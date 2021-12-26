@@ -1,0 +1,962 @@
+{
+  "structs": [
+    {
+      "name": "Vector2",
+      "description": "Vector2 type",
+      "fields": [
+        {
+          "name": "x",
+          "type": "float",
+          "description": ""
+        },
+        {
+          "name": "y",
+          "type": "float",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "Vector3",
+      "description": "Vector3 type",
+      "fields": [
+        {
+          "name": "x",
+          "type": "float",
+          "description": ""
+        },
+        {
+          "name": "y",
+          "type": "float",
+          "description": ""
+        },
+        {
+          "name": "z",
+          "type": "float",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "Vector4",
+      "description": "Vector4 type",
+      "fields": [
+        {
+          "name": "x",
+          "type": "float",
+          "description": ""
+        },
+        {
+          "name": "y",
+          "type": "float",
+          "description": ""
+        },
+        {
+          "name": "z",
+          "type": "float",
+          "description": ""
+        },
+        {
+          "name": "w",
+          "type": "float",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "Matrix",
+      "description": "Matrix type (OpenGL style 4x4 - right handed, column major)",
+      "fields": [
+        {
+          "name": "m0, m4, m8, m12",
+          "type": "float",
+          "description": "Matrix first row (4 components)"
+        },
+        {
+          "name": "m1, m5, m9, m13",
+          "type": "float",
+          "description": "Matrix second row (4 components)"
+        },
+        {
+          "name": "m2, m6, m10, m14",
+          "type": "float",
+          "description": "Matrix third row (4 components)"
+        },
+        {
+          "name": "m3, m7, m11, m15",
+          "type": "float",
+          "description": "Matrix fourth row (4 components)"
+        }
+      ]
+    },
+    {
+      "name": "float3",
+      "description": "NOTE: Helper types to be used instead of array return types for *ToFloat functions",
+      "fields": [
+        {
+          "name": "v[3]",
+          "type": "float",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "float16",
+      "description": "",
+      "fields": [
+        {
+          "name": "v[16]",
+          "type": "float",
+          "description": ""
+        }
+      ]
+    }
+  ],
+  "enums": [
+  ],
+  "functions": [
+    {
+      "name": "Clamp",
+      "description": "Clamp float value",
+      "returnType": "float",
+      "params": {
+        "value": "float",
+        "min": "float",
+        "max": "float"
+      }
+    },
+    {
+      "name": "Lerp",
+      "description": "Calculate linear interpolation between two floats",
+      "returnType": "float",
+      "params": {
+        "start": "float",
+        "end": "float",
+        "amount": "float"
+      }
+    },
+    {
+      "name": "Normalize",
+      "description": "Normalize input value within input range",
+      "returnType": "float",
+      "params": {
+        "value": "float",
+        "start": "float",
+        "end": "float"
+      }
+    },
+    {
+      "name": "Remap",
+      "description": "Remap input value within input range to output range",
+      "returnType": "float",
+      "params": {
+        "value": "float",
+        "inputStart": "float",
+        "inputEnd": "float",
+        "outputStart": "float",
+        "outputEnd": "float"
+      }
+    },
+    {
+      "name": "Vector2Zero",
+      "description": "Vector with components value 0.0f",
+      "returnType": "Vector2"
+    },
+    {
+      "name": "Vector2One",
+      "description": "Vector with components value 1.0f",
+      "returnType": "Vector2"
+    },
+    {
+      "name": "Vector2Add",
+      "description": "Add two vectors (v1 + v2)",
+      "returnType": "Vector2",
+      "params": {
+        "v1": "Vector2",
+        "v2": "Vector2"
+      }
+    },
+    {
+      "name": "Vector2AddValue",
+      "description": "Add vector and float value",
+      "returnType": "Vector2",
+      "params": {
+        "v": "Vector2",
+        "add": "float"
+      }
+    },
+    {
+      "name": "Vector2Subtract",
+      "description": "Subtract two vectors (v1 - v2)",
+      "returnType": "Vector2",
+      "params": {
+        "v1": "Vector2",
+        "v2": "Vector2"
+      }
+    },
+    {
+      "name": "Vector2SubtractValue",
+      "description": "Subtract vector by float value",
+      "returnType": "Vector2",
+      "params": {
+        "v": "Vector2",
+        "sub": "float"
+      }
+    },
+    {
+      "name": "Vector2Length",
+      "description": "Calculate vector length",
+      "returnType": "float",
+      "params": {
+        "v": "Vector2"
+      }
+    },
+    {
+      "name": "Vector2LengthSqr",
+      "description": "Calculate vector square length",
+      "returnType": "float",
+      "params": {
+        "v": "Vector2"
+      }
+    },
+    {
+      "name": "Vector2DotProduct",
+      "description": "Calculate two vectors dot product",
+      "returnType": "float",
+      "params": {
+        "v1": "Vector2",
+        "v2": "Vector2"
+      }
+    },
+    {
+      "name": "Vector2Distance",
+      "description": "Calculate distance between two vectors",
+      "returnType": "float",
+      "params": {
+        "v1": "Vector2",
+        "v2": "Vector2"
+      }
+    },
+    {
+      "name": "Vector2Angle",
+      "description": "Calculate angle from two vectors",
+      "returnType": "float",
+      "params": {
+        "v1": "Vector2",
+        "v2": "Vector2"
+      }
+    },
+    {
+      "name": "Vector2Scale",
+      "description": "Scale vector (multiply by value)",
+      "returnType": "Vector2",
+      "params": {
+        "v": "Vector2",
+        "scale": "float"
+      }
+    },
+    {
+      "name": "Vector2Multiply",
+      "description": "Multiply vector by vector",
+      "returnType": "Vector2",
+      "params": {
+        "v1": "Vector2",
+        "v2": "Vector2"
+      }
+    },
+    {
+      "name": "Vector2Negate",
+      "description": "Negate vector",
+      "returnType": "Vector2",
+      "params": {
+        "v": "Vector2"
+      }
+    },
+    {
+      "name": "Vector2Divide",
+      "description": "Divide vector by vector",
+      "returnType": "Vector2",
+      "params": {
+        "v1": "Vector2",
+        "v2": "Vector2"
+      }
+    },
+    {
+      "name": "Vector2Normalize",
+      "description": "Normalize provided vector",
+      "returnType": "Vector2",
+      "params": {
+        "v": "Vector2"
+      }
+    },
+    {
+      "name": "Vector2Lerp",
+      "description": "Calculate linear interpolation between two vectors",
+      "returnType": "Vector2",
+      "params": {
+        "v1": "Vector2",
+        "v2": "Vector2",
+        "amount": "float"
+      }
+    },
+    {
+      "name": "Vector2Reflect",
+      "description": "Calculate reflected vector to normal",
+      "returnType": "Vector2",
+      "params": {
+        "v": "Vector2",
+        "normal": "Vector2"
+      }
+    },
+    {
+      "name": "Vector2Rotate",
+      "description": "Rotate vector by angle",
+      "returnType": "Vector2",
+      "params": {
+        "v": "Vector2",
+        "angle": "float"
+      }
+    },
+    {
+      "name": "Vector2MoveTowards",
+      "description": "Move Vector towards target",
+      "returnType": "Vector2",
+      "params": {
+        "v": "Vector2",
+        "target": "Vector2",
+        "maxDistance": "float"
+      }
+    },
+    {
+      "name": "Vector3Zero",
+      "description": "Vector with components value 0.0f",
+      "returnType": "Vector3"
+    },
+    {
+      "name": "Vector3One",
+      "description": "Vector with components value 1.0f",
+      "returnType": "Vector3"
+    },
+    {
+      "name": "Vector3Add",
+      "description": "Add two vectors",
+      "returnType": "Vector3",
+      "params": {
+        "v1": "Vector3",
+        "v2": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3AddValue",
+      "description": "Add vector and float value",
+      "returnType": "Vector3",
+      "params": {
+        "v": "Vector3",
+        "add": "float"
+      }
+    },
+    {
+      "name": "Vector3Subtract",
+      "description": "Subtract two vectors",
+      "returnType": "Vector3",
+      "params": {
+        "v1": "Vector3",
+        "v2": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3SubtractValue",
+      "description": "Subtract vector by float value",
+      "returnType": "Vector3",
+      "params": {
+        "v": "Vector3",
+        "sub": "float"
+      }
+    },
+    {
+      "name": "Vector3Scale",
+      "description": "Multiply vector by scalar",
+      "returnType": "Vector3",
+      "params": {
+        "v": "Vector3",
+        "scalar": "float"
+      }
+    },
+    {
+      "name": "Vector3Multiply",
+      "description": "Multiply vector by vector",
+      "returnType": "Vector3",
+      "params": {
+        "v1": "Vector3",
+        "v2": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3CrossProduct",
+      "description": "Calculate two vectors cross product",
+      "returnType": "Vector3",
+      "params": {
+        "v1": "Vector3",
+        "v2": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3Perpendicular",
+      "description": "Calculate one vector perpendicular vector",
+      "returnType": "Vector3",
+      "params": {
+        "v": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3Length",
+      "description": "Calculate vector length",
+      "returnType": "float",
+      "params": {
+        "v": "const Vector3"
+      }
+    },
+    {
+      "name": "Vector3LengthSqr",
+      "description": "Calculate vector square length",
+      "returnType": "float",
+      "params": {
+        "v": "const Vector3"
+      }
+    },
+    {
+      "name": "Vector3DotProduct",
+      "description": "Calculate two vectors dot product",
+      "returnType": "float",
+      "params": {
+        "v1": "Vector3",
+        "v2": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3Distance",
+      "description": "Calculate distance between two vectors",
+      "returnType": "float",
+      "params": {
+        "v1": "Vector3",
+        "v2": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3Angle",
+      "description": "Calculate angle between two vectors",
+      "returnType": "float",
+      "params": {
+        "v1": "Vector3",
+        "v2": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3Negate",
+      "description": "Negate provided vector (invert direction)",
+      "returnType": "Vector3",
+      "params": {
+        "v": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3Divide",
+      "description": "Divide vector by vector",
+      "returnType": "Vector3",
+      "params": {
+        "v1": "Vector3",
+        "v2": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3Normalize",
+      "description": "Normalize provided vector",
+      "returnType": "Vector3",
+      "params": {
+        "v": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3OrthoNormalize",
+      "description": "Orthonormalize provided vectors. Makes vectors normalized and orthogonal to each other. Gram-Schmidt function implementation",
+      "returnType": "void",
+      "params": {
+        "v1": "Vector3 *",
+        "v2": "Vector3 *"
+      }
+    },
+    {
+      "name": "Vector3Transform",
+      "description": "Transforms a Vector3 by a given Matrix",
+      "returnType": "Vector3",
+      "params": {
+        "v": "Vector3",
+        "mat": "Matrix"
+      }
+    },
+    {
+      "name": "Vector3RotateByQuaternion",
+      "description": "Transform a vector by quaternion rotation",
+      "returnType": "Vector3",
+      "params": {
+        "v": "Vector3",
+        "q": "Quaternion"
+      }
+    },
+    {
+      "name": "Vector3Lerp",
+      "description": "Calculate linear interpolation between two vectors",
+      "returnType": "Vector3",
+      "params": {
+        "v1": "Vector3",
+        "v2": "Vector3",
+        "amount": "float"
+      }
+    },
+    {
+      "name": "Vector3Reflect",
+      "description": "Calculate reflected vector to normal",
+      "returnType": "Vector3",
+      "params": {
+        "v": "Vector3",
+        "normal": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3Min",
+      "description": "Get min value for each pair of components",
+      "returnType": "Vector3",
+      "params": {
+        "v1": "Vector3",
+        "v2": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3Max",
+      "description": "Get max value for each pair of components",
+      "returnType": "Vector3",
+      "params": {
+        "v1": "Vector3",
+        "v2": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3Barycenter",
+      "description": "Compute barycenter coordinates (u, v, w) for point p with respect to triangle (a, b, c). NOTE: Assumes P is on the plane of ",
+      "returnType": "Vector3",
+      "params": {
+        "p": "Vector3",
+        "a": "Vector3",
+        "b": "Vector3",
+        "c": "Vector3"
+      }
+    },
+    {
+      "name": "Vector3Unproject",
+      "description": "Projects a Vector3 from screen space into object space. NOTE: We are avoiding calling other raymath functions despite availa",
+      "returnType": "Vector3",
+      "params": {
+        "source": "Vector3",
+        "projection": "Matrix",
+        "view": "Matrix"
+      }
+    },
+    {
+      "name": "Vector3ToFloatV",
+      "description": "Get Vector3 as float array",
+      "returnType": "float3",
+      "params": {
+        "v": "Vector3"
+      }
+    },
+    {
+      "name": "MatrixDeterminant",
+      "description": "Compute matrix determinant",
+      "returnType": "float",
+      "params": {
+        "mat": "Matrix"
+      }
+    },
+    {
+      "name": "MatrixTrace",
+      "description": "Get the trace of the matrix (sum of the values along the diagonal)",
+      "returnType": "float",
+      "params": {
+        "mat": "Matrix"
+      }
+    },
+    {
+      "name": "MatrixTranspose",
+      "description": "Transposes provided matrix",
+      "returnType": "Matrix",
+      "params": {
+        "mat": "Matrix"
+      }
+    },
+    {
+      "name": "MatrixInvert",
+      "description": "Invert provided matrix",
+      "returnType": "Matrix",
+      "params": {
+        "mat": "Matrix"
+      }
+    },
+    {
+      "name": "MatrixNormalize",
+      "description": "Normalize provided matrix",
+      "returnType": "Matrix",
+      "params": {
+        "mat": "Matrix"
+      }
+    },
+    {
+      "name": "MatrixIdentity",
+      "description": "Get identity matrix",
+      "returnType": "Matrix"
+    },
+    {
+      "name": "MatrixAdd",
+      "description": "Add two matrices",
+      "returnType": "Matrix",
+      "params": {
+        "left": "Matrix",
+        "right": "Matrix"
+      }
+    },
+    {
+      "name": "MatrixSubtract",
+      "description": "Subtract two matrices (left - right)",
+      "returnType": "Matrix",
+      "params": {
+        "left": "Matrix",
+        "right": "Matrix"
+      }
+    },
+    {
+      "name": "MatrixMultiply",
+      "description": "Get two matrix multiplication. NOTE: When multiplying matrices... the order matters!",
+      "returnType": "Matrix",
+      "params": {
+        "left": "Matrix",
+        "right": "Matrix"
+      }
+    },
+    {
+      "name": "MatrixTranslate",
+      "description": "Get translation matrix",
+      "returnType": "Matrix",
+      "params": {
+        "x": "float",
+        "y": "float",
+        "z": "float"
+      }
+    },
+    {
+      "name": "MatrixRotate",
+      "description": "Create rotation matrix from axis and angle. NOTE: Angle should be provided in radians",
+      "returnType": "Matrix",
+      "params": {
+        "axis": "Vector3",
+        "angle": "float"
+      }
+    },
+    {
+      "name": "MatrixRotateX",
+      "description": "Get x-rotation matrix (angle in radians)",
+      "returnType": "Matrix",
+      "params": {
+        "angle": "float"
+      }
+    },
+    {
+      "name": "MatrixRotateY",
+      "description": "Get y-rotation matrix (angle in radians)",
+      "returnType": "Matrix",
+      "params": {
+        "angle": "float"
+      }
+    },
+    {
+      "name": "MatrixRotateZ",
+      "description": "Get z-rotation matrix (angle in radians)",
+      "returnType": "Matrix",
+      "params": {
+        "angle": "float"
+      }
+    },
+    {
+      "name": "MatrixRotateXYZ",
+      "description": "Get xyz-rotation matrix (angles in radians)",
+      "returnType": "Matrix",
+      "params": {
+        "ang": "Vector3"
+      }
+    },
+    {
+      "name": "MatrixRotateZYX",
+      "description": "Get zyx-rotation matrix (angles in radians)",
+      "returnType": "Matrix",
+      "params": {
+        "ang": "Vector3"
+      }
+    },
+    {
+      "name": "MatrixScale",
+      "description": "Get scaling matrix",
+      "returnType": "Matrix",
+      "params": {
+        "x": "float",
+        "y": "float",
+        "z": "float"
+      }
+    },
+    {
+      "name": "MatrixFrustum",
+      "description": "Get perspective projection matrix",
+      "returnType": "Matrix",
+      "params": {
+        "left": "double",
+        "right": "double",
+        "bottom": "double",
+        "top": "double",
+        "near": "double",
+        "far": "double"
+      }
+    },
+    {
+      "name": "MatrixPerspective",
+      "description": "Get perspective projection matrix. NOTE: Angle should be provided in radians",
+      "returnType": "Matrix",
+      "params": {
+        "fovy": "double",
+        "aspect": "double",
+        "near": "double",
+        "far": "double"
+      }
+    },
+    {
+      "name": "MatrixOrtho",
+      "description": "Get orthographic projection matrix",
+      "returnType": "Matrix",
+      "params": {
+        "left": "double",
+        "right": "double",
+        "bottom": "double",
+        "top": "double",
+        "near": "double",
+        "far": "double"
+      }
+    },
+    {
+      "name": "MatrixLookAt",
+      "description": "Get camera look-at matrix (view matrix)",
+      "returnType": "Matrix",
+      "params": {
+        "eye": "Vector3",
+        "target": "Vector3",
+        "up": "Vector3"
+      }
+    },
+    {
+      "name": "MatrixToFloatV",
+      "description": "Get float array of matrix data",
+      "returnType": "float16",
+      "params": {
+        "mat": "Matrix"
+      }
+    },
+    {
+      "name": "QuaternionAdd",
+      "description": "Add two quaternions",
+      "returnType": "Quaternion",
+      "params": {
+        "q1": "Quaternion",
+        "q2": "Quaternion"
+      }
+    },
+    {
+      "name": "QuaternionAddValue",
+      "description": "Add quaternion and float value",
+      "returnType": "Quaternion",
+      "params": {
+        "q": "Quaternion",
+        "add": "float"
+      }
+    },
+    {
+      "name": "QuaternionSubtract",
+      "description": "Subtract two quaternions",
+      "returnType": "Quaternion",
+      "params": {
+        "q1": "Quaternion",
+        "q2": "Quaternion"
+      }
+    },
+    {
+      "name": "QuaternionSubtractValue",
+      "description": "Subtract quaternion and float value",
+      "returnType": "Quaternion",
+      "params": {
+        "q": "Quaternion",
+        "sub": "float"
+      }
+    },
+    {
+      "name": "QuaternionIdentity",
+      "description": "Get identity quaternion",
+      "returnType": "Quaternion"
+    },
+    {
+      "name": "QuaternionLength",
+      "description": "Computes the length of a quaternion",
+      "returnType": "float",
+      "params": {
+        "q": "Quaternion"
+      }
+    },
+    {
+      "name": "QuaternionNormalize",
+      "description": "Normalize provided quaternion",
+      "returnType": "Quaternion",
+      "params": {
+        "q": "Quaternion"
+      }
+    },
+    {
+      "name": "QuaternionInvert",
+      "description": "Invert provided quaternion",
+      "returnType": "Quaternion",
+      "params": {
+        "q": "Quaternion"
+      }
+    },
+    {
+      "name": "QuaternionMultiply",
+      "description": "Calculate two quaternion multiplication",
+      "returnType": "Quaternion",
+      "params": {
+        "q1": "Quaternion",
+        "q2": "Quaternion"
+      }
+    },
+    {
+      "name": "QuaternionScale",
+      "description": "Scale quaternion by float value",
+      "returnType": "Quaternion",
+      "params": {
+        "q": "Quaternion",
+        "mul": "float"
+      }
+    },
+    {
+      "name": "QuaternionDivide",
+      "description": "Divide two quaternions",
+      "returnType": "Quaternion",
+      "params": {
+        "q1": "Quaternion",
+        "q2": "Quaternion"
+      }
+    },
+    {
+      "name": "QuaternionLerp",
+      "description": "Calculate linear interpolation between two quaternions",
+      "returnType": "Quaternion",
+      "params": {
+        "q1": "Quaternion",
+        "q2": "Quaternion",
+        "amount": "float"
+      }
+    },
+    {
+      "name": "QuaternionNlerp",
+      "description": "Calculate slerp-optimized interpolation between two quaternions",
+      "returnType": "Quaternion",
+      "params": {
+        "q1": "Quaternion",
+        "q2": "Quaternion",
+        "amount": "float"
+      }
+    },
+    {
+      "name": "QuaternionSlerp",
+      "description": "Calculates spherical linear interpolation between two quaternions",
+      "returnType": "Quaternion",
+      "params": {
+        "q1": "Quaternion",
+        "q2": "Quaternion",
+        "amount": "float"
+      }
+    },
+    {
+      "name": "QuaternionFromVector3ToVector3",
+      "description": "Calculate quaternion based on the rotation from one vector to another",
+      "returnType": "Quaternion",
+      "params": {
+        "from": "Vector3",
+        "to": "Vector3"
+      }
+    },
+    {
+      "name": "QuaternionFromMatrix",
+      "description": "Get a quaternion for a given rotation matrix",
+      "returnType": "Quaternion",
+      "params": {
+        "mat": "Matrix"
+      }
+    },
+    {
+      "name": "QuaternionToMatrix",
+      "description": "Get a matrix for a given quaternion",
+      "returnType": "Matrix",
+      "params": {
+        "q": "Quaternion"
+      }
+    },
+    {
+      "name": "QuaternionFromAxisAngle",
+      "description": "Get rotation quaternion for an angle and axis. NOTE: angle must be provided in radians",
+      "returnType": "Quaternion",
+      "params": {
+        "axis": "Vector3",
+        "angle": "float"
+      }
+    },
+    {
+      "name": "QuaternionToAxisAngle",
+      "description": "Get the rotation angle and axis for a given quaternion",
+      "returnType": "void",
+      "params": {
+        "q": "Quaternion",
+        "outAxis": "Vector3 *",
+        "outAngle": "float *"
+      }
+    },
+    {
+      "name": "QuaternionFromEuler",
+      "description": "Get the quaternion equivalent to Euler angles. NOTE: Rotation order is ZYX",
+      "returnType": "Quaternion",
+      "params": {
+        "pitch": "float",
+        "yaw": "float",
+        "roll": "float"
+      }
+    },
+    {
+      "name": "QuaternionToEuler",
+      "description": "Get the Euler angles equivalent to quaternion (roll, pitch, yaw). NOTE: Angles are returned in a Vector3 struct in radians",
+      "returnType": "Vector3",
+      "params": {
+        "q": "Quaternion"
+      }
+    },
+    {
+      "name": "QuaternionTransform",
+      "description": "Transform a quaternion given a transformation matrix",
+      "returnType": "Quaternion",
+      "params": {
+        "q": "Quaternion",
+        "mat": "Matrix"
+      }
+    }
+  ]
+}
