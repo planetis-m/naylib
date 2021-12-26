@@ -12,6 +12,7 @@ const
     "RAudioBuffer* {.importc: \"rAudioBuffer\", bycopy.} = object"
   ]
   header = """
+from raymath import Vector2, Vector3, Vector4, Quaternion, Matrix
 
 const lext = when defined(windows): ".dll" elif defined(macosx): ".dylib" else: ".so"
 {.pragma: rlapi, cdecl, dynlib: "libraylib" & lext.}

@@ -1,3 +1,4 @@
+from raymath import Vector2, Vector3, Vector4, Quaternion, Matrix
 
 const lext* = when defined(windows): ".dll" elif defined(macosx): ".dylib" else: ".so"
 {.pragma: rlapi, cdecl, dynlib: "libraylib" & lext.}
@@ -10,28 +11,6 @@ const
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 
 type
-  Vector2* {.bycopy.} = object ## Vector2, 2 components
-    x*: float32 ## Vector x component
-    y*: float32 ## Vector y component
-
-  Vector3* {.bycopy.} = object ## Vector3, 3 components
-    x*: float32 ## Vector x component
-    y*: float32 ## Vector y component
-    z*: float32 ## Vector z component
-
-  Vector4* {.bycopy.} = object ## Vector4, 4 components
-    x*: float32 ## Vector x component
-    y*: float32 ## Vector y component
-    z*: float32 ## Vector z component
-    w*: float32 ## Vector w component
-  Quaternion* = Vector4 ## Quaternion, 4 components (Vector4 alias)
-
-  Matrix* {.bycopy.} = object ## Matrix, 4x4 components, column major, OpenGL style, right handed
-    m0*, m4*, m8*, m12*: float32 ## Matrix first row (4 components)
-    m1*, m5*, m9*, m13*: float32 ## Matrix second row (4 components)
-    m2*, m6*, m10*, m14*: float32 ## Matrix third row (4 components)
-    m3*, m7*, m11*, m15*: float32 ## Matrix fourth row (4 components)
-
   Color* {.bycopy.} = object ## Color, 4 components, R8G8B8A8 (32bit)
     r*: uint8 ## Color red value
     g*: uint8 ## Color green value
