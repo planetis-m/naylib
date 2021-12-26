@@ -202,10 +202,10 @@ proc crossProduct*(v1: Vector3; v2: Vector3): Vector3 =
 proc perpendicular*(v: Vector3): Vector3 =
   ## Calculate one vector perpendicular vector
   result = Vector3()
-  var min = float32(abs(v.x))
+  var min = abs(v.x)
   var cardinalAxis = Vector3(x: 1'f32, y: 0'f32, z: 0'f32)
   if abs(v.y) < min:
-    min = float32(abs(v.y))
+    min = abs(v.y)
     var tmp = Vector3(x: 0'f32, y: 1'f32, z: 0'f32)
     cardinalAxis = tmp
   if abs(v.z) < min:
@@ -264,13 +264,13 @@ proc normalize*(v: Vector3): Vector3 =
   result.z = result.z * ilength
 
 ## Orthonormalize provided vectors
-proc orthoNormalize*(v1: ptr Vector3; v2: ptr Vector3) =
+proc orthoNormalize*(v1: var Vector3; v2: var Vector3) =
   ## Makes vectors normalized and orthogonal to each other
   ## Gram-Schmidt function implementation
   var length = 0'f32
   var ilength = 0'f32
   # Vector3Normalize(*v1);
-  var v: Vector3 = v1[]
+  var v = v1
   length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
   if length == 0'f32:
     length = 1'f32
@@ -291,9 +291,9 @@ proc orthoNormalize*(v1: ptr Vector3; v2: ptr Vector3) =
   vn1.y = vn1.y * ilength
   vn1.z = vn1.z * ilength
   # Vector3CrossProduct(vn1, *v1)
-  var vn2 = Vector3(x: vn1.y * v1.z - vn1.z * v1.y, y: vn1.z * v1.x - vn1.x * v1.z,
+  let vn2 = Vector3(x: vn1.y * v1.z - vn1.z * v1.y, y: vn1.z * v1.x - vn1.x * v1.z,
                          z: vn1.x * v1.y - vn1.y * v1.x)
-  v2[] = vn2
+  v2 = vn2
 
 proc transform*(v: Vector3; mat: Matrix): Vector3 =
   ## Transforms a Vector3 by a given Matrix
@@ -1248,7 +1248,7 @@ proc fromAxisAngle*(axis: Vector3; angle: float32): Quaternion =
     result.z = q.z * ilength
     result.w = q.w * ilength
 
-proc toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var cfloat) =
+proc toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) =
   ## Get the rotation angle and axis for a given quaternion
   var q = q
   if abs(q.w) > 1'f32:
