@@ -1,28 +1,7 @@
 import std/math
+from raylib import Vector2, Vector3, Vector4, Quaternion, Matrix
 
 type
-  Vector2* {.bycopy.} = object ## Vector2, 2 components
-    x*: float32 ## Vector x component
-    y*: float32 ## Vector y component
-
-  Vector3* {.bycopy.} = object ## Vector3, 3 components
-    x*: float32 ## Vector x component
-    y*: float32 ## Vector y component
-    z*: float32 ## Vector z component
-
-  Vector4* {.bycopy.} = object ## Vector4, 4 components
-    x*: float32 ## Vector x component
-    y*: float32 ## Vector y component
-    z*: float32 ## Vector z component
-    w*: float32 ## Vector w component
-  Quaternion* = Vector4 ## Quaternion, 4 components (Vector4 alias)
-
-  Matrix* {.bycopy.} = object ## Matrix, 4x4 components, column major, OpenGL style, right handed
-    m0*, m4*, m8*, m12*: float32 ## Matrix first row (4 components)
-    m1*, m5*, m9*, m13*: float32 ## Matrix second row (4 components)
-    m2*, m6*, m10*, m14*: float32 ## Matrix third row (4 components)
-    m3*, m7*, m11*, m15*: float32 ## Matrix fourth row (4 components)
-
   Float3* {.bycopy.} = object ## NOTE: Helper types to be used instead of array return types for *ToFloat functions
     v*: array[3, float32]
 
@@ -164,11 +143,11 @@ proc moveTowards*(v: Vector2; target: Vector2; maxDistance: float32): Vector2 =
 
 proc vector3Zero*(): Vector3 =
   ## Vector with components value 0'f32
-  result = Vector3(x: 0'f32, y: 0'f32, z: 0'f32)
+  result = Vector3(x: 0, y: 0, z: 0)
 
 proc vector3One*(): Vector3 =
   ## Vector with components value 1'f32
-  result = Vector3(x: 1'f32, y: 1'f32, z: 1'f32)
+  result = Vector3(x: 1, y: 1, z: 1)
 
 proc add*(v1: Vector3; v2: Vector3): Vector3 =
   ## Add two vectors
@@ -203,13 +182,13 @@ proc perpendicular*(v: Vector3): Vector3 =
   ## Calculate one vector perpendicular vector
   result = Vector3()
   var min = abs(v.x)
-  var cardinalAxis = Vector3(x: 1'f32, y: 0'f32, z: 0'f32)
+  var cardinalAxis = Vector3(x: 1, y: 0, z: 0)
   if abs(v.y) < min:
     min = abs(v.y)
-    var tmp = Vector3(x: 0'f32, y: 1'f32, z: 0'f32)
+    var tmp = Vector3(x: 0, y: 1, z: 0)
     cardinalAxis = tmp
   if abs(v.z) < min:
-    var tmp = Vector3(x: 0'f32, y: 0'f32, z: 1'f32)
+    var tmp = Vector3(x: 0, y: 0, z: 1)
     cardinalAxis = tmp
   result.x = v.y * cardinalAxis.z - v.z * cardinalAxis.y
   result.y = v.z * cardinalAxis.x - v.x * cardinalAxis.z
@@ -352,11 +331,11 @@ proc barycenter*(p: Vector3; a: Vector3; b: Vector3; c: Vector3): Vector3 =
   ## Compute barycenter coordinates (u, v, w) for point p with respect to triangle (a, b, c)
   ## NOTE: Assumes P is on the plane of the triangle
   result = Vector3()
-  var v0 = Vector3(x: b.x - a.x, y: b.y - a.y, z: b.z - a.z)
+  let v0 = Vector3(x: b.x - a.x, y: b.y - a.y, z: b.z - a.z)
   # Vector3Subtract(b, a)
-  var v1 = Vector3(x: c.x - a.x, y: c.y - a.y, z: c.z - a.z)
+  let v1 = Vector3(x: c.x - a.x, y: c.y - a.y, z: c.z - a.z)
   # Vector3Subtract(c, a)
-  var v2 = Vector3(x: p.x - a.x, y: p.y - a.y, z: p.z - a.z)
+  let v2 = Vector3(x: p.x - a.x, y: p.y - a.y, z: p.z - a.z)
   # Vector3Subtract(p, a)
   let d00 = (v0.x * v0.x + v0.y * v0.y + v0.z * v0.z)
   # Vector3DotProduct(v0, v0)
@@ -928,7 +907,7 @@ proc lookAt*(eye: Vector3; target: Vector3; up: Vector3): Matrix =
   # Vector3Subtract(eye, target)
   var vz = Vector3(x: eye.x - target.x, y: eye.y - target.y, z: eye.z - target.z)
   # Vector3Normalize(vz)
-  var v: Vector3 = vz
+  var v = vz
   length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
   if length == 0'f32:
     length = 1'f32
@@ -1098,7 +1077,7 @@ proc nlerp*(q1: Quaternion; q2: Quaternion; amount: float32): Quaternion =
   result.z = q1.z + amount * (q2.z - q1.z)
   result.w = q1.w + amount * (q2.w - q1.w)
   # QuaternionNormalize(q);
-  var q: Quaternion = result
+  var q = result
   var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
   if length == 0'f32:
     length = 1'f32
@@ -1238,7 +1217,7 @@ proc fromAxisAngle*(axis: Vector3; angle: float32): Quaternion =
     result.z = axis.z * sinres
     result.w = cosres
     ## QuaternionNormalize(q);
-    var q: Quaternion = result
+    var q = result
     length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
     if length == 0'f32:
       length = 1'f32
@@ -1261,7 +1240,7 @@ proc toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) =
     q.y = q.y * ilength
     q.z = q.z * ilength
     q.w = q.w * ilength
-  var resAxis = Vector3(x: 0'f32, y: 0'f32, z: 0'f32)
+  var resAxis = Vector3(x: 0, y: 0, z: 0)
   let resAngle = 2'f32 * arccos(q.w)
   let den = sqrt(1'f32 - q.w * q.w)
   if den > 0.0001'f32:
