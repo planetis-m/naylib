@@ -45,7 +45,7 @@ const
   outputname = "../raymath.nim"
 
 proc main =
-  template str(x: string) =
+  template ident(x: string) =
     buf.setLen 0
     let isKeyw = isKeyword(x)
     if isKeyw:
@@ -55,18 +55,18 @@ proc main =
       buf.add '`'
     otp.write buf
   template lit(x: string) = otp.write x
-  template ind =
+  template spaces =
     buf.setLen 0
     addIndent(buf, indent)
     otp.write buf
+  template scope(body: untyped) =
+    inc indent, indWidth
+    body
+    dec indent, indWidth
   template doc(x: untyped) =
     if x.description != "":
       lit " ## "
       lit x.description
-  template scp(body: untyped) =
-    inc indent, indWidth
-    body
-    dec indent, indWidth
 
   var top = parseApi(raylibApi)
 
@@ -78,18 +78,18 @@ proc main =
     lit header
     # Generate type definitions
     lit "\ntype"
-    scp:
+    scope:
       for obj in items(top.structs):
         if obj.name in excluded: continue
-        ind
-        str capitalizeAscii(obj.name)
+        spaces
+        ident capitalizeAscii(obj.name)
         lit "* {.bycopy.} = object"
         doc obj
-        scp:
+        scope:
           for fld in items(obj.fields):
-            ind
+            spaces
             var (name, sub) = transFieldName(fld.name)
-            str name
+            ident name
             lit "*: "
             let kind = convertType(fld.`type`, sub, false)
             lit kind
@@ -104,7 +104,7 @@ proc main =
         removePrefix(name, "Vector3")
         removePrefix(name, "Matrix")
         removePrefix(name, "Quaternion")
-      str uncapitalizeAscii(name)
+      ident uncapitalizeAscii(name)
       lit "*("
       var hasVarargs = false
       for i, (name, kind) in fnc.params.pairs:
@@ -112,7 +112,7 @@ proc main =
           hasVarargs = true
         else:
           if i > 0: lit ", "
-          str name
+          ident name
           lit ": "
           let kind = convertType(kind, "", false)
           lit kind
@@ -120,16 +120,16 @@ proc main =
       if fnc.returnType != "void":
         lit ": "
         let kind = convertType(fnc.returnType, "", false)
-        str kind
+        ident kind
       lit " {.importc: \""
-      str fnc.name
+      ident fnc.name
       lit "\""
       if hasVarargs:
         lit ", varargs"
       lit ", rmapi.}"
-      scp:
-        if fnc.description != "":
-          ind
+      if fnc.description != "":
+        scope:
+          spaces
           lit "## "
           lit fnc.description
     lit "\n"

@@ -22,6 +22,12 @@ const
     "xor",
     "yield"]
 
+proc isKeyword*(s: string): bool {.inline.} =
+  ## Checks if an indentifier is a Nim keyword
+  binarySearch(nimKeyw, s) >= 0
+
+## The raylib_parser produces JSON with the following structure.
+## The type definitions are used by the deserializer to process the file.
 type
   Topmost* = object
     structs*: seq[StructInfo]
@@ -31,7 +37,7 @@ type
   FunctionInfo* = object
     name*, description*, returnType*: string
     params*: Params
-  Params* = seq[(string, string)]
+  Params* = seq[(string, string)] # Could have used an OrderedTable instead.
 
   StructInfo* = object
     name*, description*: string
@@ -49,6 +55,7 @@ type
     value*: int
     description*: string
 
+# The deserializer doesn't support anonymous tuples by default, process manually.
 proc initFromJson(dst: var Params; p: var JsonParser) =
   eat(p, tkCurlyLe)
   while p.tok != tkCurlyRi:
@@ -78,6 +85,8 @@ proc addIndent*(result: var string, indent: int) =
     result.add(' ')
 
 proc toNimType*(x: string): string =
+  ## Translates a single C identifier to the equivalent Nim type.
+  ## Also used to make replacements.
   case x
   of "float":
     "float32"
@@ -95,7 +104,12 @@ proc toNimType*(x: string): string =
     "Float16"
   else: x
 
-proc convertType*(s: string, sub: string, many: bool): string =
+proc convertType*(s: string, pattern: string, many: bool): string =
+  ## Converts a C type to the equivalent Nim type.
+  ## Should work with function parameters, return, and struct fields types.
+  ## If a `pattern` is provided, it substitutes the found base type and returns it.
+  ## `many` hints the generation of `ptr UncheckedArray` instead of `ptr`.
+  ## NOTE: expects `s` to be formatted with spaces, `MyType*` needs to be `MyType *`
   var isVoid = false
   var isPointer = false
   var isDoublePointer = false
@@ -136,8 +150,8 @@ proc convertType*(s: string, sub: string, many: bool): string =
       result = "char"
   elif isUnsigned:
     result = "u" & result
-  if sub != "":
-    result = sub % result
+  if pattern != "":
+    result = pattern % result
   elif isChar and not isUnsigned:
     if isDoublePointer:
       result = "cstringArray"
@@ -159,22 +173,28 @@ proc convertType*(s: string, sub: string, many: bool): string =
       result = "ptr ptr " & result
 
 proc hasMany*(x: string): bool {.inline.} =
+  ## Tries to determine if an identifier is plural
   let x = strip(x, false, chars = Digits)
   x.endsWith("es") or (not x.endsWith("ss") and x.endsWith('s')) or
       endsWith(x.normalize, "data")
 
 proc transFieldName*(x: string): (string, string) =
+  ## Returns the identifier name(s) and if an array is detected, separated.
   var name: string
   var len: int
+  # In C array definition follows the identifier, `name[4]`.
   if scanf(x, "$w[$i]$.", name, len):
     result = (name, &"array[{len}, $1]")
   else:
     if validIdentifier(x):
       result = (x, "")
     else:
+      # Multiple identifiers in the same line.
+      # Make sure all but the last one, are exported.
       result = (replace(x, ",", "*,"), "")
 
 proc camelCaseAscii*(s: string): string =
+  ## Converts snake_case to CamelCase
   var L = s.len
   while L > 0 and s[L-1] == '_': dec L
   result = newStringOfCap(L)
@@ -193,6 +213,7 @@ proc camelCaseAscii*(s: string): string =
     inc i
 
 proc allSequential*(x: seq[ValueInfo]): bool =
+  ## Checks that the enum has no holes.
   var prev = x[0].value
   for i in 1..x.high:
     let xi = x[i].value
@@ -204,5 +225,3 @@ proc allSequential*(x: seq[ValueInfo]): bool =
 proc uncapitalizeAscii*(s: string): string =
   if s.len == 0: result = ""
   else: result = toLowerAscii(s[0]) & substr(s, 1)
-
-proc isKeyword*(s: string): bool {.inline.} = binarySearch(nimKeyw, s) >= 0

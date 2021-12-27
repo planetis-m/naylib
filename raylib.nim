@@ -1,4 +1,4 @@
-const lext* = when defined(windows): ".dll" elif defined(macosx): ".dylib" else: ".so"
+const lext = when defined(windows): ".dll" elif defined(macosx): ".dylib" else: ".so"
 {.pragma: rlapi, cdecl, dynlib: "libraylib" & lext.}
 
 const

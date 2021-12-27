@@ -287,7 +287,7 @@ const
   outputname = "../raylib.nim"
 
 proc main =
-  template str(x: string) =
+  template ident(x: string) =
     buf.setLen 0
     let isKeyw = isKeyword(x)
     if isKeyw:
@@ -297,18 +297,18 @@ proc main =
       buf.add '`'
     otp.write buf
   template lit(x: string) = otp.write x
-  template ind =
+  template spaces =
     buf.setLen 0
     addIndent(buf, indent)
     otp.write buf
+  template scope(body: untyped) =
+    inc indent, indWidth
+    body
+    dec indent, indWidth
   template doc(x: untyped) =
     if x.description != "":
       lit " ## "
       lit x.description
-  template scp(body: untyped) =
-    inc indent, indWidth
-    body
-    dec indent, indWidth
 
   var top = parseApi(raylibApi)
 
@@ -320,18 +320,19 @@ proc main =
     lit header
     # Generate type definitions
     lit "\ntype"
-    scp:
+    scope:
       for obj in items(top.structs):
-        ind
-        str obj.name
+        spaces
+        ident obj.name
         lit "* {.bycopy.} = object"
         doc obj
-        scp:
+        scope:
           for fld in items(obj.fields):
-            ind
-            var (name, sub) = transFieldName(fld.name)
-            str name
+            spaces
+            var (name, pat) = transFieldName(fld.name)
+            ident name
             lit "*: "
+            # Replace `int32` with the respective enum type.
             if obj.name == "Camera3D" and name == "projection":
               lit "CameraProjection"
             elif obj.name == "Image" and name == "format":
@@ -343,54 +344,60 @@ proc main =
             else:
               let many = hasMany(fld.name) or
                   (obj.name == "Model" and (fld.name == "meshMaterial" or fld.name == "bindPose"))
+              # Manual replacements for some fields
               if obj.name == "ModelAnimation" and fld.name == "framePoses":
-                sub = "ptr UncheckedArray[ptr UncheckedArray[$1]]"
+                pat = "ptr UncheckedArray[ptr UncheckedArray[$1]]"
               elif obj.name == "Mesh" and fld.name == "vboId":
-                sub = "ptr array[MaxMeshVertexBuffers, $1]"
+                pat = "ptr array[MaxMeshVertexBuffers, $1]"
               elif obj.name == "Material" and fld.name == "maps":
-                sub = "ptr array[MaxMaterialMaps, $1]"
+                pat = "ptr array[MaxMaterialMaps, $1]"
               elif obj.name == "Shader" and fld.name == "locs":
-                sub = "ptr array[MaxShaderLocations, $1]"
-              let kind = convertType(fld.`type`, sub, many)
+                pat = "ptr array[MaxShaderLocations, $1]"
+              let kind = convertType(fld.`type`, pat, many)
               lit kind
             doc fld
+        # Add a type alias or a missing type after the respective type.
         case obj.name
         of "Vector4":
-          ind
+          spaces
           lit extraTypes[0]
         of "AudioStream":
-          ind
+          spaces
           lit extraTypes[5]
         of "Texture":
-          ind
+          spaces
           lit extraTypes[1]
-          ind
+          spaces
           lit extraTypes[2]
         of "RenderTexture":
-          ind
+          spaces
           lit extraTypes[3]
         of "Camera3D":
-          ind
+          spaces
           lit extraTypes[4]
         lit "\n"
+      # Generate enums definitions
       for enm in mitems(top.enums):
-        ind
-        str enm.name
+        spaces
+        ident enm.name
         lit "* {.size: sizeof(cint).} = enum"
         doc enm
-        scp:
+        scope:
+          # Some enums are unsorted!
           proc cmpValueInfo(x, y: ValueInfo): int = cmp(x.value, y.value)
           sort(enm.values, cmpValueInfo)
           let allSeq = allSequential(enm.values)
           for (i, val) in mpairs(enm.values):
             if i-1>=0 and enm.values[i-1].value == val.value: # duplicate!
               continue
-            ind
+            spaces
+            # Remove prefixes from enum fields.
             for (name, prefix) in enumPrefixes.items:
               if enm.name == name:
                 removePrefix(val.name, prefix)
                 break
-            str camelCaseAscii(val.name)
+            ident camelCaseAscii(val.name) # Follow Nim's naming convention for enum fields.
+            # Omit setting the int value if the enum has no holes.
             if not allSeq or (i == 0 and val.value != 0):
               lit " = "
               lit $val.value
@@ -400,18 +407,19 @@ proc main =
     lit flagsHelper
     lit duplicateVal
     lit colors
+    # Generate functions
     for fnc in items(top.functions):
       if fnc.name in excluded: continue
       lit "\nproc "
-      str uncapitalizeAscii(fnc.name)
+      ident uncapitalizeAscii(fnc.name) # Follow Nim's naming convention for proc names.
       lit "*("
       var hasVarargs = false
       for i, (name, kind) in fnc.params.pairs:
-        if name == "" and kind == "":
+        if name == "" and kind == "": # , ...) {
           hasVarargs = true
         else:
           if i > 0: lit ", "
-          str name
+          ident name
           lit ": "
           block outer:
             for (fname, kind, params) in enumInFuncParams.items:
@@ -434,16 +442,16 @@ proc main =
               break outer
           let many = hasMany(fnc.name) or fnc.name == "LoadImagePalette"
           let kind = convertType(fnc.returnType, "", many)
-          str kind
+          ident kind
       lit " {.importc: \""
-      str fnc.name
+      ident fnc.name
       lit "\""
       if hasVarargs:
         lit ", varargs"
       lit ", rlapi.}"
-      scp:
-        if fnc.description != "":
-          ind
+      if fnc.description != "":
+        scope:
+          spaces
           lit "## "
           lit fnc.description
     lit "\n"
