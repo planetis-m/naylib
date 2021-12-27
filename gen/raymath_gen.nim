@@ -2,14 +2,13 @@ import common, std/[algorithm, streams, strformat]
 import strutils except indent
 
 const
-  indWidth = 2
-  header = """
+  raymathHeader = """
 from raylib import Vector2, Vector3, Vector4, Quaternion, Matrix
 
 const lext = when defined(windows): ".dll" elif defined(macosx): ".dylib" else: ".so"
 {.pragma: rmapi, cdecl, dynlib: "libraylib" & lext.}
 """
-  excluded = [
+  excludedTypes = [
     "Vector2",
     "Vector3",
     "Vector4",
@@ -40,11 +39,7 @@ template `/=`*[T: Vector2 | Vector3 | Quaternion](v1: var T, value: float32) = v
 template `-`*[T: Vector2 | Vector3](v1: T): T = negate(v1)
 """
 
-const
-  raylibApi = "../api/raymath_api.json"
-  outputname = "../raymath.nim"
-
-proc main =
+proc genBindings(t: Topmost, fname: string, header, footer: string) =
   template ident(x: string) =
     buf.setLen 0
     let isKeyw = isKeyword(x)
@@ -68,19 +63,17 @@ proc main =
       lit " ## "
       lit x.description
 
-  var top = parseApi(raylibApi)
-
   var buf = newStringOfCap(50)
   var indent = 0
   var otp: FileStream
   try:
-    otp = openFileStream(outputname, fmWrite)
+    otp = openFileStream(fname, fmWrite)
     lit header
     # Generate type definitions
     lit "\ntype"
     scope:
-      for obj in items(top.structs):
-        if obj.name in excluded: continue
+      for obj in items(t.structs):
+        if obj.name in excludedTypes: continue
         spaces
         ident capitalizeAscii(obj.name)
         lit "* {.bycopy.} = object"
@@ -88,14 +81,14 @@ proc main =
         scope:
           for fld in items(obj.fields):
             spaces
-            var (name, sub) = transFieldName(fld.name)
+            var (name, pat) = transFieldName(fld.name)
             ident name
             lit "*: "
-            let kind = convertType(fld.`type`, sub, false)
+            let kind = convertType(fld.`type`, pat, false)
             lit kind
             doc fld
         lit "\n"
-    for fnc in items(top.functions):
+    for fnc in items(t.functions):
       lit "\nproc "
       var name = fnc.name
       if name notin ["Vector2Zero", "Vector2One", "Vector3Zero",
@@ -107,12 +100,12 @@ proc main =
       ident uncapitalizeAscii(name)
       lit "*("
       var hasVarargs = false
-      for i, (name, kind) in fnc.params.pairs:
-        if name == "" and kind == "":
+      for i, (param, kind) in fnc.params.pairs:
+        if param == "" and kind == "":
           hasVarargs = true
         else:
           if i > 0: lit ", "
-          ident name
+          ident param
           lit ": "
           let kind = convertType(kind, "", false)
           lit kind
@@ -133,8 +126,16 @@ proc main =
           lit "## "
           lit fnc.description
     lit "\n"
-    lit raymathOps
+    lit footer
   finally:
     if otp != nil: otp.close()
+
+const
+  raylibApi = "../api/raymath_api.json"
+  outputname = "../raymath.nim"
+
+proc main =
+  var t = parseApi(raylibApi)
+  genBindings(t, outputname, raymathHeader, raymathOps)
 
 main()

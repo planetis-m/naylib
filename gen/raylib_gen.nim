@@ -2,16 +2,15 @@ import common, std/[algorithm, streams]
 import strutils except indent
 
 const
-  indWidth = 2
-  extraTypes = [
-    "Quaternion* = Vector4 ## Quaternion, 4 components (Vector4 alias)",
-    "Texture2D* = Texture ## Texture2D, same as Texture",
-    "TextureCubemap* = Texture ## TextureCubemap, same as Texture",
-    "RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture",
-    "Camera* = Camera3D ## Camera type fallback, defaults to Camera3D",
-    "RAudioBuffer* {.importc: \"rAudioBuffer\", bycopy.} = object"
-  ]
-  header = """
+  extraTypes = {
+    "Vector4": "Quaternion* = Vector4 ## Quaternion, 4 components (Vector4 alias)",
+    "Texture": "Texture2D* = Texture ## Texture2D, same as Texture",
+    "Texture": "TextureCubemap* = Texture ## TextureCubemap, same as Texture",
+    "RenderTexture": "RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture",
+    "Camera3D": "Camera* = Camera3D ## Camera type fallback, defaults to Camera3D",
+    "AudioStream": "RAudioBuffer* {.importc: \"rAudioBuffer\", bycopy.} = object"
+  }
+  raylibHeader = """
 const lext = when defined(windows): ".dll" elif defined(macosx): ".dylib" else: ".so"
 {.pragma: rlapi, cdecl, dynlib: "libraylib" & lext.}
 
@@ -22,7 +21,21 @@ const
   MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 """
-  flagsHelper = """
+  helpers = """
+
+type va_list* {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
+proc vprintf*(format: cstring, args: va_list) {.cdecl, importc: "vprintf", header: "<stdio.h>".}
+
+## Callbacks to hook some internal functions
+## WARNING: This callbacks are intended for advance users
+type
+  TraceLogCallback* = proc (logLevel: cint; text: cstring; args: va_list) {.cdecl.} ## Logging: Redirect trace log messages
+  LoadFileDataCallback* = proc (fileName: cstring; bytesRead: ptr uint32): ptr UncheckedArray[uint8] {.
+      cdecl.} ## FileIO: Load binary data
+  SaveFileDataCallback* = proc (fileName: cstring; data: pointer; bytesToWrite: uint32): bool {.
+      cdecl.} ## FileIO: Save binary data
+  LoadFileTextCallback* = proc (fileName: cstring): cstring {.cdecl.} ## FileIO: Load text data
+  SaveFileTextCallback* = proc (fileName: cstring; text: cstring): bool {.cdecl.} ## FileIO: Save text data
 
   Enums = ConfigFlags|Gesture
   Flag*[E: Enums] = distinct uint32
@@ -32,13 +45,9 @@ proc flag*[E: Enums](e: varargs[E]): Flag[E] {.inline.} =
   for val in items(e):
     res = res or uint32(val)
   Flag[E](res)
-"""
-  duplicateVal = """
 
 const
   Menu* = KeyboardKey.R ## Key: Android menu button
-"""
-  colors = """
 
   LightGray* = Color(r: 200, g: 200, b: 200, a: 255)
   Gray* = Color(r: 130, g: 130, b: 130, a: 255)
@@ -67,29 +76,6 @@ const
   Magenta* = Color(r: 255, g: 0, b: 255, a: 255)
   RayWhite* = Color(r: 245, g: 245, b: 245, a: 255)
 """
-  enumPrefixes = [
-    ("ConfigFlags", "FLAG_"),
-    ("TraceLogLevel", "LOG_"),
-    ("KeyboardKey", "KEY_"),
-    ("MouseButton", "MOUSE_BUTTON_"),
-    ("MouseCursor", "MOUSE_CURSOR_"),
-    ("GamepadButton", "GAMEPAD_BUTTON_"),
-    ("GamepadAxis", "GAMEPAD_AXIS_"),
-    ("MaterialMapIndex", "MATERIAL_MAP_"),
-    ("ShaderLocationIndex", "SHADER_LOC_"),
-    ("ShaderUniformDataType", "SHADER_UNIFORM_"),
-    ("ShaderAttributeDataType", "SHADER_ATTRIB_"),
-    ("PixelFormat", "PIXELFORMAT_"),
-    ("TextureFilter", "TEXTURE_FILTER_"),
-    ("TextureWrap", "TEXTURE_WRAP_"),
-    ("CubemapLayout", "CUBEMAP_LAYOUT_"),
-    ("FontType", "FONT_"),
-    ("BlendMode", "BLEND_"),
-    ("Gesture", "GESTURE_"),
-    ("CameraMode", "CAMERA_"),
-    ("CameraProjection", "CAMERA_"),
-    ("NPatchLayout", "NPATCH_")
-  ]
   enumInFuncParams = [
     # KeyboardKey
     ("IsKeyPressed", "KeyboardKey", @["key"]),
@@ -153,7 +139,7 @@ const
     # FontType
     ("LoadFontData", "FontType", @["type"]),
   ]
-  excluded = [
+  excludedFuncs = [
     # Text strings management functions
     "TextCopy",
     "TextIsEqual",
@@ -265,28 +251,60 @@ proc `=destroy`*(x: var Music) =
   if x.stream.buffer != nil: unloadMusicStream(x)
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 """
-  callbacks = """
 
-type va_list* {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
-proc vprintf*(format: cstring, args: va_list) {.cdecl, importc: "vprintf", header: "<stdio.h>".}
+proc removeEnumPrefix(enm, val: string): string =
+  # Remove prefixes from enum fields.
+  const
+    enumPrefixes = {
+      "ConfigFlags": "FLAG_",
+      "TraceLogLevel": "LOG_",
+      "KeyboardKey": "KEY_",
+      "MouseButton": "MOUSE_BUTTON_",
+      "MouseCursor": "MOUSE_CURSOR_",
+      "GamepadButton": "GAMEPAD_BUTTON_",
+      "GamepadAxis": "GAMEPAD_AXIS_",
+      "MaterialMapIndex": "MATERIAL_MAP_",
+      "ShaderLocationIndex": "SHADER_LOC_",
+      "ShaderUniformDataType": "SHADER_UNIFORM_",
+      "ShaderAttributeDataType": "SHADER_ATTRIB_",
+      "PixelFormat": "PIXELFORMAT_",
+      "TextureFilter": "TEXTURE_FILTER_",
+      "TextureWrap": "TEXTURE_WRAP_",
+      "CubemapLayout": "CUBEMAP_LAYOUT_",
+      "FontType": "FONT_",
+      "BlendMode": "BLEND_",
+      "Gesture": "GESTURE_",
+      "CameraMode": "CAMERA_",
+      "CameraProjection": "CAMERA_",
+      "NPatchLayout": "NPATCH_"
+    }
+  result = val
+  for x, prefix in enumPrefixes.items:
+    if enm == x:
+      removePrefix(result, prefix)
+      return
 
-## Callbacks to hook some internal functions
-## WARNING: This callbacks are intended for advance users
-type
-  TraceLogCallback* = proc (logLevel: cint; text: cstring; args: va_list) {.cdecl.} ## Logging: Redirect trace log messages
-  LoadFileDataCallback* = proc (fileName: cstring; bytesRead: ptr uint32): ptr UncheckedArray[uint8] {.
-      cdecl.} ## FileIO: Load binary data
-  SaveFileDataCallback* = proc (fileName: cstring; data: pointer; bytesToWrite: uint32): bool {.
-      cdecl.} ## FileIO: Save binary data
-  LoadFileTextCallback* = proc (fileName: cstring): cstring {.cdecl.} ## FileIO: Load text data
-  SaveFileTextCallback* = proc (fileName: cstring; text: cstring): bool {.cdecl.} ## FileIO: Save text data
-"""
+proc replaceCintField(obj, fld: string): string =
+  # Replace `int32` with the respective enum type.
+  const enumReplacements = [
+    ("Camera3D", "projection", "CameraProjection"),
+    ("Image", "format", "PixelFormat"),
+    ("Texture", "format", "PixelFormat"),
+    ("NPatchInfo", "layout", "NPatchLayout")
+  ]
+  result = ""
+  for x, y, kind in enumReplacements.items:
+    if obj == x and fld == y:
+      return kind
 
-const
-  raylibApi = "../api/raylib_api.json"
-  outputname = "../raylib.nim"
+proc getSpecialPattern(x, y: string, replacements: openarray[(string, string, string)]): string =
+  # Manual replacements for some fields
+  result = ""
+  for a, b, pattern in replacements.items:
+    if x == a and y == b:
+      return pattern
 
-proc main =
+proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
   template ident(x: string) =
     buf.setLen 0
     let isKeyw = isKeyword(x)
@@ -310,18 +328,16 @@ proc main =
       lit " ## "
       lit x.description
 
-  var top = parseApi(raylibApi)
-
   var buf = newStringOfCap(50)
   var indent = 0
   var otp: FileStream
   try:
-    otp = openFileStream(outputname, fmWrite)
+    otp = openFileStream(fname, fmWrite)
     lit header
     # Generate type definitions
     lit "\ntype"
     scope:
-      for obj in items(top.structs):
+      for obj in items(t.structs):
         spaces
         ident obj.name
         lit "* {.bycopy.} = object"
@@ -332,112 +348,83 @@ proc main =
             var (name, pat) = transFieldName(fld.name)
             ident name
             lit "*: "
-            # Replace `int32` with the respective enum type.
-            if obj.name == "Camera3D" and name == "projection":
-              lit "CameraProjection"
-            elif obj.name == "Image" and name == "format":
-              lit "PixelFormat"
-            elif obj.name == "Texture" and name == "format":
-              lit "PixelFormat"
-            elif obj.name == "NPatchInfo" and name == "layout":
-              lit "NPatchLayout"
+            let kind = replaceCintField(obj.name, name)
+            if kind != "":
+              lit kind
             else:
-              let many = hasMany(fld.name) or
-                  (obj.name == "Model" and (fld.name == "meshMaterial" or fld.name == "bindPose"))
-              # Manual replacements for some fields
-              if obj.name == "ModelAnimation" and fld.name == "framePoses":
-                pat = "ptr UncheckedArray[ptr UncheckedArray[$1]]"
-              elif obj.name == "Mesh" and fld.name == "vboId":
-                pat = "ptr array[MaxMeshVertexBuffers, $1]"
-              elif obj.name == "Material" and fld.name == "maps":
-                pat = "ptr array[MaxMaterialMaps, $1]"
-              elif obj.name == "Shader" and fld.name == "locs":
-                pat = "ptr array[MaxShaderLocations, $1]"
+              let many = hasMany(name) or (obj.name, name) in {"Model": "meshMaterial", "Model": "bindPose"}
+              const replacements = [
+                ("ModelAnimation", "framePoses", "ptr UncheckedArray[ptr UncheckedArray[$1]]"),
+                ("Mesh", "vboId", "ptr array[MaxMeshVertexBuffers, $1]"),
+                ("Material", "maps", "ptr array[MaxMaterialMaps, $1]"),
+                ("Shader", "locs", "ptr array[MaxShaderLocations, $1]")
+              ]
+              let tmp = getSpecialPattern(obj.name, name, replacements)
+              if tmp != "": pat = tmp
               let kind = convertType(fld.`type`, pat, many)
               lit kind
             doc fld
         # Add a type alias or a missing type after the respective type.
-        case obj.name
-        of "Vector4":
-          spaces
-          lit extraTypes[0]
-        of "AudioStream":
-          spaces
-          lit extraTypes[5]
-        of "Texture":
-          spaces
-          lit extraTypes[1]
-          spaces
-          lit extraTypes[2]
-        of "RenderTexture":
-          spaces
-          lit extraTypes[3]
-        of "Camera3D":
-          spaces
-          lit extraTypes[4]
+        for name, extra in extraTypes.items:
+          if obj.name == name:
+            spaces
+            lit extra
         lit "\n"
       # Generate enums definitions
-      for enm in mitems(top.enums):
+      for enm in items(t.enums):
         spaces
         ident enm.name
         lit "* {.size: sizeof(cint).} = enum"
         doc enm
         scope:
-          # Some enums are unsorted!
-          proc cmpValueInfo(x, y: ValueInfo): int = cmp(x.value, y.value)
-          sort(enm.values, cmpValueInfo)
           let allSeq = allSequential(enm.values)
-          for (i, val) in mpairs(enm.values):
-            if i-1>=0 and enm.values[i-1].value == val.value: # duplicate!
+          for i, val in pairs(enm.values):
+            if i-1>=0 and enm.values[i-1].value == val.value: # omit duplicate!
               continue
             spaces
-            # Remove prefixes from enum fields.
-            for (name, prefix) in enumPrefixes.items:
-              if enm.name == name:
-                removePrefix(val.name, prefix)
-                break
-            ident camelCaseAscii(val.name) # Follow Nim's naming convention for enum fields.
-            # Omit setting the int value if the enum has no holes.
+            # Follow Nim's naming convention for enum fields.
+            let name = removeEnumPrefix(enm.name, val.name)
+            ident camelCaseAscii(name)
+            # Set the int value if the enum has holes and it doesn't start at 0.
             if not allSeq or (i == 0 and val.value != 0):
               lit " = "
               lit $val.value
             doc val
           lit "\n"
-    lit callbacks
-    lit flagsHelper
-    lit duplicateVal
-    lit colors
+    lit middle
     # Generate functions
-    for fnc in items(top.functions):
-      if fnc.name in excluded: continue
+    for fnc in items(t.functions):
+      if fnc.name in excludedFuncs: continue
       lit "\nproc "
       ident uncapitalizeAscii(fnc.name) # Follow Nim's naming convention for proc names.
       lit "*("
       var hasVarargs = false
-      for i, (name, kind) in fnc.params.pairs:
-        if name == "" and kind == "": # , ...) {
+      for i, (param, kind) in fnc.params.pairs:
+        if param == "" and kind == "": # , ...) {
           hasVarargs = true
         else:
           if i > 0: lit ", "
-          ident name
+          ident param
           lit ": "
           block outer:
-            for (fname, kind, params) in enumInFuncParams.items:
-              if fname == fnc.name and name in params:
+            for (name, kind, params) in enumInFuncParams.items:
+              if name == fnc.name and param in params:
                 lit kind
                 break outer
-            let many = (fnc.name != "LoadImageAnim" or name != "frames") and hasMany(name)
-            var pat = ""
-            if fnc.name == "GenImageFontAtlas" and name == "recs":
-              pat = "ptr ptr UncheckedArray[$1]"
+            let many = (fnc.name, param) notin {"LoadImageAnim": "frames"} and hasMany(param)
+            const
+              replacements = [
+                ("GenImageFontAtlas", "recs", "ptr ptr UncheckedArray[$1]")
+              ]
+            let pat = getSpecialPattern(fnc.name, param, replacements)
             let kind = convertType(kind, pat, many)
             lit kind
       lit ")"
       if fnc.returnType != "void":
         lit ": "
         block outer:
-          for (fname, kind, params) in enumInFuncParams.items:
-            if fname == fnc.name and "returnType" in params:
+          for (name, kind, params) in enumInFuncParams.items:
+            if name == fnc.name and "returnType" in params:
               lit kind
               break outer
           let many = hasMany(fnc.name) or fnc.name == "LoadImagePalette"
@@ -455,8 +442,19 @@ proc main =
           lit "## "
           lit fnc.description
     lit "\n"
-    lit raylibDestructors
+    lit footer
   finally:
     if otp != nil: otp.close()
+
+const
+  raylibApi = "../api/raylib_api.json"
+  outputname = "../raylib.nim"
+
+proc main =
+  proc cmp(x, y: ValueInfo): int = cmp(x.value, y.value)
+  var t = parseApi(raylibApi)
+  # Some enums are unsorted!
+  for enm in mitems(t.enums): sort(enm.values, cmp)
+  genBindings(t, outputname, raylibHeader, helpers, raylibDestructors)
 
 main()

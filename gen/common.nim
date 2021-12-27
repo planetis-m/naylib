@@ -1,6 +1,7 @@
 import eminim, std/[algorithm, strutils, strscans, strformat, streams, parsejson]
 
 const
+  indWidth* = 2
   nimKeyw = ["addr", "and", "as", "asm",
     "bind", "block", "break",
     "case", "cast", "concept", "const", "continue", "converter",
