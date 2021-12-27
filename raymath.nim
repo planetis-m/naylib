@@ -104,7 +104,7 @@ proc normalize*(v: Vector2): Vector2 =
     result.x = v.x * ilength
     result.y = v.y * ilength
 
-proc lerp*(v1: Vector2; v2: Vector2; amount: float32): Vector2 =
+proc lerp*(v1, v2: Vector2; amount: float32): Vector2 =
   ## Calculate linear interpolation between two vectors
   result = Vector2()
   result.x = v1.x + amount * (v2.x - v1.x)
@@ -124,7 +124,7 @@ proc rotate*(v: Vector2; angle: float32): Vector2 =
   result.x = v.x * cos(angle) - v.y * sin(angle)
   result.y = v.x * sin(angle) + v.y * cos(angle)
 
-proc moveTowards*(v: Vector2; target: Vector2; maxDistance: float32): Vector2 =
+proc moveTowards*(v, target: Vector2; maxDistance: float32): Vector2 =
   ## Move Vector towards target
   result = Vector2()
   let dx = target.x - v.x
@@ -294,7 +294,7 @@ proc rotateByQuaternion*(v: Vector3; q: Quaternion): Vector3 =
   result.z = v.x * (-(2 * q.w * q.y) + 2 * q.x * q.z) + v.y * (2 * q.w * q.x + 2 * q.y * q.z) +
       v.z * (q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z)
 
-proc lerp*(v1: Vector3; v2: Vector3; amount: float32): Vector3 =
+proc lerp*(v1, v2: Vector3; amount: float32): Vector3 =
   ## Calculate linear interpolation between two vectors
   result = Vector3()
   result.x = v1.x + amount * (v2.x - v1.x)
@@ -1057,7 +1057,7 @@ proc divide*(q1, q2: Quaternion): Quaternion =
   result = Quaternion(x: q1.x / q2.x, y: q1.y / q2.y, z: q1.z / q2.z,
                                   w: q1.w / q2.w)
 
-proc lerp*(q1: Quaternion; q2: Quaternion; amount: float32): Quaternion =
+proc lerp*(q1, q2: Quaternion; amount: float32): Quaternion =
   ## Calculate linear interpolation between two quaternions
   result = Quaternion()
   result.x = q1.x + amount * (q2.x - q1.x)
@@ -1065,7 +1065,7 @@ proc lerp*(q1: Quaternion; q2: Quaternion; amount: float32): Quaternion =
   result.z = q1.z + amount * (q2.z - q1.z)
   result.w = q1.w + amount * (q2.w - q1.w)
 
-proc nlerp*(q1: Quaternion; q2: Quaternion; amount: float32): Quaternion =
+proc nlerp*(q1, q2: Quaternion; amount: float32): Quaternion =
   ## Calculate slerp-optimized interpolation between two quaternions
   result = Quaternion()
   # QuaternionLerp(q1, q2, amount)
@@ -1084,7 +1084,7 @@ proc nlerp*(q1: Quaternion; q2: Quaternion; amount: float32): Quaternion =
   result.z = q.z * ilength
   result.w = q.w * ilength
 
-proc slerp*(q1: Quaternion; q2: Quaternion; amount: float32): Quaternion =
+proc slerp*(q1, q2: Quaternion; amount: float32): Quaternion =
   ## Calculates spherical linear interpolation between two quaternions
   result = Quaternion()
   var q2 = q2
