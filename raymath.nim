@@ -8,9 +8,9 @@ type
   Float16* {.bycopy.} = object
     v*: array[16, float32]
 
-## ----------------------------------------------------------------------------------
-## Module Functions Definition - Utils math
-## ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
+# Module Functions Definition - Utils math
+# ----------------------------------------------------------------------------------
 
 proc clamp*(value, min, max: float32): float32 =
   ## Clamp float value
@@ -31,9 +31,9 @@ proc remap*(value, inputStart, inputEnd, outputStart, outputEnd: float32): float
   result = (value - inputStart) / (inputEnd - inputStart) *
       (outputEnd - outputStart) + outputStart
 
-## ----------------------------------------------------------------------------------
-## Module Functions Definition - Vector2 math
-## ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
+# Module Functions Definition - Vector2 math
+# ----------------------------------------------------------------------------------
 
 proc vector2Zero*(): Vector2 =
   ## Vector with components value 0'f32
@@ -136,9 +136,9 @@ proc moveTowards*(v, target: Vector2; maxDistance: float32): Vector2 =
   result.x = v.x + dx / dist * maxDistance
   result.y = v.y + dy / dist * maxDistance
 
-## ----------------------------------------------------------------------------------
-## Module Functions Definition - Vector3 math
-## ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
+# Module Functions Definition - Vector3 math
+# ----------------------------------------------------------------------------------
 
 proc vector3Zero*(): Vector3 =
   ## Vector with components value 0'f32
@@ -241,8 +241,8 @@ proc normalize*(v: Vector3): Vector3 =
   result.y = result.y * ilength
   result.z = result.z * ilength
 
-## Orthonormalize provided vectors
 proc orthoNormalize*(v1: var Vector3; v2: var Vector3) =
+  ## Orthonormalize provided vectors
   ## Makes vectors normalized and orthogonal to each other
   ## Gram-Schmidt function implementation
   var length = 0'f32
@@ -450,9 +450,9 @@ proc toFloatV*(v: Vector3): Float3 =
   buffer.v[2] = v.z
   return buffer
 
-## ----------------------------------------------------------------------------------
-## Module Functions Definition - Matrix math
-## ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
+# Module Functions Definition - Matrix math
+# ----------------------------------------------------------------------------------
 
 proc determinant*(mat: Matrix): float32 =
   ## Compute matrix determinant
@@ -967,9 +967,9 @@ proc toFloatV*(mat: Matrix): Float16 =
   result.v[14] = mat.m14
   result.v[15] = mat.m15
 
-## ----------------------------------------------------------------------------------
-## Module Functions Definition - Quaternion math
-## ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
+# Module Functions Definition - Quaternion math
+# ----------------------------------------------------------------------------------
 
 proc add*(q1, q2: Quaternion): Quaternion =
   ## Add two quaternions
@@ -1198,7 +1198,7 @@ proc fromAxisAngle*(axis: Vector3; angle: float32): Quaternion =
     angle = angle * 0.5'f32
     var length = 0'f32
     var ilength = 0'f32
-    ## Vector3Normalize(axis)
+    # Vector3Normalize(axis)
     var v = axis
     length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
     if length == 0'f32:
@@ -1213,7 +1213,7 @@ proc fromAxisAngle*(axis: Vector3; angle: float32): Quaternion =
     result.y = axis.y * sinres
     result.z = axis.z * sinres
     result.w = cosres
-    ## QuaternionNormalize(q);
+    # QuaternionNormalize(q);
     var q = result
     length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
     if length == 0'f32:
@@ -1228,7 +1228,7 @@ proc toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) =
   ## Get the rotation angle and axis for a given quaternion
   var q = q
   if abs(q.w) > 1'f32:
-    ## QuaternionNormalize(q);
+    # QuaternionNormalize(q);
     var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
     if length == 0'f32:
       length = 1'f32
@@ -1245,8 +1245,8 @@ proc toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) =
     resAxis.y = q.y / den
     resAxis.z = q.z / den
   else:
-    ## This occurs when the angle is zero.
-    ## Not a problem: just set an arbitrary normalized axis.
+    # This occurs when the angle is zero.
+    # Not a problem: just set an arbitrary normalized axis.
     resAxis.x = 1'f32
   outAxis = resAxis
   outAngle = resAngle

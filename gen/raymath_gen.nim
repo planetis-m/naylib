@@ -113,7 +113,7 @@ proc genBindings(t: Topmost, fname: string, header, footer: string) =
       if fnc.returnType != "void":
         lit ": "
         let kind = convertType(fnc.returnType, "", false)
-        ident kind
+        lit kind
       lit " {.importc: \""
       ident fnc.name
       lit "\""
