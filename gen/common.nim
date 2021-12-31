@@ -1,4 +1,5 @@
-import eminim, std/[algorithm, strutils, strscans, strformat, streams, parsejson]
+import eminim, std/[algorithm, strscans, strformat, streams, parsejson]
+import strutils except indent
 
 const
   indWidth* = 2
@@ -226,3 +227,27 @@ proc allSequential*(x: seq[ValueInfo]): bool =
 proc uncapitalizeAscii*(s: string): string =
   if s.len == 0: result = ""
   else: result = toLowerAscii(s[0]) & substr(s, 1)
+
+# used internally by the genBindings procs
+template ident*(x: string) =
+  buf.setLen 0
+  let isKeyw = isKeyword(x)
+  if isKeyw:
+    buf.add '`'
+  buf.add x
+  if isKeyw:
+    buf.add '`'
+  otp.write buf
+template lit*(x: string) = otp.write x
+template spaces* =
+  buf.setLen 0
+  addIndent(buf, indent)
+  otp.write buf
+template scope*(body: untyped) =
+  inc indent, indWidth
+  body
+  dec indent, indWidth
+template doc*(x: untyped) =
+  if x.description != "":
+    lit " ## "
+    lit x.description

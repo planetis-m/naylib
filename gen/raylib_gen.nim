@@ -1,5 +1,4 @@
-import common, std/[algorithm, streams, sugar]
-import strutils except indent
+import common, std/[algorithm, streams, strutils, sugar]
 
 const
   extraTypes = {
@@ -321,29 +320,6 @@ proc getSpecialPattern(x, y: string, replacements: openarray[(string, string, st
       return pattern
 
 proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
-  template ident(x: string) =
-    buf.setLen 0
-    let isKeyw = isKeyword(x)
-    if isKeyw:
-      buf.add '`'
-    buf.add x
-    if isKeyw:
-      buf.add '`'
-    otp.write buf
-  template lit(x: string) = otp.write x
-  template spaces =
-    buf.setLen 0
-    addIndent(buf, indent)
-    otp.write buf
-  template scope(body: untyped) =
-    inc indent, indWidth
-    body
-    dec indent, indWidth
-  template doc(x: untyped) =
-    if x.description != "":
-      lit " ## "
-      lit x.description
-
   var buf = newStringOfCap(50)
   var indent = 0
   var otp: FileStream
