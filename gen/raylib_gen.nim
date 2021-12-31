@@ -76,68 +76,117 @@ const
   Magenta* = Color(r: 255, g: 0, b: 255, a: 255)
   RayWhite* = Color(r: 245, g: 245, b: 245, a: 255)
 """
+  enumInFuncReturn = [
+    ("GetKeyPressed", 0),
+    ("GetGamepadButtonPressed", 1),
+    ("GetGestureDetected", 6)
+  ]
   enumInFuncParams = [
     # KeyboardKey
-    ("IsKeyPressed", "KeyboardKey", @["key"]),
-    ("IsKeyDown", "KeyboardKey", @["key"]),
-    ("IsKeyReleased", "KeyboardKey", @["key"]),
-    ("IsKeyUp", "KeyboardKey", @["key"]),
-    ("SetExitKey", "KeyboardKey", @["key"]),
-    ("GetKeyPressed", "KeyboardKey", @["returnType"]),
-    ("SetCameraPanControl", "KeyboardKey", @["keyPan"]),
-    ("SetCameraAltControl", "KeyboardKey", @["keyAlt"]),
-    ("SetCameraSmoothZoomControl", "KeyboardKey", @["keySmoothZoom"]),
-    ("SetCameraMoveControls", "KeyboardKey", @["keyFront", "keyBack", "keyRight", "keyLeft", "keyUp", "keyDown"]),
+    ("IsKeyPressed", "key"),
+    ("IsKeyDown", "key"),
+    ("IsKeyReleased", "key"),
+    ("IsKeyUp", "key"),
+    ("SetExitKey", "key"),
+    ("SetCameraPanControl", "keyPan"),
+    ("SetCameraAltControl", "keyAlt"),
+    ("SetCameraSmoothZoomControl", "keySmoothZoom"),
+    ("SetCameraMoveControls", "keyFront"),
+    ("SetCameraMoveControls", "keyBack"),
+    ("SetCameraMoveControls", "keyRight"),
+    ("SetCameraMoveControls", "keyLeft"),
+    ("SetCameraMoveControls", "keyUp"),
+    ("SetCameraMoveControls", "keyDown"),
     # GamepadButton
-    ("IsGamepadButtonPressed", "GamepadButton", @["button"]),
-    ("IsGamepadButtonDown", "GamepadButton", @["button"]),
-    ("IsGamepadButtonReleased", "GamepadButton", @["button"]),
-    ("IsGamepadButtonUp", "GamepadButton", @["button"]),
-    ("GetGamepadButtonPressed", "GamepadButton", @["returnType"]),
+    ("IsGamepadButtonPressed", "button"),
+    ("IsGamepadButtonDown", "button"),
+    ("IsGamepadButtonReleased", "button"),
+    ("IsGamepadButtonUp", "button"),
     # GamepadAxis
-    ("GetGamepadAxisMovement", "GamepadAxis", @["axis"]),
+    ("GetGamepadAxisMovement", "axis"),
     # MouseCursor
-    ("SetMouseCursor", "MouseCursor", @["cursor"]),
+    ("SetMouseCursor", "cursor"),
     # MouseButton
-    ("IsMouseButtonPressed", "MouseButton", @["button"]),
-    ("IsMouseButtonDown", "MouseButton", @["button"]),
-    ("IsMouseButtonReleased", "MouseButton", @["button"]),
-    ("IsMouseButtonUp", "MouseButton", @["button"]),
+    ("IsMouseButtonPressed", "button"),
+    ("IsMouseButtonDown", "button"),
+    ("IsMouseButtonReleased", "button"),
+    ("IsMouseButtonUp", "button"),
     # Gesture
-    ("SetGesturesEnabled", "Flag[Gesture]", @["flags"]),
-    ("IsGestureDetected", "Gesture", @["gesture"]),
-    ("GetGestureDetected", "Gesture", @["returnType"]),
+    ("SetGesturesEnabled", "flags"),
+    ("IsGestureDetected", "gesture"),
     # ConfigFlags
-    ("SetConfigFlags", "Flag[ConfigFlags]", @["flags"]),
-    ("IsWindowState", "ConfigFlags", @["flag"]),
-    ("SetWindowState", "Flag[ConfigFlags]", @["flags"]),
-    ("ClearWindowState", "Flag[ConfigFlags]", @["flags"]),
+    ("SetConfigFlags", "flags"),
+    ("SetWindowState", "flags"),
+    ("ClearWindowState", "flags"),
+    ("IsWindowState", "flag"),
     # TraceLogLevel
-    ("TraceLog", "TraceLogLevel", @["logLevel"]),
-    ("SetTraceLogLevel", "TraceLogLevel", @["logLevel"]),
+    ("TraceLog", "logLevel"),
+    ("SetTraceLogLevel", "logLevel"),
     # CameraMode
-    ("SetCameraMode", "CameraMode", @["mode"]),
+    ("SetCameraMode", "mode"),
     # BlendMode
-    ("BeginBlendMode", "BlendMode", @["mode"]),
+    ("BeginBlendMode", "mode"),
     # MaterialMapIndex
-    ("SetMaterialTexture", "MaterialMapIndex", @["mapType"]),
+    ("SetMaterialTexture", "mapType"),
     # ShaderUniformDataType
-    ("SetShaderValue", "ShaderUniformDataType", @["uniformType"]),
-    ("SetShaderValueV", "ShaderUniformDataType", @["uniformType"]),
+    ("SetShaderValue", "uniformType"),
+    ("SetShaderValueV", "uniformType"),
     # PixelFormat
-    ("LoadImageRaw", "PixelFormat", @["format"]),
-    ("ImageFormat", "PixelFormat", @["newFormat"]),
-    ("GetPixelColor", "PixelFormat", @["format"]),
-    ("SetPixelColor", "PixelFormat", @["format"]),
-    ("GetPixelDataSize", "PixelFormat", @["format"]),
+    ("LoadImageRaw", "format"),
+    ("ImageFormat", "newFormat"),
+    ("GetPixelColor", "format"),
+    ("SetPixelColor", "format"),
+    ("GetPixelDataSize", "format"),
     # TextureFilter
-    ("SetTextureFilter", "TextureFilter", @["filter"]),
+    ("SetTextureFilter", "filter"),
     # TextureWrap
-    ("SetTextureWrap", "TextureWrap", @["wrap"]),
+    ("SetTextureWrap", "wrap"),
     # CubemapLayout
-    ("LoadTextureCubemap", "CubemapLayout", @["layout"]),
+    ("LoadTextureCubemap", "layout"),
     # FontType
-    ("LoadFontData", "FontType", @["type"]),
+    ("LoadFontData", "type")
+  ]
+  enumIndices = [
+    0'i32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, # KeyboardKey
+    1, 1, 1, 1, # GamepadButton
+    2, # GamepadAxis
+    3, # MouseCursor
+    4, 4, 4, 4, # MouseButton
+    5, # Flag[Gesture]
+    6, # Gesture
+    7, 7, 7, # Flag[ConfigFlags]
+    8, # ConfigFlags
+    9, 9, # TraceLogLevel
+    10, # CameraMode
+    11, # BlendMode
+    12, # MaterialMapIndex
+    13, 13, # ShaderUniformDataType
+    14, 14, 14, 14, 14, # PixelFormat
+    15, # TextureFilter
+    16, # TextureWrap
+    17, # CubemapLayout
+    18 # FontType
+  ]
+  enumInFuncs = [
+    "KeyboardKey",
+    "GamepadButton",
+    "GamepadAxis",
+    "MouseCursor",
+    "MouseButton",
+    "Flag[Gesture]",
+    "Gesture",
+    "Flag[ConfigFlags]",
+    "ConfigFlags",
+    "TraceLogLevel",
+    "CameraMode",
+    "BlendMode",
+    "MaterialMapIndex",
+    "ShaderUniformDataType",
+    "PixelFormat",
+    "TextureFilter",
+    "TextureWrap",
+    "CubemapLayout",
+    "FontType"
   ]
   excludedFuncs = [
     # Text strings management functions
@@ -375,9 +424,9 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
           ident param
           lit ": "
           block outer:
-            for (name, kind, params) in enumInFuncParams.items:
-              if name == fnc.name and param in params:
-                lit kind
+            for j, (name, param1) in enumInFuncParams.pairs:
+              if name == fnc.name and param1 == param:
+                lit enumInFuncs[enumIndices[j]]
                 break outer
             let many = (fnc.name, param) != ("LoadImageAnim", "frames") and hasMany(param)
             const
@@ -391,9 +440,9 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
       if fnc.returnType != "void":
         lit ": "
         block outer:
-          for (name, kind, params) in enumInFuncParams.items:
-            if name == fnc.name and "returnType" in params:
-              lit kind
+          for (name, idx) in enumInFuncReturn.items:
+            if name == fnc.name:
+              lit enumInFuncs[idx]
               break outer
           let many = hasMany(fnc.name) or fnc.name == "LoadImagePalette"
           let kind = convertType(fnc.returnType, "", many)
