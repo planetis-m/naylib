@@ -682,11 +682,9 @@ proc getWindowPosition*(): Vector2 {.importc: "GetWindowPosition", rlapi.}
 proc getWindowScaleDPI*(): Vector2 {.importc: "GetWindowScaleDPI", rlapi.}
   ## Get window scale DPI factor
 proc getMonitorNamePriv(monitor: int32): cstring {.importc: "GetMonitorName", rlapi.}
-  ## Get the human-readable, UTF-8 encoded name of the primary monitor
 proc setClipboardText*(text: cstring) {.importc: "SetClipboardText", rlapi.}
   ## Set clipboard text content
 proc getClipboardTextPriv(): cstring {.importc: "GetClipboardText", rlapi.}
-  ## Get clipboard text content
 proc swapScreenBuffer*() {.importc: "SwapScreenBuffer", rlapi.}
   ## Swap back buffer with front buffer (screen drawing)
 proc pollInputEvents*() {.importc: "PollInputEvents", rlapi.}
@@ -792,11 +790,8 @@ proc traceLog*(logLevel: TraceLogLevel, text: cstring) {.importc: "TraceLog", va
 proc setTraceLogLevel*(logLevel: TraceLogLevel) {.importc: "SetTraceLogLevel", rlapi.}
   ## Set the current threshold (minimum) log level
 proc memAlloc(size: int32): pointer {.importc: "MemAlloc", rlapi.}
-  ## Internal memory allocator
 proc memRealloc(`ptr`: pointer, size: int32): pointer {.importc: "MemRealloc", rlapi.}
-  ## Internal memory reallocator
 proc memFree(`ptr`: pointer) {.importc: "MemFree", rlapi.}
-  ## Internal memory free
 proc setTraceLogCallback*(callback: TraceLogCallback) {.importc: "SetTraceLogCallback", rlapi.}
   ## Set custom trace log
 proc setLoadFileDataCallback*(callback: LoadFileDataCallback) {.importc: "SetLoadFileDataCallback", rlapi.}
@@ -810,7 +805,6 @@ proc setSaveFileTextCallback*(callback: SaveFileTextCallback) {.importc: "SetSav
 proc isFileDropped*(): bool {.importc: "IsFileDropped", rlapi.}
   ## Check if a file has been dropped into window
 proc getDroppedFilesPriv(count: ptr int32): cstringArray {.importc: "GetDroppedFiles", rlapi.}
-  ## Get dropped files names (memory should be freed)
 proc clearDroppedFiles*() {.importc: "ClearDroppedFiles", rlapi.}
   ## Clear dropped files paths buffer (free memory)
 proc saveStorageValue*(position: uint32, value: int32): bool {.importc: "SaveStorageValue", rlapi.}
@@ -834,7 +828,6 @@ proc getCharPressed*(): int32 {.importc: "GetCharPressed", rlapi.}
 proc isGamepadAvailable*(gamepad: int32): bool {.importc: "IsGamepadAvailable", rlapi.}
   ## Check if a gamepad is available
 proc getGamepadNamePriv(gamepad: int32): cstring {.importc: "GetGamepadName", rlapi.}
-  ## Get gamepad internal name id
 proc isGamepadButtonPressed*(gamepad: int32, button: GamepadButton): bool {.importc: "IsGamepadButtonPressed", rlapi.}
   ## Check if a gamepad button has been pressed once
 proc isGamepadButtonDown*(gamepad: int32, button: GamepadButton): bool {.importc: "IsGamepadButtonDown", rlapi.}
@@ -1094,13 +1087,9 @@ proc imageColorBrightness*(image: ptr Image, brightness: int32) {.importc: "Imag
 proc imageColorReplace*(image: ptr Image, color: Color, replace: Color) {.importc: "ImageColorReplace", rlapi.}
   ## Modify image color: replace color
 proc loadImageColorsPriv(image: Image): ptr UncheckedArray[Color] {.importc: "LoadImageColors", rlapi.}
-  ## Load color data from image as a Color array (RGBA - 32bit)
 proc loadImagePalettePriv(image: Image, maxPaletteSize: int32, colorCount: ptr int32): ptr UncheckedArray[Color] {.importc: "LoadImagePalette", rlapi.}
-  ## Load colors palette from image as a Color array (RGBA - 32bit)
 proc unloadImageColorsPriv(colors: ptr UncheckedArray[Color]) {.importc: "UnloadImageColors", rlapi.}
-  ## Unload color data loaded with LoadImageColors()
 proc unloadImagePalettePriv(colors: ptr UncheckedArray[Color]) {.importc: "UnloadImagePalette", rlapi.}
-  ## Unload colors palette loaded with LoadImagePalette()
 proc getImageAlphaBorder*(image: Image, threshold: float32): Rectangle {.importc: "GetImageAlphaBorder", rlapi.}
   ## Get image alpha border rectangle
 proc getImageColor*(image: Image, x: int32, y: int32): Color {.importc: "GetImageColor", rlapi.}
@@ -1208,11 +1197,9 @@ proc loadFontFromImage*(image: Image, key: Color, firstChar: int32): Font {.impo
 proc loadFontFromMemory*(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontFromMemory", rlapi.}
   ## Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
 proc loadFontDataPriv(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData", rlapi.}
-  ## Load font data for further use
 proc genImageFontAtlas*(chars: ptr UncheckedArray[GlyphInfo], recs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas", rlapi.}
   ## Generate image font atlas using chars info
 proc unloadFontDataPriv(chars: ptr UncheckedArray[GlyphInfo], glyphCount: int32) {.importc: "UnloadFontData", rlapi.}
-  ## Unload font chars info data (RAM)
 proc unloadFont*(font: Font) {.importc: "UnloadFont", rlapi.}
   ## Unload Font from GPU memory (VRAM)
 proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS", rlapi.}
@@ -1236,17 +1223,13 @@ proc getGlyphInfo*(font: Font, codepoint: int32): GlyphInfo {.importc: "GetGlyph
 proc getGlyphAtlasRec*(font: Font, codepoint: int32): Rectangle {.importc: "GetGlyphAtlasRec", rlapi.}
   ## Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
 proc loadCodepointsPriv(text: cstring, count: ptr int32): ptr UncheckedArray[int32] {.importc: "LoadCodepoints", rlapi.}
-  ## Load all codepoints from a UTF-8 text string, codepoints count returned by parameter
 proc unloadCodepointsPriv(codepoints: ptr UncheckedArray[int32]) {.importc: "UnloadCodepoints", rlapi.}
-  ## Unload codepoints data from memory
 proc getCodepointCount*(text: cstring): int32 {.importc: "GetCodepointCount", rlapi.}
   ## Get total number of codepoints in a UTF-8 encoded string
 proc getCodepoint*(text: cstring, bytesProcessed: ptr int32): int32 {.importc: "GetCodepoint", rlapi.}
   ## Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
 proc codepointToUTF8Priv(codepoint: int32, byteSize: ptr int32): cstring {.importc: "CodepointToUTF8", rlapi.}
-  ## Encode one codepoint into UTF-8 byte array (array length returned as parameter)
 proc textCodepointsToUTF8Priv(codepoints: ptr UncheckedArray[int32], length: int32): cstring {.importc: "TextCodepointsToUTF8", rlapi.}
-  ## Encode text as codepoints array into UTF-8 text string (WARNING: memory must be freed!)
 proc drawLine3D*(startPos: Vector3, endPos: Vector3, color: Color) {.importc: "DrawLine3D", rlapi.}
   ## Draw a line in 3D world space
 proc drawPoint3D*(position: Vector3, color: Color) {.importc: "DrawPoint3D", rlapi.}
@@ -1356,7 +1339,6 @@ proc genMeshHeightmap*(heightmap: Image, size: Vector3): Mesh {.importc: "GenMes
 proc genMeshCubicmap*(cubicmap: Image, cubeSize: Vector3): Mesh {.importc: "GenMeshCubicmap", rlapi.}
   ## Generate cubes-based map mesh from image data
 proc loadMaterialsPriv(fileName: cstring, materialCount: ptr int32): ptr UncheckedArray[Material] {.importc: "LoadMaterials", rlapi.}
-  ## Load materials from model file
 proc loadMaterialDefault*(): Material {.importc: "LoadMaterialDefault", rlapi.}
   ## Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 proc unloadMaterial*(material: Material) {.importc: "UnloadMaterial", rlapi.}
@@ -1366,13 +1348,11 @@ proc setMaterialTexture*(material: ptr Material, mapType: MaterialMapIndex, text
 proc setModelMeshMaterial*(model: ptr Model, meshId: int32, materialId: int32) {.importc: "SetModelMeshMaterial", rlapi.}
   ## Set material for a mesh
 proc loadModelAnimationsPriv(fileName: cstring, animCount: ptr uint32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations", rlapi.}
-  ## Load model animations from file
 proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation", rlapi.}
   ## Update model animation pose
 proc unloadModelAnimation*(anim: ModelAnimation) {.importc: "UnloadModelAnimation", rlapi.}
   ## Unload animation data
 proc unloadModelAnimationsPriv(animations: ptr UncheckedArray[ModelAnimation], count: uint32) {.importc: "UnloadModelAnimations", rlapi.}
-  ## Unload animation array data
 proc isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid", rlapi.}
   ## Check model animation skeleton match
 proc checkCollisionSpheres*(center1: Vector3, radius1: float32, center2: Vector3, radius2: float32): bool {.importc: "CheckCollisionSpheres", rlapi.}
@@ -1446,9 +1426,7 @@ proc waveCopy*(wave: Wave): Wave {.importc: "WaveCopy", rlapi.}
 proc waveCrop*(wave: ptr Wave, initSample: int32, finalSample: int32) {.importc: "WaveCrop", rlapi.}
   ## Crop a wave to defined samples range
 proc loadWaveSamplesPriv(wave: Wave): ptr UncheckedArray[float32] {.importc: "LoadWaveSamples", rlapi.}
-  ## Load samples data from wave as a floats array
 proc unloadWaveSamplesPriv(samples: ptr UncheckedArray[float32]) {.importc: "UnloadWaveSamples", rlapi.}
-  ## Unload samples data loaded with LoadWaveSamples()
 proc loadMusicStream*(fileName: cstring): Music {.importc: "LoadMusicStream", rlapi.}
   ## Load music stream from file
 proc loadMusicStreamFromMemory*(fileType: cstring, data: ptr UncheckedArray[uint8], dataSize: int32): Music {.importc: "LoadMusicStreamFromMemory", rlapi.}

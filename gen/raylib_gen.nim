@@ -453,7 +453,7 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
       if hasVarargs:
         lit ", varargs"
       lit ", rlapi.}"
-      if not isAlloc or not isPrivate and fnc.description != "":
+      if not (isAlloc or isPrivate) and fnc.description != "":
         scope:
           spaces
           lit "## "
