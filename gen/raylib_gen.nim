@@ -78,8 +78,8 @@ const
 """
   enumInFuncReturn = [
     ("GetKeyPressed", 0),
-    ("GetGamepadButtonPressed", 1),
-    ("GetGestureDetected", 6)
+    ("GetGamepadButtonPressed", 14),
+    ("GetGestureDetected", 25)
   ]
   enumInFuncParams = [
     # KeyboardKey
@@ -146,42 +146,48 @@ const
     # FontType
     ("LoadFontData", "type")
   ]
-  enumIndices = [
-    0'i32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, # KeyboardKey
-    1, 1, 1, 1, # GamepadButton
-    2, # GamepadAxis
-    3, # MouseCursor
-    4, 4, 4, 4, # MouseButton
-    5, # Flag[Gesture]
-    6, # Gesture
-    7, 7, 7, # Flag[ConfigFlags]
-    8, # ConfigFlags
-    9, 9, # TraceLogLevel
-    10, # CameraMode
-    11, # BlendMode
-    12, # MaterialMapIndex
-    13, 13, # ShaderUniformDataType
-    14, 14, 14, 14, 14, # PixelFormat
-    15, # TextureFilter
-    16, # TextureWrap
-    17, # CubemapLayout
-    18 # FontType
-  ]
   enumInFuncs = [
     "KeyboardKey",
+    "KeyboardKey",
+    "KeyboardKey",
+    "KeyboardKey",
+    "KeyboardKey",
+    "KeyboardKey",
+    "KeyboardKey",
+    "KeyboardKey",
+    "KeyboardKey",
+    "KeyboardKey",
+    "KeyboardKey",
+    "KeyboardKey",
+    "KeyboardKey",
+    "KeyboardKey",
+    "GamepadButton",
+    "GamepadButton",
+    "GamepadButton",
     "GamepadButton",
     "GamepadAxis",
     "MouseCursor",
     "MouseButton",
+    "MouseButton",
+    "MouseButton",
+    "MouseButton",
     "Flag[Gesture]",
     "Gesture",
     "Flag[ConfigFlags]",
+    "Flag[ConfigFlags]",
+    "Flag[ConfigFlags]",
     "ConfigFlags",
+    "TraceLogLevel",
     "TraceLogLevel",
     "CameraMode",
     "BlendMode",
     "MaterialMapIndex",
     "ShaderUniformDataType",
+    "ShaderUniformDataType",
+    "PixelFormat",
+    "PixelFormat",
+    "PixelFormat",
+    "PixelFormat",
     "PixelFormat",
     "TextureFilter",
     "TextureWrap",
@@ -426,7 +432,7 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
           block outer:
             for j, (name, param1) in enumInFuncParams.pairs:
               if name == fnc.name and param1 == param:
-                lit enumInFuncs[enumIndices[j]]
+                lit enumInFuncs[j]
                 break outer
             let many = (fnc.name, param) != ("LoadImageAnim", "frames") and hasMany(param)
             const

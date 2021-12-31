@@ -71,7 +71,7 @@ proc getDroppedFiles*(): seq[string] =
   ## Get dropped files names (memory should be freed)
   var count = 0'i32
   let dropfiles = getDroppedFilesPriv(count)
-  result = cstringArraytoSeq(dropfiles, count)
+  result = cstringArrayToSeq(dropfiles, count)
 
 proc getGamepadName*(gamepad: int32): string {.inline.}
   ## Get gamepad internal name id
