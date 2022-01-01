@@ -1604,7 +1604,7 @@ proc drawTriangleFan*(points: openarray[Vector2], color: Color) =
 
 proc drawTriangleStrip*(points: openarray[Vector2], color: Color) =
   ## Draw a triangle strip defined by points
-  drawTriangelStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  drawTriangleStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc loadImageFromMemory*(fileType: string, fileData: openarray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
@@ -1612,7 +1612,7 @@ proc loadImageFromMemory*(fileType: string, fileData: openarray[uint8]): Image =
 
 proc drawTexturePoly*(texture: Texture2D, center: Vector2, points: openarray[Vector2], texcoords: openarray[Vector2], tint: Color) =
   ## Draw a textured polygon
-  drawTexturePolyPriv(texture, center, cast[ptr UncheckedArray[Vector2]]((points), cast[ptr UncheckedArray[Vector2]]((texcoords), points.len.int32, tint)
+  drawTexturePolyPriv(texture, center, cast[ptr UncheckedArray[Vector2]](points), cast[ptr UncheckedArray[Vector2]](texcoords), points.len.int32, tint)
 
 proc loadFontEx*(fileName: string, fontSize: int32, fontChars: openarray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for fontChars to load the default character set
@@ -1629,7 +1629,7 @@ proc genImageFontAtlas*(chars: openarray[GlyphInfo], recs: var seq[Rectangle], f
   ## Generate image font atlas using chars info
   var data: ptr UncheckedArray[Rectangle] = nil
   result = genImageFontAtlasPriv(cast[ptr UncheckedArray[GlyphInfo]](chars), data.addr, chars.len.int32, fontSize, padding, packMethod)
-  recs = newSeq[Material](chars.len)
+  recs = newSeq[Rectangle](chars.len)
   copyMem(recs[0].addr, data, chars.len * sizeof(Rectangle))
   #for i in 0..<len.int:
     #result[i] = data[i]
