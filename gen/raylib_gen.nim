@@ -238,7 +238,14 @@ const
     "CompressData",
     "DecompressData",
     "EncodeDataBase64",
-    "DecodeDataBase64"
+    "DecodeDataBase64",
+    # Text codepoints management functions (unicode characters)
+    "LoadCodepoints",
+    "UnloadCodepoints",
+    "GetCodepointCount",
+    "GetCodepoint",
+    "CodepointToUTF8",
+    "TextCodepointsToUTF8",
   ]
   allocFuncs = [
     "MemAlloc",
@@ -260,11 +267,19 @@ const
     "UnloadImageColors",
     "LoadFontData",
     "UnloadFontData",
-    "LoadCodepoints",
-    "UnloadCodepoints",
-    "CodepointToUTF8",
-    "TextCodepointsToUTF8",
-    "LoadMaterials"
+    "LoadMaterials",
+    "DrawLineStrip",
+    "DrawTriangleFan",
+    "DrawTriangleStrip",
+    "LoadImageFromMemory",
+    "DrawTexturePoly",
+    "LoadFontEx",
+    "LoadFontFromMemory",
+    "GenImageFontAtlas",
+    "DrawTriangleStrip3D",
+    "DrawMeshInstanced",
+    "LoadWaveFromMemory",
+    "LoadMusicStreamFromMemory"
   ]
 
 proc removeEnumPrefix(enm, val: string): string =
@@ -344,7 +359,7 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
             if kind != "":
               lit kind
             else:
-              let many = hasMany(name) or (obj.name, name) in {"Model": "meshMaterial", "Model": "bindPose"}
+              let many = isPlural(name) or (obj.name, name) in {"Model": "meshMaterial", "Model": "bindPose"}
               const replacements = [
                 ("ModelAnimation", "framePoses", "ptr UncheckedArray[ptr UncheckedArray[$1]]"),
                 ("Mesh", "vboId", "ptr array[MaxMeshVertexBuffers, $1]"),
@@ -353,7 +368,7 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
               ]
               let tmp = getSpecialPattern(obj.name, name, replacements)
               if tmp != "": pat = tmp
-              let kind = convertType(fld.`type`, pat, many)
+              let kind = convertType(fld.`type`, pat, many, false)
               lit kind
             doc fld
         # Add a type alias or a missing type after the respective type.
@@ -410,13 +425,13 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
               if name == fnc.name and param1 == param:
                 lit enumInFuncs[j]
                 break outer
-            let many = (fnc.name, param) != ("LoadImageAnim", "frames") and hasMany(param)
+            let many = (fnc.name, param) != ("LoadImageAnim", "frames") and isPlural(param)
             const
               replacements = [
                 ("GenImageFontAtlas", "recs", "ptr ptr UncheckedArray[$1]")
               ]
             let pat = getSpecialPattern(fnc.name, param, replacements)
-            let kind = convertType(kind, pat, many)
+            let kind = convertType(kind, pat, many, not isPrivate)
             lit kind
       lit ")"
       if fnc.returnType != "void":
@@ -426,8 +441,8 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
             if name == fnc.name:
               lit enumInFuncs[idx]
               break outer
-          let many = hasMany(fnc.name) or fnc.name == "LoadImagePalette"
-          let kind = convertType(fnc.returnType, "", many)
+          let many = isPlural(fnc.name) or fnc.name == "LoadImagePalette"
+          let kind = convertType(fnc.returnType, "", many, not isPrivate)
           lit kind
       lit " {.importc: \""
       ident fnc.name

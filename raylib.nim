@@ -898,7 +898,7 @@ proc getGesturePinchAngle*(): float32 {.importc: "GetGesturePinchAngle", rlapi.}
   ## Get gesture pinch angle
 proc setCameraMode*(camera: Camera, mode: CameraMode) {.importc: "SetCameraMode", rlapi.}
   ## Set camera mode (multiple camera modes available)
-proc updateCamera*(camera: ptr Camera) {.importc: "UpdateCamera", rlapi.}
+proc updateCamera*(camera: var Camera) {.importc: "UpdateCamera", rlapi.}
   ## Update camera position for selected mode
 proc setCameraPanControl*(keyPan: KeyboardKey) {.importc: "SetCameraPanControl", rlapi.}
   ## Set camera pan key to combine with mouse movement (free camera)
@@ -926,8 +926,7 @@ proc drawLineBezierQuad*(startPos: Vector2, endPos: Vector2, controlPos: Vector2
   ## Draw line using quadratic bezier curves with a control point
 proc drawLineBezierCubic*(startPos: Vector2, endPos: Vector2, startControlPos: Vector2, endControlPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineBezierCubic", rlapi.}
   ## Draw line using cubic bezier curves with 2 control points
-proc drawLineStrip*(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawLineStrip", rlapi.}
-  ## Draw lines sequence
+proc drawLineStripPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawLineStrip", rlapi.}
 proc drawCircle*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircle", rlapi.}
   ## Draw a color-filled circle
 proc drawCircleSector*(center: Vector2, radius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawCircleSector", rlapi.}
@@ -974,10 +973,8 @@ proc drawTriangle*(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.import
   ## Draw a color-filled triangle (vertex in counter-clockwise order!)
 proc drawTriangleLines*(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "DrawTriangleLines", rlapi.}
   ## Draw triangle outline (vertex in counter-clockwise order!)
-proc drawTriangleFan*(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawTriangleFan", rlapi.}
-  ## Draw a triangle fan defined by points (first vertex is the center)
-proc drawTriangleStrip*(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip", rlapi.}
-  ## Draw a triangle strip defined by points
+proc drawTriangleFanPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawTriangleFan", rlapi.}
+proc drawTriangleStripPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip", rlapi.}
 proc drawPoly*(center: Vector2, sides: int32, radius: float32, rotation: float32, color: Color) {.importc: "DrawPoly", rlapi.}
   ## Draw a regular polygon (Vector version)
 proc drawPolyLines*(center: Vector2, sides: int32, radius: float32, rotation: float32, color: Color) {.importc: "DrawPolyLines", rlapi.}
@@ -996,7 +993,7 @@ proc checkCollisionPointCircle*(point: Vector2, center: Vector2, radius: float32
   ## Check if point is inside circle
 proc checkCollisionPointTriangle*(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): bool {.importc: "CheckCollisionPointTriangle", rlapi.}
   ## Check if point is inside a triangle
-proc checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: ptr Vector2): bool {.importc: "CheckCollisionLines", rlapi.}
+proc checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: var Vector2): bool {.importc: "CheckCollisionLines", rlapi.}
   ## Check the collision between two lines defined by two points each, returns collision point by reference
 proc checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshold: int32): bool {.importc: "CheckCollisionPointLine", rlapi.}
   ## Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
@@ -1006,10 +1003,9 @@ proc loadImage*(fileName: cstring): Image {.importc: "LoadImage", rlapi.}
   ## Load image from file into CPU memory (RAM)
 proc loadImageRaw*(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw", rlapi.}
   ## Load image from RAW file data
-proc loadImageAnim*(fileName: cstring, frames: ptr int32): Image {.importc: "LoadImageAnim", rlapi.}
+proc loadImageAnim*(fileName: cstring, frames: var int32): Image {.importc: "LoadImageAnim", rlapi.}
   ## Load image sequence from file (frames appended to image.data)
-proc loadImageFromMemory*(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Image {.importc: "LoadImageFromMemory", rlapi.}
-  ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
+proc loadImageFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Image {.importc: "LoadImageFromMemory", rlapi.}
 proc loadImageFromTexture*(texture: Texture2D): Image {.importc: "LoadImageFromTexture", rlapi.}
   ## Load image from GPU texture data
 proc loadImageFromScreen*(): Image {.importc: "LoadImageFromScreen", rlapi.}
@@ -1042,49 +1038,49 @@ proc imageText*(text: cstring, fontSize: int32, color: Color): Image {.importc: 
   ## Create an image from text (default font)
 proc imageTextEx*(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx", rlapi.}
   ## Create an image from text (custom sprite font)
-proc imageFormat*(image: ptr Image, newFormat: PixelFormat) {.importc: "ImageFormat", rlapi.}
+proc imageFormat*(image: var Image, newFormat: PixelFormat) {.importc: "ImageFormat", rlapi.}
   ## Convert image data to desired format
-proc imageToPOT*(image: ptr Image, fill: Color) {.importc: "ImageToPOT", rlapi.}
+proc imageToPOT*(image: var Image, fill: Color) {.importc: "ImageToPOT", rlapi.}
   ## Convert image to POT (power-of-two)
-proc imageCrop*(image: ptr Image, crop: Rectangle) {.importc: "ImageCrop", rlapi.}
+proc imageCrop*(image: var Image, crop: Rectangle) {.importc: "ImageCrop", rlapi.}
   ## Crop an image to a defined rectangle
-proc imageAlphaCrop*(image: ptr Image, threshold: float32) {.importc: "ImageAlphaCrop", rlapi.}
+proc imageAlphaCrop*(image: var Image, threshold: float32) {.importc: "ImageAlphaCrop", rlapi.}
   ## Crop image depending on alpha value
-proc imageAlphaClear*(image: ptr Image, color: Color, threshold: float32) {.importc: "ImageAlphaClear", rlapi.}
+proc imageAlphaClear*(image: var Image, color: Color, threshold: float32) {.importc: "ImageAlphaClear", rlapi.}
   ## Clear alpha channel to desired color
-proc imageAlphaMask*(image: ptr Image, alphaMask: Image) {.importc: "ImageAlphaMask", rlapi.}
+proc imageAlphaMask*(image: var Image, alphaMask: Image) {.importc: "ImageAlphaMask", rlapi.}
   ## Apply alpha mask to image
-proc imageAlphaPremultiply*(image: ptr Image) {.importc: "ImageAlphaPremultiply", rlapi.}
+proc imageAlphaPremultiply*(image: var Image) {.importc: "ImageAlphaPremultiply", rlapi.}
   ## Premultiply alpha channel
-proc imageResize*(image: ptr Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize", rlapi.}
+proc imageResize*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize", rlapi.}
   ## Resize image (Bicubic scaling algorithm)
-proc imageResizeNN*(image: ptr Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN", rlapi.}
+proc imageResizeNN*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN", rlapi.}
   ## Resize image (Nearest-Neighbor scaling algorithm)
-proc imageResizeCanvas*(image: ptr Image, newWidth: int32, newHeight: int32, offsetX: int32, offsetY: int32, fill: Color) {.importc: "ImageResizeCanvas", rlapi.}
+proc imageResizeCanvas*(image: var Image, newWidth: int32, newHeight: int32, offsetX: int32, offsetY: int32, fill: Color) {.importc: "ImageResizeCanvas", rlapi.}
   ## Resize canvas and fill with color
-proc imageMipmaps*(image: ptr Image) {.importc: "ImageMipmaps", rlapi.}
+proc imageMipmaps*(image: var Image) {.importc: "ImageMipmaps", rlapi.}
   ## Compute all mipmap levels for a provided image
-proc imageDither*(image: ptr Image, rBpp: int32, gBpp: int32, bBpp: int32, aBpp: int32) {.importc: "ImageDither", rlapi.}
+proc imageDither*(image: var Image, rBpp: int32, gBpp: int32, bBpp: int32, aBpp: int32) {.importc: "ImageDither", rlapi.}
   ## Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
-proc imageFlipVertical*(image: ptr Image) {.importc: "ImageFlipVertical", rlapi.}
+proc imageFlipVertical*(image: var Image) {.importc: "ImageFlipVertical", rlapi.}
   ## Flip image vertically
-proc imageFlipHorizontal*(image: ptr Image) {.importc: "ImageFlipHorizontal", rlapi.}
+proc imageFlipHorizontal*(image: var Image) {.importc: "ImageFlipHorizontal", rlapi.}
   ## Flip image horizontally
-proc imageRotateCW*(image: ptr Image) {.importc: "ImageRotateCW", rlapi.}
+proc imageRotateCW*(image: var Image) {.importc: "ImageRotateCW", rlapi.}
   ## Rotate image clockwise 90deg
-proc imageRotateCCW*(image: ptr Image) {.importc: "ImageRotateCCW", rlapi.}
+proc imageRotateCCW*(image: var Image) {.importc: "ImageRotateCCW", rlapi.}
   ## Rotate image counter-clockwise 90deg
-proc imageColorTint*(image: ptr Image, color: Color) {.importc: "ImageColorTint", rlapi.}
+proc imageColorTint*(image: var Image, color: Color) {.importc: "ImageColorTint", rlapi.}
   ## Modify image color: tint
-proc imageColorInvert*(image: ptr Image) {.importc: "ImageColorInvert", rlapi.}
+proc imageColorInvert*(image: var Image) {.importc: "ImageColorInvert", rlapi.}
   ## Modify image color: invert
-proc imageColorGrayscale*(image: ptr Image) {.importc: "ImageColorGrayscale", rlapi.}
+proc imageColorGrayscale*(image: var Image) {.importc: "ImageColorGrayscale", rlapi.}
   ## Modify image color: grayscale
-proc imageColorContrast*(image: ptr Image, contrast: float32) {.importc: "ImageColorContrast", rlapi.}
+proc imageColorContrast*(image: var Image, contrast: float32) {.importc: "ImageColorContrast", rlapi.}
   ## Modify image color: contrast (-100 to 100)
-proc imageColorBrightness*(image: ptr Image, brightness: int32) {.importc: "ImageColorBrightness", rlapi.}
+proc imageColorBrightness*(image: var Image, brightness: int32) {.importc: "ImageColorBrightness", rlapi.}
   ## Modify image color: brightness (-255 to 255)
-proc imageColorReplace*(image: ptr Image, color: Color, replace: Color) {.importc: "ImageColorReplace", rlapi.}
+proc imageColorReplace*(image: var Image, color: Color, replace: Color) {.importc: "ImageColorReplace", rlapi.}
   ## Modify image color: replace color
 proc loadImageColorsPriv(image: Image): ptr UncheckedArray[Color] {.importc: "LoadImageColors", rlapi.}
 proc loadImagePalettePriv(image: Image, maxPaletteSize: int32, colorCount: ptr int32): ptr UncheckedArray[Color] {.importc: "LoadImagePalette", rlapi.}
@@ -1094,33 +1090,33 @@ proc getImageAlphaBorder*(image: Image, threshold: float32): Rectangle {.importc
   ## Get image alpha border rectangle
 proc getImageColor*(image: Image, x: int32, y: int32): Color {.importc: "GetImageColor", rlapi.}
   ## Get image pixel color at (x, y) position
-proc imageClearBackground*(dst: ptr Image, color: Color) {.importc: "ImageClearBackground", rlapi.}
+proc imageClearBackground*(dst: var Image, color: Color) {.importc: "ImageClearBackground", rlapi.}
   ## Clear image background with given color
-proc imageDrawPixel*(dst: ptr Image, posX: int32, posY: int32, color: Color) {.importc: "ImageDrawPixel", rlapi.}
+proc imageDrawPixel*(dst: var Image, posX: int32, posY: int32, color: Color) {.importc: "ImageDrawPixel", rlapi.}
   ## Draw pixel within an image
-proc imageDrawPixelV*(dst: ptr Image, position: Vector2, color: Color) {.importc: "ImageDrawPixelV", rlapi.}
+proc imageDrawPixelV*(dst: var Image, position: Vector2, color: Color) {.importc: "ImageDrawPixelV", rlapi.}
   ## Draw pixel within an image (Vector version)
-proc imageDrawLine*(dst: ptr Image, startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "ImageDrawLine", rlapi.}
+proc imageDrawLine*(dst: var Image, startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "ImageDrawLine", rlapi.}
   ## Draw line within an image
-proc imageDrawLineV*(dst: ptr Image, start: Vector2, `end`: Vector2, color: Color) {.importc: "ImageDrawLineV", rlapi.}
+proc imageDrawLineV*(dst: var Image, start: Vector2, `end`: Vector2, color: Color) {.importc: "ImageDrawLineV", rlapi.}
   ## Draw line within an image (Vector version)
-proc imageDrawCircle*(dst: ptr Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircle", rlapi.}
+proc imageDrawCircle*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircle", rlapi.}
   ## Draw circle within an image
-proc imageDrawCircleV*(dst: ptr Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV", rlapi.}
+proc imageDrawCircleV*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV", rlapi.}
   ## Draw circle within an image (Vector version)
-proc imageDrawRectangle*(dst: ptr Image, posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "ImageDrawRectangle", rlapi.}
+proc imageDrawRectangle*(dst: var Image, posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "ImageDrawRectangle", rlapi.}
   ## Draw rectangle within an image
-proc imageDrawRectangleV*(dst: ptr Image, position: Vector2, size: Vector2, color: Color) {.importc: "ImageDrawRectangleV", rlapi.}
+proc imageDrawRectangleV*(dst: var Image, position: Vector2, size: Vector2, color: Color) {.importc: "ImageDrawRectangleV", rlapi.}
   ## Draw rectangle within an image (Vector version)
-proc imageDrawRectangleRec*(dst: ptr Image, rec: Rectangle, color: Color) {.importc: "ImageDrawRectangleRec", rlapi.}
+proc imageDrawRectangleRec*(dst: var Image, rec: Rectangle, color: Color) {.importc: "ImageDrawRectangleRec", rlapi.}
   ## Draw rectangle within an image
-proc imageDrawRectangleLines*(dst: ptr Image, rec: Rectangle, thick: int32, color: Color) {.importc: "ImageDrawRectangleLines", rlapi.}
+proc imageDrawRectangleLines*(dst: var Image, rec: Rectangle, thick: int32, color: Color) {.importc: "ImageDrawRectangleLines", rlapi.}
   ## Draw rectangle lines within an image
-proc imageDraw*(dst: ptr Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) {.importc: "ImageDraw", rlapi.}
+proc imageDraw*(dst: var Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) {.importc: "ImageDraw", rlapi.}
   ## Draw a source image within a destination image (tint applied to source)
-proc imageDrawText*(dst: ptr Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText", rlapi.}
+proc imageDrawText*(dst: var Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText", rlapi.}
   ## Draw text (using default font) within an image (destination)
-proc imageDrawTextEx*(dst: ptr Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx", rlapi.}
+proc imageDrawTextEx*(dst: var Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx", rlapi.}
   ## Draw text (custom sprite font) within an image (destination)
 proc loadTexture*(fileName: cstring): Texture2D {.importc: "LoadTexture", rlapi.}
   ## Load texture from file into GPU memory (VRAM)
@@ -1138,7 +1134,7 @@ proc updateTexture*(texture: Texture2D, pixels: pointer) {.importc: "UpdateTextu
   ## Update GPU texture with new data
 proc updateTextureRec*(texture: Texture2D, rec: Rectangle, pixels: pointer) {.importc: "UpdateTextureRec", rlapi.}
   ## Update GPU texture rectangle with new data
-proc genTextureMipmaps*(texture: ptr Texture2D) {.importc: "GenTextureMipmaps", rlapi.}
+proc genTextureMipmaps*(texture: var Texture2D) {.importc: "GenTextureMipmaps", rlapi.}
   ## Generate GPU mipmaps for a texture
 proc setTextureFilter*(texture: Texture2D, filter: TextureFilter) {.importc: "SetTextureFilter", rlapi.}
   ## Set texture scaling filter mode
@@ -1160,8 +1156,7 @@ proc drawTexturePro*(texture: Texture2D, source: Rectangle, dest: Rectangle, ori
   ## Draw a part of a texture defined by a rectangle with 'pro' parameters
 proc drawTextureNPatch*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch", rlapi.}
   ## Draws a texture (or part of it) that stretches or shrinks nicely
-proc drawTexturePoly*(texture: Texture2D, center: Vector2, points: ptr UncheckedArray[Vector2], texcoords: ptr UncheckedArray[Vector2], pointCount: int32, tint: Color) {.importc: "DrawTexturePoly", rlapi.}
-  ## Draw a textured polygon
+proc drawTexturePolyPriv(texture: Texture2D, center: Vector2, points: ptr UncheckedArray[Vector2], texcoords: ptr UncheckedArray[Vector2], pointCount: int32, tint: Color) {.importc: "DrawTexturePoly", rlapi.}
 proc fade*(color: Color, alpha: float32): Color {.importc: "Fade", rlapi.}
   ## Get color with alpha applied, alpha goes from 0.0f to 1.0f
 proc colorToInt*(color: Color): int32 {.importc: "ColorToInt", rlapi.}
@@ -1190,15 +1185,12 @@ proc getFontDefault*(): Font {.importc: "GetFontDefault", rlapi.}
   ## Get the default Font
 proc loadFont*(fileName: cstring): Font {.importc: "LoadFont", rlapi.}
   ## Load font from file into GPU memory (VRAM)
-proc loadFontEx*(fileName: cstring, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontEx", rlapi.}
-  ## Load font from file with extended parameters, use NULL for fontChars and 0 for glyphCount to load the default character set
+proc loadFontExPriv(fileName: cstring, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontEx", rlapi.}
 proc loadFontFromImage*(image: Image, key: Color, firstChar: int32): Font {.importc: "LoadFontFromImage", rlapi.}
   ## Load font from Image (XNA style)
-proc loadFontFromMemory*(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontFromMemory", rlapi.}
-  ## Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
+proc loadFontFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontFromMemory", rlapi.}
 proc loadFontDataPriv(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData", rlapi.}
-proc genImageFontAtlas*(chars: ptr UncheckedArray[GlyphInfo], recs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas", rlapi.}
-  ## Generate image font atlas using chars info
+proc genImageFontAtlasPriv(chars: ptr UncheckedArray[GlyphInfo], recs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas", rlapi.}
 proc unloadFontDataPriv(chars: ptr UncheckedArray[GlyphInfo], glyphCount: int32) {.importc: "UnloadFontData", rlapi.}
 proc unloadFont*(font: Font) {.importc: "UnloadFont", rlapi.}
   ## Unload Font from GPU memory (VRAM)
@@ -1222,14 +1214,6 @@ proc getGlyphInfo*(font: Font, codepoint: int32): GlyphInfo {.importc: "GetGlyph
   ## Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
 proc getGlyphAtlasRec*(font: Font, codepoint: int32): Rectangle {.importc: "GetGlyphAtlasRec", rlapi.}
   ## Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
-proc loadCodepointsPriv(text: cstring, count: ptr int32): ptr UncheckedArray[int32] {.importc: "LoadCodepoints", rlapi.}
-proc unloadCodepointsPriv(codepoints: ptr UncheckedArray[int32]) {.importc: "UnloadCodepoints", rlapi.}
-proc getCodepointCount*(text: cstring): int32 {.importc: "GetCodepointCount", rlapi.}
-  ## Get total number of codepoints in a UTF-8 encoded string
-proc getCodepoint*(text: cstring, bytesProcessed: ptr int32): int32 {.importc: "GetCodepoint", rlapi.}
-  ## Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
-proc codepointToUTF8Priv(codepoint: int32, byteSize: ptr int32): cstring {.importc: "CodepointToUTF8", rlapi.}
-proc textCodepointsToUTF8Priv(codepoints: ptr UncheckedArray[int32], length: int32): cstring {.importc: "TextCodepointsToUTF8", rlapi.}
 proc drawLine3D*(startPos: Vector3, endPos: Vector3, color: Color) {.importc: "DrawLine3D", rlapi.}
   ## Draw a line in 3D world space
 proc drawPoint3D*(position: Vector3, color: Color) {.importc: "DrawPoint3D", rlapi.}
@@ -1238,8 +1222,7 @@ proc drawCircle3D*(center: Vector3, radius: float32, rotationAxis: Vector3, rota
   ## Draw a circle in 3D world space
 proc drawTriangle3D*(v1: Vector3, v2: Vector3, v3: Vector3, color: Color) {.importc: "DrawTriangle3D", rlapi.}
   ## Draw a color-filled triangle (vertex in counter-clockwise order!)
-proc drawTriangleStrip3D*(points: ptr UncheckedArray[Vector3], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip3D", rlapi.}
-  ## Draw a triangle strip defined by points
+proc drawTriangleStrip3DPriv(points: ptr UncheckedArray[Vector3], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip3D", rlapi.}
 proc drawCube*(position: Vector3, width: float32, height: float32, length: float32, color: Color) {.importc: "DrawCube", rlapi.}
   ## Draw cube
 proc drawCubeV*(position: Vector3, size: Vector3, color: Color) {.importc: "DrawCubeV", rlapi.}
@@ -1298,7 +1281,7 @@ proc drawBillboardRec*(camera: Camera, texture: Texture2D, source: Rectangle, po
   ## Draw a billboard texture defined by source
 proc drawBillboardPro*(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawBillboardPro", rlapi.}
   ## Draw a billboard texture defined by source and rotation
-proc uploadMesh*(mesh: ptr Mesh, dynamic: bool) {.importc: "UploadMesh", rlapi.}
+proc uploadMesh*(mesh: var Mesh, dynamic: bool) {.importc: "UploadMesh", rlapi.}
   ## Upload mesh vertex data in GPU and provide VAO/VBO ids
 proc updateMeshBuffer*(mesh: Mesh, index: int32, data: pointer, dataSize: int32, offset: int32) {.importc: "UpdateMeshBuffer", rlapi.}
   ## Update mesh vertex data in GPU for a specific buffer index
@@ -1306,15 +1289,14 @@ proc unloadMesh*(mesh: Mesh) {.importc: "UnloadMesh", rlapi.}
   ## Unload mesh data from CPU and GPU
 proc drawMesh*(mesh: Mesh, material: Material, transform: Matrix) {.importc: "DrawMesh", rlapi.}
   ## Draw a 3d mesh with material and transform
-proc drawMeshInstanced*(mesh: Mesh, material: Material, transforms: ptr UncheckedArray[Matrix], instances: int32) {.importc: "DrawMeshInstanced", rlapi.}
-  ## Draw multiple mesh instances with material and different transforms
+proc drawMeshInstancedPriv(mesh: Mesh, material: Material, transforms: ptr UncheckedArray[Matrix], instances: int32) {.importc: "DrawMeshInstanced", rlapi.}
 proc exportMesh*(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMesh", rlapi.}
   ## Export mesh data to file, returns true on success
 proc getMeshBoundingBox*(mesh: Mesh): BoundingBox {.importc: "GetMeshBoundingBox", rlapi.}
   ## Compute mesh bounding box limits
-proc genMeshTangents*(mesh: ptr Mesh) {.importc: "GenMeshTangents", rlapi.}
+proc genMeshTangents*(mesh: var Mesh) {.importc: "GenMeshTangents", rlapi.}
   ## Compute mesh tangents
-proc genMeshBinormals*(mesh: ptr Mesh) {.importc: "GenMeshBinormals", rlapi.}
+proc genMeshBinormals*(mesh: var Mesh) {.importc: "GenMeshBinormals", rlapi.}
   ## Compute mesh binormals
 proc genMeshPoly*(sides: int32, radius: float32): Mesh {.importc: "GenMeshPoly", rlapi.}
   ## Generate polygonal mesh
@@ -1343,9 +1325,9 @@ proc loadMaterialDefault*(): Material {.importc: "LoadMaterialDefault", rlapi.}
   ## Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 proc unloadMaterial*(material: Material) {.importc: "UnloadMaterial", rlapi.}
   ## Unload material from GPU memory (VRAM)
-proc setMaterialTexture*(material: ptr Material, mapType: MaterialMapIndex, texture: Texture2D) {.importc: "SetMaterialTexture", rlapi.}
+proc setMaterialTexture*(material: var Material, mapType: MaterialMapIndex, texture: Texture2D) {.importc: "SetMaterialTexture", rlapi.}
   ## Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
-proc setModelMeshMaterial*(model: ptr Model, meshId: int32, materialId: int32) {.importc: "SetModelMeshMaterial", rlapi.}
+proc setModelMeshMaterial*(model: var Model, meshId: int32, materialId: int32) {.importc: "SetModelMeshMaterial", rlapi.}
   ## Set material for a mesh
 proc loadModelAnimationsPriv(fileName: cstring, animCount: ptr uint32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations", rlapi.}
 proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation", rlapi.}
@@ -1383,8 +1365,7 @@ proc setMasterVolume*(volume: float32) {.importc: "SetMasterVolume", rlapi.}
   ## Set master volume (listener)
 proc loadWave*(fileName: cstring): Wave {.importc: "LoadWave", rlapi.}
   ## Load wave data from file
-proc loadWaveFromMemory*(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Wave {.importc: "LoadWaveFromMemory", rlapi.}
-  ## Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
+proc loadWaveFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Wave {.importc: "LoadWaveFromMemory", rlapi.}
 proc loadSound*(fileName: cstring): Sound {.importc: "LoadSound", rlapi.}
   ## Load sound from file
 proc loadSoundFromWave*(wave: Wave): Sound {.importc: "LoadSoundFromWave", rlapi.}
@@ -1419,18 +1400,17 @@ proc setSoundVolume*(sound: Sound, volume: float32) {.importc: "SetSoundVolume",
   ## Set volume for a sound (1.0 is max level)
 proc setSoundPitch*(sound: Sound, pitch: float32) {.importc: "SetSoundPitch", rlapi.}
   ## Set pitch for a sound (1.0 is base level)
-proc waveFormat*(wave: ptr Wave, sampleRate: int32, sampleSize: int32, channels: int32) {.importc: "WaveFormat", rlapi.}
+proc waveFormat*(wave: var Wave, sampleRate: int32, sampleSize: int32, channels: int32) {.importc: "WaveFormat", rlapi.}
   ## Convert wave data to desired format
 proc waveCopy*(wave: Wave): Wave {.importc: "WaveCopy", rlapi.}
   ## Copy a wave to a new wave
-proc waveCrop*(wave: ptr Wave, initSample: int32, finalSample: int32) {.importc: "WaveCrop", rlapi.}
+proc waveCrop*(wave: var Wave, initSample: int32, finalSample: int32) {.importc: "WaveCrop", rlapi.}
   ## Crop a wave to defined samples range
 proc loadWaveSamplesPriv(wave: Wave): ptr UncheckedArray[float32] {.importc: "LoadWaveSamples", rlapi.}
 proc unloadWaveSamplesPriv(samples: ptr UncheckedArray[float32]) {.importc: "UnloadWaveSamples", rlapi.}
 proc loadMusicStream*(fileName: cstring): Music {.importc: "LoadMusicStream", rlapi.}
   ## Load music stream from file
-proc loadMusicStreamFromMemory*(fileType: cstring, data: ptr UncheckedArray[uint8], dataSize: int32): Music {.importc: "LoadMusicStreamFromMemory", rlapi.}
-  ## Load music stream from data
+proc loadMusicStreamFromMemoryPriv(fileType: cstring, data: ptr UncheckedArray[uint8], dataSize: int32): Music {.importc: "LoadMusicStreamFromMemory", rlapi.}
 proc unloadMusicStream*(music: Music) {.importc: "UnloadMusicStream", rlapi.}
   ## Unload music stream
 proc playMusicStream*(music: Music) {.importc: "PlayMusicStream", rlapi.}
@@ -1551,12 +1531,12 @@ proc getClipboardText*(): string {.inline.} =
 proc getDroppedFiles*(): seq[string] =
   ## Get dropped files names (memory should be freed)
   var count = 0'i32
-  let dropfiles = getDroppedFilesPriv(count)
+  let dropfiles = getDroppedFilesPriv(count.addr)
   result = cstringArrayToSeq(dropfiles, count)
 
-proc getGamepadName*(gamepad: int32): string {.inline.}
+proc getGamepadName*(gamepad: int32): string {.inline.} =
   ## Get gamepad internal name id
-  result = $getGamepadNamePriv()
+  result = $getGamepadNamePriv(gamepad)
 
 proc loadModelAnimations*(fileName: string): seq[ModelAnimation] =
   ## Load model animations from file
@@ -1577,3 +1557,96 @@ proc loadWaveSamples*(wave: Wave): seq[float32] =
   result = newSeq[float32](len)
   copyMem(result[0].addr, data, len * sizeof(float32))
   memFree(data)
+
+proc loadImageColors*(image: Image): seq[Color] =
+  ## Load color data from image as a Color array (RGBA - 32bit)
+  let data = loadImageColorsPriv(image)
+  let len = int(image.width * image.height)
+  result = newSeq[Color](len)
+  copyMem(result[0].addr, data, len * sizeof(Color))
+  memFree(data)
+
+proc loadImagePalette*(image: Image, maxPaletteSize: int32): seq[Color] =
+  ## Load colors palette from image as a Color array (RGBA - 32bit)
+  var len = 0'i32
+  let data = loadImagePalettePriv(image, maxPaletteSize, len.addr)
+  result = newSeq[Color](len.int)
+  copyMem(result[0].addr, data, len.int * sizeof(Color))
+  memFree(data)
+
+proc loadFontData*(fileData: openarray[uint8], fontSize: int32, fontChars: openarray[int32], `type`: FontType): seq[GlyphInfo] =
+  ## Load font data for further use
+  let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
+      fontSize, cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32, `type`)
+  result = newSeq[GlyphInfo](fontChars.len)
+  copyMem(result[0].addr, data, fontChars.len * sizeof(GlyphInfo))
+  memFree(data)
+
+proc loadMaterials*(fileName: string): seq[Material] =
+  ## Load materials from model file
+  var len = 0'i32
+  let data = loadMaterialsPriv(fileName.cstring, len.addr)
+  if len <= 0:
+    raise newException(IOError, "No materials loaded from " & filename)
+  result = newSeq[Material](len.int)
+  copyMem(result[0].addr, data, len.int * sizeof(Material))
+  #for i in 0..<len.int:
+    #result[i] = data[i]
+  memFree(data)
+
+proc drawLineStrip*(points: openarray[Vector2], color: Color) {.inline.} =
+  ## Draw lines sequence
+  drawLineStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc drawTriangleFan*(points: openarray[Vector2], color: Color) =
+  ## Draw a triangle fan defined by points (first vertex is the center)
+  drawTriangleFanPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc drawTriangleStrip*(points: openarray[Vector2], color: Color) =
+  ## Draw a triangle strip defined by points
+  drawTriangelStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc loadImageFromMemory*(fileType: string, fileData: openarray[uint8]): Image =
+  ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
+  result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32)
+
+proc drawTexturePoly*(texture: Texture2D, center: Vector2, points: openarray[Vector2], texcoords: openarray[Vector2], tint: Color) =
+  ## Draw a textured polygon
+  drawTexturePolyPriv(texture, center, cast[ptr UncheckedArray[Vector2]]((points), cast[ptr UncheckedArray[Vector2]]((texcoords), points.len.int32, tint)
+
+proc loadFontEx*(fileName: string, fontSize: int32, fontChars: openarray[int32]): Font =
+  ## Load font from file with extended parameters, use an empty array for fontChars to load the default character set
+  result = loadFontExPriv(fileName.cstring, fontSize,
+      if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
+
+proc loadFontFromMemory*(fileType: string, fileData: openarray[uint8], fontSize: int32, fontChars: openarray[int32]): Font =
+  ## Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
+  result = loadFontFromMemoryPriv(fileType.cstring,
+      cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
+      cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
+
+proc genImageFontAtlas*(chars: openarray[GlyphInfo], recs: var seq[Rectangle], fontSize: int32, padding: int32, packMethod: int32): Image =
+  ## Generate image font atlas using chars info
+  var data: ptr UncheckedArray[Rectangle] = nil
+  result = genImageFontAtlasPriv(cast[ptr UncheckedArray[GlyphInfo]](chars), data.addr, chars.len.int32, fontSize, padding, packMethod)
+  recs = newSeq[Material](chars.len)
+  copyMem(recs[0].addr, data, chars.len * sizeof(Rectangle))
+  #for i in 0..<len.int:
+    #result[i] = data[i]
+  memFree(data)
+
+proc drawTriangleStrip3D*(points: openarray[Vector3], color: Color) =
+  ## Draw a triangle strip defined by points
+  drawTriangleStrip3DPriv(cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
+
+proc drawMeshInstanced*(mesh: Mesh, material: Material, transforms: openarray[Matrix]) =
+  ## Draw multiple mesh instances with material and different transforms
+  drawMeshInstancedPriv(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms), transforms.len.int32)
+
+proc loadWaveFromMemory*(fileType: string, fileData: openarray[uint8]): Wave =
+  ## Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
+  loadWaveFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32)
+
+proc loadMusicStreamFromMemory*(fileType: string, data: openarray[uint8]): Music =
+  ## Load music stream from data
+  loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data), data.len.int32)

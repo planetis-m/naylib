@@ -106,7 +106,7 @@ proc toNimType*(x: string): string =
     "Float16"
   else: x
 
-proc convertType*(s: string, pattern: string, many: bool): string =
+proc convertType*(s: string, pattern: string, many, isVar: bool): string =
   ## Converts a C type to the equivalent Nim type.
   ## Should work with function parameters, return, and struct fields types.
   ## If a `pattern` is provided, it substitutes the found base type and returns it.
@@ -165,7 +165,9 @@ proc convertType*(s: string, pattern: string, many: bool): string =
     elif many:
       result = "ptr UncheckedArray[" & result & "]"
     else:
-      result = "ptr " & result
+      if isVar:
+        result = "var " & result
+      else: result = "ptr " & result
   elif isDoublePointer:
     if isVoid:
       result = "ptr pointer"
@@ -174,7 +176,7 @@ proc convertType*(s: string, pattern: string, many: bool): string =
     else:
       result = "ptr ptr " & result
 
-proc hasMany*(x: string): bool {.inline.} =
+proc isPlural*(x: string): bool {.inline.} =
   ## Tries to determine if an identifier is plural
   let x = strip(x, false, chars = Digits)
   x.endsWith("es") or (not x.endsWith("ss") and x.endsWith('s')) or
