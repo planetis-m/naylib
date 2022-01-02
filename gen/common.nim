@@ -216,16 +216,6 @@ proc camelCaseAscii*(s: string): string =
       else: result.add toLowerAscii(s[i])
     inc i
 
-proc allSequential*(x: seq[ValueInfo]): bool =
-  ## Checks that the enum has no holes.
-  var prev = x[0].value
-  for i in 1..x.high:
-    let xi = x[i].value
-    if prev + 1 < xi:
-      return false
-    prev = xi
-  result = true
-
 proc uncapitalizeAscii*(s: string): string =
   if s.len == 0: result = ""
   else: result = toLowerAscii(s[0]) & substr(s, 1)

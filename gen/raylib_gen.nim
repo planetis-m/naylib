@@ -1,4 +1,4 @@
-import common, std/[algorithm, streams, strutils, sugar]
+import common, std/[streams, strutils]
 
 const
   extraTypes = {
@@ -10,11 +10,12 @@ const
     "AudioStream": "RAudioBuffer* {.importc: \"rAudioBuffer\", bycopy.} = object"
   }
   raylibHeader = """
-const lext = when defined(windows): ".dll" elif defined(macosx): ".dylib" else: ".so"
-{.pragma: rlapi, cdecl, dynlib: "libraylib" & lext.}
+from os import parentDir, `/`
+const raylibdir = currentSourcePath().parentDir / "raylib" / "src"
+{.passL: raylibdir / "libraylib.a".}
 
 const
-  RaylibVersion* = "4.0"
+  RaylibVersion* = "4.1-dev"
 
   MaxShaderLocations* = 32 ## Maximum number of shader locations supported
   MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
@@ -46,7 +47,11 @@ proc flag*[E: Enums](e: varargs[E]): Flag[E] {.inline.} =
   Flag[E](res)
 
 const
-  Menu* = KeyboardKey.R ## Key: Android menu button
+  MaterialMapDiffuse* = MaterialMapAlbedo
+  MaterialMapSpecular* = MaterialMapMetalness
+
+  ShaderLocMapDiffuse* = ShaderLocMapAlbedo
+  ShaderLocMapSpecular* = ShaderLocMapMetalness
 
   LightGray* = Color(r: 200, g: 200, b: 200, a: 255)
   Gray* = Color(r: 130, g: 130, b: 130, a: 255)
@@ -282,38 +287,6 @@ const
     "LoadMusicStreamFromMemory"
   ]
 
-proc removeEnumPrefix(enm, val: string): string =
-  # Remove prefixes from enum fields.
-  const
-    enumPrefixes = {
-      "ConfigFlags": "FLAG_",
-      "TraceLogLevel": "LOG_",
-      "KeyboardKey": "KEY_",
-      "MouseButton": "MOUSE_BUTTON_",
-      "MouseCursor": "MOUSE_CURSOR_",
-      "GamepadButton": "GAMEPAD_BUTTON_",
-      "GamepadAxis": "GAMEPAD_AXIS_",
-      "MaterialMapIndex": "MATERIAL_MAP_",
-      "ShaderLocationIndex": "SHADER_LOC_",
-      "ShaderUniformDataType": "SHADER_UNIFORM_",
-      "ShaderAttributeDataType": "SHADER_ATTRIB_",
-      "PixelFormat": "PIXELFORMAT_",
-      "TextureFilter": "TEXTURE_FILTER_",
-      "TextureWrap": "TEXTURE_WRAP_",
-      "CubemapLayout": "CUBEMAP_LAYOUT_",
-      "FontType": "FONT_",
-      "BlendMode": "BLEND_",
-      "Gesture": "GESTURE_",
-      "CameraMode": "CAMERA_",
-      "CameraProjection": "CAMERA_",
-      "NPatchLayout": "NPATCH_"
-    }
-  result = val
-  for x, prefix in enumPrefixes.items:
-    if enm == x:
-      removePrefix(result, prefix)
-      return
-
 proc replaceCintField(obj, fld: string): string =
   # Replace `int32` with the respective enum type.
   const enumReplacements = [
@@ -381,23 +354,21 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
       for enm in items(t.enums):
         spaces
         ident enm.name
-        lit "* {.size: sizeof(cint).} = enum"
+        lit "* = distinct int32"
         doc enm
-        scope:
-          let allSeq = allSequential(enm.values)
-          for i, val in pairs(enm.values):
-            if i-1>=0 and enm.values[i-1].value == val.value: # omit duplicate!
-              continue
-            spaces
-            # Follow Nim's naming convention for enum fields.
-            let name = removeEnumPrefix(enm.name, val.name)
-            ident camelCaseAscii(name)
-            # Set the int value if the enum has holes and it doesn't start at 0.
-            if not allSeq or (i == 0 and val.value != 0):
-              lit " = "
-              lit $val.value
-            doc val
-          lit "\n"
+    lit "\n\nconst"
+    scope:
+      for enm in items(t.enums):
+        for i, val in pairs(enm.values):
+          spaces
+          ident camelCaseAscii(val.name)
+          lit "* = "
+          ident enm.name
+          lit "("
+          lit $val.value
+          lit ")"
+          doc val
+        lit "\n"
     lit middle
     # Generate functions
     for fnc in items(t.functions):
@@ -449,7 +420,7 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
       lit "\""
       if hasVarargs:
         lit ", varargs"
-      lit ", rlapi.}"
+      lit ", cdecl.}"
       if not (isAlloc or isPrivate) and fnc.description != "":
         scope:
           spaces
@@ -466,8 +437,6 @@ const
 
 proc main =
   var t = parseApi(raylibApi)
-  # Some enums are unsorted!
-  for enm in mitems(t.enums): sort(enm.values, (x, y) => cmp(x.value, y.value))
   genBindings(t, outputname, raylibHeader, helpers, readFile("raylib_wrap.nim"))
 
 main()
