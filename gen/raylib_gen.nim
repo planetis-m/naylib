@@ -287,20 +287,7 @@ const
     "LoadMusicStreamFromMemory"
   ]
 
-proc replaceCintField(obj, fld: string): string =
-  # Replace `int32` with the respective enum type.
-  const enumReplacements = [
-    ("Camera3D", "projection", "CameraProjection"),
-    ("Image", "format", "PixelFormat"),
-    ("Texture", "format", "PixelFormat"),
-    ("NPatchInfo", "layout", "NPatchLayout")
-  ]
-  result = ""
-  for x, y, kind in enumReplacements.items:
-    if obj == x and fld == y:
-      return kind
-
-proc getSpecialPattern(x, y: string, replacements: openarray[(string, string, string)]): string =
+proc getReplacement(x, y: string, replacements: openarray[(string, string, string)]): string =
   # Manual replacements for some fields
   result = ""
   for a, b, pattern in replacements.items:
@@ -350,7 +337,13 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
             var (name, pat) = transFieldName(fld.name)
             ident name
             lit "*: "
-            let kind = replaceCintField(obj.name, name)
+            const replacements = [
+              ("Camera3D", "projection", "CameraProjection"),
+              ("Image", "format", "PixelFormat"),
+              ("Texture", "format", "PixelFormat"),
+              ("NPatchInfo", "layout", "NPatchLayout")
+            ]
+            let kind = getReplacement(obj.name, name, replacements)
             if kind != "":
               lit kind
             else:
@@ -361,7 +354,7 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
                 ("Material", "maps", "ptr array[MaxMaterialMaps, $1]"),
                 ("Shader", "locs", "ptr array[MaxShaderLocations, $1]")
               ]
-              let tmp = getSpecialPattern(obj.name, name, replacements)
+              let tmp = getReplacement(obj.name, name, replacements)
               if tmp != "": pat = tmp
               let kind = convertType(fld.`type`, pat, many, false)
               lit kind
@@ -405,7 +398,7 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
               replacements = [
                 ("GenImageFontAtlas", "recs", "ptr ptr UncheckedArray[$1]")
               ]
-            let pat = getSpecialPattern(fnc.name, param, replacements)
+            let pat = getReplacement(fnc.name, param, replacements)
             let kind = convertType(kind, pat, many, not isPrivate)
             lit kind
       lit ")"
