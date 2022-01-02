@@ -15,12 +15,12 @@ template exec(cmd: string) =
   if execShellCmd(cmd) != 0: quit("FAILURE", QuitFailure)
 
 proc main =
-  if not dirExists("../raylib"):
-    exec("git clone --depth 1 https://github.com/raysan5/raylib.git ../raylib")
-    withDir("../raylib"):
-      exec("git fetch")
-      #exec("git checkout " & RaylibStableCommit)
-      withDir("src"):
-        exec("make PLATFORM=PLATFORM_DESKTOP -j4")
+  if not dirExists("../dist/raylib"):
+    exec("git clone --depth 1 https://github.com/raysan5/raylib.git ../dist/raylib")
+  withDir("../dist/raylib"):
+    exec("git fetch")
+    #exec("git checkout " & RaylibStableCommit)
+    withDir("src"):
+      exec("make PLATFORM=PLATFORM_DESKTOP -j4")
 
 main()

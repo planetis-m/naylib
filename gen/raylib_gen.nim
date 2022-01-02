@@ -7,12 +7,10 @@ const
     "Texture": "TextureCubemap* = Texture ## TextureCubemap, same as Texture",
     "RenderTexture": "RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture",
     "Camera3D": "Camera* = Camera3D ## Camera type fallback, defaults to Camera3D",
-    "AudioStream": "RAudioBuffer* {.importc: \"rAudioBuffer\", bycopy.} = object"
+    "AudioStream": """RAudioBuffer* {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object"""
   }
   raylibHeader = """
-from os import parentDir, `/`
-const raylibdir = currentSourcePath().parentDir / "raylib" / "src"
-{.passL: raylibdir / "libraylib.a".}
+{.passL: "-lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -DPLATFORM_DESKTOP".}
 
 const
   RaylibVersion* = "4.1-dev"
@@ -320,7 +318,7 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
       for obj in items(t.structs):
         spaces
         ident obj.name
-        lit "* {.bycopy.} = object"
+        lit "* {.bycopy, header: \"raylib.h\".} = object"
         doc obj
         scope:
           for fld in items(obj.fields):
@@ -371,6 +369,7 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
         lit "\n"
     lit middle
     # Generate functions
+    lit "\n{.push callconv: cdecl, header: \"raylib.h\".}"
     for fnc in items(t.functions):
       if fnc.name in excludedFuncs: continue
       lit "\nproc "
@@ -420,13 +419,13 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
       lit "\""
       if hasVarargs:
         lit ", varargs"
-      lit ", cdecl.}"
+      lit ".}"
       if not (isAlloc or isPrivate) and fnc.description != "":
         scope:
           spaces
           lit "## "
           lit fnc.description
-    lit "\n"
+    lit "\n{.pop.}\n"
     lit footer
   finally:
     if otp != nil: otp.close()
