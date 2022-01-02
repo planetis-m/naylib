@@ -14,9 +14,11 @@ const
 
 const
   RaylibVersion* = "4.1-dev"
-
-  MaxShaderLocations* = 32 ## Maximum number of shader locations supported
-  MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
+"""
+  extraDistinct = """
+  # Taken from raylib/src/config.h
+  MaxShaderLocations* = ShaderLocationIndex(32) ## Maximum number of shader locations supported
+  MaxMaterialMaps* = MaterialMapIndex(12) ## Maximum number of shader maps supported
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 """
   helpers = """
@@ -312,13 +314,35 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
   try:
     otp = openFileStream(fname, fmWrite)
     lit header
+    # Generate enum definitions
+    lit "\ntype"
+    scope:
+      for enm in items(t.enums):
+        spaces
+        ident enm.name
+        lit "* = distinct int32"
+        doc enm
+    lit "\n\nconst"
+    scope:
+      for enm in items(t.enums):
+        for i, val in pairs(enm.values):
+          spaces
+          ident camelCaseAscii(val.name)
+          lit "* = "
+          ident enm.name
+          lit "("
+          lit $val.value
+          lit ")"
+          doc val
+        lit "\n"
+      lit extraDistinct
     # Generate type definitions
     lit "\ntype"
     scope:
       for obj in items(t.structs):
         spaces
         ident obj.name
-        lit "* {.bycopy, header: \"raylib.h\".} = object"
+        lit "* {.header: \"raylib.h\", bycopy.} = object"
         doc obj
         scope:
           for fld in items(obj.fields):
@@ -347,25 +371,6 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
           if obj.name == name:
             spaces
             lit extra
-        lit "\n"
-      # Generate enums definitions
-      for enm in items(t.enums):
-        spaces
-        ident enm.name
-        lit "* = distinct int32"
-        doc enm
-    lit "\n\nconst"
-    scope:
-      for enm in items(t.enums):
-        for i, val in pairs(enm.values):
-          spaces
-          ident camelCaseAscii(val.name)
-          lit "* = "
-          ident enm.name
-          lit "("
-          lit $val.value
-          lit ")"
-          doc val
         lit "\n"
     lit middle
     # Generate functions
