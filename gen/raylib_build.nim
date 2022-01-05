@@ -22,5 +22,7 @@ proc main =
     #exec("git checkout " & RaylibStableCommit)
     withDir("src"):
       exec("make PLATFORM=PLATFORM_DESKTOP -j4")
+      exec("sudo make install")
+    # TODO: produce api JSON files
 
 main()

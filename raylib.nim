@@ -3,6 +3,20 @@
 const
   RaylibVersion* = "4.1-dev"
 
+type va_list* {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
+proc vprintf*(format: cstring, args: va_list) {.cdecl, importc: "vprintf", header: "<stdio.h>".}
+
+## Callbacks to hook some internal functions
+## WARNING: This callbacks are intended for advance users
+type
+  TraceLogCallback* = proc (logLevel: cint; text: cstring; args: va_list) {.cdecl.} ## Logging: Redirect trace log messages
+  LoadFileDataCallback* = proc (fileName: cstring; bytesRead: ptr uint32): ptr UncheckedArray[uint8] {.
+      cdecl.} ## FileIO: Load binary data
+  SaveFileDataCallback* = proc (fileName: cstring; data: pointer; bytesToWrite: uint32): bool {.
+      cdecl.} ## FileIO: Save binary data
+  LoadFileTextCallback* = proc (fileName: cstring): cstring {.cdecl.} ## FileIO: Load text data
+  SaveFileTextCallback* = proc (fileName: cstring; text: cstring): bool {.cdecl.} ## FileIO: Save text data
+
 type
   ConfigFlags* = distinct int32 ## System/Window config flags
   TraceLogLevel* = distinct int32 ## Trace log level
@@ -338,10 +352,26 @@ const
   NpatchNinePatch* = NPatchLayout(0) ## Npatch layout: 3x3 tiles
   NpatchThreePatchVertical* = NPatchLayout(1) ## Npatch layout: 1x3 tiles
   NpatchThreePatchHorizontal* = NPatchLayout(2) ## Npatch layout: 3x1 tiles
+
+  MaterialMapDiffuse* = MaterialMapAlbedo
+  MaterialMapSpecular* = MaterialMapMetalness
+
+  ShaderLocMapDiffuse* = ShaderLocMapAlbedo
+  ShaderLocMapSpecular* = ShaderLocMapMetalness
   # Taken from raylib/src/config.h
   MaxShaderLocations* = ShaderLocationIndex(32) ## Maximum number of shader locations supported
   MaxMaterialMaps* = MaterialMapIndex(12) ## Maximum number of shader maps supported
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
+
+type
+  Enums = ConfigFlags|Gesture
+  Flag*[E: Enums] = distinct uint32
+
+proc flag*[E: Enums](e: varargs[E]): Flag[E] {.inline.} =
+  var res = 0'u32
+  for val in items(e):
+    res = res or uint32(val)
+  Flag[E](res)
 
 type
   Vector2* {.header: "raylib.h", bycopy.} = object ## Vector2, 2 components
@@ -555,36 +585,7 @@ type
     scale*: array[2, float32] ## VR distortion scale
     scaleIn*: array[2, float32] ## VR distortion scale in
 
-type va_list* {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
-proc vprintf*(format: cstring, args: va_list) {.cdecl, importc: "vprintf", header: "<stdio.h>".}
-
-## Callbacks to hook some internal functions
-## WARNING: This callbacks are intended for advance users
-type
-  TraceLogCallback* = proc (logLevel: cint; text: cstring; args: va_list) {.cdecl.} ## Logging: Redirect trace log messages
-  LoadFileDataCallback* = proc (fileName: cstring; bytesRead: ptr uint32): ptr UncheckedArray[uint8] {.
-      cdecl.} ## FileIO: Load binary data
-  SaveFileDataCallback* = proc (fileName: cstring; data: pointer; bytesToWrite: uint32): bool {.
-      cdecl.} ## FileIO: Save binary data
-  LoadFileTextCallback* = proc (fileName: cstring): cstring {.cdecl.} ## FileIO: Load text data
-  SaveFileTextCallback* = proc (fileName: cstring; text: cstring): bool {.cdecl.} ## FileIO: Save text data
-
-  Enums = ConfigFlags|Gesture
-  Flag*[E: Enums] = distinct uint32
-
-proc flag*[E: Enums](e: varargs[E]): Flag[E] {.inline.} =
-  var res = 0'u32
-  for val in items(e):
-    res = res or uint32(val)
-  Flag[E](res)
-
 const
-  MaterialMapDiffuse* = MaterialMapAlbedo
-  MaterialMapSpecular* = MaterialMapMetalness
-
-  ShaderLocMapDiffuse* = ShaderLocMapAlbedo
-  ShaderLocMapSpecular* = ShaderLocMapMetalness
-
   LightGray* = Color(r: 200, g: 200, b: 200, a: 255)
   Gray* = Color(r: 130, g: 130, b: 130, a: 255)
   DarkGray* = Color(r: 80, g: 80, b: 80, a: 255)
@@ -636,7 +637,7 @@ proc isWindowResized*(): bool {.importc: "IsWindowResized".}
 proc isWindowState*(flag: ConfigFlags): bool {.importc: "IsWindowState".}
   ## Check if one specific window flag is enabled
 proc setWindowState*(flags: Flag[ConfigFlags]) {.importc: "SetWindowState".}
-  ## Set window configuration state using flags
+  ## Set window configuration state using flags (only PLATFORM_DESKTOP)
 proc clearWindowState*(flags: Flag[ConfigFlags]) {.importc: "ClearWindowState".}
   ## Clear window configuration state flags
 proc toggleFullscreen*() {.importc: "ToggleFullscreen".}
@@ -659,6 +660,8 @@ proc setWindowMinSize*(width: int32, height: int32) {.importc: "SetWindowMinSize
   ## Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
 proc setWindowSize*(width: int32, height: int32) {.importc: "SetWindowSize".}
   ## Set window dimensions
+proc setWindowOpacity*(opacity: float32) {.importc: "SetWindowOpacity".}
+  ## Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
 proc getWindowHandle*(): pointer {.importc: "GetWindowHandle".}
   ## Get native window handle
 proc getScreenWidth*(): int32 {.importc: "GetScreenWidth".}
@@ -1201,7 +1204,9 @@ proc loadFontDataPriv(fileData: ptr UncheckedArray[uint8], dataSize: int32, font
 proc genImageFontAtlasPriv(chars: ptr UncheckedArray[GlyphInfo], recs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
 proc unloadFontDataPriv(chars: ptr UncheckedArray[GlyphInfo], glyphCount: int32) {.importc: "UnloadFontData".}
 proc unloadFont*(font: Font) {.importc: "UnloadFont".}
-  ## Unload Font from GPU memory (VRAM)
+  ## Unload font from GPU memory (VRAM)
+proc exportFontAsCode*(font: Font, fileName: cstring): bool {.importc: "ExportFontAsCode".}
+  ## Export font as code file, returns true on success
 proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS".}
   ## Draw current FPS
 proc drawText*(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "DrawText".}

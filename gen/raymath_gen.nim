@@ -76,14 +76,14 @@ proc genBindings(t: Topmost, fname: string, header, footer: string) =
       ident uncapitalizeAscii(name)
       lit "*("
       var hasVarargs = false
-      for i, (param, kind) in fnc.params.pairs:
-        if param == "" and kind == "":
+      for i, param in fnc.params.pairs:
+        if param.name == "" and param.`type` == "":
           hasVarargs = true
         else:
           if i > 0: lit ", "
-          ident param
+          ident param.name
           lit ": "
-          let kind = convertType(kind, "", false)
+          let kind = convertType(param.`type`, "", false)
           lit kind
       lit ")"
       if fnc.returnType != "void":

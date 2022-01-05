@@ -1,4 +1,4 @@
-import eminim, std/[algorithm, strscans, strformat, streams, parsejson]
+import eminim, std/[algorithm, strscans, strformat, streams]
 import strutils except indent
 
 const
@@ -38,15 +38,17 @@ type
 
   FunctionInfo* = object
     name*, description*, returnType*: string
-    params*: Params
-  Params* = seq[(string, string)] # Could have used an OrderedTable instead.
+    params*: seq[ParamInfo]
+
+  ParamInfo* = object
+    `type`*, name*: string
 
   StructInfo* = object
     name*, description*: string
     fields*: seq[FieldInfo]
 
   FieldInfo* = object
-    name*, `type`*, description*: string
+    `type`*, name*, description*: string
 
   EnumInfo* = object
     name*, description*: string
@@ -56,22 +58,6 @@ type
     name*: string
     value*: int
     description*: string
-
-# The deserializer doesn't support anonymous tuples by default, process manually.
-proc initFromJson(dst: var Params; p: var JsonParser) =
-  eat(p, tkCurlyLe)
-  while p.tok != tkCurlyRi:
-    if p.tok != tkString:
-      raiseParseErr(p, "string literal as key")
-    var keyValPair: (string, string)
-    keyValPair[0] = move p.a
-    discard getTok(p)
-    eat(p, tkColon)
-    initFromJson(keyValPair[1], p)
-    dst.add keyValPair
-    if p.tok != tkComma: break
-    discard getTok(p)
-  eat(p, tkCurlyRi)
 
 proc parseApi*(fname: string): Topmost =
   var inp: FileStream

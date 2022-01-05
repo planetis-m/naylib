@@ -14,14 +14,6 @@ const
 
 const
   RaylibVersion* = "4.1-dev"
-"""
-  extraDistinct = """
-  # Taken from raylib/src/config.h
-  MaxShaderLocations* = ShaderLocationIndex(32) ## Maximum number of shader locations supported
-  MaxMaterialMaps* = MaterialMapIndex(12) ## Maximum number of shader maps supported
-  MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
-"""
-  helpers = """
 
 type va_list* {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
 proc vprintf*(format: cstring, args: va_list) {.cdecl, importc: "vprintf", header: "<stdio.h>".}
@@ -36,7 +28,20 @@ type
       cdecl.} ## FileIO: Save binary data
   LoadFileTextCallback* = proc (fileName: cstring): cstring {.cdecl.} ## FileIO: Load text data
   SaveFileTextCallback* = proc (fileName: cstring; text: cstring): bool {.cdecl.} ## FileIO: Save text data
+"""
+  extraDistinct = """
 
+  MaterialMapDiffuse* = MaterialMapAlbedo
+  MaterialMapSpecular* = MaterialMapMetalness
+
+  ShaderLocMapDiffuse* = ShaderLocMapAlbedo
+  ShaderLocMapSpecular* = ShaderLocMapMetalness
+  # Taken from raylib/src/config.h
+  MaxShaderLocations* = ShaderLocationIndex(32) ## Maximum number of shader locations supported
+  MaxMaterialMaps* = MaterialMapIndex(12) ## Maximum number of shader maps supported
+  MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
+
+type
   Enums = ConfigFlags|Gesture
   Flag*[E: Enums] = distinct uint32
 
@@ -45,14 +50,10 @@ proc flag*[E: Enums](e: varargs[E]): Flag[E] {.inline.} =
   for val in items(e):
     res = res or uint32(val)
   Flag[E](res)
+"""
+  helpers = """
 
 const
-  MaterialMapDiffuse* = MaterialMapAlbedo
-  MaterialMapSpecular* = MaterialMapMetalness
-
-  ShaderLocMapDiffuse* = ShaderLocMapAlbedo
-  ShaderLocMapSpecular* = ShaderLocMapMetalness
-
   LightGray* = Color(r: 200, g: 200, b: 200, a: 255)
   Gray* = Color(r: 130, g: 130, b: 130, a: 255)
   DarkGray* = Color(r: 80, g: 80, b: 80, a: 255)
@@ -322,7 +323,7 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
           lit ")"
           doc val
         lit "\n"
-      lit extraDistinct
+    lit extraDistinct
     # Generate type definitions
     lit "\ntype"
     scope:
@@ -381,25 +382,25 @@ proc genBindings(t: Topmost, fname: string; header, middle, footer: string) =
       else:
         lit "*("
       var hasVarargs = false
-      for i, (param, kind) in fnc.params.pairs:
-        if param == "" and kind == "": # , ...) {
+      for i, param in fnc.params.pairs:
+        if param.name == "" and param.`type` == "": # , ...) {
           hasVarargs = true
         else:
           if i > 0: lit ", "
-          ident param
+          ident param.name
           lit ": "
           block outer:
             for j, (name, param1) in enumInFuncParams.pairs:
-              if name == fnc.name and param1 == param:
+              if name == fnc.name and param1 == param.name:
                 lit enumInFuncs[j]
                 break outer
-            let many = (fnc.name, param) != ("LoadImageAnim", "frames") and isPlural(param)
+            let many = (fnc.name, param.name) != ("LoadImageAnim", "frames") and isPlural(param.name)
             const
               replacements = [
                 ("GenImageFontAtlas", "recs", "ptr ptr UncheckedArray[$1]")
               ]
-            let pat = getReplacement(fnc.name, param, replacements)
-            let kind = convertType(kind, pat, many, not isPrivate)
+            let pat = getReplacement(fnc.name, param.name, replacements)
+            let kind = convertType(param.`type`, pat, many, not isPrivate)
             lit kind
       lit ")"
       if fnc.returnType != "void":
