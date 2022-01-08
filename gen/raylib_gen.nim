@@ -29,26 +29,6 @@ type
   LoadFileTextCallback* = proc (fileName: cstring): cstring {.cdecl.} ## FileIO: Load text data
   SaveFileTextCallback* = proc (fileName: cstring; text: cstring): bool {.cdecl.} ## FileIO: Save text data
 """
-  arrayAccess = """
-
-proc $2*(x: $1): lent $4 {.inline.} =
-  result = $4(x)
-
-proc $2*(x: var $1): var $4 {.inline.} =
-  result = $4(x)
-
-proc `[]`*(x: $4, i: $5): $3 =
-  checkArrayAccess($1(x).$2, $6)
-  result = $1(x).$2[i]
-
-proc `[]`*(x: var $4, i: $5): var $3 =
-  checkArrayAccess($1(x).$2, $6)
-  result = $1(x).$2[i]
-
-proc `[]=`*(x: var $4, i: $5, val: $3) =
-  checkArrayAccess($1(x).$2, $6)
-  $1(x).$2[i] = val
-"""
   extraDistinct = """
 
   MaterialMapDiffuse* = MaterialMapAlbedo
@@ -525,10 +505,6 @@ proc genBindings(t: TopLevel, fname: string; header, middle, footer: string) =
       lit " {.inline.} = x."
       ident field
       lit "\n"
-    for obj, field, kind in procArrays.items:
-      let dist = obj & capitalizeAscii(field)
-      let (idx, len) = getIdxLen(obj, field)
-      lit format(arrayAccess, [obj, field, kind, dist, idx, len])
   finally:
     if otp != nil: otp.close()
 

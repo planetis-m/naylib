@@ -1504,7 +1504,7 @@ proc raiseRangeDefect {.noinline, noreturn.} =
 template checkArrayAccess(a, len) =
   when compileOption("boundChecks"):
     {.line.}:
-      if a == nil or i >= len:
+      if a == nil or i.uint32 >= len.uint32:
         raiseRangeDefect()
 
 proc `<`*(a, b: MaterialMapIndex): bool {.borrow.}
@@ -1705,19 +1705,6 @@ proc loadWaveFromMemory*(fileType: string, fileData: openarray[uint8]): Wave =
 proc loadMusicStreamFromMemory*(fileType: string, data: openarray[uint8]): Music =
   ## Load music stream from data
   loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data), data.len.int32)
-
-proc id*(x: Texture): uint32 {.inline.} = x.id
-proc id*(x: RenderTexture): uint32 {.inline.} = x.id
-proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
-proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
-proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
-proc vaoId*(x: Mesh): uint32 {.inline.} = x.vaoId
-proc id*(x: Shader): uint32 {.inline.} = x.id
-proc meshCount*(x: Model): int32 {.inline.} = x.meshCount
-proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
-proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
-proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
-proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
 
 proc recs*(x: Font): lent FontRecs {.inline.} =
   result = FontRecs(x)
@@ -2162,3 +2149,16 @@ proc `[]`*(x: var FramePose, i: int32): var Transform =
 proc `[]=`*(x: var FramePose, i: int32, val: Transform) =
   checkArrayAccess(x.data, x.len)
   x.data[i] = val
+
+proc id*(x: Texture): uint32 {.inline.} = x.id
+proc id*(x: RenderTexture): uint32 {.inline.} = x.id
+proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
+proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
+proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
+proc vaoId*(x: Mesh): uint32 {.inline.} = x.vaoId
+proc id*(x: Shader): uint32 {.inline.} = x.id
+proc meshCount*(x: Model): int32 {.inline.} = x.meshCount
+proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
+proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
+proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
+proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
