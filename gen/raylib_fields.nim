@@ -40,7 +40,7 @@ proc glyphs*(x: Font): lent FontGlyphs {.inline.} =
 proc glyphs*(x: var Font): var FontGlyphs {.inline.} =
   result = FontGlyphs(x)
 
-proc `[]`*(x: FontGlyphs, i: int32): GlyphInfo =
+proc `[]`*(x: FontGlyphs, i: int32): lent GlyphInfo =
   checkArrayAccess(Font(x).glyphs, i, Font(x).glyphCount)
   result = Font(x).glyphs[i]
 
@@ -292,7 +292,7 @@ proc maps*(x: Material): lent MaterialMaps {.inline.} =
 proc maps*(x: var Material): var MaterialMaps {.inline.} =
   result = MaterialMaps(x)
 
-proc `[]`*(x: MaterialMaps, i: MaterialMapIndex): MaterialMap =
+proc `[]`*(x: MaterialMaps, i: MaterialMapIndex): lent MaterialMap =
   checkArrayAccess(Material(x).maps, i, MaxMaterialMaps)
   result = Material(x).maps[i]
 
@@ -310,7 +310,7 @@ proc meshes*(x: Model): lent ModelMeshes {.inline.} =
 proc meshes*(x: var Model): var ModelMeshes {.inline.} =
   result = ModelMeshes(x)
 
-proc `[]`*(x: ModelMeshes, i: int32): Mesh =
+proc `[]`*(x: ModelMeshes, i: int32): lent Mesh =
   checkArrayAccess(Model(x).meshes, i, Model(x).meshCount)
   result = Model(x).meshes[i]
 
@@ -328,7 +328,7 @@ proc materials*(x: Model): lent ModelMaterials {.inline.} =
 proc materials*(x: var Model): var ModelMaterials {.inline.} =
   result = ModelMaterials(x)
 
-proc `[]`*(x: ModelMaterials, i: int32): Material =
+proc `[]`*(x: ModelMaterials, i: int32): lent Material =
   checkArrayAccess(Model(x).materials, i, Model(x).materialCount)
   result = Model(x).materials[i]
 
@@ -364,7 +364,7 @@ proc bones*(x: Model): lent ModelBones {.inline.} =
 proc bones*(x: var Model): var ModelBones {.inline.} =
   result = ModelBones(x)
 
-proc `[]`*(x: ModelBones, i: int32): BoneInfo =
+proc `[]`*(x: ModelBones, i: int32): lent BoneInfo =
   checkArrayAccess(Model(x).bones, i, Model(x).boneCount)
   result = Model(x).bones[i]
 
@@ -382,7 +382,7 @@ proc bindPose*(x: Model): lent ModelBindPose {.inline.} =
 proc bindPose*(x: var Model): var ModelBindPose {.inline.} =
   result = ModelBindPose(x)
 
-proc `[]`*(x: ModelBindPose, i: int32): Transform =
+proc `[]`*(x: ModelBindPose, i: int32): lent Transform =
   checkArrayAccess(Model(x).bindPose, i, Model(x).boneCount)
   result = Model(x).bindPose[i]
 
@@ -400,7 +400,7 @@ proc bones*(x: ModelAnimation): lent ModelAnimationBones {.inline.} =
 proc bones*(x: var ModelAnimation): var ModelAnimationBones {.inline.} =
   result = ModelAnimationBones(x)
 
-proc `[]`*(x: ModelAnimationBones, i: int32): BoneInfo =
+proc `[]`*(x: ModelAnimationBones, i: int32): lent BoneInfo =
   checkArrayAccess(ModelAnimation(x).bones, i, ModelAnimation(x).boneCount)
   result = ModelAnimation(x).bones[i]
 
