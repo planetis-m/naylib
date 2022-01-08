@@ -1498,23 +1498,6 @@ proc setAudioStreamBufferSizeDefault*(size: int32) {.importc: "SetAudioStreamBuf
   ## Default size for new audio streams
 {.pop.}
 
-proc raiseRangeDefect {.noinline, noreturn.} =
-  raise newException(RangeDefect, "array access out of bounds")
-
-template checkArrayAccess(a, len) =
-  when compileOption("boundChecks"):
-    {.line.}:
-      if a == nil or i.uint32 >= len.uint32:
-        raiseRangeDefect()
-
-proc `<`*(a, b: MaterialMapIndex): bool {.borrow.}
-proc `<=`*(a, b: MaterialMapIndex): bool {.borrow.}
-proc `==`*(a, b: MaterialMapIndex): bool {.borrow.}
-
-proc `<`*(a, b: ShaderLocationIndex): bool {.borrow.}
-proc `<=`*(a, b: ShaderLocationIndex): bool {.borrow.}
-proc `==`*(a, b: ShaderLocationIndex): bool {.borrow.}
-
 proc `=destroy`*(x: var Image) =
   if x.data != nil: unloadImage(x)
 proc `=copy`*(dest: var Image; source: Image) =
@@ -1574,6 +1557,37 @@ proc `=copy`*(dest: var Sound; source: Sound) {.error.}
 proc `=destroy`*(x: var Music) =
   if x.stream.buffer != nil: unloadMusicStream(x)
 proc `=copy`*(dest: var Music; source: Music) {.error.}
+
+type
+  FramePose* = object
+    len: int32
+    data: ptr UncheckedArray[Transform]
+
+proc len*(x: FramePose): int32 {.inline.} = x.len
+
+proc `=destroy`*(x: var FramePose) =
+  if x.data != nil: memFree(x.data)
+proc `=copy`*(dest: var FramePose; source: FramePose) =
+  if dest.data != source.data:
+    `=destroy`(dest)
+    wasMoved(dest)
+    dest.len = source.len
+    if dest.len > 0:
+      dest.data = cast[typeof(dest.data)](memAlloc(dest.len))
+      copyMem(dest.data, source.data, dest.len * sizeof(Transform))
+
+proc id*(x: Texture): uint32 {.inline.} = x.id
+proc id*(x: RenderTexture): uint32 {.inline.} = x.id
+proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
+proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
+proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
+proc vaoId*(x: Mesh): uint32 {.inline.} = x.vaoId
+proc id*(x: Shader): uint32 {.inline.} = x.id
+proc meshCount*(x: Model): int32 {.inline.} = x.meshCount
+proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
+proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
+proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
+proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
 
 proc getMonitorName*(monitor: int32): string {.inline.} =
   ## Get the human-readable, UTF-8 encoded name of the primary monitor
@@ -1705,6 +1719,24 @@ proc loadWaveFromMemory*(fileType: string, fileData: openarray[uint8]): Wave =
 proc loadMusicStreamFromMemory*(fileType: string, data: openarray[uint8]): Music =
   ## Load music stream from data
   loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data), data.len.int32)
+
+proc raiseRangeDefect {.noinline, noreturn.} =
+  raise newException(RangeDefect, "array access out of bounds")
+
+template checkArrayAccess(a, len) =
+  when compileOption("boundChecks"):
+    {.line.}:
+      if a == nil or i.uint32 >= len.uint32:
+        raiseRangeDefect()
+
+proc `<`*(a, b: MaterialMapIndex): bool {.borrow.}
+proc `<=`*(a, b: MaterialMapIndex): bool {.borrow.}
+proc `==`*(a, b: MaterialMapIndex): bool {.borrow.}
+
+proc `<`*(a, b: ShaderLocationIndex): bool {.borrow.}
+proc `<=`*(a, b: ShaderLocationIndex): bool {.borrow.}
+proc `==`*(a, b: ShaderLocationIndex): bool {.borrow.}
+
 
 proc recs*(x: Font): lent FontRecs {.inline.} =
   result = FontRecs(x)
@@ -2108,24 +2140,6 @@ proc framePoses*(x: ModelAnimation): lent ModelAnimationFramePoses {.inline.} =
 proc framePoses*(x: var ModelAnimation): var ModelAnimationFramePoses {.inline.} =
   result = ModelAnimationFramePoses(x)
 
-type
-  FramePose* = object
-    len: int32
-    data: ptr UncheckedArray[Transform]
-
-proc len*(x: FramePose): int32 {.inline.} = x.len
-
-proc `=destroy`*(x: var FramePose) =
-  if x.data != nil: memFree(x.data)
-proc `=copy`*(dest: var FramePose; source: FramePose) =
-  if dest.data != source.data:
-    `=destroy`(dest)
-    wasMoved(dest)
-    dest.len = source.len
-    if dest.len > 0:
-      dest.data = cast[typeof(dest.data)](memAlloc(dest.len))
-      copyMem(dest.data, source.data, dest.len * sizeof(Transform))
-
 proc `[]`*(x: ModelAnimationFramePoses, i: int32): FramePose =
   checkArrayAccess(ModelAnimation(x).framePoses, ModelAnimation(x).frameCount)
   result = FramePose(len: ModelAnimation(x).boneCount, data: ModelAnimation(x).framePoses[i])
@@ -2149,16 +2163,3 @@ proc `[]`*(x: var FramePose, i: int32): var Transform =
 proc `[]=`*(x: var FramePose, i: int32, val: Transform) =
   checkArrayAccess(x.data, x.len)
   x.data[i] = val
-
-proc id*(x: Texture): uint32 {.inline.} = x.id
-proc id*(x: RenderTexture): uint32 {.inline.} = x.id
-proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
-proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
-proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
-proc vaoId*(x: Mesh): uint32 {.inline.} = x.vaoId
-proc id*(x: Shader): uint32 {.inline.} = x.id
-proc meshCount*(x: Model): int32 {.inline.} = x.meshCount
-proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
-proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
-proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
-proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount

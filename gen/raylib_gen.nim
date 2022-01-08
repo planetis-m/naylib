@@ -337,7 +337,7 @@ proc getIdxLen(obj, name: string): (string, string) =
   else:
     ("int32", obj & "(x)." & name[0..^2] & "Count")
 
-proc genBindings(t: TopLevel, fname: string; header, middle, footer: string) =
+proc genBindings(t: TopLevel, fname: string; header, middle: string) =
   var buf = newStringOfCap(50)
   var indent = 0
   var otp: FileStream
@@ -493,7 +493,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle, footer: string) =
           lit "## "
           lit fnc.description
     lit "\n{.pop.}\n"
-    lit footer
+    lit readFile("raylib_types.nim")
     lit "\n"
     for obj, field, kind in procProperties.items:
       lit "proc "
@@ -505,6 +505,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle, footer: string) =
       lit " {.inline.} = x."
       ident field
       lit "\n"
+    lit readFile("raylib_wrap.nim")
+    lit readFile("raylib_fields.nim")
   finally:
     if otp != nil: otp.close()
 
@@ -514,6 +516,6 @@ const
 
 proc main =
   var t = parseApi(raylibApi)
-  genBindings(t, outputname, raylibHeader, helpers, readFile("raylib_wrap.nim"))
+  genBindings(t, outputname, raylibHeader, helpers)
 
 main()
