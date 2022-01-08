@@ -295,48 +295,6 @@ proc getReplacement(x, y: string, replacements: openarray[(string, string, strin
     if x == a and y == b:
       return pattern
 
-proc getIdxLen(obj, name: string): (string, string) =
-  if (obj, name) == ("Mesh", "vboId"):
-    ("int32", "MaxMeshVertexBuffers")
-  elif (obj, name) == ("Material", "maps"):
-    ("MaterialMapIndex", "MaxMaterialMaps")
-  elif (obj, name) == ("Shader", "locs"):
-    ("ShaderLocationIndex", "MaxShaderLocations")
-  elif (obj, name) == ("Font", "recs"):
-    ("int32", "Font(x).glyphCount")
-  elif (obj, name) == ("Mesh", "boneIds"):
-    ("int32", "Mesh(x).vertexCount")
-  elif (obj, name) == ("Mesh", "boneWeights"):
-    ("int32", "Mesh(x).vertexCount")
-  elif (obj, name) == ("Mesh", "indices"):
-    ("int32", "Mesh(x).triangleCount")
-  elif (obj, name) == ("Mesh", "tangents"):
-    ("int32", "Mesh(x).vertexCount")
-  elif (obj, name) == ("Mesh", "texcoords"):
-    ("int32", "Mesh(x).vertexCount")
-  elif (obj, name) == ("Mesh", "texcoords2"):
-    ("int32", "Mesh(x).vertexCount")
-  elif (obj, name) == ("Mesh", "animVertices"):
-    ("int32", "Mesh(x).vertexCount")
-  elif (obj, name) == ("Mesh", "animNormals"):
-    ("int32", "Mesh(x).vertexCount")
-  elif (obj, name) == ("Mesh", "normals"):
-    ("int32", "Mesh(x).vertexCount")
-  elif (obj, name) == ("Mesh", "colors"):
-    ("int32", "Mesh(x).vertexCount")
-  elif (obj, name) == ("Mesh", "vertices"):
-    ("int32", "Mesh(x).vertexCount")
-  elif (obj, name) == ("Model", "meshMaterial"):
-    ("int32", "Model(x).meshCount")
-  elif (obj, name) == ("Model", "meshes"):
-    ("int32", "Model(x).meshCount")
-  elif (obj, name) == ("Model", "bindPose"):
-    ("int32", "Model(x).boneCount")
-  elif (obj, name) == ("ModelAnimation", "framePoses"):
-    ("int32", "ModelAnimation(x).frameCount")
-  else:
-    ("int32", obj & "(x)." & name[0..^2] & "Count")
-
 proc genBindings(t: TopLevel, fname: string; header, middle: string) =
   var buf = newStringOfCap(50)
   var indent = 0

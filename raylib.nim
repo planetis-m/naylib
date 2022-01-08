@@ -1719,7 +1719,6 @@ proc `<`*(a, b: ShaderLocationIndex): bool {.borrow.}
 proc `<=`*(a, b: ShaderLocationIndex): bool {.borrow.}
 proc `==`*(a, b: ShaderLocationIndex): bool {.borrow.}
 
-
 proc recs*(x: Font): lent FontRecs {.inline.} =
   result = FontRecs(x)
 
