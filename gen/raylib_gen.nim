@@ -341,7 +341,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
             ident name
             let isPrivate = (obj.name, name) notin
                 {"Wave": "frameCount", "Sound": "frameCount", "Music": "frameCount"} and
-                name.endsWith("Count") or name in ["id", "vaoId"]
+                name.endsWith("Count")
             const replacements = [
               ("Camera3D", "projection", "CameraProjection"),
               ("Image", "format", "PixelFormat"),

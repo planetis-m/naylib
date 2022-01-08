@@ -416,7 +416,7 @@ type
     format*: PixelFormat ## Data format (PixelFormat type)
 
   Texture* {.header: "raylib.h", bycopy.} = object ## Texture, tex data stored in GPU memory (VRAM)
-    id: uint32 ## OpenGL texture id
+    id*: uint32 ## OpenGL texture id
     width*: int32 ## Texture base width
     height*: int32 ## Texture base height
     mipmaps*: int32 ## Mipmap levels, 1 by default
@@ -425,7 +425,7 @@ type
   TextureCubemap* = Texture ## TextureCubemap, same as Texture
 
   RenderTexture* {.header: "raylib.h", bycopy.} = object ## RenderTexture, fbo for texture rendering
-    id: uint32 ## OpenGL framebuffer object id
+    id*: uint32 ## OpenGL framebuffer object id
     texture*: Texture ## Color buffer attachment texture
     depth*: Texture ## Depth buffer attachment texture
   RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture
@@ -481,11 +481,11 @@ type
     animNormals: ptr UncheckedArray[float32] ## Animated normals (after bones transformations)
     boneIds: ptr UncheckedArray[uint8] ## Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)
     boneWeights: ptr UncheckedArray[float32] ## Vertex bone weight, up to 4 bones influence by vertex (skinning)
-    vaoId: uint32 ## OpenGL Vertex Array Object id
+    vaoId*: uint32 ## OpenGL Vertex Array Object id
     vboId: ptr array[MaxMeshVertexBuffers, uint32] ## OpenGL Vertex Buffer Objects id (default vertex data)
 
   Shader* {.header: "raylib.h", bycopy.} = object ## Shader
-    id: uint32 ## Shader program id
+    id*: uint32 ## Shader program id
     locs: ptr array[MaxShaderLocations, int32] ## Shader locations array (RL_MAX_SHADER_LOCATIONS)
 
   MaterialMap* {.header: "raylib.h", bycopy.} = object ## MaterialMap
@@ -1558,13 +1558,9 @@ proc `=destroy`*(x: var Music) =
   if x.stream.buffer != nil: unloadMusicStream(x)
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 
-proc id*(x: Texture): uint32 {.inline.} = x.id
-proc id*(x: RenderTexture): uint32 {.inline.} = x.id
 proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
 proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
 proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
-proc vaoId*(x: Mesh): uint32 {.inline.} = x.vaoId
-proc id*(x: Shader): uint32 {.inline.} = x.id
 proc meshCount*(x: Model): int32 {.inline.} = x.meshCount
 proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
 proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
