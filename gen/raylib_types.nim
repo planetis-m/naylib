@@ -58,21 +58,3 @@ proc `=copy`*(dest: var Sound; source: Sound) {.error.}
 proc `=destroy`*(x: var Music) =
   if x.stream.buffer != nil: unloadMusicStream(x)
 proc `=copy`*(dest: var Music; source: Music) {.error.}
-
-type
-  FramePose* = object
-    len: int32
-    data: ptr UncheckedArray[Transform]
-
-proc len*(x: FramePose): int32 {.inline.} = x.len
-
-proc `=destroy`*(x: var FramePose) =
-  if x.data != nil: memFree(x.data)
-proc `=copy`*(dest: var FramePose; source: FramePose) =
-  if dest.data != source.data:
-    `=destroy`(dest)
-    wasMoved(dest)
-    dest.len = source.len
-    if dest.len > 0:
-      dest.data = cast[typeof(dest.data)](memAlloc(dest.len))
-      copyMem(dest.data, source.data, dest.len * sizeof(Transform))
