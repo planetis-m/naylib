@@ -60,11 +60,11 @@ proc vertices*(x: var Mesh): var MeshVertices {.inline.} =
 
 proc `[]`*(x: MeshVertices, i: int32): Vector3 =
   checkArrayAccess(Mesh(x).vertices, i, Mesh(x).vertexCount)
-  result = cast[Vector3](Mesh(x).vertices[i*sizeof(Vector3)])
+  result = cast[ptr Vector3](Mesh(x).vertices[i*sizeof(Vector3)].addr)[]
 
 proc `[]`*(x: var MeshVertices, i: int32): var Vector3 =
   checkArrayAccess(Mesh(x).vertices, i, Mesh(x).vertexCount)
-  result = cast[var Vector3](Mesh(x).vertices[i*sizeof(Vector3)])
+  result = cast[ptr Vector3](Mesh(x).vertices[i*sizeof(Vector3)].addr)[]
 
 proc `[]=`*(x: var MeshVertices, i: int32, val: Vector3) =
   checkArrayAccess(Mesh(x).vertices, i, Mesh(x).vertexCount)
@@ -78,11 +78,11 @@ proc texcoords*(x: var Mesh): var MeshTexcoords {.inline.} =
 
 proc `[]`*(x: MeshTexcoords, i: int32): Vector2 =
   checkArrayAccess(Mesh(x).texcoords, i, Mesh(x).vertexCount)
-  result = cast[Vector2](Mesh(x).texcoords[i*sizeof(Vector2)])
+  result = cast[ptr Vector2](Mesh(x).texcoords[i*sizeof(Vector2)].addr)[]
 
 proc `[]`*(x: var MeshTexcoords, i: int32): var Vector2 =
   checkArrayAccess(Mesh(x).texcoords, i, Mesh(x).vertexCount)
-  result = cast[var Vector2](Mesh(x).texcoords[i*sizeof(Vector2)])
+  result = cast[ptr Vector2](Mesh(x).texcoords[i*sizeof(Vector2)].addr)[]
 
 proc `[]=`*(x: var MeshTexcoords, i: int32, val: Vector2) =
   checkArrayAccess(Mesh(x).texcoords, i, Mesh(x).vertexCount)
@@ -96,11 +96,11 @@ proc texcoords2*(x: var Mesh): var MeshTexcoords2 {.inline.} =
 
 proc `[]`*(x: MeshTexcoords2, i: int32): Vector2 =
   checkArrayAccess(Mesh(x).texcoords2, i, Mesh(x).vertexCount)
-  result = cast[Vector2](Mesh(x).texcoords2[i*sizeof(Vector2)])
+  result = cast[ptr Vector2](Mesh(x).texcoords2[i*sizeof(Vector2)].addr)[]
 
 proc `[]`*(x: var MeshTexcoords2, i: int32): var Vector2 =
   checkArrayAccess(Mesh(x).texcoords2, i, Mesh(x).vertexCount)
-  result = cast[var Vector2](Mesh(x).texcoords2[i*sizeof(Vector2)])
+  result = cast[ptr Vector2](Mesh(x).texcoords2[i*sizeof(Vector2)].addr)[]
 
 proc `[]=`*(x: var MeshTexcoords2, i: int32, val: Vector2) =
   checkArrayAccess(Mesh(x).texcoords2, i, Mesh(x).vertexCount)
@@ -114,11 +114,11 @@ proc normals*(x: var Mesh): var MeshNormals {.inline.} =
 
 proc `[]`*(x: MeshNormals, i: int32): Vector3 =
   checkArrayAccess(Mesh(x).normals, i, Mesh(x).vertexCount)
-  result = cast[Vector3](Mesh(x).normals[i*sizeof(Vector3)])
+  result = cast[ptr Vector3](Mesh(x).normals[i*sizeof(Vector3)].addr)[]
 
 proc `[]`*(x: var MeshNormals, i: int32): var Vector3 =
   checkArrayAccess(Mesh(x).normals, i, Mesh(x).vertexCount)
-  result = cast[var Vector3](Mesh(x).normals[i*sizeof(Vector3)])
+  result = cast[ptr Vector3](Mesh(x).normals[i*sizeof(Vector3)].addr)[]
 
 proc `[]=`*(x: var MeshNormals, i: int32, val: Vector3) =
   checkArrayAccess(Mesh(x).normals, i, Mesh(x).vertexCount)
@@ -132,11 +132,11 @@ proc tangents*(x: var Mesh): var MeshTangents {.inline.} =
 
 proc `[]`*(x: MeshTangents, i: int32): Vector4 =
   checkArrayAccess(Mesh(x).tangents, i, Mesh(x).vertexCount)
-  result = cast[Vector4](Mesh(x).tangents[i*sizeof(Vector4)])
+  result = cast[ptr Vector4](Mesh(x).tangents[i*sizeof(Vector4)].addr)[]
 
 proc `[]`*(x: var MeshTangents, i: int32): var Vector4 =
   checkArrayAccess(Mesh(x).tangents, i, Mesh(x).vertexCount)
-  result = cast[var Vector4](Mesh(x).tangents[i*sizeof(Vector4)])
+  result = cast[ptr Vector4](Mesh(x).tangents[i*sizeof(Vector4)].addr)[]
 
 proc `[]=`*(x: var MeshTangents, i: int32, val: Vector4) =
   checkArrayAccess(Mesh(x).tangents, i, Mesh(x).vertexCount)
@@ -150,11 +150,11 @@ proc colors*(x: var Mesh): var MeshColors {.inline.} =
 
 proc `[]`*(x: MeshColors, i: int32): Color =
   checkArrayAccess(Mesh(x).colors, i, Mesh(x).vertexCount)
-  result = cast[Color](Mesh(x).colors[i*sizeof(Color)])
+  result = cast[ptr Color](Mesh(x).colors[i*sizeof(Color)].addr)[]
 
 proc `[]`*(x: var MeshColors, i: int32): var Color =
   checkArrayAccess(Mesh(x).colors, i, Mesh(x).vertexCount)
-  result = cast[var Color](Mesh(x).colors[i*sizeof(Color)])
+  result = cast[ptr Color](Mesh(x).colors[i*sizeof(Color)].addr)[]
 
 proc `[]=`*(x: var MeshColors, i: int32, val: Color) =
   checkArrayAccess(Mesh(x).colors, i, Mesh(x).vertexCount)
@@ -168,11 +168,11 @@ proc indices*(x: var Mesh): var MeshIndices {.inline.} =
 
 proc `[]`*(x: MeshIndices, i: int32): array[3, uint16] =
   checkArrayAccess(Mesh(x).indices, i, Mesh(x).triangleCount)
-  result = cast[typeof(result)](Mesh(x).indices[i*sizeof(result)])
+  result = cast[ptr typeof(result)](Mesh(x).indices[i*sizeof(result)].addr)[]
 
 proc `[]`*(x: var MeshIndices, i: int32): var array[3, uint16] =
   checkArrayAccess(Mesh(x).indices, i, Mesh(x).triangleCount)
-  result = cast[var typeof(result)](Mesh(x).indices[i*sizeof(result)])
+  result = cast[ptr typeof(result)](Mesh(x).indices[i*sizeof(result)].addr)[]
 
 proc `[]=`*(x: var MeshIndices, i: int32, val: array[3, uint16]) =
   checkArrayAccess(Mesh(x).indices, i, Mesh(x).triangleCount)
@@ -186,11 +186,11 @@ proc animVertices*(x: var Mesh): var MeshAnimVertices {.inline.} =
 
 proc `[]`*(x: MeshAnimVertices, i: int32): Vector3 =
   checkArrayAccess(Mesh(x).animVertices, i, Mesh(x).vertexCount)
-  result = cast[var Vector3](Mesh(x).animVertices[i*sizeof(Vector3)])
+  result = cast[ptr Vector3](Mesh(x).animVertices[i*sizeof(Vector3)].addr)[]
 
 proc `[]`*(x: var MeshAnimVertices, i: int32): var Vector3 =
   checkArrayAccess(Mesh(x).animVertices, i, Mesh(x).vertexCount)
-  result = cast[var Vector3](Mesh(x).animVertices[i*sizeof(Vector3)])
+  result = cast[ptr Vector3](Mesh(x).animVertices[i*sizeof(Vector3)].addr)[]
 
 proc `[]=`*(x: var MeshAnimVertices, i: int32, val: Vector3) =
   checkArrayAccess(Mesh(x).animVertices, i, Mesh(x).vertexCount)
@@ -204,11 +204,11 @@ proc animNormals*(x: var Mesh): var MeshAnimNormals {.inline.} =
 
 proc `[]`*(x: MeshAnimNormals, i: int32): Vector3 =
   checkArrayAccess(Mesh(x).animNormals, i, Mesh(x).vertexCount)
-  result = cast[Vector3](Mesh(x).animNormals[i*sizeof(Vector3)])
+  result = cast[ptr Vector3](Mesh(x).animNormals[i*sizeof(Vector3)].addr)[]
 
 proc `[]`*(x: var MeshAnimNormals, i: int32): var Vector3 =
   checkArrayAccess(Mesh(x).animNormals, i, Mesh(x).vertexCount)
-  result = cast[var Vector3](Mesh(x).animNormals[i*sizeof(Vector3)])
+  result = cast[ptr Vector3](Mesh(x).animNormals[i*sizeof(Vector3)].addr)[]
 
 proc `[]=`*(x: var MeshAnimNormals, i: int32, val: Vector3) =
   checkArrayAccess(Mesh(x).animNormals, i, Mesh(x).vertexCount)
@@ -222,11 +222,11 @@ proc boneIds*(x: var Mesh): var MeshBoneIds {.inline.} =
 
 proc `[]`*(x: MeshBoneIds, i: int32): array[4, uint8] =
   checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
-  result = cast[typeof(result)](Mesh(x).boneIds[i*sizeof(result)])
+  result = cast[ptr typeof(result)](Mesh(x).boneIds[i*sizeof(result)].addr)[]
 
 proc `[]`*(x: var MeshBoneIds, i: int32): var array[4, uint8] =
   checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
-  result = cast[var typeof(result)](Mesh(x).boneIds[i*sizeof(result)])
+  result = cast[ptr typeof(result)](Mesh(x).boneIds[i*sizeof(result)].addr)[]
 
 proc `[]=`*(x: var MeshBoneIds, i: int32, val: array[4, uint8]) =
   checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
@@ -240,11 +240,11 @@ proc boneWeights*(x: var Mesh): var MeshBoneWeights {.inline.} =
 
 proc `[]`*(x: MeshBoneWeights, i: int32): Vector4 =
   checkArrayAccess(Mesh(x).boneWeights, i, Mesh(x).vertexCount)
-  result = cast[Vector4](Mesh(x).boneWeights[i*sizeof(Vector4)])
+  result = cast[ptr Vector4](Mesh(x).boneWeights[i*sizeof(Vector4)].addr)[]
 
 proc `[]`*(x: var MeshBoneWeights, i: int32): var Vector4 =
   checkArrayAccess(Mesh(x).boneWeights, i, Mesh(x).vertexCount)
-  result = cast[var Vector4](Mesh(x).boneWeights[i*sizeof(Vector4)])
+  result = cast[ptr Vector4](Mesh(x).boneWeights[i*sizeof(Vector4)].addr)[]
 
 proc `[]=`*(x: var MeshBoneWeights, i: int32, val: Vector4) =
   checkArrayAccess(Mesh(x).boneWeights, i, Mesh(x).vertexCount)
