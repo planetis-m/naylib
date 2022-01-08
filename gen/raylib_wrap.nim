@@ -1,4 +1,12 @@
 
+proc `<`*(a, b: MaterialMapIndex): bool {.borrow.}
+proc `<=`*(a, b: MaterialMapIndex): bool {.borrow.}
+proc `==`*(a, b: MaterialMapIndex): bool {.borrow.}
+
+proc `<`*(a, b: ShaderLocationIndex): bool {.borrow.}
+proc `<=`*(a, b: ShaderLocationIndex): bool {.borrow.}
+proc `==`*(a, b: ShaderLocationIndex): bool {.borrow.}
+
 proc `=destroy`*(x: var Image) =
   if x.data != nil: unloadImage(x)
 proc `=copy`*(dest: var Image; source: Image) =
