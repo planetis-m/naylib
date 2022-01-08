@@ -16,6 +16,8 @@ proc `<`*(a, b: ShaderLocationIndex): bool {.borrow.}
 proc `<=`*(a, b: ShaderLocationIndex): bool {.borrow.}
 proc `==`*(a, b: ShaderLocationIndex): bool {.borrow.}
 
+{.push overflowChecks: off.}
+
 proc recs*(x: Font): lent FontRecs {.inline.} =
   result = FontRecs(x)
 
@@ -432,3 +434,5 @@ proc `[]=`*(x: var ModelAnimationFramePoses; i, y: int32, val: Transform) =
   checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
   checkArrayAccess(ModelAnimation(x).framePoses[i], y, ModelAnimation(x).boneCount)
   ModelAnimation(x).framePoses[i][y] = val
+
+{.pop.}
