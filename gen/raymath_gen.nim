@@ -38,7 +38,7 @@ template `/=`*[T: Vector2 | Vector3 | Quaternion](v1: var T, value: float32) = v
 template `-`*[T: Vector2 | Vector3](v1: T): T = negate(v1)
 """
 
-proc genBindings(t: Topmost, fname: string, header, footer: string) =
+proc genBindings(t: TopLevel, fname: string, header, footer: string) =
   var buf = newStringOfCap(50)
   var indent = 0
   var otp: FileStream
@@ -60,7 +60,7 @@ proc genBindings(t: Topmost, fname: string, header, footer: string) =
             var (name, pat) = transFieldName(fld.name)
             ident name
             lit "*: "
-            let kind = convertType(fld.`type`, pat, false)
+            let kind = convertType(fld.`type`, pat, false, false)
             lit kind
             doc fld
         lit "\n"
@@ -83,12 +83,12 @@ proc genBindings(t: Topmost, fname: string, header, footer: string) =
           if i > 0: lit ", "
           ident param.name
           lit ": "
-          let kind = convertType(param.`type`, "", false)
+          let kind = convertType(param.`type`, "", false, true)
           lit kind
       lit ")"
       if fnc.returnType != "void":
         lit ": "
-        let kind = convertType(fnc.returnType, "", false)
+        let kind = convertType(fnc.returnType, "", false, true)
         lit kind
       lit " {.importc: \""
       ident fnc.name

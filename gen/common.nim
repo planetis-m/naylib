@@ -31,7 +31,7 @@ proc isKeyword*(s: string): bool {.inline.} =
 ## The raylib_parser produces JSON with the following structure.
 ## The type definitions are used by the deserializer to process the file.
 type
-  Topmost* = object
+  TopLevel* = object
     structs*: seq[StructInfo]
     enums*: seq[EnumInfo]
     functions*: seq[FunctionInfo]
@@ -59,11 +59,11 @@ type
     value*: int
     description*: string
 
-proc parseApi*(fname: string): Topmost =
+proc parseApi*(fname: string): TopLevel =
   var inp: FileStream
   try:
     inp = openFileStream(fname)
-    result = inp.jsonTo(Topmost)
+    result = inp.jsonTo(TopLevel)
   finally:
     if inp != nil: inp.close()
 
@@ -92,7 +92,7 @@ proc toNimType*(x: string): string =
     "Float16"
   else: x
 
-proc convertType*(s: string, pattern: string, many, isVar: bool): string =
+proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var string): string =
   ## Converts a C type to the equivalent Nim type.
   ## Should work with function parameters, return, and struct fields types.
   ## If a `pattern` is provided, it substitutes the found base type and returns it.
@@ -138,6 +138,7 @@ proc convertType*(s: string, pattern: string, many, isVar: bool): string =
       result = "char"
   elif isUnsigned:
     result = "u" & result
+  baseKind = result
   if pattern != "":
     result = pattern % result
   elif isChar and not isUnsigned:

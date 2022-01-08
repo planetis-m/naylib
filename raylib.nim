@@ -416,7 +416,7 @@ type
     format*: PixelFormat ## Data format (PixelFormat type)
 
   Texture* {.header: "raylib.h", bycopy.} = object ## Texture, tex data stored in GPU memory (VRAM)
-    id*: uint32 ## OpenGL texture id
+    id: uint32 ## OpenGL texture id
     width*: int32 ## Texture base width
     height*: int32 ## Texture base height
     mipmaps*: int32 ## Mipmap levels, 1 by default
@@ -425,7 +425,7 @@ type
   TextureCubemap* = Texture ## TextureCubemap, same as Texture
 
   RenderTexture* {.header: "raylib.h", bycopy.} = object ## RenderTexture, fbo for texture rendering
-    id*: uint32 ## OpenGL framebuffer object id
+    id: uint32 ## OpenGL framebuffer object id
     texture*: Texture ## Color buffer attachment texture
     depth*: Texture ## Depth buffer attachment texture
   RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture
@@ -447,11 +447,11 @@ type
 
   Font* {.header: "raylib.h", bycopy.} = object ## Font, font texture and GlyphInfo array data
     baseSize*: int32 ## Base size (default chars height)
-    glyphCount*: int32 ## Number of glyph characters
+    glyphCount: int32 ## Number of glyph characters
     glyphPadding*: int32 ## Padding around the glyph characters
     texture*: Texture2D ## Texture atlas containing the glyphs
-    recs*: ptr UncheckedArray[Rectangle] ## Rectangles in texture for the glyphs
-    glyphs*: ptr UncheckedArray[GlyphInfo] ## Glyphs info data
+    recs: ptr UncheckedArray[Rectangle] ## Rectangles in texture for the glyphs
+    glyphs: ptr UncheckedArray[GlyphInfo] ## Glyphs info data
 
   Camera3D* {.header: "raylib.h", bycopy.} = object ## Camera, defines position/orientation in 3d space
     position*: Vector3 ## Camera position
@@ -468,25 +468,25 @@ type
     zoom*: float32 ## Camera zoom (scaling), should be 1.0f by default
 
   Mesh* {.header: "raylib.h", bycopy.} = object ## Mesh, vertex data and vao/vbo
-    vertexCount*: int32 ## Number of vertices stored in arrays
-    triangleCount*: int32 ## Number of triangles stored (indexed or not)
-    vertices*: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
-    texcoords*: ptr UncheckedArray[float32] ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
-    texcoords2*: ptr UncheckedArray[float32] ## Vertex second texture coordinates (useful for lightmaps) (shader-location = 5)
-    normals*: ptr UncheckedArray[float32] ## Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
-    tangents*: ptr UncheckedArray[float32] ## Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
-    colors*: ptr UncheckedArray[uint8] ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-    indices*: ptr UncheckedArray[uint16] ## Vertex indices (in case vertex data comes indexed)
-    animVertices*: ptr UncheckedArray[float32] ## Animated vertex positions (after bones transformations)
-    animNormals*: ptr UncheckedArray[float32] ## Animated normals (after bones transformations)
-    boneIds*: ptr UncheckedArray[uint8] ## Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)
-    boneWeights*: ptr UncheckedArray[float32] ## Vertex bone weight, up to 4 bones influence by vertex (skinning)
-    vaoId*: uint32 ## OpenGL Vertex Array Object id
-    vboId*: ptr array[MaxMeshVertexBuffers, uint32] ## OpenGL Vertex Buffer Objects id (default vertex data)
+    vertexCount: int32 ## Number of vertices stored in arrays
+    triangleCount: int32 ## Number of triangles stored (indexed or not)
+    vertices: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
+    texcoords: ptr UncheckedArray[float32] ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+    texcoords2: ptr UncheckedArray[float32] ## Vertex second texture coordinates (useful for lightmaps) (shader-location = 5)
+    normals: ptr UncheckedArray[float32] ## Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
+    tangents: ptr UncheckedArray[float32] ## Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
+    colors: ptr UncheckedArray[uint8] ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
+    indices: ptr UncheckedArray[uint16] ## Vertex indices (in case vertex data comes indexed)
+    animVertices: ptr UncheckedArray[float32] ## Animated vertex positions (after bones transformations)
+    animNormals: ptr UncheckedArray[float32] ## Animated normals (after bones transformations)
+    boneIds: ptr UncheckedArray[uint8] ## Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)
+    boneWeights: ptr UncheckedArray[float32] ## Vertex bone weight, up to 4 bones influence by vertex (skinning)
+    vaoId: uint32 ## OpenGL Vertex Array Object id
+    vboId: ptr array[MaxMeshVertexBuffers, uint32] ## OpenGL Vertex Buffer Objects id (default vertex data)
 
   Shader* {.header: "raylib.h", bycopy.} = object ## Shader
-    id*: uint32 ## Shader program id
-    locs*: ptr array[MaxShaderLocations, int32] ## Shader locations array (RL_MAX_SHADER_LOCATIONS)
+    id: uint32 ## Shader program id
+    locs: ptr array[MaxShaderLocations, int32] ## Shader locations array (RL_MAX_SHADER_LOCATIONS)
 
   MaterialMap* {.header: "raylib.h", bycopy.} = object ## MaterialMap
     texture*: Texture2D ## Material map texture
@@ -495,7 +495,7 @@ type
 
   Material* {.header: "raylib.h", bycopy.} = object ## Material, includes shader and maps
     shader*: Shader ## Material shader
-    maps*: ptr array[MaxMaterialMaps, MaterialMap] ## Material maps array (MAX_MATERIAL_MAPS)
+    maps: ptr array[MaxMaterialMaps, MaterialMap] ## Material maps array (MAX_MATERIAL_MAPS)
     params*: array[4, float32] ## Material generic parameters (if required)
 
   Transform* {.header: "raylib.h", bycopy.} = object ## Transform, vectex transformation data
@@ -509,20 +509,20 @@ type
 
   Model* {.header: "raylib.h", bycopy.} = object ## Model, meshes, materials and animation data
     transform*: Matrix ## Local transform matrix
-    meshCount*: int32 ## Number of meshes
-    materialCount*: int32 ## Number of materials
-    meshes*: ptr UncheckedArray[Mesh] ## Meshes array
-    materials*: ptr UncheckedArray[Material] ## Materials array
-    meshMaterial*: ptr UncheckedArray[int32] ## Mesh material number
-    boneCount*: int32 ## Number of bones
-    bones*: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
-    bindPose*: ptr UncheckedArray[Transform] ## Bones base transformation (pose)
+    meshCount: int32 ## Number of meshes
+    materialCount: int32 ## Number of materials
+    meshes: ptr UncheckedArray[Mesh] ## Meshes array
+    materials: ptr UncheckedArray[Material] ## Materials array
+    meshMaterial: ptr UncheckedArray[int32] ## Mesh material number
+    boneCount: int32 ## Number of bones
+    bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
+    bindPose: ptr UncheckedArray[Transform] ## Bones base transformation (pose)
 
   ModelAnimation* {.header: "raylib.h", bycopy.} = object ## ModelAnimation
-    boneCount*: int32 ## Number of bones
-    frameCount*: int32 ## Number of animation frames
-    bones*: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
-    framePoses*: ptr UncheckedArray[ptr UncheckedArray[Transform]] ## Poses array by frame
+    boneCount: int32 ## Number of bones
+    frameCount: int32 ## Number of animation frames
+    bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
+    framePoses: ptr UncheckedArray[ptr UncheckedArray[Transform]] ## Poses array by frame
 
   Ray* {.header: "raylib.h", bycopy.} = object ## Ray, ray for raycasting
     position*: Vector3 ## Ray position (origin)
@@ -584,6 +584,30 @@ type
     rightScreenCenter*: array[2, float32] ## VR right screen center
     scale*: array[2, float32] ## VR distortion scale
     scaleIn*: array[2, float32] ## VR distortion scale in
+
+  FontRecs* = distinct Font
+  FontGlyphs* = distinct Font
+  MeshVertices* = distinct Mesh
+  MeshTexcoords* = distinct Mesh
+  MeshTexcoords2* = distinct Mesh
+  MeshNormals* = distinct Mesh
+  MeshTangents* = distinct Mesh
+  MeshColors* = distinct Mesh
+  MeshIndices* = distinct Mesh
+  MeshAnimVertices* = distinct Mesh
+  MeshAnimNormals* = distinct Mesh
+  MeshBoneIds* = distinct Mesh
+  MeshBoneWeights* = distinct Mesh
+  MeshVboId* = distinct Mesh
+  ShaderLocs* = distinct Shader
+  MaterialMaps* = distinct Material
+  ModelMeshes* = distinct Model
+  ModelMaterials* = distinct Model
+  ModelMeshMaterial* = distinct Model
+  ModelBones* = distinct Model
+  ModelBindPose* = distinct Model
+  ModelAnimationBones* = distinct ModelAnimation
+  ModelAnimationFramePoses* = distinct ModelAnimation
 
 const
   LightGray* = Color(r: 200, g: 200, b: 200, a: 255)
@@ -1474,6 +1498,23 @@ proc setAudioStreamBufferSizeDefault*(size: int32) {.importc: "SetAudioStreamBuf
   ## Default size for new audio streams
 {.pop.}
 
+proc raiseRangeDefect {.noinline, noreturn.} =
+  raise newException(RangeDefect, "array access out of bounds")
+
+template checkArrayAccess(a, len) =
+  when compileOption("boundChecks"):
+    {.line.}:
+      if a == nil or i >= len:
+        raiseRangeDefect()
+
+proc `<`*(a, b: MaterialMapIndex): bool {.borrow.}
+proc `<=`*(a, b: MaterialMapIndex): bool {.borrow.}
+proc `==`*(a, b: MaterialMapIndex): bool {.borrow.}
+
+proc `<`*(a, b: ShaderLocationIndex): bool {.borrow.}
+proc `<=`*(a, b: ShaderLocationIndex): bool {.borrow.}
+proc `==`*(a, b: ShaderLocationIndex): bool {.borrow.}
+
 proc `=destroy`*(x: var Image) =
   if x.data != nil: unloadImage(x)
 proc `=copy`*(dest: var Image; source: Image) =
@@ -1664,3 +1705,460 @@ proc loadWaveFromMemory*(fileType: string, fileData: openarray[uint8]): Wave =
 proc loadMusicStreamFromMemory*(fileType: string, data: openarray[uint8]): Music =
   ## Load music stream from data
   loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data), data.len.int32)
+
+proc id*(x: Texture): uint32 {.inline.} = x.id
+proc id*(x: RenderTexture): uint32 {.inline.} = x.id
+proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
+proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
+proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
+proc vaoId*(x: Mesh): uint32 {.inline.} = x.vaoId
+proc id*(x: Shader): uint32 {.inline.} = x.id
+proc meshCount*(x: Model): int32 {.inline.} = x.meshCount
+proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
+proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
+proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
+proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
+
+proc recs*(x: Font): lent FontRecs {.inline.} =
+  result = FontRecs(x)
+
+proc recs*(x: var Font): var FontRecs {.inline.} =
+  result = FontRecs(x)
+
+proc `[]`*(x: FontRecs, i: int32): Rectangle =
+  checkArrayAccess(Font(x).recs, Font(x).glyphCount)
+  result = Font(x).recs[i]
+
+proc `[]`*(x: var FontRecs, i: int32): var Rectangle =
+  checkArrayAccess(Font(x).recs, Font(x).glyphCount)
+  result = Font(x).recs[i]
+
+proc `[]=`*(x: var FontRecs, i: int32, val: Rectangle) =
+  checkArrayAccess(Font(x).recs, Font(x).glyphCount)
+  Font(x).recs[i] = val
+
+proc glyphs*(x: Font): lent FontGlyphs {.inline.} =
+  result = FontGlyphs(x)
+
+proc glyphs*(x: var Font): var FontGlyphs {.inline.} =
+  result = FontGlyphs(x)
+
+proc `[]`*(x: FontGlyphs, i: int32): GlyphInfo =
+  checkArrayAccess(Font(x).glyphs, Font(x).glyphCount)
+  result = Font(x).glyphs[i]
+
+proc `[]`*(x: var FontGlyphs, i: int32): var GlyphInfo =
+  checkArrayAccess(Font(x).glyphs, Font(x).glyphCount)
+  result = Font(x).glyphs[i]
+
+proc `[]=`*(x: var FontGlyphs, i: int32, val: GlyphInfo) =
+  checkArrayAccess(Font(x).glyphs, Font(x).glyphCount)
+  Font(x).glyphs[i] = val
+
+proc vertices*(x: Mesh): lent MeshVertices {.inline.} =
+  result = MeshVertices(x)
+
+proc vertices*(x: var Mesh): var MeshVertices {.inline.} =
+  result = MeshVertices(x)
+
+proc `[]`*(x: MeshVertices, i: int32): Vector3 =
+  checkArrayAccess(Mesh(x).vertices, Mesh(x).vertexCount)
+  result = cast[Vector3](Mesh(x).vertices[i*sizeof(Vector3)])
+
+proc `[]`*(x: var MeshVertices, i: int32): var Vector3 =
+  checkArrayAccess(Mesh(x).vertices, Mesh(x).vertexCount)
+  result = cast[var Vector3](Mesh(x).vertices[i*sizeof(Vector3)])
+
+proc `[]=`*(x: var MeshVertices, i: int32, val: Vector3) =
+  checkArrayAccess(Mesh(x).vertices, Mesh(x).vertexCount)
+  copyMem(Mesh(x).vertices[i*sizeof(Vector3)].addr, val.unsafeAddr, sizeof(Vector3))
+
+proc texcoords*(x: Mesh): lent MeshTexcoords {.inline.} =
+  result = MeshTexcoords(x)
+
+proc texcoords*(x: var Mesh): var MeshTexcoords {.inline.} =
+  result = MeshTexcoords(x)
+
+proc `[]`*(x: MeshTexcoords, i: int32): Vector2 =
+  checkArrayAccess(Mesh(x).texcoords, Mesh(x).vertexCount)
+  result = cast[Vector2](Mesh(x).texcoords[i*sizeof(Vector2)])
+
+proc `[]`*(x: var MeshTexcoords, i: int32): var Vector2 =
+  checkArrayAccess(Mesh(x).texcoords, Mesh(x).vertexCount)
+  result = cast[var Vector2](Mesh(x).texcoords[i*sizeof(Vector2)])
+
+proc `[]=`*(x: var MeshTexcoords, i: int32, val: Vector2) =
+  checkArrayAccess(Mesh(x).texcoords, Mesh(x).vertexCount)
+  copyMem(Mesh(x).texcoords[i*sizeof(Vector2)].addr, val.unsafeAddr, sizeof(Vector2))
+
+proc texcoords2*(x: Mesh): lent MeshTexcoords2 {.inline.} =
+  result = MeshTexcoords2(x)
+
+proc texcoords2*(x: var Mesh): var MeshTexcoords2 {.inline.} =
+  result = MeshTexcoords2(x)
+
+proc `[]`*(x: MeshTexcoords2, i: int32): Vector2 =
+  checkArrayAccess(Mesh(x).texcoords2, Mesh(x).vertexCount)
+  result = cast[Vector2](Mesh(x).texcoords2[i*sizeof(Vector2)])
+
+proc `[]`*(x: var MeshTexcoords2, i: int32): var Vector2 =
+  checkArrayAccess(Mesh(x).texcoords2, Mesh(x).vertexCount)
+  result = cast[var Vector2](Mesh(x).texcoords2[i*sizeof(Vector2)])
+
+proc `[]=`*(x: var MeshTexcoords2, i: int32, val: Vector2) =
+  checkArrayAccess(Mesh(x).texcoords2, Mesh(x).vertexCount)
+  copyMem(Mesh(x).texcoords2[i*sizeof(Vector2)].addr, val.unsafeAddr, sizeof(Vector2))
+
+proc normals*(x: Mesh): lent MeshNormals {.inline.} =
+  result = MeshNormals(x)
+
+proc normals*(x: var Mesh): var MeshNormals {.inline.} =
+  result = MeshNormals(x)
+
+proc `[]`*(x: MeshNormals, i: int32): Vector3 =
+  checkArrayAccess(Mesh(x).normals, Mesh(x).vertexCount)
+  result = cast[Vector3](Mesh(x).normals[i*sizeof(Vector3)])
+
+proc `[]`*(x: var MeshNormals, i: int32): var Vector3 =
+  checkArrayAccess(Mesh(x).normals, Mesh(x).vertexCount)
+  result = cast[var Vector3](Mesh(x).normals[i*sizeof(Vector3)])
+
+proc `[]=`*(x: var MeshNormals, i: int32, val: Vector3) =
+  checkArrayAccess(Mesh(x).normals, Mesh(x).vertexCount)
+  copyMem(Mesh(x).normals[i*sizeof(Vector3)].addr, val.unsafeAddr, sizeof(Vector3))
+
+proc tangents*(x: Mesh): lent MeshTangents {.inline.} =
+  result = MeshTangents(x)
+
+proc tangents*(x: var Mesh): var MeshTangents {.inline.} =
+  result = MeshTangents(x)
+
+proc `[]`*(x: MeshTangents, i: int32): Vector4 =
+  checkArrayAccess(Mesh(x).tangents, Mesh(x).vertexCount)
+  result = cast[Vector4](Mesh(x).tangents[i*sizeof(Vector4)])
+
+proc `[]`*(x: var MeshTangents, i: int32): var Vector4 =
+  checkArrayAccess(Mesh(x).tangents, Mesh(x).vertexCount)
+  result = cast[var Vector4](Mesh(x).tangents[i*sizeof(Vector4)])
+
+proc `[]=`*(x: var MeshTangents, i: int32, val: Vector4) =
+  checkArrayAccess(Mesh(x).tangents, Mesh(x).vertexCount)
+  copyMem(Mesh(x).tangents[i*sizeof(Vector4)].addr, val.unsafeAddr, sizeof(Vector4))
+
+proc colors*(x: Mesh): lent MeshColors {.inline.} =
+  result = MeshColors(x)
+
+proc colors*(x: var Mesh): var MeshColors {.inline.} =
+  result = MeshColors(x)
+
+proc `[]`*(x: MeshColors, i: int32): Color =
+  checkArrayAccess(Mesh(x).colors, Mesh(x).vertexCount)
+  result = cast[Color](Mesh(x).colors[i*sizeof(Color)])
+
+proc `[]`*(x: var MeshColors, i: int32): var Color =
+  checkArrayAccess(Mesh(x).colors, Mesh(x).vertexCount)
+  result = cast[var Color](Mesh(x).colors[i*sizeof(Color)])
+
+proc `[]=`*(x: var MeshColors, i: int32, val: Color) =
+  checkArrayAccess(Mesh(x).colors, Mesh(x).vertexCount)
+  copyMem(Mesh(x).colors[i*sizeof(Color)].addr, val.unsafeAddr, sizeof(Color))
+
+proc indices*(x: Mesh): lent MeshIndices {.inline.} =
+  result = MeshIndices(x)
+
+proc indices*(x: var Mesh): var MeshIndices {.inline.} =
+  result = MeshIndices(x)
+
+proc `[]`*(x: MeshIndices, i: int32): array[3, uint16] =
+  checkArrayAccess(Mesh(x).indices, Mesh(x).triangleCount)
+  result = cast[typeof(result)](Mesh(x).indices[i*sizeof(result)])
+
+proc `[]`*(x: var MeshIndices, i: int32): var array[3, uint16] =
+  checkArrayAccess(Mesh(x).indices, Mesh(x).triangleCount)
+  result = cast[var typeof(result)](Mesh(x).indices[i*sizeof(result)])
+
+proc `[]=`*(x: var MeshIndices, i: int32, val: array[3, uint16]) =
+  checkArrayAccess(Mesh(x).indices, Mesh(x).triangleCount)
+  copyMem(Mesh(x).indices[i*sizeof(val)].addr, val.unsafeAddr, sizeof(val))
+
+proc animVertices*(x: Mesh): lent MeshAnimVertices {.inline.} =
+  result = MeshAnimVertices(x)
+
+proc animVertices*(x: var Mesh): var MeshAnimVertices {.inline.} =
+  result = MeshAnimVertices(x)
+
+proc `[]`*(x: MeshAnimVertices, i: int32): Vector3 =
+  checkArrayAccess(Mesh(x).animVertices, Mesh(x).vertexCount)
+  result = cast[var Vector3](Mesh(x).animVertices[i*sizeof(Vector3)])
+
+proc `[]`*(x: var MeshAnimVertices, i: int32): var Vector3 =
+  checkArrayAccess(Mesh(x).animVertices, Mesh(x).vertexCount)
+  result = cast[var Vector3](Mesh(x).animVertices[i*sizeof(Vector3)])
+
+proc `[]=`*(x: var MeshAnimVertices, i: int32, val: Vector3) =
+  checkArrayAccess(Mesh(x).animVertices, Mesh(x).vertexCount)
+  copyMem(Mesh(x).animVertices[i*sizeof(Vector3)].addr, val.unsafeAddr, sizeof(Vector3))
+
+proc animNormals*(x: Mesh): lent MeshAnimNormals {.inline.} =
+  result = MeshAnimNormals(x)
+
+proc animNormals*(x: var Mesh): var MeshAnimNormals {.inline.} =
+  result = MeshAnimNormals(x)
+
+proc `[]`*(x: MeshAnimNormals, i: int32): Vector3 =
+  checkArrayAccess(Mesh(x).animNormals, Mesh(x).vertexCount)
+  result = cast[Vector3](Mesh(x).animNormals[i*sizeof(Vector3)])
+
+proc `[]`*(x: var MeshAnimNormals, i: int32): var Vector3 =
+  checkArrayAccess(Mesh(x).animNormals, Mesh(x).vertexCount)
+  result = cast[var Vector3](Mesh(x).animNormals[i*sizeof(Vector3)])
+
+proc `[]=`*(x: var MeshAnimNormals, i: int32, val: Vector3) =
+  checkArrayAccess(Mesh(x).animNormals, Mesh(x).vertexCount)
+  copyMem(Mesh(x).animNormals[i*sizeof(Vector3)].addr, val.unsafeAddr, sizeof(Vector3))
+
+proc boneIds*(x: Mesh): lent MeshBoneIds {.inline.} =
+  result = MeshBoneIds(x)
+
+proc boneIds*(x: var Mesh): var MeshBoneIds {.inline.} =
+  result = MeshBoneIds(x)
+
+proc `[]`*(x: MeshBoneIds, i: int32): array[4, uint8] =
+  checkArrayAccess(Mesh(x).boneIds, Mesh(x).vertexCount)
+  result = cast[typeof(result)](Mesh(x).boneIds[i*sizeof(result)])
+
+proc `[]`*(x: var MeshBoneIds, i: int32): var array[4, uint8] =
+  checkArrayAccess(Mesh(x).boneIds, Mesh(x).vertexCount)
+  result = cast[var typeof(result)](Mesh(x).boneIds[i*sizeof(result)])
+
+proc `[]=`*(x: var MeshBoneIds, i: int32, val: array[4, uint8]) =
+  checkArrayAccess(Mesh(x).boneIds, Mesh(x).vertexCount)
+  copyMem(Mesh(x).boneIds[i*sizeof(val)].addr, val.unsafeAddr, sizeof(val))
+
+proc boneWeights*(x: Mesh): lent MeshBoneWeights {.inline.} =
+  result = MeshBoneWeights(x)
+
+proc boneWeights*(x: var Mesh): var MeshBoneWeights {.inline.} =
+  result = MeshBoneWeights(x)
+
+proc `[]`*(x: MeshBoneWeights, i: int32): Vector4 =
+  checkArrayAccess(Mesh(x).boneWeights, Mesh(x).vertexCount)
+  result = cast[Vector4](Mesh(x).boneWeights[i*sizeof(Vector4)])
+
+proc `[]`*(x: var MeshBoneWeights, i: int32): var Vector4 =
+  checkArrayAccess(Mesh(x).boneWeights, Mesh(x).vertexCount)
+  result = cast[var Vector4](Mesh(x).boneWeights[i*sizeof(Vector4)])
+
+proc `[]=`*(x: var MeshBoneWeights, i: int32, val: Vector4) =
+  checkArrayAccess(Mesh(x).boneWeights, Mesh(x).vertexCount)
+  copyMem(Mesh(x).boneWeights[i*sizeof(Vector4)].addr, val.unsafeAddr, sizeof(Vector4))
+
+proc vboId*(x: Mesh): lent MeshVboId {.inline.} =
+  result = MeshVboId(x)
+
+proc vboId*(x: var Mesh): var MeshVboId {.inline.} =
+  result = MeshVboId(x)
+
+proc `[]`*(x: MeshVboId, i: int32): uint32 =
+  checkArrayAccess(Mesh(x).vboId, MaxMeshVertexBuffers)
+  result = Mesh(x).vboId[i]
+
+proc `[]`*(x: var MeshVboId, i: int32): var uint32 =
+  checkArrayAccess(Mesh(x).vboId, MaxMeshVertexBuffers)
+  result = Mesh(x).vboId[i]
+
+proc `[]=`*(x: var MeshVboId, i: int32, val: uint32) =
+  checkArrayAccess(Mesh(x).vboId, MaxMeshVertexBuffers)
+  Mesh(x).vboId[i] = val
+
+proc locs*(x: Shader): lent ShaderLocs {.inline.} =
+  result = ShaderLocs(x)
+
+proc locs*(x: var Shader): var ShaderLocs {.inline.} =
+  result = ShaderLocs(x)
+
+proc `[]`*(x: ShaderLocs, i: ShaderLocationIndex): int32 =
+  checkArrayAccess(Shader(x).locs, MaxShaderLocations)
+  result = Shader(x).locs[i]
+
+proc `[]`*(x: var ShaderLocs, i: ShaderLocationIndex): var int32 =
+  checkArrayAccess(Shader(x).locs, MaxShaderLocations)
+  result = Shader(x).locs[i]
+
+proc `[]=`*(x: var ShaderLocs, i: ShaderLocationIndex, val: int32) =
+  checkArrayAccess(Shader(x).locs, MaxShaderLocations)
+  Shader(x).locs[i] = val
+
+proc maps*(x: Material): lent MaterialMaps {.inline.} =
+  result = MaterialMaps(x)
+
+proc maps*(x: var Material): var MaterialMaps {.inline.} =
+  result = MaterialMaps(x)
+
+proc `[]`*(x: MaterialMaps, i: MaterialMapIndex): MaterialMap =
+  checkArrayAccess(Material(x).maps, MaxMaterialMaps)
+  result = Material(x).maps[i]
+
+proc `[]`*(x: var MaterialMaps, i: MaterialMapIndex): var MaterialMap =
+  checkArrayAccess(Material(x).maps, MaxMaterialMaps)
+  result = Material(x).maps[i]
+
+proc `[]=`*(x: var MaterialMaps, i: MaterialMapIndex, val: MaterialMap) =
+  checkArrayAccess(Material(x).maps, MaxMaterialMaps)
+  Material(x).maps[i] = val
+
+proc meshes*(x: Model): lent ModelMeshes {.inline.} =
+  result = ModelMeshes(x)
+
+proc meshes*(x: var Model): var ModelMeshes {.inline.} =
+  result = ModelMeshes(x)
+
+proc `[]`*(x: ModelMeshes, i: int32): Mesh =
+  checkArrayAccess(Model(x).meshes, Model(x).meshCount)
+  result = Model(x).meshes[i]
+
+proc `[]`*(x: var ModelMeshes, i: int32): var Mesh =
+  checkArrayAccess(Model(x).meshes, Model(x).meshCount)
+  result = Model(x).meshes[i]
+
+proc `[]=`*(x: var ModelMeshes, i: int32, val: Mesh) =
+  checkArrayAccess(Model(x).meshes, Model(x).meshCount)
+  Model(x).meshes[i] = val
+
+proc materials*(x: Model): lent ModelMaterials {.inline.} =
+  result = ModelMaterials(x)
+
+proc materials*(x: var Model): var ModelMaterials {.inline.} =
+  result = ModelMaterials(x)
+
+proc `[]`*(x: ModelMaterials, i: int32): Material =
+  checkArrayAccess(Model(x).materials, Model(x).materialCount)
+  result = Model(x).materials[i]
+
+proc `[]`*(x: var ModelMaterials, i: int32): var Material =
+  checkArrayAccess(Model(x).materials, Model(x).materialCount)
+  result = Model(x).materials[i]
+
+proc `[]=`*(x: var ModelMaterials, i: int32, val: Material) =
+  checkArrayAccess(Model(x).materials, Model(x).materialCount)
+  Model(x).materials[i] = val
+
+proc meshMaterial*(x: Model): lent ModelMeshMaterial {.inline.} =
+  result = ModelMeshMaterial(x)
+
+proc meshMaterial*(x: var Model): var ModelMeshMaterial {.inline.} =
+  result = ModelMeshMaterial(x)
+
+proc `[]`*(x: ModelMeshMaterial, i: int32): int32 =
+  checkArrayAccess(Model(x).meshMaterial, Model(x).meshCount)
+  result = Model(x).meshMaterial[i]
+
+proc `[]`*(x: var ModelMeshMaterial, i: int32): var int32 =
+  checkArrayAccess(Model(x).meshMaterial, Model(x).meshCount)
+  result = Model(x).meshMaterial[i]
+
+proc `[]=`*(x: var ModelMeshMaterial, i: int32, val: int32) =
+  checkArrayAccess(Model(x).meshMaterial, Model(x).meshCount)
+  Model(x).meshMaterial[i] = val
+
+proc bones*(x: Model): lent ModelBones {.inline.} =
+  result = ModelBones(x)
+
+proc bones*(x: var Model): var ModelBones {.inline.} =
+  result = ModelBones(x)
+
+proc `[]`*(x: ModelBones, i: int32): BoneInfo =
+  checkArrayAccess(Model(x).bones, Model(x).boneCount)
+  result = Model(x).bones[i]
+
+proc `[]`*(x: var ModelBones, i: int32): var BoneInfo =
+  checkArrayAccess(Model(x).bones, Model(x).boneCount)
+  result = Model(x).bones[i]
+
+proc `[]=`*(x: var ModelBones, i: int32, val: BoneInfo) =
+  checkArrayAccess(Model(x).bones, Model(x).boneCount)
+  Model(x).bones[i] = val
+
+proc bindPose*(x: Model): lent ModelBindPose {.inline.} =
+  result = ModelBindPose(x)
+
+proc bindPose*(x: var Model): var ModelBindPose {.inline.} =
+  result = ModelBindPose(x)
+
+proc `[]`*(x: ModelBindPose, i: int32): Transform =
+  checkArrayAccess(Model(x).bindPose, Model(x).boneCount)
+  result = Model(x).bindPose[i]
+
+proc `[]`*(x: var ModelBindPose, i: int32): var Transform =
+  checkArrayAccess(Model(x).bindPose, Model(x).boneCount)
+  result = Model(x).bindPose[i]
+
+proc `[]=`*(x: var ModelBindPose, i: int32, val: Transform) =
+  checkArrayAccess(Model(x).bindPose, Model(x).boneCount)
+  Model(x).bindPose[i] = val
+
+proc bones*(x: ModelAnimation): lent ModelAnimationBones {.inline.} =
+  result = ModelAnimationBones(x)
+
+proc bones*(x: var ModelAnimation): var ModelAnimationBones {.inline.} =
+  result = ModelAnimationBones(x)
+
+proc `[]`*(x: ModelAnimationBones, i: int32): BoneInfo =
+  checkArrayAccess(ModelAnimation(x).bones, ModelAnimation(x).boneCount)
+  result = ModelAnimation(x).bones[i]
+
+proc `[]`*(x: var ModelAnimationBones, i: int32): var BoneInfo =
+  checkArrayAccess(ModelAnimation(x).bones, ModelAnimation(x).boneCount)
+  result = ModelAnimation(x).bones[i]
+
+proc `[]=`*(x: var ModelAnimationBones, i: int32, val: BoneInfo) =
+  checkArrayAccess(ModelAnimation(x).bones, ModelAnimation(x).boneCount)
+  ModelAnimation(x).bones[i] = val
+
+proc framePoses*(x: ModelAnimation): lent ModelAnimationFramePoses {.inline.} =
+  result = ModelAnimationFramePoses(x)
+
+proc framePoses*(x: var ModelAnimation): var ModelAnimationFramePoses {.inline.} =
+  result = ModelAnimationFramePoses(x)
+
+type
+  FramePose* = object
+    len: int32
+    data: ptr UncheckedArray[Transform]
+
+proc len*(x: FramePose): int32 {.inline.} = x.len
+
+proc `=destroy`*(x: var FramePose) =
+  if x.data != nil: memFree(x.data)
+proc `=copy`*(dest: var FramePose; source: FramePose) =
+  if dest.data != source.data:
+    `=destroy`(dest)
+    wasMoved(dest)
+    dest.len = source.len
+    if dest.len > 0:
+      dest.data = cast[typeof(dest.data)](memAlloc(dest.len))
+      copyMem(dest.data, source.data, dest.len * sizeof(Transform))
+
+proc `[]`*(x: ModelAnimationFramePoses, i: int32): FramePose =
+  checkArrayAccess(ModelAnimation(x).framePoses, ModelAnimation(x).frameCount)
+  result = FramePose(len: ModelAnimation(x).boneCount, data: ModelAnimation(x).framePoses[i])
+
+proc `[]`*(x: var ModelAnimationFramePoses, i: int32): FramePose =
+  checkArrayAccess(ModelAnimation(x).framePoses, ModelAnimation(x).frameCount)
+  result = FramePose(len: ModelAnimation(x).boneCount, data: ModelAnimation(x).framePoses[i])
+
+proc `[]=`*(x: var ModelAnimationFramePoses, i: int32, val: sink FramePose) =
+  checkArrayAccess(ModelAnimation(x).framePoses, ModelAnimation(x).frameCount)
+  ModelAnimation(x).framePoses[i] = val.data
+
+proc `[]`*(x: FramePose, i: int32): lent Transform =
+  checkArrayAccess(x.data, x.len)
+  result = x.data[i]
+
+proc `[]`*(x: var FramePose, i: int32): var Transform =
+  checkArrayAccess(x.data, x.len)
+  result = x.data[i]
+
+proc `[]=`*(x: var FramePose, i: int32, val: Transform) =
+  checkArrayAccess(x.data, x.len)
+  x.data[i] = val
