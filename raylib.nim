@@ -1921,15 +1921,15 @@ proc boneIds*(x: var Mesh): var MeshBoneIds {.inline.} =
 
 proc `[]`*(x: MeshBoneIds, i: int32): array[4, uint8] =
   checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
-  result = cast[ptr UncheckedArray[typeof(result)](Mesh(x).boneIds)[i]
+  result = cast[ptr UncheckedArray[typeof(result)]](Mesh(x).boneIds)[i]
 
 proc `[]`*(x: var MeshBoneIds, i: int32): var array[4, uint8] =
   checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
-  result = cast[ptr UncheckedArray[typeof(result)](Mesh(x).boneIds)[i]
+  result = cast[ptr UncheckedArray[typeof(result)]](Mesh(x).boneIds)[i]
 
 proc `[]=`*(x: var MeshBoneIds, i: int32, val: array[4, uint8]) =
   checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
-  cast[ptr UncheckedArray[typeof(result)](Mesh(x).boneIds)[i] = val
+  cast[ptr UncheckedArray[typeof(val)]](Mesh(x).boneIds)[i] = val
 
 proc boneWeights*(x: Mesh): lent MeshBoneWeights {.inline.} =
   result = MeshBoneWeights(x)
