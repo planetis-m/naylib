@@ -236,6 +236,7 @@ const
     "GetDirectoryPath",
     "GetPrevDirectoryPath",
     "GetWorkingDirectory",
+    "GetApplicationDirectory",
     "GetDirectoryFiles",
     "ClearDirectoryFiles",
     "ChangeDirectory",
