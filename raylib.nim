@@ -1715,11 +1715,7 @@ proc `<`*(a, b: ShaderLocationIndex): bool {.borrow.}
 proc `<=`*(a, b: ShaderLocationIndex): bool {.borrow.}
 proc `==`*(a, b: ShaderLocationIndex): bool {.borrow.}
 
-proc recs*(x: Font): lent FontRecs {.inline.} =
-  result = FontRecs(x)
-
-proc recs*(x: var Font): var FontRecs {.inline.} =
-  result = FontRecs(x)
+template recs*(x: Font): FontRecs = FontRecs(x)
 
 proc `[]`*(x: FontRecs, i: int32): Rectangle =
   checkArrayAccess(Font(x).recs, i, Font(x).glyphCount)
@@ -1733,11 +1729,7 @@ proc `[]=`*(x: var FontRecs, i: int32, val: Rectangle) =
   checkArrayAccess(Font(x).recs, i, Font(x).glyphCount)
   Font(x).recs[i] = val
 
-proc glyphs*(x: Font): lent FontGlyphs {.inline.} =
-  result = FontGlyphs(x)
-
-proc glyphs*(x: var Font): var FontGlyphs {.inline.} =
-  result = FontGlyphs(x)
+template glyphs*(x: Font): FontGlyphs = FontGlyphs(x)
 
 proc `[]`*(x: FontGlyphs, i: int32): lent GlyphInfo =
   checkArrayAccess(Font(x).glyphs, i, Font(x).glyphCount)
@@ -1751,11 +1743,7 @@ proc `[]=`*(x: var FontGlyphs, i: int32, val: GlyphInfo) =
   checkArrayAccess(Font(x).glyphs, i, Font(x).glyphCount)
   Font(x).glyphs[i] = val
 
-proc vertices*(x: Mesh): lent MeshVertices {.inline.} =
-  result = MeshVertices(x)
-
-proc vertices*(x: var Mesh): var MeshVertices {.inline.} =
-  result = MeshVertices(x)
+template vertices*(x: Mesh): MeshVertices = MeshVertices(x)
 
 proc `[]`*(x: MeshVertices, i: int32): Vector3 =
   checkArrayAccess(Mesh(x).vertices, i, Mesh(x).vertexCount)
@@ -1769,11 +1757,7 @@ proc `[]=`*(x: var MeshVertices, i: int32, val: Vector3) =
   checkArrayAccess(Mesh(x).vertices, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector3]](Mesh(x).vertices)[i] = val
 
-proc texcoords*(x: Mesh): lent MeshTexcoords {.inline.} =
-  result = MeshTexcoords(x)
-
-proc texcoords*(x: var Mesh): var MeshTexcoords {.inline.} =
-  result = MeshTexcoords(x)
+template texcoords*(x: Mesh): MeshTexcoords = MeshTexcoords(x)
 
 proc `[]`*(x: MeshTexcoords, i: int32): Vector2 =
   checkArrayAccess(Mesh(x).texcoords, i, Mesh(x).vertexCount)
@@ -1787,11 +1771,7 @@ proc `[]=`*(x: var MeshTexcoords, i: int32, val: Vector2) =
   checkArrayAccess(Mesh(x).texcoords, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector2]](Mesh(x).texcoords)[i] = val
 
-proc texcoords2*(x: Mesh): lent MeshTexcoords2 {.inline.} =
-  result = MeshTexcoords2(x)
-
-proc texcoords2*(x: var Mesh): var MeshTexcoords2 {.inline.} =
-  result = MeshTexcoords2(x)
+template texcoords2*(x: Mesh): MeshTexcoords2 = MeshTexcoords2(x)
 
 proc `[]`*(x: MeshTexcoords2, i: int32): Vector2 =
   checkArrayAccess(Mesh(x).texcoords2, i, Mesh(x).vertexCount)
@@ -1805,11 +1785,7 @@ proc `[]=`*(x: var MeshTexcoords2, i: int32, val: Vector2) =
   checkArrayAccess(Mesh(x).texcoords2, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector2]](Mesh(x).texcoords2)[i] = val
 
-proc normals*(x: Mesh): lent MeshNormals {.inline.} =
-  result = MeshNormals(x)
-
-proc normals*(x: var Mesh): var MeshNormals {.inline.} =
-  result = MeshNormals(x)
+template normals*(x: Mesh): MeshNormals = MeshNormals(x)
 
 proc `[]`*(x: MeshNormals, i: int32): Vector3 =
   checkArrayAccess(Mesh(x).normals, i, Mesh(x).vertexCount)
@@ -1823,11 +1799,7 @@ proc `[]=`*(x: var MeshNormals, i: int32, val: Vector3) =
   checkArrayAccess(Mesh(x).normals, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector3]](Mesh(x).normals)[i] = val
 
-proc tangents*(x: Mesh): lent MeshTangents {.inline.} =
-  result = MeshTangents(x)
-
-proc tangents*(x: var Mesh): var MeshTangents {.inline.} =
-  result = MeshTangents(x)
+template tangents*(x: Mesh): MeshTangents = MeshTangents(x)
 
 proc `[]`*(x: MeshTangents, i: int32): Vector4 =
   checkArrayAccess(Mesh(x).tangents, i, Mesh(x).vertexCount)
@@ -1841,11 +1813,7 @@ proc `[]=`*(x: var MeshTangents, i: int32, val: Vector4) =
   checkArrayAccess(Mesh(x).tangents, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector4]](Mesh(x).tangents)[i] = val
 
-proc colors*(x: Mesh): lent MeshColors {.inline.} =
-  result = MeshColors(x)
-
-proc colors*(x: var Mesh): var MeshColors {.inline.} =
-  result = MeshColors(x)
+template colors*(x: Mesh): MeshColors = MeshColors(x)
 
 proc `[]`*(x: MeshColors, i: int32): Color =
   checkArrayAccess(Mesh(x).colors, i, Mesh(x).vertexCount)
@@ -1859,11 +1827,7 @@ proc `[]=`*(x: var MeshColors, i: int32, val: Color) =
   checkArrayAccess(Mesh(x).colors, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Color]](Mesh(x).colors)[i] = val
 
-proc indices*(x: Mesh): lent MeshIndices {.inline.} =
-  result = MeshIndices(x)
-
-proc indices*(x: var Mesh): var MeshIndices {.inline.} =
-  result = MeshIndices(x)
+template indices*(x: Mesh): MeshIndices = MeshIndices(x)
 
 proc `[]`*(x: MeshIndices, i: int32): array[3, uint16] =
   checkArrayAccess(Mesh(x).indices, i, Mesh(x).triangleCount)
@@ -1877,11 +1841,7 @@ proc `[]=`*(x: var MeshIndices, i: int32, val: array[3, uint16]) =
   checkArrayAccess(Mesh(x).indices, i, Mesh(x).triangleCount)
   cast[ptr UncheckedArray[typeof(val)]](Mesh(x).indices)[i] = val
 
-proc animVertices*(x: Mesh): lent MeshAnimVertices {.inline.} =
-  result = MeshAnimVertices(x)
-
-proc animVertices*(x: var Mesh): var MeshAnimVertices {.inline.} =
-  result = MeshAnimVertices(x)
+template animVertices*(x: Mesh): MeshAnimVertices = MeshAnimVertices(x)
 
 proc `[]`*(x: MeshAnimVertices, i: int32): Vector3 =
   checkArrayAccess(Mesh(x).animVertices, i, Mesh(x).vertexCount)
@@ -1895,11 +1855,7 @@ proc `[]=`*(x: var MeshAnimVertices, i: int32, val: Vector3) =
   checkArrayAccess(Mesh(x).animVertices, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector3]](Mesh(x).animVertices)[i] = val
 
-proc animNormals*(x: Mesh): lent MeshAnimNormals {.inline.} =
-  result = MeshAnimNormals(x)
-
-proc animNormals*(x: var Mesh): var MeshAnimNormals {.inline.} =
-  result = MeshAnimNormals(x)
+template animNormals*(x: Mesh): MeshAnimNormals = MeshAnimNormals(x)
 
 proc `[]`*(x: MeshAnimNormals, i: int32): Vector3 =
   checkArrayAccess(Mesh(x).animNormals, i, Mesh(x).vertexCount)
@@ -1913,11 +1869,7 @@ proc `[]=`*(x: var MeshAnimNormals, i: int32, val: Vector3) =
   checkArrayAccess(Mesh(x).animNormals, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector3]](Mesh(x).animNormals)[i] = val
 
-proc boneIds*(x: Mesh): lent MeshBoneIds {.inline.} =
-  result = MeshBoneIds(x)
-
-proc boneIds*(x: var Mesh): var MeshBoneIds {.inline.} =
-  result = MeshBoneIds(x)
+template boneIds*(x: Mesh): MeshBoneIds = MeshBoneIds(x)
 
 proc `[]`*(x: MeshBoneIds, i: int32): array[4, uint8] =
   checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
@@ -1931,11 +1883,7 @@ proc `[]=`*(x: var MeshBoneIds, i: int32, val: array[4, uint8]) =
   checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[typeof(val)]](Mesh(x).boneIds)[i] = val
 
-proc boneWeights*(x: Mesh): lent MeshBoneWeights {.inline.} =
-  result = MeshBoneWeights(x)
-
-proc boneWeights*(x: var Mesh): var MeshBoneWeights {.inline.} =
-  result = MeshBoneWeights(x)
+template boneWeights*(x: Mesh): MeshBoneWeights = MeshBoneWeights(x)
 
 proc `[]`*(x: MeshBoneWeights, i: int32): Vector4 =
   checkArrayAccess(Mesh(x).boneWeights, i, Mesh(x).vertexCount)
@@ -1949,11 +1897,7 @@ proc `[]=`*(x: var MeshBoneWeights, i: int32, val: Vector4) =
   checkArrayAccess(Mesh(x).boneWeights, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector4]](Mesh(x).boneWeights)[i] = val
 
-proc vboId*(x: Mesh): lent MeshVboId {.inline.} =
-  result = MeshVboId(x)
-
-proc vboId*(x: var Mesh): var MeshVboId {.inline.} =
-  result = MeshVboId(x)
+template vboId*(x: Mesh): MeshVboId = MeshVboId(x)
 
 proc `[]`*(x: MeshVboId, i: int32): uint32 =
   checkArrayAccess(Mesh(x).vboId, i, MaxMeshVertexBuffers)
@@ -1967,11 +1911,7 @@ proc `[]=`*(x: var MeshVboId, i: int32, val: uint32) =
   checkArrayAccess(Mesh(x).vboId, i, MaxMeshVertexBuffers)
   Mesh(x).vboId[i] = val
 
-proc locs*(x: Shader): lent ShaderLocs {.inline.} =
-  result = ShaderLocs(x)
-
-proc locs*(x: var Shader): var ShaderLocs {.inline.} =
-  result = ShaderLocs(x)
+template locs*(x: Shader): ShaderLocs = ShaderLocs(x)
 
 proc `[]`*(x: ShaderLocs, i: ShaderLocationIndex): int32 =
   checkArrayAccess(Shader(x).locs, i, MaxShaderLocations)
@@ -1985,11 +1925,7 @@ proc `[]=`*(x: var ShaderLocs, i: ShaderLocationIndex, val: int32) =
   checkArrayAccess(Shader(x).locs, i, MaxShaderLocations)
   Shader(x).locs[i] = val
 
-proc maps*(x: Material): lent MaterialMaps {.inline.} =
-  result = MaterialMaps(x)
-
-proc maps*(x: var Material): var MaterialMaps {.inline.} =
-  result = MaterialMaps(x)
+template maps*(x: Material): MaterialMaps = MaterialMaps(x)
 
 proc `[]`*(x: MaterialMaps, i: MaterialMapIndex): lent MaterialMap =
   checkArrayAccess(Material(x).maps, i, MaxMaterialMaps)
@@ -2003,11 +1939,7 @@ proc `[]=`*(x: var MaterialMaps, i: MaterialMapIndex, val: MaterialMap) =
   checkArrayAccess(Material(x).maps, i, MaxMaterialMaps)
   Material(x).maps[i] = val
 
-proc meshes*(x: Model): lent ModelMeshes {.inline.} =
-  result = ModelMeshes(x)
-
-proc meshes*(x: var Model): var ModelMeshes {.inline.} =
-  result = ModelMeshes(x)
+template meshes*(x: Model): ModelMeshes = ModelMeshes(x)
 
 proc `[]`*(x: ModelMeshes, i: int32): lent Mesh =
   checkArrayAccess(Model(x).meshes, i, Model(x).meshCount)
@@ -2021,11 +1953,7 @@ proc `[]=`*(x: var ModelMeshes, i: int32, val: Mesh) =
   checkArrayAccess(Model(x).meshes, i, Model(x).meshCount)
   Model(x).meshes[i] = val
 
-proc materials*(x: Model): lent ModelMaterials {.inline.} =
-  result = ModelMaterials(x)
-
-proc materials*(x: var Model): var ModelMaterials {.inline.} =
-  result = ModelMaterials(x)
+template materials*(x: Model): ModelMaterials = ModelMaterials(x)
 
 proc `[]`*(x: ModelMaterials, i: int32): lent Material =
   checkArrayAccess(Model(x).materials, i, Model(x).materialCount)
@@ -2039,11 +1967,7 @@ proc `[]=`*(x: var ModelMaterials, i: int32, val: Material) =
   checkArrayAccess(Model(x).materials, i, Model(x).materialCount)
   Model(x).materials[i] = val
 
-proc meshMaterial*(x: Model): lent ModelMeshMaterial {.inline.} =
-  result = ModelMeshMaterial(x)
-
-proc meshMaterial*(x: var Model): var ModelMeshMaterial {.inline.} =
-  result = ModelMeshMaterial(x)
+template meshMaterial*(x: Model): ModelMeshMaterial = ModelMeshMaterial(x)
 
 proc `[]`*(x: ModelMeshMaterial, i: int32): int32 =
   checkArrayAccess(Model(x).meshMaterial, i, Model(x).meshCount)
@@ -2057,11 +1981,7 @@ proc `[]=`*(x: var ModelMeshMaterial, i: int32, val: int32) =
   checkArrayAccess(Model(x).meshMaterial, i, Model(x).meshCount)
   Model(x).meshMaterial[i] = val
 
-proc bones*(x: Model): lent ModelBones {.inline.} =
-  result = ModelBones(x)
-
-proc bones*(x: var Model): var ModelBones {.inline.} =
-  result = ModelBones(x)
+template bones*(x: Model): ModelBones = ModelBones(x)
 
 proc `[]`*(x: ModelBones, i: int32): lent BoneInfo =
   checkArrayAccess(Model(x).bones, i, Model(x).boneCount)
@@ -2075,11 +1995,7 @@ proc `[]=`*(x: var ModelBones, i: int32, val: BoneInfo) =
   checkArrayAccess(Model(x).bones, i, Model(x).boneCount)
   Model(x).bones[i] = val
 
-proc bindPose*(x: Model): lent ModelBindPose {.inline.} =
-  result = ModelBindPose(x)
-
-proc bindPose*(x: var Model): var ModelBindPose {.inline.} =
-  result = ModelBindPose(x)
+template bindPose*(x: Model): ModelBindPose = ModelBindPose(x)
 
 proc `[]`*(x: ModelBindPose, i: int32): lent Transform =
   checkArrayAccess(Model(x).bindPose, i, Model(x).boneCount)
@@ -2096,9 +2012,6 @@ proc `[]=`*(x: var ModelBindPose, i: int32, val: Transform) =
 proc bones*(x: ModelAnimation): lent ModelAnimationBones {.inline.} =
   result = ModelAnimationBones(x)
 
-proc bones*(x: var ModelAnimation): var ModelAnimationBones {.inline.} =
-  result = ModelAnimationBones(x)
-
 proc `[]`*(x: ModelAnimationBones, i: int32): lent BoneInfo =
   checkArrayAccess(ModelAnimation(x).bones, i, ModelAnimation(x).boneCount)
   result = ModelAnimation(x).bones[i]
@@ -2111,11 +2024,7 @@ proc `[]=`*(x: var ModelAnimationBones, i: int32, val: BoneInfo) =
   checkArrayAccess(ModelAnimation(x).bones, i, ModelAnimation(x).boneCount)
   ModelAnimation(x).bones[i] = val
 
-proc framePoses*(x: ModelAnimation): lent ModelAnimationFramePoses {.inline.} =
-  result = ModelAnimationFramePoses(x)
-
-proc framePoses*(x: var ModelAnimation): var ModelAnimationFramePoses {.inline.} =
-  result = ModelAnimationFramePoses(x)
+template framePoses*(x: ModelAnimation): ModelAnimationFramePoses = ModelAnimationFramePoses(x)
 
 proc `[]`*(x: ModelAnimationFramePoses; i, y: int32): lent Transform =
   checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
