@@ -37,8 +37,8 @@ type
   ShaderLocMapDiffuse* = ShaderLocMapAlbedo
   ShaderLocMapSpecular* = ShaderLocMapMetalness
   # Taken from raylib/src/config.h
-  MaxShaderLocations* = ShaderLocationIndex(32) ## Maximum number of shader locations supported
-  MaxMaterialMaps* = MaterialMapIndex(12) ## Maximum number of shader maps supported
+  MaxShaderLocations* = 32 ## Maximum number of shader locations supported
+  MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 
 type

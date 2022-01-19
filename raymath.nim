@@ -104,6 +104,17 @@ proc normalize*(v: Vector2): Vector2 {.inline.} =
     result.x = v.x * ilength
     result.y = v.y * ilength
 
+proc transform*(v: Vector2; mat: Matrix): Vector2 {.inline.} =
+  ## Transforms a Vector2 by a given Matrix
+  result = Vector2()
+
+  let x = v.x
+  let y = v.y
+  let z = 0'f32
+
+  result.x = mat.m0*x + mat.m4*y + mat.m8*z + mat.m12
+  result.y = mat.m1*x + mat.m5*y + mat.m9*z + mat.m13
+
 proc lerp*(v1, v2: Vector2; amount: float32): Vector2 {.inline.} =
   ## Calculate linear interpolation between two vectors
   result = Vector2()
