@@ -16,12 +16,12 @@ const
   RaylibVersion* = "4.1-dev"
 
 type va_list* {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
-proc vprintf*(format: cstring, args: va_list) {.cdecl, importc: "vprintf", header: "<stdio.h>".}
+proc vsprintf*(s: cstring, format: cstring, args: va_list) {.cdecl, importc: "vsprintf", header: "<stdio.h>".}
 
 ## Callbacks to hook some internal functions
 ## WARNING: This callbacks are intended for advance users
 type
-  TraceLogCallback* = proc (logLevel: cint; text: cstring; args: va_list) {.cdecl.} ## Logging: Redirect trace log messages
+  TraceLogCallbackImpl = proc (logLevel: int32; text: cstring; args: va_list) {.cdecl.}
   LoadFileDataCallback* = proc (fileName: cstring; bytesRead: ptr uint32): ptr UncheckedArray[uint8] {.
       cdecl.} ## FileIO: Load binary data
   SaveFileDataCallback* = proc (fileName: cstring; data: pointer; bytesToWrite: uint32): bool {.
@@ -273,6 +273,7 @@ const
     "LoadImageColors",
     "UnloadImageColors",
     "LoadFontData",
+    "SetTraceLogCallback",
     "UnloadFontData",
     "LoadMaterials",
     "DrawLineStrip",
@@ -424,10 +425,13 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
               replacements = [
                 ("GenImageFontAtlas", "recs", "ptr ptr UncheckedArray[$1]")
               ]
-            let pat = getReplacement(fnc.name, param.name, replacements)
-            var baseKind = ""
-            let kind = convertType(param.`type`, pat, many, not isPrivate, baseKind)
-            lit kind
+            if param.`type` == "TraceLogCallback":
+              lit "TraceLogCallbackImpl"
+            else:
+              let pat = getReplacement(fnc.name, param.name, replacements)
+              var baseKind = ""
+              let kind = convertType(param.`type`, pat, many, not isPrivate, baseKind)
+              lit kind
       lit ")"
       if fnc.returnType != "void":
         lit ": "

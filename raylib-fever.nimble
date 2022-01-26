@@ -1,6 +1,6 @@
 # Package
 
-version     = "0.2.3"
+version     = "0.3.0"
 author      = "Antonis Geralis"
 description = "Uses official raylib_api.json to produce Nim bindings"
 license     = "MIT"

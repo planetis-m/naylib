@@ -4,12 +4,12 @@ const
   RaylibVersion* = "4.1-dev"
 
 type va_list* {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
-proc vprintf*(format: cstring, args: va_list) {.cdecl, importc: "vprintf", header: "<stdio.h>".}
+proc vsprintf*(s: cstring, format: cstring, args: va_list) {.cdecl, importc: "vsprintf", header: "<stdio.h>".}
 
 ## Callbacks to hook some internal functions
 ## WARNING: This callbacks are intended for advance users
 type
-  TraceLogCallback* = proc (logLevel: cint; text: cstring; args: va_list) {.cdecl.} ## Logging: Redirect trace log messages
+  TraceLogCallbackImpl = proc (logLevel: int32; text: cstring; args: va_list) {.cdecl.}
   LoadFileDataCallback* = proc (fileName: cstring; bytesRead: ptr uint32): ptr UncheckedArray[uint8] {.
       cdecl.} ## FileIO: Load binary data
   SaveFileDataCallback* = proc (fileName: cstring; data: pointer; bytesToWrite: uint32): bool {.
@@ -827,8 +827,7 @@ proc setTraceLogLevel*(logLevel: TraceLogLevel) {.importc: "SetTraceLogLevel".}
 proc memAlloc(size: int32): pointer {.importc: "MemAlloc".}
 proc memRealloc(`ptr`: pointer, size: int32): pointer {.importc: "MemRealloc".}
 proc memFree(`ptr`: pointer) {.importc: "MemFree".}
-proc setTraceLogCallback*(callback: TraceLogCallback) {.importc: "SetTraceLogCallback".}
-  ## Set custom trace log
+proc setTraceLogCallbackPriv(callback: TraceLogCallbackImpl) {.importc: "SetTraceLogCallback".}
 proc setLoadFileDataCallback*(callback: LoadFileDataCallback) {.importc: "SetLoadFileDataCallback".}
   ## Set custom file binary data loader
 proc setSaveFileDataCallback*(callback: SaveFileDataCallback) {.importc: "SetSaveFileDataCallback".}
@@ -1566,6 +1565,22 @@ proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
 proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
 proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
 proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
+
+type
+  TraceLogCallback* = proc (logLevel: TraceLogLevel; text: string) {.nimcall.} ## Logging: Redirect trace log messages
+
+var
+  traceLogCallback: TraceLogCallback # TraceLog callback function pointer
+
+proc wrapperTraceLogCallback(logLevel: int32; text: cstring; args: va_list) {.cdecl.} =
+  var buf = newString(128)
+  vsprintf(buf.cstring, text, args)
+  traceLogCallback(logLevel.TraceLogLevel, buf)
+
+proc setTraceLogCallback*(callback: TraceLogCallback) =
+  ## Set custom trace log
+  traceLogCallback = callback
+  setTraceLogCallbackPriv(wrapperTraceLogCallback)
 
 proc getMonitorName*(monitor: int32): string {.inline.} =
   ## Get the human-readable, UTF-8 encoded name of the primary monitor
