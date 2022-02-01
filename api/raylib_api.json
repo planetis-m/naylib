@@ -2351,7 +2351,7 @@
         {
           "name": "BLEND_CUSTOM",
           "value": 5,
-          "description": "Belnd textures using custom src/dst factors (use rlSetBlendMode())"
+          "description": "Blend textures using custom src/dst factors (use rlSetBlendMode())"
         }
       ]
     },
@@ -3628,6 +3628,17 @@
       ]
     },
     {
+      "name": "GetFileLength",
+      "description": "Get file length in bytes (NOTE: GetFileSize() conflicts with windows.h)",
+      "returnType": "int",
+      "params": [
+        {
+          "type": "const char *",
+          "name": "fileName"
+        }
+      ]
+    },
+    {
       "name": "GetFileExtension",
       "description": "Get pointer to extension for a filename string (includes dot: '.png')",
       "returnType": "const char *",
@@ -3685,6 +3696,11 @@
     {
       "name": "GetWorkingDirectory",
       "description": "Get current working directory (uses static string)",
+      "returnType": "const char *"
+    },
+    {
+      "name": "GetApplicationDirectory",
+      "description": "Get the directory if the running application (uses static string)",
       "returnType": "const char *"
     },
     {
@@ -7509,6 +7525,41 @@
       ]
     },
     {
+      "name": "DrawTextCodepoints",
+      "description": "Draw multiple character (codepoint)",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Font",
+          "name": "font"
+        },
+        {
+          "type": "int *",
+          "name": "codepoints"
+        },
+        {
+          "type": "int",
+          "name": "count"
+        },
+        {
+          "type": "Vector2",
+          "name": "position"
+        },
+        {
+          "type": "float",
+          "name": "fontSize"
+        },
+        {
+          "type": "float",
+          "name": "spacing"
+        },
+        {
+          "type": "Color",
+          "name": "tint"
+        }
+      ]
+    },
+    {
       "name": "MeasureText",
       "description": "Measure string width for default font",
       "returnType": "int",
@@ -9615,25 +9666,17 @@
       ]
     },
     {
-      "name": "WaveFormat",
-      "description": "Convert wave data to desired format",
+      "name": "SetSoundPan",
+      "description": "Set pan for a sound (0.5 is center)",
       "returnType": "void",
       "params": [
         {
-          "type": "Wave *",
-          "name": "wave"
+          "type": "Sound",
+          "name": "sound"
         },
         {
-          "type": "int",
-          "name": "sampleRate"
-        },
-        {
-          "type": "int",
-          "name": "sampleSize"
-        },
-        {
-          "type": "int",
-          "name": "channels"
+          "type": "float",
+          "name": "pan"
         }
       ]
     },
@@ -9668,8 +9711,31 @@
       ]
     },
     {
+      "name": "WaveFormat",
+      "description": "Convert wave data to desired format",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Wave *",
+          "name": "wave"
+        },
+        {
+          "type": "int",
+          "name": "sampleRate"
+        },
+        {
+          "type": "int",
+          "name": "sampleSize"
+        },
+        {
+          "type": "int",
+          "name": "channels"
+        }
+      ]
+    },
+    {
       "name": "LoadWaveSamples",
-      "description": "Load samples data from wave as a floats array",
+      "description": "Load samples data from wave as a 32bit float data array",
       "returnType": "float *",
       "params": [
         {
@@ -9842,6 +9908,21 @@
       ]
     },
     {
+      "name": "SetMusicPan",
+      "description": "Set pan for a music (0.5 is center)",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Music",
+          "name": "music"
+        },
+        {
+          "type": "float",
+          "name": "pan"
+        }
+      ]
+    },
+    {
       "name": "GetMusicTimeLength",
       "description": "Get music time length (in seconds)",
       "returnType": "float",
@@ -10005,6 +10086,21 @@
         {
           "type": "float",
           "name": "pitch"
+        }
+      ]
+    },
+    {
+      "name": "SetAudioStreamPan",
+      "description": "Set pan for audio stream (0.5 is centered)",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "AudioStream",
+          "name": "stream"
+        },
+        {
+          "type": "float",
+          "name": "pan"
         }
       ]
     },

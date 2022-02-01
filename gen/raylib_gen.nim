@@ -232,6 +232,7 @@ const
     "IsFileExtension",
     "GetFileExtension",
     "GetFileName",
+    "GetFileLength",
     "GetFileNameWithoutExt",
     "GetDirectoryPath",
     "GetPrevDirectoryPath",
@@ -287,7 +288,8 @@ const
     "DrawTriangleStrip3D",
     "DrawMeshInstanced",
     "LoadWaveFromMemory",
-    "LoadMusicStreamFromMemory"
+    "LoadMusicStreamFromMemory",
+    "DrawTextCodepoints"
   ]
 
 proc getReplacement(x, y: string, replacements: openarray[(string, string, string)]): string =

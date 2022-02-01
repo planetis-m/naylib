@@ -145,3 +145,8 @@ proc loadWaveFromMemory*(fileType: string, fileData: openarray[uint8]): Wave =
 proc loadMusicStreamFromMemory*(fileType: string, data: openarray[uint8]): Music =
   ## Load music stream from data
   loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data), data.len.int32)
+
+proc drawTextCodepoints*(font: Font, codepoints: openarray[int32], position: Vector2,
+    fontSize: float32, spacing: float32, tint: Color) =
+  drawTextCodepointsPriv(font, cast[ptr UncheckedArray[uint8]](codepoints),
+      codepoints.len.int32, position, spacing, tint)

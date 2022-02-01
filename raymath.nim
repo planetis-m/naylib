@@ -1023,8 +1023,7 @@ proc normalize*(q: Quaternion): Quaternion {.inline.} =
 proc invert*(q: Quaternion): Quaternion {.inline.} =
   ## Invert provided quaternion
   result = q
-  let length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
-  let lengthSq = length * length
+  let lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
   if lengthSq != 0'f32:
     let invLength = 1'f32 / lengthSq
     result.x = result.x * -invLength

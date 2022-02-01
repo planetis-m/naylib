@@ -326,7 +326,7 @@ const
   BlendMultiplied* = BlendMode(2) ## Blend textures multiplying colors
   BlendAddColors* = BlendMode(3) ## Blend textures adding colors (alternative)
   BlendSubtractColors* = BlendMode(4) ## Blend textures subtracting colors (alternative)
-  BlendCustom* = BlendMode(5) ## Belnd textures using custom src/dst factors (use rlSetBlendMode())
+  BlendCustom* = BlendMode(5) ## Blend textures using custom src/dst factors (use rlSetBlendMode())
 
   GestureNone* = Gesture(0) ## No gesture
   GestureTap* = Gesture(1) ## Tap gesture
@@ -1240,6 +1240,7 @@ proc drawTextPro*(font: Font, text: cstring, position: Vector2, origin: Vector2,
   ## Draw text using Font and pro parameters (rotation)
 proc drawTextCodepoint*(font: Font, codepoint: int32, position: Vector2, fontSize: float32, tint: Color) {.importc: "DrawTextCodepoint".}
   ## Draw one character (codepoint)
+proc drawTextCodepointsPriv(font: Font, codepoints: ptr UncheckedArray[int32], count: int32, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextCodepoints".}
 proc measureText*(text: cstring, fontSize: int32): int32 {.importc: "MeasureText".}
   ## Measure string width for default font
 proc measureTextEx*(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
@@ -1436,12 +1437,14 @@ proc setSoundVolume*(sound: Sound, volume: float32) {.importc: "SetSoundVolume".
   ## Set volume for a sound (1.0 is max level)
 proc setSoundPitch*(sound: Sound, pitch: float32) {.importc: "SetSoundPitch".}
   ## Set pitch for a sound (1.0 is base level)
-proc waveFormat*(wave: var Wave, sampleRate: int32, sampleSize: int32, channels: int32) {.importc: "WaveFormat".}
-  ## Convert wave data to desired format
+proc setSoundPan*(sound: Sound, pan: float32) {.importc: "SetSoundPan".}
+  ## Set pan for a sound (0.5 is center)
 proc waveCopy*(wave: Wave): Wave {.importc: "WaveCopy".}
   ## Copy a wave to a new wave
 proc waveCrop*(wave: var Wave, initSample: int32, finalSample: int32) {.importc: "WaveCrop".}
   ## Crop a wave to defined samples range
+proc waveFormat*(wave: var Wave, sampleRate: int32, sampleSize: int32, channels: int32) {.importc: "WaveFormat".}
+  ## Convert wave data to desired format
 proc loadWaveSamplesPriv(wave: Wave): ptr UncheckedArray[float32] {.importc: "LoadWaveSamples".}
 proc unloadWaveSamplesPriv(samples: ptr UncheckedArray[float32]) {.importc: "UnloadWaveSamples".}
 proc loadMusicStream*(fileName: cstring): Music {.importc: "LoadMusicStream".}
@@ -1467,6 +1470,8 @@ proc setMusicVolume*(music: Music, volume: float32) {.importc: "SetMusicVolume".
   ## Set volume for music (1.0 is max level)
 proc setMusicPitch*(music: Music, pitch: float32) {.importc: "SetMusicPitch".}
   ## Set pitch for a music (1.0 is base level)
+proc setMusicPan*(music: Music, pan: float32) {.importc: "SetMusicPan".}
+  ## Set pan for a music (0.5 is center)
 proc getMusicTimeLength*(music: Music): float32 {.importc: "GetMusicTimeLength".}
   ## Get music time length (in seconds)
 proc getMusicTimePlayed*(music: Music): float32 {.importc: "GetMusicTimePlayed".}
@@ -1493,6 +1498,8 @@ proc setAudioStreamVolume*(stream: AudioStream, volume: float32) {.importc: "Set
   ## Set volume for audio stream (1.0 is max level)
 proc setAudioStreamPitch*(stream: AudioStream, pitch: float32) {.importc: "SetAudioStreamPitch".}
   ## Set pitch for audio stream (1.0 is base level)
+proc setAudioStreamPan*(stream: AudioStream, pan: float32) {.importc: "SetAudioStreamPan".}
+  ## Set pan for audio stream (0.5 is centered)
 proc setAudioStreamBufferSizeDefault*(size: int32) {.importc: "SetAudioStreamBufferSizeDefault".}
   ## Default size for new audio streams
 {.pop.}
@@ -1712,6 +1719,11 @@ proc loadWaveFromMemory*(fileType: string, fileData: openarray[uint8]): Wave =
 proc loadMusicStreamFromMemory*(fileType: string, data: openarray[uint8]): Music =
   ## Load music stream from data
   loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data), data.len.int32)
+
+proc drawTextCodepoints*(font: Font, codepoints: openarray[int32], position: Vector2,
+    fontSize: float32, spacing: float32, tint: Color) =
+  drawTextCodepointsPriv(font, cast[ptr UncheckedArray[uint8]](codepoints),
+      codepoints.len.int32, position, spacing, tint)
 
 proc raiseRangeDefect {.noinline, noreturn.} =
   raise newException(RangeDefect, "array access out of bounds")
