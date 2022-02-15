@@ -132,8 +132,10 @@ proc reflect*(v, normal: Vector2): Vector2 {.inline.} =
 proc rotate*(v: Vector2; angle: float32): Vector2 {.inline.} =
   ## Rotate vector by angle
   result = Vector2()
-  result.x = v.x * cos(angle) - v.y * sin(angle)
-  result.y = v.x * sin(angle) + v.y * cos(angle)
+  let cosres = cos(angle)
+  let sinres = sin(angle)
+  result.x = v.x * cosres - v.y * sinres
+  result.y = v.x * sinres + v.y * cosres
 
 proc moveTowards*(v, target: Vector2; maxDistance: float32): Vector2 {.inline.} =
   ## Move Vector towards target

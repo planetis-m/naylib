@@ -1722,8 +1722,8 @@ proc loadMusicStreamFromMemory*(fileType: string, data: openarray[uint8]): Music
 
 proc drawTextCodepoints*(font: Font, codepoints: openarray[int32], position: Vector2,
     fontSize: float32, spacing: float32, tint: Color) =
-  drawTextCodepointsPriv(font, cast[ptr UncheckedArray[uint8]](codepoints),
-      codepoints.len.int32, position, spacing, tint)
+  drawTextCodepointsPriv(font, cast[ptr UncheckedArray[int32]](codepoints),
+      codepoints.len.int32, position, fontSize, spacing, tint)
 
 proc raiseRangeDefect {.noinline, noreturn.} =
   raise newException(RangeDefect, "array access out of bounds")
