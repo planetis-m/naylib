@@ -4,7 +4,7 @@ import nake
 const
   RaylibStableCommit = "4f2bfc54760cbcbf142417b0bb24ddebf9ee4221"
   SourceDir = currentSourcePath().parentDir
-  CIncludesDir = SourceDir / "cincludes"
+  CIncludeDir = SourceDir / "cinclude"
   RaylibDir = SourceDir / "dist" / "raylib"
 
 proc fetchLatestRaylib =
@@ -19,9 +19,10 @@ task "static", "Builds raylib C static library":
   withDir(RaylibDir / "src"):
     direShell("make clean")
     direShell("make PLATFORM=PLATFORM_DESKTOP -j4")
-    discard existsOrCreateDir(CIncludesDir)
-    copyFileToDir("libraylib.a", CIncludesDir)
-    copyFileToDir("raylib.h", CIncludesDir)
+    # Install to cinclude directory
+    discard existsOrCreateDir(CIncludeDir)
+    copyFileToDir("libraylib.a", CIncludeDir)
+    copyFileToDir("raylib.h", CIncludeDir)
 
 task "parse", "Produces JSON API files":
   let parser = "raylib_parser"

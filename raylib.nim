@@ -1,7 +1,7 @@
 import os
-const cincludes = currentSourcePath().parentDir / "cincludes"
-{.passC: "-I" & cincludes.}
-{.passL: cincludes / "libraylib.a" & " -lGL -lm -lpthread -ldl -lrt -lX11 -DPLATFORM_DESKTOP".}
+const cinclude = currentSourcePath().parentDir / "cinclude"
+{.passC: "-I" & cinclude.}
+{.passL: cinclude / "libraylib.a" & " -lGL -lm -lpthread -ldl -lrt -lX11 -DPLATFORM_DESKTOP".}
 
 const
   RaylibVersion* = "4.1-dev"
