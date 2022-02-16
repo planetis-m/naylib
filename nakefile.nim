@@ -2,8 +2,9 @@ import nake
 # Only Linux is supported!
 
 const
-  RaylibStableCommit = "0851960397f02a477d80eda2239f90fae14dec64"
+  RaylibStableCommit = "4f2bfc54760cbcbf142417b0bb24ddebf9ee4221"
   SourceDir = currentSourcePath().parentDir
+  CIncludesDir = SourceDir / "cincludes"
   RaylibDir = SourceDir / "dist" / "raylib"
 
 proc fetchLatestRaylib =
@@ -18,7 +19,9 @@ task "static", "Builds raylib C static library":
   withDir(RaylibDir / "src"):
     direShell("make clean")
     direShell("make PLATFORM=PLATFORM_DESKTOP -j4")
-    copyFileToDir("libraylib.a", SourceDir)
+    discard existsOrCreateDir(CIncludesDir)
+    copyFileToDir("libraylib.a", CIncludesDir)
+    copyFileToDir("raylib.h", CIncludesDir)
 
 task "parse", "Produces JSON API files":
   let parser = "raylib_parser"

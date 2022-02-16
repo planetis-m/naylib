@@ -1,4 +1,7 @@
-{.passL: "-lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -DPLATFORM_DESKTOP".}
+import os
+const cincludes = currentSourcePath().parentDir / "cincludes"
+{.passC: "-I" & cincludes.}
+{.passL: cincludes / "libraylib.a" & " -lGL -lm -lpthread -ldl -lrt -lX11 -DPLATFORM_DESKTOP".}
 
 const
   RaylibVersion* = "4.1-dev"
