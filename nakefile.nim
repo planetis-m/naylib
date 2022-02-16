@@ -28,6 +28,6 @@ task "parse", "Produces JSON API files":
   let header = RaylibDir / "src" / "raylib.h"
   fetchLatestRaylib()
   withDir(RaylibDir / "parser"):
-    let exe = parser & ExeExt
+    let exe = parser.addFileExt(ExeExt)
     direShell("cc", parser & ".c", "-o", exe)
-    direShell("./" & exe, "-f JSON", "-d RLAPI", "-i", header, "-o", SourceDir / "api")
+    direShell($CurDir / exe, "-f JSON", "-d RLAPI", "-i", header, "-o", SourceDir / "api")
