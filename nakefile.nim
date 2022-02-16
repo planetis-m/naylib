@@ -29,15 +29,17 @@ proc generateWrapper =
   let script = "raylib_gen"
   withDir(SourceDir / "gen"):
     direShell(findExe("nim"), "c", "--mm:arc --panics:on -d:release -d:emiLenient", script)
-    let exe = script.addFileExt(ExeExt)
-    direShell($CurDir / exe)
+    var exe = script.addFileExt(ExeExt)
+    normalizeExe(exe)
+    direShell(exe)
 
 task "wrap", "Produces the raylib nim wrapper":
   let parser = "raylib_parser"
   let header = RaylibDir / "src" / "raylib.h"
   fetchLatestRaylib()
   withDir(RaylibDir / "parser"):
-    let exe = parser.addFileExt(ExeExt)
-    direShell("cc", parser & ".c", "-o", exe)
-    direShell($CurDir / exe, "-f JSON", "-d RLAPI", "-i", header, "-o", JsonApiDir / "raylib_api.json")
+    var exe = parser.addFileExt(ExeExt)
+    normalizeExe(exe)
+    direShell("cc", parser.addFileExt(".c"), "-o", exe)
+    direShell(exe, "-f JSON", "-d RLAPI", "-i", header, "-o", JsonApiDir / "raylib_api.json")
   generateWrapper()
