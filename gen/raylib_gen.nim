@@ -10,7 +10,10 @@ const
     "AudioStream": """RAudioBuffer* {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object"""
   }
   raylibHeader = """
-{.passL: "-lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -DPLATFORM_DESKTOP".}
+import os
+const cinclude = currentSourcePath().parentDir / "cinclude"
+{.passC: "-I" & cinclude.}
+{.passL: cinclude / "libraylib.a" & " -lGL -lm -lpthread -ldl -lrt -lX11 -DPLATFORM_DESKTOP".}
 
 const
   RaylibVersion* = "4.1-dev"

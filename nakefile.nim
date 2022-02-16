@@ -5,6 +5,7 @@ const
   RaylibStableCommit = "4f2bfc54760cbcbf142417b0bb24ddebf9ee4221"
   SourceDir = currentSourcePath().parentDir
   CIncludeDir = SourceDir / "cinclude"
+  JsonApiDir = SourceDir / "api"
   RaylibDir = SourceDir / "dist" / "raylib"
 
 proc fetchLatestRaylib =
@@ -14,7 +15,7 @@ proc fetchLatestRaylib =
     direShell("git fetch")
     direShell("git checkout", RaylibStableCommit)
 
-task "static", "Builds raylib C static library":
+task "build", "Builds the raylib C static library":
   fetchLatestRaylib()
   withDir(RaylibDir / "src"):
     direShell("make clean")
@@ -24,11 +25,19 @@ task "static", "Builds raylib C static library":
     copyFileToDir("libraylib.a", CIncludeDir)
     copyFileToDir("raylib.h", CIncludeDir)
 
-task "parse", "Produces JSON API files":
+proc generateWrapper =
+  let script = "raylib_gen"
+  withDir(SourceDir / "gen"):
+    direShell(findExe("nim"), "c", "--mm:arc --panics:on -d:release -d:emiLenient", script)
+    let gen = script.addFileExt(ExeExt)
+    direShell($CurDir / gen)
+
+task "wrap", "Produces the raylib nim wrapper":
   let parser = "raylib_parser"
   let header = RaylibDir / "src" / "raylib.h"
   fetchLatestRaylib()
   withDir(RaylibDir / "parser"):
     let exe = parser.addFileExt(ExeExt)
     direShell("cc", parser & ".c", "-o", exe)
-    direShell($CurDir / exe, "-f JSON", "-d RLAPI", "-i", header, "-o", SourceDir / "api")
+    direShell($CurDir / exe, "-f JSON", "-d RLAPI", "-i", header, "-o", JsonApiDir / "raylib_api.json")
+  generateWrapper()
