@@ -2,7 +2,7 @@ import nake
 # Only Linux is supported!
 
 const
-  RaylibStableCommit = "4f2bfc54760cbcbf142417b0bb24ddebf9ee4221"
+  RaylibStableCommit = "963de06d08f28784e03b6cfa994d545f9e0ef8b5"
   SourceDir = currentSourcePath().parentDir
   CIncludeDir = SourceDir / "cinclude"
   JsonApiDir = SourceDir / "api"
@@ -28,7 +28,7 @@ task "build", "Builds the raylib C static library":
 proc generateWrapper =
   let script = "raylib_gen"
   withDir(SourceDir / "gen"):
-    direShell(findExe("nim"), "c", "--mm:arc --panics:on -d:release -d:emiLenient", script)
+    direShell("nim", "c", "--mm:arc --panics:on -d:release -d:emiLenient", script)
     var exe = script.addFileExt(ExeExt)
     normalizeExe(exe)
     direShell(exe)
