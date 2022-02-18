@@ -1,3 +1,4 @@
+from unicode import Rune
 import os
 const cinclude = currentSourcePath().parentDir / "cinclude"
 {.passC: "-I" & cinclude.}
@@ -1242,18 +1243,18 @@ proc drawTextEx*(font: Font, text: cstring, position: Vector2, fontSize: float32
   ## Draw text using font and additional parameters
 proc drawTextPro*(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro".}
   ## Draw text using Font and pro parameters (rotation)
-proc drawTextCodepoint*(font: Font, codepoint: int32, position: Vector2, fontSize: float32, tint: Color) {.importc: "DrawTextCodepoint".}
+proc drawTextCodepoint*(font: Font, codepoint: Rune, position: Vector2, fontSize: float32, tint: Color) {.importc: "DrawTextCodepoint".}
   ## Draw one character (codepoint)
 proc drawTextCodepointsPriv(font: Font, codepoints: ptr UncheckedArray[int32], count: int32, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextCodepoints".}
 proc measureText*(text: cstring, fontSize: int32): int32 {.importc: "MeasureText".}
   ## Measure string width for default font
 proc measureTextEx*(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
   ## Measure string size for Font
-proc getGlyphIndex*(font: Font, codepoint: int32): int32 {.importc: "GetGlyphIndex".}
+proc getGlyphIndex*(font: Font, codepoint: Rune): int32 {.importc: "GetGlyphIndex".}
   ## Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
-proc getGlyphInfo*(font: Font, codepoint: int32): GlyphInfo {.importc: "GetGlyphInfo".}
+proc getGlyphInfo*(font: Font, codepoint: Rune): GlyphInfo {.importc: "GetGlyphInfo".}
   ## Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
-proc getGlyphAtlasRec*(font: Font, codepoint: int32): Rectangle {.importc: "GetGlyphAtlasRec".}
+proc getGlyphAtlasRec*(font: Font, codepoint: Rune): Rectangle {.importc: "GetGlyphAtlasRec".}
   ## Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
 proc drawLine3D*(startPos: Vector3, endPos: Vector3, color: Color) {.importc: "DrawLine3D".}
   ## Draw a line in 3D world space
@@ -1724,7 +1725,7 @@ proc loadMusicStreamFromMemory*(fileType: string, data: openarray[uint8]): Music
   ## Load music stream from data
   loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data), data.len.int32)
 
-proc drawTextCodepoints*(font: Font, codepoints: openarray[int32], position: Vector2,
+proc drawTextCodepoints*(font: Font, codepoints: openarray[Rune], position: Vector2,
     fontSize: float32, spacing: float32, tint: Color) =
   drawTextCodepointsPriv(font, cast[ptr UncheckedArray[int32]](codepoints),
       codepoints.len.int32, position, fontSize, spacing, tint)

@@ -146,7 +146,7 @@ proc loadMusicStreamFromMemory*(fileType: string, data: openarray[uint8]): Music
   ## Load music stream from data
   loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data), data.len.int32)
 
-proc drawTextCodepoints*(font: Font, codepoints: openarray[int32], position: Vector2,
+proc drawTextCodepoints*(font: Font, codepoints: openarray[Rune], position: Vector2,
     fontSize: float32, spacing: float32, tint: Color) =
   drawTextCodepointsPriv(font, cast[ptr UncheckedArray[int32]](codepoints),
       codepoints.len.int32, position, fontSize, spacing, tint)

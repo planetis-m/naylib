@@ -10,6 +10,7 @@ const
     "AudioStream": """RAudioBuffer* {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object"""
   }
   raylibHeader = """
+from unicode import Rune
 import os
 const cinclude = currentSourcePath().parentDir / "cinclude"
 {.passC: "-I" & cinclude.}
@@ -152,7 +153,12 @@ const
     # CubemapLayout
     ("LoadTextureCubemap", "layout"),
     # FontType
-    ("LoadFontData", "type")
+    ("LoadFontData", "type"),
+    # Rune
+    ("DrawTextCodepoint", "codepoint"),
+    ("GetGlyphIndex", "codepoint"),
+    ("GetGlyphInfo", "codepoint"),
+    ("GetGlyphAtlasRec", "codepoint")
   ]
   enumInFuncs = [
     "KeyboardKey",
@@ -200,7 +206,11 @@ const
     "TextureFilter",
     "TextureWrap",
     "CubemapLayout",
-    "FontType"
+    "FontType",
+    "Rune",
+    "Rune",
+    "Rune",
+    "Rune"
   ]
   excludedFuncs = [
     # Text strings management functions
