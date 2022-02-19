@@ -1,12 +1,6 @@
 
-proc raiseRangeDefect {.noinline, noreturn.} =
-  raise newException(RangeDefect, "array access out of bounds")
-
 template checkArrayAccess(a, x, len) =
-  when compileOption("boundChecks"):
-    {.line.}:
-      if a == nil or x.uint32 >= len.uint32:
-        raiseRangeDefect()
+  rangeCheck a != nil and x.uint32 < len.uint32
 
 template recs*(x: Font): FontRecs = FontRecs(x)
 

@@ -1569,6 +1569,41 @@ proc `=destroy`*(x: var Music) =
   if x.stream.buffer != nil: unloadMusicStream(x)
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 
+type
+  CSeq*[T] = object
+    len: int
+    data: ptr UncheckedArray[T]
+
+proc `=destroy`*[T](x: var CSeq[T]) =
+  if x.data != nil:
+    for i in 0..<x.len: `=destroy`(x.data[i])
+    memFree(x.data)
+proc `=copy`*[T](dest: var CSeq[T]; source: CSeq[T]) =
+  if dest.data != source.data:
+    `=destroy`(dest)
+    wasMoved(dest)
+    dest.len = source.len
+    if dest.len > 0:
+      dest.data = cast[typeof(dest.data)](memAlloc(dest.len.int32))
+      for i in 0..<dest.len: dest.data[i] = source.data[i]
+
+proc `[]`*[T](x: CSeq[T], i: int): lent T =
+  rangeCheck x.data != nil and i.uint < x.len.uint
+  result = x.data[i]
+
+proc `[]`*[T](x: var CSeq[T], i: int): var T =
+  rangeCheck x.data != nil and i.uint < x.len.uint
+  result = x.data[i]
+
+proc `[]=`*[T](x: var CSeq[T], i: int, val: sink T) =
+  rangeCheck x.data != nil and i.uint < x.len.uint
+  x.data[i] = val
+
+proc len*[T](x: CSeq[T]): int {.inline.} = x.len
+
+template toOpenArray*(x: CSeq, first, last: int): untyped =
+  toOpenArray(x.data, first, last)
+
 proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
 proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
 proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
@@ -1612,61 +1647,46 @@ proc getGamepadName*(gamepad: int32): string {.inline.} =
   ## Get gamepad internal name id
   result = $getGamepadNamePriv(gamepad)
 
-proc loadModelAnimations*(fileName: string): seq[ModelAnimation] =
+proc loadModelAnimations*(fileName: string): CSeq[ModelAnimation] =
   ## Load model animations from file
   var len = 0'u32
   let data = loadModelAnimationsPriv(fileName.cstring, len.addr)
   if len <= 0:
     raise newException(IOError, "No model animations loaded from " & filename)
-  result = newSeq[ModelAnimation](len.int)
-  copyMem(result[0].addr, data, len.int * sizeof(ModelAnimation))
-  #for i in 0..<len.int:
-    #result[i] = data[i]
-  memFree(data)
+  result = CSeq[ModelAnimation](len: len.int, data: data)
 
-proc loadWaveSamples*(wave: Wave): seq[float32] =
+proc loadWaveSamples*(wave: Wave): CSeq[float32] =
   ## Load samples data from wave as a floats array
   let data = loadWaveSamplesPriv(wave)
   let len = int(wave.frameCount * wave.channels)
-  result = newSeq[float32](len)
-  copyMem(result[0].addr, data, len * sizeof(float32))
-  memFree(data)
+  result = CSeq[float32](len: len, data: data)
 
-proc loadImageColors*(image: Image): seq[Color] =
+proc loadImageColors*(image: Image): CSeq[Color] =
   ## Load color data from image as a Color array (RGBA - 32bit)
   let data = loadImageColorsPriv(image)
   let len = int(image.width * image.height)
-  result = newSeq[Color](len)
-  copyMem(result[0].addr, data, len * sizeof(Color))
-  memFree(data)
+  result = CSeq[Color](len: len, data: data)
 
-proc loadImagePalette*(image: Image, maxPaletteSize: int32): seq[Color] =
+proc loadImagePalette*(image: Image, maxPaletteSize: int32): CSeq[Color] =
   ## Load colors palette from image as a Color array (RGBA - 32bit)
   var len = 0'i32
   let data = loadImagePalettePriv(image, maxPaletteSize, len.addr)
-  result = newSeq[Color](len.int)
-  copyMem(result[0].addr, data, len.int * sizeof(Color))
-  memFree(data)
+  result = CSeq[Color](len: len.int, data: data)
 
-proc loadFontData*(fileData: openarray[uint8], fontSize: int32, fontChars: openarray[int32], `type`: FontType): seq[GlyphInfo] =
+proc loadFontData*(fileData: openarray[uint8], fontSize: int32, fontChars: openarray[int32],
+    `type`: FontType): CSeq[GlyphInfo] =
   ## Load font data for further use
   let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
       fontSize, cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32, `type`)
-  result = newSeq[GlyphInfo](fontChars.len)
-  copyMem(result[0].addr, data, fontChars.len * sizeof(GlyphInfo))
-  memFree(data)
+  result = CSeq[GlyphInfo](len: fontChars.len, data: data)
 
-proc loadMaterials*(fileName: string): seq[Material] =
+proc loadMaterials*(fileName: string): CSeq[Material] =
   ## Load materials from model file
   var len = 0'i32
   let data = loadMaterialsPriv(fileName.cstring, len.addr)
   if len <= 0:
     raise newException(IOError, "No materials loaded from " & filename)
-  result = newSeq[Material](len.int)
-  copyMem(result[0].addr, data, len.int * sizeof(Material))
-  #for i in 0..<len.int:
-    #result[i] = data[i]
-  memFree(data)
+  result = CSeq[Material](len: len.int, data: data)
 
 proc drawLineStrip*(points: openarray[Vector2], color: Color) {.inline.} =
   ## Draw lines sequence
@@ -1699,15 +1719,11 @@ proc loadFontFromMemory*(fileType: string, fileData: openarray[uint8], fontSize:
       cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
       cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
 
-proc genImageFontAtlas*(chars: openarray[GlyphInfo], recs: var seq[Rectangle], fontSize: int32, padding: int32, packMethod: int32): Image =
+proc genImageFontAtlas*(chars: openarray[GlyphInfo], recs: var CSeq[Rectangle], fontSize: int32, padding: int32, packMethod: int32): Image =
   ## Generate image font atlas using chars info
   var data: ptr UncheckedArray[Rectangle] = nil
   result = genImageFontAtlasPriv(cast[ptr UncheckedArray[GlyphInfo]](chars), data.addr, chars.len.int32, fontSize, padding, packMethod)
-  recs = newSeq[Rectangle](chars.len)
-  copyMem(recs[0].addr, data, chars.len * sizeof(Rectangle))
-  #for i in 0..<len.int:
-    #result[i] = data[i]
-  memFree(data)
+  recs = CSeq[Rectangle](len: chars.len, data: data)
 
 proc drawTriangleStrip3D*(points: openarray[Vector3], color: Color) =
   ## Draw a triangle strip defined by points
@@ -1727,17 +1743,12 @@ proc loadMusicStreamFromMemory*(fileType: string, data: openarray[uint8]): Music
 
 proc drawTextCodepoints*(font: Font, codepoints: openarray[Rune], position: Vector2,
     fontSize: float32, spacing: float32, tint: Color) =
+  ## Draw multiple character (codepoint)
   drawTextCodepointsPriv(font, cast[ptr UncheckedArray[int32]](codepoints),
       codepoints.len.int32, position, fontSize, spacing, tint)
 
-proc raiseRangeDefect {.noinline, noreturn.} =
-  raise newException(RangeDefect, "array access out of bounds")
-
 template checkArrayAccess(a, x, len) =
-  when compileOption("boundChecks"):
-    {.line.}:
-      if a == nil or x.uint32 >= len.uint32:
-        raiseRangeDefect()
+  rangeCheck a != nil and x.uint32 < len.uint32
 
 template recs*(x: Font): FontRecs = FontRecs(x)
 

@@ -28,7 +28,7 @@ task "build", "Builds the raylib C static library":
 proc generateWrapper =
   let script = "raylib_gen"
   withDir(SourceDir / "gen"):
-    direShell("nim", "c", "--mm:arc --panics:on -d:release -d:emiLenient", script)
+    direShell("nim c", "--mm:arc --panics:on -d:release -d:emiLenient", script)
     var exe = script.addFileExt(ExeExt)
     normalizeExe(exe)
     direShell(exe)

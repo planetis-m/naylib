@@ -58,3 +58,41 @@ proc `=copy`*(dest: var Sound; source: Sound) {.error.}
 proc `=destroy`*(x: var Music) =
   if x.stream.buffer != nil: unloadMusicStream(x)
 proc `=copy`*(dest: var Music; source: Music) {.error.}
+
+type
+  CSeq*[T] = object
+    len: int
+    data: ptr UncheckedArray[T]
+
+proc `=destroy`*[T](x: var CSeq[T]) =
+  if x.data != nil:
+    for i in 0..<x.len: `=destroy`(x.data[i])
+    memFree(x.data)
+proc `=copy`*[T](dest: var CSeq[T]; source: CSeq[T]) =
+  if dest.data != source.data:
+    `=destroy`(dest)
+    wasMoved(dest)
+    dest.len = source.len
+    if dest.len > 0:
+      dest.data = cast[typeof(dest.data)](memAlloc(dest.len.int32))
+      for i in 0..<dest.len: dest.data[i] = source.data[i]
+
+proc `[]`*[T](x: CSeq[T], i: int): lent T =
+  rangeCheck x.data != nil and i.uint < x.len.uint
+  result = x.data[i]
+
+proc `[]`*[T](x: var CSeq[T], i: int): var T =
+  rangeCheck x.data != nil and i.uint < x.len.uint
+  result = x.data[i]
+
+proc `[]=`*[T](x: var CSeq[T], i: int, val: sink T) =
+  rangeCheck x.data != nil and i.uint < x.len.uint
+  x.data[i] = val
+
+proc len*[T](x: CSeq[T]): int {.inline.} = x.len
+
+template toOpenArray*(x: CSeq, first, last: int): untyped =
+  toOpenArray(x.data, first, last)
+
+template toOpenArray*(x: CSeq): untyped =
+  toOpenArray(x.data, 0, x.len-1)
