@@ -82,10 +82,19 @@ proc loadFontData*(fileData: openarray[uint8]; fontSize: int32; fontChars: opena
       fontChars.len.int32, `type`)
   result = CSeq[GlyphInfo](len: if fontChars.len == 0: 95 else: fontChars.len, data: data)
 
+proc loadFontData*(fileData: openarray[uint8]; fontSize, glyphCount: int32;
+    `type`: FontType): CSeq[GlyphInfo] =
+  let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
+      fontSize, nil, glyphCount, `type`)
+  result = CSeq[GlyphInfo](len: glyphCount, data: data)
+
 proc loadFontEx*(fileName: string; fontSize: int32; fontChars: openarray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for fontChars to load the default character set
   result = loadFontExPriv(fileName.cstring, fontSize,
       if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
+
+proc loadFontEx*(fileName: string; fontSize, glyphCount: int32): Font =
+  result = loadFontExPriv(fileName.cstring, fontSize, nil, glyphCount)
 
 proc loadFontFromMemory*(fileType: string; fileData: openarray[uint8]; fontSize: int32;
     fontChars: openarray[int32]): Font =
@@ -93,6 +102,11 @@ proc loadFontFromMemory*(fileType: string; fileData: openarray[uint8]; fontSize:
   result = loadFontFromMemoryPriv(fileType.cstring,
       cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
       if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
+
+proc loadFontFromMemory*(fileType: string; fileData: openarray[uint8]; fontSize: int32;
+    glyphCount: int32): Font =
+  result = loadFontFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+      fileData.len.int32, fontSize, nil, glyphCount)
 
 proc genImageFontAtlas*(chars: openarray[GlyphInfo]; recs: var CSeq[Rectangle]; fontSize: int32;
     padding: int32; packMethod: int32): Image =
