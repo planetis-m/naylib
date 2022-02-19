@@ -1604,6 +1604,9 @@ proc len*[T](x: CSeq[T]): int {.inline.} = x.len
 template toOpenArray*(x: CSeq, first, last: int): untyped =
   toOpenArray(x.data, first, last)
 
+template toOpenArray*(x: CSeq): untyped =
+  toOpenArray(x.data, 0, x.len-1)
+
 proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
 proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
 proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
@@ -1614,7 +1617,8 @@ proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
 proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
 
 type
-  TraceLogCallback* = proc (logLevel: TraceLogLevel; text: string) {.nimcall.} ## Logging: Redirect trace log messages
+  TraceLogCallback* = proc (logLevel: TraceLogLevel;
+      text: string) {.nimcall.} ## Logging: Redirect trace log messages
 
 var
   traceLogCallback: TraceLogCallback # TraceLog callback function pointer
@@ -1667,13 +1671,13 @@ proc loadImageColors*(image: Image): CSeq[Color] =
   let len = int(image.width * image.height)
   result = CSeq[Color](len: len, data: data)
 
-proc loadImagePalette*(image: Image, maxPaletteSize: int32): CSeq[Color] =
+proc loadImagePalette*(image: Image; maxPaletteSize: int32): CSeq[Color] =
   ## Load colors palette from image as a Color array (RGBA - 32bit)
   var len = 0'i32
   let data = loadImagePalettePriv(image, maxPaletteSize, len.addr)
   result = CSeq[Color](len: len.int, data: data)
 
-proc loadFontData*(fileData: openarray[uint8], fontSize: int32, fontChars: openarray[int32],
+proc loadFontData*(fileData: openarray[uint8]; fontSize: int32; fontChars: openarray[int32];
     `type`: FontType): CSeq[GlyphInfo] =
   ## Load font data for further use
   let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
@@ -1688,64 +1692,73 @@ proc loadMaterials*(fileName: string): CSeq[Material] =
     raise newException(IOError, "No materials loaded from " & filename)
   result = CSeq[Material](len: len.int, data: data)
 
-proc drawLineStrip*(points: openarray[Vector2], color: Color) {.inline.} =
+proc drawLineStrip*(points: openarray[Vector2]; color: Color) {.inline.} =
   ## Draw lines sequence
   drawLineStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
-proc drawTriangleFan*(points: openarray[Vector2], color: Color) =
+proc drawTriangleFan*(points: openarray[Vector2]; color: Color) =
   ## Draw a triangle fan defined by points (first vertex is the center)
   drawTriangleFanPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
-proc drawTriangleStrip*(points: openarray[Vector2], color: Color) =
+proc drawTriangleStrip*(points: openarray[Vector2]; color: Color) =
   ## Draw a triangle strip defined by points
   drawTriangleStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
-proc loadImageFromMemory*(fileType: string, fileData: openarray[uint8]): Image =
+proc loadImageFromMemory*(fileType: string; fileData: openarray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
-  result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32)
+  result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+      fileData.len.int32)
 
-proc drawTexturePoly*(texture: Texture2D, center: Vector2, points: openarray[Vector2], texcoords: openarray[Vector2], tint: Color) =
+proc drawTexturePoly*(texture: Texture2D; center: Vector2; points: openarray[Vector2];
+    texcoords: openarray[Vector2]; tint: Color) =
   ## Draw a textured polygon
-  drawTexturePolyPriv(texture, center, cast[ptr UncheckedArray[Vector2]](points), cast[ptr UncheckedArray[Vector2]](texcoords), points.len.int32, tint)
+  drawTexturePolyPriv(texture, center, cast[ptr UncheckedArray[Vector2]](points),
+      cast[ptr UncheckedArray[Vector2]](texcoords), points.len.int32, tint)
 
-proc loadFontEx*(fileName: string, fontSize: int32, fontChars: openarray[int32]): Font =
+proc loadFontEx*(fileName: string; fontSize: int32; fontChars: openarray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for fontChars to load the default character set
   result = loadFontExPriv(fileName.cstring, fontSize,
       if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
 
-proc loadFontFromMemory*(fileType: string, fileData: openarray[uint8], fontSize: int32, fontChars: openarray[int32]): Font =
+proc loadFontFromMemory*(fileType: string; fileData: openarray[uint8]; fontSize: int32;
+    fontChars: openarray[int32]): Font =
   ## Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
   result = loadFontFromMemoryPriv(fileType.cstring,
       cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
       cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
 
-proc genImageFontAtlas*(chars: openarray[GlyphInfo], recs: var CSeq[Rectangle], fontSize: int32, padding: int32, packMethod: int32): Image =
+proc genImageFontAtlas*(chars: openarray[GlyphInfo]; recs: var CSeq[Rectangle]; fontSize: int32;
+    padding: int32; packMethod: int32): Image =
   ## Generate image font atlas using chars info
   var data: ptr UncheckedArray[Rectangle] = nil
-  result = genImageFontAtlasPriv(cast[ptr UncheckedArray[GlyphInfo]](chars), data.addr, chars.len.int32, fontSize, padding, packMethod)
+  result = genImageFontAtlasPriv(cast[ptr UncheckedArray[GlyphInfo]](chars), data.addr,
+      chars.len.int32, fontSize, padding, packMethod)
   recs = CSeq[Rectangle](len: chars.len, data: data)
 
-proc drawTriangleStrip3D*(points: openarray[Vector3], color: Color) =
+proc drawTriangleStrip3D*(points: openarray[Vector3]; color: Color) =
   ## Draw a triangle strip defined by points
   drawTriangleStrip3DPriv(cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
 
-proc drawMeshInstanced*(mesh: Mesh, material: Material, transforms: openarray[Matrix]) =
+proc drawMeshInstanced*(mesh: Mesh; material: Material; transforms: openarray[Matrix]) =
   ## Draw multiple mesh instances with material and different transforms
-  drawMeshInstancedPriv(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms), transforms.len.int32)
+  drawMeshInstancedPriv(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms),
+      transforms.len.int32)
 
-proc loadWaveFromMemory*(fileType: string, fileData: openarray[uint8]): Wave =
+proc loadWaveFromMemory*(fileType: string; fileData: openarray[uint8]): Wave =
   ## Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
-  loadWaveFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32)
+  loadWaveFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+      fileData.len.int32)
 
-proc loadMusicStreamFromMemory*(fileType: string, data: openarray[uint8]): Music =
+proc loadMusicStreamFromMemory*(fileType: string; data: openarray[uint8]): Music =
   ## Load music stream from data
-  loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data), data.len.int32)
+  loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
+      data.len.int32)
 
-proc drawTextCodepoints*(font: Font, codepoints: openarray[Rune], position: Vector2,
-    fontSize: float32, spacing: float32, tint: Color) =
+proc drawTextCodepoints*(font: Font; codepoints: openarray[Rune]; position: Vector2;
+    fontSize: float32; spacing: float32; tint: Color) =
   ## Draw multiple character (codepoint)
-  drawTextCodepointsPriv(font, cast[ptr UncheckedArray[int32]](codepoints),
-      codepoints.len.int32, position, fontSize, spacing, tint)
+  drawTextCodepointsPriv(font, cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32,
+      position, fontSize, spacing, tint)
 
 template checkArrayAccess(a, x, len) =
   rangeCheck a != nil and x.uint32 < len.uint32
