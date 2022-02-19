@@ -91,6 +91,10 @@ proc `[]=`*[T](x: var CSeq[T], i: int, val: sink T) =
 
 proc len*[T](x: CSeq[T]): int {.inline.} = x.len
 
+proc `@`*[T](x: CSeq[T]): seq[T] {.inline.} =
+  newSeq(result, x.len)
+  for i in 0..x.len-1: result[i] = x[i]
+
 template toOpenArray*(x: CSeq, first, last: int): untyped =
   toOpenArray(x.data, first, last)
 
