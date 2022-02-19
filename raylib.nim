@@ -1666,13 +1666,6 @@ proc loadImagePalette*(image: Image; maxPaletteSize: int32): CSeq[Color] =
   let data = loadImagePalettePriv(image, maxPaletteSize, len.addr)
   result = CSeq[Color](len: len.int, data: data)
 
-proc loadFontData*(fileData: openarray[uint8]; fontSize: int32; fontChars: openarray[int32];
-    `type`: FontType): CSeq[GlyphInfo] =
-  ## Load font data for further use
-  let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
-      fontSize, cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32, `type`)
-  result = CSeq[GlyphInfo](len: fontChars.len, data: data)
-
 proc loadMaterials*(fileName: string): CSeq[Material] =
   ## Load materials from model file
   var len = 0'i32
@@ -1703,6 +1696,14 @@ proc drawTexturePoly*(texture: Texture2D; center: Vector2; points: openarray[Vec
   ## Draw a textured polygon
   drawTexturePolyPriv(texture, center, cast[ptr UncheckedArray[Vector2]](points),
       cast[ptr UncheckedArray[Vector2]](texcoords), points.len.int32, tint)
+
+proc loadFontData*(fileData: openarray[uint8]; fontSize: int32; fontChars: openarray[int32];
+    `type`: FontType): CSeq[GlyphInfo] =
+  ## Load font data for further use
+  let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
+      fontSize, if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars),
+      fontChars.len.int32, `type`)
+  result = CSeq[GlyphInfo](len: if fontChars.len == 0: 95 else: fontChars.len, data: data)
 
 proc loadFontEx*(fileName: string; fontSize: int32; fontChars: openarray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for fontChars to load the default character set
