@@ -1745,6 +1745,62 @@ proc drawTextCodepoints*(font: Font; codepoints: openarray[Rune]; position: Vect
   drawTextCodepointsPriv(font, cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32,
       position, fontSize, spacing, tint)
 
+template drawing*(body: untyped) =
+  ## Setup canvas (framebuffer) to start drawing
+  beginDrawing()
+  try:
+    body
+  finally: endDrawing()
+
+template mode2D*(camera: Camera2D; body: untyped) =
+  ## 2D mode with custom camera (2D)
+  beginMode2D(camera)
+  try:
+    body
+  finally: endMode2D()
+
+template mode3D*(camera: Camera3D; body: untyped) =
+  ## 3D mode with custom camera (3D)
+  beginMode3D(camera)
+  try:
+    body
+  finally: endMode3D()
+
+template textureMode*(target: RenderTexture2D; body: untyped) =
+  ## Drawing to render texture
+  beginTextureMode(target)
+  try:
+    body
+  finally: endTextureMode()
+
+template shaderMode*(shader: Shader; body: untyped) =
+  ## Custom shader drawing
+  beginShaderMode(shader)
+  try:
+    body
+  finally: endShaderMode()
+
+template blendMode*(mode: BlendMode; body: untyped) =
+  ## Blending mode (alpha, additive, multiplied, subtract, custom)
+  beginBlendMode(mode)
+  try:
+    body
+  finally: endBlendMode()
+
+template scissorMode*(x, y, width, height: int32; body: untyped) =
+  ## Scissor mode (define screen area for following drawing)
+  beginScissorMode(x, y, width, height)
+  try:
+    body
+  finally: endScissorMode()
+
+template vrStereoMode*(config: VrStereoConfig; body: untyped) =
+  ## Stereo rendering (requires VR simulator)
+  beginVrStereoMode(config)
+  try:
+    body
+  finally: endVrStereoMode()
+
 template checkArrayAccess(a, x, len) =
   rangeCheck a != nil and x.uint32 < len.uint32
 
