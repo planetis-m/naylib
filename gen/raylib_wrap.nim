@@ -92,7 +92,7 @@ proc loadFontFromMemory*(fileType: string; fileData: openarray[uint8]; fontSize:
   ## Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
   result = loadFontFromMemoryPriv(fileType.cstring,
       cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
-      cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
+      if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
 
 proc genImageFontAtlas*(chars: openarray[GlyphInfo]; recs: var CSeq[Rectangle]; fontSize: int32;
     padding: int32; packMethod: int32): Image =
