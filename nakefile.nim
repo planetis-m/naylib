@@ -16,15 +16,14 @@ proc fetchLatestRaylib =
     direSilentShell(&"Cloning {RaylibGitUrl}...",
         "git clone --depth 1", RaylibGitUrl, RaylibDir)
   withDir(RaylibDir):
-    direSilentShell("Fetching latest stable commit...", "git fetch")
-    direShell("git checkout", RaylibStableCommit)
+    direSilentShell("Fetching latest stable commit...",
+        "git fetch && git checkout", RaylibStableCommit)
 
 task "build", "Build the raylib C static library":
   fetchLatestRaylib()
   withDir(RaylibDir / "src"):
-    direShell("make clean")
     direSilentShell("Building raylib static library...",
-        "make CC=clang PLATFORM=PLATFORM_DESKTOP -j4")
+        "make clean && make CC=clang PLATFORM=PLATFORM_DESKTOP -j4")
     # Install to cinclude directory
     discard existsOrCreateDir(CIncludeDir)
     copyFileToDir("libraylib.a", CIncludeDir)
@@ -35,12 +34,12 @@ proc generateWrapper =
   withDir(SourceDir / "gen"):
     var exe = script.addFileExt(ExeExt)
     if exe.needsRefresh(script):
-      direSilentShell(&"Building {script}...",
+      direSilentShell("Building raylib2nim tool...",
           "nim c", "--mm:arc --panics:on -d:release -d:emiLenient", script)
     else:
-      echo "Skipped building ", script
+      echo "Skipped building raylib2nim tool."
     normalizeExe(exe)
-    direShell("Generating raylib Nim wrapper...", exe)
+    direSilentShell("Generating raylib Nim wrapper...", exe)
 
 task "wrap", "Produce the raylib nim wrapper":
   let parser = "raylib_parser"
@@ -49,7 +48,7 @@ task "wrap", "Produce the raylib nim wrapper":
   withDir(RaylibDir / "parser"):
     var exe = parser.addFileExt(ExeExt)
     if exe.needsRefresh(parser):
-      direSilentShell(&"Building {parser}...",
+      direSilentShell("Building raylib API parser...",
           "cc", parser.addFileExt(".c"), "-o", exe)
     else:
       echo "Skipped building ", parser
