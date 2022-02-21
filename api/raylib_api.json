@@ -4091,7 +4091,7 @@
       "returnType": "unsigned char *",
       "params": [
         {
-          "type": "unsigned char *",
+          "type": "const unsigned char *",
           "name": "data"
         },
         {
@@ -4110,7 +4110,7 @@
       "returnType": "unsigned char *",
       "params": [
         {
-          "type": "unsigned char *",
+          "type": "const unsigned char *",
           "name": "compData"
         },
         {
@@ -4148,7 +4148,7 @@
       "returnType": "unsigned char *",
       "params": [
         {
-          "type": "unsigned char *",
+          "type": "const unsigned char *",
           "name": "data"
         },
         {
@@ -7853,7 +7853,7 @@
           "name": "font"
         },
         {
-          "type": "int *",
+          "type": "const int *",
           "name": "codepoints"
         },
         {
@@ -8034,7 +8034,7 @@
       "returnType": "char *",
       "params": [
         {
-          "type": "int *",
+          "type": "const int *",
           "name": "codepoints"
         },
         {
@@ -9087,7 +9087,7 @@
           "name": "index"
         },
         {
-          "type": "void *",
+          "type": "const void *",
           "name": "data"
         },
         {
@@ -9144,7 +9144,7 @@
           "name": "material"
         },
         {
-          "type": "Matrix *",
+          "type": "const Matrix *",
           "name": "transforms"
         },
         {
@@ -10095,7 +10095,7 @@
           "name": "fileType"
         },
         {
-          "type": "unsigned char *",
+          "type": "const unsigned char *",
           "name": "data"
         },
         {

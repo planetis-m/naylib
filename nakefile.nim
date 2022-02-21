@@ -2,13 +2,13 @@ import nake, std/strformat
 # Only Linux is supported!
 
 const
+  SourceDir = currentSourcePath().parentDir.quoteShell
   ProjectUrl = "https://github.com/planetis-m/raylib-fever"
   RaylibGitUrl = "https://github.com/raysan5/raylib.git"
-  RaylibStableCommit = "d4382f4a52e7631bf02ff8073ed24b282596ce0a"
-  SourceDir = currentSourcePath().parentDir.quoteShell
+  RaylibStableCommit = "6e9ec253c89a9f37e7cbe1f1db382121dcbb61c1"
+  RaylibDir = SourceDir / "dist" / "raylib"
   CIncludeDir = SourceDir / "cinclude"
   JsonApiDir = SourceDir / "api"
-  RaylibDir = SourceDir / "dist" / "raylib"
   DocsDir = SourceDir / "docs"
 
 proc fetchLatestRaylib =
@@ -51,7 +51,7 @@ task "wrap", "Produce the raylib nim wrapper":
       direSilentShell("Building raylib API parser...",
           "cc", parser.addFileExt(".c"), "-o", exe)
     else:
-      echo "Skipped building ", parser
+      echo "Skipped building raylib API parser."
     normalizeExe(exe)
     direSilentShell("Generating API JSON file...",
         exe, "-f JSON", "-d RLAPI", "-i", header, "-o", JsonApiDir / "raylib_api.json")
