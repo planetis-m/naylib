@@ -12,21 +12,21 @@ type
 # Module Functions Definition - Utils math
 # ----------------------------------------------------------------------------------
 
-proc clamp*(value, min, max: float32): float32 {.inline.} =
+func clamp*(value, min, max: float32): float32 {.inline.} =
   ## Clamp float value
   result = if value < min: min else: value
   if result > max:
     result = max
 
-proc lerp*(start, `end`, amount: float32): float32 {.inline.} =
+func lerp*(start, `end`, amount: float32): float32 {.inline.} =
   ## Calculate linear interpolation between two floats
   result = start + amount * (`end` - start)
 
-proc normalize*(value, start, `end`: float32): float32 {.inline.} =
+func normalize*(value, start, `end`: float32): float32 {.inline.} =
   ## Normalize input value within input range
   result = (value - start) / (`end` - start)
 
-proc remap*(value, inputStart, inputEnd, outputStart, outputEnd: float32): float32 {.inline.} =
+func remap*(value, inputStart, inputEnd, outputStart, outputEnd: float32): float32 {.inline.} =
   ## Remap input value within input range to output range
   result = (value - inputStart) / (inputEnd - inputStart) *
       (outputEnd - outputStart) + outputStart
@@ -35,71 +35,71 @@ proc remap*(value, inputStart, inputEnd, outputStart, outputEnd: float32): float
 # Module Functions Definition - Vector2 math
 # ----------------------------------------------------------------------------------
 
-proc vector2Zero*(): Vector2 {.inline.} =
+func vector2Zero*(): Vector2 {.inline.} =
   ## Vector with components value 0'f32
   result = Vector2(x: 0, y: 0)
 
-proc vector2One*(): Vector2 {.inline.} =
+func vector2One*(): Vector2 {.inline.} =
   ## Vector with components value 1'f32
   result = Vector2(x: 1, y: 1)
 
-proc add*(v1, v2: Vector2): Vector2 {.inline.} =
+func add*(v1, v2: Vector2): Vector2 {.inline.} =
   ## Add two vectors (v1 + v2)
   result = Vector2(x: v1.x + v2.x, y: v1.y + v2.y)
 
-proc addValue*(v: Vector2; add: float32): Vector2 {.inline.} =
+func addValue*(v: Vector2; add: float32): Vector2 {.inline.} =
   ## Add vector and float value
   result = Vector2(x: v.x + add, y: v.y + add)
 
-proc subtract*(v1, v2: Vector2): Vector2 {.inline.} =
+func subtract*(v1, v2: Vector2): Vector2 {.inline.} =
   ## Subtract two vectors (v1 - v2)
   result = Vector2(x: v1.x - v2.x, y: v1.y - v2.y)
 
-proc subtractValue*(v: Vector2; sub: float32): Vector2 {.inline.} =
+func subtractValue*(v: Vector2; sub: float32): Vector2 {.inline.} =
   ## Subtract vector by float value
   result = Vector2(x: v.x - sub, y: v.y - sub)
 
-proc length*(v: Vector2): float32 {.inline.} =
+func length*(v: Vector2): float32 {.inline.} =
   ## Calculate vector length
   result = sqrt((v.x * v.x) + (v.y * v.y))
 
-proc lengthSqr*(v: Vector2): float32 {.inline.} =
+func lengthSqr*(v: Vector2): float32 {.inline.} =
   ## Calculate vector square length
   result = (v.x * v.x) + (v.y * v.y)
 
-proc dotProduct*(v1, v2: Vector2): float32 {.inline.} =
+func dotProduct*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate two vectors dot product
   result = (v1.x * v2.x + v1.y * v2.y)
 
-proc distance*(v1, v2: Vector2): float32 {.inline.} =
+func distance*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate distance between two vectors
   result = sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y))
 
-proc distanceSqr*(v1, v2: Vector2): float32 {.inline.} =
+func distanceSqr*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate square distance between two vectors
   result = (v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y)
 
-proc angle*(v1, v2: Vector2): float32 {.inline.} =
+func angle*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate angle from two vectors
   result = arctan2(v2.y, v2.x) - arctan2(v1.y, v1.x)
 
-proc scale*(v: Vector2; scale: float32): Vector2 {.inline.} =
+func scale*(v: Vector2; scale: float32): Vector2 {.inline.} =
   ## Scale vector (multiply by value)
   result = Vector2(x: v.x * scale, y: v.y * scale)
 
-proc multiply*(v1, v2: Vector2): Vector2 {.inline.} =
+func multiply*(v1, v2: Vector2): Vector2 {.inline.} =
   ## Multiply vector by vector
   result = Vector2(x: v1.x * v2.x, y: v1.y * v2.y)
 
-proc negate*(v: Vector2): Vector2 {.inline.} =
+func negate*(v: Vector2): Vector2 {.inline.} =
   ## Negate vector
   result = Vector2(x: -v.x, y: -v.y)
 
-proc divide*(v1, v2: Vector2): Vector2 {.inline.} =
+func divide*(v1, v2: Vector2): Vector2 {.inline.} =
   ## Divide vector by vector
   result = Vector2(x: v1.x / v2.x, y: v1.y / v2.y)
 
-proc normalize*(v: Vector2): Vector2 {.inline.} =
+func normalize*(v: Vector2): Vector2 {.inline.} =
   ## Normalize provided vector
   result = Vector2()
   let length = sqrt((v.x * v.x) + (v.y * v.y))
@@ -108,7 +108,7 @@ proc normalize*(v: Vector2): Vector2 {.inline.} =
     result.x = v.x * ilength
     result.y = v.y * ilength
 
-proc transform*(v: Vector2; mat: Matrix): Vector2 {.inline.} =
+func transform*(v: Vector2; mat: Matrix): Vector2 {.inline.} =
   ## Transforms a Vector2 by a given Matrix
   result = Vector2()
 
@@ -119,13 +119,13 @@ proc transform*(v: Vector2; mat: Matrix): Vector2 {.inline.} =
   result.x = mat.m0*x + mat.m4*y + mat.m8*z + mat.m12
   result.y = mat.m1*x + mat.m5*y + mat.m9*z + mat.m13
 
-proc lerp*(v1, v2: Vector2; amount: float32): Vector2 {.inline.} =
+func lerp*(v1, v2: Vector2; amount: float32): Vector2 {.inline.} =
   ## Calculate linear interpolation between two vectors
   result = Vector2()
   result.x = v1.x + amount * (v2.x - v1.x)
   result.y = v1.y + amount * (v2.y - v1.y)
 
-proc reflect*(v, normal: Vector2): Vector2 {.inline.} =
+func reflect*(v, normal: Vector2): Vector2 {.inline.} =
   ## Calculate reflected vector to normal
   result = Vector2()
   let dotProduct = (v.x * normal.x + v.y * normal.y)
@@ -133,7 +133,7 @@ proc reflect*(v, normal: Vector2): Vector2 {.inline.} =
   result.x = v.x - (2'f32 * normal.x) * dotProduct
   result.y = v.y - (2'f32 * normal.y) * dotProduct
 
-proc rotate*(v: Vector2; angle: float32): Vector2 {.inline.} =
+func rotate*(v: Vector2; angle: float32): Vector2 {.inline.} =
   ## Rotate vector by angle
   result = Vector2()
   let cosres = cos(angle)
@@ -141,7 +141,7 @@ proc rotate*(v: Vector2; angle: float32): Vector2 {.inline.} =
   result.x = v.x * cosres - v.y * sinres
   result.y = v.x * sinres + v.y * cosres
 
-proc moveTowards*(v, target: Vector2; maxDistance: float32): Vector2 {.inline.} =
+func moveTowards*(v, target: Vector2; maxDistance: float32): Vector2 {.inline.} =
   ## Move Vector towards target
   result = Vector2()
   let dx = target.x - v.x
@@ -157,44 +157,44 @@ proc moveTowards*(v, target: Vector2; maxDistance: float32): Vector2 {.inline.} 
 # Module Functions Definition - Vector3 math
 # ----------------------------------------------------------------------------------
 
-proc vector3Zero*(): Vector3 {.inline.} =
+func vector3Zero*(): Vector3 {.inline.} =
   ## Vector with components value 0'f32
   result = Vector3(x: 0, y: 0, z: 0)
 
-proc vector3One*(): Vector3 {.inline.} =
+func vector3One*(): Vector3 {.inline.} =
   ## Vector with components value 1'f32
   result = Vector3(x: 1, y: 1, z: 1)
 
-proc add*(v1, v2: Vector3): Vector3 {.inline.} =
+func add*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Add two vectors
   result = Vector3(x: v1.x + v2.x, y: v1.y + v2.y, z: v1.z + v2.z)
 
-proc addValue*(v: Vector3; add: float32): Vector3 {.inline.} =
+func addValue*(v: Vector3; add: float32): Vector3 {.inline.} =
   ## Add vector and float value
   result = Vector3(x: v.x + add, y: v.y + add, z: v.z + add)
 
-proc subtract*(v1, v2: Vector3): Vector3 {.inline.} =
+func subtract*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Subtract two vectors
   result = Vector3(x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z)
 
-proc subtractValue*(v: Vector3; sub: float32): Vector3 {.inline.} =
+func subtractValue*(v: Vector3; sub: float32): Vector3 {.inline.} =
   ## Subtract vector by float value
   result = Vector3(x: v.x - sub, y: v.y - sub, z: v.z - sub)
 
-proc scale*(v: Vector3; scalar: float32): Vector3 {.inline.} =
+func scale*(v: Vector3; scalar: float32): Vector3 {.inline.} =
   ## Multiply vector by scalar
   result = Vector3(x: v.x * scalar, y: v.y * scalar, z: v.z * scalar)
 
-proc multiply*(v1, v2: Vector3): Vector3 {.inline.} =
+func multiply*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Multiply vector by vector
   result = Vector3(x: v1.x * v2.x, y: v1.y * v2.y, z: v1.z * v2.z)
 
-proc crossProduct*(v1, v2: Vector3): Vector3 {.inline.} =
+func crossProduct*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Calculate two vectors cross product
   result = Vector3(x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z,
                             z: v1.x * v2.y - v1.y * v2.x)
 
-proc perpendicular*(v: Vector3): Vector3 {.inline.} =
+func perpendicular*(v: Vector3): Vector3 {.inline.} =
   ## Calculate one vector perpendicular vector
   result = Vector3()
   var min = abs(v.x)
@@ -210,19 +210,19 @@ proc perpendicular*(v: Vector3): Vector3 {.inline.} =
   result.y = v.z * cardinalAxis.x - v.x * cardinalAxis.z
   result.z = v.x * cardinalAxis.y - v.y * cardinalAxis.x
 
-proc length*(v: Vector3): float32 {.inline.} =
+func length*(v: Vector3): float32 {.inline.} =
   ## Calculate vector length
   result = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
 
-proc lengthSqr*(v: Vector3): float32 {.inline.} =
+func lengthSqr*(v: Vector3): float32 {.inline.} =
   ## Calculate vector square length
   result = v.x * v.x + v.y * v.y + v.z * v.z
 
-proc dotProduct*(v1, v2: Vector3): float32 {.inline.} =
+func dotProduct*(v1, v2: Vector3): float32 {.inline.} =
   ## Calculate two vectors dot product
   result = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
 
-proc distance*(v1, v2: Vector3): float32 {.inline.} =
+func distance*(v1, v2: Vector3): float32 {.inline.} =
   ## Calculate distance between two vectors
   result = 0'f32
   let dx = v2.x - v1.x
@@ -230,7 +230,7 @@ proc distance*(v1, v2: Vector3): float32 {.inline.} =
   let dz = v2.z - v1.z
   result = sqrt(dx * dx + dy * dy + dz * dz)
 
-proc distanceSqr(v1, v2: Vector3): float32 {.inline.} =
+func distanceSqr(v1, v2: Vector3): float32 {.inline.} =
   ## Calculate square distance between two vectors
   result = 0'f32
   let dx = v2.x - v1.x
@@ -238,7 +238,7 @@ proc distanceSqr(v1, v2: Vector3): float32 {.inline.} =
   let dz = v2.z - v1.z
   result = dx * dx + dy * dy + dz * dz
 
-proc angle*(v1, v2: Vector3): float32 {.inline.} =
+func angle*(v1, v2: Vector3): float32 {.inline.} =
   ## Calculate angle between two vectors
   result = 0'f32
   var cross = Vector3(x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z,
@@ -247,15 +247,15 @@ proc angle*(v1, v2: Vector3): float32 {.inline.} =
   let dot = (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z)
   result = arctan2(len, dot)
 
-proc negate*(v: Vector3): Vector3 {.inline.} =
+func negate*(v: Vector3): Vector3 {.inline.} =
   ## Negate provided vector (invert direction)
   result = Vector3(x: -v.x, y: -v.y, z: -v.z)
 
-proc divide*(v1, v2: Vector3): Vector3 {.inline.} =
+func divide*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Divide vector by vector
   result = Vector3(x: v1.x / v2.x, y: v1.y / v2.y, z: v1.z / v2.z)
 
-proc normalize*(v: Vector3): Vector3 {.inline.} =
+func normalize*(v: Vector3): Vector3 {.inline.} =
   ## Normalize provided vector
   result = v
   var length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
@@ -266,7 +266,7 @@ proc normalize*(v: Vector3): Vector3 {.inline.} =
   result.y = result.y * ilength
   result.z = result.z * ilength
 
-proc orthoNormalize*(v1: var Vector3; v2: var Vector3) {.inline.} =
+func orthoNormalize*(v1: var Vector3; v2: var Vector3) {.inline.} =
   ## Orthonormalize provided vectors
   ## Makes vectors normalized and orthogonal to each other
   ## Gram-Schmidt function implementation
@@ -298,7 +298,7 @@ proc orthoNormalize*(v1: var Vector3; v2: var Vector3) {.inline.} =
                          z: vn1.x * v1.y - vn1.y * v1.x)
   v2 = vn2
 
-proc transform*(v: Vector3; mat: Matrix): Vector3 {.inline.} =
+func transform*(v: Vector3; mat: Matrix): Vector3 {.inline.} =
   ## Transforms a Vector3 by a given Matrix
   result = Vector3()
   let x = v.x
@@ -308,7 +308,7 @@ proc transform*(v: Vector3; mat: Matrix): Vector3 {.inline.} =
   result.y = mat.m1 * x + mat.m5 * y + mat.m9 * z + mat.m13
   result.z = mat.m2 * x + mat.m6 * y + mat.m10 * z + mat.m14
 
-proc rotateByQuaternion*(v: Vector3; q: Quaternion): Vector3 {.inline.} =
+func rotateByQuaternion*(v: Vector3; q: Quaternion): Vector3 {.inline.} =
   ## Transform a vector by quaternion rotation
   result = Vector3()
   result.x = v.x * (q.x * q.x + q.w * q.w - q.y * q.y - q.z * q.z) +
@@ -319,14 +319,14 @@ proc rotateByQuaternion*(v: Vector3; q: Quaternion): Vector3 {.inline.} =
   result.z = v.x * (-(2 * q.w * q.y) + 2 * q.x * q.z) + v.y * (2 * q.w * q.x + 2 * q.y * q.z) +
       v.z * (q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z)
 
-proc lerp*(v1, v2: Vector3; amount: float32): Vector3 {.inline.} =
+func lerp*(v1, v2: Vector3; amount: float32): Vector3 {.inline.} =
   ## Calculate linear interpolation between two vectors
   result = Vector3()
   result.x = v1.x + amount * (v2.x - v1.x)
   result.y = v1.y + amount * (v2.y - v1.y)
   result.z = v1.z + amount * (v2.z - v1.z)
 
-proc reflect*(v, normal: Vector3): Vector3 {.inline.} =
+func reflect*(v, normal: Vector3): Vector3 {.inline.} =
   ## Calculate reflected vector to normal
   result = Vector3()
   # I is the original vector
@@ -337,21 +337,21 @@ proc reflect*(v, normal: Vector3): Vector3 {.inline.} =
   result.y = v.y - 2'f32 * normal.y * dotProduct
   result.z = v.z - 2'f32 * normal.z * dotProduct
 
-proc min*(v1, v2: Vector3): Vector3 {.inline.} =
+func min*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Get min value for each pair of components
   result = Vector3()
   result.x = min(v1.x, v2.x)
   result.y = min(v1.y, v2.y)
   result.z = min(v1.z, v2.z)
 
-proc max*(v1, v2: Vector3): Vector3 {.inline.} =
+func max*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Get max value for each pair of components
   result = Vector3()
   result.x = max(v1.x, v2.x)
   result.y = max(v1.y, v2.y)
   result.z = max(v1.z, v2.z)
 
-proc barycenter*(p, a, b, c: Vector3): Vector3 {.inline.} =
+func barycenter*(p, a, b, c: Vector3): Vector3 {.inline.} =
   ## Compute barycenter coordinates (u, v, w) for point p with respect to triangle (a, b, c)
   ## NOTE: Assumes P is on the plane of the triangle
   result = Vector3()
@@ -376,7 +376,7 @@ proc barycenter*(p, a, b, c: Vector3): Vector3 {.inline.} =
   result.z = (d00 * d21 - d01 * d20) / denom
   result.x = 1'f32 - (result.z + result.y)
 
-proc unproject*(source: Vector3; projection, view: Matrix): Vector3 {.inline.} =
+func unproject*(source: Vector3; projection, view: Matrix): Vector3 {.inline.} =
   ## Projects a Vector3 from screen space into object space
   ## NOTE: We are avoiding calling other raymath functions despite available
   result = Vector3()
@@ -467,7 +467,7 @@ proc unproject*(source: Vector3; projection, view: Matrix): Vector3 {.inline.} =
   result.y = qtransformed.y / qtransformed.w
   result.z = qtransformed.z / qtransformed.w
 
-proc toFloatV*(v: Vector3): Float3 {.inline.} =
+func toFloatV*(v: Vector3): Float3 {.inline.} =
   ## Get Vector3 as float array
   var buffer = Float3()
   buffer.v[0] = v.x
@@ -479,7 +479,7 @@ proc toFloatV*(v: Vector3): Float3 {.inline.} =
 # Module Functions Definition - Matrix math
 # ----------------------------------------------------------------------------------
 
-proc determinant*(mat: Matrix): float32 {.inline.} =
+func determinant*(mat: Matrix): float32 {.inline.} =
   ## Compute matrix determinant
   result = 0'f32
   # Cache the matrix values (speed optimization)
@@ -510,11 +510,11 @@ proc determinant*(mat: Matrix): float32 {.inline.} =
       a10 * a01 * a32 * a23 - a00 * a11 * a32 * a23 - a20 * a11 * a02 * a33 + a10 * a21 * a02 * a33 +
       a20 * a01 * a12 * a33 - a00 * a21 * a12 * a33 - a10 * a01 * a22 * a33 + a00 * a11 * a22 * a33
 
-proc trace*(mat: Matrix): float32 {.inline.} =
+func trace*(mat: Matrix): float32 {.inline.} =
   ## Get the trace of the matrix (sum of the values along the diagonal)
   result = (mat.m0 + mat.m5 + mat.m10 + mat.m15)
 
-proc transpose*(mat: Matrix): Matrix {.inline.} =
+func transpose*(mat: Matrix): Matrix {.inline.} =
   ## Transposes provided matrix
   result = Matrix()
   result.m0 = mat.m0
@@ -534,7 +534,7 @@ proc transpose*(mat: Matrix): Matrix {.inline.} =
   result.m14 = mat.m11
   result.m15 = mat.m15
 
-proc invert*(mat: Matrix): Matrix {.inline.} =
+func invert*(mat: Matrix): Matrix {.inline.} =
   ## Invert provided matrix
   result = Matrix()
   # Cache the matrix values (speed optimization)
@@ -590,7 +590,7 @@ proc invert*(mat: Matrix): Matrix {.inline.} =
   result.m14 = (-(a30 * b03) + a31 * b01 - a32 * b00) * invDet
   result.m15 = (a20 * b03 - a21 * b01 + a22 * b00) * invDet
 
-proc normalize*(mat: Matrix): Matrix {.inline.} =
+func normalize*(mat: Matrix): Matrix {.inline.} =
   ## Normalize provided matrix
   result = Matrix()
   # Cache the matrix values (speed optimization)
@@ -639,13 +639,13 @@ proc normalize*(mat: Matrix): Matrix {.inline.} =
   result.m14 = mat.m14 / det
   result.m15 = mat.m15 / det
 
-proc matrixIdentity*(): Matrix {.inline.} =
+func matrixIdentity*(): Matrix {.inline.} =
   ## Get identity matrix
   result = Matrix(m0: 1, m4: 0, m8: 0, m12: 0, m1: 0, m5: 1,
                           m9: 0, m13: 0, m2: 0, m6: 0, m10: 1, m14: 0,
                           m3: 0, m7: 0, m11: 0, m15: 1)
 
-proc add*(left, right: Matrix): Matrix {.inline.} =
+func add*(left, right: Matrix): Matrix {.inline.} =
   ## Add two matrices
   result = Matrix()
   result.m0 = left.m0 + right.m0
@@ -665,7 +665,7 @@ proc add*(left, right: Matrix): Matrix {.inline.} =
   result.m14 = left.m14 + right.m14
   result.m15 = left.m15 + right.m15
 
-proc subtract*(left, right: Matrix): Matrix {.inline.} =
+func subtract*(left, right: Matrix): Matrix {.inline.} =
   ## Subtract two matrices (left - right)
   result = Matrix()
   result.m0 = left.m0 - right.m0
@@ -685,7 +685,7 @@ proc subtract*(left, right: Matrix): Matrix {.inline.} =
   result.m14 = left.m14 - right.m14
   result.m15 = left.m15 - right.m15
 
-proc multiply*(left, right: Matrix): Matrix {.inline.} =
+func multiply*(left, right: Matrix): Matrix {.inline.} =
   ## Get two matrix multiplication
   ## NOTE: When multiplying matrices... the order matters!
   result = Matrix()
@@ -722,13 +722,13 @@ proc multiply*(left, right: Matrix): Matrix {.inline.} =
   result.m15 = left.m12 * right.m3 + left.m13 * right.m7 + left.m14 * right.m11 +
       left.m15 * right.m15
 
-proc translate*(x, y, z: float32): Matrix {.inline.} =
+func translate*(x, y, z: float32): Matrix {.inline.} =
   ## Get translation matrix
   result = Matrix(m0: 1, m4: 0, m8: 0, m12: x, m1: 0, m5: 1,
                           m9: 0, m13: y, m2: 0, m6: 0, m10: 1, m14: z, m3: 0,
                           m7: 0, m11: 0, m15: 1)
 
-proc rotate*(axis: Vector3; angle: float32): Matrix {.inline.} =
+func rotate*(axis: Vector3; angle: float32): Matrix {.inline.} =
   ## Create rotation matrix from axis and angle
   ## NOTE: Angle should be provided in radians
   result = Matrix()
@@ -762,7 +762,7 @@ proc rotate*(axis: Vector3; angle: float32): Matrix {.inline.} =
   result.m14 = 0'f32
   result.m15 = 1'f32
 
-proc rotateX*(angle: float32): Matrix {.inline.} =
+func rotateX*(angle: float32): Matrix {.inline.} =
   ## Get x-rotation matrix (angle in radians)
   result = Matrix(m0: 1, m4: 0, m8: 0, m12: 0, m1: 0, m5: 1,
                           m9: 0, m13: 0, m2: 0, m6: 0, m10: 1, m14: 0,
@@ -775,7 +775,7 @@ proc rotateX*(angle: float32): Matrix {.inline.} =
   result.m9 = sinres
   result.m10 = cosres
 
-proc rotateY*(angle: float32): Matrix {.inline.} =
+func rotateY*(angle: float32): Matrix {.inline.} =
   ## Get y-rotation matrix (angle in radians)
   result = Matrix(m0: 1, m4: 0, m8: 0, m12: 0, m1: 0, m5: 1,
                           m9: 0, m13: 0, m2: 0, m6: 0, m10: 1, m14: 0,
@@ -788,7 +788,7 @@ proc rotateY*(angle: float32): Matrix {.inline.} =
   result.m8 = -sinres
   result.m10 = cosres
 
-proc rotateZ*(angle: float32): Matrix {.inline.} =
+func rotateZ*(angle: float32): Matrix {.inline.} =
   ## Get z-rotation matrix (angle in radians)
   result = Matrix(m0: 1, m4: 0, m8: 0, m12: 0, m1: 0, m5: 1,
                           m9: 0, m13: 0, m2: 0, m6: 0, m10: 1, m14: 0,
@@ -801,7 +801,7 @@ proc rotateZ*(angle: float32): Matrix {.inline.} =
   result.m4 = sinres
   result.m5 = cosres
 
-proc rotateXYZ*(ang: Vector3): Matrix {.inline.} =
+func rotateXYZ*(ang: Vector3): Matrix {.inline.} =
   ## Get xyz-rotation matrix (angles in radians)
   result = Matrix(m0: 1, m4: 0, m8: 0, m12: 0, m1: 0, m5: 1,
                           m9: 0, m13: 0, m2: 0, m6: 0, m10: 1, m14: 0,
@@ -823,7 +823,7 @@ proc rotateXYZ*(ang: Vector3): Matrix {.inline.} =
   result.m6 = cosy * sinx
   result.m10 = cosy * cosx
 
-proc rotateZYX*(ang: Vector3): Matrix {.inline.} =
+func rotateZYX*(ang: Vector3): Matrix {.inline.} =
   ## Get zyx-rotation matrix (angles in radians)
   result = Matrix()
   let cz = cos(ang.z)
@@ -849,13 +849,13 @@ proc rotateZYX*(ang: Vector3): Matrix {.inline.} =
   result.m14 = 0
   result.m15 = 1
 
-proc scale*(x, y, z: float32): Matrix {.inline.} =
+func scale*(x, y, z: float32): Matrix {.inline.} =
   ## Get scaling matrix
   result = Matrix(m0: x, m4: 0, m8: 0, m12: 0, m1: 0, m5: y, m9: 0,
                           m13: 0, m2: 0, m6: 0, m10: z, m14: 0, m3: 0,
                           m7: 0, m11: 0, m15: 1)
 
-proc frustum*(left, right, bottom, top, near, far: float): Matrix {.inline.} =
+func frustum*(left, right, bottom, top, near, far: float): Matrix {.inline.} =
   # Get perspective projection matrix
   result = Matrix()
   let rl = float32(right - left)
@@ -878,7 +878,7 @@ proc frustum*(left, right, bottom, top, near, far: float): Matrix {.inline.} =
   result.m14 = -((float32(far * float32(near * 2'f32))) / fn)
   result.m15 = 0'f32
 
-proc perspective*(fovy, aspect, near, far: float): Matrix {.inline.} =
+func perspective*(fovy, aspect, near, far: float): Matrix {.inline.} =
   ## Get perspective projection matrix
   ## NOTE: Angle should be provided in radians
   result = Matrix()
@@ -898,7 +898,7 @@ proc perspective*(fovy, aspect, near, far: float): Matrix {.inline.} =
   result.m11 = -1'f32
   result.m14 = -((float32(far * float32(near * 2'f32))) / fn)
 
-proc ortho*(left, right, bottom, top, near, far: float): Matrix {.inline.} =
+func ortho*(left, right, bottom, top, near, far: float): Matrix {.inline.} =
   # Get orthographic projection matrix
   result = Matrix()
   let rl = float32(right - left)
@@ -921,7 +921,7 @@ proc ortho*(left, right, bottom, top, near, far: float): Matrix {.inline.} =
   result.m14 = -((float32(far) + float32(near)) / fn)
   result.m15 = 1'f32
 
-proc lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
+func lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
   ## Get camera look-at matrix (view matrix)
   result = Matrix()
   var length = 0'f32
@@ -972,7 +972,7 @@ proc lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
   # Vector3DotProduct(vz, eye)
   result.m15 = 1'f32
 
-proc toFloatV*(mat: Matrix): Float16 {.inline.} =
+func toFloatV*(mat: Matrix): Float16 {.inline.} =
   ## Get float array of matrix data
   result = Float16()
   result.v[0] = mat.m0
@@ -996,33 +996,33 @@ proc toFloatV*(mat: Matrix): Float16 {.inline.} =
 # Module Functions Definition - Quaternion math
 # ----------------------------------------------------------------------------------
 
-proc add*(q1, q2: Quaternion): Quaternion {.inline.} =
+func add*(q1, q2: Quaternion): Quaternion {.inline.} =
   ## Add two quaternions
   result = Quaternion(x: q1.x + q2.x, y: q1.y + q2.y, z: q1.z + q2.z,
                                   w: q1.w + q2.w)
 
-proc addValue*(q: Quaternion; add: float32): Quaternion {.inline.} =
+func addValue*(q: Quaternion; add: float32): Quaternion {.inline.} =
   ## Add quaternion and float value
   result = Quaternion(x: q.x + add, y: q.y + add, z: q.z + add, w: q.w + add)
 
-proc subtract*(q1, q2: Quaternion): Quaternion {.inline.} =
+func subtract*(q1, q2: Quaternion): Quaternion {.inline.} =
   ## Subtract two quaternions
   result = Quaternion(x: q1.x - q2.x, y: q1.y - q2.y, z: q1.z - q2.z,
                                   w: q1.w - q2.w)
 
-proc subtractValue*(q: Quaternion; sub: float32): Quaternion {.inline.} =
+func subtractValue*(q: Quaternion; sub: float32): Quaternion {.inline.} =
   ## Subtract quaternion and float value
   result = Quaternion(x: q.x - sub, y: q.y - sub, z: q.z - sub, w: q.w - sub)
 
-proc quaternionIdentity*(): Quaternion {.inline.} =
+func quaternionIdentity*(): Quaternion {.inline.} =
   ## Get identity quaternion
   result = Quaternion(x: 0, y: 0, z: 0, w: 1)
 
-proc length*(q: Quaternion): float32 {.inline.} =
+func length*(q: Quaternion): float32 {.inline.} =
   ## Computes the length of a quaternion
   result = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
 
-proc normalize*(q: Quaternion): Quaternion {.inline.} =
+func normalize*(q: Quaternion): Quaternion {.inline.} =
   ## Normalize provided quaternion
   result = Quaternion()
   var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
@@ -1034,7 +1034,7 @@ proc normalize*(q: Quaternion): Quaternion {.inline.} =
   result.z = q.z * ilength
   result.w = q.w * ilength
 
-proc invert*(q: Quaternion): Quaternion {.inline.} =
+func invert*(q: Quaternion): Quaternion {.inline.} =
   ## Invert provided quaternion
   result = q
   let lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
@@ -1045,7 +1045,7 @@ proc invert*(q: Quaternion): Quaternion {.inline.} =
     result.z = result.z * -invLength
     result.w = result.w * invLength
 
-proc multiply*(q1, q2: Quaternion): Quaternion {.inline.} =
+func multiply*(q1, q2: Quaternion): Quaternion {.inline.} =
   ## Calculate two quaternion multiplication
   result = Quaternion()
   let
@@ -1063,7 +1063,7 @@ proc multiply*(q1, q2: Quaternion): Quaternion {.inline.} =
   result.z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx
   result.w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz
 
-proc scale*(q: Quaternion; mul: float32): Quaternion {.inline.} =
+func scale*(q: Quaternion; mul: float32): Quaternion {.inline.} =
   ## Scale quaternion by float value
   result = Quaternion()
   let
@@ -1076,12 +1076,12 @@ proc scale*(q: Quaternion; mul: float32): Quaternion {.inline.} =
   result.z = qaz * mul + qaw * mul + qax * mul - qay * mul
   result.w = qaw * mul - qax * mul - qay * mul - qaz * mul
 
-proc divide*(q1, q2: Quaternion): Quaternion {.inline.} =
+func divide*(q1, q2: Quaternion): Quaternion {.inline.} =
   ## Divide two quaternions
   result = Quaternion(x: q1.x / q2.x, y: q1.y / q2.y, z: q1.z / q2.z,
                                   w: q1.w / q2.w)
 
-proc lerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
+func lerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   ## Calculate linear interpolation between two quaternions
   result = Quaternion()
   result.x = q1.x + amount * (q2.x - q1.x)
@@ -1089,7 +1089,7 @@ proc lerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   result.z = q1.z + amount * (q2.z - q1.z)
   result.w = q1.w + amount * (q2.w - q1.w)
 
-proc nlerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
+func nlerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   ## Calculate slerp-optimized interpolation between two quaternions
   result = Quaternion()
   # QuaternionLerp(q1, q2, amount)
@@ -1108,7 +1108,7 @@ proc nlerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   result.z = q.z * ilength
   result.w = q.w * ilength
 
-proc slerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
+func slerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   ## Calculates spherical linear interpolation between two quaternions
   result = Quaternion()
   var q2 = q2
@@ -1139,7 +1139,7 @@ proc slerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
       result.z = (q1.z * ratioA + q2.z * ratioB)
       result.w = (q1.w * ratioA + q2.w * ratioB)
 
-proc fromVector3ToVector3*(`from`, to: Vector3): Quaternion {.inline.} =
+func fromVector3ToVector3*(`from`, to: Vector3): Quaternion {.inline.} =
   ## Calculate quaternion based on the rotation from one vector to another
   result = Quaternion()
   let cos2Theta = (`from`.x * to.x + `from`.y * to.y + `from`.z * to.z)
@@ -1164,7 +1164,7 @@ proc fromVector3ToVector3*(`from`, to: Vector3): Quaternion {.inline.} =
   result.z = q.z * ilength
   result.w = q.w * ilength
 
-proc fromMatrix*(mat: Matrix): Quaternion {.inline.} =
+func fromMatrix*(mat: Matrix): Quaternion {.inline.} =
   ## Get a quaternion for a given rotation matrix
   result = Quaternion()
   if (mat.m0 > mat.m5) and (mat.m0 > mat.m10):
@@ -1186,7 +1186,7 @@ proc fromMatrix*(mat: Matrix): Quaternion {.inline.} =
     result.z = 0.25'f32 * s
     result.w = (mat.m4 - mat.m1) / s
 
-proc toMatrix*(q: Quaternion): Matrix {.inline.} =
+func toMatrix*(q: Quaternion): Matrix {.inline.} =
   ## Get a matrix for a given quaternion
   result = Matrix(m0: 1, m4: 0, m8: 0, m12: 0, m1: 0, m5: 1,
                           m9: 0, m13: 0, m2: 0, m6: 0, m10: 1, m14: 0,
@@ -1211,7 +1211,7 @@ proc toMatrix*(q: Quaternion): Matrix {.inline.} =
   result.m9 = 2 * (bc - ad)
   result.m10 = 1 - 2 * (a2 + b2)
 
-proc fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
+func fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
   ## Get rotation quaternion for an angle and axis
   ## NOTE: angle must be provided in radians
   result = Quaternion(x: 0, y: 0, z: 0, w: 1)
@@ -1248,7 +1248,7 @@ proc fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
     result.z = q.z * ilength
     result.w = q.w * ilength
 
-proc toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) {.inline.} =
+func toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) {.inline.} =
   ## Get the rotation angle and axis for a given quaternion
   var q = q
   if abs(q.w) > 1'f32:
@@ -1275,7 +1275,7 @@ proc toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) {.
   outAxis = resAxis
   outAngle = resAngle
 
-proc fromEuler*(pitch, yaw, roll: float32): Quaternion {.inline.} =
+func fromEuler*(pitch, yaw, roll: float32): Quaternion {.inline.} =
   ## Get the quaternion equivalent to Euler angles
   ## NOTE: Rotation order is ZYX
   result = Quaternion()
@@ -1290,7 +1290,7 @@ proc fromEuler*(pitch, yaw, roll: float32): Quaternion {.inline.} =
   result.z = x0 * y0 * z1 - x1 * y1 * z0
   result.w = x0 * y0 * z0 + x1 * y1 * z1
 
-proc toEuler*(q: Quaternion): Vector3 {.inline.} =
+func toEuler*(q: Quaternion): Vector3 {.inline.} =
   ## Get the Euler angles equivalent to quaternion (roll, pitch, yaw)
   ## NOTE: Angles are returned in a Vector3 struct in radians
   result = Vector3()
@@ -1308,7 +1308,7 @@ proc toEuler*(q: Quaternion): Vector3 {.inline.} =
   let z1 = 1'f32 - 2'f32 * (q.y * q.y + q.z * q.z)
   result.z = arctan2(z0, z1)
 
-proc transform*(q: Quaternion; mat: Matrix): Quaternion {.inline.} =
+func transform*(q: Quaternion; mat: Matrix): Quaternion {.inline.} =
   ## Transform a quaternion given a transformation matrix
   result = Quaternion()
   result.x = mat.m0 * q.x + mat.m4 * q.y + mat.m8 * q.z + mat.m12 * q.w
