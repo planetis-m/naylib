@@ -75,6 +75,10 @@ proc distance*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate distance between two vectors
   result = sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y))
 
+proc distanceSqr*(v1, v2: Vector2): float32 {.inline.} =
+  ## Calculate square distance between two vectors
+  result = (v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y)
+
 proc angle*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate angle from two vectors
   result = arctan2(v2.y, v2.x) - arctan2(v1.y, v1.x)
@@ -143,7 +147,7 @@ proc moveTowards*(v, target: Vector2; maxDistance: float32): Vector2 {.inline.} 
   let dx = target.x - v.x
   let dy = target.y - v.y
   let value = (dx * dx) + (dy * dy)
-  if (value == 0) or ((maxDistance >= 0) and (value <= maxDistance * maxDistance)):
+  if value == 0 or (maxDistance >= 0 and value <= maxDistance * maxDistance):
     return target
   let dist = sqrt(value)
   result.x = v.x + dx / dist * maxDistance
@@ -216,7 +220,7 @@ proc lengthSqr*(v: Vector3): float32 {.inline.} =
 
 proc dotProduct*(v1, v2: Vector3): float32 {.inline.} =
   ## Calculate two vectors dot product
-  result = (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z)
+  result = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
 
 proc distance*(v1, v2: Vector3): float32 {.inline.} =
   ## Calculate distance between two vectors
@@ -225,6 +229,14 @@ proc distance*(v1, v2: Vector3): float32 {.inline.} =
   let dy = v2.y - v1.y
   let dz = v2.z - v1.z
   result = sqrt(dx * dx + dy * dy + dz * dz)
+
+proc distanceSqr(v1, v2: Vector3): float32 {.inline.} =
+  ## Calculate square distance between two vectors
+  result = 0'f32
+  let dx = v2.x - v1.x
+  let dy = v2.y - v1.y
+  let dz = v2.z - v1.z
+  result = dx * dx + dy * dy + dz * dz
 
 proc angle*(v1, v2: Vector3): float32 {.inline.} =
   ## Calculate angle between two vectors
@@ -321,9 +333,9 @@ proc reflect*(v, normal: Vector3): Vector3 {.inline.} =
   # N is the normal of the incident plane
   # R = I - (2*N*(DotProduct[I, N]))
   let dotProduct = (v.x * normal.x + v.y * normal.y + v.z * normal.z)
-  result.x = v.x - (2'f32 * normal.x) * dotProduct
-  result.y = v.y - (2'f32 * normal.y) * dotProduct
-  result.z = v.z - (2'f32 * normal.z) * dotProduct
+  result.x = v.x - 2'f32 * normal.x * dotProduct
+  result.y = v.y - 2'f32 * normal.y * dotProduct
+  result.z = v.z - 2'f32 * normal.z * dotProduct
 
 proc min*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Get min value for each pair of components
