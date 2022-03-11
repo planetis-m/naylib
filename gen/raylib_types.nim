@@ -77,16 +77,19 @@ proc `=copy`*[T](dest: var CSeq[T]; source: CSeq[T]) =
       dest.data = cast[typeof(dest.data)](memAlloc(dest.len.int32))
       for i in 0..<dest.len: dest.data[i] = source.data[i]
 
+template checkArrayAccess(a, x, len) =
+  rangeCheck a != nil and x.uint32 < len.uint32
+
 proc `[]`*[T](x: CSeq[T], i: int): lent T =
-  rangeCheck x.data != nil and i.uint < x.len.uint
+  checkArrayAccess(x.data, i, x.len)
   result = x.data[i]
 
 proc `[]`*[T](x: var CSeq[T], i: int): var T =
-  rangeCheck x.data != nil and i.uint < x.len.uint
+  checkArrayAccess(x.data, i, x.len)
   result = x.data[i]
 
 proc `[]=`*[T](x: var CSeq[T], i: int, val: sink T) =
-  rangeCheck x.data != nil and i.uint < x.len.uint
+  checkArrayAccess(x.data, i, x.len)
   x.data[i] = val
 
 proc len*[T](x: CSeq[T]): int {.inline.} = x.len

@@ -1,7 +1,4 @@
 
-template checkArrayAccess(a, x, len) =
-  rangeCheck a != nil and x.uint32 < len.uint32
-
 template recs*(x: Font): FontRecs = FontRecs(x)
 
 proc `[]`*(x: FontRecs, i: int): Rectangle =
