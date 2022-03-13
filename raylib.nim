@@ -1645,19 +1645,13 @@ type
 proc kind*(x: typedesc[float32]): ShaderUniformDataType = ShaderUniformFloat
 proc value*(x: float32): pointer = x.addr
 
-proc kind*(x: typedesc[seq[float32]]): ShaderUniformDataType = ShaderUniformFloat
-proc value*(x: seq[float32]): pointer = x[0].addr
-
-proc kind*(x: typedesc[CSeq[float32]]): ShaderUniformDataType = ShaderUniformFloat
-proc value*(x: CSeq[float32]): pointer = x.data
-
 proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: int32, value: T) =
   ## Set shader uniform value
   setShaderValuePriv(shader, locIndex, value.value, kind(T))
 
-proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: int32, value: T) =
+proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: int32, value: openarray[T]) =
   ## Set shader uniform value vector
-  setShaderValueVPriv(shader, locIndex, value.value, kind(T), value.len.int32)
+  setShaderValueVPriv(shader, locIndex, cast[pointer](value), kind(T), value.len.int32)
 
 proc loadModelAnimations*(fileName: string): CSeq[ModelAnimation] =
   ## Load model animations from file
@@ -1711,26 +1705,20 @@ proc loadImageFromMemory*(fileType: string; fileData: openarray[uint8]): Image =
       fileData.len.int32)
 
 type
-  Pixels* = concept
+  Pixel* = concept
     proc kind(x: typedesc[Self]): PixelFormat
     proc value(x: Self): pointer
 
 proc kind*(x: typedesc[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
 proc value*(x: Color): pointer = x.addr
 
-proc kind*(x: typedesc[seq[Color]]): PixelFormat = PixelformatUncompressedR8g8b8a8
-proc value*(x: seq[Color]): pointer = x[0].addr
-
-proc kind*(x: typedesc[CSeq[Color]]): PixelFormat = PixelformatUncompressedR8g8b8a8
-proc value*(x: CSeq[Color]): pointer = x.data
-
-proc updateTexture*[T: Pixels](texture: Texture2D, pixels: T) =
+proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openarray[T]) =
   ## Update GPU texture with new data
-  updateTexturePriv(texture, pixels.value)
+  updateTexturePriv(texture, cast[pointer](pixels))
 
-proc updateTextureRec*[T: Pixels](texture: Texture2D, rec: Rectangle, pixels: T) =
+proc updateTextureRec*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openarray[T]) =
   ## Update GPU texture rectangle with new data
-  updateTextureRecPriv(texture, rec, pixels.value)
+  updateTextureRecPriv(texture, rec, cast[pointer](pixels))
 
 proc drawTexturePoly*(texture: Texture2D; center: Vector2; points: openarray[Vector2];
     texcoords: openarray[Vector2]; tint: Color) =
@@ -1738,11 +1726,11 @@ proc drawTexturePoly*(texture: Texture2D; center: Vector2; points: openarray[Vec
   drawTexturePolyPriv(texture, center, cast[ptr UncheckedArray[Vector2]](points),
       cast[ptr UncheckedArray[Vector2]](texcoords), points.len.int32, tint)
 
-proc getPixelColor*[T: Pixels](pixels: T): Color =
+proc getPixelColor*[T: Pixel](pixels: T): Color =
   ## Get Color from a source pixel pointer of certain format
   getPixelColorPriv(pixels.value, kind(T))
 
-proc setPixelColor*[T: Pixels](pixels: T, color: Color) =
+proc setPixelColor*[T: Pixel](pixels: T, color: Color) =
   ## Set color formatted into destination pixel pointer
   setPixelColorPriv(pixels.value, color, kind(T))
 
