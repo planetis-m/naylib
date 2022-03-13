@@ -3,7 +3,7 @@ import nake, std/strformat
 
 const
   SourceDir = currentSourcePath().parentDir.quoteShell
-  ProjectUrl = "https://github.com/planetis-m/raylib-fever"
+  ProjectUrl = "https://github.com/planetis-m/naylib"
   RaylibGitUrl = "https://github.com/raysan5/raylib.git"
   RaylibStableCommit = "6e9ec253c89a9f37e7cbe1f1db382121dcbb61c1"
   RaylibDir = SourceDir / "dist" / "raylib"
