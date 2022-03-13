@@ -1171,10 +1171,8 @@ proc unloadTexture*(texture: Texture2D) {.importc: "UnloadTexture".}
   ## Unload texture from GPU memory (VRAM)
 proc unloadRenderTexture*(target: RenderTexture2D) {.importc: "UnloadRenderTexture".}
   ## Unload render texture from GPU memory (VRAM)
-proc updateTexture*(texture: Texture2D, pixels: pointer) {.importc: "UpdateTexture".}
-  ## Update GPU texture with new data
-proc updateTextureRec*(texture: Texture2D, rec: Rectangle, pixels: pointer) {.importc: "UpdateTextureRec".}
-  ## Update GPU texture rectangle with new data
+proc updateTexturePriv(texture: Texture2D, pixels: pointer) {.importc: "UpdateTexture".}
+proc updateTextureRecPriv(texture: Texture2D, rec: Rectangle, pixels: pointer) {.importc: "UpdateTextureRec".}
 proc genTextureMipmaps*(texture: var Texture2D) {.importc: "GenTextureMipmaps".}
   ## Generate GPU mipmaps for a texture
 proc setTextureFilter*(texture: Texture2D, filter: TextureFilter) {.importc: "SetTextureFilter".}
@@ -1216,10 +1214,8 @@ proc colorAlphaBlend*(dst: Color, src: Color, tint: Color): Color {.importc: "Co
   ## Get src alpha-blended into dst color with tint
 proc getColor*(hexValue: uint32): Color {.importc: "GetColor".}
   ## Get Color structure from hexadecimal value
-proc getPixelColor*(srcPtr: pointer, format: PixelFormat): Color {.importc: "GetPixelColor".}
-  ## Get Color from a source pixel pointer of certain format
-proc setPixelColor*(dstPtr: pointer, color: Color, format: PixelFormat) {.importc: "SetPixelColor".}
-  ## Set color formatted into destination pixel pointer
+proc getPixelColorPriv(srcPtr: pointer, format: PixelFormat): Color {.importc: "GetPixelColor".}
+proc setPixelColorPriv(dstPtr: pointer, color: Color, format: PixelFormat) {.importc: "SetPixelColor".}
 proc getPixelDataSize*(width: int32, height: int32, format: PixelFormat): int32 {.importc: "GetPixelDataSize".}
   ## Get pixel data size in bytes for certain format
 proc getFontDefault*(): Font {.importc: "GetFontDefault".}
@@ -1694,11 +1690,37 @@ proc loadImageFromMemory*(fileType: string; fileData: openarray[uint8]): Image =
   result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
 
+type
+  Pixels* = concept
+    proc kind(x: Self): PixelFormat
+    proc value(x: Self): pointer
+
+proc kind*(x: seq[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
+proc kind*(x: CSeq[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
+proc value*(x: seq[Color]): pointer = x[0].addr
+proc value*(x: CSeq[Color]): pointer = x.data
+
+proc updateTexture*(texture: Texture2D, pixels: Pixels) =
+  ## Update GPU texture with new data
+  updateTexturePriv(texture, pixels.value)
+
+proc updateTextureRec*(texture: Texture2D, rec: Rectangle, pixels: Pixels) =
+  ## Update GPU texture rectangle with new data
+  updateTextureRecPriv(texture, rec, pixels.value)
+
 proc drawTexturePoly*(texture: Texture2D; center: Vector2; points: openarray[Vector2];
     texcoords: openarray[Vector2]; tint: Color) =
   ## Draw a textured polygon
   drawTexturePolyPriv(texture, center, cast[ptr UncheckedArray[Vector2]](points),
       cast[ptr UncheckedArray[Vector2]](texcoords), points.len.int32, tint)
+
+proc getPixelColor*(pixels: Pixels): Color =
+  ## Get Color from a source pixel pointer of certain format
+  getPixelColorPriv(pixels.value, pixels.kind)
+
+proc setPixelColor*(pixels: Pixels, color: Color) =
+  ## Set color formatted into destination pixel pointer
+  setPixelColorPriv(pixels.value, color, pixels.kind)
 
 proc loadFontData*(fileData: openarray[uint8]; fontSize: int32; fontChars: openarray[int32];
     `type`: FontType): CSeq[GlyphInfo] =

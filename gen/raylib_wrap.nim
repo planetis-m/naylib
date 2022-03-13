@@ -68,11 +68,37 @@ proc loadImageFromMemory*(fileType: string; fileData: openarray[uint8]): Image =
   result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
 
+type
+  Pixels* = concept
+    proc kind(x: Self): PixelFormat
+    proc value(x: Self): pointer
+
+proc kind*(x: seq[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
+proc kind*(x: CSeq[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
+proc value*(x: seq[Color]): pointer = x[0].addr
+proc value*(x: CSeq[Color]): pointer = x.data
+
+proc updateTexture*(texture: Texture2D, pixels: Pixels) =
+  ## Update GPU texture with new data
+  updateTexturePriv(texture, pixels.value)
+
+proc updateTextureRec*(texture: Texture2D, rec: Rectangle, pixels: Pixels) =
+  ## Update GPU texture rectangle with new data
+  updateTextureRecPriv(texture, rec, pixels.value)
+
 proc drawTexturePoly*(texture: Texture2D; center: Vector2; points: openarray[Vector2];
     texcoords: openarray[Vector2]; tint: Color) =
   ## Draw a textured polygon
   drawTexturePolyPriv(texture, center, cast[ptr UncheckedArray[Vector2]](points),
       cast[ptr UncheckedArray[Vector2]](texcoords), points.len.int32, tint)
+
+proc getPixelColor*(pixels: Pixels): Color =
+  ## Get Color from a source pixel pointer of certain format
+  getPixelColorPriv(pixels.value, pixels.kind)
+
+proc setPixelColor*(pixels: Pixels, color: Color) =
+  ## Set color formatted into destination pixel pointer
+  setPixelColorPriv(pixels.value, color, pixels.kind)
 
 proc loadFontData*(fileData: openarray[uint8]; fontSize: int32; fontChars: openarray[int32];
     `type`: FontType): CSeq[GlyphInfo] =
