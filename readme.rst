@@ -1,6 +1,6 @@
-====================================================
-          Naylib - Raylib Nim wrapper
-====================================================
+=============================================================
+          Naylib - Yet another raylib Nim wrapper
+=============================================================
 
 This repo contains raylib wrapper generated using raylib_parser.
 It focuses on an idiomatic Nim API.

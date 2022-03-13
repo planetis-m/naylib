@@ -2,7 +2,7 @@ import std/math
 from raylib import Vector2, Vector3, Vector4, Quaternion, Matrix
 
 type
-  Float3* {.bycopy.} = object ## NOTE: Helper types to be used instead of array return types for *ToFloat functions
+  Float3* {.bycopy.} = object ## NOTE: Helper types to be used instead of array return types for ToFloat functions
     v*: array[3, float32]
 
   Float16* {.bycopy.} = object

@@ -64,6 +64,6 @@ task "docs", "Generate documentation":
       let doc = DocsDir / src.changeFileExt(".html")
       if doc.needsRefresh(src):
         direSilentShell(&"Generating the docs for {src}...", "nim doc",
-            &"--verbosity:0 --git.url:{ProjectUrl} --git.devel:main --git.commit:main --out:{DocsDir}", src)
+            &"--verbosity:0 --git.url:{ProjectUrl} --git.devel:main --git.commit:main --out:{doc}", src)
       else:
         echo "Skipped generating ", doc
