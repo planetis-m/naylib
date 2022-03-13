@@ -1,8 +1,8 @@
 ====================================================
-          Naylib - Raylib Nim bindings
+          Naylib - Raylib Nim wrapper
 ====================================================
 
-This repo contains raylib bindings generated using raylib_parser.
+This repo contains raylib wrapper generated using raylib_parser.
 It focuses on an idiomatic Nim API.
 
 Docs: Comming soon (TM)

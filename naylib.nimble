@@ -2,7 +2,7 @@
 
 version     = "0.5.1"
 author      = "Antonis Geralis"
-description = "Raylib Nim bindings"
+description = "Raylib Nim wrapper"
 license     = "MIT"
 
 # Deps
