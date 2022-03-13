@@ -790,10 +790,8 @@ proc getShaderLocation*(shader: Shader, uniformName: cstring): int32 {.importc: 
   ## Get shader uniform location
 proc getShaderLocationAttrib*(shader: Shader, attribName: cstring): int32 {.importc: "GetShaderLocationAttrib".}
   ## Get shader attribute location
-proc setShaderValue*(shader: Shader, locIndex: int32, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue".}
-  ## Set shader uniform value
-proc setShaderValueV*(shader: Shader, locIndex: int32, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV".}
-  ## Set shader uniform value vector
+proc setShaderValuePriv(shader: Shader, locIndex: int32, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue".}
+proc setShaderValueVPriv(shader: Shader, locIndex: int32, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV".}
 proc setShaderValueMatrix*(shader: Shader, locIndex: int32, mat: Matrix) {.importc: "SetShaderValueMatrix".}
   ## Set shader uniform value (matrix 4x4)
 proc setShaderValueTexture*(shader: Shader, locIndex: int32, texture: Texture2D) {.importc: "SetShaderValueTexture".}
@@ -1639,6 +1637,28 @@ proc getGamepadName*(gamepad: int32): string {.inline.} =
   ## Get gamepad internal name id
   result = $getGamepadNamePriv(gamepad)
 
+type
+  ShaderV* = concept
+    proc kind(x: typedesc[Self]): ShaderUniformDataType
+    proc value(x: Self): pointer
+
+proc kind*(x: typedesc[float32]): ShaderUniformDataType = ShaderUniformFloat
+proc value*(x: float32): pointer = x.addr
+
+proc kind*(x: typedesc[seq[float32]]): ShaderUniformDataType = ShaderUniformFloat
+proc value*(x: seq[float32]): pointer = x[0].addr
+
+proc kind*(x: typedesc[CSeq[float32]]): ShaderUniformDataType = ShaderUniformFloat
+proc value*(x: CSeq[float32]): pointer = x.data
+
+proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: int32, value: T) =
+  ## Set shader uniform value
+  setShaderValuePriv(shader, locIndex, value.value, kind(T))
+
+proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: int32, value: T) =
+  ## Set shader uniform value vector
+  setShaderValueVPriv(shader, locIndex, value.value, kind(T), value.len.int32)
+
 proc loadModelAnimations*(fileName: string): CSeq[ModelAnimation] =
   ## Load model animations from file
   var len = 0'u32
@@ -1692,19 +1712,23 @@ proc loadImageFromMemory*(fileType: string; fileData: openarray[uint8]): Image =
 
 type
   Pixels* = concept
-    proc kind(x: Self): PixelFormat
+    proc kind(x: typedesc[Self]): PixelFormat
     proc value(x: Self): pointer
 
-proc kind*(x: seq[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
-proc kind*(x: CSeq[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
+proc kind*(x: typedesc[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
+proc value*(x: Color): pointer = x.addr
+
+proc kind*(x: typedesc[seq[Color]]): PixelFormat = PixelformatUncompressedR8g8b8a8
 proc value*(x: seq[Color]): pointer = x[0].addr
+
+proc kind*(x: typedesc[CSeq[Color]]): PixelFormat = PixelformatUncompressedR8g8b8a8
 proc value*(x: CSeq[Color]): pointer = x.data
 
-proc updateTexture*(texture: Texture2D, pixels: Pixels) =
+proc updateTexture*[T: Pixels](texture: Texture2D, pixels: T) =
   ## Update GPU texture with new data
   updateTexturePriv(texture, pixels.value)
 
-proc updateTextureRec*(texture: Texture2D, rec: Rectangle, pixels: Pixels) =
+proc updateTextureRec*[T: Pixels](texture: Texture2D, rec: Rectangle, pixels: T) =
   ## Update GPU texture rectangle with new data
   updateTextureRecPriv(texture, rec, pixels.value)
 
@@ -1714,13 +1738,13 @@ proc drawTexturePoly*(texture: Texture2D; center: Vector2; points: openarray[Vec
   drawTexturePolyPriv(texture, center, cast[ptr UncheckedArray[Vector2]](points),
       cast[ptr UncheckedArray[Vector2]](texcoords), points.len.int32, tint)
 
-proc getPixelColor*(pixels: Pixels): Color =
+proc getPixelColor*[T: Pixels](pixels: T): Color =
   ## Get Color from a source pixel pointer of certain format
-  getPixelColorPriv(pixels.value, pixels.kind)
+  getPixelColorPriv(pixels.value, kind(T))
 
-proc setPixelColor*(pixels: Pixels, color: Color) =
+proc setPixelColor*[T: Pixels](pixels: T, color: Color) =
   ## Set color formatted into destination pixel pointer
-  setPixelColorPriv(pixels.value, color, pixels.kind)
+  setPixelColorPriv(pixels.value, color, kind(T))
 
 proc loadFontData*(fileData: openarray[uint8]; fontSize: int32; fontChars: openarray[int32];
     `type`: FontType): CSeq[GlyphInfo] =
