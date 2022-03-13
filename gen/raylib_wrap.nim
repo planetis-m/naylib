@@ -25,6 +25,36 @@ type
 proc kind*(x: typedesc[float32]): ShaderUniformDataType = ShaderUniformFloat
 proc value*(x: float32): pointer = x.addr
 
+proc kind*(x: typedesc[Vector2]): ShaderUniformDataType = ShaderUniformVec2
+proc value*(x: Vector2): pointer = x.addr
+
+proc kind*(x: typedesc[Vector3]): ShaderUniformDataType = ShaderUniformVec3
+proc value*(x: Vector3): pointer = x.addr
+
+proc kind*(x: typedesc[Vector4]): ShaderUniformDataType = ShaderUniformVec4
+proc value*(x: Vector4): pointer = x.addr
+
+proc kind*(x: typedesc[int32]): ShaderUniformDataType = ShaderUniformInt
+proc value*(x: int32): pointer = x.addr
+
+proc kind*(x: typedesc[array[2, int32]]): ShaderUniformDataType = ShaderUniformIvec2
+proc value*(x: array[2, int32]): pointer = x.addr
+
+proc kind*(x: typedesc[array[3, int32]]): ShaderUniformDataType = ShaderUniformIvec3
+proc value*(x: array[3, int32]): pointer = x.addr
+
+proc kind*(x: typedesc[array[4, int32]]): ShaderUniformDataType = ShaderUniformIvec4
+proc value*(x: array[4, int32]): pointer = x.addr
+
+proc kind*(x: typedesc[array[2, float32]]): ShaderUniformDataType = ShaderUniformVec2
+proc value*(x: array[2, float32]): pointer = x.addr
+
+proc kind*(x: typedesc[array[3, float32]]): ShaderUniformDataType = ShaderUniformVec3
+proc value*(x: array[3, float32]): pointer = x.addr
+
+proc kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = ShaderUniformVec4
+proc value*(x: array[4, float32]): pointer = x.addr
+
 proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: int32, value: T) =
   ## Set shader uniform value
   setShaderValuePriv(shader, locIndex, value.value, kind(T))
