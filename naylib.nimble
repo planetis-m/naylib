@@ -2,7 +2,7 @@
 
 version     = "0.5.1"
 author      = "Antonis Geralis"
-description = "Uses official raylib_api.json to produce Nim bindings"
+description = "Raylib Nim bindings"
 license     = "MIT"
 
 # Deps
