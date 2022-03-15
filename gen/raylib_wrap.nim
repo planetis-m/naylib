@@ -8,10 +8,11 @@ proc getClipboardText*(): string {.inline.} =
   result = $getClipboardTextPriv()
 
 proc getDroppedFiles*(): seq[string] =
-  ## Get dropped files names (memory should be freed)
+  ## Get dropped files names
   var count = 0'i32
   let dropfiles = getDroppedFilesPriv(count.addr)
   result = cstringArrayToSeq(dropfiles, count)
+  clearDroppedFilesPriv() # Clear internal buffers
 
 proc getGamepadName*(gamepad: int32): string {.inline.} =
   ## Get gamepad internal name id

@@ -278,6 +278,7 @@ const
     "GetMonitorName",
     "GetClipboardText",
     "GetDroppedFiles",
+    "ClearDroppedFiles",
     "GetGamepadName",
     "UpdateTexture",
     "UpdateTextureRec",
