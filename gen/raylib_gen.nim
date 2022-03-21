@@ -431,7 +431,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         lit "*("
       var hasVarargs = false
       for i, param in fnc.params.pairs:
-        if param.name == "" and param.`type` == "": # , ...) {
+        if param.name == "args" and param.`type` == "...": # , ...) {
           hasVarargs = true
         else:
           if i > 0: lit ", "

@@ -5,7 +5,7 @@ const
   SourceDir = currentSourcePath().parentDir.quoteShell
   ProjectUrl = "https://github.com/planetis-m/naylib"
   RaylibGitUrl = "https://github.com/raysan5/raylib.git"
-  RaylibStableCommit = "6e9ec253c89a9f37e7cbe1f1db382121dcbb61c1"
+  RaylibStableCommit = "0da78307458fd20e3f13260a39042ac416301eaa"
   RaylibDir = SourceDir / "dist" / "raylib"
   CIncludeDir = SourceDir / "cinclude"
   JsonApiDir = SourceDir / "api"
@@ -23,7 +23,7 @@ task "build", "Build the raylib C static library":
   fetchLatestRaylib()
   withDir(RaylibDir / "src"):
     direSilentShell("Building raylib static library...",
-        "make clean && make CC=clang PLATFORM=PLATFORM_DESKTOP -j4")
+        "make clean && make PLATFORM=PLATFORM_DESKTOP -j4")
     # Install to cinclude directory
     discard existsOrCreateDir(CIncludeDir)
     copyFileToDir("libraylib.a", CIncludeDir)
