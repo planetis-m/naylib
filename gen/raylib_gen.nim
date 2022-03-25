@@ -57,6 +57,7 @@ type
       cdecl.} ## FileIO: Save binary data
   LoadFileTextCallback* = proc (fileName: cstring): cstring {.cdecl.} ## FileIO: Load text data
   SaveFileTextCallback* = proc (fileName: cstring; text: cstring): bool {.cdecl.} ## FileIO: Save text data
+  AudioCallback* = proc (bufferData: pointer, frames: unit32) {.cdecl.} ## Audio thread callback to request new data
 
 const
   LightGray* = Color(r: 200, g: 200, b: 200, a: 255)

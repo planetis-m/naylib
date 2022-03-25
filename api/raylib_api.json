@@ -3719,8 +3719,8 @@
           "name": "text"
         },
         {
-          "type": "",
-          "name": ""
+          "type": "...",
+          "name": "args"
         }
       ]
     },
@@ -8094,8 +8094,8 @@
           "name": "text"
         },
         {
-          "type": "",
-          "name": ""
+          "type": "...",
+          "name": "args"
         }
       ]
     },
@@ -10431,6 +10431,21 @@
         {
           "type": "int",
           "name": "size"
+        }
+      ]
+    },
+    {
+      "name": "SetAudioStreamCallback",
+      "description": "Audio thread callback to request new data",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "AudioStream",
+          "name": "stream"
+        },
+        {
+          "type": "AudioCallback",
+          "name": "callback"
         }
       ]
     }

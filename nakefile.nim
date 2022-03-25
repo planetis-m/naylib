@@ -5,7 +5,7 @@ const
   SourceDir = currentSourcePath().parentDir.quoteShell
   ProjectUrl = "https://github.com/planetis-m/naylib"
   RaylibGitUrl = "https://github.com/raysan5/raylib.git"
-  RaylibStableCommit = "0da78307458fd20e3f13260a39042ac416301eaa"
+  RaylibStableCommit = "a2399bd2bc5d4cde2df369c69de2683c6ef8a550"
   RaylibDir = SourceDir / "dist" / "raylib"
   CIncludeDir = SourceDir / "cinclude"
   JsonApiDir = SourceDir / "api"
