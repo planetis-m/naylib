@@ -30,9 +30,9 @@ task "build", "Build the raylib C static library":
     copyFileToDir("raylib.h", CIncludeDir)
 
 proc generateWrapper =
-  let script = "raylib_gen"
+  let script = "raylib_gen.nim"
   withDir(SourceDir / "gen"):
-    var exe = script.addFileExt(ExeExt)
+    var exe = script.changeFileExt(ExeExt)
     if exe.needsRefresh(script):
       direSilentShell("Building raylib2nim tool...",
           "nim c", "--mm:arc --panics:on -d:release -d:emiLenient", script)
@@ -42,11 +42,11 @@ proc generateWrapper =
     direSilentShell("Generating raylib Nim wrapper...", exe)
 
 task "wrap", "Produce the raylib nim wrapper":
-  let parser = "raylib_parser"
+  let parser = "raylib_parser.c"
   let header = RaylibDir / "src" / "raylib.h"
   fetchLatestRaylib()
   withDir(RaylibDir / "parser"):
-    var exe = parser.addFileExt(ExeExt)
+    var exe = parser.changeFileExt(ExeExt)
     if exe.needsRefresh(parser):
       direSilentShell("Building raylib API parser...",
           "cc", parser.addFileExt(".c"), "-o", exe)
