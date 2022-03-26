@@ -388,14 +388,14 @@ proc `==`*(a, b: CameraProjection): bool {.borrow.}
 proc `==`*(a, b: NPatchLayout): bool {.borrow.}
 
 type
-  Enums = ConfigFlags|Gesture
-  Flag*[E: Enums] = distinct uint32
+  FlagsEnum = ConfigFlags|Gesture
+  Flags*[E: FlagsEnum] = distinct uint32
 
-proc flag*[E: Enums](e: varargs[E]): Flag[E] {.inline.} =
+proc flags*[E: FlagsEnum](e: varargs[E]): Flags[E] {.inline.} =
   var res = 0'u32
   for val in items(e):
     res = res or uint32(val)
-  Flag[E](res)
+  Flags[E](res)
 
 type
   Vector2* {.header: "raylib.h", bycopy.} = object ## Vector2, 2 components
@@ -700,9 +700,9 @@ proc isWindowResized*(): bool {.importc: "IsWindowResized".}
   ## Check if window has been resized last frame
 proc isWindowState*(flag: ConfigFlags): bool {.importc: "IsWindowState".}
   ## Check if one specific window flag is enabled
-proc setWindowState*(flags: Flag[ConfigFlags]) {.importc: "SetWindowState".}
+proc setWindowState*(flags: Flags[ConfigFlags]) {.importc: "SetWindowState".}
   ## Set window configuration state using flags (only PLATFORM_DESKTOP)
-proc clearWindowState*(flags: Flag[ConfigFlags]) {.importc: "ClearWindowState".}
+proc clearWindowState*(flags: Flags[ConfigFlags]) {.importc: "ClearWindowState".}
   ## Clear window configuration state flags
 proc toggleFullscreen*() {.importc: "ToggleFullscreen".}
   ## Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
@@ -856,7 +856,7 @@ proc getTime*(): float {.importc: "GetTime".}
   ## Get elapsed time in seconds since InitWindow()
 proc takeScreenshot*(fileName: cstring) {.importc: "TakeScreenshot".}
   ## Takes a screenshot of current screen (filename extension defines format)
-proc setConfigFlags*(flags: Flag[ConfigFlags]) {.importc: "SetConfigFlags".}
+proc setConfigFlags*(flags: Flags[ConfigFlags]) {.importc: "SetConfigFlags".}
   ## Setup init configuration flags (view FLAGS)
 proc traceLog*(logLevel: TraceLogLevel, text: cstring) {.importc: "TraceLog", varargs.}
   ## Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
@@ -952,7 +952,7 @@ proc getTouchPointId*(index: int32): int32 {.importc: "GetTouchPointId".}
   ## Get touch point identifier for given index
 proc getTouchPointCount*(): int32 {.importc: "GetTouchPointCount".}
   ## Get number of touch points
-proc setGesturesEnabled*(flags: Flag[Gesture]) {.importc: "SetGesturesEnabled".}
+proc setGesturesEnabled*(flags: Flags[Gesture]) {.importc: "SetGesturesEnabled".}
   ## Enable a set of gestures using flags
 proc isGestureDetected*(gesture: Gesture): bool {.importc: "IsGestureDetected".}
   ## Check if a gesture have been detected

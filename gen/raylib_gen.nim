@@ -65,14 +65,14 @@ proc `==`*(a, b: CameraProjection): bool {.borrow.}
 proc `==`*(a, b: NPatchLayout): bool {.borrow.}
 
 type
-  Enums = ConfigFlags|Gesture
-  Flag*[E: Enums] = distinct uint32
+  FlagsEnum = ConfigFlags|Gesture
+  Flags*[E: FlagsEnum] = distinct uint32
 
-proc flag*[E: Enums](e: varargs[E]): Flag[E] {.inline.} =
+proc flags*[E: FlagsEnum](e: varargs[E]): Flags[E] {.inline.} =
   var res = 0'u32
   for val in items(e):
     res = res or uint32(val)
-  Flag[E](res)
+  Flags[E](res)
 """
   helpers = """
 
@@ -220,11 +220,11 @@ const
     "MouseButton",
     "MouseButton",
     "MouseButton",
-    "Flag[Gesture]",
+    "Flags[Gesture]",
     "Gesture",
-    "Flag[ConfigFlags]",
-    "Flag[ConfigFlags]",
-    "Flag[ConfigFlags]",
+    "Flags[ConfigFlags]",
+    "Flags[ConfigFlags]",
+    "Flags[ConfigFlags]",
     "ConfigFlags",
     "TraceLogLevel",
     "TraceLogLevel",
