@@ -816,10 +816,8 @@ proc loadVrStereoConfig*(device: VrDeviceInfo): VrStereoConfig {.importc: "LoadV
   ## Load VR stereo config for VR simulator device parameters
 proc unloadVrStereoConfig*(config: VrStereoConfig) {.importc: "UnloadVrStereoConfig".}
   ## Unload VR stereo config
-proc loadShader*(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader".}
-  ## Load shader from files and bind default locations
-proc loadShaderFromMemory*(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory".}
-  ## Load shader from code strings and bind default locations
+proc loadShaderPriv(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader".}
+proc loadShaderFromMemoryPriv(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory".}
 proc getShaderLocation*(shader: Shader, uniformName: cstring): int32 {.importc: "GetShaderLocation".}
   ## Get shader uniform location
 proc getShaderLocationAttrib*(shader: Shader, attribName: cstring): int32 {.importc: "GetShaderLocationAttrib".}
@@ -1673,43 +1671,53 @@ proc getGamepadName*(gamepad: int32): string {.inline.} =
   ## Get gamepad internal name id
   result = $getGamepadNamePriv(gamepad)
 
+proc loadShader*(vsFileName, fsFileName: string): Shader =
+  ## Load shader from files and bind default locations
+  result = loadShaderPriv(if vsFileName.len == 0: nil else: vsFileName.cstring,
+      if fsFileName.len == 0: nil else: fsFileName.cstring)
+
+proc loadShaderFromMemory*(vsCode, fsCode: string): Shader =
+  ## Load shader from code strings and bind default locations
+  result = loadShaderFromMemoryPriv(if vsCode.len == 0: nil else: vsCode.cstring,
+      if fsCode.len == 0: nil else: fsCode.cstring)
+
 type
   ShaderV* = concept
     proc kind(x: typedesc[Self]): ShaderUniformDataType
     proc value(x: Self): pointer
 
-proc kind*(x: typedesc[float32]): ShaderUniformDataType = ShaderUniformFloat
-proc value*(x: float32): pointer = x.addr
+template kind*(x: typedesc[float32]): ShaderUniformDataType = ShaderUniformFloat
+template value*(x: float32): pointer = x.addr
 
-proc kind*(x: typedesc[Vector2]): ShaderUniformDataType = ShaderUniformVec2
-proc value*(x: Vector2): pointer = x.addr
+template kind*(x: typedesc[Vector2]): ShaderUniformDataType = ShaderUniformVec2
+template value*(x: Vector2): pointer = x.addr
 
-proc kind*(x: typedesc[Vector3]): ShaderUniformDataType = ShaderUniformVec3
-proc value*(x: Vector3): pointer = x.addr
+template kind*(x: typedesc[Vector3]): ShaderUniformDataType = ShaderUniformVec3
+template value*(x: Vector3): pointer = x.addr
 
-proc kind*(x: typedesc[Vector4]): ShaderUniformDataType = ShaderUniformVec4
-proc value*(x: Vector4): pointer = x.addr
+template kind*(x: typedesc[Vector4]): ShaderUniformDataType = ShaderUniformVec4
+template value*(x: Vector4): pointer = x.addr
 
-proc kind*(x: typedesc[int32]): ShaderUniformDataType = ShaderUniformInt
-proc value*(x: int32): pointer = x.addr
+template kind*(x: typedesc[int32]): ShaderUniformDataType = ShaderUniformInt
+template value*(x: int32): pointer = x.addr
 
-proc kind*(x: typedesc[array[2, int32]]): ShaderUniformDataType = ShaderUniformIvec2
-proc value*(x: array[2, int32]): pointer = x.addr
+template kind*(x: typedesc[array[2, int32]]): ShaderUniformDataType = ShaderUniformIvec2
+template value*(x: array[2, int32]): pointer = x.addr
 
-proc kind*(x: typedesc[array[3, int32]]): ShaderUniformDataType = ShaderUniformIvec3
-proc value*(x: array[3, int32]): pointer = x.addr
+template kind*(x: typedesc[array[3, int32]]): ShaderUniformDataType = ShaderUniformIvec3
+template value*(x: array[3, int32]): pointer = x.addr
 
-proc kind*(x: typedesc[array[4, int32]]): ShaderUniformDataType = ShaderUniformIvec4
-proc value*(x: array[4, int32]): pointer = x.addr
+template kind*(x: typedesc[array[4, int32]]): ShaderUniformDataType = ShaderUniformIvec4
+template value*(x: array[4, int32]): pointer = x.addr
 
-proc kind*(x: typedesc[array[2, float32]]): ShaderUniformDataType = ShaderUniformVec2
-proc value*(x: array[2, float32]): pointer = x.addr
+template kind*(x: typedesc[array[2, float32]]): ShaderUniformDataType = ShaderUniformVec2
+template value*(x: array[2, float32]): pointer = x.addr
 
-proc kind*(x: typedesc[array[3, float32]]): ShaderUniformDataType = ShaderUniformVec3
-proc value*(x: array[3, float32]): pointer = x.addr
+template kind*(x: typedesc[array[3, float32]]): ShaderUniformDataType = ShaderUniformVec3
+template value*(x: array[3, float32]): pointer = x.addr
 
-proc kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = ShaderUniformVec4
-proc value*(x: array[4, float32]): pointer = x.addr
+template kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = ShaderUniformVec4
+template value*(x: array[4, float32]): pointer = x.addr
 
 proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: int32, value: T) =
   ## Set shader uniform value
@@ -1775,8 +1783,8 @@ type
     proc kind(x: typedesc[Self]): PixelFormat
     proc value(x: Self): pointer
 
-proc kind*(x: typedesc[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
-proc value*(x: Color): pointer = x.addr
+template kind*(x: typedesc[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
+template value*(x: Color): pointer = x.addr
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openarray[T]) =
   ## Update GPU texture with new data

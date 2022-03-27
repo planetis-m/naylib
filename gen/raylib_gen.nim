@@ -318,6 +318,8 @@ const
     "UpdateTextureRec",
     "GetPixelColor",
     "SetPixelColor",
+    "LoadShader",
+    "LoadShaderFromMemory",
     "SetShaderValue",
     "SetShaderValueV",
     "LoadModelAnimations",
