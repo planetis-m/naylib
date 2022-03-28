@@ -1326,7 +1326,7 @@ proc drawGrid*(slices: int32, spacing: float32) {.importc: "DrawGrid".}
   ## Draw a grid (centered at (0, 0, 0))
 proc loadModel*(fileName: cstring): Model {.importc: "LoadModel".}
   ## Load model from files (meshes and materials)
-proc loadModelFromMesh*(mesh: Mesh): Model {.importc: "LoadModelFromMesh".}
+proc loadModelFromMesh*(mesh: sink Mesh): Model {.importc: "LoadModelFromMesh".}
   ## Load model from generated mesh (default material)
 proc unloadModel*(model: Model) {.importc: "UnloadModel".}
   ## Unload model (including meshes) from memory (RAM and/or VRAM)

@@ -481,7 +481,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
             let many = (fnc.name, param.name) != ("LoadImageAnim", "frames") and isPlural(param.name)
             const
               replacements = [
-                ("GenImageFontAtlas", "recs", "ptr ptr UncheckedArray[$1]")
+                ("GenImageFontAtlas", "recs", "ptr ptr UncheckedArray[$1]"),
+                ("LoadModelFromMesh", "mesh", "sink Mesh"),
               ]
             let pat = getReplacement(fnc.name, param.name, replacements)
             var baseKind = ""
