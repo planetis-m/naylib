@@ -1820,7 +1820,7 @@ proc loadFontData*(fileData: openarray[uint8]; fontSize, glyphCount: int32;
     `type`: FontType): CSeq[GlyphInfo] =
   let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
       fontSize, nil, glyphCount, `type`)
-  result = CSeq[GlyphInfo](len: glyphCount, data: data)
+  result = CSeq[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
 
 proc loadFontEx*(fileName: string; fontSize: int32; fontChars: openarray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for fontChars to load the default character set
@@ -1841,6 +1841,18 @@ proc loadFontFromMemory*(fileType: string; fileData: openarray[uint8]; fontSize:
     glyphCount: int32): Font =
   result = loadFontFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32, fontSize, nil, glyphCount)
+
+proc loadFontFromData*(chars: sink CSeq[GlyphInfo]; baseSize, padding: int32, packMethod: int32): Font =
+  ## Load font using chars info
+  result.baseSize = baseSize
+  result.glyphCount = chars.len.int32
+  result.glyphs = chars.data
+  wasMoved(chars)
+  let atlas = genImageFontAtlasPriv(result.glyphs, result.recs.addr, result.glyphCount, baseSize,
+      padding, packMethod)
+  result.texture = loadTextureFromImage(atlas)
+  if result.texture.id == 0:
+    raise newException(IOError, "Error loading font from image.")
 
 proc genImageFontAtlas*(chars: openarray[GlyphInfo]; recs: var CSeq[Rectangle]; fontSize: int32;
     padding: int32; packMethod: int32): Image =
