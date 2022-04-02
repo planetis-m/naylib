@@ -3040,33 +3040,6 @@ window.addEventListener('DOMContentLoaded', main);
     title="isWindowState(flag: ConfigFlags): bool">isWindowState(flag: ConfigFlags): bool</a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">kind
-      <li><a class="reference" href="#kind%2Ctypedesc%5Barray%5B%2Cfloat32%5D%5D"
-    title="kind(x: typedesc[array[2, float32]]): ShaderUniformDataType">kind(x: typedesc[array[2, float32]]): ShaderUniformDataType</a></li>
-  <li><a class="reference" href="#kind%2Ctypedesc%5Barray%5B%2Cint32%5D%5D"
-    title="kind(x: typedesc[array[2, int32]]): ShaderUniformDataType">kind(x: typedesc[array[2, int32]]): ShaderUniformDataType</a></li>
-  <li><a class="reference" href="#kind%2Ctypedesc%5Barray%5B%2Cfloat32%5D%5D_2"
-    title="kind(x: typedesc[array[3, float32]]): ShaderUniformDataType">kind(x: typedesc[array[3, float32]]): ShaderUniformDataType</a></li>
-  <li><a class="reference" href="#kind%2Ctypedesc%5Barray%5B%2Cint32%5D%5D_2"
-    title="kind(x: typedesc[array[3, int32]]): ShaderUniformDataType">kind(x: typedesc[array[3, int32]]): ShaderUniformDataType</a></li>
-  <li><a class="reference" href="#kind%2Ctypedesc%5Barray%5B%2Cfloat32%5D%5D_3"
-    title="kind(x: typedesc[array[4, float32]]): ShaderUniformDataType">kind(x: typedesc[array[4, float32]]): ShaderUniformDataType</a></li>
-  <li><a class="reference" href="#kind%2Ctypedesc%5Barray%5B%2Cint32%5D%5D_3"
-    title="kind(x: typedesc[array[4, int32]]): ShaderUniformDataType">kind(x: typedesc[array[4, int32]]): ShaderUniformDataType</a></li>
-  <li><a class="reference" href="#kind%2Ctypedesc%5BColor%5D"
-    title="kind(x: typedesc[Color]): PixelFormat">kind(x: typedesc[Color]): PixelFormat</a></li>
-  <li><a class="reference" href="#kind%2Ctypedesc%5Bfloat32%5D"
-    title="kind(x: typedesc[float32]): ShaderUniformDataType">kind(x: typedesc[float32]): ShaderUniformDataType</a></li>
-  <li><a class="reference" href="#kind%2Ctypedesc%5Bint32%5D"
-    title="kind(x: typedesc[int32]): ShaderUniformDataType">kind(x: typedesc[int32]): ShaderUniformDataType</a></li>
-  <li><a class="reference" href="#kind%2Ctypedesc%5BVector2%5D"
-    title="kind(x: typedesc[Vector2]): ShaderUniformDataType">kind(x: typedesc[Vector2]): ShaderUniformDataType</a></li>
-  <li><a class="reference" href="#kind%2Ctypedesc%5BVector3%5D"
-    title="kind(x: typedesc[Vector3]): ShaderUniformDataType">kind(x: typedesc[Vector3]): ShaderUniformDataType</a></li>
-  <li><a class="reference" href="#kind%2Ctypedesc%5BVector4%5D"
-    title="kind(x: typedesc[Vector4]): ShaderUniformDataType">kind(x: typedesc[Vector4]): ShaderUniformDataType</a></li>
-
-  </ul>
   <ul class="simple nested-toc-section">len
       <li><a class="reference" href="#len%2CCSeq%5BT%5D"
     title="len[T](x: CSeq[T]): int">len[T](x: CSeq[T]): int</a></li>
@@ -3098,6 +3071,13 @@ window.addEventListener('DOMContentLoaded', main);
     title="loadFontEx(fileName: string; fontSize, glyphCount: int32): Font">loadFontEx(fileName: string; fontSize, glyphCount: int32): Font</a></li>
   <li><a class="reference" href="#loadFontEx%2Cstring%2Cint32%2CopenArray%5Bint32%5D"
     title="loadFontEx(fileName: string; fontSize: int32; fontChars: openArray[int32]): Font">loadFontEx(fileName: string; fontSize: int32; fontChars: openArray[int32]): Font</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">loadFontFromData
+      <li><a class="reference" href="#loadFontFromData%2CsinkCSeq%5BGlyphInfo%5D%2Cint32%2Cint32%2Cint32"
+    title="loadFontFromData(chars: sink CSeq[GlyphInfo]; baseSize, padding: int32;
+                 packMethod: int32): Font">loadFontFromData(chars: sink CSeq[GlyphInfo]; baseSize, padding: int32;
+                 packMethod: int32): Font</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">loadFontFromImage
@@ -3179,8 +3159,8 @@ window.addEventListener('DOMContentLoaded', main);
 
   </ul>
   <ul class="simple nested-toc-section">loadModelFromMesh
-      <li><a class="reference" href="#loadModelFromMesh%2CMesh"
-    title="loadModelFromMesh(mesh: Mesh): Model">loadModelFromMesh(mesh: Mesh): Model</a></li>
+      <li><a class="reference" href="#loadModelFromMesh%2CsinkMesh"
+    title="loadModelFromMesh(mesh: sink Mesh): Model">loadModelFromMesh(mesh: sink Mesh): Model</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">loadMusicStream
@@ -3793,33 +3773,6 @@ window.addEventListener('DOMContentLoaded', main);
     title="uploadMesh(mesh: var Mesh; dynamic: bool)">uploadMesh(mesh: var Mesh; dynamic: bool)</a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">value
-      <li><a class="reference" href="#value%2Carray%5B%2Cfloat32%5D"
-    title="value(x: array[2, float32]): pointer">value(x: array[2, float32]): pointer</a></li>
-  <li><a class="reference" href="#value%2Carray%5B%2Cint32%5D"
-    title="value(x: array[2, int32]): pointer">value(x: array[2, int32]): pointer</a></li>
-  <li><a class="reference" href="#value%2Carray%5B%2Cfloat32%5D_2"
-    title="value(x: array[3, float32]): pointer">value(x: array[3, float32]): pointer</a></li>
-  <li><a class="reference" href="#value%2Carray%5B%2Cint32%5D_2"
-    title="value(x: array[3, int32]): pointer">value(x: array[3, int32]): pointer</a></li>
-  <li><a class="reference" href="#value%2Carray%5B%2Cfloat32%5D_3"
-    title="value(x: array[4, float32]): pointer">value(x: array[4, float32]): pointer</a></li>
-  <li><a class="reference" href="#value%2Carray%5B%2Cint32%5D_3"
-    title="value(x: array[4, int32]): pointer">value(x: array[4, int32]): pointer</a></li>
-  <li><a class="reference" href="#value%2CColor"
-    title="value(x: Color): pointer">value(x: Color): pointer</a></li>
-  <li><a class="reference" href="#value%2Cfloat32"
-    title="value(x: float32): pointer">value(x: float32): pointer</a></li>
-  <li><a class="reference" href="#value%2Cint32"
-    title="value(x: int32): pointer">value(x: int32): pointer</a></li>
-  <li><a class="reference" href="#value%2CVector2"
-    title="value(x: Vector2): pointer">value(x: Vector2): pointer</a></li>
-  <li><a class="reference" href="#value%2CVector3"
-    title="value(x: Vector3): pointer">value(x: Vector3): pointer</a></li>
-  <li><a class="reference" href="#value%2CVector4"
-    title="value(x: Vector4): pointer">value(x: Vector4): pointer</a></li>
-
-  </ul>
   <ul class="simple nested-toc-section">vertexCount
       <li><a class="reference" href="#vertexCount%2CMesh"
     title="vertexCount(x: Mesh): int32">vertexCount(x: Mesh): int32</a></li>
@@ -3923,6 +3876,33 @@ window.addEventListener('DOMContentLoaded', main);
     title="indices(x: Mesh): MeshIndices">indices(x: Mesh): MeshIndices</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">kind
+      <li><a class="reference" href="#kind.t%2Ctypedesc%5Barray%5B%2Cfloat32%5D%5D"
+    title="kind(x: typedesc[array[2, float32]]): ShaderUniformDataType">kind(x: typedesc[array[2, float32]]): ShaderUniformDataType</a></li>
+  <li><a class="reference" href="#kind.t%2Ctypedesc%5Barray%5B%2Cint32%5D%5D"
+    title="kind(x: typedesc[array[2, int32]]): ShaderUniformDataType">kind(x: typedesc[array[2, int32]]): ShaderUniformDataType</a></li>
+  <li><a class="reference" href="#kind.t%2Ctypedesc%5Barray%5B%2Cfloat32%5D%5D_2"
+    title="kind(x: typedesc[array[3, float32]]): ShaderUniformDataType">kind(x: typedesc[array[3, float32]]): ShaderUniformDataType</a></li>
+  <li><a class="reference" href="#kind.t%2Ctypedesc%5Barray%5B%2Cint32%5D%5D_2"
+    title="kind(x: typedesc[array[3, int32]]): ShaderUniformDataType">kind(x: typedesc[array[3, int32]]): ShaderUniformDataType</a></li>
+  <li><a class="reference" href="#kind.t%2Ctypedesc%5Barray%5B%2Cfloat32%5D%5D_3"
+    title="kind(x: typedesc[array[4, float32]]): ShaderUniformDataType">kind(x: typedesc[array[4, float32]]): ShaderUniformDataType</a></li>
+  <li><a class="reference" href="#kind.t%2Ctypedesc%5Barray%5B%2Cint32%5D%5D_3"
+    title="kind(x: typedesc[array[4, int32]]): ShaderUniformDataType">kind(x: typedesc[array[4, int32]]): ShaderUniformDataType</a></li>
+  <li><a class="reference" href="#kind.t%2Ctypedesc%5BColor%5D"
+    title="kind(x: typedesc[Color]): PixelFormat">kind(x: typedesc[Color]): PixelFormat</a></li>
+  <li><a class="reference" href="#kind.t%2Ctypedesc%5Bfloat32%5D"
+    title="kind(x: typedesc[float32]): ShaderUniformDataType">kind(x: typedesc[float32]): ShaderUniformDataType</a></li>
+  <li><a class="reference" href="#kind.t%2Ctypedesc%5Bint32%5D"
+    title="kind(x: typedesc[int32]): ShaderUniformDataType">kind(x: typedesc[int32]): ShaderUniformDataType</a></li>
+  <li><a class="reference" href="#kind.t%2Ctypedesc%5BVector2%5D"
+    title="kind(x: typedesc[Vector2]): ShaderUniformDataType">kind(x: typedesc[Vector2]): ShaderUniformDataType</a></li>
+  <li><a class="reference" href="#kind.t%2Ctypedesc%5BVector3%5D"
+    title="kind(x: typedesc[Vector3]): ShaderUniformDataType">kind(x: typedesc[Vector3]): ShaderUniformDataType</a></li>
+  <li><a class="reference" href="#kind.t%2Ctypedesc%5BVector4%5D"
+    title="kind(x: typedesc[Vector4]): ShaderUniformDataType">kind(x: typedesc[Vector4]): ShaderUniformDataType</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">locs
       <li><a class="reference" href="#locs.t%2CShader"
     title="locs(x: Shader): ShaderLocs">locs(x: Shader): ShaderLocs</a></li>
@@ -4003,6 +3983,33 @@ window.addEventListener('DOMContentLoaded', main);
     title="toOpenArray(x: CSeq): untyped">toOpenArray(x: CSeq): untyped</a></li>
   <li><a class="reference" href="#toOpenArray.t%2CCSeq%2Cint%2Cint"
     title="toOpenArray(x: CSeq; first, last: int): untyped">toOpenArray(x: CSeq; first, last: int): untyped</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">value
+      <li><a class="reference" href="#value.t%2Carray%5B%2Cfloat32%5D"
+    title="value(x: array[2, float32]): pointer">value(x: array[2, float32]): pointer</a></li>
+  <li><a class="reference" href="#value.t%2Carray%5B%2Cint32%5D"
+    title="value(x: array[2, int32]): pointer">value(x: array[2, int32]): pointer</a></li>
+  <li><a class="reference" href="#value.t%2Carray%5B%2Cfloat32%5D_2"
+    title="value(x: array[3, float32]): pointer">value(x: array[3, float32]): pointer</a></li>
+  <li><a class="reference" href="#value.t%2Carray%5B%2Cint32%5D_2"
+    title="value(x: array[3, int32]): pointer">value(x: array[3, int32]): pointer</a></li>
+  <li><a class="reference" href="#value.t%2Carray%5B%2Cfloat32%5D_3"
+    title="value(x: array[4, float32]): pointer">value(x: array[4, float32]): pointer</a></li>
+  <li><a class="reference" href="#value.t%2Carray%5B%2Cint32%5D_3"
+    title="value(x: array[4, int32]): pointer">value(x: array[4, int32]): pointer</a></li>
+  <li><a class="reference" href="#value.t%2CColor"
+    title="value(x: Color): pointer">value(x: Color): pointer</a></li>
+  <li><a class="reference" href="#value.t%2Cfloat32"
+    title="value(x: float32): pointer">value(x: float32): pointer</a></li>
+  <li><a class="reference" href="#value.t%2Cint32"
+    title="value(x: int32): pointer">value(x: int32): pointer</a></li>
+  <li><a class="reference" href="#value.t%2CVector2"
+    title="value(x: Vector2): pointer">value(x: Vector2): pointer</a></li>
+  <li><a class="reference" href="#value.t%2CVector3"
+    title="value(x: Vector3): pointer">value(x: Vector3): pointer</a></li>
+  <li><a class="reference" href="#value.t%2CVector4"
+    title="value(x: Vector4): pointer">value(x: Vector4): pointer</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">vboId
@@ -9953,9 +9960,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1950"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1962"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1950" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1962" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -9965,9 +9972,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1936"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1948"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1936" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1948" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -9978,9 +9985,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2146"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2158"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2146" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2158" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -9990,9 +9997,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2076"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2088"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2076" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2088" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10002,9 +10009,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2062"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2074"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2062" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2074" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10014,9 +10021,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2090"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2102"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2090" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2102" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10026,9 +10033,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2104"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2116"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2104" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2116" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10038,9 +10045,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2034"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2046"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2034" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2046" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10050,9 +10057,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2048"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2060"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2048" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2060" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10062,9 +10069,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2006"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2018"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2006" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2018" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10074,9 +10081,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2020"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2032"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2020" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2032" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10086,9 +10093,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1992"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2004"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1992" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2004" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10098,9 +10105,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1978"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1990"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1978" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1990" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10110,9 +10117,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2118"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2130"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2118" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2130" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10122,9 +10129,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1964"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1976"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1964" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1976" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10134,9 +10141,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2230"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2242"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2230" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2242" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10147,9 +10154,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2244"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2256"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2244" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2256" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10159,9 +10166,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2216"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2228"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2216" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2228" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10171,9 +10178,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2202"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2214"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2202" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2214" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10183,9 +10190,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2174"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2186"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2174" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2186" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10195,9 +10202,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2160"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2172"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2160" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2172" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10207,9 +10214,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2188"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2200"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2188" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2200" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10219,9 +10226,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2132"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2144"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2132" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2144" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10231,9 +10238,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1954"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1966"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1954" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1966" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10243,9 +10250,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1940"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1952"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1940" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1952" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10256,9 +10263,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2150"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2162"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2150" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2162" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10268,9 +10275,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2080"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2092"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2080" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2092" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10280,9 +10287,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2066"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2078"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2066" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2078" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10293,9 +10300,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2094"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2106"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2094" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2106" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10305,9 +10312,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2108"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2120"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2108" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2120" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10317,9 +10324,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2038"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2050"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2038" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2050" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10330,9 +10337,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2052"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2064"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2052" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2064" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10342,9 +10349,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2010"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2022"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2010" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2022" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10354,9 +10361,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2024"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2036"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2024" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2036" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10366,9 +10373,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1996"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2008"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1996" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2008" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10378,9 +10385,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1982"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1994"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1982" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1994" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10390,9 +10397,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2122"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2134"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2122" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2134" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10402,9 +10409,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1968"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1980"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1968" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1980" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10415,9 +10422,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2234"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2246"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2234" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2246" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10428,9 +10435,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2249"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2261"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2249" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2261" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10440,9 +10447,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2220"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2232"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2220" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2232" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10452,9 +10459,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2206"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2218"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2206" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2218" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10464,9 +10471,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2178"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2190"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2178" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2190" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10476,9 +10483,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2164"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2176"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2164" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2176" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10488,9 +10495,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2192"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2204"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2192" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2204" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10501,9 +10508,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2136"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2148"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2136" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2148" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10541,9 +10548,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1958"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1970"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1958" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1970" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10553,9 +10560,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1944"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1956"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1944" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1956" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10566,9 +10573,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2154"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2166"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2154" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2166" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10578,9 +10585,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2084"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2096"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2084" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2096" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10590,9 +10597,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2070"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2082"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2070" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2082" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10603,9 +10610,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2098"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2110"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2098" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2110" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10615,9 +10622,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2112"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2124"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2112" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2124" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10627,9 +10634,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2042"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2054"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2042" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2054" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10640,9 +10647,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2056"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2068"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2056" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2068" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10652,9 +10659,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2014"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2026"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2014" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2026" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10664,9 +10671,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2028"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2040"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2028" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2040" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10676,9 +10683,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2000"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2012"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2000" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2012" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10688,9 +10695,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1986"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1998"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1986" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1998" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10700,9 +10707,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2126"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2138"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2126" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2138" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10712,9 +10719,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1972"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1984"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1972" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1984" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10725,9 +10732,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2238"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2250"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2238" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2250" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10738,9 +10745,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2254"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2266"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2254" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2266" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10750,9 +10757,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2224"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2236"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2224" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2236" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10762,9 +10769,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2210"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2222"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2210" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2222" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10774,9 +10781,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2182"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2194"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2182" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2194" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10786,9 +10793,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2168"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2180"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2168" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2180" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10798,9 +10805,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2196"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2208"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2196" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2208" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -10811,9 +10818,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2140"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2152"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2140" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2152" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -12009,9 +12016,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Draw multiple mesh instances with material and different transforms
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1857"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1869"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1857" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1869" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -12559,9 +12566,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Draw multiple character (codepoint)
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1872"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1884"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1872" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1884" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -12860,9 +12867,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Draw a triangle strip defined by points
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1853"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1865"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1853" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1865" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -13234,9 +13241,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Generate image font atlas using chars info
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1845"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1857"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1845" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1857" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -16076,154 +16083,6 @@ class="link-seesrc" target="_blank">Source</a>
 
 </div>
 
-<div id="kind-procs-all">
-<div id="kind,typedesc[array[,float32]]">
-<dt><pre><span class="Keyword">proc</span> <a href="#kind%2Ctypedesc%5Barray%5B%2Cfloat32%5D%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1713"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1713" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="kind,typedesc[array[,int32]]">
-<dt><pre><span class="Keyword">proc</span> <a href="#kind%2Ctypedesc%5Barray%5B%2Cint32%5D%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1704"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1704" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="kind,typedesc[array[,float32]]_2">
-<dt><pre><span class="Keyword">proc</span> <a href="#kind%2Ctypedesc%5Barray%5B%2Cfloat32%5D%5D_2"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">3</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1716"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1716" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="kind,typedesc[array[,int32]]_2">
-<dt><pre><span class="Keyword">proc</span> <a href="#kind%2Ctypedesc%5Barray%5B%2Cint32%5D%5D_2"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">3</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1707"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1707" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="kind,typedesc[array[,float32]]_3">
-<dt><pre><span class="Keyword">proc</span> <a href="#kind%2Ctypedesc%5Barray%5B%2Cfloat32%5D%5D_3"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1719"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1719" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="kind,typedesc[array[,int32]]_3">
-<dt><pre><span class="Keyword">proc</span> <a href="#kind%2Ctypedesc%5Barray%5B%2Cint32%5D%5D_3"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1710"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1710" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="kind,typedesc[Color]">
-<dt><pre><span class="Keyword">proc</span> <a href="#kind%2Ctypedesc%5BColor%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="raylib.html#Color"><span class="Identifier">Color</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#PixelFormat"><span class="Identifier">PixelFormat</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1786"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1786" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="kind,typedesc[float32]">
-<dt><pre><span class="Keyword">proc</span> <a href="#kind%2Ctypedesc%5Bfloat32%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1689"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1689" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="kind,typedesc[int32]">
-<dt><pre><span class="Keyword">proc</span> <a href="#kind%2Ctypedesc%5Bint32%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1701"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1701" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="kind,typedesc[Vector2]">
-<dt><pre><span class="Keyword">proc</span> <a href="#kind%2Ctypedesc%5BVector2%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1692"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1692" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="kind,typedesc[Vector3]">
-<dt><pre><span class="Keyword">proc</span> <a href="#kind%2Ctypedesc%5BVector3%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1695"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1695" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="kind,typedesc[Vector4]">
-<dt><pre><span class="Keyword">proc</span> <a href="#kind%2Ctypedesc%5BVector4%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="raylib.html#Vector4"><span class="Identifier">Vector4</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1698"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1698" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-
-</div>
-
 <div id="len-procs-all">
 <div id="len,CSeq[T]">
 <dt><pre><span class="Keyword">proc</span> <a href="#len%2CCSeq%5BT%5D"><span class="Identifier">len</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.<span class="Identifier">inline</span>.}</pre></dt>
@@ -16329,6 +16188,23 @@ Load font from file with extended parameters, use an empty array for fontChars t
 href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1825"
 class="link-seesrc" target="_blank">Source</a>
 &nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1825" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+
+</div>
+
+<div id="loadFontFromData-procs-all">
+<div id="loadFontFromData,sinkCSeq[GlyphInfo],int32,int32,int32">
+<dt><pre><span class="Keyword">proc</span> <a href="#loadFontFromData%2CsinkCSeq%5BGlyphInfo%5D%2Cint32%2Cint32%2Cint32"><span class="Identifier">loadFontFromData</span></a><span class="Other">(</span><span class="Identifier">chars</span><span class="Other">:</span> <span class="Identifier">sink</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><a href="raylib.html#GlyphInfo"><span class="Identifier">GlyphInfo</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">baseSize</span><span class="Other">,</span> <span class="Identifier">padding</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span>
+                      <span class="Identifier">packMethod</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Font"><span class="Identifier">Font</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+Load font using chars info
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1845"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1845" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -16589,8 +16465,8 @@ class="link-seesrc" target="_blank">Source</a>
 </div>
 
 <div id="loadModelFromMesh-procs-all">
-<div id="loadModelFromMesh,Mesh">
-<dt><pre><span class="Keyword">proc</span> <a href="#loadModelFromMesh%2CMesh"><span class="Identifier">loadModelFromMesh</span></a><span class="Other">(</span><span class="Identifier">mesh</span><span class="Other">:</span> <a href="raylib.html#Mesh"><span class="Identifier">Mesh</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Model"><span class="Identifier">Model</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;LoadModelFromMesh&quot;</span><span class="Other">,</span>
+<div id="loadModelFromMesh,sinkMesh">
+<dt><pre><span class="Keyword">proc</span> <a href="#loadModelFromMesh%2CsinkMesh"><span class="Identifier">loadModelFromMesh</span></a><span class="Other">(</span><span class="Identifier">mesh</span><span class="Other">:</span> <span class="Identifier">sink</span> <a href="raylib.html#Mesh"><span class="Identifier">Mesh</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Model"><span class="Identifier">Model</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;LoadModelFromMesh&quot;</span><span class="Other">,</span>
     <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
@@ -16630,9 +16506,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Load music stream from data
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1867"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1879"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1867" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1879" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -16832,9 +16708,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1862"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1874"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1862" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1874" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -18643,154 +18519,6 @@ class="link-seesrc" target="_blank">Source</a>
 
 </div>
 
-<div id="value-procs-all">
-<div id="value,array[,float32]">
-<dt><pre><span class="Keyword">proc</span> <a href="#value%2Carray%5B%2Cfloat32%5D"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1714"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1714" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="value,array[,int32]">
-<dt><pre><span class="Keyword">proc</span> <a href="#value%2Carray%5B%2Cint32%5D"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1705"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1705" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="value,array[,float32]_2">
-<dt><pre><span class="Keyword">proc</span> <a href="#value%2Carray%5B%2Cfloat32%5D_2"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">3</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1717"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1717" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="value,array[,int32]_2">
-<dt><pre><span class="Keyword">proc</span> <a href="#value%2Carray%5B%2Cint32%5D_2"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">3</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1708"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1708" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="value,array[,float32]_3">
-<dt><pre><span class="Keyword">proc</span> <a href="#value%2Carray%5B%2Cfloat32%5D_3"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1720"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1720" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="value,array[,int32]_3">
-<dt><pre><span class="Keyword">proc</span> <a href="#value%2Carray%5B%2Cint32%5D_3"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1711"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1711" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="value,Color">
-<dt><pre><span class="Keyword">proc</span> <a href="#value%2CColor"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Color"><span class="Identifier">Color</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1787"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1787" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="value,float32">
-<dt><pre><span class="Keyword">proc</span> <a href="#value%2Cfloat32"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1690"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1690" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="value,int32">
-<dt><pre><span class="Keyword">proc</span> <a href="#value%2Cint32"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1702"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1702" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="value,Vector2">
-<dt><pre><span class="Keyword">proc</span> <a href="#value%2CVector2"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1693"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1693" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="value,Vector3">
-<dt><pre><span class="Keyword">proc</span> <a href="#value%2CVector3"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1696"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1696" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="value,Vector4">
-<dt><pre><span class="Keyword">proc</span> <a href="#value%2CVector4"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Vector4"><span class="Identifier">Vector4</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1699"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1699" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-
-</div>
-
 <div id="vertexCount-procs-all">
 <div id="vertexCount,Mesh">
 <dt><pre><span class="Keyword">proc</span> <a href="#vertexCount%2CMesh"><span class="Identifier">vertexCount</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Mesh"><span class="Identifier">Mesh</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.<span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
@@ -18922,9 +18650,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2074"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2086"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2074" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2086" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -18938,9 +18666,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2060"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2072"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2060" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2072" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -18954,9 +18682,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2214"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2226"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2214" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2226" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -18970,9 +18698,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Blending mode (alpha, additive, multiplied, subtract, custom)
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1913"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1925"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1913" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1925" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -18986,9 +18714,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2088"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2100"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2088" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2100" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19002,9 +18730,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2200"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2212"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2200" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2212" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19014,9 +18742,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2228"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2240"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2228" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2240" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19030,9 +18758,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2102"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2114"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2102" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2114" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19046,9 +18774,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2032"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2044"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2032" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2044" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19062,9 +18790,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Setup canvas (framebuffer) to start drawing
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1878"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1890"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1878" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1890" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19078,9 +18806,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2242"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2254"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2242" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2254" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19094,9 +18822,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1948"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1960"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1948" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1960" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19110,9 +18838,157 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2046"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2058"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2046" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2058" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+
+</div>
+
+<div id="kind-templates-all">
+<div id="kind.t,typedesc[array[,float32]]">
+<dt><pre><span class="Keyword">template</span> <a href="#kind.t%2Ctypedesc%5Barray%5B%2Cfloat32%5D%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1713"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1713" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="kind.t,typedesc[array[,int32]]">
+<dt><pre><span class="Keyword">template</span> <a href="#kind.t%2Ctypedesc%5Barray%5B%2Cint32%5D%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1704"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1704" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="kind.t,typedesc[array[,float32]]_2">
+<dt><pre><span class="Keyword">template</span> <a href="#kind.t%2Ctypedesc%5Barray%5B%2Cfloat32%5D%5D_2"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">3</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1716"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1716" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="kind.t,typedesc[array[,int32]]_2">
+<dt><pre><span class="Keyword">template</span> <a href="#kind.t%2Ctypedesc%5Barray%5B%2Cint32%5D%5D_2"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">3</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1707"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1707" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="kind.t,typedesc[array[,float32]]_3">
+<dt><pre><span class="Keyword">template</span> <a href="#kind.t%2Ctypedesc%5Barray%5B%2Cfloat32%5D%5D_3"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1719"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1719" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="kind.t,typedesc[array[,int32]]_3">
+<dt><pre><span class="Keyword">template</span> <a href="#kind.t%2Ctypedesc%5Barray%5B%2Cint32%5D%5D_3"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1710"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1710" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="kind.t,typedesc[Color]">
+<dt><pre><span class="Keyword">template</span> <a href="#kind.t%2Ctypedesc%5BColor%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="raylib.html#Color"><span class="Identifier">Color</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#PixelFormat"><span class="Identifier">PixelFormat</span></a></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1786"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1786" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="kind.t,typedesc[float32]">
+<dt><pre><span class="Keyword">template</span> <a href="#kind.t%2Ctypedesc%5Bfloat32%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1689"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1689" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="kind.t,typedesc[int32]">
+<dt><pre><span class="Keyword">template</span> <a href="#kind.t%2Ctypedesc%5Bint32%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1701"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1701" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="kind.t,typedesc[Vector2]">
+<dt><pre><span class="Keyword">template</span> <a href="#kind.t%2Ctypedesc%5BVector2%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1692"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1692" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="kind.t,typedesc[Vector3]">
+<dt><pre><span class="Keyword">template</span> <a href="#kind.t%2Ctypedesc%5BVector3%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1695"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1695" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="kind.t,typedesc[Vector4]">
+<dt><pre><span class="Keyword">template</span> <a href="#kind.t%2Ctypedesc%5BVector4%5D"><span class="Identifier">kind</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="raylib.html#Vector4"><span class="Identifier">Vector4</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1698"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1698" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19126,9 +19002,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2130"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2142"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2130" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2142" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19142,9 +19018,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2144"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2156"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2144" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2156" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19158,9 +19034,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2172"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2184"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2172" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2184" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19174,9 +19050,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2158"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2170"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2158" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2170" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19190,9 +19066,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2186"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2198"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2186" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2198" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19206,9 +19082,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 2D mode with custom camera (2D)
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1885"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1897"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1885" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1897" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19222,9 +19098,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 3D mode with custom camera (3D)
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1892"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1904"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1892" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1904" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19238,9 +19114,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2004"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2016"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2004" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2016" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19254,9 +19130,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1934"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1946"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1934" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1946" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19270,9 +19146,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Scissor mode (define screen area for following drawing)
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1920"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1932"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1920" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1932" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19286,9 +19162,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Custom shader drawing
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1906"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1918"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1906" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1918" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19302,9 +19178,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2018"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2030"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2018" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2030" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19318,9 +19194,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1976"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1988"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1976" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1988" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19334,9 +19210,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1990"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2002"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1990" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2002" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19350,9 +19226,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Drawing to render texture
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1899"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1911"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1899" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1911" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19387,6 +19263,154 @@ class="link-seesrc" target="_blank">Source</a>
 
 </div>
 
+<div id="value-templates-all">
+<div id="value.t,array[,float32]">
+<dt><pre><span class="Keyword">template</span> <a href="#value.t%2Carray%5B%2Cfloat32%5D"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1714"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1714" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="value.t,array[,int32]">
+<dt><pre><span class="Keyword">template</span> <a href="#value.t%2Carray%5B%2Cint32%5D"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1705"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1705" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="value.t,array[,float32]_2">
+<dt><pre><span class="Keyword">template</span> <a href="#value.t%2Carray%5B%2Cfloat32%5D_2"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">3</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1717"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1717" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="value.t,array[,int32]_2">
+<dt><pre><span class="Keyword">template</span> <a href="#value.t%2Carray%5B%2Cint32%5D_2"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">3</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1708"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1708" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="value.t,array[,float32]_3">
+<dt><pre><span class="Keyword">template</span> <a href="#value.t%2Carray%5B%2Cfloat32%5D_3"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1720"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1720" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="value.t,array[,int32]_3">
+<dt><pre><span class="Keyword">template</span> <a href="#value.t%2Carray%5B%2Cint32%5D_3"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1711"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1711" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="value.t,Color">
+<dt><pre><span class="Keyword">template</span> <a href="#value.t%2CColor"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Color"><span class="Identifier">Color</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1787"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1787" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="value.t,float32">
+<dt><pre><span class="Keyword">template</span> <a href="#value.t%2Cfloat32"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1690"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1690" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="value.t,int32">
+<dt><pre><span class="Keyword">template</span> <a href="#value.t%2Cint32"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1702"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1702" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="value.t,Vector2">
+<dt><pre><span class="Keyword">template</span> <a href="#value.t%2CVector2"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1693"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1693" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="value.t,Vector3">
+<dt><pre><span class="Keyword">template</span> <a href="#value.t%2CVector3"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1696"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1696" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="value.t,Vector4">
+<dt><pre><span class="Keyword">template</span> <a href="#value.t%2CVector4"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Vector4"><span class="Identifier">Vector4</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1699"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1699" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+
+</div>
+
 <div id="vboId-templates-all">
 <div id="vboId.t,Mesh">
 <dt><pre><span class="Keyword">template</span> <a href="#vboId.t%2CMesh"><span class="Identifier">vboId</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Mesh"><span class="Identifier">Mesh</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#MeshVboId"><span class="Identifier">MeshVboId</span></a></pre></dt>
@@ -19394,9 +19418,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2116"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L2128"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2116" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L2128" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19410,9 +19434,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1962"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1974"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1962" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1974" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19426,9 +19450,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Stereo rendering (requires VR simulator)
 &nbsp;&nbsp;<a
-href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1927"
+href="https://github.com/planetis-m/naylib/tree/main/raylib.nim#L1939"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1927" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/planetis-m/naylib/edit/main/raylib.nim#L1939" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -19444,7 +19468,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-03-27 16:51:54 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-04-02 13:56:31 UTC</small>
       </div>
     </div>
   </div>
