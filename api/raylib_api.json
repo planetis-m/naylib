@@ -9646,21 +9646,6 @@
       ]
     },
     {
-      "name": "GetRayCollisionModel",
-      "description": "Get collision info between ray and model",
-      "returnType": "RayCollision",
-      "params": [
-        {
-          "type": "Ray",
-          "name": "ray"
-        },
-        {
-          "type": "Model",
-          "name": "model"
-        }
-      ]
-    },
-    {
       "name": "GetRayCollisionMesh",
       "description": "Get collision info between ray and mesh",
       "returnType": "RayCollision",

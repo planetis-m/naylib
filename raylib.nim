@@ -1416,8 +1416,6 @@ proc getRayCollisionSphere*(ray: Ray, center: Vector3, radius: float32): RayColl
   ## Get collision info between ray and sphere
 proc getRayCollisionBox*(ray: Ray, box: BoundingBox): RayCollision {.importc: "GetRayCollisionBox".}
   ## Get collision info between ray and box
-proc getRayCollisionModel*(ray: Ray, model: Model): RayCollision {.importc: "GetRayCollisionModel".}
-  ## Get collision info between ray and model
 proc getRayCollisionMesh*(ray: Ray, mesh: Mesh, transform: Matrix): RayCollision {.importc: "GetRayCollisionMesh".}
   ## Get collision info between ray and mesh
 proc getRayCollisionTriangle*(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3): RayCollision {.importc: "GetRayCollisionTriangle".}
