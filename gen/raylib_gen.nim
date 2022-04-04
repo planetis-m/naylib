@@ -382,7 +382,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         lit "* = distinct int32"
         doc enm
       spaces
-      lit "ShaderLocation* = distinct int32 ## Location of the uniform/attribute variable"
+      # Extra distinct type used in GetShaderLocation, SetShaderValue
+      lit "ShaderLocation* = distinct int32 ## Shader location of a variable"
     lit "\n\nconst"
     scope:
       for enm in items(t.enums):
@@ -432,7 +433,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
                 ("ModelAnimation", "framePoses", "ptr UncheckedArray[ptr UncheckedArray[$1]]"),
                 ("Mesh", "vboId", "ptr array[MaxMeshVertexBuffers, $1]"),
                 ("Material", "maps", "ptr array[MaxMaterialMaps, $1]"),
-                ("Shader", "locs", "ptr array[MaxShaderLocations, $1]")
+                ("Shader", "locs", "ptr array[MaxShaderLocations, ShaderLocation]")
               ]
               let tmp = getReplacement(obj.name, name, replacements)
               if tmp != "": pat = tmp

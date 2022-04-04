@@ -29,7 +29,7 @@ type
   CameraMode* = distinct int32 ## Camera system modes
   CameraProjection* = distinct int32 ## Camera projection
   NPatchLayout* = distinct int32 ## N-patch layout
-  ShaderLocation* = distinct int32 ## Location of the uniform/attribute variable
+  ShaderLocation* = distinct int32 ## Shader location of a variable
 
 const
   FlagVsyncHint* = ConfigFlags(64) ## Set to try enabling V-Sync on GPU
@@ -511,7 +511,7 @@ type
 
   Shader* {.header: "raylib.h", bycopy.} = object ## Shader
     id*: uint32 ## Shader program id
-    locs: ptr array[MaxShaderLocations, int32] ## Shader locations array (RL_MAX_SHADER_LOCATIONS)
+    locs: ptr array[MaxShaderLocations, ShaderLocation] ## Shader locations array (RL_MAX_SHADER_LOCATIONS)
 
   MaterialMap* {.header: "raylib.h", bycopy.} = object ## MaterialMap
     texture*: Texture2D ## Material map texture
