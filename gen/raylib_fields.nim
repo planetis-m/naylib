@@ -197,15 +197,15 @@ proc `[]=`*(x: var MeshVboId, i: int, val: uint32) =
 
 template locs*(x: Shader): ShaderLocs = ShaderLocs(x)
 
-proc `[]`*(x: ShaderLocs, i: ShaderLocationIndex): int32 =
+proc `[]`*(x: ShaderLocs, i: ShaderLocationIndex): ShaderLocation =
   checkArrayAccess(Shader(x).locs, i, MaxShaderLocations)
   result = Shader(x).locs[i.int]
 
-proc `[]`*(x: var ShaderLocs, i: ShaderLocationIndex): var int32 =
+proc `[]`*(x: var ShaderLocs, i: ShaderLocationIndex): var ShaderLocation =
   checkArrayAccess(Shader(x).locs, i, MaxShaderLocations)
   result = Shader(x).locs[i.int]
 
-proc `[]=`*(x: var ShaderLocs, i: ShaderLocationIndex, val: int32) =
+proc `[]=`*(x: var ShaderLocs, i: ShaderLocationIndex, val: ShaderLocation) =
   checkArrayAccess(Shader(x).locs, i, MaxShaderLocations)
   Shader(x).locs[i.int] = val
 
