@@ -970,7 +970,7 @@ proc setCameraMode*(camera: Camera, mode: CameraMode) {.importc: "SetCameraMode"
   ## Set camera mode (multiple camera modes available)
 proc updateCamera*(camera: var Camera) {.importc: "UpdateCamera".}
   ## Update camera position for selected mode
-proc setCameraPanControl*(keyPan: KeyboardKey) {.importc: "SetCameraPanControl".}
+proc setCameraPanControl*(keyPan: MouseButton) {.importc: "SetCameraPanControl".}
   ## Set camera pan key to combine with mouse movement (free camera)
 proc setCameraAltControl*(keyAlt: KeyboardKey) {.importc: "SetCameraAltControl".}
   ## Set camera alt key to combine with mouse movement (free camera)
