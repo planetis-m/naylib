@@ -174,7 +174,7 @@ const
     ("BeginBlendMode", "mode"),
     # MaterialMapIndex
     ("SetMaterialTexture", "mapType"),
-    # ShaderLocationIndex
+    # ShaderLocation
     ("SetShaderValue", "locIndex"),
     ("SetShaderValueV", "locIndex"),
     ("SetShaderValueMatrix", "locIndex"),
@@ -238,10 +238,10 @@ const
     "CameraMode",
     "BlendMode",
     "MaterialMapIndex",
-    "ShaderLocationIndex",
-    "ShaderLocationIndex",
-    "ShaderLocationIndex",
-    "ShaderLocationIndex",
+    "ShaderLocation",
+    "ShaderLocation",
+    "ShaderLocation",
+    "ShaderLocation",
     "ShaderUniformDataType",
     "ShaderUniformDataType",
     "PixelFormat",
@@ -381,6 +381,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         ident enm.name
         lit "* = distinct int32"
         doc enm
+      spaces
+      lit "ShaderLocation* = distinct int32 ## Location of the uniform/attribute variable"
     lit "\n\nconst"
     scope:
       for enm in items(t.enums):

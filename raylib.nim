@@ -29,6 +29,7 @@ type
   CameraMode* = distinct int32 ## Camera system modes
   CameraProjection* = distinct int32 ## Camera projection
   NPatchLayout* = distinct int32 ## N-patch layout
+  ShaderLocation* = distinct int32 ## Location of the uniform/attribute variable
 
 const
   FlagVsyncHint* = ConfigFlags(64) ## Set to try enabling V-Sync on GPU
@@ -818,15 +819,15 @@ proc unloadVrStereoConfig*(config: VrStereoConfig) {.importc: "UnloadVrStereoCon
   ## Unload VR stereo config
 proc loadShaderPriv(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader".}
 proc loadShaderFromMemoryPriv(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory".}
-proc getShaderLocation*(shader: Shader, uniformName: cstring): ShaderLocationIndex {.importc: "GetShaderLocation".}
+proc getShaderLocation*(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation".}
   ## Get shader uniform location
-proc getShaderLocationAttrib*(shader: Shader, attribName: cstring): ShaderLocationIndex {.importc: "GetShaderLocationAttrib".}
+proc getShaderLocationAttrib*(shader: Shader, attribName: cstring): ShaderLocation {.importc: "GetShaderLocationAttrib".}
   ## Get shader attribute location
-proc setShaderValuePriv(shader: Shader, locIndex: ShaderLocationIndex, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue".}
-proc setShaderValueVPriv(shader: Shader, locIndex: ShaderLocationIndex, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV".}
-proc setShaderValueMatrix*(shader: Shader, locIndex: ShaderLocationIndex, mat: Matrix) {.importc: "SetShaderValueMatrix".}
+proc setShaderValuePriv(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue".}
+proc setShaderValueVPriv(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV".}
+proc setShaderValueMatrix*(shader: Shader, locIndex: ShaderLocation, mat: Matrix) {.importc: "SetShaderValueMatrix".}
   ## Set shader uniform value (matrix 4x4)
-proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocationIndex, texture: Texture2D) {.importc: "SetShaderValueTexture".}
+proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocation, texture: Texture2D) {.importc: "SetShaderValueTexture".}
   ## Set shader uniform value for texture (sampler2d)
 proc unloadShader*(shader: Shader) {.importc: "UnloadShader".}
   ## Unload shader from GPU memory (VRAM)
