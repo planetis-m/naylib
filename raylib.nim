@@ -818,15 +818,15 @@ proc unloadVrStereoConfig*(config: VrStereoConfig) {.importc: "UnloadVrStereoCon
   ## Unload VR stereo config
 proc loadShaderPriv(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader".}
 proc loadShaderFromMemoryPriv(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory".}
-proc getShaderLocation*(shader: Shader, uniformName: cstring): int32 {.importc: "GetShaderLocation".}
+proc getShaderLocation*(shader: Shader, uniformName: cstring): ShaderLocationIndex {.importc: "GetShaderLocation".}
   ## Get shader uniform location
-proc getShaderLocationAttrib*(shader: Shader, attribName: cstring): int32 {.importc: "GetShaderLocationAttrib".}
+proc getShaderLocationAttrib*(shader: Shader, attribName: cstring): ShaderLocationIndex {.importc: "GetShaderLocationAttrib".}
   ## Get shader attribute location
-proc setShaderValuePriv(shader: Shader, locIndex: int32, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue".}
-proc setShaderValueVPriv(shader: Shader, locIndex: int32, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV".}
-proc setShaderValueMatrix*(shader: Shader, locIndex: int32, mat: Matrix) {.importc: "SetShaderValueMatrix".}
+proc setShaderValuePriv(shader: Shader, locIndex: ShaderLocationIndex, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue".}
+proc setShaderValueVPriv(shader: Shader, locIndex: ShaderLocationIndex, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV".}
+proc setShaderValueMatrix*(shader: Shader, locIndex: ShaderLocationIndex, mat: Matrix) {.importc: "SetShaderValueMatrix".}
   ## Set shader uniform value (matrix 4x4)
-proc setShaderValueTexture*(shader: Shader, locIndex: int32, texture: Texture2D) {.importc: "SetShaderValueTexture".}
+proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocationIndex, texture: Texture2D) {.importc: "SetShaderValueTexture".}
   ## Set shader uniform value for texture (sampler2d)
 proc unloadShader*(shader: Shader) {.importc: "UnloadShader".}
   ## Unload shader from GPU memory (VRAM)
@@ -1717,11 +1717,11 @@ template value*(x: array[3, float32]): pointer = x.addr
 template kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = ShaderUniformVec4
 template value*(x: array[4, float32]): pointer = x.addr
 
-proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: int32, value: T) =
+proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: ShaderLocationIndex, value: T) =
   ## Set shader uniform value
   setShaderValuePriv(shader, locIndex, value.value, kind(T))
 
-proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: int32, value: openarray[T]) =
+proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocationIndex, value: openarray[T]) =
   ## Set shader uniform value vector
   setShaderValueVPriv(shader, locIndex, cast[pointer](value), kind(T), value.len.int32)
 

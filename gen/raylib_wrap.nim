@@ -66,11 +66,11 @@ template value*(x: array[3, float32]): pointer = x.addr
 template kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = ShaderUniformVec4
 template value*(x: array[4, float32]): pointer = x.addr
 
-proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: int32, value: T) =
+proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: ShaderLocationIndex, value: T) =
   ## Set shader uniform value
   setShaderValuePriv(shader, locIndex, value.value, kind(T))
 
-proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: int32, value: openarray[T]) =
+proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocationIndex, value: openarray[T]) =
   ## Set shader uniform value vector
   setShaderValueVPriv(shader, locIndex, cast[pointer](value), kind(T), value.len.int32)
 

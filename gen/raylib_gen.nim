@@ -123,7 +123,9 @@ const
   enumInFuncReturn = [
     ("GetKeyPressed", 0),
     ("GetGamepadButtonPressed", 14),
-    ("GetGestureDetected", 25)
+    ("GetGestureDetected", 25),
+    ("GetShaderLocation", 35),
+    ("GetShaderLocationAttrib", 35)
   ]
   enumInFuncParams = [
     # KeyboardKey
@@ -172,6 +174,11 @@ const
     ("BeginBlendMode", "mode"),
     # MaterialMapIndex
     ("SetMaterialTexture", "mapType"),
+    # ShaderLocationIndex
+    ("SetShaderValue", "locIndex"),
+    ("SetShaderValueV", "locIndex"),
+    ("SetShaderValueMatrix", "locIndex"),
+    ("SetShaderValueTexture", "locIndex"),
     # ShaderUniformDataType
     ("SetShaderValue", "uniformType"),
     ("SetShaderValueV", "uniformType"),
@@ -231,6 +238,10 @@ const
     "CameraMode",
     "BlendMode",
     "MaterialMapIndex",
+    "ShaderLocationIndex",
+    "ShaderLocationIndex",
+    "ShaderLocationIndex",
+    "ShaderLocationIndex",
     "ShaderUniformDataType",
     "ShaderUniformDataType",
     "PixelFormat",
