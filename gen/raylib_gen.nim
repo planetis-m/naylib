@@ -51,6 +51,7 @@ proc `<`*(a, b: ShaderLocationIndex): bool {.borrow.}
 proc `<=`*(a, b: ShaderLocationIndex): bool {.borrow.}
 proc `==`*(a, b: ShaderLocationIndex): bool {.borrow.}
 
+proc `==`*(a, b: ShaderLocation): bool {.borrow.}
 proc `==`*(a, b: ShaderUniformDataType): bool {.borrow.}
 proc `==`*(a, b: ShaderAttributeDataType): bool {.borrow.}
 proc `==`*(a, b: PixelFormat): bool {.borrow.}
