@@ -384,7 +384,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         doc enm
       spaces
       # Extra distinct type used in GetShaderLocation, SetShaderValue
-      lit "ShaderLocation* = distinct int32 ## Shader location of a variable"
+      lit "ShaderLocation* = distinct int32 ## Shader location"
     lit "\n\nconst"
     scope:
       for enm in items(t.enums):

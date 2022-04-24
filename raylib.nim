@@ -29,7 +29,7 @@ type
   CameraMode* = distinct int32 ## Camera system modes
   CameraProjection* = distinct int32 ## Camera projection
   NPatchLayout* = distinct int32 ## N-patch layout
-  ShaderLocation* = distinct int32 ## Shader location of a variable
+  ShaderLocation* = distinct int32 ## Shader location
 
 const
   FlagVsyncHint* = ConfigFlags(64) ## Set to try enabling V-Sync on GPU
@@ -1751,7 +1751,7 @@ proc loadImagePalette*(image: Image; maxPaletteSize: int32): CSeq[Color] =
   ## Load colors palette from image as a Color array (RGBA - 32bit)
   var len = 0'i32
   let data = loadImagePalettePriv(image, maxPaletteSize, len.addr)
-  result = CSeq[Color](len: len.int, data: data)
+  result = CSeq[Color](len: len, data: data)
 
 proc loadMaterials*(fileName: string): CSeq[Material] =
   ## Load materials from model file
@@ -1759,7 +1759,7 @@ proc loadMaterials*(fileName: string): CSeq[Material] =
   let data = loadMaterialsPriv(fileName.cstring, len.addr)
   if len <= 0:
     raise newException(IOError, "No materials loaded from " & filename)
-  result = CSeq[Material](len: len.int, data: data)
+  result = CSeq[Material](len: len, data: data)
 
 proc drawLineStrip*(points: openarray[Vector2]; color: Color) {.inline.} =
   ## Draw lines sequence
