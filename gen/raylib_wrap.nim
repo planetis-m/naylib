@@ -1,4 +1,7 @@
 
+proc raiseResourceNotFound(filename: string) {.noinline, noreturn.} =
+  raise newException(IOError, "Could not load resource from " & filename)
+
 proc getMonitorName*(monitor: int32): string {.inline.} =
   ## Get the human-readable, UTF-8 encoded name of the primary monitor
   result = $getMonitorNamePriv(monitor)
@@ -79,7 +82,7 @@ proc loadModelAnimations*(fileName: string): CSeq[ModelAnimation] =
   var len = 0'u32
   let data = loadModelAnimationsPriv(fileName.cstring, len.addr)
   if len <= 0:
-    raise newException(IOError, "No model animations loaded from " & filename)
+    raiseResourceNotFound(filename)
   result = CSeq[ModelAnimation](len: len.int, data: data)
 
 proc loadWaveSamples*(wave: Wave): CSeq[float32] =
@@ -98,15 +101,15 @@ proc loadImagePalette*(image: Image; maxPaletteSize: int32): CSeq[Color] =
   ## Load colors palette from image as a Color array (RGBA - 32bit)
   var len = 0'i32
   let data = loadImagePalettePriv(image, maxPaletteSize, len.addr)
-  result = CSeq[Color](len: len.int, data: data)
+  result = CSeq[Color](len: len, data: data)
 
 proc loadMaterials*(fileName: string): CSeq[Material] =
   ## Load materials from model file
   var len = 0'i32
   let data = loadMaterialsPriv(fileName.cstring, len.addr)
   if len <= 0:
-    raise newException(IOError, "No materials loaded from " & filename)
-  result = CSeq[Material](len: len.int, data: data)
+    raiseResourceNotFound(filename)
+  result = CSeq[Material](len: len, data: data)
 
 proc drawLineStrip*(points: openarray[Vector2]; color: Color) {.inline.} =
   ## Draw lines sequence

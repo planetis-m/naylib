@@ -15,6 +15,11 @@ type
 # Module Functions Definition - Utils math
 # ----------------------------------------------------------------------------------
 
+func equals*(x, y: float32): bool {.inline.} =
+  ## Check whether two given floats are almost equal
+  result = abs(x - y) <=
+      Epsilon * max(1'f32, max(abs(x), abs(y)))
+
 func clamp*(value, min, max: float32): float32 {.inline.} =
   ## Clamp float value
   result = if value < min: min else: value
@@ -34,11 +39,6 @@ func remap*(value, inputStart, inputEnd, outputStart, outputEnd: float32): float
   result = (value - inputStart) / (inputEnd - inputStart) *
       (outputEnd - outputStart) + outputStart
 
-func equals*(x, y: float32): bool {.inline.} =
-  ## Check whether two given floats are almost equal
-  result = abs(x - y) <=
-      Epsilon * max(1'f32, max(abs(x), abs(y)))
-
 # ----------------------------------------------------------------------------------
 # Module Functions Definition - Vector2 math
 # ----------------------------------------------------------------------------------
@@ -50,6 +50,35 @@ func vector2Zero*(): Vector2 {.inline.} =
 func vector2One*(): Vector2 {.inline.} =
   ## Vector with components value 1'f32
   result = Vector2(x: 1, y: 1)
+
+func equals*(p, q: Vector2): bool {.inline.} =
+  ## Check whether two given vectors are almost equal
+  result = abs(p.x - q.x) <=
+      Epsilon * max(1'f32, max(abs(p.x), abs(q.x))) and
+      abs(p.y - q.y) <=
+      Epsilon * max(1'f32, max(abs(p.y), abs(q.y)))
+
+func clamp*(v, min, max: Vector2): Vector2 {.inline.} =
+  ## Clamp the components of the vector between
+  ## min and max values specified by the given vectors
+  result = Vector2()
+  result.x = min(max.x, max(min.x, v.x))
+  result.y = min(max.y, max(min.y, v.y))
+
+func clampValue*(v: Vector2; min, max: float32): Vector2 {.inline.} =
+  ## Clamp the magnitude of the vector between two min and max values
+  result = Vector2()
+  var length = v.x * v.x + v.y * v.y
+  if length > 0'f32:
+    length = sqrt(length)
+    if length < min:
+      let scale = min / length
+      result.x = v.x * scale
+      result.y = v.y * scale
+    elif length > max:
+      let scale = max / length
+      result.x = v.x * scale
+      result.y = v.y * scale
 
 func add*(v1, v2: Vector2): Vector2 {.inline.} =
   ## Add two vectors (v1 + v2)
@@ -165,35 +194,6 @@ func invert*(v: Vector2): Vector2 {.inline.} =
   ## Invert the given vector
   result = Vector2(x: 1'f32 / v.x, y: 1'f32 / v.y)
 
-func clamp*(v, min, max: Vector2): Vector2 {.inline.} =
-  ## Clamp the components of the vector between
-  ## min and max values specified by the given vectors
-  result = Vector2()
-  result.x = min(max.x, max(min.x, v.x))
-  result.y = min(max.y, max(min.y, v.y))
-
-func clampValue*(v: Vector2; min, max: float32): Vector2 {.inline.} =
-  ## Clamp the magnitude of the vector between two min and max values
-  result = Vector2()
-  var length = v.x * v.x + v.y * v.y
-  if length > 0'f32:
-    length = sqrt(length)
-    if length < min:
-      let scale = min / length
-      result.x = v.x * scale
-      result.y = v.y * scale
-    elif length > max:
-      let scale = max / length
-      result.x = v.x * scale
-      result.y = v.y * scale
-
-func equals*(p, q: Vector2): bool {.inline.} =
-  ## Check whether two given vectors are almost equal
-  result = abs(p.x - q.x) <=
-      Epsilon * max(1'f32, max(abs(p.x), abs(q.x))) and
-      abs(p.y - q.y) <=
-      Epsilon * max(1'f32, max(abs(p.y), abs(q.y)))
-
 # ----------------------------------------------------------------------------------
 # Module Functions Definition - Vector3 math
 # ----------------------------------------------------------------------------------
@@ -205,6 +205,40 @@ func vector3Zero*(): Vector3 {.inline.} =
 func vector3One*(): Vector3 {.inline.} =
   ## Vector with components value 1'f32
   result = Vector3(x: 1, y: 1, z: 1)
+
+func equals*(p, q: Vector3): bool {.inline.} =
+  ## Check whether two given vectors are almost equal
+  result = abs(p.x - q.x) <=
+      Epsilon * max(1'f32, max(abs(p.x), abs(q.x))) and
+      abs(p.y - q.y) <=
+      Epsilon * max(1'f32, max(abs(p.y), abs(q.y))) and
+      abs(p.z - q.z) <=
+      Epsilon * max(1'f32, max(abs(p.z), abs(q.z)))
+
+func clamp*(v, min, max: Vector3): Vector3 {.inline.} =
+  ## Clamp the components of the vector between
+  ## min and max values specified by the given vectors
+  result = Vector3()
+  result.x = min(max.x, max(min.x, v.x))
+  result.y = min(max.y, max(min.y, v.y))
+  result.z = min(max.z, max(min.z, v.z))
+
+func clampValue*(v: Vector3; min, max: float32): Vector3 {.inline.} =
+  ## Clamp the magnitude of the vector between two values
+  result = Vector3()
+  var length = v.x * v.x + v.y * v.y + v.z * v.z
+  if length > 0'f32:
+    length = sqrt(length)
+    if length < min:
+      let scale = min / length
+      result.x = v.x * scale
+      result.y = v.y * scale
+      result.z = v.z * scale
+    elif length > max:
+      let scale = max / length
+      result.x = v.x * scale
+      result.y = v.y * scale
+      result.z = v.z * scale
 
 func add*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Add two vectors
@@ -519,40 +553,6 @@ func toFloatV*(v: Vector3): Float3 {.inline.} =
 func invert*(v: Vector3): Vector3 {.inline.} =
   ## Invert the given vector
   result = Vector3(x: 1'f32 / v.x, y: 1'f32 / v.y, z: 1'f32 / v.z)
-
-func clamp*(v, min, max: Vector3): Vector3 {.inline.} =
-  ## Clamp the components of the vector between
-  ## min and max values specified by the given vectors
-  result = Vector3()
-  result.x = min(max.x, max(min.x, v.x))
-  result.y = min(max.y, max(min.y, v.y))
-  result.z = min(max.z, max(min.z, v.z))
-
-func clampValue*(v: Vector3; min, max: float32): Vector3 {.inline.} =
-  ## Clamp the magnitude of the vector between two values
-  result = Vector3()
-  var length = v.x * v.x + v.y * v.y + v.z * v.z
-  if length > 0'f32:
-    length = sqrt(length)
-    if length < min:
-      let scale = min / length
-      result.x = v.x * scale
-      result.y = v.y * scale
-      result.z = v.z * scale
-    elif length > max:
-      let scale = max / length
-      result.x = v.x * scale
-      result.y = v.y * scale
-      result.z = v.z * scale
-
-func equals*(p, q: Vector3): bool {.inline.} =
-  ## Check whether two given vectors are almost equal
-  result = abs(p.x - q.x) <=
-      Epsilon * max(1'f32, max(abs(p.x), abs(q.x))) and
-      abs(p.y - q.y) <=
-      Epsilon * max(1'f32, max(abs(p.y), abs(q.y))) and
-      abs(p.z - q.z) <=
-      Epsilon * max(1'f32, max(abs(p.z), abs(q.z)))
 
 # ----------------------------------------------------------------------------------
 # Module Functions Definition - Matrix math
@@ -1026,6 +1026,17 @@ func toFloatV*(mat: Matrix): Float16 {.inline.} =
 # Module Functions Definition - Quaternion math
 # ----------------------------------------------------------------------------------
 
+func equals*(p, q: Quaternion): bool {.inline.} =
+  ## Check whether two given quaternions are almost equal
+  result = abs(p.x - q.x) <=
+      Epsilon * max(1'f32, max(abs(p.x), abs(q.x))) and
+      abs(p.y - q.y) <=
+      Epsilon * max(1'f32, max(abs(p.y), abs(q.y))) and
+      abs(p.z - q.z) <=
+      Epsilon * max(1'f32, max(abs(p.z), abs(q.z))) and
+      abs(p.w - q.w) <=
+      Epsilon * max(1'f32, max(abs(p.w), abs(q.w)))
+
 func add*(q1, q2: Quaternion): Quaternion {.inline.} =
   ## Add two quaternions
   result = Quaternion(x: q1.x + q2.x, y: q1.y + q2.y, z: q1.z + q2.z,
@@ -1345,17 +1356,6 @@ func transform*(q: Quaternion; mat: Matrix): Quaternion {.inline.} =
   result.y = mat.m1 * q.x + mat.m5 * q.y + mat.m9 * q.z + mat.m13 * q.w
   result.z = mat.m2 * q.x + mat.m6 * q.y + mat.m10 * q.z + mat.m14 * q.w
   result.w = mat.m3 * q.x + mat.m7 * q.y + mat.m11 * q.z + mat.m15 * q.w
-
-func equals*(p, q: Quaternion): bool {.inline.} =
-  ## Check whether two given quaternions are almost equal
-  result = abs(p.x - q.x) <=
-      Epsilon * max(1'f32, max(abs(p.x), abs(q.x))) and
-      abs(p.y - q.y) <=
-      Epsilon * max(1'f32, max(abs(p.y), abs(q.y))) and
-      abs(p.z - q.z) <=
-      Epsilon * max(1'f32, max(abs(p.z), abs(q.z))) and
-      abs(p.w - q.w) <=
-      Epsilon * max(1'f32, max(abs(p.w), abs(q.w)))
 
 template `=~`*[T: float32 | Vector2 | Vector3 | Quaternion](v1, v2: T): bool = equals(v1, v2)
 
