@@ -7,7 +7,8 @@ const
     "Texture": "TextureCubemap* = Texture ## TextureCubemap, same as Texture",
     "RenderTexture": "RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture",
     "Camera3D": "Camera* = Camera3D ## Camera type fallback, defaults to Camera3D",
-    "AudioStream": """RAudioBuffer* {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object"""
+    "AudioStream": """RAudioBuffer* {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object""",
+    "AudioStream": """RAudioProcessor* {.importc: "rAudioProcessor", header: "raylib.h", bycopy.} = object"""
   }
   raylibHeader = """
 from unicode import Rune

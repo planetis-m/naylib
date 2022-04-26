@@ -578,6 +578,7 @@ type
     sampleSize*: uint32 ## Bit depth (bits per sample): 8, 16, 32 (24 not supported)
     channels*: uint32 ## Number of channels (1-mono, 2-stereo, ...)
   RAudioBuffer* {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object
+  RAudioProcessor* {.importc: "rAudioProcessor", header: "raylib.h", bycopy.} = object
 
   Sound* {.header: "raylib.h", bycopy.} = object ## Sound
     stream*: AudioStream ## Audio stream
