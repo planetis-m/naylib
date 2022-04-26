@@ -33,7 +33,7 @@ It can easily be avoided with one of the following ways:
 
 - Using defer or try/finally inside a proc body
 
-.. code-block::nim
+.. code-block:: nim
 
   initWindow(800, 450, "example")
   defer: closeWindow()
@@ -41,7 +41,7 @@ It can easily be avoided with one of the following ways:
 
 - Wrap everything in a game object (harder)
 
-.. code-block::nim
+.. code-block:: nim
 
   type
     Game = object
@@ -66,7 +66,7 @@ It can easily be avoided with one of the following ways:
 
 - In top level statements
 
-.. code-block::nim
+.. code-block:: nim
 
   initWindow(800, 450, "example")
   block:
