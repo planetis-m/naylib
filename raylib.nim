@@ -2157,29 +2157,29 @@ proc `[]=`*(x: var MeshVboId, i: int, val: uint32) =
 template locs*(x: Shader): ShaderLocs = ShaderLocs(x)
 
 proc `[]`*(x: ShaderLocs, i: ShaderLocationIndex): ShaderLocation =
-  checkArrayAccess(Shader(x).locs, i, MaxShaderLocations)
+  checkArrayAccess(Shader(x).locs, i.int, MaxShaderLocations)
   result = Shader(x).locs[i.int]
 
 proc `[]`*(x: var ShaderLocs, i: ShaderLocationIndex): var ShaderLocation =
-  checkArrayAccess(Shader(x).locs, i, MaxShaderLocations)
+  checkArrayAccess(Shader(x).locs, i.int, MaxShaderLocations)
   result = Shader(x).locs[i.int]
 
 proc `[]=`*(x: var ShaderLocs, i: ShaderLocationIndex, val: ShaderLocation) =
-  checkArrayAccess(Shader(x).locs, i, MaxShaderLocations)
+  checkArrayAccess(Shader(x).locs, i.int, MaxShaderLocations)
   Shader(x).locs[i.int] = val
 
 template maps*(x: Material): MaterialMaps = MaterialMaps(x)
 
 proc `[]`*(x: MaterialMaps, i: MaterialMapIndex): lent MaterialMap =
-  checkArrayAccess(Material(x).maps, i, MaxMaterialMaps)
+  checkArrayAccess(Material(x).maps, i.int, MaxMaterialMaps)
   result = Material(x).maps[i.int]
 
 proc `[]`*(x: var MaterialMaps, i: MaterialMapIndex): var MaterialMap =
-  checkArrayAccess(Material(x).maps, i, MaxMaterialMaps)
+  checkArrayAccess(Material(x).maps, i.int, MaxMaterialMaps)
   result = Material(x).maps[i.int]
 
 proc `[]=`*(x: var MaterialMaps, i: MaterialMapIndex, val: MaterialMap) =
-  checkArrayAccess(Material(x).maps, i, MaxMaterialMaps)
+  checkArrayAccess(Material(x).maps, i.int, MaxMaterialMaps)
   Material(x).maps[i.int] = val
 
 template meshes*(x: Model): ModelMeshes = ModelMeshes(x)
