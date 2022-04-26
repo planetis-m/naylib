@@ -84,10 +84,6 @@ proc toNimType*(x: string): string =
     "int16"
   of "long":
     "int64"
-  of "rAudioBuffer":
-    "RAudioBuffer"
-  of "rAudioProcessor":
-    "RAudioProcessor"
   of "float3":
     "Float3"
   of "float16":

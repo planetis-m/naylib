@@ -7,8 +7,8 @@ const
     "Texture": "TextureCubemap* = Texture ## TextureCubemap, same as Texture",
     "RenderTexture": "RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture",
     "Camera3D": "Camera* = Camera3D ## Camera type fallback, defaults to Camera3D",
-    "AudioStream": """RAudioBuffer* {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object""",
-    "AudioStream": """RAudioProcessor* {.importc: "rAudioProcessor", header: "raylib.h", bycopy.} = object"""
+    "AudioStream": """rAudioBuffer {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object""",
+    "AudioStream": """rAudioProcessor {.importc: "rAudioProcessor", header: "raylib.h", bycopy.} = object"""
   }
   raylibHeader = """
 from unicode import Rune
@@ -417,7 +417,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
             ident name
             let isPrivate = (obj.name, name) notin
                 {"Wave": "frameCount", "Sound": "frameCount", "Music": "frameCount"} and
-                name.endsWith("Count")
+                name.endsWith("Count") or (obj.name, name) in {"AudioStream": "buffer",
+                "AudioStream": "processor"}
             const replacements = [
               ("Camera3D", "projection", "CameraProjection"),
               ("Image", "format", "PixelFormat"),

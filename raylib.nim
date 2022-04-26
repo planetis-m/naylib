@@ -572,13 +572,13 @@ type
     data*: pointer ## Buffer data pointer
 
   AudioStream* {.header: "raylib.h", bycopy.} = object ## AudioStream, custom audio stream
-    buffer*: ptr RAudioBuffer ## Pointer to internal data used by the audio system
-    processor*: ptr RAudioProcessor ## Pointer to internal data processor, useful for audio effects
+    buffer: ptr rAudioBuffer ## Pointer to internal data used by the audio system
+    processor: ptr rAudioProcessor ## Pointer to internal data processor, useful for audio effects
     sampleRate*: uint32 ## Frequency (samples per second)
     sampleSize*: uint32 ## Bit depth (bits per sample): 8, 16, 32 (24 not supported)
     channels*: uint32 ## Number of channels (1-mono, 2-stereo, ...)
-  RAudioBuffer* {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object
-  RAudioProcessor* {.importc: "rAudioProcessor", header: "raylib.h", bycopy.} = object
+  rAudioBuffer {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object
+  rAudioProcessor {.importc: "rAudioProcessor", header: "raylib.h", bycopy.} = object
 
   Sound* {.header: "raylib.h", bycopy.} = object ## Sound
     stream*: AudioStream ## Audio stream
@@ -1661,6 +1661,8 @@ proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
 proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
 proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
 proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
+proc buffer*(x: AudioStream): ptr rAudioBuffer {.inline.} = x.buffer
+proc processor*(x: AudioStream): ptr rAudioProcessor {.inline.} = x.processor
 
 proc raiseResourceNotFound(filename: string) {.noinline, noreturn.} =
   raise newException(IOError, "Could not load resource from " & filename)
