@@ -1620,8 +1620,14 @@ proc `=copy`*[T](dest: var CSeq[T]; source: CSeq[T]) =
       dest.data = cast[typeof(dest.data)](memAlloc(dest.len.int32))
       for i in 0..<dest.len: dest.data[i] = source.data[i]
 
+proc raiseIndexDefect(i, n: int) {.noinline, noreturn.} =
+  raise newException(IndexDefect, "index " & $i & " not in 0 .. " & $n)
+
 template checkArrayAccess(a, x, len) =
-  rangeCheck a != nil and x.uint32 < len.uint32
+  when compileOption("boundChecks"):
+    {.line.}:
+      if a == nil or (x < 0 or x >= len):
+        raiseIndexDefect(x, len-1)
 
 proc `[]`*[T](x: CSeq[T], i: int): lent T =
   checkArrayAccess(x.data, i, x.len)
