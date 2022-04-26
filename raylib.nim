@@ -573,6 +573,7 @@ type
 
   AudioStream* {.header: "raylib.h", bycopy.} = object ## AudioStream, custom audio stream
     buffer*: ptr RAudioBuffer ## Pointer to internal data used by the audio system
+    processor*: ptr rAudioProcessor ## Pointer to internal data processor, useful for audio effects
     sampleRate*: uint32 ## Frequency (samples per second)
     sampleSize*: uint32 ## Bit depth (bits per sample): 8, 16, 32 (24 not supported)
     channels*: uint32 ## Number of channels (1-mono, 2-stereo, ...)
@@ -1536,6 +1537,8 @@ proc setAudioStreamBufferSizeDefault*(size: int32) {.importc: "SetAudioStreamBuf
   ## Default size for new audio streams
 proc setAudioStreamCallback*(stream: AudioStream, callback: AudioCallback) {.importc: "SetAudioStreamCallback".}
   ## Audio thread callback to request new data
+proc attachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "AttachAudioStreamProcessor".}
+proc detachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "DetachAudioStreamProcessor".}
 {.pop.}
 
 proc `=destroy`*(x: var Image) =
@@ -1652,6 +1655,9 @@ proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
 proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
 proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
 
+proc raiseResourceNotFound(filename: string) {.noinline, noreturn.} =
+  raise newException(IOError, "Could not load resource from " & filename)
+
 proc getMonitorName*(monitor: int32): string {.inline.} =
   ## Get the human-readable, UTF-8 encoded name of the primary monitor
   result = $getMonitorNamePriv(monitor)
@@ -1732,7 +1738,7 @@ proc loadModelAnimations*(fileName: string): CSeq[ModelAnimation] =
   var len = 0'u32
   let data = loadModelAnimationsPriv(fileName.cstring, len.addr)
   if len <= 0:
-    raise newException(IOError, "No model animations loaded from " & filename)
+    raiseResourceNotFound(filename)
   result = CSeq[ModelAnimation](len: len.int, data: data)
 
 proc loadWaveSamples*(wave: Wave): CSeq[float32] =
@@ -1758,7 +1764,7 @@ proc loadMaterials*(fileName: string): CSeq[Material] =
   var len = 0'i32
   let data = loadMaterialsPriv(fileName.cstring, len.addr)
   if len <= 0:
-    raise newException(IOError, "No materials loaded from " & filename)
+    raiseResourceNotFound(filename)
   result = CSeq[Material](len: len, data: data)
 
 proc drawLineStrip*(points: openarray[Vector2]; color: Color) {.inline.} =
