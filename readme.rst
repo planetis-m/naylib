@@ -31,15 +31,15 @@ Types are wrapped with Nim's destructors but ``closeWindow`` must be called at t
 This might create a conflict with variables that are destroyed after the last statement in your program.
 It can easily be avoided with one of the following ways:
 
-- Using defer or try/finally inside a proc body
+- Using defer or try/finally
 
 .. code-block:: nim
 
   initWindow(800, 450, "example")
   defer: closeWindow()
-  let texture = loadTexture("resources/"example.png")
+  let texture = loadTexture("resources/example.png")
 
-- Wrap everything in a game object (harder)
+- Wrap everything in a game object
 
 .. code-block:: nim
 
@@ -53,22 +53,23 @@ It can easily be avoided with one of the following ways:
   proc `=sink`(x: var Game; y: Game) {.error.}
   proc `=copy`(x: var Game; y: Game) {.error.}
 
-  proc initGame(width, height, fps: int32, title: string): Game =
+  proc initGame(width, height, fps: int32, flags: Flags[ConfigFlags], title: string): Game =
     assert not isWindowReady(), "Window is already opened"
+    setConfigFlags(flags)
     initWindow(width, height, title)
     setTargetFPS(fps)
 
-  proc gameShouldClose(x: Game): bool =
+  proc gameShouldClose(x: Game): bool {.inline.} =
     result = windowShouldClose()
 
-  let game = initGame(800, 450, 60, "example")
-  let texture = loadTexture("resources/"example.png")
+  let game = initGame(800, 450, 60, flags(FlagMsaa4xHint, FlagWindowHighdpi), "example")
+  let texture = loadTexture("resources/example.png")
 
-- In top level statements
+- Using a block
 
 .. code-block:: nim
 
   initWindow(800, 450, "example")
   block:
-    let texture = loadTexture("resources/"example.png")
+    let texture = loadTexture("resources/example.png")
   closeWindow()
