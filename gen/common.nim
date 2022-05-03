@@ -33,6 +33,7 @@ proc isKeyword*(s: string): bool {.inline.} =
 type
   TopLevel* = object
     structs*: seq[StructInfo]
+    aliases*: seq[AliasInfo]
     enums*: seq[EnumInfo]
     functions*: seq[FunctionInfo]
 
@@ -58,6 +59,9 @@ type
     name*: string
     value*: int
     description*: string
+
+  AliasInfo* = object
+    `type`*, name*, description*: string
 
 proc parseApi*(fname: string): TopLevel =
   var inp: FileStream
@@ -175,12 +179,7 @@ proc transFieldName*(x: string): (string, string) =
   if scanf(x, "$w[$i]$.", name, len):
     result = (name, &"array[{len}, $1]")
   else:
-    if validIdentifier(x):
-      result = (x, "")
-    else:
-      # Multiple identifiers in the same line.
-      # Make sure all but the last one, are exported.
-      result = (replace(x, ",", "*,"), "")
+    result = (x, "")
 
 proc camelCaseAscii*(s: string): string =
   ## Converts snake_case to CamelCase

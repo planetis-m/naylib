@@ -1,15 +1,10 @@
 import common, std/[streams, strutils]
 
 const
-  extraTypes = {
-    "Vector4": "Quaternion* = Vector4 ## Quaternion, 4 components (Vector4 alias)",
-    "Texture": "Texture2D* = Texture ## Texture2D, same as Texture",
-    "Texture": "TextureCubemap* = Texture ## TextureCubemap, same as Texture",
-    "RenderTexture": "RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture",
-    "Camera3D": "Camera* = Camera3D ## Camera type fallback, defaults to Camera3D",
-    "AudioStream": """rAudioBuffer {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object""",
-    "AudioStream": """rAudioProcessor {.importc: "rAudioProcessor", header: "raylib.h", bycopy.} = object"""
-  }
+  extraTypes = [
+    """rAudioBuffer {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object""",
+    """rAudioProcessor {.importc: "rAudioProcessor", header: "raylib.h", bycopy.} = object"""
+  ]
   raylibHeader = """
 from unicode import Rune
 import os
@@ -454,12 +449,19 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
               if isArray:
                 procArrays.add (obj.name, name, baseKind)
             doc fld
-        # Add a type alias or a missing type after the respective type.
-        for name, extra in extraTypes.items:
-          if obj.name == name:
-            spaces
-            lit extra
         lit "\n"
+      # Add a type alias or a missing type
+      for alias in items(t.aliases):
+        spaces
+        ident alias.name
+        lit "* = "
+        ident alias.`type`
+        doc alias
+      lit "\n"
+      for extra in extraTypes.items:
+        spaces
+        lit extra
+      lit "\n"
       for obj, name, _ in procArrays.items:
         spaces
         lit obj

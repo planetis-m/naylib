@@ -414,13 +414,24 @@ type
     y*: float32 ## Vector y component
     z*: float32 ## Vector z component
     w*: float32 ## Vector w component
-  Quaternion* = Vector4 ## Quaternion, 4 components (Vector4 alias)
 
   Matrix* {.header: "raylib.h", bycopy.} = object ## Matrix, 4x4 components, column major, OpenGL style, right handed
-    m0*, m4*, m8*, m12*: float32 ## Matrix first row (4 components)
-    m1*, m5*, m9*, m13*: float32 ## Matrix second row (4 components)
-    m2*, m6*, m10*, m14*: float32 ## Matrix third row (4 components)
-    m3*, m7*, m11*, m15*: float32 ## Matrix fourth row (4 components)
+    m0*: float32 ## Matrix first row (4 components)
+    m4*: float32 ## Matrix first row (4 components)
+    m8*: float32 ## Matrix first row (4 components)
+    m12*: float32 ## Matrix first row (4 components)
+    m1*: float32 ## Matrix second row (4 components)
+    m5*: float32 ## Matrix second row (4 components)
+    m9*: float32 ## Matrix second row (4 components)
+    m13*: float32 ## Matrix second row (4 components)
+    m2*: float32 ## Matrix third row (4 components)
+    m6*: float32 ## Matrix third row (4 components)
+    m10*: float32 ## Matrix third row (4 components)
+    m14*: float32 ## Matrix third row (4 components)
+    m3*: float32 ## Matrix fourth row (4 components)
+    m7*: float32 ## Matrix fourth row (4 components)
+    m11*: float32 ## Matrix fourth row (4 components)
+    m15*: float32 ## Matrix fourth row (4 components)
 
   Color* {.header: "raylib.h", bycopy.} = object ## Color, 4 components, R8G8B8A8 (32bit)
     r*: uint8 ## Color red value
@@ -447,14 +458,11 @@ type
     height*: int32 ## Texture base height
     mipmaps*: int32 ## Mipmap levels, 1 by default
     format*: PixelFormat ## Data format (PixelFormat type)
-  Texture2D* = Texture ## Texture2D, same as Texture
-  TextureCubemap* = Texture ## TextureCubemap, same as Texture
 
   RenderTexture* {.header: "raylib.h", bycopy.} = object ## RenderTexture, fbo for texture rendering
     id*: uint32 ## OpenGL framebuffer object id
     texture*: Texture ## Color buffer attachment texture
     depth*: Texture ## Depth buffer attachment texture
-  RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture
 
   NPatchInfo* {.header: "raylib.h", bycopy.} = object ## NPatchInfo, n-patch layout info
     source*: Rectangle ## Texture source rectangle
@@ -485,7 +493,6 @@ type
     up*: Vector3 ## Camera up vector (rotation over its axis)
     fovy*: float32 ## Camera field-of-view apperture in Y (degrees) in perspective, used as near plane width in orthographic
     projection*: CameraProjection ## Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
-  Camera* = Camera3D ## Camera type fallback, defaults to Camera3D
 
   Camera2D* {.header: "raylib.h", bycopy.} = object ## Camera2D, defines position/orientation in 2d space
     offset*: Vector2 ## Camera offset (displacement from target)
@@ -498,7 +505,7 @@ type
     triangleCount: int32 ## Number of triangles stored (indexed or not)
     vertices: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
     texcoords: ptr UncheckedArray[float32] ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
-    texcoords2: ptr UncheckedArray[float32] ## Vertex second texture coordinates (useful for lightmaps) (shader-location = 5)
+    texcoords2: ptr UncheckedArray[float32] ## Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)
     normals: ptr UncheckedArray[float32] ## Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
     tangents: ptr UncheckedArray[float32] ## Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
     colors: ptr UncheckedArray[uint8] ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
@@ -577,8 +584,6 @@ type
     sampleRate*: uint32 ## Frequency (samples per second)
     sampleSize*: uint32 ## Bit depth (bits per sample): 8, 16, 32 (24 not supported)
     channels*: uint32 ## Number of channels (1-mono, 2-stereo, ...)
-  rAudioBuffer {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object
-  rAudioProcessor {.importc: "rAudioProcessor", header: "raylib.h", bycopy.} = object
 
   Sound* {.header: "raylib.h", bycopy.} = object ## Sound
     stream*: AudioStream ## Audio stream
@@ -612,6 +617,15 @@ type
     rightScreenCenter*: array[2, float32] ## VR right screen center
     scale*: array[2, float32] ## VR distortion scale
     scaleIn*: array[2, float32] ## VR distortion scale in
+
+  Quaternion* = Vector4 ## Quaternion, 4 components (Vector4 alias)
+  Texture2D* = Texture ## Texture2D, same as Texture
+  TextureCubemap* = Texture ## TextureCubemap, same as Texture
+  RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture
+  Camera* = Camera3D ## Camera type fallback, defaults to Camera3D
+
+  rAudioBuffer {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object
+  rAudioProcessor {.importc: "rAudioProcessor", header: "raylib.h", bycopy.} = object
 
   FontRecs* = distinct Font
   FontGlyphs* = distinct Font
