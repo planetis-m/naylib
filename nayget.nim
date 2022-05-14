@@ -24,7 +24,9 @@ const
   docsDir = srcDir / "docs"
 
 proc exec(cmd: string) =
-  if execShellCmd(cmd) != 0: quit("FAILURE: " & cmd)
+  let (outp, status) = execCmdEx(cmd)
+  when defined(verbose): echo outp
+  if status != 0: quit("FAILURE: " & cmd)
 
 template withDir(dir, body) =
   let old = getCurrentDir()
@@ -72,7 +74,7 @@ proc wrapLatestRaylib =
     exec(&"cc {parser} -o {exe}")
     normalizeExe(exe)
     echo "Generating API JSON file..."
-    exec(&"exe -f JSON -d RLAPI -i {header} -o {apiDir / \"raylib_api.json\"}")
+    exec(&"{exe} -f JSON -d RLAPI -i {header} -o {apiDir / \"raylib_api.json\"}")
   generateWrapper()
 
 proc buildDocs =
