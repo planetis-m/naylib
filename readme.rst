@@ -17,7 +17,7 @@ Installation
 
 .. code-block::
 
-  nake build
+  nim r nayget build
 
 Official raylib `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_
 
