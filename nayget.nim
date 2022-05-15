@@ -1,4 +1,4 @@
-import std / [os, strformat, strutils, osproc]
+import std / [os, strformat, osproc]
 
 const
   RayLatestCommit = "4eb3d8857f1a8377f2cfa6e804183512cde5973e"
@@ -25,7 +25,7 @@ const
 
 proc exec(cmd: string) =
   let (outp, status) = execCmdEx(cmd)
-  when defined(verbose): echo outp
+  when not defined(release): echo outp
   if status != 0: quit("FAILURE: " & cmd)
 
 template withDir(dir, body) =
@@ -42,13 +42,15 @@ proc fetchLatestRaylib =
     exec("git clone --depth 50 https://github.com/raysan5/raylib.git " & rayDir)
   withDir(rayDir):
     echo "Fetching latest commit..."
-    exec("git fetch && git checkout " & RayLatestCommit)
+    exec("git fetch")
+    exec("git checkout " & RayLatestCommit)
 
 proc buildLatestRaylib =
   fetchLatestRaylib()
   withDir(rayDir / "src"):
     echo "Building raylib static library..."
-    exec("make clean && make PLATFORM=PLATFORM_DESKTOP -j4")
+    exec("make clean")
+    exec("make PLATFORM=PLATFORM_DESKTOP -j4")
     echo "Copying to C include directory"
     discard existsOrCreateDir(inclDir)
     copyFileToDir("libraylib.a", inclDir)
@@ -83,8 +85,8 @@ proc buildDocs =
     for src in items(["raymath", "raylib"]):
       let doc = docsDir / src.addFileExt(".html")
       echo &"Generating the docs for {src}..."
-      const url = "https://github.com/planetis-m/naylib"
-      exec(&"nim doc --verbosity:0 --git.url:{url} --git.devel:main --git.commit:main --out:{doc} {src}")
+      exec("nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib" &
+        &"--git.devel:main --git.commit:main --out:{doc} {src}")
 
 proc main =
   if os.paramCount() != 1: writeHelp()
