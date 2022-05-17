@@ -1,9 +1,6 @@
 import std/math
 from raylib import Vector2, Vector3, Vector4, Quaternion, Matrix
 
-const
-  Epsilon = 0.000001'f32
-
 type
   Float3* {.bycopy.} = object ## NOTE: Helper types to be used instead of array return types for ToFloat functions
     v*: array[3, float32]
@@ -14,11 +11,6 @@ type
 # ----------------------------------------------------------------------------------
 # Module Functions Definition - Utils math
 # ----------------------------------------------------------------------------------
-
-func equals*(x, y: float32): bool {.inline.} =
-  ## Check whether two given floats are almost equal
-  result = abs(x - y) <=
-      Epsilon * max(1'f32, max(abs(x), abs(y)))
 
 func clamp*(value, min, max: float32): float32 {.inline.} =
   ## Clamp float value
@@ -50,13 +42,6 @@ func vector2Zero*(): Vector2 {.inline.} =
 func vector2One*(): Vector2 {.inline.} =
   ## Vector with components value 1'f32
   result = Vector2(x: 1, y: 1)
-
-func equals*(p, q: Vector2): bool {.inline.} =
-  ## Check whether two given vectors are almost equal
-  result = abs(p.x - q.x) <=
-      Epsilon * max(1'f32, max(abs(p.x), abs(q.x))) and
-      abs(p.y - q.y) <=
-      Epsilon * max(1'f32, max(abs(p.y), abs(q.y)))
 
 func clamp*(v, min, max: Vector2): Vector2 {.inline.} =
   ## Clamp the components of the vector between
@@ -206,15 +191,6 @@ func vector3One*(): Vector3 {.inline.} =
   ## Vector with components value 1'f32
   result = Vector3(x: 1, y: 1, z: 1)
 
-func equals*(p, q: Vector3): bool {.inline.} =
-  ## Check whether two given vectors are almost equal
-  result = abs(p.x - q.x) <=
-      Epsilon * max(1'f32, max(abs(p.x), abs(q.x))) and
-      abs(p.y - q.y) <=
-      Epsilon * max(1'f32, max(abs(p.y), abs(q.y))) and
-      abs(p.z - q.z) <=
-      Epsilon * max(1'f32, max(abs(p.z), abs(q.z)))
-
 func clamp*(v, min, max: Vector3): Vector3 {.inline.} =
   ## Clamp the components of the vector between
   ## min and max values specified by the given vectors
@@ -266,8 +242,9 @@ func multiply*(v1, v2: Vector3): Vector3 {.inline.} =
 
 func crossProduct*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Calculate two vectors cross product
-  result = Vector3(x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z,
-                            z: v1.x * v2.y - v1.y * v2.x)
+  result = Vector3(x: v1.y * v2.z - v1.z * v2.y,
+                   y: v1.z * v2.x - v1.x * v2.z,
+                   z: v1.x * v2.y - v1.y * v2.x)
 
 func perpendicular*(v: Vector3): Vector3 {.inline.} =
   ## Calculate one vector perpendicular vector
@@ -1026,17 +1003,6 @@ func toFloatV*(mat: Matrix): Float16 {.inline.} =
 # Module Functions Definition - Quaternion math
 # ----------------------------------------------------------------------------------
 
-func equals*(p, q: Quaternion): bool {.inline.} =
-  ## Check whether two given quaternions are almost equal
-  result = abs(p.x - q.x) <=
-      Epsilon * max(1'f32, max(abs(p.x), abs(q.x))) and
-      abs(p.y - q.y) <=
-      Epsilon * max(1'f32, max(abs(p.y), abs(q.y))) and
-      abs(p.z - q.z) <=
-      Epsilon * max(1'f32, max(abs(p.z), abs(q.z))) and
-      abs(p.w - q.w) <=
-      Epsilon * max(1'f32, max(abs(p.w), abs(q.w)))
-
 func add*(q1, q2: Quaternion): Quaternion {.inline.} =
   ## Add two quaternions
   result = Quaternion(x: q1.x + q2.x, y: q1.y + q2.y, z: q1.z + q2.z,
@@ -1356,8 +1322,6 @@ func transform*(q: Quaternion; mat: Matrix): Quaternion {.inline.} =
   result.y = mat.m1 * q.x + mat.m5 * q.y + mat.m9 * q.z + mat.m13 * q.w
   result.z = mat.m2 * q.x + mat.m6 * q.y + mat.m10 * q.z + mat.m14 * q.w
   result.w = mat.m3 * q.x + mat.m7 * q.y + mat.m11 * q.z + mat.m15 * q.w
-
-template `=~`*[T: float32 | Vector2 | Vector3 | Quaternion](v1, v2: T): bool = equals(v1, v2)
 
 template `+`*[T: Vector2 | Vector3 | Quaternion | Matrix](v1, v2: T): T = add(v1, v2)
 template `+=`*[T: Vector2 | Vector3 | Quaternion | Matrix](v1: var T, v2: T) = v1 = add(v1, v2)
