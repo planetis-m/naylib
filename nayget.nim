@@ -93,7 +93,8 @@ proc buildDocs =
         &"--git.devel:main --git.commit:main --out:{doc} {src}")
 
 proc main =
-  var platform, cmd = ""
+  var platform = "platformdesktop"
+  var cmd = ""
   var wayland = false
   for kind, key, val in getopt():
     case kind
@@ -102,10 +103,16 @@ proc main =
     of cmdLongOption, cmdShortOption:
       case normalize(key)
       of "help", "h": writeHelp()
-      of "platform", "p": platform = val
+      of "platform", "p": platform = normalize(val)
       of "wayland": wayland = true
       else: writeHelp()
     of cmdEnd: assert false # cannot happen
+  case platform
+  of "platformdesktop": platform = "PLATFORM_DESKTOP"
+  of "platformrpi": platform = "PLATFORM_RPI"
+  of "platformdrm": platform = "PLATFORM_DRM"
+  of "platformandroid": platform = "PLATFORM_ANDROID"
+  else: writeHelp()
   case cmd
   of "build": buildLatestRaylib(platform, wayland)
   of "wrap": wrapLatestRaylib()

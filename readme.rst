@@ -20,13 +20,13 @@ Using nimble:
 .. code-block::
 
   nimble install naylib
-  nayget build --platform:PLATFORM_DESKTOP
+  nayget build
 
 or without, git clone this repo and then:
 
 .. code-block::
 
-  nim r nayget build --platform:PLATFORM_DESKTOP
+  nim r nayget build
 
 Official raylib `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_
 
