@@ -33,6 +33,14 @@ Official raylib `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`
 Usage Tips
 ==========
 
+Creating a new project
+----------------------
+
+TODO
+
+When compiling a new program don't forget to specify the target platform with ``--define:PlatformDesktop``.
+Other available values are ``PlatformRpi``, ``PlatformDrm``, ``PlatformAndroid``.
+
 How to call closeWindow
 -----------------------
 
