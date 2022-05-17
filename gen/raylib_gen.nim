@@ -10,7 +10,15 @@ from unicode import Rune
 import os
 const cinclude = currentSourcePath().parentDir / "cinclude"
 {.passC: "-I" & cinclude.}
-{.passL: cinclude / "libraylib.a" & " -lGL -lm -lpthread -ldl -lrt -lX11 -DPLATFORM_DESKTOP".}
+{.passL: cinclude / "libraylib.a".}
+when defined(linux):
+  {.passL: "-lGL -lm -lpthread -ldl -lrt -lX11 -DPLATFORM_DESKTOP".}
+elif defined(windows):
+  {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm -DPLATFORM_DESKTOP".}
+elif defined(macosx):
+  {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo -DPLATFORM_DESKTOP".}
+elif defined(bsd):
+  {.passL: "-lGL -lpthread -lX11 -DPLATFORM_DESKTOP".}
 
 const
   RaylibVersion* = "4.1-dev"
@@ -408,7 +416,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         scope:
           for fld in items(obj.fields):
             spaces
-            var (name, pat) = transFieldName(fld.name)
+            var name = fld.name
             ident name
             let isPrivate = (obj.name, name) notin
                 {"Wave": "frameCount", "Sound": "frameCount", "Music": "frameCount"} and
