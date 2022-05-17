@@ -15,6 +15,15 @@ See the accompanying examples `repo <https://github.com/planetis-m/raylib-exampl
 Installation
 ============
 
+Using nimble:
+
+.. code-block::
+
+  nimble install naylib
+  nayget build
+
+or without, git clone this repo and then:
+
 .. code-block::
 
   nim r nayget build
