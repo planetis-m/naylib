@@ -1,19 +1,29 @@
 from unicode import Rune
 import os
 const cinclude = currentSourcePath().parentDir / "cinclude"
-const platform {.strdefine.} = "PLATFORM_DESKTOP"
 {.passC: "-I" & cinclude.}
 {.passL: cinclude / "libraylib.a".}
-{.passL: "-D" & platform.}
-when platform == "PLATFORM_DESKTOP":
+when defined(PlatformDesktop):
+  {.passC: "-DPLATFORM_DESKTOP".}
   when defined(linux):
-    {.passL: "-lGL -lm -lpthread -ldl -lrt -lX11".}
+    when defined(Wayland): {.passC: "-D_GLFW_WAYLAND".}
+    else: {.passL: "-lX11".}
+    {.passL: "-lGL -lm -lpthread -ldl -lrt".}
   elif defined(windows):
     {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
   elif defined(macosx):
     {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo".}
   elif defined(bsd):
     {.passL: "-lGL -lpthread -lX11".}
+elif defined(PlatformRpi):
+  {.passC: "-DPLATFORM_RPI".}
+  {.passL: "-lbrcmGLESv2 -lbrcmEGL -lpthread -lrt -lm -lbcm_host -ldl".}
+elif defined(PlatformDrm):
+  {.passC: "-DPLATFORM_DRM -DEGL_NO_X11".}
+  {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl".}
+elif defined(PlatformAndroid):
+  {.passC: "-DPLATFORM_ANDROID".}
+  {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
 
 const
   RaylibVersion* = "4.1-dev"

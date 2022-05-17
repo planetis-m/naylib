@@ -1,14 +1,17 @@
-import std / [os, strformat, osproc]
+import std / [os, strformat, osproc, parseopt, strutils]
 
 const
   RayLatestCommit = "4eb3d8857f1a8377f2cfa6e804183512cde5973e"
 
   Usage = """
-Usage: nayget command
+Usage: nayget command --option
 Commands:
-  build    -- build the raylib C static library
-  wrap     -- produce the raylib nim wrapper
-  docs     -- generate documentation
+  build        -- build the raylib C static library
+  wrap         -- produce the raylib nim wrapper
+  docs         -- generate documentation
+Options:
+  --platform:x -- one of PlatformDesktop, PlatformRpi, PlatformDrm, PlatformAndroid
+  --wayland    -- use wayland display
 """
 
 proc writeHelp() =
@@ -45,12 +48,13 @@ proc fetchLatestRaylib =
     exec("git fetch")
     exec("git checkout " & RayLatestCommit)
 
-proc buildLatestRaylib =
+proc buildLatestRaylib(platform: string) =
   fetchLatestRaylib()
   withDir(rayDir / "src"):
     echo "Building raylib static library..."
-    exec("make clean")
-    exec("make PLATFORM=PLATFORM_DESKTOP -j4")
+    let exe = when defined(windows): "mingw32-make" else: "make"
+    exec(exe & " clean")
+    exec(exe & &" PLATFORM={platform} -j4")
     echo "Copying to C include directory"
     discard existsOrCreateDir(inclDir)
     copyFileToDir("libraylib.a", inclDir)
@@ -89,10 +93,21 @@ proc buildDocs =
         &"--git.devel:main --git.commit:main --out:{doc} {src}")
 
 proc main =
-  if os.paramCount() != 1: writeHelp()
-  let cmd = paramStr(1)
+  var platform, cmd = ""
+  var wayland = false
+  for kind, key, val in getopt():
+    case kind
+    of cmdArgument:
+      cmd = key
+    of cmdLongOption, cmdShortOption:
+      case normalize(key)
+      of "help", "h": writeHelp()
+      of "platform", "p": platform = val
+      of "wayland": wayland = true
+      else: writeHelp()
+    of cmdEnd: assert false # cannot happen
   case cmd
-  of "build": buildLatestRaylib()
+  of "build": buildLatestRaylib(platform)
   of "wrap": wrapLatestRaylib()
   of "docs": buildDocs()
   else: writeHelp()
