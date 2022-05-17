@@ -5,7 +5,7 @@ author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
 bin         = @["nayget"]
-installExt  = @["nim"]
+installExt  = @["nim","json"]
 
 # Deps
 
