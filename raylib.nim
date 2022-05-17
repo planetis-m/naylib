@@ -9,6 +9,7 @@ when defined(PlatformDesktop):
     {.passL: "-lGL -lm -lpthread -ldl -lrt".}
   elif defined(windows):
     {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
+    when defined(release): {.passL: "-Wl,--subsystem,windows".}
   elif defined(macosx):
     {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo".}
   elif defined(bsd):
