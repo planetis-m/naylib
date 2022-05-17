@@ -5,15 +5,14 @@ const cinclude = currentSourcePath().parentDir / "cinclude"
 {.passL: cinclude / "libraylib.a".}
 when defined(PlatformDesktop):
   when defined(linux):
-    when defined(Wayland): {.passC: "-D_GLFW_WAYLAND".}
-    else: {.passL: "-lX11".}
+    when not defined(Wayland): {.passL: "-lX11".}
     {.passL: "-lGL -lm -lpthread -ldl -lrt".}
   elif defined(windows):
     {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
   elif defined(macosx):
     {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo".}
   elif defined(bsd):
-    {.passL: "-lGL -lpthread -lX11".}
+    {.passL: "-lGL -lpthread -lX11 -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor".}
 elif defined(PlatformRpi):
   {.passL: "-lbrcmGLESv2 -lbrcmEGL -lpthread -lrt -lm -lbcm_host -ldl".}
 elif defined(PlatformDrm):

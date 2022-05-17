@@ -12,25 +12,21 @@ const cinclude = currentSourcePath().parentDir / "cinclude"
 {.passC: "-I" & cinclude.}
 {.passL: cinclude / "libraylib.a".}
 when defined(PlatformDesktop):
-  {.passC: "-DPLATFORM_DESKTOP".}
   when defined(linux):
-    when defined(Wayland): {.passC: "-D_GLFW_WAYLAND".}
-    else: {.passL: "-lX11".}
+    when not defined(Wayland): {.passL: "-lX11".}
     {.passL: "-lGL -lm -lpthread -ldl -lrt".}
   elif defined(windows):
     {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
   elif defined(macosx):
     {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo".}
   elif defined(bsd):
-    {.passL: "-lGL -lpthread -lX11".}
+    {.passL: "-lGL -lpthread -lX11 -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor".}
 elif defined(PlatformRpi):
-  {.passC: "-DPLATFORM_RPI".}
   {.passL: "-lbrcmGLESv2 -lbrcmEGL -lpthread -lrt -lm -lbcm_host -ldl".}
 elif defined(PlatformDrm):
-  {.passC: "-DPLATFORM_DRM -DEGL_NO_X11".}
+  {.passC: "-DEGL_NO_X11".}
   {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl".}
 elif defined(PlatformAndroid):
-  {.passC: "-DPLATFORM_ANDROID".}
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
 
 const

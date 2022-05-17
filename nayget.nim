@@ -48,13 +48,13 @@ proc fetchLatestRaylib =
     exec("git fetch")
     exec("git checkout " & RayLatestCommit)
 
-proc buildLatestRaylib(platform: string) =
+proc buildLatestRaylib(platform: string, wayland: bool) =
   fetchLatestRaylib()
   withDir(rayDir / "src"):
     echo "Building raylib static library..."
     let exe = when defined(windows): "mingw32-make" else: "make"
     exec(exe & " clean")
-    exec(exe & &" PLATFORM={platform} -j4")
+    exec(exe & &" PLATFORM={platform} USE_WAYLAND_DISPLAY={toUpperAscii($wayland)} -j4")
     echo "Copying to C include directory"
     discard existsOrCreateDir(inclDir)
     copyFileToDir("libraylib.a", inclDir)
@@ -107,7 +107,7 @@ proc main =
       else: writeHelp()
     of cmdEnd: assert false # cannot happen
   case cmd
-  of "build": buildLatestRaylib(platform)
+  of "build": buildLatestRaylib(platform, wayland)
   of "wrap": wrapLatestRaylib()
   of "docs": buildDocs()
   else: writeHelp()
