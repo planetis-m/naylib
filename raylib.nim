@@ -5,6 +5,7 @@ const cinclude = currentSourcePath().parentDir / "cinclude"
 {.passL: cinclude / "libraylib.a".}
 when defined(PlatformDesktop):
   when defined(linux):
+    {.passC: "-D_DEFAULT_SOURCE".}
     when not defined(Wayland): {.passL: "-lX11".}
     {.passL: "-lGL -lm -lpthread -ldl -lrt".}
   elif defined(windows):

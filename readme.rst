@@ -48,7 +48,7 @@ Types are wrapped with Nim's destructors but ``closeWindow`` must be called at t
 This might create a conflict with variables that are destroyed after the last statement in your program.
 It can easily be avoided with one of the following ways:
 
-- Using defer or try/finally
+- Using defer (not available at the top level) or try/finally
 
 .. code-block:: nim
 

@@ -10,8 +10,8 @@ Commands:
   wrap         -- produce the raylib nim wrapper
   docs         -- generate documentation
 Options:
-  --platform:x -- one of PlatformDesktop, PlatformRpi, PlatformDrm, PlatformAndroid
-  --wayland    -- use wayland display
+  --platform:x -- one of Desktop, RPi, DRM, Android
+  --wayland    -- use Wayland display
 """
 
 proc writeHelp() =
@@ -93,7 +93,7 @@ proc buildDocs =
         &"--git.devel:main --git.commit:main --out:{doc} {src}")
 
 proc main =
-  var platform = "platformdesktop"
+  var platform = "desktop"
   var cmd = ""
   var wayland = false
   for kind, key, val in getopt():
@@ -108,10 +108,10 @@ proc main =
       else: writeHelp()
     of cmdEnd: assert false # cannot happen
   case platform
-  of "platformdesktop": platform = "PLATFORM_DESKTOP"
-  of "platformrpi": platform = "PLATFORM_RPI"
-  of "platformdrm": platform = "PLATFORM_DRM"
-  of "platformandroid": platform = "PLATFORM_ANDROID"
+  of "desktop": platform = "PLATFORM_DESKTOP"
+  of "rpi": platform = "PLATFORM_RPI"
+  of "drm": platform = "PLATFORM_DRM"
+  of "android": platform = "PLATFORM_ANDROID"
   else: writeHelp()
   case cmd
   of "build": buildLatestRaylib(platform, wayland)
