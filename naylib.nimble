@@ -1,11 +1,9 @@
 # Package
 
-version     = "1.3.4"
+version     = "1.4.0"
 author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
-bin         = @["nayget"]
-installExt  = @["nim","json","a","h"]
 
 # Deps
 
