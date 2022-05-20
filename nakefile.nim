@@ -4,13 +4,11 @@ const
   RayLatestCommit = "4eb3d8857f1a8377f2cfa6e804183512cde5973e"
 
 const
-  rayDir = "dist/raylib"
-  inclDir = "include"
-  apiDir = "api"
-  docsDir = "docs"
-
-let
-  pkgDir = getAppDir()
+  pkgDir = currentSourcePath().parentDir.quoteShell
+  rayDir = pkgDir / "dist/raylib"
+  inclDir = pkgDir / "include"
+  apiDir = pkgDir / "api"
+  docsDir = pkgDir / "docs"
 
 proc fetchLatestRaylib =
   if not dirExists(rayDir):
@@ -46,7 +44,7 @@ task "buildAndroid", "Build the raylib library for the Android platform":
 # The rest are meant for developers only!
 proc generateWrapper =
   let script = "raylib_gen.nim"
-  withDir("tools"):
+  withDir(pkgDir / "tools"):
     var exe = script.changeFileExt(ExeExt)
     direSilentShell "Building raylib2nim tool...",
         "nim c --mm:arc --panics:on -d:release -d:emiLenient", script
@@ -67,9 +65,9 @@ task "wrap", "Produce the raylib nim wrapper":
 
 task "docs", "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
-  withDir("src"):
+  withDir(pkgDir / "src"):
     for src in items(["raymath", "raylib"]):
-      let doc = pkgDir / docsDir / src.addFileExt(".html")
+      let doc = docsDir / src.addFileExt(".html")
       direSilentShell(&"Generating the docs for {src}...",
           "nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:",
           doc, src)
