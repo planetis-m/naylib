@@ -15,15 +15,14 @@ proc fetchLatestRaylib =
     direSilentShell "Cloning raysan/raylib...",
         "git clone --depth 50 https://github.com/raysan5/raylib.git", rayDir
   withDir(rayDir):
-    direSilentShell "Fetching latest commit...", "git fetch"
-    direSilentShell "", "git checkout", RayLatestCommit
+    direSilentShell "Fetching latest commit...", "git fetch && git checkout", RayLatestCommit
 
 proc buildLatestRaylib(platform: string) =
   fetchLatestRaylib()
   withDir(rayDir / "src"):
-    const make = when defined(windows): "mingw32-make" else: "make"
-    direSilentShell "Building raylib static library...", make, "clean"
-    direSilentShell "", make, "PLATFORM=" & platform, "-j4"
+    const exe = when defined(windows): "mingw32-make" else: "make"
+    direSilentShell "Building raylib static library...", exe, "clean &&",
+        exe, "PLATFORM=" & platform, "-j4"
     echo "Copying to C include directory..."
     discard existsOrCreateDir(inclDir)
     copyFileToDir("libraylib.a", inclDir)
@@ -43,21 +42,21 @@ task "buildAndroid", "Build the raylib library for the Android platform":
 
 # The rest are meant for developers only!
 proc generateWrapper =
-  let script = "raylib_gen.nim"
+  let src = "raylib_gen.nim"
   withDir(pkgDir / "tools"):
-    var exe = script.changeFileExt(ExeExt)
+    var exe = src.changeFileExt(ExeExt)
     direSilentShell "Building raylib2nim tool...",
-        "nim c --mm:arc --panics:on -d:release -d:emiLenient", script
+        "nim c --mm:arc --panics:on -d:release -d:emiLenient", src
     normalizeExe(exe)
     direSilentShell "Generating raylib Nim wrapper...", exe
 
 task "wrap", "Produce the raylib nim wrapper":
-  let parser = "raylib_parser.c"
+  let src = "raylib_parser.c"
   let header = rayDir / "src/raylib.h"
   fetchLatestRaylib()
   withDir(rayDir / "parser"):
-    var exe = parser.changeFileExt(ExeExt)
-    direSilentShell "Building raylib API parser...", "cc", parser, "-o", exe
+    var exe = src.changeFileExt(ExeExt)
+    direSilentShell "Building raylib API parser...", "cc", src, "-o", exe
     normalizeExe(exe)
     direSilentShell "Generating API JSON file...",
         exe, "-f JSON", "-d RLAPI", "-i", header, "-o", apiDir / "raylib_api.json"
