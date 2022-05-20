@@ -8,9 +8,9 @@ const
   raylibHeader = """
 from unicode import Rune
 import os
-const cinclude = currentSourcePath().parentDir / "cinclude"
-{.passC: "-I" & cinclude.}
-{.passL: cinclude / "libraylib.a".}
+const inclDir = currentSourcePath().parentDir /../ "include"
+{.passC: "-I" & inclDir.}
+{.passL: inclDir / "libraylib.a".}
 when defined(PlatformDesktop):
   when defined(linux):
     {.passC: "-D_DEFAULT_SOURCE".}

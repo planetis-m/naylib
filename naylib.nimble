@@ -1,9 +1,10 @@
 # Package
 
-version     = "1.4.0"
+version     = "1.4.1"
 author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
+srcDir      = "src"
 
 # Deps
 

@@ -5,7 +5,7 @@ const
 
 const
   rayDir = "dist/raylib"
-  inclDir = "cinclude"
+  inclDir = "include"
   apiDir = "api"
   docsDir = "docs"
 
@@ -64,8 +64,9 @@ task "wrap", "Produce the raylib nim wrapper":
 
 task "docs", "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
-  for src in items(["raymath", "raylib"]):
-    let doc = docsDir / src.addFileExt(".html")
-    direSilentShell(&"Generating the docs for {src}...",
-        "nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:",
-        doc, src)
+  withDir("src"):
+    for src in items(["raymath", "raylib"]):
+      let doc = docsDir / src.addFileExt(".html")
+      direSilentShell(&"Generating the docs for {src}...",
+          "nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:",
+          doc, src)
