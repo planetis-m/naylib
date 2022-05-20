@@ -9,6 +9,9 @@ const
   apiDir = "api"
   docsDir = "docs"
 
+let
+  pkgDir = getAppDir()
+
 proc fetchLatestRaylib =
   if not dirExists(rayDir):
     direSilentShell "Cloning raysan/raylib...",
@@ -66,7 +69,7 @@ task "docs", "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
   withDir("src"):
     for src in items(["raymath", "raylib"]):
-      let doc = docsDir / src.addFileExt(".html")
+      let doc = pkgDir / docsDir / src.addFileExt(".html")
       direSilentShell(&"Generating the docs for {src}...",
           "nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:",
           doc, src)
