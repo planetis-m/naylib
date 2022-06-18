@@ -638,7 +638,7 @@ type
     scale*: array[2, float32] ## VR distortion scale
     scaleIn*: array[2, float32] ## VR distortion scale in
 
-  FilePathList* {.header: "raylib.h", bycopy.} = object ## File path list
+  FilePathList {.header: "raylib.h", bycopy.} = object ## File path list
     capacity: uint32 ## Filepaths max entries
     count: uint32 ## Filepaths entries count
     paths: cstringArray ## Filepaths entries
@@ -924,10 +924,8 @@ proc exportDataAsCode*(data: cstring, size: uint32, fileName: cstring): bool {.i
   ## Export data to code (.h), returns true on success
 proc isFileDropped*(): bool {.importc: "IsFileDropped".}
   ## Check if a file has been dropped into window
-proc loadDroppedFiles*(): FilePathList {.importc: "LoadDroppedFiles".}
-  ## Load dropped filepaths
-proc unloadDroppedFiles*(files: FilePathList) {.importc: "UnloadDroppedFiles".}
-  ## Unload dropped filepaths
+proc loadDroppedFilesPriv(): FilePathList {.importc: "LoadDroppedFiles".}
+proc unloadDroppedFilesPriv(files: FilePathList) {.importc: "UnloadDroppedFiles".}
 proc saveStorageValue*(position: uint32, value: int32): bool {.importc: "SaveStorageValue".}
   ## Save integer value to storage file (to defined position), returns true on success
 proc loadStorageValue*(position: uint32): int32 {.importc: "LoadStorageValue".}
@@ -1651,10 +1649,6 @@ proc `=destroy`*(x: var Music) =
   if x.stream.buffer != nil: unloadMusicStream(x)
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 
-#proc `=destroy`*(x: var FilePathList) =
-  #if x.paths != nil: unloadDroppedFiles(x)
-#proc `=copy`*(dest: var FilePathList; source: FilePathList) {.error.}
-
 type
   CSeq*[T] = object
     len: int
@@ -1727,6 +1721,12 @@ proc getMonitorName*(monitor: int32): string {.inline.} =
 proc getClipboardText*(): string {.inline.} =
   ## Get clipboard text content
   result = $getClipboardTextPriv()
+
+proc getDroppedFiles*(): seq[string] =
+  ## Get dropped files names
+  let dropfiles = loadDroppedFilesPriv()
+  result = cstringArrayToSeq(dropfiles.paths, dropfiles.count.int)
+  unloadDroppedFilesPriv(dropfiles) # Clear internal buffers
 
 proc getGamepadName*(gamepad: int32): string {.inline.} =
   ## Get gamepad internal name id
@@ -2328,9 +2328,3 @@ proc `[]=`*(x: var ModelAnimationFramePoses; i, j: int, val: Transform) =
   checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
   checkArrayAccess(ModelAnimation(x).framePoses[i], j, ModelAnimation(x).boneCount)
   ModelAnimation(x).framePoses[i][j] = val
-
-proc len*(x: FilePathList): int = int x.count
-
-proc `[]`*(x: FilePathList, i: int): string =
-  checkArrayAccess(x.paths, i, int x.count)
-  result = $x.paths[i]

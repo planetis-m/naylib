@@ -323,9 +323,3 @@ proc `[]=`*(x: var ModelAnimationFramePoses; i, j: int, val: Transform) =
   checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
   checkArrayAccess(ModelAnimation(x).framePoses[i], j, ModelAnimation(x).boneCount)
   ModelAnimation(x).framePoses[i][j] = val
-
-proc len*(x: FilePathList): int = int x.count
-
-proc `[]`*(x: FilePathList, i: int): string =
-  checkArrayAccess(x.paths, i, int x.count)
-  result = $x.paths[i]

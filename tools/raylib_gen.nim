@@ -374,7 +374,9 @@ const
     "DrawMeshInstanced",
     "LoadWaveFromMemory",
     "LoadMusicStreamFromMemory",
-    "DrawTextCodepoints"
+    "DrawTextCodepoints",
+    "UnloadDroppedFiles",
+    "LoadDroppedFiles"
   ]
 
 proc getReplacement(x, y: string, replacements: openarray[(string, string, string)]): string =
@@ -424,7 +426,9 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
       for obj in items(t.structs):
         spaces
         ident obj.name
-        lit "* {.header: \"raylib.h\", bycopy.} = object"
+        if obj.name == "FilePathList":
+          lit " {.header: \"raylib.h\", bycopy.} = object"
+        else: lit "* {.header: \"raylib.h\", bycopy.} = object"
         doc obj
         scope:
           for fld in items(obj.fields):
