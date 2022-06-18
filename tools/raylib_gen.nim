@@ -24,10 +24,10 @@ when defined(PlatformDesktop):
   elif defined(bsd):
     {.passL: "-lGL -lpthread -lX11 -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor".}
 elif defined(PlatformRpi):
-  {.passL: "-lbrcmGLESv2 -lbrcmEGL -lpthread -lrt -lm -lbcm_host -ldl".}
+  {.passL: "-lbrcmGLESv2 -lbrcmEGL -lpthread -lrt -lm -lbcm_host -ldl -latomic".}
 elif defined(PlatformDrm):
   {.passC: "-DEGL_NO_X11".}
-  {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl".}
+  {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl -latomic".}
 elif defined(PlatformAndroid):
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
 
@@ -452,8 +452,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
                 ("Material", "maps", "ptr array[MaxMaterialMaps, $1]"),
                 ("Shader", "locs", "ptr array[MaxShaderLocations, ShaderLocation]")
               ]
-              let tmp = getReplacement(obj.name, name, replacements)
-              if tmp != "": pat = tmp
+              let pat = getReplacement(obj.name, name, replacements)
               var baseKind = ""
               let kind = convertType(fld.`type`, pat, many, false, baseKind)
               var isArray = many and not endsWith(name.normalize, "data") and
@@ -569,7 +568,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
 
 const
   raylibApi = "../api/raylib_api.json"
-  outputname = "../raylib.nim"
+  outputname = "../src/raylib.nim"
 
 proc main =
   var t = parseApi(raylibApi)

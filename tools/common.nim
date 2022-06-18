@@ -117,7 +117,7 @@ proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var s
   var isUnsigned = false
   var isSizeT = false
   var isSigned = false
-  for (token, isSep) in tokenize(s):
+  for token, isSep in tokenize(s):
     if isSep: continue
     case token
     of "const":
@@ -139,7 +139,10 @@ proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var s
     of "int":
       discard
     else:
-      result = toNimType(token)
+      var len = 0
+      if scanf(token, "$w[$i]$.", result, len):
+        result = "array[" & $len & ", " & toNimType(result) & "]"
+      else: result = toNimType(token)
   if result == "": result = "int32"
   if isSizeT:
     result = "csize_t"
@@ -180,16 +183,6 @@ proc isPlural*(x: string): bool {.inline.} =
   let x = strip(x, false, chars = Digits)
   x.endsWith("es") or (not x.endsWith("ss") and x.endsWith('s')) or
       endsWith(x.normalize, "data")
-
-proc transFieldName*(x: string): (string, string) =
-  ## Returns the identifier name(s) and if an array is detected, separated.
-  var name: string
-  var len: int
-  # In C array definition follows the identifier, `name[4]`.
-  if scanf(x, "$w[$i]$.", name, len):
-    result = (name, &"array[{len}, $1]")
-  else:
-    result = (x, "")
 
 proc camelCaseAscii*(s: string): string =
   ## Converts snake_case to CamelCase

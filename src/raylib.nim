@@ -287,15 +287,15 @@ const
   ShaderAttribVec4* = ShaderAttributeDataType(3) ## Shader attribute type: vec4 (4 float)
 
   PixelformatUncompressedGrayscale* = PixelFormat(1) ## 8 bit per pixel (no alpha)
-  PixelformatUncompressedGrayAlpha* = PixelFormat(2) ## 8x2 bpp (2 channels)
+  PixelformatUncompressedGrayAlpha* = PixelFormat(2) ## 8*2 bpp (2 channels)
   PixelformatUncompressedR5g6b5* = PixelFormat(3) ## 16 bpp
   PixelformatUncompressedR8g8b8* = PixelFormat(4) ## 24 bpp
   PixelformatUncompressedR5g5b5a1* = PixelFormat(5) ## 16 bpp (1 bit alpha)
   PixelformatUncompressedR4g4b4a4* = PixelFormat(6) ## 16 bpp (4 bit alpha)
   PixelformatUncompressedR8g8b8a8* = PixelFormat(7) ## 32 bpp
   PixelformatUncompressedR32* = PixelFormat(8) ## 32 bpp (1 channel - float)
-  PixelformatUncompressedR32g32b32* = PixelFormat(9) ## 32x3 bpp (3 channels - float)
-  PixelformatUncompressedR32g32b32a32* = PixelFormat(10) ## 32x4 bpp (4 channels - float)
+  PixelformatUncompressedR32g32b32* = PixelFormat(9) ## 32*3 bpp (3 channels - float)
+  PixelformatUncompressedR32g32b32a32* = PixelFormat(10) ## 32*4 bpp (4 channels - float)
   PixelformatCompressedDxt1Rgb* = PixelFormat(11) ## 4 bpp (no alpha)
   PixelformatCompressedDxt1Rgba* = PixelFormat(12) ## 4 bpp (1 bit alpha)
   PixelformatCompressedDxt3Rgba* = PixelFormat(13) ## 8 bpp
