@@ -13,7 +13,7 @@ proc getClipboardText*(): string {.inline.} =
 proc getDroppedFiles*(): seq[string] =
   ## Get dropped files names
   let dropfiles = loadDroppedFilesPriv()
-  result = cstringArrayToSeq(dropfiles.paths, dropfiles.count.int)
+  result = cstringArrayToSeq(dropfiles.paths, dropfiles.count)
   unloadDroppedFilesPriv(dropfiles) # Clear internal buffers
 
 proc getGamepadName*(gamepad: int32): string {.inline.} =

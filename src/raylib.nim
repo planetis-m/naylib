@@ -436,22 +436,10 @@ type
     w*: float32 ## Vector w component
 
   Matrix* {.header: "raylib.h", bycopy.} = object ## Matrix, 4x4 components, column major, OpenGL style, right handed
-    m0*: float32 ## Matrix first row (4 components)
-    m4*: float32 ## Matrix first row (4 components)
-    m8*: float32 ## Matrix first row (4 components)
-    m12*: float32 ## Matrix first row (4 components)
-    m1*: float32 ## Matrix second row (4 components)
-    m5*: float32 ## Matrix second row (4 components)
-    m9*: float32 ## Matrix second row (4 components)
-    m13*: float32 ## Matrix second row (4 components)
-    m2*: float32 ## Matrix third row (4 components)
-    m6*: float32 ## Matrix third row (4 components)
-    m10*: float32 ## Matrix third row (4 components)
-    m14*: float32 ## Matrix third row (4 components)
-    m3*: float32 ## Matrix fourth row (4 components)
-    m7*: float32 ## Matrix fourth row (4 components)
-    m11*: float32 ## Matrix fourth row (4 components)
-    m15*: float32 ## Matrix fourth row (4 components)
+    m0*, m4*, m8*, m12*: float32 ## Matrix first row (4 components)
+    m1*, m5*, m9*, m13*: float32 ## Matrix second row (4 components)
+    m2*, m6*, m10*, m14*: float32 ## Matrix third row (4 components)
+    m3*, m7*, m11*, m15*: float32 ## Matrix fourth row (4 components)
 
   Color* {.header: "raylib.h", bycopy.} = object ## Color, 4 components, R8G8B8A8 (32bit)
     r*: uint8 ## Color red value
@@ -1725,7 +1713,7 @@ proc getClipboardText*(): string {.inline.} =
 proc getDroppedFiles*(): seq[string] =
   ## Get dropped files names
   let dropfiles = loadDroppedFilesPriv()
-  result = cstringArrayToSeq(dropfiles.paths, dropfiles.count.int)
+  result = cstringArrayToSeq(dropfiles.paths, dropfiles.count)
   unloadDroppedFilesPriv(dropfiles) # Clear internal buffers
 
 proc getGamepadName*(gamepad: int32): string {.inline.} =

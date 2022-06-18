@@ -432,9 +432,13 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         doc obj
         scope:
           for fld in items(obj.fields):
-            spaces
+            if obj.name != "Matrix" or fld.name notin ["m4", "m8", "m12", "m5", "m9", "m13", "m6", "m10", "m14", "m7", "m11", "m15"]:
+              spaces
             var name = fld.name
             ident name
+            if obj.name == "Matrix" and fld.name in ["m0", "m4", "m8", "m1", "m5", "m9", "m2", "m6", "m10", "m3", "m7", "m11"]:
+              lit "*, "
+              continue
             let isPrivate = (obj.name, name) notin
                 {"Wave": "frameCount", "Sound": "frameCount", "Music": "frameCount"} and
                 name.endsWith("Count") or (obj.name, name) in {"AudioStream": "buffer",
