@@ -63,6 +63,7 @@ const
   FlagWindowAlwaysRun* = ConfigFlags(256) ## Set to allow windows running while minimized
   FlagWindowTransparent* = ConfigFlags(16) ## Set to allow transparent framebuffer
   FlagWindowHighdpi* = ConfigFlags(8192) ## Set to support HighDPI
+  FlagWindowMousePassthrough* = ConfigFlags(16384) ## Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
   FlagMsaa4xHint* = ConfigFlags(32) ## Set to try enabling MSAA 4X
   FlagInterlacedHint* = ConfigFlags(65536) ## Set to try enabling interlaced video format (for V3D)
 
@@ -336,7 +337,7 @@ const
   BlendMultiplied* = BlendMode(2) ## Blend textures multiplying colors
   BlendAddColors* = BlendMode(3) ## Blend textures adding colors (alternative)
   BlendSubtractColors* = BlendMode(4) ## Blend textures subtracting colors (alternative)
-  BlendAlphaPremul* = BlendMode(5) ## Blend premultiplied textures considering alpha
+  BlendAlphaPremultiply* = BlendMode(5) ## Blend premultiplied textures considering alpha
   BlendCustom* = BlendMode(6) ## Blend textures using custom src/dst factors (use rlSetBlendMode())
 
   GestureNone* = Gesture(0) ## No gesture
@@ -637,6 +638,11 @@ type
     scale*: array[2, float32] ## VR distortion scale
     scaleIn*: array[2, float32] ## VR distortion scale in
 
+  FilePathList* {.header: "raylib.h", bycopy.} = object ## File path list
+    capacity: uint32 ## Filepaths max entries
+    count: uint32 ## Filepaths entries count
+    paths: cstringArray ## Filepaths entries
+
   Quaternion* = Vector4 ## Quaternion, 4 components (Vector4 alias)
   Texture2D* = Texture ## Texture2D, same as Texture
   TextureCubemap* = Texture ## TextureCubemap, same as Texture
@@ -780,9 +786,9 @@ proc getCurrentMonitor*(): int32 {.importc: "GetCurrentMonitor".}
 proc getMonitorPosition*(monitor: int32): Vector2 {.importc: "GetMonitorPosition".}
   ## Get specified monitor position
 proc getMonitorWidth*(monitor: int32): int32 {.importc: "GetMonitorWidth".}
-  ## Get specified monitor width (max available by monitor)
+  ## Get specified monitor width (current video mode used by monitor)
 proc getMonitorHeight*(monitor: int32): int32 {.importc: "GetMonitorHeight".}
-  ## Get specified monitor height (max available by monitor)
+  ## Get specified monitor height (current video mode used by monitor)
 proc getMonitorPhysicalWidth*(monitor: int32): int32 {.importc: "GetMonitorPhysicalWidth".}
   ## Get specified monitor physical width in millimetres
 proc getMonitorPhysicalHeight*(monitor: int32): int32 {.importc: "GetMonitorPhysicalHeight".}
@@ -797,12 +803,16 @@ proc getMonitorNamePriv(monitor: int32): cstring {.importc: "GetMonitorName".}
 proc setClipboardText*(text: cstring) {.importc: "SetClipboardText".}
   ## Set clipboard text content
 proc getClipboardTextPriv(): cstring {.importc: "GetClipboardText".}
+proc enableEventWaiting*() {.importc: "EnableEventWaiting".}
+  ## Enable waiting for events on EndDrawing(), no automatic event polling
+proc disableEventWaiting*() {.importc: "DisableEventWaiting".}
+  ## Disable waiting for events on EndDrawing(), automatic events polling
 proc swapScreenBuffer*() {.importc: "SwapScreenBuffer".}
   ## Swap back buffer with front buffer (screen drawing)
 proc pollInputEvents*() {.importc: "PollInputEvents".}
   ## Register all input events
-proc waitTime*(ms: float32) {.importc: "WaitTime".}
-  ## Wait for some milliseconds (halt program execution)
+proc waitTime*(seconds: float) {.importc: "WaitTime".}
+  ## Wait for some time (halt program execution)
 proc showCursor*() {.importc: "ShowCursor".}
   ## Shows cursor
 proc hideCursor*() {.importc: "HideCursor".}
@@ -875,12 +885,12 @@ proc getCameraMatrix2D*(camera: Camera2D): Matrix {.importc: "GetCameraMatrix2D"
   ## Get camera 2d transform matrix
 proc getWorldToScreen*(position: Vector3, camera: Camera): Vector2 {.importc: "GetWorldToScreen".}
   ## Get the screen space position for a 3d world space position
+proc getScreenToWorld2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetScreenToWorld2D".}
+  ## Get the world space position for a 2d camera screen space position
 proc getWorldToScreenEx*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx".}
   ## Get size position for a 3d world space position
 proc getWorldToScreen2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetWorldToScreen2D".}
   ## Get the screen space position for a 2d camera world space position
-proc getScreenToWorld2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetScreenToWorld2D".}
-  ## Get the world space position for a 2d camera screen space position
 proc setTargetFPS*(fps: int32) {.importc: "SetTargetFPS".}
   ## Set target FPS (maximum)
 proc getFPS*(): int32 {.importc: "GetFPS".}
@@ -910,10 +920,14 @@ proc setLoadFileTextCallback*(callback: LoadFileTextCallback) {.importc: "SetLoa
   ## Set custom file text data loader
 proc setSaveFileTextCallback*(callback: SaveFileTextCallback) {.importc: "SetSaveFileTextCallback".}
   ## Set custom file text data saver
+proc exportDataAsCode*(data: cstring, size: uint32, fileName: cstring): bool {.importc: "ExportDataAsCode".}
+  ## Export data to code (.h), returns true on success
 proc isFileDropped*(): bool {.importc: "IsFileDropped".}
   ## Check if a file has been dropped into window
-proc getDroppedFilesPriv(count: ptr int32): cstringArray {.importc: "GetDroppedFiles".}
-proc clearDroppedFilesPriv() {.importc: "ClearDroppedFiles".}
+proc loadDroppedFiles*(): FilePathList {.importc: "LoadDroppedFiles".}
+  ## Load dropped filepaths
+proc unloadDroppedFiles*(files: FilePathList) {.importc: "UnloadDroppedFiles".}
+  ## Unload dropped filepaths
 proc saveStorageValue*(position: uint32, value: int32): bool {.importc: "SaveStorageValue".}
   ## Save integer value to storage file (to defined position), returns true on success
 proc loadStorageValue*(position: uint32): int32 {.importc: "LoadStorageValue".}
@@ -974,7 +988,9 @@ proc setMouseOffset*(offsetX: int32, offsetY: int32) {.importc: "SetMouseOffset"
 proc setMouseScale*(scaleX: float32, scaleY: float32) {.importc: "SetMouseScale".}
   ## Set mouse scaling
 proc getMouseWheelMove*(): float32 {.importc: "GetMouseWheelMove".}
-  ## Get mouse wheel movement Y
+  ## Get mouse wheel movement for X or Y, whichever is larger
+proc getMouseWheelMoveV*(): Vector2 {.importc: "GetMouseWheelMoveV".}
+  ## Get mouse wheel movement for both X and Y
 proc setMouseCursor*(cursor: MouseCursor) {.importc: "SetMouseCursor".}
   ## Set mouse cursor
 proc getTouchX*(): int32 {.importc: "GetTouchX".}
@@ -1635,6 +1651,10 @@ proc `=destroy`*(x: var Music) =
   if x.stream.buffer != nil: unloadMusicStream(x)
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 
+#proc `=destroy`*(x: var FilePathList) =
+  #if x.paths != nil: unloadDroppedFiles(x)
+#proc `=copy`*(dest: var FilePathList; source: FilePathList) {.error.}
+
 type
   CSeq*[T] = object
     len: int
@@ -1707,13 +1727,6 @@ proc getMonitorName*(monitor: int32): string {.inline.} =
 proc getClipboardText*(): string {.inline.} =
   ## Get clipboard text content
   result = $getClipboardTextPriv()
-
-proc getDroppedFiles*(): seq[string] =
-  ## Get dropped files names
-  var count = 0'i32
-  let dropfiles = getDroppedFilesPriv(count.addr)
-  result = cstringArrayToSeq(dropfiles, count)
-  clearDroppedFilesPriv() # Clear internal buffers
 
 proc getGamepadName*(gamepad: int32): string {.inline.} =
   ## Get gamepad internal name id
@@ -2315,3 +2328,9 @@ proc `[]=`*(x: var ModelAnimationFramePoses; i, j: int, val: Transform) =
   checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
   checkArrayAccess(ModelAnimation(x).framePoses[i], j, ModelAnimation(x).boneCount)
   ModelAnimation(x).framePoses[i][j] = val
+
+proc len*(x: FilePathList): int = int x.count
+
+proc `[]`*(x: FilePathList, i: int): string =
+  checkArrayAccess(x.paths, i, int x.count)
+  result = $x.paths[i]

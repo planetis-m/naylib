@@ -317,6 +317,10 @@ const
     "ClearDirectoryFiles",
     "ChangeDirectory",
     "GetFileModTime",
+    "IsPathFile",
+    "UnloadDirectoryFiles",
+    "LoadDirectoryFiles",
+    "LoadDirectoryFilesEx",
     # Compression/Encoding functionality
     "CompressData",
     "DecompressData",
@@ -338,8 +342,6 @@ const
   privateFuncs = [
     "GetMonitorName",
     "GetClipboardText",
-    "GetDroppedFiles",
-    "ClearDroppedFiles",
     "GetGamepadName",
     "UpdateTexture",
     "UpdateTextureRec",
@@ -456,8 +458,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
               var baseKind = ""
               let kind = convertType(fld.`type`, pat, many, false, baseKind)
               var isArray = many and not endsWith(name.normalize, "data") and
-                  (obj.name, name) notin {"Material": "params", "VrDeviceInfo": "lensDistortionValues"}
-              if isPrivate or isArray:
+                  (obj.name, name) notin {"Material": "params", "VrDeviceInfo": "lensDistortionValues", "FilePathList": "paths"}
+              if isPrivate or isArray or obj.name == "FilePathList":
                 lit ": "
               else:
                 lit "*: "

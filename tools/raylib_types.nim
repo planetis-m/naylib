@@ -59,6 +59,10 @@ proc `=destroy`*(x: var Music) =
   if x.stream.buffer != nil: unloadMusicStream(x)
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 
+proc `=destroy`*(x: var FilePathList) =
+  if x.paths != nil: unloadDroppedFiles(x)
+proc `=copy`*(dest: var FilePathList; source: FilePathList) {.error.}
+
 type
   CSeq*[T] = object
     len: int

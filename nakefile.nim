@@ -1,7 +1,7 @@
 import nake, std/strformat
 
 const
-  RayLatestCommit = "4eb3d8857f1a8377f2cfa6e804183512cde5973e"
+  RayLatestCommit = "8d9c45a08a85ca8f81e10c2ff1d685faee9610d5"
 
 const
   pkgDir = currentSourcePath().parentDir.quoteShell
@@ -13,7 +13,7 @@ const
 proc fetchLatestRaylib =
   if not dirExists(rayDir):
     direSilentShell "Cloning raysan/raylib...",
-        "git clone --depth 50 https://github.com/raysan5/raylib.git", rayDir
+        "git clone --depth 1 https://github.com/raysan5/raylib.git", rayDir
   withDir(rayDir):
     direSilentShell "Fetching latest commit...", "git fetch; git checkout", RayLatestCommit
 

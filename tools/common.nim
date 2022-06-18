@@ -32,7 +32,7 @@ proc isKeyword*(s: string): bool {.inline.} =
 ## The type definitions are used by the deserializer to process the file.
 type
   TopLevel* = object
-    defines*: seq[DefineInfo]
+    #defines*: seq[DefineInfo]
     structs*: seq[StructInfo]
     callbacks*: seq[FunctionInfo]
     aliases*: seq[AliasInfo]
