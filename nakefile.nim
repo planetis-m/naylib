@@ -15,7 +15,7 @@ proc fetchLatestRaylib =
     direSilentShell "Cloning raysan/raylib...",
         "git clone --depth 50 https://github.com/raysan5/raylib.git", rayDir
   withDir(rayDir):
-    direSilentShell "Fetching latest commit...", "git fetch && git checkout", RayLatestCommit
+    direSilentShell "Fetching latest commit...", "git fetch; git checkout", RayLatestCommit
 
 proc buildLatestRaylib(platform: string) =
   fetchLatestRaylib()

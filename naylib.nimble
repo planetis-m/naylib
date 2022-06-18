@@ -5,6 +5,7 @@ author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
 srcDir      = "src"
+#skipDirs    = @["api", "tools"]
 
 # Deps
 
