@@ -914,10 +914,6 @@ proc isFileDropped*(): bool {.importc: "IsFileDropped".}
   ## Check if a file has been dropped into window
 proc loadDroppedFilesPriv(): FilePathList {.importc: "LoadDroppedFiles".}
 proc unloadDroppedFilesPriv(files: FilePathList) {.importc: "UnloadDroppedFiles".}
-proc saveStorageValue*(position: uint32, value: int32): bool {.importc: "SaveStorageValue".}
-  ## Save integer value to storage file (to defined position), returns true on success
-proc loadStorageValue*(position: uint32): int32 {.importc: "LoadStorageValue".}
-  ## Load integer value from storage file (from defined position)
 proc isKeyPressed*(key: KeyboardKey): bool {.importc: "IsKeyPressed".}
   ## Check if a key has been pressed once
 proc isKeyDown*(key: KeyboardKey): bool {.importc: "IsKeyDown".}
@@ -1404,8 +1400,6 @@ proc getMeshBoundingBox*(mesh: Mesh): BoundingBox {.importc: "GetMeshBoundingBox
   ## Compute mesh bounding box limits
 proc genMeshTangents*(mesh: var Mesh) {.importc: "GenMeshTangents".}
   ## Compute mesh tangents
-proc genMeshBinormals*(mesh: var Mesh) {.importc: "GenMeshBinormals".}
-  ## Compute mesh binormals
 proc genMeshPoly*(sides: int32, radius: float32): Mesh {.importc: "GenMeshPoly".}
   ## Generate polygonal mesh
 proc genMeshPlane*(width: float32, length: float32, resX: int32, resZ: int32): Mesh {.importc: "GenMeshPlane".}

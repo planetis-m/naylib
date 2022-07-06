@@ -3997,6 +3997,17 @@
       ]
     },
     {
+      "name": "OpenURL",
+      "description": "Open URL with default system browser (if available)",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "const char *",
+          "name": "url"
+        }
+      ]
+    },
+    {
       "name": "SetTraceLogCallback",
       "description": "Set custom trace log",
       "returnType": "void",
@@ -4429,43 +4440,6 @@
         {
           "type": "int *",
           "name": "outputSize"
-        }
-      ]
-    },
-    {
-      "name": "SaveStorageValue",
-      "description": "Save integer value to storage file (to defined position), returns true on success",
-      "returnType": "bool",
-      "params": [
-        {
-          "type": "unsigned int",
-          "name": "position"
-        },
-        {
-          "type": "int",
-          "name": "value"
-        }
-      ]
-    },
-    {
-      "name": "LoadStorageValue",
-      "description": "Load integer value from storage file (from defined position)",
-      "returnType": "int",
-      "params": [
-        {
-          "type": "unsigned int",
-          "name": "position"
-        }
-      ]
-    },
-    {
-      "name": "OpenURL",
-      "description": "Open URL with default system browser (if available)",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "const char *",
-          "name": "url"
         }
       ]
     },
@@ -9462,17 +9436,6 @@
     {
       "name": "GenMeshTangents",
       "description": "Compute mesh tangents",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "Mesh *",
-          "name": "mesh"
-        }
-      ]
-    },
-    {
-      "name": "GenMeshBinormals",
-      "description": "Compute mesh binormals",
       "returnType": "void",
       "params": [
         {
