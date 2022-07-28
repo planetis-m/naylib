@@ -52,7 +52,7 @@ func clamp*(v, min, max: Vector2): Vector2 {.inline.} =
 
 func clampValue*(v: Vector2; min, max: float32): Vector2 {.inline.} =
   ## Clamp the magnitude of the vector between two min and max values
-  result = Vector2()
+  result = v
   var length = v.x * v.x + v.y * v.y
   if length > 0'f32:
     length = sqrt(length)
@@ -201,7 +201,7 @@ func clamp*(v, min, max: Vector3): Vector3 {.inline.} =
 
 func clampValue*(v: Vector3; min, max: float32): Vector3 {.inline.} =
   ## Clamp the magnitude of the vector between two values
-  result = Vector3()
+  result = v
   var length = v.x * v.x + v.y * v.y + v.z * v.z
   if length > 0'f32:
     length = sqrt(length)
@@ -370,6 +370,48 @@ func rotateByQuaternion*(v: Vector3; q: Quaternion): Vector3 {.inline.} =
       v.z * (-(2 * q.w * q.x) + 2 * q.y * q.z)
   result.z = v.x * (-(2 * q.w * q.y) + 2 * q.x * q.z) + v.y * (2 * q.w * q.x + 2 * q.y * q.z) +
       v.z * (q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z)
+
+proc rotateByAxisAngle*(v, axis: Vector3; angle: float32): Vector3 =
+  ## Rotates a vector around an axis
+  # Using Euler-Rodrigues Formula
+  # Ref.: https://en.wikipedia.org/w/index.php?title=Euler%E2%80%93Rodrigues_formula
+  result = v
+  var axis = axis
+  var angle = angle
+  # normalize(axis)
+  var length = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z)
+  if length == 0'f32:
+    length = 1'f32
+  let ilength = 1'f32 / length
+  axis.x = axis.x * ilength
+  axis.y = axis.y * ilength
+  axis.z = axis.z * ilength
+  angle = angle / 2'f32
+  var a = sin(angle)
+  var b = axis.x * a
+  var c = axis.y * a
+  var d = axis.z * a
+  a = cos(angle)
+  let w = Vector3(x: b, y: c, z: d)
+  # crossProduct(w, v)
+  var wv = Vector3(x: w.y * v.z - w.z * v.y, y: w.z * v.x - w.x * v.z, z: w.x * v.y - w.y * v.x)
+  # crossProduct(w, wv)
+  var wwv = Vector3(x: w.y * wv.z - w.z * wv.y, y: w.z * wv.x - w.x * wv.z, z: w.x * wv.y - w.y * wv.x)
+  # scale(wv, 2 * a)
+  a = a * 2
+  wv.x = wv.x * a
+  wv.y = wv.y * a
+  wv.z = wv.z * a
+  # scale(wwv, 2)
+  wwv.x = wwv.x * 2
+  wwv.y = wwv.y * 2
+  wwv.z = wwv.z * 2
+  result.x += wv.x
+  result.y += wv.y
+  result.z += wv.z
+  result.x += wwv.x
+  result.y += wwv.y
+  result.z += wwv.z
 
 func lerp*(v1, v2: Vector3; amount: float32): Vector3 {.inline.} =
   ## Calculate linear interpolation between two vectors
@@ -1154,12 +1196,12 @@ func fromVector3ToVector3*(`from`, to: Vector3): Quaternion {.inline.} =
   var cross = Vector3(x: `from`.y * to.z - `from`.z * to.y,
                            y: `from`.z * to.x - `from`.x * to.z,
                            z: `from`.x * to.y - `from`.y * to.x)
-  # Vector3CrossProduct(from, to)
+  # crossProduct(from, to)
   result.x = cross.x
   result.y = cross.y
   result.z = cross.z
   result.w = 1'f32 + cos2Theta
-  # QuaternionNormalize(q);
+  # normalize(q)
   # NOTE: Normalize to essentially nlerp the original and identity to 0.5
   var q = result
   var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
@@ -1174,24 +1216,44 @@ func fromVector3ToVector3*(`from`, to: Vector3): Quaternion {.inline.} =
 func fromMatrix*(mat: Matrix): Quaternion {.inline.} =
   ## Get a quaternion for a given rotation matrix
   result = Quaternion()
-  if (mat.m0 > mat.m5) and (mat.m0 > mat.m10):
-    let s = sqrt(1'f32 + mat.m0 - mat.m5 - mat.m10) * 2
-    result.x = 0.25'f32 * s
-    result.y = (mat.m4 + mat.m1) / s
-    result.z = (mat.m2 + mat.m8) / s
-    result.w = (mat.m9 - mat.m6) / s
-  elif mat.m5 > mat.m10:
-    let s = sqrt(1'f32 + mat.m5 - mat.m0 - mat.m10) * 2
-    result.x = (mat.m4 + mat.m1) / s
-    result.y = 0.25'f32 * s
-    result.z = (mat.m9 + mat.m6) / s
-    result.w = (mat.m2 - mat.m8) / s
-  else:
-    let s = sqrt(1'f32 + mat.m10 - mat.m0 - mat.m5) * 2
-    result.x = (mat.m2 + mat.m8) / s
-    result.y = (mat.m9 + mat.m6) / s
-    result.z = 0.25'f32 * s
-    result.w = (mat.m4 - mat.m1) / s
+  let fourWSquaredMinus1 = mat.m0 + mat.m5 + mat.m10
+  let fourXSquaredMinus1 = mat.m0 - mat.m5 - mat.m10
+  let fourYSquaredMinus1 = mat.m5 - mat.m0 - mat.m10
+  let fourZSquaredMinus1 = mat.m10 - mat.m0 - mat.m5
+  var biggestIndex: range[0..3] = 0
+  var fourBiggestSquaredMinus1 = fourWSquaredMinus1
+  if fourXSquaredMinus1 > fourBiggestSquaredMinus1:
+    fourBiggestSquaredMinus1 = fourXSquaredMinus1
+    biggestIndex = 1
+  if fourYSquaredMinus1 > fourBiggestSquaredMinus1:
+    fourBiggestSquaredMinus1 = fourYSquaredMinus1
+    biggestIndex = 2
+  if fourZSquaredMinus1 > fourBiggestSquaredMinus1:
+    fourBiggestSquaredMinus1 = fourZSquaredMinus1
+    biggestIndex = 3
+  var biggestVal = sqrt(fourBiggestSquaredMinus1 + 1'f32) * 0.5'f32
+  var mult = 0.25'f32 / biggestVal
+  case biggestIndex
+  of 0:
+    result.w = biggestVal
+    result.x = (mat.m6 - mat.m9) * mult
+    result.y = (mat.m8 - mat.m2) * mult
+    result.z = (mat.m1 - mat.m4) * mult
+  of 1:
+    result.x = biggestVal
+    result.w = (mat.m6 - mat.m9) * mult
+    result.y = (mat.m1 + mat.m4) * mult
+    result.z = (mat.m8 + mat.m2) * mult
+  of 2:
+    result.y = biggestVal
+    result.w = (mat.m8 - mat.m2) * mult
+    result.x = (mat.m1 + mat.m4) * mult
+    result.z = (mat.m6 + mat.m9) * mult
+  of 3:
+    result.z = biggestVal
+    result.w = (mat.m1 - mat.m4) * mult
+    result.x = (mat.m8 + mat.m2) * mult
+    result.y = (mat.m6 + mat.m9) * mult
 
 func toMatrix*(q: Quaternion): Matrix {.inline.} =
   ## Get a matrix for a given quaternion

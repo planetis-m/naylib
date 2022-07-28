@@ -13,6 +13,12 @@
       "description": ""
     },
     {
+      "name": "__declspec(x)",
+      "type": "MACRO",
+      "value": "__attribute__((x))",
+      "description": ""
+    },
+    {
       "name": "RLAPI",
       "type": "UNKNOWN",
       "value": "__declspec(dllexport)",
