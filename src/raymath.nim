@@ -812,7 +812,8 @@ func rotate*(axis: Vector3; angle: float32): Matrix {.inline.} =
   result.m15 = 1'f32
 
 func rotateX*(angle: float32): Matrix {.inline.} =
-  ## Get x-rotation matrix (angle in radians)
+  ## Get x-rotation matrix
+  ## NOTE: Angle must be provided in radians
   result = Matrix(m0: 1, m4: 0, m8: 0, m12: 0, m1: 0, m5: 1,
                           m9: 0, m13: 0, m2: 0, m6: 0, m10: 1, m14: 0,
                           m3: 0, m7: 0, m11: 0, m15: 1)
@@ -825,7 +826,8 @@ func rotateX*(angle: float32): Matrix {.inline.} =
   result.m10 = cosres
 
 func rotateY*(angle: float32): Matrix {.inline.} =
-  ## Get y-rotation matrix (angle in radians)
+  ## Get y-rotation matrix
+  ## NOTE: Angle must be provided in radians
   result = Matrix(m0: 1, m4: 0, m8: 0, m12: 0, m1: 0, m5: 1,
                           m9: 0, m13: 0, m2: 0, m6: 0, m10: 1, m14: 0,
                           m3: 0, m7: 0, m11: 0, m15: 1)
@@ -838,7 +840,8 @@ func rotateY*(angle: float32): Matrix {.inline.} =
   result.m10 = cosres
 
 func rotateZ*(angle: float32): Matrix {.inline.} =
-  ## Get z-rotation matrix (angle in radians)
+  ## Get z-rotation matrix
+  ## NOTE: Angle must be provided in radians
   result = Matrix(m0: 1, m4: 0, m8: 0, m12: 0, m1: 0, m5: 1,
                           m9: 0, m13: 0, m2: 0, m6: 0, m10: 1, m14: 0,
                           m3: 0, m7: 0, m11: 0, m15: 1)
@@ -850,18 +853,19 @@ func rotateZ*(angle: float32): Matrix {.inline.} =
   result.m4 = -sinres
   result.m5 = cosres
 
-func rotateXYZ*(ang: Vector3): Matrix {.inline.} =
-  ## Get xyz-rotation matrix (angles in radians)
+func rotateXYZ*(angle: Vector3): Matrix {.inline.} =
+  ## Get xyz-rotation matrix
+  ## NOTE: Angle must be provided in radians
   result = Matrix(m0: 1, m4: 0, m8: 0, m12: 0, m1: 0, m5: 1,
                           m9: 0, m13: 0, m2: 0, m6: 0, m10: 1, m14: 0,
                           m3: 0, m7: 0, m11: 0, m15: 1)
   # MatrixIdentity()
-  let cosz = cos(-ang.z)
-  let sinz = sin(-ang.z)
-  let cosy = cos(-ang.y)
-  let siny = sin(-ang.y)
-  let cosx = cos(-ang.x)
-  let sinx = sin(-ang.x)
+  let cosz = cos(-angle.z)
+  let sinz = sin(-angle.z)
+  let cosy = cos(-angle.y)
+  let siny = sin(-angle.y)
+  let cosx = cos(-angle.x)
+  let sinx = sin(-angle.x)
   result.m0 = cosz * cosy
   result.m1 = (cosz * siny * sinx) - (sinz * cosx)
   result.m2 = (cosz * siny * cosx) + (sinz * sinx)
@@ -872,15 +876,16 @@ func rotateXYZ*(ang: Vector3): Matrix {.inline.} =
   result.m9 = cosy * sinx
   result.m10 = cosy * cosx
 
-func rotateZYX*(ang: Vector3): Matrix {.inline.} =
-  ## Get zyx-rotation matrix (angles in radians)
+func rotateZYX*(angle: Vector3): Matrix {.inline.} =
+  ## Get zyx-rotation matrix
+  ## NOTE: Angle must be provided in radians
   result = Matrix()
-  let cz = cos(ang.z)
-  let sz = sin(ang.z)
-  let cy = cos(ang.y)
-  let sy = sin(ang.y)
-  let cx = cos(ang.x)
-  let sx = sin(ang.x)
+  let cz = cos(angle.z)
+  let sz = sin(angle.z)
+  let cy = cos(angle.y)
+  let sy = sin(angle.y)
+  let cx = cos(angle.x)
+  let sx = sin(angle.x)
   result.m0 = cz * cy
   result.m4 = cz * sy * sx - cx * sz
   result.m8 = sz * sx + cz * cx * sy
@@ -929,7 +934,7 @@ func frustum*(left, right, bottom, top, near, far: float): Matrix {.inline.} =
 
 func perspective*(fovy, aspect, near, far: float): Matrix {.inline.} =
   ## Get perspective projection matrix
-  ## NOTE: Angle should be provided in radians
+  ## NOTE: Fovy angle must be provided in radians
   result = Matrix()
   let top = near * tan(fovy * 0.5)
   let bottom = -top
@@ -1282,7 +1287,7 @@ func toMatrix*(q: Quaternion): Matrix {.inline.} =
 
 func fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
   ## Get rotation quaternion for an angle and axis
-  ## NOTE: angle must be provided in radians
+  ## NOTE: Angle must be provided in radians
   result = Quaternion(x: 0, y: 0, z: 0, w: 1)
   var angle = angle
   var axis = axis
