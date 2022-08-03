@@ -24,7 +24,7 @@ elif defined(PlatformAndroid):
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
 
 const
-  RaylibVersion* = "4.2-dev"
+  RaylibVersion* = "4.2"
 
 type
   ConfigFlags* = distinct int32 ## System/Window config flags

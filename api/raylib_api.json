@@ -9,7 +9,7 @@
     {
       "name": "RAYLIB_VERSION",
       "type": "STRING",
-      "value": "4.2-dev",
+      "value": "4.2",
       "description": ""
     },
     {
