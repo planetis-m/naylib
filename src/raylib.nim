@@ -1568,7 +1568,9 @@ proc setAudioStreamBufferSizeDefault*(size: int32) {.importc: "SetAudioStreamBuf
 proc setAudioStreamCallback*(stream: AudioStream, callback: AudioCallback) {.importc: "SetAudioStreamCallback".}
   ## Audio thread callback to request new data
 proc attachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "AttachAudioStreamProcessor".}
+  ## Attach audio stream processor to stream
 proc detachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "DetachAudioStreamProcessor".}
+  ## Detach audio stream processor from stream
 {.pop.}
 
 proc `=destroy`*(x: var Image) =

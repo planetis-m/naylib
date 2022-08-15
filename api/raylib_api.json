@@ -10685,7 +10685,7 @@
     },
     {
       "name": "AttachAudioStreamProcessor",
-      "description": "",
+      "description": "Attach audio stream processor to stream",
       "returnType": "void",
       "params": [
         {
@@ -10700,7 +10700,7 @@
     },
     {
       "name": "DetachAudioStreamProcessor",
-      "description": "",
+      "description": "Detach audio stream processor from stream",
       "returnType": "void",
       "params": [
         {
