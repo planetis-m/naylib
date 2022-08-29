@@ -17,12 +17,12 @@ proc fetchLatestRaylib =
   withDir(rayDir):
     direSilentShell "Fetching latest commit...", "git fetch; git checkout", RayLatestCommit
 
-proc buildLatestRaylib(platform: string) =
+proc buildLatestRaylib(platform: string, wayland = false) =
   fetchLatestRaylib()
   withDir(rayDir / "src"):
     const exe = when defined(windows): "mingw32-make" else: "make"
     direSilentShell "Building raylib static library...", exe, "clean &&",
-        exe, "PLATFORM=" & platform, "-j4"
+        exe, "PLATFORM=" & platform, "USE_WAYLAND_DISPLAY=" & toUpperAscii($wayland), "-j4"
     echo "Copying to C include directory..."
     discard existsOrCreateDir(inclDir)
     copyFileToDir("libraylib.a", inclDir)
