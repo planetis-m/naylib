@@ -15,13 +15,9 @@ See the accompanying examples `repo <https://github.com/planetis-m/raylib-exampl
 Installation
 ============
 
-Using nimble:
+.. warning::
 
-.. code-block::
-
-  nimble install naylib
-  cd $(nimble path naylib)
-  nake buildDesktop
+  It does not work with nimble. I am looking for a fix.
 
 or without, git clone this repo and then:
 

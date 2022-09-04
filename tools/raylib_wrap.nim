@@ -122,6 +122,9 @@ proc drawTriangleStrip*(points: openarray[Vector2]; color: Color) =
   ## Draw a triangle strip defined by points
   drawTriangleStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
+proc checkCollisionPointPoly*(point: Vector2, points: openarray[Vector2]): bool =
+  checkCollisionPointPolyPriv(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
+
 proc loadImageFromMemory*(fileType: string; fileData: openarray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
   result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),

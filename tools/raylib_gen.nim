@@ -365,6 +365,7 @@ const
     "DrawLineStrip",
     "DrawTriangleFan",
     "DrawTriangleStrip",
+    "CheckCollisionPointPoly",
     "LoadImageFromMemory",
     "DrawTexturePoly",
     "LoadFontEx",

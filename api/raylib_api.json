@@ -5996,6 +5996,25 @@
       ]
     },
     {
+      "name": "CheckCollisionPointPoly",
+      "description": "Check if point is within a polygon described by array of vertices",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "Vector2",
+          "name": "point"
+        },
+        {
+          "type": "Vector2 *",
+          "name": "points"
+        },
+        {
+          "type": "int",
+          "name": "pointCount"
+        }
+      ]
+    },
+    {
       "name": "CheckCollisionLines",
       "description": "Check the collision between two lines defined by two points each, returns collision point by reference",
       "returnType": "bool",

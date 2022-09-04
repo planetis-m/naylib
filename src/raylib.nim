@@ -1098,6 +1098,7 @@ proc checkCollisionPointCircle*(point: Vector2, center: Vector2, radius: float32
   ## Check if point is inside circle
 proc checkCollisionPointTriangle*(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): bool {.importc: "CheckCollisionPointTriangle".}
   ## Check if point is inside a triangle
+proc checkCollisionPointPolyPriv(point: Vector2, points: ptr UncheckedArray[Vector2], pointCount: int32): bool {.importc: "CheckCollisionPointPoly".}
 proc checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: var Vector2): bool {.importc: "CheckCollisionLines".}
   ## Check the collision between two lines defined by two points each, returns collision point by reference
 proc checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshold: int32): bool {.importc: "CheckCollisionPointLine".}
@@ -1817,6 +1818,9 @@ proc drawTriangleFan*(points: openarray[Vector2]; color: Color) =
 proc drawTriangleStrip*(points: openarray[Vector2]; color: Color) =
   ## Draw a triangle strip defined by points
   drawTriangleStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc checkCollisionPointPoly*(point: Vector2, points: openarray[Vector2]): bool =
+  checkCollisionPointPolyPriv(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
 
 proc loadImageFromMemory*(fileType: string; fileData: openarray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
