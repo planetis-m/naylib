@@ -17,9 +17,9 @@ Installation
 
 .. warning::
 
-  It does not work with nimble. I am looking for a fix.
+  Currently this package does not work when installed via nimble. Help is needed!
 
-or without, git clone this repo and then:
+or without nimble, clone this repo and then:
 
 .. code-block::
 
@@ -79,7 +79,7 @@ It can easily be avoided with one of the following ways:
   let game = initGame(800, 450, 60, flags(FlagMsaa4xHint, FlagWindowHighdpi), "example")
   let texture = loadTexture("resources/example.png")
 
-- Using a block
+- Using a block or a proc call
 
 .. code-block:: nim
 
