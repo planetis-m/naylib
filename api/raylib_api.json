@@ -3971,7 +3971,7 @@
       "returnType": "void *",
       "params": [
         {
-          "type": "int",
+          "type": "unsigned int",
           "name": "size"
         }
       ]
@@ -3986,7 +3986,7 @@
           "name": "ptr"
         },
         {
-          "type": "int",
+          "type": "unsigned int",
           "name": "size"
         }
       ]

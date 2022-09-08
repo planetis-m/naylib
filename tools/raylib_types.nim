@@ -1,4 +1,21 @@
 
+type
+  EmbeddedImage* = distinct Image
+  EmbeddedWave* = distinct Wave
+  EmbeddedFont* = distinct Font
+
+proc `=destroy`*(x: var EmbeddedImage) = discard
+proc `=copy`*(dest: var EmbeddedImage; source: EmbeddedImage) =
+  copyMem(addr dest, addr source, sizeof(Image))
+
+proc `=destroy`*(x: var EmbeddedWave) = discard
+proc `=copy`*(dest: var EmbeddedWave; source: EmbeddedWave) =
+  copyMem(addr dest, addr source, sizeof(Wave))
+
+proc `=destroy`*(x: var EmbeddedFont) = discard
+proc `=copy`*(dest: var EmbeddedFont; source: EmbeddedFont) =
+  copyMem(addr dest, addr source, sizeof(Font))
+
 proc `=destroy`*(x: var Image) =
   if x.data != nil: unloadImage(x)
 proc `=copy`*(dest: var Image; source: Image) =
@@ -74,7 +91,7 @@ proc `=copy`*[T](dest: var CSeq[T]; source: CSeq[T]) =
     wasMoved(dest)
     dest.len = source.len
     if dest.len > 0:
-      dest.data = cast[typeof(dest.data)](memAlloc(dest.len.int32))
+      dest.data = cast[typeof(dest.data)](memAlloc(dest.len.uint32))
       for i in 0..<dest.len: dest.data[i] = source.data[i]
 
 proc raiseIndexDefect(i, n: int) {.noinline, noreturn.} =

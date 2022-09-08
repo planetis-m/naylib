@@ -1,4 +1,10 @@
 
+proc toEmbedded*(data: openarray[byte], width, height: int32, format: PixelFormat): EmbeddedImage {.inline.} =
+  Image(data: addr data, width: width, height: height, mipmaps: 1, format: format).EmbeddedImage
+
+proc toEmbedded*(data: openarray[byte], frameCount, sampleRate, sampleSize, channels: uint32): EmbeddedWave {.inline.} =
+  Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).EmbeddedWave
+
 proc raiseResourceNotFound(filename: string) {.noinline, noreturn.} =
   raise newException(IOError, "Could not load resource from " & filename)
 
