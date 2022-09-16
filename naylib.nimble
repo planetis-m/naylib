@@ -38,11 +38,11 @@ proc buildLatestRaylib(platform: string, wayland = false) =
     const exe = when defined(windows): "mingw32-make" else: "make"
     # Building raylib static library...", exe, "clean &&",
     exec exe & " PLATFORM=" & platform & (if wayland: "USE_WAYLAND_DISPLAY=TRUE" else: "") & " -j4"
-  # Copying to C include directory...
-  if not dirExists inclDir:
-    mkDir inclDir
-  cpFile(rayDir & "/src/libraylib.a", inclDir & "/libraylib.a")
-  cpFile(rayDir & "/src/raylib.h", inclDir & "/raylib.h")
+    # Copying to C include directory...
+    if not dirExists inclDir:
+      mkDir inclDir
+    cpFile("libraylib.a", inclDir & "/libraylib.a")
+    cpFile("raylib.h", inclDir & "/raylib.h")
 
 task buildDesktop, "Build the raylib library for the Desktop platform":
   buildLatestRaylib("PLATFORM_DESKTOP")
