@@ -15,8 +15,8 @@ See the accompanying examples `repo <https://github.com/planetis-m/raylib-exampl
 Installation
 ============
 
-Install with `nimble install naylib` then cd in the installed directory,
-i.e: `cd $(nimble path naylib)` and run:
+Install with ``nimble install naylib`` then cd in the installed directory,
+i.e: ``cd $(nimble path naylib)`` and run:
 
 .. code-block::
 
