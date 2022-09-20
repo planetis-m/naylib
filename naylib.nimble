@@ -17,7 +17,7 @@ requires "nim >= 1.6.0"
 const
   RayLatestCommit = "4311ffc9e13c4de3c519ce9b1afd2f52fc618914"
 
-const
+let
   pkgDir = thisDir()
   rayDir = pkgDir & "/dist/raylib"
   inclDir = pkgDir & "/include"
@@ -36,8 +36,9 @@ proc buildLatestRaylib(platform: string, wayland = false) =
   fetchLatestRaylib()
   withDir(rayDir & "/src"):
     const exe = when defined(windows): "mingw32-make" else: "make"
-    # Building raylib static library...", exe, "clean &&",
-    exec exe & " PLATFORM=" & platform & (if wayland: "USE_WAYLAND_DISPLAY=TRUE" else: "") & " -j4"
+    # Building raylib static library...
+    exec exe & " clean && " & exe & " PLATFORM=" & platform &
+        (if wayland: "USE_WAYLAND_DISPLAY=TRUE" else: "") & " -j4"
     # Copying to C include directory...
     if not dirExists inclDir:
       mkDir inclDir
