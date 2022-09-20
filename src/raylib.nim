@@ -1134,6 +1134,8 @@ proc genImageChecked*(width: int32, height: int32, checksX: int32, checksY: int3
   ## Generate image: checked
 proc genImageWhiteNoise*(width: int32, height: int32, factor: float32): Image {.importc: "GenImageWhiteNoise".}
   ## Generate image: white noise
+proc genImagePerlinNoise*(width: int32, height: int32, offsetX: int32, offsetY: int32, scale: float32): Image {.importc: "GenImagePerlinNoise".}
+  ## Generate image: perlin noise
 proc genImageCellular*(width: int32, height: int32, tileSize: int32): Image {.importc: "GenImageCellular".}
   ## Generate image: cellular algorithm, bigger tileSize means bigger cells
 proc imageCopy*(image: Image): Image {.importc: "ImageCopy".}
@@ -1210,6 +1212,10 @@ proc imageDrawCircle*(dst: var Image, centerX: int32, centerY: int32, radius: in
   ## Draw circle within an image
 proc imageDrawCircleV*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV".}
   ## Draw circle within an image (Vector version)
+proc imageDrawCircleLines*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircleLines".}
+  ## Draw circle outline within an image
+proc imageDrawCircleLinesV*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleLinesV".}
+  ## Draw circle outline within an image (Vector version)
 proc imageDrawRectangle*(dst: var Image, posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "ImageDrawRectangle".}
   ## Draw rectangle within an image
 proc imageDrawRectangleV*(dst: var Image, position: Vector2, size: Vector2, color: Color) {.importc: "ImageDrawRectangleV".}

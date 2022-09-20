@@ -15,7 +15,7 @@ requires "nim >= 1.6.0"
 #foreignDep "wayland-protocols"
 
 const
-  RayLatestCommit = "eaa0b9102b3751617b9856d3a60eed26354c4140"
+  RayLatestCommit = "4311ffc9e13c4de3c519ce9b1afd2f52fc618914"
 
 const
   pkgDir = thisDir()

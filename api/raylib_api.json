@@ -6351,6 +6351,33 @@
       ]
     },
     {
+      "name": "GenImagePerlinNoise",
+      "description": "Generate image: perlin noise",
+      "returnType": "Image",
+      "params": [
+        {
+          "type": "int",
+          "name": "width"
+        },
+        {
+          "type": "int",
+          "name": "height"
+        },
+        {
+          "type": "int",
+          "name": "offsetX"
+        },
+        {
+          "type": "int",
+          "name": "offsetY"
+        },
+        {
+          "type": "float",
+          "name": "scale"
+        }
+      ]
+    },
+    {
       "name": "GenImageCellular",
       "description": "Generate image: cellular algorithm, bigger tileSize means bigger cells",
       "returnType": "Image",
@@ -7010,6 +7037,56 @@
     {
       "name": "ImageDrawCircleV",
       "description": "Draw circle within an image (Vector version)",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Image *",
+          "name": "dst"
+        },
+        {
+          "type": "Vector2",
+          "name": "center"
+        },
+        {
+          "type": "int",
+          "name": "radius"
+        },
+        {
+          "type": "Color",
+          "name": "color"
+        }
+      ]
+    },
+    {
+      "name": "ImageDrawCircleLines",
+      "description": "Draw circle outline within an image",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Image *",
+          "name": "dst"
+        },
+        {
+          "type": "int",
+          "name": "centerX"
+        },
+        {
+          "type": "int",
+          "name": "centerY"
+        },
+        {
+          "type": "int",
+          "name": "radius"
+        },
+        {
+          "type": "Color",
+          "name": "color"
+        }
+      ]
+    },
+    {
+      "name": "ImageDrawCircleLinesV",
+      "description": "Draw circle outline within an image (Vector version)",
       "returnType": "void",
       "params": [
         {
