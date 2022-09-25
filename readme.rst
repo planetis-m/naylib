@@ -127,9 +127,9 @@ Text strings management functions
 raylib function    Native alternative                         notes
 ================== ========================================== ================
 TextCopy           assignment
-TextIsEqual        ``==``
+TextIsEqual        `==`
 TextLength         len
-TextFormat         strutils.format, strformat
+TextFormat         strutils.format, strformat.`&`
 TextSubtext        substr
 TextReplace        strutils.replace, strutils.multiReplace
 TextInsert         insert
@@ -160,7 +160,7 @@ LoadUTF8                toUTF8
 UnloadUTF8              None                  Not needed
 ======================= ===================== ==============================
 
-See also proc ``graphemeLen``,  ``runeSubStr`` and everything else provided by std/unicode.
+See also proc ``graphemeLen``, ``runeSubStr`` and everything else provided by std/unicode.
 
 Compression/Encoding functionality
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
