@@ -84,9 +84,8 @@ task wrap, "Produce the raylib nim wrapper":
 
 task docs, "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
-  withDir(pkgDir & "/src"):
-    for src in items(["raymath", "raylib"]):
-      let doc = docsDir & "/" & src & ".html"
-      # Generating the docs for...
-      exec "nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:" &
-          doc & " " & src
+  for src in items(["raymath", "raylib"]):
+    let doc = docsDir & "/" & src & ".html"
+    # Generating the docs for...
+    exec "nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:" &
+        doc & " " & pkgDir & "/src/" & src
