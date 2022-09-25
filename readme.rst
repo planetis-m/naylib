@@ -94,25 +94,25 @@ Bellow is a table that will help you convert those functions to native Nim funct
 Text strings management functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+------------------+------------------------------------------+------------------------+
-| raylib function  | Native alternative                       | notes                  |
-+==================+==========================================+========================+
-| TextCopy         | assignment                               |                        |
-| TextIsEqual      | `==`                                     |                        |
-| TextLength       | len                                      |                        |
-| TextFormat       | strutils.format, strformat               |                        |
-| TextSubtext      | substr                                   |                        |
-| TextReplace      | strutils.replace, strutils.multiReplace  |                        |
-| TextInsert       | insert                                   |                        |
-| TextJoin         | strutils.join                            |                        |
-| TextSplit        | strutils.split                           |                        |
-| TextAppend       | add                                      |                        |
-| TextFindIndex    | strutils.find                            |                        |
-| TextToUpper      | strutils.toUpperAscii, unicode.toUpper   |                        |
-| TextToLower      | strutils.toLowerAscii, unicode.toLower   |                        |
-| TextToPascal     | -                                        | Use a custom function  |
-| TextToInteger    | strutils.parseInt                        |                        |
-+------------------+------------------------------------------+------------------------+
+ ================== ========================================== ========================
+  raylib function    Native alternative                         notes
+ ================== ========================================== ========================
+  TextCopy           assignment
+  TextIsEqual        `==`
+  TextLength         len
+  TextFormat         strutils.format, strformat
+  TextSubtext        substr
+  TextReplace        strutils.replace, strutils.multiReplace
+  TextInsert         insert
+  TextJoin           strutils.join
+  TextSplit          strutils.split
+  TextAppend         add
+  TextFindIndex      strutils.find
+  TextToUpper        strutils.toUpperAscii, unicode.toUpper
+  TextToLower        strutils.toLowerAscii, unicode.toLower
+  TextToPascal       -                                          Use a custom function
+  TextToInteger      strutils.parseInt
+ ================== ========================================== ========================
 
 Misc
 ~~~~
