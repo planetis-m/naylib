@@ -94,9 +94,9 @@ Bellow is a table that will help you convert those functions to native Nim funct
 Files management functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-========================== ================================ ==============================
+========================== ================================ =================
 raylib function            Native alternative               notes
-========================== ================================ ==============================
+========================== ================================ =================
 LoadFileData               readFile                         Cast to seq[byte]
 UnloadFileData             None                             Not needed
 SaveFileData               writeFile
@@ -118,7 +118,7 @@ GetDirectoryFiles          os.walkDir, os.walkFiles
 ChangeDirectory            os.setCurrentDir
 GetFileModTime             os.getLastModificationTime
 IsPathFile                 os.getFileInfo
-========================== ================================ ==============================
+========================== ================================ =================
 
 Text strings management functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -183,4 +183,31 @@ raylib function    Native alternative             notes
 GetRandomValue     random.rand
 SetRandomSeed      random.randomize
 OpenURL            browsers.openDefaultBrowser
+PI (C macros)      math.PI
+DEG2RAD            math.degToRad
+RAD2DEG            math.radToDeg
 ================== ============================== ========
+
+Other changes and improvements
+------------------------------
+
+- ``LoadDroppedFiles``, ``UnloadDroppedFiles`` added in raylib 4.2 were removed and
+replaced by the older ``getDroppedFiles`` which is more efficient and simpler to wrap, as
+it doesn't require as many copies.
+
+- ``ConfigFlags`` and ``Gesture`` are used in raylib as bitflags. There is a convenient
+``flags`` proc that returns ``Flags[T]``.
+
+- ``CSeq`` type is added which encapsulates memory managed by raylib for zero copies.
+Provided are index operators, len, and seq (``@``) and ``toOpenArray`` converters.
+
+- ``toEmbedded`` procs that return ``EmbeddedImage``, ``EmbeddedWave``, that are not
+destroyed, for embedding files directly to source code. Need to use ``exportImageAsCode``
+and ``exportWaveAsCode`` first and translate the output to Nim with a tool such as c2nim
+or manually. See `others/embedded_files_loading` example.
+
+- ``ShaderV`` and ``Pixel`` concepts allow plugging-in foreign data types to procs that
+use them.
+
+- Data types that hold pointers to arrays of structs, most notably ``Mesh``, are properly
+encapsulated with index operators and a safe and idiomatic API.
