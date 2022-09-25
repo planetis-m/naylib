@@ -107,7 +107,7 @@ FileExists                 os.fileExists
 DirectoryExists            os.dirExists
 IsFileExtension            os.searchExtPos                  Need to write an expression
 GetFileExtension           os.splitFile, os.searchExtPos
-GetFileName                os.extractFilenam
+GetFileName                os.extractFilename
 GetFileLength              os.getFileSize
 GetFileNameWithoutExt      os.splitFile
 GetDirectoryPath           os.splitFile
@@ -115,17 +115,17 @@ GetPrevDirectoryPath       os.parentDir, os.parentDirs
 GetWorkingDirectory        os.getCurrentDir
 GetApplicationDirectory    os.getAppDir
 GetDirectoryFiles          os.walkDir, os.walkFiles
-ChangeDirectory            os.getCurrentDir
+ChangeDirectory            os.setCurrentDir
 GetFileModTime             os.getLastModificationTime
-IsPathFile                 None?
+IsPathFile                 os.getFileInfo
 ========================== ================================ ==============================
 
 Text strings management functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-================== ========================================== ========================
+================== ========================================== ================
 raylib function    Native alternative                         notes
-================== ========================================== ========================
+================== ========================================== ================
 TextCopy           assignment
 TextIsEqual        ``==``
 TextLength         len
@@ -139,9 +139,9 @@ TextAppend         add
 TextFindIndex      strutils.find
 TextToUpper        strutils.toUpperAscii, unicode.toUpper
 TextToLower        strutils.toLowerAscii, unicode.toLower
-TextToPascal       None                                       Use a custom function
+TextToPascal       None                                       Write a function
 TextToInteger      strutils.parseInt
-================== ========================================== ========================
+================== ========================================== ================
 
 Text codepoints management functions (unicode characters)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
