@@ -151,8 +151,8 @@ raylib function         Native alternative    notes
 ======================= ===================== ==============================
 LoadCodepoints          toRunes
 UnloadCodepoints        None                  Not needed
-GetCodepoint            runeAt                Returns 0xFFFD on error
-GetCodepointCount       size
+GetCodepoint            runeAt, size          Returns 0xFFFD on error
+GetCodepointCount       runeLen
 GetCodepointPrevious    None                  toRunes and iterate in reverse
 GetCodepointNext        None                  Use runes iterator
 CodepointToUTF8         toUTF8
