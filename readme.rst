@@ -199,7 +199,7 @@ Other changes and improvements
   ``flags`` proc that returns ``Flags[T]``.
 
 - ``CSeq`` type is added which encapsulates memory managed by raylib for zero copies.
-  Provided are index operators, len, and seq (``@``) and ``toOpenArray`` converters.
+  Provided are index operators, len, and ``@`` (seq) and ``toOpenArray`` converters.
 
 - ``toEmbedded`` procs that return ``EmbeddedImage``, ``EmbeddedWave``, that are not
   destroyed, for embedding files directly to source code. Need to use ``exportImageAsCode``
@@ -207,7 +207,10 @@ Other changes and improvements
   or manually. See `others/embedded_files_loading` example.
 
 - ``ShaderV`` and ``Pixel`` concepts allow plugging-in foreign data types to procs that
-  use them.
+  use them (``setShaderValue``, ``updateTexture``, etc).
 
 - Data types that hold pointers to arrays of structs, most notably ``Mesh``, are properly
-  encapsulated with index operators and a safe and idiomatic API.
+  encapsulated with index operators for a safe and idiomatic API.
+
+- Every function that is supposed to use a specific C enum type, is properly typechecked.
+  So wrong code like ``isKeyPressed(MouseButtonLeft)`` doesn't compile.
