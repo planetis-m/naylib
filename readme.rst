@@ -85,11 +85,40 @@ It can easily be avoided with one of the following ways:
     let texture = loadTexture("resources/example.png")
   closeWindow()
 
-Raylib functions to Nim std
----------------------------
+Raylib functions to Nim
+-----------------------
 
 Some raylib functions are not wrapped as the API is deemed too C-like and better alternatives exist in the Nim stdlib.
 Bellow is a table that will help you convert those functions to native Nim functions.
+
+Files management functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+========================== ================================ ==============================
+raylib function            Native alternative               notes
+========================== ================================ ==============================
+LoadFileData               readFile                         Cast to seq[byte]
+UnloadFileData             None                             Not needed
+SaveFileData               writeFile
+LoadFileText               readFile
+UnloadFileText             None                             Not needed
+SaveFileText               writeFile
+FileExists                 os.fileExists
+DirectoryExists            os.dirExists
+IsFileExtension            os.searchExtPos                  Need to write an expression
+GetFileExtension           os.splitFile, os.searchExtPos
+GetFileName                os.extractFilenam
+GetFileLength              os.getFileSize
+GetFileNameWithoutExt      os.splitFile
+GetDirectoryPath           os.splitFile
+GetPrevDirectoryPath       os.parentDir, os.parentDirs
+GetWorkingDirectory        os.getCurrentDir
+GetApplicationDirectory    os.getAppDir
+GetDirectoryFiles          os.walkDir, os.walkFiles
+ChangeDirectory            os.getCurrentDir
+GetFileModTime             os.getLastModificationTime
+IsPathFile                 None?
+========================== ================================ ==============================
 
 Text strings management functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -98,7 +127,7 @@ Text strings management functions
 raylib function    Native alternative                         notes
 ================== ========================================== ========================
 TextCopy           assignment
-TextIsEqual        `==`
+TextIsEqual        ``==``
 TextLength         len
 TextFormat         strutils.format, strformat
 TextSubtext        substr
@@ -110,9 +139,40 @@ TextAppend         add
 TextFindIndex      strutils.find
 TextToUpper        strutils.toUpperAscii, unicode.toUpper
 TextToLower        strutils.toLowerAscii, unicode.toLower
-TextToPascal       -                                          Use a custom function
+TextToPascal       None                                       Use a custom function
 TextToInteger      strutils.parseInt
 ================== ========================================== ========================
+
+Text codepoints management functions (unicode characters)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+======================= ===================== =======================
+raylib function         Native alternative    notes
+======================= ===================== =======================
+LoadCodepoints          toRunes
+UnloadCodepoints        None                  Not needed
+GetCodepoint            runeAt                Returns 0xFFFD on error
+GetCodepointCount       size
+GetCodepointPrevious    None
+GetCodepointNext        None
+CodepointToUTF8         toUTF8
+LoadUTF8                toUTF8
+UnloadUTF8              None                  Not needed
+======================= ===================== =======================
+
+See also proc ``graphemeLen`` and everything else provided by std/unicode.
+
+Compression/Encoding functionality
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+================== ===================== ================
+raylib function    Native alternative    notes
+================== ===================== ================
+CompressData       zippy.compress        External package
+DecompressData     zippy.decompress
+EncodeDataBase64   base64.encode
+DecodeDataBase64   base64.decode
+================== ===================== ================
 
 Misc
 ~~~~

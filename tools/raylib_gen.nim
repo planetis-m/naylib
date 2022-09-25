@@ -314,7 +314,6 @@ const
     "GetWorkingDirectory",
     "GetApplicationDirectory",
     "GetDirectoryFiles",
-    "ClearDirectoryFiles",
     "ChangeDirectory",
     "GetFileModTime",
     "IsPathFile",
