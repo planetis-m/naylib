@@ -5,7 +5,11 @@
 This repo contains raylib wrapper generated using raylib_parser.
 It focuses on an idiomatic Nim API.
 
-The Docs are `here <https://planetis-m.github.io/naylib/raylib.html>`_
+Documentation
+=============
+
+- `raylib <https://planetis-m.github.io/naylib/raylib.html>`_
+- `raymath <https://planetis-m.github.io/naylib/raymath.html>`_
 
 Examples
 ========
