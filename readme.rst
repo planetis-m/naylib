@@ -153,8 +153,8 @@ LoadCodepoints          toRunes
 UnloadCodepoints        None                  Not needed
 GetCodepoint            runeAt                Returns 0xFFFD on error
 GetCodepointCount       size
-GetCodepointPrevious    None
-GetCodepointNext        None
+GetCodepointPrevious    None                  Use runes iterator
+GetCodepointNext        None                  Same
 CodepointToUTF8         toUTF8
 LoadUTF8                toUTF8
 UnloadUTF8              None                  Not needed
