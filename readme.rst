@@ -105,7 +105,7 @@ UnloadFileText             None                             Not needed
 SaveFileText               writeFile
 FileExists                 os.fileExists
 DirectoryExists            os.dirExists
-IsFileExtension            os.searchExtPos                  Need to write an expression
+IsFileExtension            strutils.endsWith
 GetFileExtension           os.splitFile, os.searchExtPos
 GetFileName                os.extractFilename
 GetFileLength              os.getFileSize
@@ -160,7 +160,7 @@ LoadUTF8                toUTF8
 UnloadUTF8              None                  Not needed
 ======================= ===================== ==============================
 
-See also proc ``graphemeLen`` and everything else provided by std/unicode.
+See also proc ``graphemeLen``,  ``runeSubStr`` and everything else provided by std/unicode.
 
 Compression/Encoding functionality
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
