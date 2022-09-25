@@ -210,7 +210,7 @@ Other changes and improvements
   use them (``setShaderValue``, ``updateTexture``, etc).
 
 - Data types that hold pointers to arrays of structs, most notably ``Mesh``, are properly
-  encapsulated with index operators for a safe and idiomatic API.
+  encapsulated and offer index operators for a safe and idiomatic API.
 
-- Every function that is supposed to use a specific C enum type, is properly typechecked.
-  So wrong code like ``isKeyPressed(MouseButtonLeft)`` doesn't compile.
+- Every function argument or struct field, that is supposed to use a specific C enum type,
+  is properly typechecked. So wrong code like ``isKeyPressed(MouseButtonLeft)`` doesn't compile.
