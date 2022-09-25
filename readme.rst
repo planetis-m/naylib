@@ -214,3 +214,5 @@ Other changes and improvements
 
 - Every function argument or struct field, that is supposed to use a specific C enum type,
   is properly typechecked. So wrong code like ``isKeyPressed(MouseButtonLeft)`` doesn't compile.
+
+- Raymath was ported to Nim!
