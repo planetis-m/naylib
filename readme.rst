@@ -146,19 +146,19 @@ TextToInteger      strutils.parseInt
 Text codepoints management functions (unicode characters)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-======================= ===================== =======================
+======================= ===================== ==============================
 raylib function         Native alternative    notes
-======================= ===================== =======================
+======================= ===================== ==============================
 LoadCodepoints          toRunes
 UnloadCodepoints        None                  Not needed
 GetCodepoint            runeAt                Returns 0xFFFD on error
 GetCodepointCount       size
-GetCodepointPrevious    None                  Use runes iterator
-GetCodepointNext        None                  Same
+GetCodepointPrevious    None                  toRunes and iterate in reverse
+GetCodepointNext        None                  Use runes iterator
 CodepointToUTF8         toUTF8
 LoadUTF8                toUTF8
 UnloadUTF8              None                  Not needed
-======================= ===================== =======================
+======================= ===================== ==============================
 
 See also proc ``graphemeLen`` and everything else provided by std/unicode.
 
