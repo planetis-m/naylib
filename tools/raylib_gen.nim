@@ -329,10 +329,13 @@ const
     # Text codepoints management functions (unicode characters)
     "LoadCodepoints",
     "UnloadCodepoints",
-    "GetCodepointCount",
     "GetCodepoint",
+    "GetCodepointCount",
+    "GetCodepointPrevious",
+    "GetCodepointNext",
     "CodepointToUTF8",
-    "TextCodepointsToUTF8",
+    "LoadUTF8",
+    "UnloadUTF8",
   ]
   allocFuncs = [
     "MemAlloc",

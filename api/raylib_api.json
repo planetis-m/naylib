@@ -8318,6 +8318,32 @@
       ]
     },
     {
+      "name": "LoadUTF8",
+      "description": "Load UTF-8 text encoded from codepoints array",
+      "returnType": "char *",
+      "params": [
+        {
+          "type": "const int *",
+          "name": "codepoints"
+        },
+        {
+          "type": "int",
+          "name": "length"
+        }
+      ]
+    },
+    {
+      "name": "UnloadUTF8",
+      "description": "Unload UTF-8 text encoded from codepoints array",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "char *",
+          "name": "text"
+        }
+      ]
+    },
+    {
       "name": "LoadCodepoints",
       "description": "Load all codepoints from a UTF-8 text string, codepoints count returned by parameter",
       "returnType": "int *",
@@ -8365,7 +8391,37 @@
         },
         {
           "type": "int *",
-          "name": "bytesProcessed"
+          "name": "codepointSize"
+        }
+      ]
+    },
+    {
+      "name": "GetCodepointNext",
+      "description": "Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure",
+      "returnType": "int",
+      "params": [
+        {
+          "type": "const char *",
+          "name": "text"
+        },
+        {
+          "type": "int *",
+          "name": "codepointSize"
+        }
+      ]
+    },
+    {
+      "name": "GetCodepointPrevious",
+      "description": "Get previous codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure",
+      "returnType": "int",
+      "params": [
+        {
+          "type": "const char *",
+          "name": "text"
+        },
+        {
+          "type": "int *",
+          "name": "codepointSize"
         }
       ]
     },
@@ -8380,22 +8436,7 @@
         },
         {
           "type": "int *",
-          "name": "byteSize"
-        }
-      ]
-    },
-    {
-      "name": "TextCodepointsToUTF8",
-      "description": "Encode text as codepoints array into UTF-8 text string (WARNING: memory must be freed!)",
-      "returnType": "char *",
-      "params": [
-        {
-          "type": "const int *",
-          "name": "codepoints"
-        },
-        {
-          "type": "int",
-          "name": "length"
+          "name": "utf8Size"
         }
       ]
     },
