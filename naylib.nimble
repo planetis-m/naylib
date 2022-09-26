@@ -1,6 +1,6 @@
 # Package
 
-version     = "1.7.2"
+version     = "1.7.3"
 author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
@@ -38,7 +38,7 @@ proc fetchLatestRaylib =
 # proc fetchStableRaylib =
 #   if not dirExists(rayDir):
 #     # Cloning raysan/raylib at tag...
-#     exec &"git clone -b '4.2.0' --depth 1 https://github.com/raysan5/raylib.git {rayDir}"
+#     exec "git clone -b '4.2.0' --depth 1 https://github.com/raysan5/raylib.git " & rayDir
 
 proc buildRaylib(platform: string, wayland = false) =
   fetchLatestRaylib()
@@ -74,7 +74,7 @@ proc generateWrapper =
   withDir(pkgDir / "/tools"):
     let exe = "raylib_gen".toExe
     # Building raylib2nim tool...
-    exec &"nim c --mm:arc --panics:on -d:release -d:emiLenient " & src
+    exec "nim c --mm:arc --panics:on -d:release -d:emiLenient " & src
     # Generating raylib Nim wrapper...
     exec /.exe
 
