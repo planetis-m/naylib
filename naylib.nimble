@@ -45,8 +45,8 @@ proc buildRaylib(platform: string, wayland = false) =
   withDir(rayDir / "/src"):
     const exe = when defined(windows): "mingw32-make" else: "make"
     # Building raylib static library...
-    exec &"{exe} clean && {exe} PLATFORM={platform} " &
-        (if wayland: "USE_WAYLAND_DISPLAY=TRUE" else: "") & " -j4"
+    exec &"{exe} clean && {exe} -j4 PLATFORM={platform} " &
+        (if wayland: "USE_WAYLAND_DISPLAY=TRUE" else: "")
     # Copying to C include directory...
     if not dirExists inclDir:
       mkDir inclDir
@@ -93,8 +93,8 @@ task wrap, "Produce the raylib nim wrapper":
 task docs, "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
   withDir(pkgDir):
-    for temp in items(["raymath", "raylib"]):
-      let doc = docsDir / temp & ".html"
-      let src = pkgDir / "/src/" & temp
+    for tmp in items(["raymath", "raylib"]):
+      let doc = docsDir / tmp & ".html"
+      let src = "src/" / tmp
       # Generating the docs for...
       exec &"nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:{doc} {src}"
