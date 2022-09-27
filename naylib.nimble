@@ -80,19 +80,20 @@ proc generateWrapper =
 task wrap, "Produce the raylib nim wrapper":
   let src = "raylib_parser.c"
   let header = relativePath("src/raylib.h", "parser")
+  let outp = relativePath(apiDir / "/raylib_api.json", rayDir / "/parser")
   fetchLatestRaylib()
   withDir(rayDir / "/parser"):
     let exe = "raylib_parser".toExe
     # Building raylib API parser...
     exec &"cc {src} -o {exe}"
     # Generating API JSON file...
-    exec &"{/.exe} -f JSON -d RLAPI -i {header} -o {relativePath(apiDir / \"/raylib_api.json\", rayDir / \"/parser\")}"
+    exec &"{/.exe} -f JSON -d RLAPI -i {header} -o {outp}"
   generateWrapper()
 
 task docs, "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
-  withDir("src"):
-    for f in items(["raymath", "raylib"]):
-      let d = relativePath(docsDir / f & ".html", "src")
-      # Generating the docs for...
-      exec &"nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:{d} {f}"
+  for t in ["raymath", "raylib"]:
+    let doc = docsDir / t & ".html"
+    let src = "src/" / t & ".nim"
+    # Generating the docs for...
+    exec &"nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:{doc} {src}"
