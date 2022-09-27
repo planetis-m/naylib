@@ -21,11 +21,10 @@ const
   RayLatestCommit = "7ab056b6efb0764967c80439c15eed828b6ae1c4"
 
 let
-  pkgDir = thisDir()
-  rayDir = pkgDir / "/dist/raylib"
-  inclDir = pkgDir / "/include"
-  apiDir = pkgDir / "/api"
-  docsDir = pkgDir / "/docs"
+  rayDir = "dist/raylib"
+  inclDir = "include"
+  apiDir = "api"
+  docsDir = "docs"
 
 proc fetchLatestRaylib =
   if not dirExists(rayDir):
@@ -45,13 +44,13 @@ proc buildRaylib(platform: string, wayland = false) =
   withDir(rayDir / "/src"):
     const exe = when defined(windows): "mingw32-make" else: "make"
     # Building raylib static library...
-    exec &"{exe} clean && {exe} PLATFORM={platform}" &
+    exec &"{exe} clean && {exe} PLATFORM={platform} " &
         (if wayland: "USE_WAYLAND_DISPLAY=TRUE" else: "") & " -j4"
-    # Copying to C include directory...
-    if not dirExists inclDir:
-      mkDir inclDir
-    cpFile("libraylib.a", inclDir / "/libraylib.a")
-    cpFile("raylib.h", inclDir / "/raylib.h")
+  # Copying to C include directory...
+  if not dirExists inclDir:
+    mkDir inclDir
+  cpFile(rayDir / "/src/libraylib.a", inclDir / "/libraylib.a")
+  cpFile(rayDir / "/src/raylib.h", inclDir / "/raylib.h")
 
 task buildDesktop, "Build the raylib library for the Desktop platform":
   buildRaylib("PLATFORM_DESKTOP")
@@ -71,7 +70,7 @@ template `/.`(x: string): string =
 
 proc generateWrapper =
   let src = "raylib_gen.nim"
-  withDir(pkgDir / "/tools"):
+  withDir("tools"):
     let exe = "raylib_gen".toExe
     # Building raylib2nim tool...
     exec "nim c --mm:arc --panics:on -d:release -d:emiLenient " & src
@@ -80,20 +79,20 @@ proc generateWrapper =
 
 task wrap, "Produce the raylib nim wrapper":
   let src = "raylib_parser.c"
-  let header = rayDir & "/src/raylib.h"
+  let header = relativePath("src/raylib.h", "parser")
   fetchLatestRaylib()
-  withDir(rayDir & "/parser"):
+  withDir(rayDir / "/parser"):
     let exe = "raylib_parser".toExe
     # Building raylib API parser...
     exec &"cc {src} -o {exe}"
     # Generating API JSON file...
-    exec &"{/.exe} -f JSON -d RLAPI -i {header} -o {apiDir / \"/raylib_api.json\"}"
+    exec &"{/.exe} -f JSON -d RLAPI -i {header} -o {relativePath(apiDir / \"/raylib_api.json\", rayDir / \"/parser\")}"
   generateWrapper()
 
 task docs, "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
-  withDir(pkgDir / "/src"):
-    for src in items(["raymath", "raylib"]):
-      let doc = docsDir / src & ".html"
+  withDir("src"):
+    for f in items(["raymath", "raylib"]):
+      let d = relativePath(docsDir / f & ".html", "src")
       # Generating the docs for...
-      exec &"nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:{doc} {src}"
+      exec &"nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:{d} {f}"
