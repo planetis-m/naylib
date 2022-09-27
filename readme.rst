@@ -195,6 +195,8 @@ RAD2DEG            math.radToDeg
 Other changes and improvements
 ------------------------------
 
+- Raw pointers were abstracted from the public API, if I missed something please open an issue.
+
 - ``LoadDroppedFiles``, ``UnloadDroppedFiles`` added in raylib 4.2 were removed and
   replaced by the older ``getDroppedFiles`` which is more efficient and simpler to wrap,
   as it doesn't require as many copies.
@@ -219,4 +221,4 @@ Other changes and improvements
 - Every function argument or struct field, that is supposed to use a specific C enum type,
   is properly typechecked. So wrong code like ``isKeyPressed(MouseButtonLeft)`` doesn't compile.
 
-- Raymath was ported to Nim!
+- Raymath was ported to Nim and a integer vector type called ``IndexN`` was added.

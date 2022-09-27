@@ -1209,9 +1209,9 @@ proc imageDrawLine*(dst: var Image, startPosX: int32, startPosY: int32, endPosX:
 proc imageDrawLineV*(dst: var Image, start: Vector2, `end`: Vector2, color: Color) {.importc: "ImageDrawLineV".}
   ## Draw line within an image (Vector version)
 proc imageDrawCircle*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircle".}
-  ## Draw circle within an image
+  ## Draw a filled circle within an image
 proc imageDrawCircleV*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV".}
-  ## Draw circle within an image (Vector version)
+  ## Draw a filled circle within an image (Vector version)
 proc imageDrawCircleLines*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircleLines".}
   ## Draw circle outline within an image
 proc imageDrawCircleLinesV*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleLinesV".}

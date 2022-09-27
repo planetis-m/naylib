@@ -18,7 +18,7 @@ requires "nim >= 1.6.0"
 import std/[strformat, os]
 
 const
-  RayLatestCommit = "7ab056b6efb0764967c80439c15eed828b6ae1c4"
+  RayLatestCommit = "8f88c61bdfe1e6e009dd6f182bc7a2f5c8b38f15"
 
 let
   pkgDir = thisDir()
@@ -48,7 +48,7 @@ proc buildRaylib(platform: string, wayland = false) =
     exec &"{exe} clean && {exe} -j4 PLATFORM={platform} " &
         (if wayland: "USE_WAYLAND_DISPLAY=TRUE" else: "")
     # Copying to C include directory...
-    if not dirExists inclDir:
+    if not dirExists(inclDir):
       mkDir inclDir
     cpFile("libraylib.a", inclDir / "/libraylib.a")
     cpFile("raylib.h", inclDir / "/raylib.h")

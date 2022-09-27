@@ -7009,7 +7009,7 @@
     },
     {
       "name": "ImageDrawCircle",
-      "description": "Draw circle within an image",
+      "description": "Draw a filled circle within an image",
       "returnType": "void",
       "params": [
         {
@@ -7036,7 +7036,7 @@
     },
     {
       "name": "ImageDrawCircleV",
-      "description": "Draw circle within an image (Vector version)",
+      "description": "Draw a filled circle within an image (Vector version)",
       "returnType": "void",
       "params": [
         {
