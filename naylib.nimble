@@ -1,10 +1,10 @@
 # Package
 
-version     = "1.7.4"
+version     = "1.7.5"
 author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
-skipDirs    = @["api", "tools", "docs"]
+srcDir      = "src"
 
 # Deps
 
@@ -14,17 +14,12 @@ requires "nim >= 1.6.0"
 #import std/distros
 #foreignDep "wayland-protocols"
 
-import std/[strformat, os]
-
 const
   RayLatestCommit = "8f88c61bdfe1e6e009dd6f182bc7a2f5c8b38f15"
 
 let
-  pkgDir = thisDir()
-  rayDir = pkgDir / "/dist/raylib"
-  inclDir = pkgDir / "/include"
-  apiDir = pkgDir / "/api"
-  docsDir = pkgDir / "/docs"
+  rayDir = "dist/raylib"
+  inclDir = "include"
 
 proc fetchLatestRaylib =
   if not dirExists(rayDir):
@@ -32,7 +27,7 @@ proc fetchLatestRaylib =
     exec "git clone --depth 1 https://github.com/raysan5/raylib.git " & rayDir
   withDir(rayDir):
     # Fetching latest commit...
-    exec &"git fetch --depth 1 origin {RayLatestCommit}; git checkout {RayLatestCommit}"
+    exec "git fetch --depth 1 origin " & RayLatestCommit & "; git checkout " & RayLatestCommit
 
 # proc fetchStableRaylib =
 #   if not dirExists(rayDir):
@@ -41,16 +36,16 @@ proc fetchLatestRaylib =
 
 proc buildRaylib(platform: string, wayland = false) =
   fetchLatestRaylib()
-  withDir(rayDir / "/src"):
+  withDir(rayDir & "/src"):
     const exe = when defined(windows): "mingw32-make" else: "make"
     # Building raylib static library...
-    exec &"{exe} clean && {exe} -j4 PLATFORM={platform} " &
+    exec exe & " clean && " & exe & " -j4 PLATFORM={platform} " &
         (if wayland: "USE_WAYLAND_DISPLAY=TRUE" else: "")
-    # Copying to C include directory...
-    if not dirExists(inclDir):
-      mkDir inclDir
-    cpFile("libraylib.a", inclDir / "/libraylib.a")
-    cpFile("raylib.h", inclDir / "/raylib.h")
+  # Copying to C include directory...
+  if not dirExists(inclDir):
+    mkDir inclDir
+  cpFile(rayDir & "/src/libraylib.a", inclDir & "/libraylib.a")
+  cpFile(rayDir & "/src/raylib.h", inclDir & "/raylib.h")
 
 task buildDesktop, "Build the raylib library for the Desktop platform":
   buildRaylib("PLATFORM_DESKTOP")
@@ -63,38 +58,3 @@ task buildDRM, "Build the raylib library for the DRM platform":
 
 task buildAndroid, "Build the raylib library for the Android platform":
   buildRaylib("PLATFORM_ANDROID")
-
-# The rest are meant for developers only!
-template `/.`(x: string): string =
-  (when defined(posix): "./" & x else: x)
-
-proc generateWrapper =
-  let src = "raylib_gen.nim"
-  withDir(pkgDir / "/tools"):
-    let exe = "raylib_gen".toExe
-    # Building raylib2nim tool...
-    exec "nim c --mm:arc --panics:on -d:release -d:emiLenient " & src
-    # Generating raylib Nim wrapper...
-    exec /.exe
-
-task wrap, "Produce the raylib nim wrapper":
-  let src = "raylib_parser.c"
-  let header = rayDir / "/src/raylib.h"
-  fetchLatestRaylib()
-  withDir(rayDir / "/parser"):
-    let exe = "raylib_parser".toExe
-    # Building raylib API parser...
-    exec &"cc {src} -o {exe}"
-    if not dirExists(apiDir):
-      mkDir apiDir
-    # Generating API JSON file...
-    exec &"{/.exe} -f JSON -d RLAPI -i {header} -o {apiDir / \"/raylib_api.json\"}"
-  generateWrapper()
-
-task docs, "Generate documentation":
-  # https://nim-lang.github.io/Nim/docgen.html
-  withDir(pkgDir):
-    for src in ["raymath", "raylib"]:
-      let doc = docsDir / src & ".html"
-      # Generating the docs for...
-      exec &"nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:{doc} {src}"

@@ -581,7 +581,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
 
 const
   raylibApi = "../api/raylib_api.json"
-  outputname = "../raylib.nim"
+  outputname = "../src/raylib.nim"
 
 proc main =
   var t = parseApi(raylibApi)
