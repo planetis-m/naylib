@@ -11,6 +11,8 @@ Documentation
 - `raylib <https://planetis-m.github.io/naylib/raylib.html>`_
 - `raymath <https://planetis-m.github.io/naylib/raymath.html>`_
 
+raylib `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_ (C specific)
+
 Examples
 ========
 
@@ -26,8 +28,6 @@ i.e: ``cd $(nimble path naylib)`` and run:
 
   nimble buildDesktop
 
-Official raylib `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_
-
 Usage Tips
 ==========
 
@@ -38,6 +38,14 @@ TODO
 
 When compiling a new program don't forget to specify the target platform with ``--define:PlatformDesktop``.
 Other available values are ``PlatformRpi`` (deprecated in raylib 4.2), ``PlatformDrm``, ``PlatformAndroid``.
+
+Replacing raymath
+-----------------
+
+Raylib doesn't depend on raymath and shouldn't. The reason is you could replace it with another vector math
+library that's `available via nimble <https://nimble.directory/search?query=vector+math>`_
+
+Keep in mind though, that you need converters from ``Vector2``, ``Vector3``, ``Quaternion``, ``Matrix`` and back.
 
 How to call closeWindow
 -----------------------
