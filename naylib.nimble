@@ -1,11 +1,10 @@
 # Package
 
-version     = "1.7.3"
+version     = "1.7.4"
 author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
-srcDir      = "src"
-#skipDirs    = @["api", "tools"]
+skipDirs    = @["api", "tools", "docs"]
 
 # Deps
 
@@ -86,6 +85,8 @@ task wrap, "Produce the raylib nim wrapper":
     let exe = "raylib_parser".toExe
     # Building raylib API parser...
     exec &"cc {src} -o {exe}"
+    if not dirExists(apiDir):
+      mkDir apiDir
     # Generating API JSON file...
     exec &"{/.exe} -f JSON -d RLAPI -i {header} -o {apiDir / \"/raylib_api.json\"}"
   generateWrapper()
@@ -93,8 +94,7 @@ task wrap, "Produce the raylib nim wrapper":
 task docs, "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
   withDir(pkgDir):
-    for tmp in items(["raymath", "raylib"]):
-      let doc = docsDir / tmp & ".html"
-      let src = "src/" / tmp
+    for src in ["raymath", "raylib"]:
+      let doc = docsDir / src & ".html"
       # Generating the docs for...
       exec &"nim doc --verbosity:0 --git.url:https://github.com/planetis-m/naylib --git.devel:main --git.commit:main --out:{doc} {src}"

@@ -1,6 +1,6 @@
 from unicode import Rune
 import os
-const inclDir = currentSourcePath().parentDir /../ "include"
+const inclDir = currentSourcePath().parentDir / "include"
 {.passC: "-I" & inclDir.}
 {.passL: inclDir / "libraylib.a".}
 when defined(PlatformDesktop):
