@@ -13,13 +13,6 @@ Documentation
 
 raylib `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_ (C specific)
 
-Examples
-========
-
-See the accompanying examples `repo <https://github.com/planetis-m/raylib-examples>`_
-
-Compile each example by running ``nim c -r -d:release example.nim``
-
 Installation
 ============
 
@@ -30,11 +23,19 @@ i.e: ``cd $(nimble path naylib)`` and run:
 
   nimble buildDesktop
 
+Examples
+========
+
+See the accompanying examples `repo <https://github.com/planetis-m/raylib-examples>`_
+
+Compile and run an example by running ``nim c -r -d:release example.nim``.
+
 Development environment
 ------------------------
 
-The development environment uses the ``nake`` tool to produce the wrapper, ``nake wrap``.
-``buildPlatform`` tasks should be used instead of nimble tasks when developing.
+The development environment uses the ``nake`` tool to produce the wrapper, ``nake wrap``
+and the documentation with ``nake docs``. ``buildPlatform`` tasks should be used instead
+of nimble tasks when developing.
 
 Usage Tips
 ==========
