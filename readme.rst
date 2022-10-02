@@ -18,6 +18,8 @@ Examples
 
 See the accompanying examples `repo <https://github.com/planetis-m/raylib-examples>`_
 
+Compile each example by running ``nim c -r -d:release example.nim``
+
 Installation
 ============
 
@@ -27,6 +29,12 @@ i.e: ``cd $(nimble path naylib)`` and run:
 .. code-block::
 
   nimble buildDesktop
+
+Development environment
+------------------------
+
+The development environment uses the ``nake`` tool to produce the wrapper, ``nake wrap``.
+``buildPlatform`` tasks should be used instead of nimble tasks when developing.
 
 Usage Tips
 ==========
@@ -203,7 +211,9 @@ RAD2DEG            math.radToDeg
 Other changes and improvements
 ------------------------------
 
-- Raw pointers were abstracted from the public API, if I missed something please open an issue.
+- Raw pointers were abstracted from the public API, except ``cstring`` parameters which are
+  implicitly converted from ``string``. Use ``--warning:CStringConv:off`` to silence
+  the warning.
 
 - ``LoadDroppedFiles``, ``UnloadDroppedFiles`` added in raylib 4.2 were removed and
   replaced by the older ``getDroppedFiles`` which is more efficient and simpler to wrap,
@@ -216,7 +226,7 @@ Other changes and improvements
   Provided are index operators, len, and ``@`` (seq) and ``toOpenArray`` converters.
 
 - ``toEmbedded`` procs that return ``EmbeddedImage``, ``EmbeddedWave``, that are not
-  destroyed, for embedding files directly to source code. Need to use ``exportImageAsCode``
+  destroyed, for embedding files directly to source code. Use ``exportImageAsCode``
   and ``exportWaveAsCode`` first and translate the output to Nim with a tool such as c2nim
   or manually. See `others/embedded_files_loading` example.
 
