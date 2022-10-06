@@ -31,7 +31,7 @@ See the accompanying examples `repo <https://github.com/planetis-m/raylib-exampl
 Compile and run an example by running ``nim c -r -d:release example.nim``.
 
 Development environment
-------------------------
+=======================
 
 The development environment uses the ``nake`` tool to produce the wrapper, ``nake wrap``
 and the documentation with ``nake docs``. ``buildPlatform`` tasks should be used instead

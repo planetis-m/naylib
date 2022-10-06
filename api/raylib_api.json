@@ -729,7 +729,7 @@
         {
           "type": "float",
           "name": "fovy",
-          "description": "Camera field-of-view apperture in Y (degrees) in perspective, used as near plane width in orthographic"
+          "description": "Camera field-of-view aperture in Y (degrees) in perspective, used as near plane width in orthographic"
         },
         {
           "type": "int",
@@ -2051,7 +2051,7 @@
         {
           "name": "MOUSE_BUTTON_FORWARD",
           "value": 5,
-          "description": "Mouse button fordward (advanced mouse device)"
+          "description": "Mouse button forward (advanced mouse device)"
         },
         {
           "name": "MOUSE_BUTTON_BACK",
@@ -2795,6 +2795,11 @@
           "name": "BLEND_CUSTOM",
           "value": 6,
           "description": "Blend textures using custom src/dst factors (use rlSetBlendMode())"
+        },
+        {
+          "name": "BLEND_CUSTOM_SEPARATE",
+          "value": 7,
+          "description": "Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendModeSeparate())"
         }
       ]
     },

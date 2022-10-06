@@ -192,7 +192,7 @@ const
   MouseButtonMiddle* = MouseButton(2) ## Mouse button middle (pressed wheel)
   MouseButtonSide* = MouseButton(3) ## Mouse button side (advanced mouse device)
   MouseButtonExtra* = MouseButton(4) ## Mouse button extra (advanced mouse device)
-  MouseButtonForward* = MouseButton(5) ## Mouse button fordward (advanced mouse device)
+  MouseButtonForward* = MouseButton(5) ## Mouse button forward (advanced mouse device)
   MouseButtonBack* = MouseButton(6) ## Mouse button back (advanced mouse device)
 
   MouseCursorDefault* = MouseCursor(0) ## Default pointer shape
@@ -288,15 +288,15 @@ const
   ShaderAttribVec4* = ShaderAttributeDataType(3) ## Shader attribute type: vec4 (4 float)
 
   PixelformatUncompressedGrayscale* = PixelFormat(1) ## 8 bit per pixel (no alpha)
-  PixelformatUncompressedGrayAlpha* = PixelFormat(2) ## 8x2 bpp (2 channels)
+  PixelformatUncompressedGrayAlpha* = PixelFormat(2) ## 8*2 bpp (2 channels)
   PixelformatUncompressedR5g6b5* = PixelFormat(3) ## 16 bpp
   PixelformatUncompressedR8g8b8* = PixelFormat(4) ## 24 bpp
   PixelformatUncompressedR5g5b5a1* = PixelFormat(5) ## 16 bpp (1 bit alpha)
   PixelformatUncompressedR4g4b4a4* = PixelFormat(6) ## 16 bpp (4 bit alpha)
   PixelformatUncompressedR8g8b8a8* = PixelFormat(7) ## 32 bpp
   PixelformatUncompressedR32* = PixelFormat(8) ## 32 bpp (1 channel - float)
-  PixelformatUncompressedR32g32b32* = PixelFormat(9) ## 32x3 bpp (3 channels - float)
-  PixelformatUncompressedR32g32b32a32* = PixelFormat(10) ## 32x4 bpp (4 channels - float)
+  PixelformatUncompressedR32g32b32* = PixelFormat(9) ## 32*3 bpp (3 channels - float)
+  PixelformatUncompressedR32g32b32a32* = PixelFormat(10) ## 32*4 bpp (4 channels - float)
   PixelformatCompressedDxt1Rgb* = PixelFormat(11) ## 4 bpp (no alpha)
   PixelformatCompressedDxt1Rgba* = PixelFormat(12) ## 4 bpp (1 bit alpha)
   PixelformatCompressedDxt3Rgba* = PixelFormat(13) ## 8 bpp
@@ -339,6 +339,7 @@ const
   BlendSubtractColors* = BlendMode(4) ## Blend textures subtracting colors (alternative)
   BlendAlphaPremultiply* = BlendMode(5) ## Blend premultiplied textures considering alpha
   BlendCustom* = BlendMode(6) ## Blend textures using custom src/dst factors (use rlSetBlendMode())
+  BlendCustomSeparate* = BlendMode(7) ## Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendModeSeparate())
 
   GestureNone* = Gesture(0) ## No gesture
   GestureTap* = Gesture(1) ## Tap gesture
@@ -499,7 +500,7 @@ type
     position*: Vector3 ## Camera position
     target*: Vector3 ## Camera target it looks-at
     up*: Vector3 ## Camera up vector (rotation over its axis)
-    fovy*: float32 ## Camera field-of-view apperture in Y (degrees) in perspective, used as near plane width in orthographic
+    fovy*: float32 ## Camera field-of-view aperture in Y (degrees) in perspective, used as near plane width in orthographic
     projection*: CameraProjection ## Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
 
   Camera2D* {.header: "raylib.h", bycopy.} = object ## Camera2D, defines position/orientation in 2d space
