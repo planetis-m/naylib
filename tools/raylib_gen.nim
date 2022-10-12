@@ -32,7 +32,11 @@ elif defined(PlatformAndroid):
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
 
 const
-  RaylibVersion* = "4.2"
+  RaylibVersion* = "4.5-dev"
+
+  RaylibMajor* = 4
+  RaylibMinor* = 5
+  RaylibPatch* = 0
 """
   extraDistinct = """
 

@@ -540,7 +540,7 @@ type
     maps: ptr array[MaxMaterialMaps, MaterialMap] ## Material maps array (MAX_MATERIAL_MAPS)
     params*: array[4, float32] ## Material generic parameters (if required)
 
-  Transform* {.header: "raylib.h", bycopy.} = object ## Transform, vectex transformation data
+  Transform* {.header: "raylib.h", bycopy.} = object ## Transform, vertex transformation data
     translation*: Vector3 ## Translation
     rotation*: Quaternion ## Rotation
     scale*: Vector3 ## Scale

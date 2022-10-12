@@ -9,7 +9,7 @@
     {
       "name": "RAYLIB_VERSION",
       "type": "STRING",
-      "value": "4.2",
+      "value": "4.5-dev",
       "description": ""
     },
     {
@@ -905,7 +905,7 @@
     },
     {
       "name": "Transform",
-      "description": "Transform, vectex transformation data",
+      "description": "Transform, vertex transformation data",
       "fields": [
         {
           "type": "Vector3",

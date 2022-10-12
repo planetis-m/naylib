@@ -1,7 +1,7 @@
 import nake, std/strformat
 
 const
-  RayLatestCommit = "7a15861d442fa8db6c9ab783e1f8eba50e2954ef"
+  RayLatestCommit = "07bbfe86b9cb750d224bc185a9ddcefba6d8bedb"
 
 const
   pkgDir = currentSourcePath().parentDir.quoteShell
