@@ -24,7 +24,9 @@ elif defined(PlatformAndroid):
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
 
 const
-  RaylibVersion* = "4.2"
+  RaylibMajor* = 4
+  RaylibMinor* = 5
+  RaylibPatch* = 0
 
 type
   ConfigFlags* = distinct int32 ## System/Window config flags
@@ -1139,6 +1141,8 @@ proc genImagePerlinNoise*(width: int32, height: int32, offsetX: int32, offsetY: 
   ## Generate image: perlin noise
 proc genImageCellular*(width: int32, height: int32, tileSize: int32): Image {.importc: "GenImageCellular".}
   ## Generate image: cellular algorithm, bigger tileSize means bigger cells
+proc genImageText*(width: int32, height: int32, text: cstring): Image {.importc: "GenImageText".}
+  ## Generate image: grayscale image from text data
 proc imageCopy*(image: Image): Image {.importc: "ImageCopy".}
   ## Create an image duplicate (useful for transformations)
 proc imageFromImage*(image: Image, rec: Rectangle): Image {.importc: "ImageFromImage".}

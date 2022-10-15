@@ -6402,6 +6402,25 @@
       ]
     },
     {
+      "name": "GenImageText",
+      "description": "Generate image: grayscale image from text data",
+      "returnType": "Image",
+      "params": [
+        {
+          "type": "int",
+          "name": "width"
+        },
+        {
+          "type": "int",
+          "name": "height"
+        },
+        {
+          "type": "const char *",
+          "name": "text"
+        }
+      ]
+    },
+    {
       "name": "ImageCopy",
       "description": "Create an image duplicate (useful for transformations)",
       "returnType": "Image",
