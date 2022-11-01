@@ -6598,6 +6598,21 @@
       ]
     },
     {
+      "name": "ImageBlurGaussian",
+      "description": "Apply Gaussian blur using a box blur approximation",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Image *",
+          "name": "image"
+        },
+        {
+          "type": "int",
+          "name": "blurSize"
+        }
+      ]
+    },
+    {
       "name": "ImageResize",
       "description": "Resize image (Bicubic scaling algorithm)",
       "returnType": "void",
@@ -9144,6 +9159,68 @@
         {
           "type": "int",
           "name": "sides"
+        },
+        {
+          "type": "Color",
+          "name": "color"
+        }
+      ]
+    },
+    {
+      "name": "DrawCapsule",
+      "description": "Draw a capsule with the center of its sphere caps at startPos and endPos",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "startPos"
+        },
+        {
+          "type": "Vector3",
+          "name": "endPos"
+        },
+        {
+          "type": "float",
+          "name": "radius"
+        },
+        {
+          "type": "int",
+          "name": "slices"
+        },
+        {
+          "type": "int",
+          "name": "rings"
+        },
+        {
+          "type": "Color",
+          "name": "color"
+        }
+      ]
+    },
+    {
+      "name": "DrawCapsuleWires",
+      "description": "Draw capsule wireframe with the center of its sphere caps at startPos and endPos",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "startPos"
+        },
+        {
+          "type": "Vector3",
+          "name": "endPos"
+        },
+        {
+          "type": "float",
+          "name": "radius"
+        },
+        {
+          "type": "int",
+          "name": "slices"
+        },
+        {
+          "type": "int",
+          "name": "rings"
         },
         {
           "type": "Color",

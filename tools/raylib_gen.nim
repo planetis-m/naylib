@@ -1,4 +1,6 @@
 import common, std/[streams, strutils]
+when defined(nimPreviewSlimSystem):
+  import std/syncio
 
 const
   extraTypes = [
@@ -32,9 +34,7 @@ elif defined(PlatformAndroid):
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
 
 const
-  RaylibMajor* = 4
-  RaylibMinor* = 5
-  RaylibPatch* = 0
+  RaylibVersion* = (4, 5, 0)
 """
   extraDistinct = """
 

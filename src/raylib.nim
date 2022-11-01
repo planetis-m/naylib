@@ -24,9 +24,7 @@ elif defined(PlatformAndroid):
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
 
 const
-  RaylibMajor* = 4
-  RaylibMinor* = 5
-  RaylibPatch* = 0
+  RaylibVersion* = (4, 5, 0)
 
 type
   ConfigFlags* = distinct int32 ## System/Window config flags
@@ -1165,6 +1163,8 @@ proc imageAlphaMask*(image: var Image, alphaMask: Image) {.importc: "ImageAlphaM
   ## Apply alpha mask to image
 proc imageAlphaPremultiply*(image: var Image) {.importc: "ImageAlphaPremultiply".}
   ## Premultiply alpha channel
+proc imageBlurGaussian*(image: var Image, blurSize: int32) {.importc: "ImageBlurGaussian".}
+  ## Apply Gaussian blur using a box blur approximation
 proc imageResize*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize".}
   ## Resize image (Bicubic scaling algorithm)
 proc imageResizeNN*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN".}
@@ -1365,6 +1365,10 @@ proc drawCylinderWires*(position: Vector3, radiusTop: float32, radiusBottom: flo
   ## Draw a cylinder/cone wires
 proc drawCylinderWiresEx*(startPos: Vector3, endPos: Vector3, startRadius: float32, endRadius: float32, sides: int32, color: Color) {.importc: "DrawCylinderWiresEx".}
   ## Draw a cylinder wires with base at startPos and top at endPos
+proc drawCapsule*(startPos: Vector3, endPos: Vector3, radius: float32, slices: int32, rings: int32, color: Color) {.importc: "DrawCapsule".}
+  ## Draw a capsule with the center of its sphere caps at startPos and endPos
+proc drawCapsuleWires*(startPos: Vector3, endPos: Vector3, radius: float32, slices: int32, rings: int32, color: Color) {.importc: "DrawCapsuleWires".}
+  ## Draw capsule wireframe with the center of its sphere caps at startPos and endPos
 proc drawPlane*(centerPos: Vector3, size: Vector2, color: Color) {.importc: "DrawPlane".}
   ## Draw a plane XZ
 proc drawRay*(ray: Ray, color: Color) {.importc: "DrawRay".}
