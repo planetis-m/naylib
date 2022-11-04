@@ -379,6 +379,7 @@ const
     "DrawMeshInstanced",
     "LoadWaveFromMemory",
     "LoadMusicStreamFromMemory",
+    "ExportDataAsCode",
     "DrawTextCodepoints",
     "UnloadDroppedFiles",
     "LoadDroppedFiles"

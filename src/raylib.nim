@@ -909,8 +909,7 @@ proc setLoadFileTextCallback*(callback: LoadFileTextCallback) {.importc: "SetLoa
   ## Set custom file text data loader
 proc setSaveFileTextCallback*(callback: SaveFileTextCallback) {.importc: "SetSaveFileTextCallback".}
   ## Set custom file text data saver
-proc exportDataAsCode*(data: cstring, size: uint32, fileName: cstring): bool {.importc: "ExportDataAsCode".}
-  ## Export data to code (.h), returns true on success
+proc exportDataAsCodePriv(data: ptr UncheckedArray[uint8], size: uint32, fileName: cstring): bool {.importc: "ExportDataAsCode".}
 proc isFileDropped*(): bool {.importc: "IsFileDropped".}
   ## Check if a file has been dropped into window
 proc loadDroppedFilesPriv(): FilePathList {.importc: "LoadDroppedFiles".}
@@ -1754,6 +1753,10 @@ proc getDroppedFiles*(): seq[string] =
 proc getGamepadName*(gamepad: int32): string {.inline.} =
   ## Get gamepad internal name id
   result = $getGamepadNamePriv(gamepad)
+
+proc exportDataAsCode*(data: openarray[uint8], fileName: string): bool =
+  ## Export data to code (.h), returns true on success
+  result = exportDataAsCodePriv(cast[ptr UncheckedArray[uint8]](data), data.len.uint32, fileName.string)
 
 proc loadShader*(vsFileName, fsFileName: string): Shader =
   ## Load shader from files and bind default locations

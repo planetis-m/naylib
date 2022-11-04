@@ -4124,7 +4124,7 @@
       "returnType": "bool",
       "params": [
         {
-          "type": "const char *",
+          "type": "const unsigned char *",
           "name": "data"
         },
         {

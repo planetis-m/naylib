@@ -26,6 +26,10 @@ proc getGamepadName*(gamepad: int32): string {.inline.} =
   ## Get gamepad internal name id
   result = $getGamepadNamePriv(gamepad)
 
+proc exportDataAsCode*(data: openarray[uint8], fileName: string): bool =
+  ## Export data to code (.h), returns true on success
+  result = exportDataAsCodePriv(cast[ptr UncheckedArray[uint8]](data), data.len.uint32, fileName.string)
+
 proc loadShader*(vsFileName, fsFileName: string): Shader =
   ## Load shader from files and bind default locations
   result = loadShaderPriv(if vsFileName.len == 0: nil else: vsFileName.cstring,
