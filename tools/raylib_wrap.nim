@@ -156,12 +156,6 @@ proc updateTextureRec*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: ope
   ## Update GPU texture rectangle with new data
   updateTextureRecPriv(texture, rec, cast[pointer](pixels))
 
-proc drawTexturePoly*(texture: Texture2D; center: Vector2; points: openarray[Vector2];
-    texcoords: openarray[Vector2]; tint: Color) =
-  ## Draw a textured polygon
-  drawTexturePolyPriv(texture, center, cast[ptr UncheckedArray[Vector2]](points),
-      cast[ptr UncheckedArray[Vector2]](texcoords), points.len.int32, tint)
-
 proc getPixelColor*[T: Pixel](pixels: T): Color =
   ## Get Color from a source pixel pointer of certain format
   getPixelColorPriv(pixels.value, kind(T))

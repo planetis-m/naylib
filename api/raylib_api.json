@@ -7577,68 +7577,6 @@
       ]
     },
     {
-      "name": "DrawTextureQuad",
-      "description": "Draw texture quad with tiling and offset parameters",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "Texture2D",
-          "name": "texture"
-        },
-        {
-          "type": "Vector2",
-          "name": "tiling"
-        },
-        {
-          "type": "Vector2",
-          "name": "offset"
-        },
-        {
-          "type": "Rectangle",
-          "name": "quad"
-        },
-        {
-          "type": "Color",
-          "name": "tint"
-        }
-      ]
-    },
-    {
-      "name": "DrawTextureTiled",
-      "description": "Draw part of a texture (defined by a rectangle) with rotation and scale tiled into dest.",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "Texture2D",
-          "name": "texture"
-        },
-        {
-          "type": "Rectangle",
-          "name": "source"
-        },
-        {
-          "type": "Rectangle",
-          "name": "dest"
-        },
-        {
-          "type": "Vector2",
-          "name": "origin"
-        },
-        {
-          "type": "float",
-          "name": "rotation"
-        },
-        {
-          "type": "float",
-          "name": "scale"
-        },
-        {
-          "type": "Color",
-          "name": "tint"
-        }
-      ]
-    },
-    {
       "name": "DrawTexturePro",
       "description": "Draw a part of a texture defined by a rectangle with 'pro' parameters",
       "returnType": "void",
@@ -7693,37 +7631,6 @@
         {
           "type": "float",
           "name": "rotation"
-        },
-        {
-          "type": "Color",
-          "name": "tint"
-        }
-      ]
-    },
-    {
-      "name": "DrawTexturePoly",
-      "description": "Draw a textured polygon",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "Texture2D",
-          "name": "texture"
-        },
-        {
-          "type": "Vector2",
-          "name": "center"
-        },
-        {
-          "type": "Vector2 *",
-          "name": "points"
-        },
-        {
-          "type": "Vector2 *",
-          "name": "texcoords"
-        },
-        {
-          "type": "int",
-          "name": "pointCount"
         },
         {
           "type": "Color",

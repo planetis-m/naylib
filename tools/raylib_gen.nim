@@ -371,7 +371,6 @@ const
     "DrawTriangleStrip",
     "CheckCollisionPointPoly",
     "LoadImageFromMemory",
-    "DrawTexturePoly",
     "LoadFontEx",
     "LoadFontFromMemory",
     "GenImageFontAtlas",

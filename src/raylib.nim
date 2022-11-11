@@ -1262,15 +1262,10 @@ proc drawTextureEx*(texture: Texture2D, position: Vector2, rotation: float32, sc
   ## Draw a Texture2D with extended parameters
 proc drawTextureRec*(texture: Texture2D, source: Rectangle, position: Vector2, tint: Color) {.importc: "DrawTextureRec".}
   ## Draw a part of a texture defined by a rectangle
-proc drawTextureQuad*(texture: Texture2D, tiling: Vector2, offset: Vector2, quad: Rectangle, tint: Color) {.importc: "DrawTextureQuad".}
-  ## Draw texture quad with tiling and offset parameters
-proc drawTextureTiled*(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: float32, scale: float32, tint: Color) {.importc: "DrawTextureTiled".}
-  ## Draw part of a texture (defined by a rectangle) with rotation and scale tiled into dest.
 proc drawTexturePro*(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTexturePro".}
   ## Draw a part of a texture defined by a rectangle with 'pro' parameters
 proc drawTextureNPatch*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch".}
   ## Draws a texture (or part of it) that stretches or shrinks nicely
-proc drawTexturePolyPriv(texture: Texture2D, center: Vector2, points: ptr UncheckedArray[Vector2], texcoords: ptr UncheckedArray[Vector2], pointCount: int32, tint: Color) {.importc: "DrawTexturePoly".}
 proc fade*(color: Color, alpha: float32): Color {.importc: "Fade".}
   ## Get color with alpha applied, alpha goes from 0.0f to 1.0f
 proc colorToInt*(color: Color): int32 {.importc: "ColorToInt".}
@@ -1883,12 +1878,6 @@ proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openarray[T]) =
 proc updateTextureRec*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openarray[T]) =
   ## Update GPU texture rectangle with new data
   updateTextureRecPriv(texture, rec, cast[pointer](pixels))
-
-proc drawTexturePoly*(texture: Texture2D; center: Vector2; points: openarray[Vector2];
-    texcoords: openarray[Vector2]; tint: Color) =
-  ## Draw a textured polygon
-  drawTexturePolyPriv(texture, center, cast[ptr UncheckedArray[Vector2]](points),
-      cast[ptr UncheckedArray[Vector2]](texcoords), points.len.int32, tint)
 
 proc getPixelColor*[T: Pixel](pixels: T): Color =
   ## Get Color from a source pixel pointer of certain format
