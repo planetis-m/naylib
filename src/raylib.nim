@@ -1341,10 +1341,6 @@ proc drawCubeWires*(position: Vector3, width: float32, height: float32, length: 
   ## Draw cube wires
 proc drawCubeWiresV*(position: Vector3, size: Vector3, color: Color) {.importc: "DrawCubeWiresV".}
   ## Draw cube wires (Vector version)
-proc drawCubeTexture*(texture: Texture2D, position: Vector3, width: float32, height: float32, length: float32, color: Color) {.importc: "DrawCubeTexture".}
-  ## Draw cube textured
-proc drawCubeTextureRec*(texture: Texture2D, source: Rectangle, position: Vector3, width: float32, height: float32, length: float32, color: Color) {.importc: "DrawCubeTextureRec".}
-  ## Draw cube with a region of a texture
 proc drawSphere*(centerPos: Vector3, radius: float32, color: Color) {.importc: "DrawSphere".}
   ## Draw sphere
 proc drawSphereEx*(centerPos: Vector3, radius: float32, rings: int32, slices: int32, color: Color) {.importc: "DrawSphereEx".}
