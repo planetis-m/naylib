@@ -34,6 +34,7 @@ proc buildRaylib(platform: string, wayland = false) =
     discard existsOrCreateDir(inclDir)
     copyFileToDir("libraylib.a", inclDir)
     copyFileToDir("raylib.h", inclDir)
+    copyFileToDir("rlgl.h", inclDir)
 
 task "buildDesktop", "Build the raylib library for the Desktop platform":
   buildRaylib("PLATFORM_DESKTOP")
