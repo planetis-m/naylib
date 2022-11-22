@@ -15,7 +15,7 @@ requires "nim >= 1.6.0"
 #foreignDep "wayland-protocols"
 
 const
-  RayLatestCommit = "e6306e5e76f83c9cf0b2bfbb85ceffa4ed2926ee"
+  RayLatestCommit = "f6558fe6e0932863b83d2a6a49b8fc81b7354242"
 
 let
   rayDir = "dist/raylib"
@@ -46,6 +46,7 @@ proc buildRaylib(platform: string, wayland = false) =
     mkDir inclDir
   cpFile(rayDir & "/src/libraylib.a", inclDir & "/libraylib.a")
   cpFile(rayDir & "/src/raylib.h", inclDir & "/raylib.h")
+  cpFile(rayDir & "/src/rlgl.h", inclDir & "/rlgl.h")
 
 task buildDesktop, "Build the raylib library for the Desktop platform":
   buildRaylib("PLATFORM_DESKTOP")
