@@ -109,10 +109,10 @@ const
 type
   VertexBuffer* {.bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
     elementCount*: int32 ## Number of elements in the buffer (QUADS)
-    vertices*: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
-    texcoords*: ptr UncheckedArray[float32] ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
-    colors*: ptr UncheckedArray[uint8] ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-    indices*: ptr UncheckedArray[uint32] ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
+    vertices: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
+    texcoords: ptr UncheckedArray[float32] ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+    colors: ptr UncheckedArray[uint8] ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
+    indices: ptr UncheckedArray[uint32] ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
     vaoId*: uint32 ## OpenGL Vertex Array Object id
     vboId*: array[4, uint32] ## OpenGL Vertex Buffer Objects id (4 types of vertex data)
 
@@ -125,14 +125,24 @@ type
   RenderBatch* {.bycopy.} = object ## rlRenderBatch type
     bufferCount*: int32 ## Number of vertex buffers (multi-buffering support)
     currentBuffer*: int32 ## Current buffer tracking in case of multi-buffering
-    vertexBuffer*: ptr UncheckedArray[VertexBuffer] ## Dynamic buffer(s) for vertex data
-    draws*: ptr UncheckedArray[DrawCall] ## Draw calls array, depends on textureId
+    vertexBuffer: ptr UncheckedArray[VertexBuffer] ## Dynamic buffer(s) for vertex data
+    draws: ptr UncheckedArray[DrawCall] ## Draw calls array, depends on textureId
     drawCounter*: int32 ## Draw calls counter
     currentDepth*: float32 ## Current depth value for next draw
+
+  VertexBufferVertices* = distinct VertexBuffer
+  VertexBufferTexcoords* = distinct VertexBuffer
+  VertexBufferColors* = distinct VertexBuffer
+  VertexBufferIndices* = distinct VertexBuffer
+  RenderBatchVertexBuffer* = distinct RenderBatch
+  RenderBatchDraws* = distinct RenderBatch
 
 proc `=destroy`*(x: var RenderBatch) =
   if x.vertexBuffer != nil: unloadRenderBatch(x)
 proc `=copy`*(dest: var RenderBatch; source: RenderBatch) {.error.}
+
+proc `=sink`*(dest: var vertexBuffer; source: VertexBuffer) {.error.}
+proc `=copy`*(dest: var VertexBuffer; source: VertexBuffer) {.error.}
 
 {.push callconv: cdecl, header: "rlgl.h".}
 proc matrixMode*(mode: int32) {.importc: "rlMatrixMode".}
@@ -418,3 +428,89 @@ proc loadDrawCube*() {.importc: "rlLoadDrawCube".}
 proc loadDrawQuad*() {.importc: "rlLoadDrawQuad".}
   ## Load and draw a quad
 {.pop.}
+template drawMode*(mode: DrawMode; body: untyped) =
+  ## Drawing mode (how to organize vertex)
+  rlBegin(mode)
+  try:
+    body
+  finally: rlEnd()
+
+template vertices*(x: VertexBuffer): VertexBufferVertices = VertexBufferVertices(x)
+template texcoords*(x: VertexBuffer): VertexBufferTexcoords = VertexBufferTexcoords(x)
+template colors*(x: VertexBuffer): VertexBufferColors = VertexBufferColors(x)
+template indices*(x: VertexBuffer): VertexBufferIndices = VertexBufferIndices(x)
+template vertexBuffer*(x: RenderBatch): RenderBatchVertexBuffer = RenderBatchVertexBuffer(x)
+template draws*(x: RenderBatch): RenderBatchDraws = RenderBatchDraws(x)
+
+proc raiseIndexDefect(i, n: int) {.noinline, noreturn.} =
+  raise newException(IndexDefect, "index " & $i & " not in 0 .. " & $n)
+
+template checkArrayAccess(a, x, len) =
+  when compileOption("boundChecks"):
+    {.line.}:
+      if a == nil or (x < 0 or x >= len):
+        raiseIndexDefect(x, len-1)
+
+proc `[]`*(x: VertexBufferVertices, i: int): Vector3 =
+  checkArrayAccess(VertexBuffer(x).vertices, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[Vector3]](VertexBuffer(x).vertices)[i]
+
+proc `[]`*(x: var VertexBufferVertices, i: int): var Vector3 =
+  checkArrayAccess(VertexBuffer(x).vertices, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[Vector3]](VertexBuffer(x).vertices)[i]
+
+proc `[]=`*(x: var VertexBufferVertices, i: int, val: Vector3) =
+  checkArrayAccess(VertexBuffer(x).vertices, i, VertexBuffer(x).elementCount)
+  cast[ptr UncheckedArray[Vector3]](VertexBuffer(x).vertices)[i] = val
+
+proc `[]`*(x: VertexBufferTexcoords, i: int): Vector2 =
+  checkArrayAccess(VertexBuffer(x).texcoords, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[Vector2]](VertexBuffer(x).texcoords)[i]
+
+proc `[]`*(x: var VertexBufferTexcoords, i: int): var Vector2 =
+  checkArrayAccess(VertexBuffer(x).texcoords, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[Vector2]](VertexBuffer(x).texcoords)[i]
+
+proc `[]=`*(x: var VertexBufferTexcoords, i: int, val: Vector2) =
+  checkArrayAccess(VertexBuffer(x).texcoords, i, VertexBuffer(x).elementCount)
+  cast[ptr UncheckedArray[Vector2]](VertexBuffer(x).texcoords)[i] = val
+
+proc `[]`*(x: VertexBufferColors, i: int): Color =
+  checkArrayAccess(VertexBuffer(x).colors, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i]
+
+proc `[]`*(x: var VertexBufferColors, i: int): var Color =
+  checkArrayAccess(VertexBuffer(x).colors, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i]
+
+proc `[]=`*(x: var VertexBufferColors, i: int, val: Color) =
+  checkArrayAccess(VertexBuffer(x).colors, i, VertexBuffer(x).elementCount)
+  cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i] = val
+
+proc `[]`*(x: VertexBufferIndices, i: int): array[6, uint32] =
+  checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[typeof(result)]](VertexBuffer(x).indices)[i]
+
+proc `[]`*(x: var VertexBufferIndices, i: int): var array[6, uint32] =
+  checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[typeof(result)]](VertexBuffer(x).indices)[i]
+
+proc `[]=`*(x: var VertexBufferIndices, i: int, val: array[6, uint32]) =
+  checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
+  cast[ptr UncheckedArray[typeof(val)]](VertexBuffer(x).indices)[i] = val
+
+proc `[]`*(x: RenderBatchVertexBuffer, i: int): VertexBuffer =
+  checkArrayAccess(RenderBatch(x).vertexBuffer, i, RenderBatch(x).bufferCount)
+  result = RenderBatch(x).vertexBuffer[i]
+
+proc `[]`*(x: var RenderBatchVertexBuffer, i: int): var VertexBuffer =
+  checkArrayAccess(RenderBatch(x).vertexBuffer, i, RenderBatch(x).bufferCount)
+  result = RenderBatch(x).vertexBuffer[i]
+
+proc `[]`*(x: RenderBatchDraws, i: int): Rectangle =
+  checkArrayAccess(RenderBatch(x).draws, i, DefaultBatchDrawCalls)
+  result = RenderBatch(x).draws[i]
+
+proc `[]`*(x: var RenderBatchDraws, i: int): var Rectangle =
+  checkArrayAccess(RenderBatch(x).draws, i, DefaultBatchDrawCalls)
+  result = RenderBatch(x).draws[i]

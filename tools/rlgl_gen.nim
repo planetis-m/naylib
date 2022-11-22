@@ -90,12 +90,101 @@ type
   ComputeShader = ShaderType(0x91B9) ## GL_COMPUTE_SHADER
 """
   helpers = """
+template drawMode*(mode: DrawMode; body: untyped) =
+  ## Drawing mode (how to organize vertex)
+  rlBegin(mode)
+  try:
+    body
+  finally: rlEnd()
+
+template vertices*(x: VertexBuffer): VertexBufferVertices = VertexBufferVertices(x)
+template texcoords*(x: VertexBuffer): VertexBufferTexcoords = VertexBufferTexcoords(x)
+template colors*(x: VertexBuffer): VertexBufferColors = VertexBufferColors(x)
+template indices*(x: VertexBuffer): VertexBufferIndices = VertexBufferIndices(x)
+template vertexBuffer*(x: RenderBatch): RenderBatchVertexBuffer = RenderBatchVertexBuffer(x)
+template draws*(x: RenderBatch): RenderBatchDraws = RenderBatchDraws(x)
+
+proc raiseIndexDefect(i, n: int) {.noinline, noreturn.} =
+  raise newException(IndexDefect, "index " & $i & " not in 0 .. " & $n)
+
+template checkArrayAccess(a, x, len) =
+  when compileOption("boundChecks"):
+    {.line.}:
+      if a == nil or (x < 0 or x >= len):
+        raiseIndexDefect(x, len-1)
+
+proc `[]`*(x: VertexBufferVertices, i: int): Vector3 =
+  checkArrayAccess(VertexBuffer(x).vertices, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[Vector3]](VertexBuffer(x).vertices)[i]
+
+proc `[]`*(x: var VertexBufferVertices, i: int): var Vector3 =
+  checkArrayAccess(VertexBuffer(x).vertices, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[Vector3]](VertexBuffer(x).vertices)[i]
+
+proc `[]=`*(x: var VertexBufferVertices, i: int, val: Vector3) =
+  checkArrayAccess(VertexBuffer(x).vertices, i, VertexBuffer(x).elementCount)
+  cast[ptr UncheckedArray[Vector3]](VertexBuffer(x).vertices)[i] = val
+
+proc `[]`*(x: VertexBufferTexcoords, i: int): Vector2 =
+  checkArrayAccess(VertexBuffer(x).texcoords, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[Vector2]](VertexBuffer(x).texcoords)[i]
+
+proc `[]`*(x: var VertexBufferTexcoords, i: int): var Vector2 =
+  checkArrayAccess(VertexBuffer(x).texcoords, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[Vector2]](VertexBuffer(x).texcoords)[i]
+
+proc `[]=`*(x: var VertexBufferTexcoords, i: int, val: Vector2) =
+  checkArrayAccess(VertexBuffer(x).texcoords, i, VertexBuffer(x).elementCount)
+  cast[ptr UncheckedArray[Vector2]](VertexBuffer(x).texcoords)[i] = val
+
+proc `[]`*(x: VertexBufferColors, i: int): Color =
+  checkArrayAccess(VertexBuffer(x).colors, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i]
+
+proc `[]`*(x: var VertexBufferColors, i: int): var Color =
+  checkArrayAccess(VertexBuffer(x).colors, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i]
+
+proc `[]=`*(x: var VertexBufferColors, i: int, val: Color) =
+  checkArrayAccess(VertexBuffer(x).colors, i, VertexBuffer(x).elementCount)
+  cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i] = val
+
+proc `[]`*(x: VertexBufferIndices, i: int): array[6, uint32] =
+  checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[typeof(result)]](VertexBuffer(x).indices)[i]
+
+proc `[]`*(x: var VertexBufferIndices, i: int): var array[6, uint32] =
+  checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
+  result = cast[ptr UncheckedArray[typeof(result)]](VertexBuffer(x).indices)[i]
+
+proc `[]=`*(x: var VertexBufferIndices, i: int, val: array[6, uint32]) =
+  checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
+  cast[ptr UncheckedArray[typeof(val)]](VertexBuffer(x).indices)[i] = val
+
+proc `[]`*(x: RenderBatchVertexBuffer, i: int): VertexBuffer =
+  checkArrayAccess(RenderBatch(x).vertexBuffer, i, RenderBatch(x).bufferCount)
+  result = RenderBatch(x).vertexBuffer[i]
+
+proc `[]`*(x: var RenderBatchVertexBuffer, i: int): var VertexBuffer =
+  checkArrayAccess(RenderBatch(x).vertexBuffer, i, RenderBatch(x).bufferCount)
+  result = RenderBatch(x).vertexBuffer[i]
+
+proc `[]`*(x: RenderBatchDraws, i: int): Rectangle =
+  checkArrayAccess(RenderBatch(x).draws, i, DefaultBatchDrawCalls)
+  result = RenderBatch(x).draws[i]
+
+proc `[]`*(x: var RenderBatchDraws, i: int): var Rectangle =
+  checkArrayAccess(RenderBatch(x).draws, i, DefaultBatchDrawCalls)
+  result = RenderBatch(x).draws[i]
 """
   destructors = """
 
 proc `=destroy`*(x: var RenderBatch) =
   if x.vertexBuffer != nil: unloadRenderBatch(x)
 proc `=copy`*(dest: var RenderBatch; source: RenderBatch) {.error.}
+
+proc `=sink`*(dest: var vertexBuffer; source: VertexBuffer) {.error.}
+proc `=copy`*(dest: var VertexBuffer; source: VertexBuffer) {.error.}
 """
   excludedEnums = [
     "rlTraceLogLevel",
@@ -140,15 +229,16 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           doc val
     lit "\n"
     lit constants
+    var procArrays: seq[(string, string, string)] = @[]
     lit "\ntype"
     scope:
       for obj in items(t.structs):
         if obj.name in excludedTypes: continue
         spaces
-        var name = obj.name
-        if name != "rlglData":
-          removePrefix(name, "rl")
-        ident capitalizeAscii(name)
+        var objName = obj.name
+        if objName != "rlglData":
+          removePrefix(objName, "rl")
+        ident capitalizeAscii(objName)
         lit "* {.bycopy.} = object"
         doc obj
         scope:
@@ -156,17 +246,29 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
             spaces
             var name = fld.name
             ident name
-            lit "*: "
             # let kind = getReplacement(obj.name, name, replacement)
             # if kind != "":
             #   lit kind
             #   continue
-            let many = isPlural(name) or (obj.name, name) == ("rlRenderBatch", "vertexBuffer")
             var baseKind = ""
+            let many = isPlural(name) or (objName, name) == ("RenderBatch", "vertexBuffer")
             let kind = convertType(fld.`type`, "", many, false, baseKind)
+            if many:
+              lit ": "
+            else:
+              lit "*: "
             lit kind
             doc fld
+            if many:
+              procArrays.add (objName, name, baseKind)
         lit "\n"
+      for obj, name, _ in procArrays.items:
+        spaces
+        lit obj
+        lit capitalizeAscii(name)
+        lit "* = distinct "
+        ident obj
+      lit "\n"
     lit destructors
     # Generate functions
     lit "\n{.push callconv: cdecl, header: \"rlgl.h\".}"
