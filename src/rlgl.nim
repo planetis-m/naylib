@@ -109,10 +109,10 @@ const
 type
   VertexBuffer* {.bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
     elementCount*: int32 ## Number of elements in the buffer (QUADS)
-    vertices*: ptr float32 ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
-    texcoords*: ptr float32 ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
-    colors*: ptr uint8 ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-    indices*: ptr uint32 ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
+    vertices*: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
+    texcoords*: ptr UncheckedArray[float32] ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+    colors*: ptr UncheckedArray[uint8] ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
+    indices*: ptr UncheckedArray[uint32] ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
     vaoId*: uint32 ## OpenGL Vertex Array Object id
     vboId*: array[4, uint32] ## OpenGL Vertex Buffer Objects id (4 types of vertex data)
 
@@ -125,8 +125,8 @@ type
   RenderBatch* {.bycopy.} = object ## rlRenderBatch type
     bufferCount*: int32 ## Number of vertex buffers (multi-buffering support)
     currentBuffer*: int32 ## Current buffer tracking in case of multi-buffering
-    vertexBuffer*: ptr VertexBuffer ## Dynamic buffer(s) for vertex data
-    draws*: ptr DrawCall ## Draw calls array, depends on textureId
+    vertexBuffer*: ptr UncheckedArray[VertexBuffer] ## Dynamic buffer(s) for vertex data
+    draws*: ptr UncheckedArray[DrawCall] ## Draw calls array, depends on textureId
     drawCounter*: int32 ## Draw calls counter
     currentDepth*: float32 ## Current depth value for next draw
 

@@ -161,8 +161,9 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
             # if kind != "":
             #   lit kind
             #   continue
+            let many = isPlural(name) or (obj.name, name) == ("rlRenderBatch", "vertexBuffer")
             var baseKind = ""
-            let kind = convertType(fld.`type`, "", false, false, baseKind)
+            let kind = convertType(fld.`type`, "", many, false, baseKind)
             lit kind
             doc fld
         lit "\n"
