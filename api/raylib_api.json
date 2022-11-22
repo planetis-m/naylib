@@ -2794,12 +2794,12 @@
         {
           "name": "BLEND_CUSTOM",
           "value": 6,
-          "description": "Blend textures using custom src/dst factors (use rlSetBlendMode())"
+          "description": "Blend textures using custom src/dst factors (use rlSetBlendFactors())"
         },
         {
           "name": "BLEND_CUSTOM_SEPARATE",
           "value": 7,
-          "description": "Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendModeSeparate())"
+          "description": "Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendFactorsSeparate())"
         }
       ]
     },

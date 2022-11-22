@@ -1,7 +1,7 @@
 import nake, std/strformat
 
 const
-  RayLatestCommit = "e6306e5e76f83c9cf0b2bfbb85ceffa4ed2926ee"
+  RayLatestCommit = "f6558fe6e0932863b83d2a6a49b8fc81b7354242"
 
 const
   pkgDir = currentSourcePath().parentDir.quoteShell
@@ -61,15 +61,18 @@ proc generateWrapper =
 
 task "wrap", "Produce the raylib nim wrapper":
   let src = "raylib_parser.c"
-  let header = rayDir / "/src/raylib.h"
+  let raylib = rayDir / "/src/raylib.h"
+  let rlgl = rayDir / "/src/rlgl.h"
   fetchLatestRaylib()
   withDir(rayDir / "/parser"):
     var exe = src.changeFileExt(ExeExt)
     direSilentShell "Building raylib API parser...", &"cc {src} -o {exe}"
     discard existsOrCreateDir(apiDir)
     normalizeExe(exe)
-    direSilentShell "Generating API JSON file...",
-        &"{exe} -f JSON -d RLAPI -i {header} -o {apiDir / \"/raylib_api.json\"}"
+    direSilentShell "Generating raylib API JSON file...",
+        &"{exe} -f JSON -d RLAPI -i {raylib} -o {apiDir / \"/raylib_api.json\"}"
+    direSilentShell "Generating rlgl API JSON file...",
+        &"{exe} -f JSON -d RLAPI -i {rlgl} -o {apiDir / \"/rlgl_api.json\"}"
   generateWrapper()
 
 task "docs", "Generate documentation":

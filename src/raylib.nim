@@ -338,8 +338,8 @@ const
   BlendAddColors* = BlendMode(3) ## Blend textures adding colors (alternative)
   BlendSubtractColors* = BlendMode(4) ## Blend textures subtracting colors (alternative)
   BlendAlphaPremultiply* = BlendMode(5) ## Blend premultiplied textures considering alpha
-  BlendCustom* = BlendMode(6) ## Blend textures using custom src/dst factors (use rlSetBlendMode())
-  BlendCustomSeparate* = BlendMode(7) ## Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendModeSeparate())
+  BlendCustom* = BlendMode(6) ## Blend textures using custom src/dst factors (use rlSetBlendFactors())
+  BlendCustomSeparate* = BlendMode(7) ## Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendFactorsSeparate())
 
   GestureNone* = Gesture(0) ## No gesture
   GestureTap* = Gesture(1) ## Tap gesture
