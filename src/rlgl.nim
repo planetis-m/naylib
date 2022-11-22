@@ -136,7 +136,7 @@ const
   VertexShader = ShaderType(0x8B31) ## GL_VERTEX_SHADER
   ComputeShader = ShaderType(0x91B9) ## GL_COMPUTE_SHADER
 
-  ## Default shader vertex attribute names to set location points
+  # Default shader vertex attribute names to set location points
   DefaultShaderAttribNamePosition* = AttribName("vertexPosition") ## Binded by default to shader location: 0
   DefaultShaderAttribNameTexcoord* = AttribName("vertexTexCoord") ## Binded by default to shader location: 1
   DefaultShaderAttribNameNormal* = AttribName("vertexNormal") ## Binded by default to shader location: 2
@@ -328,7 +328,7 @@ proc rlglClose*() {.importc: "rlglClose".}
   ## De-inititialize rlgl (buffers, shaders, textures)
 proc loadExtensions*(loader: pointer) {.importc: "rlLoadExtensions".}
   ## Load OpenGL extensions (loader function required)
-proc getVersion*(): int32 {.importc: "rlGetVersion".}
+proc getVersion*(): GlVersion {.importc: "rlGetVersion".}
   ## Get current OpenGL version
 proc setFramebufferWidth*(width: int32) {.importc: "rlSetFramebufferWidth".}
   ## Set current framebuffer width

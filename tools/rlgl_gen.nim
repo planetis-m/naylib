@@ -243,7 +243,7 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     "Matrix"
   ]
   enumInFuncReturn = [
-    ("rlGetVersion", 9),
+    ("rlGetVersion", 15),
   ]
   enumInFuncParams = [
     # TextureParameter
@@ -380,9 +380,14 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
       lit ")"
       if fnc.returnType != "void":
         lit ": "
-        var baseKind = ""
-        let kind = convertType(fnc.returnType, "", false, true, baseKind)
-        lit kind
+        block outer:
+          for (name, idx) in enumInFuncReturn.items:
+            if name == fnc.name:
+              lit enumInFuncs[idx]
+              break outer
+          var baseKind = ""
+          let kind = convertType(fnc.returnType, "", false, true, baseKind)
+          lit kind
       lit " {.importc: \""
       ident fnc.name
       lit "\""
