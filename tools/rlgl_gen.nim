@@ -5,9 +5,9 @@ when defined(nimPreviewSlimSystem):
 const
   rlglHeader = """
 from raylib import PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex,
-  ShaderUniformDataType, ShaderAttributeDataType, MaxShaderLocations, Matrix
+  ShaderUniformDataType, ShaderAttributeDataType, MaxShaderLocations, Matrix, Vector2, Vector3, Color
 export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniformDataType,
-  ShaderAttributeDataType, MaxShaderLocations
+  ShaderAttributeDataType, MaxShaderLocations, Matrix, Vector2, Vector3, Color
 
 const
   RlglVersion* = (4, 2, 0)
@@ -90,6 +90,14 @@ type
   ComputeShader = ShaderType(0x91B9) ## GL_COMPUTE_SHADER
 """
   helpers = """
+
+proc `=destroy`*(x: var RenderBatch) =
+  if x.vertexBuffer != nil: unloadRenderBatch(x)
+proc `=copy`*(dest: var RenderBatch; source: RenderBatch) {.error.}
+
+proc `=sink`*(dest: var VertexBuffer; source: VertexBuffer) {.error.}
+proc `=copy`*(dest: var VertexBuffer; source: VertexBuffer) {.error.}
+
 template drawMode*(mode: DrawMode; body: untyped) =
   ## Drawing mode (how to organize vertex)
   rlBegin(mode)
@@ -161,7 +169,7 @@ proc `[]=`*(x: var VertexBufferIndices, i: int, val: array[6, uint32]) =
   checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
   cast[ptr UncheckedArray[typeof(val)]](VertexBuffer(x).indices)[i] = val
 
-proc `[]`*(x: RenderBatchVertexBuffer, i: int): VertexBuffer =
+proc `[]`*(x: RenderBatchVertexBuffer, i: int): lent VertexBuffer =
   checkArrayAccess(RenderBatch(x).vertexBuffer, i, RenderBatch(x).bufferCount)
   result = RenderBatch(x).vertexBuffer[i]
 
@@ -169,22 +177,13 @@ proc `[]`*(x: var RenderBatchVertexBuffer, i: int): var VertexBuffer =
   checkArrayAccess(RenderBatch(x).vertexBuffer, i, RenderBatch(x).bufferCount)
   result = RenderBatch(x).vertexBuffer[i]
 
-proc `[]`*(x: RenderBatchDraws, i: int): Rectangle =
+proc `[]`*(x: RenderBatchDraws, i: int): DrawCall =
   checkArrayAccess(RenderBatch(x).draws, i, DefaultBatchDrawCalls)
   result = RenderBatch(x).draws[i]
 
-proc `[]`*(x: var RenderBatchDraws, i: int): var Rectangle =
+proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
   checkArrayAccess(RenderBatch(x).draws, i, DefaultBatchDrawCalls)
   result = RenderBatch(x).draws[i]
-"""
-  destructors = """
-
-proc `=destroy`*(x: var RenderBatch) =
-  if x.vertexBuffer != nil: unloadRenderBatch(x)
-proc `=copy`*(dest: var RenderBatch; source: RenderBatch) {.error.}
-
-proc `=sink`*(dest: var vertexBuffer; source: VertexBuffer) {.error.}
-proc `=copy`*(dest: var VertexBuffer; source: VertexBuffer) {.error.}
 """
   excludedEnums = [
     "rlTraceLogLevel",
@@ -269,7 +268,6 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
         lit "* = distinct "
         ident obj
       lit "\n"
-    lit destructors
     # Generate functions
     lit "\n{.push callconv: cdecl, header: \"rlgl.h\".}"
     for fnc in items(t.functions):
