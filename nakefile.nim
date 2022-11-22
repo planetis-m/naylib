@@ -50,19 +50,20 @@ task "buildAndroid", "Build the raylib library for the Android platform":
 
 # The rest are meant for developers only!
 
-proc generateWrapper =
-  let src = "raylib_gen.nim"
+proc generateWrapper(lib: string) =
+  let src = lib & "_gen.nim"
   withDir(pkgDir / "/tools"):
     var exe = src.changeFileExt(ExeExt)
-    direSilentShell "Building raylib2nim tool...",
+    direSilentShell &"Building {lib}2nim tool...",
         "nim c --mm:arc --panics:on -d:release -d:emiLenient " & src
     normalizeExe(exe)
-    direSilentShell "Generating raylib Nim wrapper...", exe
+    direSilentShell &"Generating {lib} Nim wrapper...", exe
 
 task "wrap", "Produce the raylib nim wrapper":
   let src = "raylib_parser.c"
   let raylib = rayDir / "/src/raylib.h"
   let rlgl = rayDir / "/src/rlgl.h"
+  # let raymath = rayDir / "/src/raymath.h"
   fetchLatestRaylib()
   withDir(rayDir / "/parser"):
     var exe = src.changeFileExt(ExeExt)
@@ -71,9 +72,13 @@ task "wrap", "Produce the raylib nim wrapper":
     normalizeExe(exe)
     direSilentShell "Generating raylib API JSON file...",
         &"{exe} -f JSON -d RLAPI -i {raylib} -o {apiDir / \"/raylib_api.json\"}"
+    # direSilentShell "Generating raymath API JSON file...",
+    #     &"{exe} -f JSON -d RMAPI -i {raymath} -o {apiDir / \"/raymath_api.json\"}"
     direSilentShell "Generating rlgl API JSON file...",
         &"{exe} -f JSON -d RLAPI -i {rlgl} -o {apiDir / \"/rlgl_api.json\"}"
-  generateWrapper()
+  generateWrapper("raylib")
+  # generateWrapper("raymath")
+  # generateWrapper("rlgl")
 
 task "docs", "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html

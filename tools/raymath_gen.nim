@@ -2,10 +2,8 @@ import common, std/[algorithm, strutils, streams, strformat]
 
 const
   raymathHeader = """
+import std/math
 from raylib import Vector2, Vector3, Vector4, Quaternion, Matrix
-
-const lext = when defined(windows): ".dll" elif defined(macosx): ".dylib" else: ".so"
-{.pragma: rmapi, cdecl, dynlib: "libraylib" & lext.}
 """
   excludedTypes = [
     "Vector2",
@@ -15,27 +13,27 @@ const lext = when defined(windows): ".dll" elif defined(macosx): ".dylib" else: 
   ]
   raymathOps = """
 
-template `+`*[T: Vector2 | Vector3 | Quaternion | Matrix](v1, v2: T): T = add(v1, v2)
-template `+=`*[T: Vector2 | Vector3 | Quaternion | Matrix](v1: var T, v2: T) = v1 = add(v1, v2)
-template `+`*[T: Vector2 | Vector3 | Quaternion](v1: T, value: float32): T = addValue(v1, value)
-template `+=`*[T: Vector2 | Vector3 | Quaternion](v1: var T, value: float32) = v1 = addValue(v1, value)
+template `+`*[T: Vector2|Vector3|Quaternion|Matrix](v1, v2: T): T = add(v1, v2)
+template `+=`*[T: Vector2|Vector3|Quaternion|Matrix](v1: var T, v2: T) = v1 = add(v1, v2)
+template `+`*[T: Vector2|Vector3|Quaternion](v1: T, value: float32): T = addValue(v1, value)
+template `+=`*[T: Vector2|Vector3|Quaternion](v1: var T, value: float32) = v1 = addValue(v1, value)
 
-template `-`*[T: Vector2 | Vector3 | Quaternion | Matrix](v1, v2: T): T = subtract(v1, v2)
-template `-=`*[T: Vector2 | Vector3 | Quaternion | Matrix](v1: var T, v2: T) = v1 = subtract(v1, v2)
-template `-`*[T: Vector2 | Vector3 | Quaternion](v1: T, value: float32): T = subtractValue(v1, value)
-template `-=`*[T: Vector2 | Vector3 | Quaternion](v1: var T, value: float32) = v1 = subtractValue(v1, value)
+template `-`*[T: Vector2|Vector3|Quaternion|Matrix](v1, v2: T): T = subtract(v1, v2)
+template `-=`*[T: Vector2|Vector3|Quaternion|Matrix](v1: var T, v2: T) = v1 = subtract(v1, v2)
+template `-`*[T: Vector2|Vector3|Quaternion](v1: T, value: float32): T = subtractValue(v1, value)
+template `-=`*[T: Vector2|Vector3|Quaternion](v1: var T, value: float32) = v1 = subtractValue(v1, value)
 
-template `*`*[T: Vector2 | Vector3 | Quaternion | Matrix](v1, v2: T): T = multiply(v1, v2)
-template `*=`*[T: Vector2 | Vector3 | Quaternion | Matrix](v1: var T, v2: T) = v1 = multiply(v1, v2)
-template `*`*[T: Vector2 | Vector3 | Quaternion](v1: T, value: float32): T = scale(v1, value)
-template `*=`*[T: Vector2 | Vector3 | Quaternion](v1: var T, value: float32) = v1 = scale(v1, value)
+template `*`*[T: Vector2|Vector3|Quaternion|Matrix](v1, v2: T): T = multiply(v1, v2)
+template `*=`*[T: Vector2|Vector3|Quaternion|Matrix](v1: var T, v2: T) = v1 = multiply(v1, v2)
+template `*`*[T: Vector2|Vector3|Quaternion](v1: T, value: float32): T = scale(v1, value)
+template `*=`*[T: Vector2|Vector3|Quaternion](v1: var T, value: float32) = v1 = scale(v1, value)
 
-template `/`*[T: Vector2 | Vector3 | Quaternion | Matrix](v1, v2: T): T = divide(v1, v2)
-template `/=`*[T: Vector2 | Vector3 | Quaternion | Matrix](v1: var T, v2: T) = v1 = divide(v1, v2)
-template `/`*[T: Vector2 | Vector3 | Quaternion](v1: T, value: float32): T = scale(v1, 1'f32/value)
-template `/=`*[T: Vector2 | Vector3 | Quaternion](v1: var T, value: float32) = v1 = scale(v1, 1'f32/value)
+template `/`*[T: Vector2|Vector3|Quaternion|Matrix](v1, v2: T): T = divide(v1, v2)
+template `/=`*[T: Vector2|Vector3|Quaternion|Matrix](v1: var T, v2: T) = v1 = divide(v1, v2)
+template `/`*[T: Vector2|Vector3|Quaternion](v1: T, value: float32): T = scale(v1, 1'f32/value)
+template `/=`*[T: Vector2|Vector3|Quaternion](v1: var T, value: float32) = v1 = scale(v1, 1'f32/value)
 
-template `-`*[T: Vector2 | Vector3](v1: T): T = negate(v1)
+template `-`*[T: Vector2|Vector3](v1: T): T = negate(v1)
 """
 
 proc genBindings(t: TopLevel, fname: string, header, footer: string) =
@@ -57,13 +55,20 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
         scope:
           for fld in items(obj.fields):
             spaces
-            var (name, pat) = transFieldName(fld.name)
+            var name = fld.name
             ident name
             lit "*: "
-            let kind = convertType(fld.`type`, pat, false, false)
+            # let kind = getReplacement(obj.name, name, replacement)
+            # if kind != "":
+            #   lit kind
+            #   continue
+            var baseKind = ""
+            let kind = convertType(fld.`type`, "", false, false, baseKind)
             lit kind
             doc fld
         lit "\n"
+    # Generate functions
+    lit "\n{.push callconv: cdecl, header: \"raymath.h\".}"
     for fnc in items(t.functions):
       lit "\nproc "
       var name = fnc.name
@@ -77,25 +82,27 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
       lit "*("
       var hasVarargs = false
       for i, param in fnc.params.pairs:
-        if param.name == "" and param.`type` == "":
+        if param.name == "args" and param.`type` == "...":
           hasVarargs = true
         else:
           if i > 0: lit ", "
           ident param.name
           lit ": "
-          let kind = convertType(param.`type`, "", false, true)
+          var baseKind = ""
+          let kind = convertType(param.`type`, "", false, true, baseKind)
           lit kind
       lit ")"
       if fnc.returnType != "void":
         lit ": "
-        let kind = convertType(fnc.returnType, "", false, true)
+        var baseKind = ""
+        let kind = convertType(fnc.returnType, "", false, true, baseKind)
         lit kind
       lit " {.importc: \""
       ident fnc.name
       lit "\""
       if hasVarargs:
         lit ", varargs"
-      lit ", rmapi.}"
+      lit ".}"
       if fnc.description != "":
         scope:
           spaces
@@ -107,11 +114,11 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
     if otp != nil: otp.close()
 
 const
-  raylibApi = "../api/raymath_api.json"
-  outputname = "../raymath.nim"
+  raymathApi = "../api/raymath_api.json"
+  outputname = "../src/raymath.nim"
 
 proc main =
-  var t = parseApi(raylibApi)
+  var t = parseApi(raymathApi)
   genBindings(t, outputname, raymathHeader, raymathOps)
 
 main()

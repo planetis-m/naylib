@@ -104,6 +104,13 @@ proc toNimType*(x: string): string =
     "Float16"
   else: x
 
+proc getReplacement*(x, y: string, replacements: openarray[(string, string, string)]): string =
+  # Manual replacements for some fields
+  result = ""
+  for a, b, pattern in replacements.items:
+    if x == a and y == b:
+      return pattern
+
 proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var string): string =
   ## Converts a C type to the equivalent Nim type.
   ## Should work with function parameters, return, and struct fields types.

@@ -384,13 +384,6 @@ const
     "LoadDroppedFiles"
   ]
 
-proc getReplacement(x, y: string, replacements: openarray[(string, string, string)]): string =
-  # Manual replacements for some fields
-  result = ""
-  for a, b, pattern in replacements.items:
-    if x == a and y == b:
-      return pattern
-
 proc genBindings(t: TopLevel, fname: string; header, middle: string) =
   var buf = newStringOfCap(50)
   var indent = 0
