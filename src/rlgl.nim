@@ -125,14 +125,14 @@ type
   RenderBatch* {.bycopy.} = object ## rlRenderBatch type
     bufferCount*: int32 ## Number of vertex buffers (multi-buffering support)
     currentBuffer*: int32 ## Current buffer tracking in case of multi-buffering
-    vertexBuffer*: ptr rlVertexBuffer ## Dynamic buffer(s) for vertex data
-    draws*: ptr rlDrawCall ## Draw calls array, depends on textureId
+    vertexBuffer*: ptr VertexBuffer ## Dynamic buffer(s) for vertex data
+    draws*: ptr DrawCall ## Draw calls array, depends on textureId
     drawCounter*: int32 ## Draw calls counter
     currentDepth*: float32 ## Current depth value for next draw
 
   RlglData* {.bycopy.} = object
-    currentBatch*: ptr rlRenderBatch ## Current render batch
-    defaultBatch*: rlRenderBatch ## Default internal render batch
+    currentBatch*: ptr RenderBatch ## Current render batch
+    defaultBatch*: RenderBatch ## Default internal render batch
     vertexCounter*: int32 ## Current active render batch vertex counter (generic, used for all batches)
     texcoordx*: float32 ## Current active texture coordinate (added on glVertex*())
     texcoordy*: float32 ## Current active texture coordinate (added on glVertex*())
@@ -335,13 +335,13 @@ proc getShaderIdDefault*(): uint32 {.importc: "rlGetShaderIdDefault".}
   ## Get default shader id
 proc getShaderLocsDefault*(): var int32 {.importc: "rlGetShaderLocsDefault".}
   ## Get default shader locations
-proc loadRenderBatch*(numBuffers: int32, bufferElements: int32): rlRenderBatch {.importc: "rlLoadRenderBatch".}
+proc loadRenderBatch*(numBuffers: int32, bufferElements: int32): RenderBatch {.importc: "rlLoadRenderBatch".}
   ## Load a render batch system
-proc unloadRenderBatch*(batch: rlRenderBatch) {.importc: "rlUnloadRenderBatch".}
+proc unloadRenderBatch*(batch: RenderBatch) {.importc: "rlUnloadRenderBatch".}
   ## Unload render batch system
-proc drawRenderBatch*(batch: var rlRenderBatch) {.importc: "rlDrawRenderBatch".}
+proc drawRenderBatch*(batch: var RenderBatch) {.importc: "rlDrawRenderBatch".}
   ## Draw render batch data (Update->Draw->Reset)
-proc setRenderBatchActive*(batch: var rlRenderBatch) {.importc: "rlSetRenderBatchActive".}
+proc setRenderBatchActive*(batch: var RenderBatch) {.importc: "rlSetRenderBatchActive".}
   ## Set the active render batch for rlgl (NULL for default internal)
 proc drawRenderBatchActive*() {.importc: "rlDrawRenderBatchActive".}
   ## Update and draw internal render batch

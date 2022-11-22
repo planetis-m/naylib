@@ -93,20 +93,22 @@ proc toNimType*(x: string): string =
   ## Also used to make replacements.
   case x
   of "float":
-    "float32"
+    result = "float32"
   of "double":
-    "float"
+    result = "float"
   of "short":
-    "int16"
+    result = "int16"
   of "long":
-    "int64"
+    result = "int64"
   of "int":
-    "int32"
+    result = "int32"
   of "float3":
-    "Float3"
+    result = "Float3"
   of "float16":
-    "Float16"
-  else: x
+    result = "Float16"
+  else:
+    result = x
+    removePrefix(result, "rl")
 
 proc getReplacement*(x, y: string, replacements: openarray[(string, string, string)]): string =
   # Manual replacements for some fields
