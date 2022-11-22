@@ -197,7 +197,8 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           spaces
           lit "## "
           lit fnc.description
-    lit "\n"
+    lit "\n{.pop.}\n"
+    # lit "\n"
     lit footer
   finally:
     if otp != nil: otp.close()

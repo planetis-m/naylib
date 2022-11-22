@@ -413,3 +413,4 @@ proc loadDrawCube*() {.importc: "rlLoadDrawCube".}
   ## Load and draw a cube
 proc loadDrawQuad*() {.importc: "rlLoadDrawQuad".}
   ## Load and draw a quad
+{.pop.}
