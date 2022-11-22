@@ -91,6 +91,12 @@ type
 """
   helpers = """
 """
+  destructors = """
+
+proc `=destroy`*(x: var RenderBatch) =
+  if x.vertexBuffer != nil: unloadRenderBatch(x)
+proc `=copy`*(dest: var RenderBatch; source: RenderBatch) {.error.}
+"""
   excludedEnums = [
     "rlTraceLogLevel",
     "rlPixelFormat",
@@ -160,6 +166,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
             lit kind
             doc fld
         lit "\n"
+    lit destructors
     # Generate functions
     lit "\n{.push callconv: cdecl, header: \"rlgl.h\".}"
     for fnc in items(t.functions):

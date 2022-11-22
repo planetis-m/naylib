@@ -130,6 +130,10 @@ type
     drawCounter*: int32 ## Draw calls counter
     currentDepth*: float32 ## Current depth value for next draw
 
+proc `=destroy`*(x: var RenderBatch) =
+  if x.vertexBuffer != nil: unloadRenderBatch(x)
+proc `=copy`*(dest: var RenderBatch; source: RenderBatch) {.error.}
+
 {.push callconv: cdecl, header: "rlgl.h".}
 proc matrixMode*(mode: int32) {.importc: "rlMatrixMode".}
   ## Choose the current matrix to be transformed
