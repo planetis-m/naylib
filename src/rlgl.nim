@@ -7,6 +7,106 @@ const
   RlglVersion* = (4, 2, 0)
 
 type
+  TextureParameter* = distinct int32
+  MatrixMode* = distinct int32
+  DrawMode* = distinct int32
+  GlType* = distinct int32
+  BufferUsageHint* = distinct int32
+  ShaderType* = distinct int32
+
+  GlVersion* = distinct int32
+  FramebufferAttachType* = distinct int32
+  FramebufferAttachTextureType* = distinct int32
+  CullMode* = distinct int32
+
+const
+  Opengl11* = GlVersion(1) ## OpenGL 1.1
+  Opengl21* = GlVersion(2) ## OpenGL 2.1 (GLSL 120)
+  Opengl33* = GlVersion(3) ## OpenGL 3.3 (GLSL 330)
+  Opengl43* = GlVersion(4) ## OpenGL 4.3 (using GLSL 330)
+  OpenglEs20* = GlVersion(5) ## OpenGL ES 2.0 (GLSL 100)
+  AttachmentColorChannel0* = FramebufferAttachType(0) ## Framebuffer attachmment type: color 0
+  AttachmentColorChannel1* = FramebufferAttachType(1) ## Framebuffer attachmment type: color 1
+  AttachmentColorChannel2* = FramebufferAttachType(2) ## Framebuffer attachmment type: color 2
+  AttachmentColorChannel3* = FramebufferAttachType(3) ## Framebuffer attachmment type: color 3
+  AttachmentColorChannel4* = FramebufferAttachType(4) ## Framebuffer attachmment type: color 4
+  AttachmentColorChannel5* = FramebufferAttachType(5) ## Framebuffer attachmment type: color 5
+  AttachmentColorChannel6* = FramebufferAttachType(6) ## Framebuffer attachmment type: color 6
+  AttachmentColorChannel7* = FramebufferAttachType(7) ## Framebuffer attachmment type: color 7
+  AttachmentDepth* = FramebufferAttachType(100) ## Framebuffer attachmment type: depth
+  AttachmentStencil* = FramebufferAttachType(200) ## Framebuffer attachmment type: stencil
+  AttachmentCubemapPositiveX* = FramebufferAttachTextureType(0) ## Framebuffer texture attachment type: cubemap, +X side
+  AttachmentCubemapNegativeX* = FramebufferAttachTextureType(1) ## Framebuffer texture attachment type: cubemap, -X side
+  AttachmentCubemapPositiveY* = FramebufferAttachTextureType(2) ## Framebuffer texture attachment type: cubemap, +Y side
+  AttachmentCubemapNegativeY* = FramebufferAttachTextureType(3) ## Framebuffer texture attachment type: cubemap, -Y side
+  AttachmentCubemapPositiveZ* = FramebufferAttachTextureType(4) ## Framebuffer texture attachment type: cubemap, +Z side
+  AttachmentCubemapNegativeZ* = FramebufferAttachTextureType(5) ## Framebuffer texture attachment type: cubemap, -Z side
+  AttachmentTexture2d* = FramebufferAttachTextureType(100) ## Framebuffer texture attachment type: texture2d
+  AttachmentRenderbuffer* = FramebufferAttachTextureType(200) ## Framebuffer texture attachment type: renderbuffer
+  CullFaceFront* = CullMode(0)
+  CullFaceBack* = CullMode(1)
+
+  DefaultBatchBufferElements = 8192 ## This is the maximum amount of elements (quads) per batch
+                                    ## NOTE: Be careful with text, every letter maps to a quad
+  DefaultBatchBuffers = 1 ## Default number of batch buffers (multi-buffering)
+  DefaultBatchDrawCalls = 256 ## Default number of batch draw calls (by state changes: mode, texture)
+  DefaultBatchMaxTextureUnits = 4 ## Maximum number of textures units that can be activated on batch drawing
+  MaxMatrixStackSize = 32 ## Maximum size of Matrix stack
+  MaxShaderLocations = 32 ## Maximum number of shader locations supported
+  CullDistanceNear = 0.01 ## Default near cull distance
+  CullDistanceFar = 1000.0 ## Default far cull distance
+
+  # Texture parameters (equivalent to OpenGL defines)
+  TextureWrapS = 0x2802.TextureParameter ## GL_TEXTURE_WRAP_S
+  TextureWrapT = 0x2803.TextureParameter ## GL_TEXTURE_WRAP_T
+  TextureMagFilter = 0x2800.TextureParameter ## GL_TEXTURE_MAG_FILTER
+  TextureMinFilter = 0x2801.TextureParameter ## GL_TEXTURE_MIN_FILTER
+
+  TextureFilterNEAREST = 0x2600.TextureParameter ## GL_NEAREST
+  TextureFilterLINEAR = 0x2601.TextureParameter ## GL_LINEAR
+  TextureFilterMIP_NEAREST = 0x2700.TextureParameter ## GL_NEAREST_MIPMAP_NEAREST
+  TextureFilterNEAREST_MIP_LINEAR = 0x2702.TextureParameter ## GL_NEAREST_MIPMAP_LINEAR
+  TextureFilterLINEAR_MIP_NEAREST = 0x2701.TextureParameter ## GL_LINEAR_MIPMAP_NEAREST
+  TextureFilterMIP_LINEAR = 0x2703.TextureParameter ## GL_LINEAR_MIPMAP_LINEAR
+  TextureFilterANISOTROPIC = 0x3000.TextureParameter ## Anisotropic filter (custom identifier)
+  TextureMipmapBIAS_RATIO = 0x4000.TextureParameter ## Texture mipmap bias, percentage ratio (custom identifier)
+
+  TextureWrapRepeat = 0x2901.TextureParameter ## GL_REPEAT
+  TextureWrapClamp = 0x812F.TextureParameter ## GL_CLAMP_TO_EDGE
+  TextureWrapMirrorRepeat = 0x8370.TextureParameter ## GL_MIRRORED_REPEAT
+  TextureWrapMirrorClamp = 0x8742.TextureParameter ## GL_MIRROR_CLAMP_EXT
+
+  # Matrix modes (equivalent to OpenGL)
+  MatrixModelview = 0x1700.MatrixMode ## GL_MODELVIEW
+  MatrixProjection = 0x1701.MatrixMode ## GL_PROJECTION
+  MatrixTexture = 0x1702.MatrixMode ## GL_TEXTURE
+
+  # Primitive assembly draw modes
+  DrawLines = 0x0001.DrawMode ## GL_LINES
+  DrawTriangles = 0x0004.DrawMode ## GL_TRIANGLES
+  DrawQuads = 0x0007.DrawMode ## GL_QUADS
+
+  # GL equivalent data types
+  GlUnsignedByte = 0x1401.GlType ## GL_UNSIGNED_BYTE
+  GlFloat = 0x1406.GlType ## GL_FLOAT
+
+  # Buffer usage hint
+  UsageStreamDraw = 0x88E0.BufferUsageHint ## GL_STREAM_DRAW
+  UsageStreamRead = 0x88E1.BufferUsageHint ## GL_STREAM_READ
+  UsageStreamCopy = 0x88E2.BufferUsageHint ## GL_STREAM_COPY
+  UsageStaticDraw = 0x88E4.BufferUsageHint ## GL_STATIC_DRAW
+  UsageStaticRead = 0x88E5.BufferUsageHint ## GL_STATIC_READ
+  UsageStaticCopy = 0x88E6.BufferUsageHint ## GL_STATIC_COPY
+  UsageDynamicDraw = 0x88E8.BufferUsageHint ## GL_DYNAMIC_DRAW
+  UsageDynamicRead = 0x88E9.BufferUsageHint ## GL_DYNAMIC_READ
+  UsageDynamicCopy = 0x88EA.BufferUsageHint ## GL_DYNAMIC_COPY
+
+  # GL Shader type
+  FragmentShader = 0x8B30.ShaderType ## GL_FRAGMENT_SHADER
+  VertexShader = 0x8B31.ShaderType ## GL_VERTEX_SHADER
+  ComputeShader = 0x91B9.ShaderType ## GL_COMPUTE_SHADER
+
+type
   VertexBuffer* {.bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
     elementCount*: int32 ## Number of elements in the buffer (QUADS)
     vertices*: ptr float32 ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)

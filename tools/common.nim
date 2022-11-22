@@ -32,7 +32,7 @@ proc isKeyword*(s: string): bool {.inline.} =
 ## The type definitions are used by the deserializer to process the file.
 type
   TopLevel* = object
-    #defines*: seq[DefineInfo]
+    # defines*: seq[DefineInfo]
     structs*: seq[StructInfo]
     callbacks*: seq[FunctionInfo]
     aliases*: seq[AliasInfo]
@@ -40,11 +40,13 @@ type
     functions*: seq[FunctionInfo]
 
   DefineType* = enum
-    UNKNOWN, MACRO, GUARD, INT, LONG, FLOAT, DOUBLE, CHAR, STRING, COLOR
+    UNKNOWN, MACRO, GUARD, INT, LONG, FLOAT, FLOAT_MATH, DOUBLE, CHAR, STRING, COLOR
+
   DefineInfo* = object
     name*: string
     `type`*: DefineType
-    value*, description*: string
+    value*: string
+    description*: string
     isHex*: bool
 
   FunctionInfo* = object
