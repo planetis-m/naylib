@@ -10,7 +10,7 @@ export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniform
   ShaderAttributeDataType
 
 const
-  RlglVersion* = (4, 5, 0)
+  RlglVersion* = (4, 2, 0)
 """
   helpers = """
 """

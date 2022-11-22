@@ -98,6 +98,8 @@ proc toNimType*(x: string): string =
     "int16"
   of "long":
     "int64"
+  of "int":
+    "int32"
   of "float3":
     "Float3"
   of "float16":
@@ -110,6 +112,8 @@ proc getReplacement*(x, y: string, replacements: openarray[(string, string, stri
   for a, b, pattern in replacements.items:
     if x == a and y == b:
       return pattern
+
+proc camelCaseAscii*(s: string): string
 
 proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var string): string =
   ## Converts a C type to the equivalent Nim type.
@@ -124,6 +128,7 @@ proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var s
   var isUnsigned = false
   var isSizeT = false
   var isSigned = false
+  var isArray = false
   for token, isSep in tokenize(s):
     if isSep: continue
     case token
@@ -147,8 +152,19 @@ proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var s
       discard
     else:
       var len = 0
+      var constant = ""
       if scanf(token, "$w[$i]$.", result, len):
-        result = "array[" & $len & ", " & toNimType(result) & "]"
+        isArray = true
+        var kind = toNimType(result)
+        if isUnsigned: kind = "u" & kind
+        result = "array[" & $len & ", " & kind & "]"
+      elif scanf(token, "$w[$w]$.", result, constant):
+        isArray = true
+        removePrefix(constant, "RL_")
+        constant = camelCaseAscii(constant)
+        var kind = toNimType(result)
+        if isUnsigned: kind = "u" & kind
+        result = "array[" & constant & ", " & kind & "]"
       else: result = toNimType(token)
   if result == "": result = "int32"
   if isSizeT:
@@ -159,7 +175,8 @@ proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var s
     else:
       result = "char"
   elif isUnsigned:
-    result = "u" & result
+    if not isArray:
+      result = "u" & result
   baseKind = result
   if pattern != "":
     result = pattern % result

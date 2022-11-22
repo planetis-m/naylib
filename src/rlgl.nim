@@ -4,7 +4,7 @@ export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniform
   ShaderAttributeDataType
 
 const
-  RlglVersion* = (4, 5, 0)
+  RlglVersion* = (4, 2, 0)
 
 type
   VertexBuffer* {.bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
@@ -12,14 +12,9 @@ type
     vertices*: ptr float32 ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
     texcoords*: ptr float32 ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
     colors*: ptr uint8 ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-    indices*: ptr defined(GRAPHICS_API_OPENunsigned ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
     indices*: ptr uint32 ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
-    indices*: #endif ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
-    indices*: defined(GRAPHICS_API_OPENGL_ES2) ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
-    indices*: ptr uint16 ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
-    vaoId*: #endif ## OpenGL Vertex Array Object id
     vaoId*: uint32 ## OpenGL Vertex Array Object id
-    vboId*: uarray[4, int] ## OpenGL Vertex Buffer Objects id (4 types of vertex data)
+    vboId*: array[4, uint32] ## OpenGL Vertex Buffer Objects id (4 types of vertex data)
 
   DrawCall* {.bycopy.} = object ## of those state-change happens (this is done in core module)
     mode*: int32 ## Drawing mode: LINES, TRIANGLES, QUADS
@@ -54,10 +49,10 @@ type
     projection*: Matrix ## Default projection matrix
     transform*: Matrix ## Transform matrix to be used with rlTranslate, rlRotate, rlScale
     transformRequired*: bool ## Require transform matrix application to current draw-call vertex (if required)
-    stack*: Matrix[RL_MAX_MATRIX_STACK_SIZE] ## Matrix stack for push/pop
+    stack*: array[MaxMatrixStackSize, Matrix] ## Matrix stack for push/pop
     stackCounter*: int32 ## Matrix stack counter
     defaultTextureId*: uint32 ## Default texture used on shapes/poly drawing (required by shader)
-    activeTextureId*: uint[RL_DEFAULT_BATCH_MAX_TEXTURE_UNITS] ## Active texture ids to be enabled on batch drawing (0 active by default)
+    activeTextureId*: array[DefaultBatchMaxTextureUnits, uint32] ## Active texture ids to be enabled on batch drawing (0 active by default)
     defaultVShaderId*: uint32 ## Default vertex shader id (used by default shader program)
     defaultFShaderId*: uint32 ## Default fragment shader id (used by default shader program)
     defaultShaderId*: uint32 ## Default shader program id, supports vertex color and diffuse texture

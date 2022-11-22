@@ -53,7 +53,7 @@ task "buildAndroid", "Build the raylib library for the Android platform":
 
 # The rest are meant for developers only!
 
-proc generateWrapper(lib: string) =
+proc genWrapper(lib: string) =
   let src = lib & "_gen.nim"
   withDir(pkgDir / "/tools"):
     var exe = src.changeFileExt(ExeExt)
@@ -62,7 +62,7 @@ proc generateWrapper(lib: string) =
     normalizeExe(exe)
     direSilentShell &"Generating {lib} Nim wrapper...", exe
 
-proc wrapRaylib(lib, prefix: string) =
+proc genApiJson(lib, prefix: string) =
   let src = "raylib_parser.c"
   fetchLatestRaylib()
   withDir(rayDir / "/parser"):
@@ -75,7 +75,10 @@ proc wrapRaylib(lib, prefix: string) =
     direSilentShell &"Generating {lib} API JSON file...",
         exe & " -f JSON " & (if prefix != "": "-d " & prefix else: "") &
         &" -i {header} -o {apiJson}"
-  generateWrapper(lib)
+
+proc wrapRaylib(lib, prefix: string) =
+  genApiJson(lib, prefix)
+  genWrapper(lib)
 
 task "wrap", "Produce all raylib nim wrappers":
   wrapRaylib("raylib", "RLAPI")
@@ -89,7 +92,8 @@ task "wrapRaymath", "Produce the raymath nim wrapper":
   wrapRaylib("raymath", "RMAPI")
 
 task "wrapRlgl", "Produce the rlgl nim wrapper":
-  wrapRaylib("rlgl", "")
+  # wrapRaylib("rlgl", "")
+  genWrapper("rlgl")
 
 task "docs", "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
