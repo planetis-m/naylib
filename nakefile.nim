@@ -36,6 +36,9 @@ proc buildRaylib(platform: string, wayland = false) =
     copyFileToDir("raylib.h", inclDir)
     copyFileToDir("rlgl.h", inclDir)
 
+task "build", "Build the raylib library for the default platform":
+  buildRaylib("PLATFORM_DESKTOP")
+
 task "buildDesktop", "Build the raylib library for the Desktop platform":
   buildRaylib("PLATFORM_DESKTOP")
 
@@ -54,31 +57,39 @@ proc generateWrapper(lib: string) =
   let src = lib & "_gen.nim"
   withDir(pkgDir / "/tools"):
     var exe = src.changeFileExt(ExeExt)
-    direSilentShell &"Building {lib}2nim tool...",
+    direSilentShell "Building the ray2nim tool...",
         "nim c --mm:arc --panics:on -d:release -d:emiLenient " & src
     normalizeExe(exe)
     direSilentShell &"Generating {lib} Nim wrapper...", exe
 
-task "wrap", "Produce the raylib nim wrapper":
+proc wrapRaylib(lib, prefix: string) =
   let src = "raylib_parser.c"
-  let raylib = rayDir / "/src/raylib.h"
-  let rlgl = rayDir / "/src/rlgl.h"
-  # let raymath = rayDir / "/src/raymath.h"
   fetchLatestRaylib()
   withDir(rayDir / "/parser"):
     var exe = src.changeFileExt(ExeExt)
     direSilentShell "Building raylib API parser...", &"cc {src} -o {exe}"
     discard existsOrCreateDir(apiDir)
     normalizeExe(exe)
-    direSilentShell "Generating raylib API JSON file...",
-        &"{exe} -f JSON -d RLAPI -i {raylib} -o {apiDir / \"/raylib_api.json\"}"
-    # direSilentShell "Generating raymath API JSON file...",
-    #     &"{exe} -f JSON -d RMAPI -i {raymath} -o {apiDir / \"/raymath_api.json\"}"
-    direSilentShell "Generating rlgl API JSON file...",
-        &"{exe} -f JSON -d RLAPI -i {rlgl} -o {apiDir / \"/rlgl_api.json\"}"
-  generateWrapper("raylib")
-  # generateWrapper("raymath")
-  # generateWrapper("rlgl")
+    let header = rayDir / &"/src/{lib}.h"
+    let apiJson = apiDir / &"/{lib}_api.json"
+    direSilentShell &"Generating {lib} API JSON file...",
+        exe & " -f JSON " & (if prefix != "": "-d " & prefix else: "") &
+        &" -i {header} -o {apiJson}"
+  generateWrapper(lib)
+
+task "wrap", "Produce all raylib nim wrappers":
+  wrapRaylib("raylib", "RLAPI")
+  # wrapRaylib("raymath", "RMAPI")
+  wrapRaylib("rlgl", "")
+
+task "wrapRaylib", "Produce the raylib nim wrapper":
+  wrapRaylib("raylib", "RLAPI")
+
+task "wrapRaymath", "Produce the raymath nim wrapper":
+  wrapRaylib("raymath", "RMAPI")
+
+task "wrapRlgl", "Produce the rlgl nim wrapper":
+  wrapRaylib("rlgl", "")
 
 task "docs", "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html

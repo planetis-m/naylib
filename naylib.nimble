@@ -48,6 +48,9 @@ proc buildRaylib(platform: string, wayland = false) =
   cpFile(rayDir & "/src/raylib.h", inclDir & "/raylib.h")
   cpFile(rayDir & "/src/rlgl.h", inclDir & "/rlgl.h")
 
+# task build, "Build the raylib library for the default platform":
+#   buildRaylib("PLATFORM_DESKTOP")
+
 task buildDesktop, "Build the raylib library for the Desktop platform":
   buildRaylib("PLATFORM_DESKTOP")
 
