@@ -2,11 +2,8 @@ import std/math
 from raylib import Vector2, Vector3, Vector4, Quaternion, Matrix
 
 type
-  Float3* {.bycopy.} = object ## NOTE: Helper types to be used instead of array return types for ToFloat functions
-    v*: array[3, float32]
-
-  Float16* {.bycopy.} = object
-    v*: array[16, float32]
+  Float3* = array[3, float32]
+  Float16* = array[16, float32]
 
   Index2* {.bycopy.} = object ## Index2, 2 components
     x*: int32 ## Index x component
@@ -570,13 +567,12 @@ func unproject*(source: Vector3; projection, view: Matrix): Vector3 {.inline.} =
   result.y = qtransformed.y / qtransformed.w
   result.z = qtransformed.z / qtransformed.w
 
-func toFloatV*(v: Vector3): Float3 {.inline.} =
+func toFloatV*(v: Vector3): Float3 {.inline, noinit.} =
   ## Get Vector3 as float array
-  var buffer = Float3()
-  buffer.v[0] = v.x
-  buffer.v[1] = v.y
-  buffer.v[2] = v.z
-  return buffer
+  # result = default(Float3)
+  result[0] = v.x
+  result[1] = v.y
+  result[2] = v.z
 
 func invert*(v: Vector3): Vector3 {.inline.} =
   ## Invert the given vector
@@ -1035,25 +1031,25 @@ func lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
   # Vector3DotProduct(vz, eye)
   result.m15 = 1'f32
 
-func toFloatV*(mat: Matrix): Float16 {.inline.} =
+func toFloatV*(mat: Matrix): Float16 {.inline, noinit.} =
   ## Get float array of matrix data
-  result = Float16()
-  result.v[0] = mat.m0
-  result.v[1] = mat.m1
-  result.v[2] = mat.m2
-  result.v[3] = mat.m3
-  result.v[4] = mat.m4
-  result.v[5] = mat.m5
-  result.v[6] = mat.m6
-  result.v[7] = mat.m7
-  result.v[8] = mat.m8
-  result.v[9] = mat.m9
-  result.v[10] = mat.m10
-  result.v[11] = mat.m11
-  result.v[12] = mat.m12
-  result.v[13] = mat.m13
-  result.v[14] = mat.m14
-  result.v[15] = mat.m15
+  # result = default(Float16)
+  result[0] = mat.m0
+  result[1] = mat.m1
+  result[2] = mat.m2
+  result[3] = mat.m3
+  result[4] = mat.m4
+  result[5] = mat.m5
+  result[6] = mat.m6
+  result[7] = mat.m7
+  result[8] = mat.m8
+  result[9] = mat.m9
+  result[10] = mat.m10
+  result[11] = mat.m11
+  result[12] = mat.m12
+  result[13] = mat.m13
+  result[14] = mat.m14
+  result[15] = mat.m15
 
 # ----------------------------------------------------------------------------------
 # Module Functions Definition - Quaternion math
