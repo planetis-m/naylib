@@ -130,52 +130,6 @@ type
     drawCounter*: int32 ## Draw calls counter
     currentDepth*: float32 ## Current depth value for next draw
 
-  RlglData* {.bycopy.} = object
-    currentBatch*: ptr RenderBatch ## Current render batch
-    defaultBatch*: RenderBatch ## Default internal render batch
-    vertexCounter*: int32 ## Current active render batch vertex counter (generic, used for all batches)
-    texcoordx*: float32 ## Current active texture coordinate (added on glVertex*())
-    texcoordy*: float32 ## Current active texture coordinate (added on glVertex*())
-    normalx*: float32 ## Current active normal (added on glVertex*())
-    normaly*: float32 ## Current active normal (added on glVertex*())
-    normalz*: float32 ## Current active normal (added on glVertex*())
-    colorr*: uint8 ## Current active color (added on glVertex*())
-    colorg*: uint8 ## Current active color (added on glVertex*())
-    colorb*: uint8 ## Current active color (added on glVertex*())
-    colora*: uint8 ## Current active color (added on glVertex*())
-    currentMatrixMode*: int32 ## Current matrix mode
-    currentMatrix*: ptr Matrix ## Current matrix pointer
-    modelview*: Matrix ## Default modelview matrix
-    projection*: Matrix ## Default projection matrix
-    transform*: Matrix ## Transform matrix to be used with rlTranslate, rlRotate, rlScale
-    transformRequired*: bool ## Require transform matrix application to current draw-call vertex (if required)
-    stack*: array[MaxMatrixStackSize, Matrix] ## Matrix stack for push/pop
-    stackCounter*: int32 ## Matrix stack counter
-    defaultTextureId*: uint32 ## Default texture used on shapes/poly drawing (required by shader)
-    activeTextureId*: array[DefaultBatchMaxTextureUnits, uint32] ## Active texture ids to be enabled on batch drawing (0 active by default)
-    defaultVShaderId*: uint32 ## Default vertex shader id (used by default shader program)
-    defaultFShaderId*: uint32 ## Default fragment shader id (used by default shader program)
-    defaultShaderId*: uint32 ## Default shader program id, supports vertex color and diffuse texture
-    defaultShaderLocs*: ptr int32 ## Default shader locations pointer to be used on rendering
-    currentShaderId*: uint32 ## Current shader id to be used on rendering (by default, defaultShaderId)
-    currentShaderLocs*: ptr int32 ## Current shader locations pointer to be used on rendering (by default, defaultShaderLocs)
-    stereoRender*: bool ## Stereo rendering flag
-    projectionStereo*: array[2, Matrix] ## VR stereo rendering eyes projection matrices
-    viewOffsetStereo*: array[2, Matrix] ## VR stereo rendering eyes view offset matrices
-    currentBlendMode*: int32 ## Blending mode active
-    glBlendSrcFactor*: int32 ## Blending source factor
-    glBlendDstFactor*: int32 ## Blending destination factor
-    glBlendEquation*: int32 ## Blending equation
-    glBlendSrcFactorRGB*: int32 ## Blending source RGB factor
-    glBlendDestFactorRGB*: int32 ## Blending destination RGB factor
-    glBlendSrcFactorAlpha*: int32 ## Blending source alpha factor
-    glBlendDestFactorAlpha*: int32 ## Blending destination alpha factor
-    glBlendEquationRGB*: int32 ## Blending equation for RGB
-    glBlendEquationAlpha*: int32 ## Blending equation for alpha
-    glCustomBlendModeModified*: bool ## Custom blending factor and equation modification status
-    framebufferWidth*: int32 ## Current framebuffer width
-    framebufferHeight*: int32 ## Current framebuffer height
-
 {.push callconv: cdecl, header: "rlgl.h".}
 proc matrixMode*(mode: int32) {.importc: "rlMatrixMode".}
   ## Choose the current matrix to be transformed
@@ -459,5 +413,3 @@ proc loadDrawCube*() {.importc: "rlLoadDrawCube".}
   ## Load and draw a cube
 proc loadDrawQuad*() {.importc: "rlLoadDrawQuad".}
   ## Load and draw a quad
-proc getMatrixProjectionStereo*(eye: int32): Matrix {.importc: "rlGetMatrixProjectionStereo".}
-proc getMatrixViewOffsetStereo*(eye: int32): Matrix {.importc: "rlGetMatrixViewOffsetStereo".}

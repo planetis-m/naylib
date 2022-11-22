@@ -92,7 +92,7 @@ task "wrapRaymath", "Produce the raymath nim wrapper":
   wrapRaylib("raymath", "RMAPI")
 
 task "wrapRlgl", "Produce the rlgl nim wrapper":
-  # wrapRaylib("rlgl", "")
+  # wrapRaylib("rlgl", "RLAPI")
   genWrapper("rlgl")
 
 task "docs", "Generate documentation":
