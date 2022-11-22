@@ -1,7 +1,7 @@
 from raylib import PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex,
   ShaderUniformDataType, ShaderAttributeDataType, MaxShaderLocations, Matrix
 export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniformDataType,
-  ShaderAttributeDataType
+  ShaderAttributeDataType, MaxShaderLocations
 
 const
   RlglVersion* = (4, 2, 0)
@@ -52,59 +52,59 @@ const
   DefaultBatchDrawCalls = 256 ## Default number of batch draw calls (by state changes: mode, texture)
   DefaultBatchMaxTextureUnits = 4 ## Maximum number of textures units that can be activated on batch drawing
   MaxMatrixStackSize = 32 ## Maximum size of Matrix stack
-  MaxShaderLocations = 32 ## Maximum number of shader locations supported
+  # MaxShaderLocations = 32 ## Maximum number of shader locations supported
   CullDistanceNear = 0.01 ## Default near cull distance
   CullDistanceFar = 1000.0 ## Default far cull distance
 
   # Texture parameters (equivalent to OpenGL defines)
-  TextureWrapS = 0x2802.TextureParameter ## GL_TEXTURE_WRAP_S
-  TextureWrapT = 0x2803.TextureParameter ## GL_TEXTURE_WRAP_T
-  TextureMagFilter = 0x2800.TextureParameter ## GL_TEXTURE_MAG_FILTER
-  TextureMinFilter = 0x2801.TextureParameter ## GL_TEXTURE_MIN_FILTER
+  TextureWrapS = TextureParameter(0x2802) ## GL_TEXTURE_WRAP_S
+  TextureWrapT = TextureParameter(0x2803) ## GL_TEXTURE_WRAP_T
+  TextureMagFilter = TextureParameter(0x2800) ## GL_TEXTURE_MAG_FILTER
+  TextureMinFilter = TextureParameter(0x2801) ## GL_TEXTURE_MIN_FILTER
 
-  TextureFilterNEAREST = 0x2600.TextureParameter ## GL_NEAREST
-  TextureFilterLINEAR = 0x2601.TextureParameter ## GL_LINEAR
-  TextureFilterMIP_NEAREST = 0x2700.TextureParameter ## GL_NEAREST_MIPMAP_NEAREST
-  TextureFilterNEAREST_MIP_LINEAR = 0x2702.TextureParameter ## GL_NEAREST_MIPMAP_LINEAR
-  TextureFilterLINEAR_MIP_NEAREST = 0x2701.TextureParameter ## GL_LINEAR_MIPMAP_NEAREST
-  TextureFilterMIP_LINEAR = 0x2703.TextureParameter ## GL_LINEAR_MIPMAP_LINEAR
-  TextureFilterANISOTROPIC = 0x3000.TextureParameter ## Anisotropic filter (custom identifier)
-  TextureMipmapBIAS_RATIO = 0x4000.TextureParameter ## Texture mipmap bias, percentage ratio (custom identifier)
+  TextureFilterNEAREST = TextureParameter(0x2600) ## GL_NEAREST
+  TextureFilterLINEAR = TextureParameter(0x2601) ## GL_LINEAR
+  TextureFilterMIP_NEAREST = TextureParameter(0x2700) ## GL_NEAREST_MIPMAP_NEAREST
+  TextureFilterNEAREST_MIP_LINEAR = TextureParameter(0x2702) ## GL_NEAREST_MIPMAP_LINEAR
+  TextureFilterLINEAR_MIP_NEAREST = TextureParameter(0x2701) ## GL_LINEAR_MIPMAP_NEAREST
+  TextureFilterMIP_LINEAR = TextureParameter(0x2703) ## GL_LINEAR_MIPMAP_LINEAR
+  TextureFilterANISOTROPIC = TextureParameter(0x3000) ## Anisotropic filter (custom identifier)
+  TextureMipmapBIAS_RATIO = TextureParameter(0x4000) ## Texture mipmap bias, percentage ratio (custom identifier)
 
-  TextureWrapRepeat = 0x2901.TextureParameter ## GL_REPEAT
-  TextureWrapClamp = 0x812F.TextureParameter ## GL_CLAMP_TO_EDGE
-  TextureWrapMirrorRepeat = 0x8370.TextureParameter ## GL_MIRRORED_REPEAT
-  TextureWrapMirrorClamp = 0x8742.TextureParameter ## GL_MIRROR_CLAMP_EXT
+  TextureWrapRepeat = TextureParameter(0x2901) ## GL_REPEAT
+  TextureWrapClamp = TextureParameter(0x812F) ## GL_CLAMP_TO_EDGE
+  TextureWrapMirrorRepeat = TextureParameter(0x8370) ## GL_MIRRORED_REPEAT
+  TextureWrapMirrorClamp = TextureParameter(0x8742) ## GL_MIRROR_CLAMP_EXT
 
   # Matrix modes (equivalent to OpenGL)
-  MatrixModelview = 0x1700.MatrixMode ## GL_MODELVIEW
-  MatrixProjection = 0x1701.MatrixMode ## GL_PROJECTION
-  MatrixTexture = 0x1702.MatrixMode ## GL_TEXTURE
+  MatrixModelview = MatrixMode(0x1700) ## GL_MODELVIEW
+  MatrixProjection = MatrixMode(0x1701) ## GL_PROJECTION
+  MatrixTexture = MatrixMode(0x1702) ## GL_TEXTURE
 
   # Primitive assembly draw modes
-  DrawLines = 0x0001.DrawMode ## GL_LINES
-  DrawTriangles = 0x0004.DrawMode ## GL_TRIANGLES
-  DrawQuads = 0x0007.DrawMode ## GL_QUADS
+  DrawLines = DrawMode(0x0001) ## GL_LINES
+  DrawTriangles = DrawMode(0x0004) ## GL_TRIANGLES
+  DrawQuads = DrawMode(0x0007) ## GL_QUADS
 
   # GL equivalent data types
-  GlUnsignedByte = 0x1401.GlType ## GL_UNSIGNED_BYTE
-  GlFloat = 0x1406.GlType ## GL_FLOAT
+  GlUnsignedByte = GlType(0x1401) ## GL_UNSIGNED_BYTE
+  GlFloat = GlType(0x1406) ## GL_FLOAT
 
   # Buffer usage hint
-  UsageStreamDraw = 0x88E0.BufferUsageHint ## GL_STREAM_DRAW
-  UsageStreamRead = 0x88E1.BufferUsageHint ## GL_STREAM_READ
-  UsageStreamCopy = 0x88E2.BufferUsageHint ## GL_STREAM_COPY
-  UsageStaticDraw = 0x88E4.BufferUsageHint ## GL_STATIC_DRAW
-  UsageStaticRead = 0x88E5.BufferUsageHint ## GL_STATIC_READ
-  UsageStaticCopy = 0x88E6.BufferUsageHint ## GL_STATIC_COPY
-  UsageDynamicDraw = 0x88E8.BufferUsageHint ## GL_DYNAMIC_DRAW
-  UsageDynamicRead = 0x88E9.BufferUsageHint ## GL_DYNAMIC_READ
-  UsageDynamicCopy = 0x88EA.BufferUsageHint ## GL_DYNAMIC_COPY
+  UsageStreamDraw = BufferUsageHint(0x88E0) ## GL_STREAM_DRAW
+  UsageStreamRead = BufferUsageHint(0x88E1) ## GL_STREAM_READ
+  UsageStreamCopy = BufferUsageHint(0x88E2) ## GL_STREAM_COPY
+  UsageStaticDraw = BufferUsageHint(0x88E4) ## GL_STATIC_DRAW
+  UsageStaticRead = BufferUsageHint(0x88E5) ## GL_STATIC_READ
+  UsageStaticCopy = BufferUsageHint(0x88E6) ## GL_STATIC_COPY
+  UsageDynamicDraw = BufferUsageHint(0x88E8) ## GL_DYNAMIC_DRAW
+  UsageDynamicRead = BufferUsageHint(0x88E9) ## GL_DYNAMIC_READ
+  UsageDynamicCopy = BufferUsageHint(0x88EA) ## GL_DYNAMIC_COPY
 
   # GL Shader type
-  FragmentShader = 0x8B30.ShaderType ## GL_FRAGMENT_SHADER
-  VertexShader = 0x8B31.ShaderType ## GL_VERTEX_SHADER
-  ComputeShader = 0x91B9.ShaderType ## GL_COMPUTE_SHADER
+  FragmentShader = ShaderType(0x8B30) ## GL_FRAGMENT_SHADER
+  VertexShader = ShaderType(0x8B31) ## GL_VERTEX_SHADER
+  ComputeShader = ShaderType(0x91B9) ## GL_COMPUTE_SHADER
 
 type
   VertexBuffer* {.bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
