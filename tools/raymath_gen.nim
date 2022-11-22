@@ -1,9 +1,12 @@
-import common, std/[algorithm, strutils, streams, strformat]
+import common, std/[strutils, streams]
+when defined(nimPreviewSlimSystem):
+  import std/syncio
 
 const
   raymathHeader = """
 import std/math
 from raylib import Vector2, Vector3, Vector4, Quaternion, Matrix
+export Vector2, Vector3, Vector4, Quaternion, Matrix
 """
   excludedTypes = [
     "Vector2",

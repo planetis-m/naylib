@@ -1,5 +1,6 @@
 import std/math
 from raylib import Vector2, Vector3, Vector4, Quaternion, Matrix
+export Vector2, Vector3, Vector4, Quaternion, Matrix
 
 type
   Float3* = array[3, float32]

@@ -1,4 +1,4 @@
-import eminim, std/[algorithm, strscans, strformat, streams]
+import eminim, std/[algorithm, strscans, streams]
 import strutils except indent
 
 const
