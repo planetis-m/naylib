@@ -10,6 +10,7 @@ Documentation
 
 - `raylib <https://planetis-m.github.io/naylib/raylib.html>`_
 - `raymath <https://planetis-m.github.io/naylib/raymath.html>`_
+- `rlgl <https://planetis-m.github.io/naylib/rlgl.html>`_
 
 raylib `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_ (C specific)
 

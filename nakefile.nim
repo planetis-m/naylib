@@ -98,7 +98,7 @@ task "wrapRlgl", "Produce the rlgl nim wrapper":
 task "docs", "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
   withDir(pkgDir):
-    for tmp in items(["raymath", "raylib"]):
+    for tmp in items(["raymath", "raylib", "rlgl"]):
       let doc = docsDir / tmp.addFileExt(".html")
       let src = "src/" / tmp
       direSilentShell(&"Generating the docs for {src}...",
