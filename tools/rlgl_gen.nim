@@ -22,10 +22,37 @@ type
   BufferUsageHint* = distinct int32
   ShaderType* = distinct int32
 
+  UniformName* = distinct cstring
+  AttribName* = distinct cstring
+
   GlVersion* = distinct int32
   FramebufferAttachType* = distinct int32
   FramebufferAttachTextureType* = distinct int32
   CullMode* = distinct int32
+
+proc `==`*(a, b: TextureParameter): bool {.borrow.}
+proc `==`*(a, b: MatrixMode): bool {.borrow.}
+proc `==`*(a, b: DrawMode): bool {.borrow.}
+proc `==`*(a, b: GlType): bool {.borrow.}
+proc `==`*(a, b: BufferUsageHint): bool {.borrow.}
+proc `==`*(a, b: ShaderType): bool {.borrow.}
+
+proc `==`*(a, b: UniformName): bool {.borrow.}
+proc `==`*(a, b: AttribName): bool {.borrow.}
+
+proc `<`*(a, b: GlVersion): bool {.borrow.}
+proc `<=`*(a, b: GlVersion): bool {.borrow.}
+proc `==`*(a, b: GlVersion): bool {.borrow.}
+
+proc `<`*(a, b: FramebufferAttachType): bool {.borrow.}
+proc `<=`*(a, b: FramebufferAttachType): bool {.borrow.}
+proc `==`*(a, b: FramebufferAttachType): bool {.borrow.}
+
+proc `<`*(a, b: FramebufferAttachTextureType): bool {.borrow.}
+proc `<=`*(a, b: FramebufferAttachTextureType): bool {.borrow.}
+proc `==`*(a, b: FramebufferAttachTextureType): bool {.borrow.}
+
+proc `==`*(a, b: CullMode): bool {.borrow.}
 """
   constants = """
 
@@ -45,14 +72,14 @@ type
   TextureMagFilter = TextureParameter(0x2800) ## GL_TEXTURE_MAG_FILTER
   TextureMinFilter = TextureParameter(0x2801) ## GL_TEXTURE_MIN_FILTER
 
-  TextureFilterNEAREST = TextureParameter(0x2600) ## GL_NEAREST
-  TextureFilterLINEAR = TextureParameter(0x2601) ## GL_LINEAR
-  TextureFilterMIP_NEAREST = TextureParameter(0x2700) ## GL_NEAREST_MIPMAP_NEAREST
-  TextureFilterNEAREST_MIP_LINEAR = TextureParameter(0x2702) ## GL_NEAREST_MIPMAP_LINEAR
-  TextureFilterLINEAR_MIP_NEAREST = TextureParameter(0x2701) ## GL_LINEAR_MIPMAP_NEAREST
-  TextureFilterMIP_LINEAR = TextureParameter(0x2703) ## GL_LINEAR_MIPMAP_LINEAR
-  TextureFilterANISOTROPIC = TextureParameter(0x3000) ## Anisotropic filter (custom identifier)
-  TextureMipmapBIAS_RATIO = TextureParameter(0x4000) ## Texture mipmap bias, percentage ratio (custom identifier)
+  TextureFilterNearest = TextureParameter(0x2600) ## GL_NEAREST
+  TextureFilterLinear = TextureParameter(0x2601) ## GL_LINEAR
+  TextureFilterMipNearest = TextureParameter(0x2700) ## GL_NEAREST_MIPMAP_NEAREST
+  TextureFilterNearestMipLinear = TextureParameter(0x2702) ## GL_NEAREST_MIPMAP_LINEAR
+  TextureFilterLinearMipNearest = TextureParameter(0x2701) ## GL_LINEAR_MIPMAP_NEAREST
+  TextureFilterMipLinear = TextureParameter(0x2703) ## GL_LINEAR_MIPMAP_LINEAR
+  TextureFilterAnisotropic = TextureParameter(0x3000) ## Anisotropic filter (custom identifier)
+  TextureMipmapBiasRatio = TextureParameter(0x4000) ## Texture mipmap bias, percentage ratio (custom identifier)
 
   TextureWrapRepeat = TextureParameter(0x2901) ## GL_REPEAT
   TextureWrapClamp = TextureParameter(0x812F) ## GL_CLAMP_TO_EDGE
@@ -88,6 +115,24 @@ type
   FragmentShader = ShaderType(0x8B30) ## GL_FRAGMENT_SHADER
   VertexShader = ShaderType(0x8B31) ## GL_VERTEX_SHADER
   ComputeShader = ShaderType(0x91B9) ## GL_COMPUTE_SHADER
+
+  # Default shader vertex attribute names to set location points
+  DefaultShaderAttribNamePosition* = AttribName("vertexPosition") ## Binded by default to shader location: 0
+  DefaultShaderAttribNameTexcoord* = AttribName("vertexTexCoord") ## Binded by default to shader location: 1
+  DefaultShaderAttribNameNormal* = AttribName("vertexNormal") ## Binded by default to shader location: 2
+  DefaultShaderAttribNameColor* = AttribName("vertexColor") ## Binded by default to shader location: 3
+  DefaultShaderAttribNameTangent* = AttribName("vertexTangent") ## Binded by default to shader location: 4
+  DefaultShaderAttribNameTexcoord2* = AttribName("vertexTexCoord2") ## Binded by default to shader location: 5
+
+  DefaultShaderUniformNameMvp* = UniformName("mvp") ## model-view-projection matrix
+  DefaultShaderUniformNameView* = UniformName("matView") ## view matrix
+  DefaultShaderUniformNameProjection* = UniformName("matProjection") ## projection matrix
+  DefaultShaderUniformNameModel* = UniformName("matModel") ## model matrix
+  DefaultShaderUniformNameNormal* = UniformName("matNormal") ## normal matrix (transpose(inverse(matModelView))
+  DefaultShaderUniformNameColor* = UniformName("colDiffuse") ## color diffuse (base tint color, multiplied by texture color)
+  DefaultShaderSampler2dNameTexture0* = UniformName("texture0") ## texture0 (texture slot active 0)
+  DefaultShaderSampler2dNameTexture1* = UniformName("texture1") ## texture1 (texture slot active 1)
+  DefaultShaderSampler2dNameTexture2* = UniformName("texture2") ## texture2 (texture slot active 2)
 """
   helpers = """
 
@@ -118,7 +163,7 @@ proc raiseIndexDefect(i, n: int) {.noinline, noreturn.} =
 template checkArrayAccess(a, x, len) =
   when compileOption("boundChecks"):
     {.line.}:
-      if a == nil or (x < 0 or x >= len):
+      if x < 0 or x >= len:
         raiseIndexDefect(x, len-1)
 
 proc `[]`*(x: VertexBufferVertices, i: int): Vector3 =
@@ -197,6 +242,45 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
   excludedTypes = [
     "Matrix"
   ]
+  enumInFuncReturn = [
+    ("rlGetVersion", 9),
+  ]
+  enumInFuncParams = [
+    # TextureParameter
+    ("rlTextureParameters", "param"),
+    ("rlMatrixMode", "mode"),
+    ("rlBegin", "mode"),
+    ("rlSetVertexAttribute", "type"),
+    ("rlCompileShader", "type"),
+    ("rlLoadShaderBuffer", "usageHint"),
+    ("rlFramebufferAttach", "attachType"),
+    ("rlFramebufferAttach", "texType"),
+    ("rlSetCullFace", "mode"),
+    ("rlSetBlendMode", "mode"),
+    ("rlGetLocationUniform", "uniformName"),
+    ("rlGetLocationAttrib", "attribName"),
+    ("rlSetUniform", "uniformType"),
+    ("rlSetVertexAttributeDefault", "attribType"),
+    ("rlGetPixelFormatName", "format")
+  ]
+  enumInFuncs = [
+    "TextureParameter",
+    "MatrixMode",
+    "DrawMode",
+    "GlType",
+    "ShaderType",
+    "BufferUsageHint",
+    "FramebufferAttachType",
+    "FramebufferAttachTextureType",
+    "CullMode",
+    "BlendMode",
+    "UniformName",
+    "AttribName",
+    "ShaderUniformDataType",
+    "ShaderAttributeDataType",
+    "PixelFormat",
+    "GlVersion"
+  ]
 
 proc genBindings(t: TopLevel, fname: string, header, footer: string) =
   var buf = newStringOfCap(50)
@@ -226,7 +310,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           lit $val.value
           lit ")"
           doc val
-    lit "\n"
+        lit "\n"
     lit constants
     var procArrays: seq[(string, string, string)] = @[]
     lit "\ntype"
@@ -285,9 +369,14 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           if i > 0: lit ", "
           ident param.name
           lit ": "
-          var baseKind = ""
-          let kind = convertType(param.`type`, "", false, true, baseKind)
-          lit kind
+          block outer:
+            for j, (name, param1) in enumInFuncParams.pairs:
+              if name == fnc.name and param1 == param.name:
+                lit enumInFuncs[j]
+                break outer
+            var baseKind = ""
+            let kind = convertType(param.`type`, "", false, true, baseKind)
+            lit kind
       lit ")"
       if fnc.returnType != "void":
         lit ": "

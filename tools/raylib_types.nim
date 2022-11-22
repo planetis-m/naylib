@@ -100,7 +100,7 @@ proc raiseIndexDefect(i, n: int) {.noinline, noreturn.} =
 template checkArrayAccess(a, x, len) =
   when compileOption("boundChecks"):
     {.line.}:
-      if a == nil or (x < 0 or x >= len):
+      if x < 0 or x >= len:
         raiseIndexDefect(x, len-1)
 
 proc `[]`*[T](x: CSeq[T], i: int): lent T =

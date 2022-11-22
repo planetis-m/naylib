@@ -14,10 +14,37 @@ type
   BufferUsageHint* = distinct int32
   ShaderType* = distinct int32
 
+  UniformName* = distinct cstring
+  AttribName* = distinct cstring
+
   GlVersion* = distinct int32
   FramebufferAttachType* = distinct int32
   FramebufferAttachTextureType* = distinct int32
   CullMode* = distinct int32
+
+proc `==`*(a, b: TextureParameter): bool {.borrow.}
+proc `==`*(a, b: MatrixMode): bool {.borrow.}
+proc `==`*(a, b: DrawMode): bool {.borrow.}
+proc `==`*(a, b: GlType): bool {.borrow.}
+proc `==`*(a, b: BufferUsageHint): bool {.borrow.}
+proc `==`*(a, b: ShaderType): bool {.borrow.}
+
+proc `==`*(a, b: UniformName): bool {.borrow.}
+proc `==`*(a, b: AttribName): bool {.borrow.}
+
+proc `<`*(a, b: GlVersion): bool {.borrow.}
+proc `<=`*(a, b: GlVersion): bool {.borrow.}
+proc `==`*(a, b: GlVersion): bool {.borrow.}
+
+proc `<`*(a, b: FramebufferAttachType): bool {.borrow.}
+proc `<=`*(a, b: FramebufferAttachType): bool {.borrow.}
+proc `==`*(a, b: FramebufferAttachType): bool {.borrow.}
+
+proc `<`*(a, b: FramebufferAttachTextureType): bool {.borrow.}
+proc `<=`*(a, b: FramebufferAttachTextureType): bool {.borrow.}
+proc `==`*(a, b: FramebufferAttachTextureType): bool {.borrow.}
+
+proc `==`*(a, b: CullMode): bool {.borrow.}
 
 const
   Opengl11* = GlVersion(1) ## OpenGL 1.1
@@ -25,6 +52,7 @@ const
   Opengl33* = GlVersion(3) ## OpenGL 3.3 (GLSL 330)
   Opengl43* = GlVersion(4) ## OpenGL 4.3 (using GLSL 330)
   OpenglEs20* = GlVersion(5) ## OpenGL ES 2.0 (GLSL 100)
+
   AttachmentColorChannel0* = FramebufferAttachType(0) ## Framebuffer attachmment type: color 0
   AttachmentColorChannel1* = FramebufferAttachType(1) ## Framebuffer attachmment type: color 1
   AttachmentColorChannel2* = FramebufferAttachType(2) ## Framebuffer attachmment type: color 2
@@ -35,6 +63,7 @@ const
   AttachmentColorChannel7* = FramebufferAttachType(7) ## Framebuffer attachmment type: color 7
   AttachmentDepth* = FramebufferAttachType(100) ## Framebuffer attachmment type: depth
   AttachmentStencil* = FramebufferAttachType(200) ## Framebuffer attachmment type: stencil
+
   AttachmentCubemapPositiveX* = FramebufferAttachTextureType(0) ## Framebuffer texture attachment type: cubemap, +X side
   AttachmentCubemapNegativeX* = FramebufferAttachTextureType(1) ## Framebuffer texture attachment type: cubemap, -X side
   AttachmentCubemapPositiveY* = FramebufferAttachTextureType(2) ## Framebuffer texture attachment type: cubemap, +Y side
@@ -43,6 +72,7 @@ const
   AttachmentCubemapNegativeZ* = FramebufferAttachTextureType(5) ## Framebuffer texture attachment type: cubemap, -Z side
   AttachmentTexture2d* = FramebufferAttachTextureType(100) ## Framebuffer texture attachment type: texture2d
   AttachmentRenderbuffer* = FramebufferAttachTextureType(200) ## Framebuffer texture attachment type: renderbuffer
+
   CullFaceFront* = CullMode(0)
   CullFaceBack* = CullMode(1)
 
@@ -62,14 +92,14 @@ const
   TextureMagFilter = TextureParameter(0x2800) ## GL_TEXTURE_MAG_FILTER
   TextureMinFilter = TextureParameter(0x2801) ## GL_TEXTURE_MIN_FILTER
 
-  TextureFilterNEAREST = TextureParameter(0x2600) ## GL_NEAREST
-  TextureFilterLINEAR = TextureParameter(0x2601) ## GL_LINEAR
-  TextureFilterMIP_NEAREST = TextureParameter(0x2700) ## GL_NEAREST_MIPMAP_NEAREST
-  TextureFilterNEAREST_MIP_LINEAR = TextureParameter(0x2702) ## GL_NEAREST_MIPMAP_LINEAR
-  TextureFilterLINEAR_MIP_NEAREST = TextureParameter(0x2701) ## GL_LINEAR_MIPMAP_NEAREST
-  TextureFilterMIP_LINEAR = TextureParameter(0x2703) ## GL_LINEAR_MIPMAP_LINEAR
-  TextureFilterANISOTROPIC = TextureParameter(0x3000) ## Anisotropic filter (custom identifier)
-  TextureMipmapBIAS_RATIO = TextureParameter(0x4000) ## Texture mipmap bias, percentage ratio (custom identifier)
+  TextureFilterNearest = TextureParameter(0x2600) ## GL_NEAREST
+  TextureFilterLinear = TextureParameter(0x2601) ## GL_LINEAR
+  TextureFilterMipNearest = TextureParameter(0x2700) ## GL_NEAREST_MIPMAP_NEAREST
+  TextureFilterNearestMipLinear = TextureParameter(0x2702) ## GL_NEAREST_MIPMAP_LINEAR
+  TextureFilterLinearMipNearest = TextureParameter(0x2701) ## GL_LINEAR_MIPMAP_NEAREST
+  TextureFilterMipLinear = TextureParameter(0x2703) ## GL_LINEAR_MIPMAP_LINEAR
+  TextureFilterAnisotropic = TextureParameter(0x3000) ## Anisotropic filter (custom identifier)
+  TextureMipmapBiasRatio = TextureParameter(0x4000) ## Texture mipmap bias, percentage ratio (custom identifier)
 
   TextureWrapRepeat = TextureParameter(0x2901) ## GL_REPEAT
   TextureWrapClamp = TextureParameter(0x812F) ## GL_CLAMP_TO_EDGE
@@ -106,6 +136,24 @@ const
   VertexShader = ShaderType(0x8B31) ## GL_VERTEX_SHADER
   ComputeShader = ShaderType(0x91B9) ## GL_COMPUTE_SHADER
 
+  ## Default shader vertex attribute names to set location points
+  DefaultShaderAttribNamePosition* = AttribName("vertexPosition") ## Binded by default to shader location: 0
+  DefaultShaderAttribNameTexcoord* = AttribName("vertexTexCoord") ## Binded by default to shader location: 1
+  DefaultShaderAttribNameNormal* = AttribName("vertexNormal") ## Binded by default to shader location: 2
+  DefaultShaderAttribNameColor* = AttribName("vertexColor") ## Binded by default to shader location: 3
+  DefaultShaderAttribNameTangent* = AttribName("vertexTangent") ## Binded by default to shader location: 4
+  DefaultShaderAttribNameTexcoord2* = AttribName("vertexTexCoord2") ## Binded by default to shader location: 5
+
+  DefaultShaderUniformNameMvp* = UniformName("mvp") ## model-view-projection matrix
+  DefaultShaderUniformNameView* = UniformName("matView") ## view matrix
+  DefaultShaderUniformNameProjection* = UniformName("matProjection") ## projection matrix
+  DefaultShaderUniformNameModel* = UniformName("matModel") ## model matrix
+  DefaultShaderUniformNameNormal* = UniformName("matNormal") ## normal matrix (transpose(inverse(matModelView))
+  DefaultShaderUniformNameColor* = UniformName("colDiffuse") ## color diffuse (base tint color, multiplied by texture color)
+  DefaultShaderSampler2dNameTexture0* = UniformName("texture0") ## texture0 (texture slot active 0)
+  DefaultShaderSampler2dNameTexture1* = UniformName("texture1") ## texture1 (texture slot active 1)
+  DefaultShaderSampler2dNameTexture2* = UniformName("texture2") ## texture2 (texture slot active 2)
+
 type
   VertexBuffer* {.bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
     elementCount*: int32 ## Number of elements in the buffer (QUADS)
@@ -138,7 +186,7 @@ type
   RenderBatchDraws* = distinct RenderBatch
 
 {.push callconv: cdecl, header: "rlgl.h".}
-proc matrixMode*(mode: int32) {.importc: "rlMatrixMode".}
+proc matrixMode*(mode: MatrixMode) {.importc: "rlMatrixMode".}
   ## Choose the current matrix to be transformed
 proc pushMatrix*() {.importc: "rlPushMatrix".}
   ## Push the current matrix to stack
@@ -158,7 +206,7 @@ proc frustum*(left: float, right: float, bottom: float, top: float, znear: float
 proc ortho*(left: float, right: float, bottom: float, top: float, znear: float, zfar: float) {.importc: "rlOrtho".}
 proc viewport*(x: int32, y: int32, width: int32, height: int32) {.importc: "rlViewport".}
   ## Set the viewport area
-proc rlBegin*(mode: int32) {.importc: "rlBegin".}
+proc rlBegin*(mode: DrawMode) {.importc: "rlBegin".}
   ## Initialize drawing mode (how to organize vertex)
 proc rlEnd*() {.importc: "rlEnd".}
   ## Finish vertex providing
@@ -208,7 +256,7 @@ proc enableTextureCubemap*(id: uint32) {.importc: "rlEnableTextureCubemap".}
   ## Enable texture cubemap
 proc disableTextureCubemap*() {.importc: "rlDisableTextureCubemap".}
   ## Disable texture cubemap
-proc textureParameters*(id: uint32, param: int32, value: int32) {.importc: "rlTextureParameters".}
+proc textureParameters*(id: uint32, param: TextureParameter, value: int32) {.importc: "rlTextureParameters".}
   ## Set texture parameters (filter, wrap)
 proc enableShader*(id: uint32) {.importc: "rlEnableShader".}
   ## Enable shader program
@@ -236,7 +284,7 @@ proc enableBackfaceCulling*() {.importc: "rlEnableBackfaceCulling".}
   ## Enable backface culling
 proc disableBackfaceCulling*() {.importc: "rlDisableBackfaceCulling".}
   ## Disable backface culling
-proc setCullFace*(mode: int32) {.importc: "rlSetCullFace".}
+proc setCullFace*(mode: CullMode) {.importc: "rlSetCullFace".}
   ## Set face culling mode
 proc enableScissorTest*() {.importc: "rlEnableScissorTest".}
   ## Enable scissor test
@@ -268,7 +316,7 @@ proc clearScreenBuffers*() {.importc: "rlClearScreenBuffers".}
   ## Clear used screen buffers (color and depth)
 proc checkErrors*() {.importc: "rlCheckErrors".}
   ## Check and log OpenGL error codes
-proc setBlendMode*(mode: int32) {.importc: "rlSetBlendMode".}
+proc setBlendMode*(mode: BlendMode) {.importc: "rlSetBlendMode".}
   ## Set blending mode
 proc setBlendFactors*(glSrcFactor: int32, glDstFactor: int32, glEquation: int32) {.importc: "rlSetBlendFactors".}
   ## Set blending mode factor and equation (using OpenGL factors)
@@ -322,9 +370,9 @@ proc updateVertexBufferElements*(id: uint32, data: pointer, dataSize: int32, off
   ## Update vertex buffer elements with new data
 proc unloadVertexArray*(vaoId: uint32) {.importc: "rlUnloadVertexArray".}
 proc unloadVertexBuffer*(vboId: uint32) {.importc: "rlUnloadVertexBuffer".}
-proc setVertexAttribute*(index: uint32, compSize: int32, `type`: int32, normalized: bool, stride: int32, pointer: pointer) {.importc: "rlSetVertexAttribute".}
+proc setVertexAttribute*(index: uint32, compSize: int32, `type`: GlType, normalized: bool, stride: int32, pointer: pointer) {.importc: "rlSetVertexAttribute".}
 proc setVertexAttributeDivisor*(index: uint32, divisor: int32) {.importc: "rlSetVertexAttributeDivisor".}
-proc setVertexAttributeDefault*(locIndex: int32, value: pointer, attribType: int32, count: int32) {.importc: "rlSetVertexAttributeDefault".}
+proc setVertexAttributeDefault*(locIndex: int32, value: pointer, attribType: ShaderAttributeDataType, count: int32) {.importc: "rlSetVertexAttributeDefault".}
   ## Set vertex attribute default value
 proc drawVertexArray*(offset: int32, count: int32) {.importc: "rlDrawVertexArray".}
 proc drawVertexArrayElements*(offset: int32, count: int32, buffer: pointer) {.importc: "rlDrawVertexArrayElements".}
@@ -340,7 +388,7 @@ proc updateTexture*(id: uint32, offsetX: int32, offsetY: int32, width: int32, he
   ## Update GPU texture with new data
 proc getGlTextureFormats*(format: int32, glInternalFormat: var uint32, glFormat: var uint32, glType: var uint32) {.importc: "rlGetGlTextureFormats".}
   ## Get OpenGL internal formats
-proc getPixelFormatName*(format: uint32): cstring {.importc: "rlGetPixelFormatName".}
+proc getPixelFormatName*(format: PixelFormat): cstring {.importc: "rlGetPixelFormatName".}
   ## Get name string for pixel format
 proc unloadTexture*(id: uint32) {.importc: "rlUnloadTexture".}
   ## Unload texture from GPU memory
@@ -352,7 +400,7 @@ proc readScreenPixels*(width: int32, height: int32): var uint8 {.importc: "rlRea
   ## Read screen pixel data (color buffer)
 proc loadFramebuffer*(width: int32, height: int32): uint32 {.importc: "rlLoadFramebuffer".}
   ## Load an empty framebuffer
-proc framebufferAttach*(fboId: uint32, texId: uint32, attachType: int32, texType: int32, mipLevel: int32) {.importc: "rlFramebufferAttach".}
+proc framebufferAttach*(fboId: uint32, texId: uint32, attachType: FramebufferAttachType, texType: FramebufferAttachTextureType, mipLevel: int32) {.importc: "rlFramebufferAttach".}
   ## Attach texture/renderbuffer to a framebuffer
 proc framebufferComplete*(id: uint32): bool {.importc: "rlFramebufferComplete".}
   ## Verify framebuffer is complete
@@ -360,17 +408,17 @@ proc unloadFramebuffer*(id: uint32) {.importc: "rlUnloadFramebuffer".}
   ## Delete framebuffer from GPU
 proc loadShaderCode*(vsCode: cstring, fsCode: cstring): uint32 {.importc: "rlLoadShaderCode".}
   ## Load shader from code strings
-proc compileShader*(shaderCode: cstring, `type`: int32): uint32 {.importc: "rlCompileShader".}
+proc compileShader*(shaderCode: cstring, `type`: ShaderType): uint32 {.importc: "rlCompileShader".}
   ## Compile custom shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
 proc loadShaderProgram*(vShaderId: uint32, fShaderId: uint32): uint32 {.importc: "rlLoadShaderProgram".}
   ## Load custom shader program
 proc unloadShaderProgram*(id: uint32) {.importc: "rlUnloadShaderProgram".}
   ## Unload shader program
-proc getLocationUniform*(shaderId: uint32, uniformName: cstring): int32 {.importc: "rlGetLocationUniform".}
+proc getLocationUniform*(shaderId: uint32, uniformName: UniformName): int32 {.importc: "rlGetLocationUniform".}
   ## Get shader location uniform
-proc getLocationAttrib*(shaderId: uint32, attribName: cstring): int32 {.importc: "rlGetLocationAttrib".}
+proc getLocationAttrib*(shaderId: uint32, attribName: AttribName): int32 {.importc: "rlGetLocationAttrib".}
   ## Get shader location attribute
-proc setUniform*(locIndex: int32, value: pointer, uniformType: int32, count: int32) {.importc: "rlSetUniform".}
+proc setUniform*(locIndex: int32, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "rlSetUniform".}
   ## Set shader value uniform
 proc setUniformMatrix*(locIndex: int32, mat: Matrix) {.importc: "rlSetUniformMatrix".}
   ## Set shader value matrix
@@ -382,7 +430,7 @@ proc loadComputeShaderProgram*(shaderId: uint32): uint32 {.importc: "rlLoadCompu
   ## Load compute shader program
 proc computeShaderDispatch*(groupX: uint32, groupY: uint32, groupZ: uint32) {.importc: "rlComputeShaderDispatch".}
   ## Dispatch compute shader (equivalent to *draw* for graphics pilepine)
-proc loadShaderBuffer*(size: uint32, data: pointer, usageHint: int32): uint32 {.importc: "rlLoadShaderBuffer".}
+proc loadShaderBuffer*(size: uint32, data: pointer, usageHint: BufferUsageHint): uint32 {.importc: "rlLoadShaderBuffer".}
   ## Load shader storage buffer object (SSBO)
 proc unloadShaderBuffer*(ssboId: uint32) {.importc: "rlUnloadShaderBuffer".}
   ## Unload shader storage buffer object (SSBO)
@@ -449,7 +497,7 @@ proc raiseIndexDefect(i, n: int) {.noinline, noreturn.} =
 template checkArrayAccess(a, x, len) =
   when compileOption("boundChecks"):
     {.line.}:
-      if a == nil or (x < 0 or x >= len):
+      if x < 0 or x >= len:
         raiseIndexDefect(x, len-1)
 
 proc `[]`*(x: VertexBufferVertices, i: int): Vector3 =
