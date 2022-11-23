@@ -501,39 +501,39 @@ template checkArrayAccess(a, x, len) =
         raiseIndexDefect(x, len-1)
 
 proc `[]`*(x: VertexBufferVertices, i: int): Vector3 =
-  checkArrayAccess(VertexBuffer(x).vertices, i, VertexBuffer(x).elementCount)
+  checkArrayAccess(VertexBuffer(x).vertices, i, 4*VertexBuffer(x).elementCount)
   result = cast[ptr UncheckedArray[Vector3]](VertexBuffer(x).vertices)[i]
 
 proc `[]`*(x: var VertexBufferVertices, i: int): var Vector3 =
-  checkArrayAccess(VertexBuffer(x).vertices, i, VertexBuffer(x).elementCount)
+  checkArrayAccess(VertexBuffer(x).vertices, i, 4*VertexBuffer(x).elementCount)
   result = cast[ptr UncheckedArray[Vector3]](VertexBuffer(x).vertices)[i]
 
 proc `[]=`*(x: var VertexBufferVertices, i: int, val: Vector3) =
-  checkArrayAccess(VertexBuffer(x).vertices, i, VertexBuffer(x).elementCount)
+  checkArrayAccess(VertexBuffer(x).vertices, i, 4*VertexBuffer(x).elementCount)
   cast[ptr UncheckedArray[Vector3]](VertexBuffer(x).vertices)[i] = val
 
 proc `[]`*(x: VertexBufferTexcoords, i: int): Vector2 =
-  checkArrayAccess(VertexBuffer(x).texcoords, i, VertexBuffer(x).elementCount)
+  checkArrayAccess(VertexBuffer(x).texcoords, i, 4*VertexBuffer(x).elementCount)
   result = cast[ptr UncheckedArray[Vector2]](VertexBuffer(x).texcoords)[i]
 
 proc `[]`*(x: var VertexBufferTexcoords, i: int): var Vector2 =
-  checkArrayAccess(VertexBuffer(x).texcoords, i, VertexBuffer(x).elementCount)
+  checkArrayAccess(VertexBuffer(x).texcoords, i, 4*VertexBuffer(x).elementCount)
   result = cast[ptr UncheckedArray[Vector2]](VertexBuffer(x).texcoords)[i]
 
 proc `[]=`*(x: var VertexBufferTexcoords, i: int, val: Vector2) =
-  checkArrayAccess(VertexBuffer(x).texcoords, i, VertexBuffer(x).elementCount)
+  checkArrayAccess(VertexBuffer(x).texcoords, i, 4*VertexBuffer(x).elementCount)
   cast[ptr UncheckedArray[Vector2]](VertexBuffer(x).texcoords)[i] = val
 
 proc `[]`*(x: VertexBufferColors, i: int): Color =
-  checkArrayAccess(VertexBuffer(x).colors, i, VertexBuffer(x).elementCount)
+  checkArrayAccess(VertexBuffer(x).colors, i, 4*VertexBuffer(x).elementCount)
   result = cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i]
 
 proc `[]`*(x: var VertexBufferColors, i: int): var Color =
-  checkArrayAccess(VertexBuffer(x).colors, i, VertexBuffer(x).elementCount)
+  checkArrayAccess(VertexBuffer(x).colors, i, 4*VertexBuffer(x).elementCount)
   result = cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i]
 
 proc `[]=`*(x: var VertexBufferColors, i: int, val: Color) =
-  checkArrayAccess(VertexBuffer(x).colors, i, VertexBuffer(x).elementCount)
+  checkArrayAccess(VertexBuffer(x).colors, i, 4*VertexBuffer(x).elementCount)
   cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i] = val
 
 proc `[]`*(x: VertexBufferIndices, i: int): array[6, uint32] =
@@ -556,7 +556,7 @@ proc `[]`*(x: var RenderBatchVertexBuffer, i: int): var VertexBuffer =
   checkArrayAccess(RenderBatch(x).vertexBuffer, i, RenderBatch(x).bufferCount)
   result = RenderBatch(x).vertexBuffer[i]
 
-proc `[]`*(x: RenderBatchDraws, i: int): DrawCall =
+proc `[]`*(x: RenderBatchDraws, i: int): lent DrawCall =
   checkArrayAccess(RenderBatch(x).draws, i, DefaultBatchDrawCalls)
   result = RenderBatch(x).draws[i]
 
