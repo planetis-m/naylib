@@ -5,9 +5,11 @@ when defined(nimPreviewSlimSystem):
 const
   rlglHeader = """
 from raylib import PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex,
-  ShaderUniformDataType, ShaderAttributeDataType, MaxShaderLocations, ShaderLocation, Matrix, Vector2, Vector3, Color
+  ShaderUniformDataType, ShaderAttributeDataType, MaxShaderLocations, ShaderLocation,
+  Matrix, Vector2, Vector3, Color, UniformName, AttribName
 export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniformDataType,
-  ShaderAttributeDataType, MaxShaderLocations, ShaderLocation, Matrix, Vector2, Vector3, Color
+  ShaderAttributeDataType, MaxShaderLocations, ShaderLocation, Matrix, Vector2, Vector3,
+  Color, UniformName, AttribName
 
 const
   RlglVersion* = (4, 2, 0)
@@ -22,9 +24,6 @@ type
   BufferUsageHint* = distinct int32
   ShaderType* = distinct int32
 
-  UniformName* = distinct cstring
-  AttribName* = distinct cstring
-
   GlVersion* = distinct int32
   FramebufferAttachType* = distinct int32
   FramebufferAttachTextureType* = distinct int32
@@ -36,9 +35,6 @@ proc `==`*(a, b: DrawMode): bool {.borrow.}
 proc `==`*(a, b: GlType): bool {.borrow.}
 proc `==`*(a, b: BufferUsageHint): bool {.borrow.}
 proc `==`*(a, b: ShaderType): bool {.borrow.}
-
-proc `==`*(a, b: UniformName): bool {.borrow.}
-proc `==`*(a, b: AttribName): bool {.borrow.}
 
 proc `<`*(a, b: GlVersion): bool {.borrow.}
 proc `<=`*(a, b: GlVersion): bool {.borrow.}

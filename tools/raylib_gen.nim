@@ -48,6 +48,13 @@ const
   MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 
+type
+  UniformName* = distinct cstring
+  AttribName* = distinct cstring
+
+proc `==`*(a, b: UniformName): bool {.borrow.}
+proc `==`*(a, b: AttribName): bool {.borrow.}
+
 proc `==`*(a, b: ConfigFlags): bool {.borrow.}
 
 proc `<`*(a, b: TraceLogLevel): bool {.borrow.}
@@ -218,7 +225,10 @@ const
     ("DrawTextCodepoint", "codepoint"),
     ("GetGlyphIndex", "codepoint"),
     ("GetGlyphInfo", "codepoint"),
-    ("GetGlyphAtlasRec", "codepoint")
+    ("GetGlyphAtlasRec", "codepoint"),
+    # Shader attribure name
+    ("GetShaderLocation", "uniformName"),
+    ("GetShaderLocationAttrib", "attribName")
   ]
   enumInFuncs = [
     "KeyboardKey",
@@ -274,7 +284,9 @@ const
     "Rune",
     "Rune",
     "Rune",
-    "Rune"
+    "Rune",
+    "UniformName",
+    "AttribName"
   ]
   excludedFuncs = [
     # Text strings management functions

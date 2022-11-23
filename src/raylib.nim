@@ -376,6 +376,13 @@ const
   MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 
+type
+  UniformName* = distinct cstring
+  AttribName* = distinct cstring
+
+proc `==`*(a, b: UniformName): bool {.borrow.}
+proc `==`*(a, b: AttribName): bool {.borrow.}
+
 proc `==`*(a, b: ConfigFlags): bool {.borrow.}
 
 proc `<`*(a, b: TraceLogLevel): bool {.borrow.}
@@ -854,9 +861,9 @@ proc unloadVrStereoConfig*(config: VrStereoConfig) {.importc: "UnloadVrStereoCon
   ## Unload VR stereo config
 proc loadShaderPriv(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader".}
 proc loadShaderFromMemoryPriv(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory".}
-proc getShaderLocation*(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation".}
+proc getShaderLocation*(shader: Shader, uniformName: UniformName): ShaderLocation {.importc: "GetShaderLocation".}
   ## Get shader uniform location
-proc getShaderLocationAttrib*(shader: Shader, attribName: cstring): ShaderLocation {.importc: "GetShaderLocationAttrib".}
+proc getShaderLocationAttrib*(shader: Shader, attribName: AttribName): ShaderLocation {.importc: "GetShaderLocationAttrib".}
   ## Get shader attribute location
 proc setShaderValuePriv(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue".}
 proc setShaderValueVPriv(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV".}
