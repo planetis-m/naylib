@@ -381,19 +381,19 @@ proc loadTexture*(data: pointer, width: int32, height: int32, format: int32, mip
   ## Load texture in GPU
 proc loadTextureDepth*(width: int32, height: int32, useRenderBuffer: bool): uint32 {.importc: "rlLoadTextureDepth".}
   ## Load depth texture/renderbuffer (to be attached to fbo)
-proc loadTextureCubemap*(data: pointer, size: int32, format: int32): uint32 {.importc: "rlLoadTextureCubemap".}
+proc loadTextureCubemap*(data: pointer, size: int32, format: PixelFormat): uint32 {.importc: "rlLoadTextureCubemap".}
   ## Load texture cubemap
-proc updateTexture*(id: uint32, offsetX: int32, offsetY: int32, width: int32, height: int32, format: int32, data: pointer) {.importc: "rlUpdateTexture".}
+proc updateTexture*(id: uint32, offsetX: int32, offsetY: int32, width: int32, height: int32, format: PixelFormat, data: pointer) {.importc: "rlUpdateTexture".}
   ## Update GPU texture with new data
-proc getGlTextureFormats*(format: int32, glInternalFormat: out uint32, glFormat: out uint32, glType: out uint32) {.importc: "rlGetGlTextureFormats".}
+proc getGlTextureFormats*(format: PixelFormat, glInternalFormat: out uint32, glFormat: out uint32, glType: out uint32) {.importc: "rlGetGlTextureFormats".}
   ## Get OpenGL internal formats
 proc getPixelFormatName*(format: PixelFormat): cstring {.importc: "rlGetPixelFormatName".}
   ## Get name string for pixel format
 proc unloadTexture*(id: uint32) {.importc: "rlUnloadTexture".}
   ## Unload texture from GPU memory
-proc genTextureMipmaps*(id: uint32, width: int32, height: int32, format: int32, mipmaps: out int32) {.importc: "rlGenTextureMipmaps".}
+proc genTextureMipmaps*(id: uint32, width: int32, height: int32, format: PixelFormat, mipmaps: out int32) {.importc: "rlGenTextureMipmaps".}
   ## Generate mipmap data for selected texture
-proc readTexturePixels*(id: uint32, width: int32, height: int32, format: int32): pointer {.importc: "rlReadTexturePixels".}
+proc readTexturePixels*(id: uint32, width: int32, height: int32, format: PixelFormat): pointer {.importc: "rlReadTexturePixels".}
   ## Read texture pixel data
 proc readScreenPixels*(width: int32, height: int32): var uint8 {.importc: "rlReadScreenPixels".}
   ## Read screen pixel data (color buffer)
@@ -443,7 +443,7 @@ proc copyShaderBuffer*(destId: uint32, srcId: uint32, destOffset: uint32, srcOff
   ## Copy SSBO data between buffers
 proc getShaderBufferSize*(id: uint32): uint32 {.importc: "rlGetShaderBufferSize".}
   ## Get SSBO buffer size
-proc bindImageTexture*(id: uint32, index: uint32, format: uint32, readonly: int32) {.importc: "rlBindImageTexture".}
+proc bindImageTexture*(id: uint32, index: uint32, format: PixelFormat, readonly: int32) {.importc: "rlBindImageTexture".}
   ## Bind image texture
 proc getMatrixModelview*(): Matrix {.importc: "rlGetMatrixModelview".}
   ## Get internal modelview matrix
@@ -468,6 +468,7 @@ proc loadDrawCube*() {.importc: "rlLoadDrawCube".}
 proc loadDrawQuad*() {.importc: "rlLoadDrawQuad".}
   ## Load and draw a quad
 {.pop.}
+
 proc elementCount*(x: VertexBuffer): int32 {.inline.} = x.elementCount
 proc bufferCount*(x: RenderBatch): int32 {.inline.} = x.bufferCount
 

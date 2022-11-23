@@ -242,7 +242,7 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     "Matrix"
   ]
   enumInFuncReturn = [
-    ("rlGetVersion", 15),
+    ("rlGetVersion", 21),
   ]
   enumInFuncParams = [
     # TextureParameter
@@ -260,7 +260,13 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     ("rlGetLocationAttrib", "attribName"),
     ("rlSetUniform", "uniformType"),
     ("rlSetVertexAttributeDefault", "attribType"),
-    ("rlGetPixelFormatName", "format")
+    ("rlGetPixelFormatName", "format"),
+    ("rlLoadTextureCubemap", "format"),
+    ("rlGetGlTextureFormats", "format"),
+    ("rlUpdateTexture", "format"),
+    ("rlGenTextureMipmaps", "format"),
+    ("rlReadTexturePixels", "format"),
+    ("rlBindImageTexture", "format")
   ]
   enumInFuncs = [
     "TextureParameter",
@@ -277,6 +283,12 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     "AttribName",
     "ShaderUniformDataType",
     "ShaderAttributeDataType",
+    "PixelFormat",
+    "PixelFormat",
+    "PixelFormat",
+    "PixelFormat",
+    "PixelFormat",
+    "PixelFormat",
     "PixelFormat",
     "GlVersion"
   ]
@@ -419,8 +431,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           spaces
           lit "## "
           lit fnc.description
-    lit "\n{.pop.}\n"
-    # lit "\n"
+    lit "\n{.pop.}\n\n"
     for obj, field, kind in procProperties.items:
       lit "proc "
       ident field
