@@ -203,7 +203,7 @@ proc rotatef*(angle: float32, x: float32, y: float32, z: float32) {.importc: "rl
   ## Multiply the current matrix by a rotation matrix
 proc scalef*(x: float32, y: float32, z: float32) {.importc: "rlScalef".}
   ## Multiply the current matrix by a scaling matrix
-proc multMatrixf*(matf: var float32) {.importc: "rlMultMatrixf".}
+proc multMatrixf*(matf: var array[16, float32]) {.importc: "rlMultMatrixf".}
   ## Multiply the current matrix by another matrix
 proc frustum*(left: float, right: float, bottom: float, top: float, znear: float, zfar: float) {.importc: "rlFrustum".}
 proc ortho*(left: float, right: float, bottom: float, top: float, znear: float, zfar: float) {.importc: "rlOrtho".}
@@ -345,7 +345,7 @@ proc getTextureIdDefault*(): uint32 {.importc: "rlGetTextureIdDefault".}
   ## Get default texture id
 proc getShaderIdDefault*(): uint32 {.importc: "rlGetShaderIdDefault".}
   ## Get default shader id
-proc getShaderLocsDefault*(): var int32 {.importc: "rlGetShaderLocsDefault".}
+proc getShaderLocsDefault*(): var ShaderLocation {.importc: "rlGetShaderLocsDefault".}
   ## Get default shader locations
 proc loadRenderBatch*(numBuffers: int32, bufferElements: int32): RenderBatch {.importc: "rlLoadRenderBatch".}
   ## Load a render batch system
@@ -389,13 +389,13 @@ proc loadTextureCubemap*(data: pointer, size: int32, format: int32): uint32 {.im
   ## Load texture cubemap
 proc updateTexture*(id: uint32, offsetX: int32, offsetY: int32, width: int32, height: int32, format: int32, data: pointer) {.importc: "rlUpdateTexture".}
   ## Update GPU texture with new data
-proc getGlTextureFormats*(format: int32, glInternalFormat: var uint32, glFormat: var uint32, glType: var uint32) {.importc: "rlGetGlTextureFormats".}
+proc getGlTextureFormats*(format: int32, glInternalFormat: out uint32, glFormat: out uint32, glType: out uint32) {.importc: "rlGetGlTextureFormats".}
   ## Get OpenGL internal formats
 proc getPixelFormatName*(format: PixelFormat): cstring {.importc: "rlGetPixelFormatName".}
   ## Get name string for pixel format
 proc unloadTexture*(id: uint32) {.importc: "rlUnloadTexture".}
   ## Unload texture from GPU memory
-proc genTextureMipmaps*(id: uint32, width: int32, height: int32, format: int32, mipmaps: var int32) {.importc: "rlGenTextureMipmaps".}
+proc genTextureMipmaps*(id: uint32, width: int32, height: int32, format: int32, mipmaps: out int32) {.importc: "rlGenTextureMipmaps".}
   ## Generate mipmap data for selected texture
 proc readTexturePixels*(id: uint32, width: int32, height: int32, format: int32): pointer {.importc: "rlReadTexturePixels".}
   ## Read texture pixel data
@@ -427,7 +427,7 @@ proc setUniformMatrix*(locIndex: int32, mat: Matrix) {.importc: "rlSetUniformMat
   ## Set shader value matrix
 proc setUniformSampler*(locIndex: int32, textureId: uint32) {.importc: "rlSetUniformSampler".}
   ## Set shader value sampler
-proc setShader*(id: uint32, locs: var int32) {.importc: "rlSetShader".}
+proc setShader*(id: uint32, locs: var ShaderLocation) {.importc: "rlSetShader".}
   ## Set shader currently active (id and locations)
 proc loadComputeShaderProgram*(shaderId: uint32): uint32 {.importc: "rlLoadComputeShaderProgram".}
   ## Load compute shader program

@@ -381,6 +381,12 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
             const
               replacements = [
                 ("rlLoadExtensions", "loader", "rlglLoadProc"),
+                ("rlGenTextureMipmaps", "mipmaps", "out $1"),
+                ("rlGetGlTextureFormats", "glInternalFormat", "out $1"),
+                ("rlGetGlTextureFormats", "glFormat", "out $1"),
+                ("rlGetGlTextureFormats", "glType", "out $1"),
+                ("rlSetShader", "locs", "var ShaderLocation"),
+                ("rlMultMatrixf", "matf", "var array[16, $1]"),
               ]
             let pat = getReplacement(fnc.name, param.name, replacements)
             let kind = convertType(param.`type`, pat, false, true, baseKind)
@@ -394,7 +400,13 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
               lit enumInFuncs[idx]
               break outer
           var baseKind = ""
-          let kind = convertType(fnc.returnType, "", false, true, baseKind)
+          const
+            replacements = [
+              ("rlGetShaderLocsDefault", "", "var ShaderLocation"),
+              # ("rlReadScreenPixels", "", ""),
+            ]
+          let pat = getReplacement(fnc.name, "", replacements)
+          let kind = convertType(fnc.returnType, pat, false, true, baseKind)
           lit kind
       lit " {.importc: \""
       ident fnc.name
