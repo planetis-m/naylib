@@ -1,7 +1,7 @@
 import nake, std/strformat
 
 const
-  RayLatestCommit = "f6558fe6e0932863b83d2a6a49b8fc81b7354242"
+  RayLatestCommit = "c48de2d1afdeefa99c5ad7760ffe8873993c841c"
 
 const
   pkgDir = currentSourcePath().parentDir.quoteShell
@@ -83,7 +83,8 @@ proc wrapRaylib(lib, prefix: string) =
 task "wrap", "Produce all raylib nim wrappers":
   wrapRaylib("raylib", "RLAPI")
   # wrapRaylib("raymath", "RMAPI")
-  wrapRaylib("rlgl", "")
+  genWrapper("rlgl")
+  # wrapRaylib("rlgl", "")
 
 task "wrapRaylib", "Produce the raylib nim wrapper":
   wrapRaylib("raylib", "RLAPI")

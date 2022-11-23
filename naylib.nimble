@@ -1,6 +1,6 @@
 # Package
 
-version     = "1.7.6"
+version     = "1.8.0"
 author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
@@ -15,7 +15,7 @@ requires "nim >= 1.6.0"
 #foreignDep "wayland-protocols"
 
 const
-  RayLatestCommit = "f6558fe6e0932863b83d2a6a49b8fc81b7354242"
+  RayLatestCommit = "c48de2d1afdeefa99c5ad7760ffe8873993c841c"
 
 let
   rayDir = "dist/raylib"
