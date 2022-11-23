@@ -468,6 +468,8 @@ proc loadDrawCube*() {.importc: "rlLoadDrawCube".}
 proc loadDrawQuad*() {.importc: "rlLoadDrawQuad".}
   ## Load and draw a quad
 {.pop.}
+proc elementCount*(x: VertexBuffer): int32 {.inline.} = x.elementCount
+proc bufferCount*(x: RenderBatch): int32 {.inline.} = x.bufferCount
 
 proc `=destroy`*(x: var RenderBatch) =
   if x.vertexBuffer != nil: unloadRenderBatch(x)

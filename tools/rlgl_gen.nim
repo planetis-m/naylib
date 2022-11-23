@@ -311,6 +311,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           doc val
         lit "\n"
     lit constants
+    var procProperties: seq[(string, string, string)] = @[]
     var procArrays: seq[(string, string, string)] = @[]
     lit "\ntype"
     scope:
@@ -333,6 +334,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
             #   lit kind
             #   continue
             var baseKind = ""
+            let isPrivate = (objName, name) in {"VertexBuffer": "elementCount", "RenderBatch": "bufferCount"}
             let many = isPlural(name) or (objName, name) == ("RenderBatch", "vertexBuffer")
             let kind = convertType(fld.`type`, "", many, false, baseKind)
             if many:
@@ -341,6 +343,8 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
               lit "*: "
             lit kind
             doc fld
+            if isPrivate:
+              procProperties.add (objName, name, kind)
             if many:
               procArrays.add (objName, name, baseKind)
         lit "\n"
@@ -417,6 +421,16 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           lit fnc.description
     lit "\n{.pop.}\n"
     # lit "\n"
+    for obj, field, kind in procProperties.items:
+      lit "proc "
+      ident field
+      lit "*(x: "
+      ident obj
+      lit "): "
+      lit kind
+      lit " {.inline.} = x."
+      ident field
+      lit "\n"
     lit footer
   finally:
     if otp != nil: otp.close()
