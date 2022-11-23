@@ -242,7 +242,9 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     "Matrix"
   ]
   enumInFuncReturn = [
-    ("rlGetVersion", 21),
+    ("rlGetLocationUniform", 21),
+    ("rlGetLocationAttrib", 21),
+    ("rlGetVersion", 25),
   ]
   enumInFuncParams = [
     # TextureParameter
@@ -266,7 +268,11 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     ("rlUpdateTexture", "format"),
     ("rlGenTextureMipmaps", "format"),
     ("rlReadTexturePixels", "format"),
-    ("rlBindImageTexture", "format")
+    ("rlBindImageTexture", "format"),
+    ("rlSetVertexAttributeDefault", "locIndex"),
+    ("rlSetUniform", "locIndex"),
+    ("rlSetUniformMatrix", "locIndex"),
+    ("rlSetUniformSampler", "locIndex"),
   ]
   enumInFuncs = [
     "TextureParameter",
@@ -290,6 +296,10 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     "PixelFormat",
     "PixelFormat",
     "PixelFormat",
+    "ShaderLocation",
+    "ShaderLocation",
+    "ShaderLocation",
+    "ShaderLocation",
     "GlVersion"
   ]
 

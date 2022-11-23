@@ -371,7 +371,7 @@ proc unloadVertexArray*(vaoId: uint32) {.importc: "rlUnloadVertexArray".}
 proc unloadVertexBuffer*(vboId: uint32) {.importc: "rlUnloadVertexBuffer".}
 proc setVertexAttribute*(index: uint32, compSize: int32, `type`: GlType, normalized: bool, stride: int32, pointer: pointer) {.importc: "rlSetVertexAttribute".}
 proc setVertexAttributeDivisor*(index: uint32, divisor: int32) {.importc: "rlSetVertexAttributeDivisor".}
-proc setVertexAttributeDefault*(locIndex: int32, value: pointer, attribType: ShaderAttributeDataType, count: int32) {.importc: "rlSetVertexAttributeDefault".}
+proc setVertexAttributeDefault*(locIndex: ShaderLocation, value: pointer, attribType: ShaderAttributeDataType, count: int32) {.importc: "rlSetVertexAttributeDefault".}
   ## Set vertex attribute default value
 proc drawVertexArray*(offset: int32, count: int32) {.importc: "rlDrawVertexArray".}
 proc drawVertexArrayElements*(offset: int32, count: int32, buffer: pointer) {.importc: "rlDrawVertexArrayElements".}
@@ -413,15 +413,15 @@ proc loadShaderProgram*(vShaderId: uint32, fShaderId: uint32): uint32 {.importc:
   ## Load custom shader program
 proc unloadShaderProgram*(id: uint32) {.importc: "rlUnloadShaderProgram".}
   ## Unload shader program
-proc getLocationUniform*(shaderId: uint32, uniformName: UniformName): int32 {.importc: "rlGetLocationUniform".}
+proc getLocationUniform*(shaderId: uint32, uniformName: UniformName): ShaderLocation {.importc: "rlGetLocationUniform".}
   ## Get shader location uniform
-proc getLocationAttrib*(shaderId: uint32, attribName: AttribName): int32 {.importc: "rlGetLocationAttrib".}
+proc getLocationAttrib*(shaderId: uint32, attribName: AttribName): ShaderLocation {.importc: "rlGetLocationAttrib".}
   ## Get shader location attribute
-proc setUniform*(locIndex: int32, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "rlSetUniform".}
+proc setUniform*(locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "rlSetUniform".}
   ## Set shader value uniform
-proc setUniformMatrix*(locIndex: int32, mat: Matrix) {.importc: "rlSetUniformMatrix".}
+proc setUniformMatrix*(locIndex: ShaderLocation, mat: Matrix) {.importc: "rlSetUniformMatrix".}
   ## Set shader value matrix
-proc setUniformSampler*(locIndex: int32, textureId: uint32) {.importc: "rlSetUniformSampler".}
+proc setUniformSampler*(locIndex: ShaderLocation, textureId: uint32) {.importc: "rlSetUniformSampler".}
   ## Set shader value sampler
 proc setShader*(id: uint32, locs: var ShaderLocation) {.importc: "rlSetShader".}
   ## Set shader currently active (id and locations)
