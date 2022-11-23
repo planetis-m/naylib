@@ -46,6 +46,9 @@ proc `==`*(a, b: FramebufferAttachTextureType): bool {.borrow.}
 
 proc `==`*(a, b: CullMode): bool {.borrow.}
 
+type
+  rlglLoadProc* = proc (name: cstring): pointer ## OpenGL extension functions loader signature (same as GLADloadproc)
+
 const
   Opengl11* = GlVersion(1) ## OpenGL 1.1
   Opengl21* = GlVersion(2) ## OpenGL 2.1 (GLSL 120)
@@ -326,7 +329,7 @@ proc rlglInit*(width: int32, height: int32) {.importc: "rlglInit".}
   ## Initialize rlgl (buffers, shaders, textures, states)
 proc rlglClose*() {.importc: "rlglClose".}
   ## De-inititialize rlgl (buffers, shaders, textures)
-proc loadExtensions*(loader: pointer) {.importc: "rlLoadExtensions".}
+proc loadExtensions*(loader: rlglLoadProc) {.importc: "rlLoadExtensions".}
   ## Load OpenGL extensions (loader function required)
 proc getVersion*(): GlVersion {.importc: "rlGetVersion".}
   ## Get current OpenGL version

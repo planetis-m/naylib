@@ -53,6 +53,9 @@ proc `<=`*(a, b: FramebufferAttachTextureType): bool {.borrow.}
 proc `==`*(a, b: FramebufferAttachTextureType): bool {.borrow.}
 
 proc `==`*(a, b: CullMode): bool {.borrow.}
+
+type
+  rlglLoadProc* = proc (name: cstring): pointer ## OpenGL extension functions loader signature (same as GLADloadproc)
 """
   constants = """
 
@@ -375,7 +378,12 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
                 lit enumInFuncs[j]
                 break outer
             var baseKind = ""
-            let kind = convertType(param.`type`, "", false, true, baseKind)
+            const
+              replacements = [
+                ("rlLoadExtensions", "loader", "rlglLoadProc"),
+              ]
+            let pat = getReplacement(fnc.name, param.name, replacements)
+            let kind = convertType(param.`type`, pat, false, true, baseKind)
             lit kind
       lit ")"
       if fnc.returnType != "void":
