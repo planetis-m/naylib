@@ -5,9 +5,9 @@ when defined(nimPreviewSlimSystem):
 const
   rlglHeader = """
 from raylib import PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex,
-  ShaderUniformDataType, ShaderAttributeDataType, MaxShaderLocations, Matrix, Vector2, Vector3, Color
+  ShaderUniformDataType, ShaderAttributeDataType, MaxShaderLocations, ShaderLocation, Matrix, Vector2, Vector3, Color
 export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniformDataType,
-  ShaderAttributeDataType, MaxShaderLocations, Matrix, Vector2, Vector3, Color
+  ShaderAttributeDataType, MaxShaderLocations, ShaderLocation, Matrix, Vector2, Vector3, Color
 
 const
   RlglVersion* = (4, 2, 0)
