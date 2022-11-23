@@ -203,7 +203,7 @@ proc rotatef*(angle: float32, x: float32, y: float32, z: float32) {.importc: "rl
   ## Multiply the current matrix by a rotation matrix
 proc scalef*(x: float32, y: float32, z: float32) {.importc: "rlScalef".}
   ## Multiply the current matrix by a scaling matrix
-proc multMatrixf*(matf: var array[16, float32]) {.importc: "rlMultMatrixf".}
+proc multMatrixf*(matf: array[16, float32]) {.importc: "rlMultMatrixf".}
   ## Multiply the current matrix by another matrix
 proc frustum*(left: float, right: float, bottom: float, top: float, znear: float, zfar: float) {.importc: "rlFrustum".}
 proc ortho*(left: float, right: float, bottom: float, top: float, znear: float, zfar: float) {.importc: "rlOrtho".}
