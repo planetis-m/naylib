@@ -349,7 +349,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
             let isPrivate = (objName, name) in {"VertexBuffer": "elementCount", "RenderBatch": "bufferCount"}
             let many = isPlural(name) or (objName, name) == ("RenderBatch", "vertexBuffer")
             let kind = convertType(fld.`type`, "", many, false, baseKind)
-            if many:
+            if many or isPrivate:
               lit ": "
             else:
               lit "*: "

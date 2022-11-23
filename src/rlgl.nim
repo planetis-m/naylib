@@ -155,7 +155,7 @@ const
 
 type
   VertexBuffer* {.bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
-    elementCount*: int32 ## Number of elements in the buffer (QUADS)
+    elementCount: int32 ## Number of elements in the buffer (QUADS)
     vertices: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
     texcoords: ptr UncheckedArray[float32] ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
     colors: ptr UncheckedArray[uint8] ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
@@ -170,7 +170,7 @@ type
     textureId*: uint32 ## Texture id to be used on the draw -> Use to create new draw call if changes
 
   RenderBatch* {.bycopy.} = object ## rlRenderBatch type
-    bufferCount*: int32 ## Number of vertex buffers (multi-buffering support)
+    bufferCount: int32 ## Number of vertex buffers (multi-buffering support)
     currentBuffer*: int32 ## Current buffer tracking in case of multi-buffering
     vertexBuffer: ptr UncheckedArray[VertexBuffer] ## Dynamic buffer(s) for vertex data
     draws: ptr UncheckedArray[DrawCall] ## Draw calls array, depends on textureId
