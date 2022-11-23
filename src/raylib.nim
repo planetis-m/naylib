@@ -1099,7 +1099,7 @@ proc checkCollisionPointCircle*(point: Vector2, center: Vector2, radius: float32
 proc checkCollisionPointTriangle*(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): bool {.importc: "CheckCollisionPointTriangle".}
   ## Check if point is inside a triangle
 proc checkCollisionPointPolyPriv(point: Vector2, points: ptr UncheckedArray[Vector2], pointCount: int32): bool {.importc: "CheckCollisionPointPoly".}
-proc checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: var Vector2): bool {.importc: "CheckCollisionLines".}
+proc checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: out Vector2): bool {.importc: "CheckCollisionLines".}
   ## Check the collision between two lines defined by two points each, returns collision point by reference
 proc checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshold: int32): bool {.importc: "CheckCollisionPointLine".}
   ## Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
@@ -1109,7 +1109,7 @@ proc loadImage*(fileName: cstring): Image {.importc: "LoadImage".}
   ## Load image from file into CPU memory (RAM)
 proc loadImageRaw*(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw".}
   ## Load image from RAW file data
-proc loadImageAnim*(fileName: cstring, frames: var int32): Image {.importc: "LoadImageAnim".}
+proc loadImageAnim*(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim".}
   ## Load image sequence from file (frames appended to image.data)
 proc loadImageFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Image {.importc: "LoadImageFromMemory".}
 proc loadImageFromTexture*(texture: Texture2D): Image {.importc: "LoadImageFromTexture".}

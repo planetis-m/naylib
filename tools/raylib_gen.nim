@@ -528,6 +528,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
               replacements = [
                 ("GenImageFontAtlas", "recs", "ptr ptr UncheckedArray[$1]"),
                 ("LoadModelFromMesh", "mesh", "sink Mesh"),
+                ("CheckCollisionLines", "collisionPoint", "out $1"),
+                ("LoadImageAnim", "frames", "out $1"),
               ]
             let pat = getReplacement(fnc.name, param.name, replacements)
             var baseKind = ""
