@@ -79,65 +79,65 @@ const
   CullFaceFront* = CullMode(0)
   CullFaceBack* = CullMode(1)
 
-  DefaultBatchBufferElements = 8192 ## This is the maximum amount of elements (quads) per batch
+  DefaultBatchBufferElements* = 8192 ## This is the maximum amount of elements (quads) per batch
                                     ## NOTE: Be careful with text, every letter maps to a quad
-  DefaultBatchBuffers = 1 ## Default number of batch buffers (multi-buffering)
-  DefaultBatchDrawCalls = 256 ## Default number of batch draw calls (by state changes: mode, texture)
-  DefaultBatchMaxTextureUnits = 4 ## Maximum number of textures units that can be activated on batch drawing
-  MaxMatrixStackSize = 32 ## Maximum size of Matrix stack
-  # MaxShaderLocations = 32 ## Maximum number of shader locations supported
-  CullDistanceNear = 0.01 ## Default near cull distance
-  CullDistanceFar = 1000.0 ## Default far cull distance
+  DefaultBatchBuffers* = 1 ## Default number of batch buffers (multi-buffering)
+  DefaultBatchDrawCalls* = 256 ## Default number of batch draw calls (by state changes: mode, texture)
+  DefaultBatchMaxTextureUnits* = 4 ## Maximum number of textures units that can be activated on batch drawing
+  MaxMatrixStackSize* = 32 ## Maximum size of Matrix stack
+  # MaxShaderLocations* = 32 ## Maximum number of shader locations supported
+  CullDistanceNear* = 0.01 ## Default near cull distance
+  CullDistanceFar* = 1000.0 ## Default far cull distance
 
   # Texture parameters (equivalent to OpenGL defines)
-  TextureWrapS = TextureParameter(0x2802) ## GL_TEXTURE_WRAP_S
-  TextureWrapT = TextureParameter(0x2803) ## GL_TEXTURE_WRAP_T
-  TextureMagFilter = TextureParameter(0x2800) ## GL_TEXTURE_MAG_FILTER
-  TextureMinFilter = TextureParameter(0x2801) ## GL_TEXTURE_MIN_FILTER
+  TextureWrapS* = TextureParameter(0x2802) ## GL_TEXTURE_WRAP_S
+  TextureWrapT* = TextureParameter(0x2803) ## GL_TEXTURE_WRAP_T
+  TextureMagFilter* = TextureParameter(0x2800) ## GL_TEXTURE_MAG_FILTER
+  TextureMinFilter* = TextureParameter(0x2801) ## GL_TEXTURE_MIN_FILTER
 
-  TextureFilterNearest = TextureParameter(0x2600) ## GL_NEAREST
-  TextureFilterLinear = TextureParameter(0x2601) ## GL_LINEAR
-  TextureFilterMipNearest = TextureParameter(0x2700) ## GL_NEAREST_MIPMAP_NEAREST
-  TextureFilterNearestMipLinear = TextureParameter(0x2702) ## GL_NEAREST_MIPMAP_LINEAR
-  TextureFilterLinearMipNearest = TextureParameter(0x2701) ## GL_LINEAR_MIPMAP_NEAREST
-  TextureFilterMipLinear = TextureParameter(0x2703) ## GL_LINEAR_MIPMAP_LINEAR
-  TextureFilterAnisotropic = TextureParameter(0x3000) ## Anisotropic filter (custom identifier)
-  TextureMipmapBiasRatio = TextureParameter(0x4000) ## Texture mipmap bias, percentage ratio (custom identifier)
+  TextureFilterNearest* = TextureParameter(0x2600) ## GL_NEAREST
+  TextureFilterLinear* = TextureParameter(0x2601) ## GL_LINEAR
+  TextureFilterMipNearest* = TextureParameter(0x2700) ## GL_NEAREST_MIPMAP_NEAREST
+  TextureFilterNearestMipLinear* = TextureParameter(0x2702) ## GL_NEAREST_MIPMAP_LINEAR
+  TextureFilterLinearMipNearest* = TextureParameter(0x2701) ## GL_LINEAR_MIPMAP_NEAREST
+  TextureFilterMipLinear* = TextureParameter(0x2703) ## GL_LINEAR_MIPMAP_LINEAR
+  TextureFilterAnisotropic* = TextureParameter(0x3000) ## Anisotropic filter (custom identifier)
+  TextureMipmapBiasRatio* = TextureParameter(0x4000) ## Texture mipmap bias, percentage ratio (custom identifier)
 
-  TextureWrapRepeat = TextureParameter(0x2901) ## GL_REPEAT
-  TextureWrapClamp = TextureParameter(0x812F) ## GL_CLAMP_TO_EDGE
-  TextureWrapMirrorRepeat = TextureParameter(0x8370) ## GL_MIRRORED_REPEAT
-  TextureWrapMirrorClamp = TextureParameter(0x8742) ## GL_MIRROR_CLAMP_EXT
+  TextureWrapRepeat* = TextureParameter(0x2901) ## GL_REPEAT
+  TextureWrapClamp* = TextureParameter(0x812F) ## GL_CLAMP_TO_EDGE
+  TextureWrapMirrorRepeat* = TextureParameter(0x8370) ## GL_MIRRORED_REPEAT
+  TextureWrapMirrorClamp* = TextureParameter(0x8742) ## GL_MIRROR_CLAMP_EXT
 
   # Matrix modes (equivalent to OpenGL)
-  MatrixModelview = MatrixMode(0x1700) ## GL_MODELVIEW
-  MatrixProjection = MatrixMode(0x1701) ## GL_PROJECTION
-  MatrixTexture = MatrixMode(0x1702) ## GL_TEXTURE
+  MatrixModelview* = MatrixMode(0x1700) ## GL_MODELVIEW
+  MatrixProjection* = MatrixMode(0x1701) ## GL_PROJECTION
+  MatrixTexture* = MatrixMode(0x1702) ## GL_TEXTURE
 
   # Primitive assembly draw modes
-  DrawLines = DrawMode(0x0001) ## GL_LINES
-  DrawTriangles = DrawMode(0x0004) ## GL_TRIANGLES
-  DrawQuads = DrawMode(0x0007) ## GL_QUADS
+  DrawLines* = DrawMode(0x0001) ## GL_LINES
+  DrawTriangles* = DrawMode(0x0004) ## GL_TRIANGLES
+  DrawQuads* = DrawMode(0x0007) ## GL_QUADS
 
   # GL equivalent data types
-  GlUnsignedByte = GlType(0x1401) ## GL_UNSIGNED_BYTE
-  GlFloat = GlType(0x1406) ## GL_FLOAT
+  GlUnsignedByte* = GlType(0x1401) ## GL_UNSIGNED_BYTE
+  GlFloat* = GlType(0x1406) ## GL_FLOAT
 
   # Buffer usage hint
-  UsageStreamDraw = BufferUsageHint(0x88E0) ## GL_STREAM_DRAW
-  UsageStreamRead = BufferUsageHint(0x88E1) ## GL_STREAM_READ
-  UsageStreamCopy = BufferUsageHint(0x88E2) ## GL_STREAM_COPY
-  UsageStaticDraw = BufferUsageHint(0x88E4) ## GL_STATIC_DRAW
-  UsageStaticRead = BufferUsageHint(0x88E5) ## GL_STATIC_READ
-  UsageStaticCopy = BufferUsageHint(0x88E6) ## GL_STATIC_COPY
-  UsageDynamicDraw = BufferUsageHint(0x88E8) ## GL_DYNAMIC_DRAW
-  UsageDynamicRead = BufferUsageHint(0x88E9) ## GL_DYNAMIC_READ
-  UsageDynamicCopy = BufferUsageHint(0x88EA) ## GL_DYNAMIC_COPY
+  UsageStreamDraw* = BufferUsageHint(0x88E0) ## GL_STREAM_DRAW
+  UsageStreamRead* = BufferUsageHint(0x88E1) ## GL_STREAM_READ
+  UsageStreamCopy* = BufferUsageHint(0x88E2) ## GL_STREAM_COPY
+  UsageStaticDraw* = BufferUsageHint(0x88E4) ## GL_STATIC_DRAW
+  UsageStaticRead* = BufferUsageHint(0x88E5) ## GL_STATIC_READ
+  UsageStaticCopy* = BufferUsageHint(0x88E6) ## GL_STATIC_COPY
+  UsageDynamicDraw* = BufferUsageHint(0x88E8) ## GL_DYNAMIC_DRAW
+  UsageDynamicRead* = BufferUsageHint(0x88E9) ## GL_DYNAMIC_READ
+  UsageDynamicCopy* = BufferUsageHint(0x88EA) ## GL_DYNAMIC_COPY
 
   # GL Shader type
-  FragmentShader = ShaderType(0x8B30) ## GL_FRAGMENT_SHADER
-  VertexShader = ShaderType(0x8B31) ## GL_VERTEX_SHADER
-  ComputeShader = ShaderType(0x91B9) ## GL_COMPUTE_SHADER
+  FragmentShader* = ShaderType(0x8B30) ## GL_FRAGMENT_SHADER
+  VertexShader* = ShaderType(0x8B31) ## GL_VERTEX_SHADER
+  ComputeShader* = ShaderType(0x91B9) ## GL_COMPUTE_SHADER
 
   # Default shader vertex attribute names to set location points
   DefaultShaderAttribNamePosition* = AttribName("vertexPosition") ## Binded by default to shader location: 0

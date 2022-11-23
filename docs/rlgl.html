@@ -119,8 +119,15 @@
 <li><a class="reference" href="#AttachmentRenderbuffer" title="AttachmentRenderbuffer = 200'i32">AttachmentRenderbuffer</a></li>
 <li><a class="reference" href="#AttachmentStencil" title="AttachmentStencil = 200'i32">AttachmentStencil</a></li>
 <li><a class="reference" href="#AttachmentTexture2d" title="AttachmentTexture2d = 100'i32">AttachmentTexture2d</a></li>
+<li><a class="reference" href="#ComputeShader" title="ComputeShader = 37305'i32">ComputeShader</a></li>
+<li><a class="reference" href="#CullDistanceFar" title="CullDistanceFar = 1000.0">CullDistanceFar</a></li>
+<li><a class="reference" href="#CullDistanceNear" title="CullDistanceNear = 0.01">CullDistanceNear</a></li>
 <li><a class="reference" href="#CullFaceBack" title="CullFaceBack = 1'i32">CullFaceBack</a></li>
 <li><a class="reference" href="#CullFaceFront" title="CullFaceFront = 0'i32">CullFaceFront</a></li>
+<li><a class="reference" href="#DefaultBatchBufferElements" title="DefaultBatchBufferElements = 8192">DefaultBatchBufferElements</a></li>
+<li><a class="reference" href="#DefaultBatchBuffers" title="DefaultBatchBuffers = 1">DefaultBatchBuffers</a></li>
+<li><a class="reference" href="#DefaultBatchDrawCalls" title="DefaultBatchDrawCalls = 256">DefaultBatchDrawCalls</a></li>
+<li><a class="reference" href="#DefaultBatchMaxTextureUnits" title="DefaultBatchMaxTextureUnits = 4">DefaultBatchMaxTextureUnits</a></li>
 <li><a class="reference" href="#DefaultShaderAttribNameColor" title="DefaultShaderAttribNameColor = &quot;vertexColor&quot;">DefaultShaderAttribNameColor</a></li>
 <li><a class="reference" href="#DefaultShaderAttribNameNormal" title="DefaultShaderAttribNameNormal = &quot;vertexNormal&quot;">DefaultShaderAttribNameNormal</a></li>
 <li><a class="reference" href="#DefaultShaderAttribNamePosition" title="DefaultShaderAttribNamePosition = &quot;vertexPosition&quot;">DefaultShaderAttribNamePosition</a></li>
@@ -136,12 +143,48 @@
 <li><a class="reference" href="#DefaultShaderUniformNameNormal" title="DefaultShaderUniformNameNormal = &quot;matNormal&quot;">DefaultShaderUniformNameNormal</a></li>
 <li><a class="reference" href="#DefaultShaderUniformNameProjection" title="DefaultShaderUniformNameProjection = &quot;matProjection&quot;">DefaultShaderUniformNameProjection</a></li>
 <li><a class="reference" href="#DefaultShaderUniformNameView" title="DefaultShaderUniformNameView = &quot;matView&quot;">DefaultShaderUniformNameView</a></li>
+<li><a class="reference" href="#DrawLines" title="DrawLines = 1'i32">DrawLines</a></li>
+<li><a class="reference" href="#DrawQuads" title="DrawQuads = 7'i32">DrawQuads</a></li>
+<li><a class="reference" href="#DrawTriangles" title="DrawTriangles = 4'i32">DrawTriangles</a></li>
+<li><a class="reference" href="#FragmentShader" title="FragmentShader = 35632'i32">FragmentShader</a></li>
+<li><a class="reference" href="#GlFloat" title="GlFloat = 5126'i32">GlFloat</a></li>
+<li><a class="reference" href="#GlUnsignedByte" title="GlUnsignedByte = 5121'i32">GlUnsignedByte</a></li>
+<li><a class="reference" href="#MatrixModelview" title="MatrixModelview = 5888'i32">MatrixModelview</a></li>
+<li><a class="reference" href="#MatrixProjection" title="MatrixProjection = 5889'i32">MatrixProjection</a></li>
+<li><a class="reference" href="#MatrixTexture" title="MatrixTexture = 5890'i32">MatrixTexture</a></li>
+<li><a class="reference" href="#MaxMatrixStackSize" title="MaxMatrixStackSize = 32">MaxMatrixStackSize</a></li>
 <li><a class="reference" href="#Opengl11" title="Opengl11 = 1'i32">Opengl11</a></li>
 <li><a class="reference" href="#Opengl21" title="Opengl21 = 2'i32">Opengl21</a></li>
 <li><a class="reference" href="#Opengl33" title="Opengl33 = 3'i32">Opengl33</a></li>
 <li><a class="reference" href="#Opengl43" title="Opengl43 = 4'i32">Opengl43</a></li>
 <li><a class="reference" href="#OpenglEs20" title="OpenglEs20 = 5'i32">OpenglEs20</a></li>
 <li><a class="reference" href="#RlglVersion" title="RlglVersion = (4, 2, 0)">RlglVersion</a></li>
+<li><a class="reference" href="#TextureFilterAnisotropic" title="TextureFilterAnisotropic = 12288'i32">TextureFilterAnisotropic</a></li>
+<li><a class="reference" href="#TextureFilterLinear" title="TextureFilterLinear = 9729'i32">TextureFilterLinear</a></li>
+<li><a class="reference" href="#TextureFilterLinearMipNearest" title="TextureFilterLinearMipNearest = 9985'i32">TextureFilterLinearMipNearest</a></li>
+<li><a class="reference" href="#TextureFilterMipLinear" title="TextureFilterMipLinear = 9987'i32">TextureFilterMipLinear</a></li>
+<li><a class="reference" href="#TextureFilterMipNearest" title="TextureFilterMipNearest = 9984'i32">TextureFilterMipNearest</a></li>
+<li><a class="reference" href="#TextureFilterNearest" title="TextureFilterNearest = 9728'i32">TextureFilterNearest</a></li>
+<li><a class="reference" href="#TextureFilterNearestMipLinear" title="TextureFilterNearestMipLinear = 9986'i32">TextureFilterNearestMipLinear</a></li>
+<li><a class="reference" href="#TextureMagFilter" title="TextureMagFilter = 10240'i32">TextureMagFilter</a></li>
+<li><a class="reference" href="#TextureMinFilter" title="TextureMinFilter = 10241'i32">TextureMinFilter</a></li>
+<li><a class="reference" href="#TextureMipmapBiasRatio" title="TextureMipmapBiasRatio = 16384'i32">TextureMipmapBiasRatio</a></li>
+<li><a class="reference" href="#TextureWrapClamp" title="TextureWrapClamp = 33071'i32">TextureWrapClamp</a></li>
+<li><a class="reference" href="#TextureWrapMirrorClamp" title="TextureWrapMirrorClamp = 34626'i32">TextureWrapMirrorClamp</a></li>
+<li><a class="reference" href="#TextureWrapMirrorRepeat" title="TextureWrapMirrorRepeat = 33648'i32">TextureWrapMirrorRepeat</a></li>
+<li><a class="reference" href="#TextureWrapRepeat" title="TextureWrapRepeat = 10497'i32">TextureWrapRepeat</a></li>
+<li><a class="reference" href="#TextureWrapS" title="TextureWrapS = 10242'i32">TextureWrapS</a></li>
+<li><a class="reference" href="#TextureWrapT" title="TextureWrapT = 10243'i32">TextureWrapT</a></li>
+<li><a class="reference" href="#UsageDynamicCopy" title="UsageDynamicCopy = 35050'i32">UsageDynamicCopy</a></li>
+<li><a class="reference" href="#UsageDynamicDraw" title="UsageDynamicDraw = 35048'i32">UsageDynamicDraw</a></li>
+<li><a class="reference" href="#UsageDynamicRead" title="UsageDynamicRead = 35049'i32">UsageDynamicRead</a></li>
+<li><a class="reference" href="#UsageStaticCopy" title="UsageStaticCopy = 35046'i32">UsageStaticCopy</a></li>
+<li><a class="reference" href="#UsageStaticDraw" title="UsageStaticDraw = 35044'i32">UsageStaticDraw</a></li>
+<li><a class="reference" href="#UsageStaticRead" title="UsageStaticRead = 35045'i32">UsageStaticRead</a></li>
+<li><a class="reference" href="#UsageStreamCopy" title="UsageStreamCopy = 35042'i32">UsageStreamCopy</a></li>
+<li><a class="reference" href="#UsageStreamDraw" title="UsageStreamDraw = 35040'i32">UsageStreamDraw</a></li>
+<li><a class="reference" href="#UsageStreamRead" title="UsageStreamRead = 35041'i32">UsageStreamRead</a></li>
+<li><a class="reference" href="#VertexShader" title="VertexShader = 35633'i32">VertexShader</a></li>
 
     </ul>
   </details>
@@ -1317,6 +1360,36 @@
 
   </dd>
 </div>
+<div id="ComputeShader">
+  <dt><pre><a href="rlgl.html#ComputeShader"><span class="Identifier">ComputeShader</span></a> <span class="Other">=</span> <span class="DecNumber">37305'i32</span></pre></dt>
+  <dd>
+    
+    GL_COMPUTE_SHADER
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L140" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L140" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="CullDistanceFar">
+  <dt><pre><a href="rlgl.html#CullDistanceFar"><span class="Identifier">CullDistanceFar</span></a> <span class="Other">=</span> <span class="FloatNumber">1000.0</span></pre></dt>
+  <dd>
+    
+    Default far cull distance
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L90" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L90" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="CullDistanceNear">
+  <dt><pre><a href="rlgl.html#CullDistanceNear"><span class="Identifier">CullDistanceNear</span></a> <span class="Other">=</span> <span class="FloatNumber">0.01</span></pre></dt>
+  <dd>
+    
+    Default near cull distance
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L89" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L89" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
 <div id="CullFaceBack">
   <dt><pre><a href="rlgl.html#CullFaceBack"><span class="Identifier">CullFaceBack</span></a> <span class="Other">=</span> <span class="DecNumber">1'i32</span></pre></dt>
   <dd>
@@ -1334,6 +1407,46 @@
     
     <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L79" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L79" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="DefaultBatchBufferElements">
+  <dt><pre><a href="rlgl.html#DefaultBatchBufferElements"><span class="Identifier">DefaultBatchBufferElements</span></a> <span class="Other">=</span> <span class="DecNumber">8192</span></pre></dt>
+  <dd>
+    
+    This is the maximum amount of elements (quads) per batch NOTE: Be careful with text, every letter maps to a quad
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L82" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L82" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="DefaultBatchBuffers">
+  <dt><pre><a href="rlgl.html#DefaultBatchBuffers"><span class="Identifier">DefaultBatchBuffers</span></a> <span class="Other">=</span> <span class="DecNumber">1</span></pre></dt>
+  <dd>
+    
+    Default number of batch buffers (multi-buffering)
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L84" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L84" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="DefaultBatchDrawCalls">
+  <dt><pre><a href="rlgl.html#DefaultBatchDrawCalls"><span class="Identifier">DefaultBatchDrawCalls</span></a> <span class="Other">=</span> <span class="DecNumber">256</span></pre></dt>
+  <dd>
+    
+    Default number of batch draw calls (by state changes: mode, texture)
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L85" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L85" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="DefaultBatchMaxTextureUnits">
+  <dt><pre><a href="rlgl.html#DefaultBatchMaxTextureUnits"><span class="Identifier">DefaultBatchMaxTextureUnits</span></a> <span class="Other">=</span> <span class="DecNumber">4</span></pre></dt>
+  <dd>
+    
+    Maximum number of textures units that can be activated on batch drawing
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L86" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L86" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1487,6 +1600,106 @@
 
   </dd>
 </div>
+<div id="DrawLines">
+  <dt><pre><a href="rlgl.html#DrawLines"><span class="Identifier">DrawLines</span></a> <span class="Other">=</span> <span class="DecNumber">1'i32</span></pre></dt>
+  <dd>
+    
+    GL_LINES
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L118" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L118" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="DrawQuads">
+  <dt><pre><a href="rlgl.html#DrawQuads"><span class="Identifier">DrawQuads</span></a> <span class="Other">=</span> <span class="DecNumber">7'i32</span></pre></dt>
+  <dd>
+    
+    GL_QUADS
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L120" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L120" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="DrawTriangles">
+  <dt><pre><a href="rlgl.html#DrawTriangles"><span class="Identifier">DrawTriangles</span></a> <span class="Other">=</span> <span class="DecNumber">4'i32</span></pre></dt>
+  <dd>
+    
+    GL_TRIANGLES
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L119" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L119" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="FragmentShader">
+  <dt><pre><a href="rlgl.html#FragmentShader"><span class="Identifier">FragmentShader</span></a> <span class="Other">=</span> <span class="DecNumber">35632'i32</span></pre></dt>
+  <dd>
+    
+    GL_FRAGMENT_SHADER
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L138" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L138" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="GlFloat">
+  <dt><pre><a href="rlgl.html#GlFloat"><span class="Identifier">GlFloat</span></a> <span class="Other">=</span> <span class="DecNumber">5126'i32</span></pre></dt>
+  <dd>
+    
+    GL_FLOAT
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L124" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L124" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="GlUnsignedByte">
+  <dt><pre><a href="rlgl.html#GlUnsignedByte"><span class="Identifier">GlUnsignedByte</span></a> <span class="Other">=</span> <span class="DecNumber">5121'i32</span></pre></dt>
+  <dd>
+    
+    GL_UNSIGNED_BYTE
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L123" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L123" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="MatrixModelview">
+  <dt><pre><a href="rlgl.html#MatrixModelview"><span class="Identifier">MatrixModelview</span></a> <span class="Other">=</span> <span class="DecNumber">5888'i32</span></pre></dt>
+  <dd>
+    
+    GL_MODELVIEW
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L113" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L113" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="MatrixProjection">
+  <dt><pre><a href="rlgl.html#MatrixProjection"><span class="Identifier">MatrixProjection</span></a> <span class="Other">=</span> <span class="DecNumber">5889'i32</span></pre></dt>
+  <dd>
+    
+    GL_PROJECTION
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L114" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L114" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="MatrixTexture">
+  <dt><pre><a href="rlgl.html#MatrixTexture"><span class="Identifier">MatrixTexture</span></a> <span class="Other">=</span> <span class="DecNumber">5890'i32</span></pre></dt>
+  <dd>
+    
+    GL_TEXTURE
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L115" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L115" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="MaxMatrixStackSize">
+  <dt><pre><a href="rlgl.html#MaxMatrixStackSize"><span class="Identifier">MaxMatrixStackSize</span></a> <span class="Other">=</span> <span class="DecNumber">32</span></pre></dt>
+  <dd>
+    
+    Maximum size of Matrix stack
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L87" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L87" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
 <div id="Opengl11">
   <dt><pre><a href="rlgl.html#Opengl11"><span class="Identifier">Opengl11</span></a> <span class="Other">=</span> <span class="DecNumber">1'i32</span></pre></dt>
   <dd>
@@ -1544,6 +1757,266 @@
     
     <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L7" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L7" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureFilterAnisotropic">
+  <dt><pre><a href="rlgl.html#TextureFilterAnisotropic"><span class="Identifier">TextureFilterAnisotropic</span></a> <span class="Other">=</span> <span class="DecNumber">12288'i32</span></pre></dt>
+  <dd>
+    
+    Anisotropic filter (custom identifier)
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L104" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L104" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureFilterLinear">
+  <dt><pre><a href="rlgl.html#TextureFilterLinear"><span class="Identifier">TextureFilterLinear</span></a> <span class="Other">=</span> <span class="DecNumber">9729'i32</span></pre></dt>
+  <dd>
+    
+    GL_LINEAR
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L99" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L99" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureFilterLinearMipNearest">
+  <dt><pre><a href="rlgl.html#TextureFilterLinearMipNearest"><span class="Identifier">TextureFilterLinearMipNearest</span></a> <span class="Other">=</span> <span class="DecNumber">9985'i32</span></pre></dt>
+  <dd>
+    
+    GL_LINEAR_MIPMAP_NEAREST
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L102" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L102" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureFilterMipLinear">
+  <dt><pre><a href="rlgl.html#TextureFilterMipLinear"><span class="Identifier">TextureFilterMipLinear</span></a> <span class="Other">=</span> <span class="DecNumber">9987'i32</span></pre></dt>
+  <dd>
+    
+    GL_LINEAR_MIPMAP_LINEAR
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L103" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L103" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureFilterMipNearest">
+  <dt><pre><a href="rlgl.html#TextureFilterMipNearest"><span class="Identifier">TextureFilterMipNearest</span></a> <span class="Other">=</span> <span class="DecNumber">9984'i32</span></pre></dt>
+  <dd>
+    
+    GL_NEAREST_MIPMAP_NEAREST
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L100" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L100" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureFilterNearest">
+  <dt><pre><a href="rlgl.html#TextureFilterNearest"><span class="Identifier">TextureFilterNearest</span></a> <span class="Other">=</span> <span class="DecNumber">9728'i32</span></pre></dt>
+  <dd>
+    
+    GL_NEAREST
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L98" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L98" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureFilterNearestMipLinear">
+  <dt><pre><a href="rlgl.html#TextureFilterNearestMipLinear"><span class="Identifier">TextureFilterNearestMipLinear</span></a> <span class="Other">=</span> <span class="DecNumber">9986'i32</span></pre></dt>
+  <dd>
+    
+    GL_NEAREST_MIPMAP_LINEAR
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L101" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L101" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureMagFilter">
+  <dt><pre><a href="rlgl.html#TextureMagFilter"><span class="Identifier">TextureMagFilter</span></a> <span class="Other">=</span> <span class="DecNumber">10240'i32</span></pre></dt>
+  <dd>
+    
+    GL_TEXTURE_MAG_FILTER
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L95" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L95" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureMinFilter">
+  <dt><pre><a href="rlgl.html#TextureMinFilter"><span class="Identifier">TextureMinFilter</span></a> <span class="Other">=</span> <span class="DecNumber">10241'i32</span></pre></dt>
+  <dd>
+    
+    GL_TEXTURE_MIN_FILTER
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L96" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L96" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureMipmapBiasRatio">
+  <dt><pre><a href="rlgl.html#TextureMipmapBiasRatio"><span class="Identifier">TextureMipmapBiasRatio</span></a> <span class="Other">=</span> <span class="DecNumber">16384'i32</span></pre></dt>
+  <dd>
+    
+    Texture mipmap bias, percentage ratio (custom identifier)
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L105" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L105" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureWrapClamp">
+  <dt><pre><a href="rlgl.html#TextureWrapClamp"><span class="Identifier">TextureWrapClamp</span></a> <span class="Other">=</span> <span class="DecNumber">33071'i32</span></pre></dt>
+  <dd>
+    
+    GL_CLAMP_TO_EDGE
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L108" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L108" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureWrapMirrorClamp">
+  <dt><pre><a href="rlgl.html#TextureWrapMirrorClamp"><span class="Identifier">TextureWrapMirrorClamp</span></a> <span class="Other">=</span> <span class="DecNumber">34626'i32</span></pre></dt>
+  <dd>
+    
+    GL_MIRROR_CLAMP_EXT
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L110" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L110" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureWrapMirrorRepeat">
+  <dt><pre><a href="rlgl.html#TextureWrapMirrorRepeat"><span class="Identifier">TextureWrapMirrorRepeat</span></a> <span class="Other">=</span> <span class="DecNumber">33648'i32</span></pre></dt>
+  <dd>
+    
+    GL_MIRRORED_REPEAT
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L109" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L109" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureWrapRepeat">
+  <dt><pre><a href="rlgl.html#TextureWrapRepeat"><span class="Identifier">TextureWrapRepeat</span></a> <span class="Other">=</span> <span class="DecNumber">10497'i32</span></pre></dt>
+  <dd>
+    
+    GL_REPEAT
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L107" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L107" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureWrapS">
+  <dt><pre><a href="rlgl.html#TextureWrapS"><span class="Identifier">TextureWrapS</span></a> <span class="Other">=</span> <span class="DecNumber">10242'i32</span></pre></dt>
+  <dd>
+    
+    GL_TEXTURE_WRAP_S
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L93" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L93" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="TextureWrapT">
+  <dt><pre><a href="rlgl.html#TextureWrapT"><span class="Identifier">TextureWrapT</span></a> <span class="Other">=</span> <span class="DecNumber">10243'i32</span></pre></dt>
+  <dd>
+    
+    GL_TEXTURE_WRAP_T
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L94" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L94" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="UsageDynamicCopy">
+  <dt><pre><a href="rlgl.html#UsageDynamicCopy"><span class="Identifier">UsageDynamicCopy</span></a> <span class="Other">=</span> <span class="DecNumber">35050'i32</span></pre></dt>
+  <dd>
+    
+    GL_DYNAMIC_COPY
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L135" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L135" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="UsageDynamicDraw">
+  <dt><pre><a href="rlgl.html#UsageDynamicDraw"><span class="Identifier">UsageDynamicDraw</span></a> <span class="Other">=</span> <span class="DecNumber">35048'i32</span></pre></dt>
+  <dd>
+    
+    GL_DYNAMIC_DRAW
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L133" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L133" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="UsageDynamicRead">
+  <dt><pre><a href="rlgl.html#UsageDynamicRead"><span class="Identifier">UsageDynamicRead</span></a> <span class="Other">=</span> <span class="DecNumber">35049'i32</span></pre></dt>
+  <dd>
+    
+    GL_DYNAMIC_READ
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L134" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L134" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="UsageStaticCopy">
+  <dt><pre><a href="rlgl.html#UsageStaticCopy"><span class="Identifier">UsageStaticCopy</span></a> <span class="Other">=</span> <span class="DecNumber">35046'i32</span></pre></dt>
+  <dd>
+    
+    GL_STATIC_COPY
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L132" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L132" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="UsageStaticDraw">
+  <dt><pre><a href="rlgl.html#UsageStaticDraw"><span class="Identifier">UsageStaticDraw</span></a> <span class="Other">=</span> <span class="DecNumber">35044'i32</span></pre></dt>
+  <dd>
+    
+    GL_STATIC_DRAW
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L130" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L130" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="UsageStaticRead">
+  <dt><pre><a href="rlgl.html#UsageStaticRead"><span class="Identifier">UsageStaticRead</span></a> <span class="Other">=</span> <span class="DecNumber">35045'i32</span></pre></dt>
+  <dd>
+    
+    GL_STATIC_READ
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L131" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L131" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="UsageStreamCopy">
+  <dt><pre><a href="rlgl.html#UsageStreamCopy"><span class="Identifier">UsageStreamCopy</span></a> <span class="Other">=</span> <span class="DecNumber">35042'i32</span></pre></dt>
+  <dd>
+    
+    GL_STREAM_COPY
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L129" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L129" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="UsageStreamDraw">
+  <dt><pre><a href="rlgl.html#UsageStreamDraw"><span class="Identifier">UsageStreamDraw</span></a> <span class="Other">=</span> <span class="DecNumber">35040'i32</span></pre></dt>
+  <dd>
+    
+    GL_STREAM_DRAW
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L127" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L127" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="UsageStreamRead">
+  <dt><pre><a href="rlgl.html#UsageStreamRead"><span class="Identifier">UsageStreamRead</span></a> <span class="Other">=</span> <span class="DecNumber">35041'i32</span></pre></dt>
+  <dd>
+    
+    GL_STREAM_READ
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L128" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L128" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="VertexShader">
+  <dt><pre><a href="rlgl.html#VertexShader"><span class="Identifier">VertexShader</span></a> <span class="Other">=</span> <span class="DecNumber">35633'i32</span></pre></dt>
+  <dd>
+    
+    GL_VERTEX_SHADER
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L139" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L139" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4227,7 +4700,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-11-23 11:13:54 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-11-23 11:34:07 UTC</small>
       </div>
     </div>
   </div>
