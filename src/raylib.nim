@@ -1603,8 +1603,8 @@ proc `=destroy`*(x: var EmbeddedFont) = discard
 proc `=copy`*(dest: var EmbeddedFont; source: EmbeddedFont) =
   copyMem(addr dest, addr source, sizeof(Font))
 
-proc `=copy`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
-proc `=sink`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
+# proc `=copy`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
+# proc `=sink`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 
 proc `=destroy`*(x: var Image) =
   if x.data != nil: unloadImage(x)
