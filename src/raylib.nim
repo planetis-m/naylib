@@ -533,7 +533,7 @@ type
 
   Shader* {.header: "raylib.h", bycopy.} = object ## Shader
     id*: uint32 ## Shader program id
-    locs: ptr array[MaxShaderLocations, ShaderLocation] ## Shader locations array (RL_MAX_SHADER_LOCATIONS)
+    locs: ptr UncheckedArray[ShaderLocation] ## Shader locations array (RL_MAX_SHADER_LOCATIONS)
 
   MaterialMap* {.header: "raylib.h", bycopy.} = object ## MaterialMap
     texture*: Texture2D ## Material map texture
@@ -1589,6 +1589,8 @@ type
   EmbeddedWave* = distinct Wave
   EmbeddedFont* = distinct Font
 
+  ShaderLocsPtr* = distinct ptr UncheckedArray[ShaderLocation]
+
 proc `=destroy`*(x: var EmbeddedImage) = discard
 proc `=copy`*(dest: var EmbeddedImage; source: EmbeddedImage) =
   copyMem(addr dest, addr source, sizeof(Image))
@@ -1600,6 +1602,9 @@ proc `=copy`*(dest: var EmbeddedWave; source: EmbeddedWave) =
 proc `=destroy`*(x: var EmbeddedFont) = discard
 proc `=copy`*(dest: var EmbeddedFont; source: EmbeddedFont) =
   copyMem(addr dest, addr source, sizeof(Font))
+
+proc `=copy`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
+proc `=sink`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 
 proc `=destroy`*(x: var Image) =
   if x.data != nil: unloadImage(x)
@@ -2218,6 +2223,9 @@ proc `[]`*(x: var MeshVboId, i: int): var uint32 =
 proc `[]=`*(x: var MeshVboId, i: int, val: uint32) =
   checkArrayAccess(Mesh(x).vboId, i, MaxMeshVertexBuffers)
   Mesh(x).vboId[i] = val
+
+proc `locs=`*(x: var Shader; locs: ShaderLocsPtr) {.inline.} =
+  x.locs = (ptr UncheckedArray[ShaderLocation])(locs)
 
 template locs*(x: Shader): ShaderLocs = ShaderLocs(x)
 

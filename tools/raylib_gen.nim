@@ -468,7 +468,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
                 ("ModelAnimation", "framePoses", "ptr UncheckedArray[ptr UncheckedArray[$1]]"),
                 ("Mesh", "vboId", "ptr array[MaxMeshVertexBuffers, $1]"),
                 ("Material", "maps", "ptr array[MaxMaterialMaps, $1]"),
-                ("Shader", "locs", "ptr array[MaxShaderLocations, ShaderLocation]")
+                ("Shader", "locs", "ptr UncheckedArray[ShaderLocation]")
               ]
               let pat = getReplacement(obj.name, name, replacements)
               var baseKind = ""

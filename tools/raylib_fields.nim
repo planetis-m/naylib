@@ -195,6 +195,9 @@ proc `[]=`*(x: var MeshVboId, i: int, val: uint32) =
   checkArrayAccess(Mesh(x).vboId, i, MaxMeshVertexBuffers)
   Mesh(x).vboId[i] = val
 
+proc `locs=`*(x: var Shader; locs: ShaderLocsPtr) {.inline.} =
+  x.locs = (ptr UncheckedArray[ShaderLocation])(locs)
+
 template locs*(x: Shader): ShaderLocs = ShaderLocs(x)
 
 proc `[]`*(x: ShaderLocs, i: ShaderLocationIndex): ShaderLocation =

@@ -1,9 +1,9 @@
 from raylib import PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex,
   ShaderUniformDataType, ShaderAttributeDataType, MaxShaderLocations, ShaderLocation,
-  Matrix, Vector2, Vector3, Color, ShaderVariable
+  Matrix, Vector2, Vector3, Color, ShaderVariable, ShaderLocsPtr
 export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniformDataType,
   ShaderAttributeDataType, MaxShaderLocations, ShaderLocation, Matrix, Vector2, Vector3,
-  Color, ShaderVariable
+  Color, ShaderVariable, ShaderLocsPtr
 
 const
   RlglVersion* = (4, 2, 0)
@@ -341,7 +341,7 @@ proc getTextureIdDefault*(): uint32 {.importc: "rlGetTextureIdDefault".}
   ## Get default texture id
 proc getShaderIdDefault*(): uint32 {.importc: "rlGetShaderIdDefault".}
   ## Get default shader id
-proc getShaderLocsDefault*(): var ShaderLocation {.importc: "rlGetShaderLocsDefault".}
+proc getShaderLocsDefault*(): ShaderLocsPtr {.importc: "rlGetShaderLocsDefault".}
   ## Get default shader locations
 proc loadRenderBatch*(numBuffers: int32, bufferElements: int32): RenderBatch {.importc: "rlLoadRenderBatch".}
   ## Load a render batch system
@@ -423,7 +423,7 @@ proc setUniformMatrix*(locIndex: ShaderLocation, mat: Matrix) {.importc: "rlSetU
   ## Set shader value matrix
 proc setUniformSampler*(locIndex: ShaderLocation, textureId: uint32) {.importc: "rlSetUniformSampler".}
   ## Set shader value sampler
-proc setShader*(id: uint32, locs: var ShaderLocation) {.importc: "rlSetShader".}
+proc setShader*(id: uint32, locs: sink ShaderLocsPtr) {.importc: "rlSetShader".}
   ## Set shader currently active (id and locations)
 proc loadComputeShaderProgram*(shaderId: uint32): uint32 {.importc: "rlLoadComputeShaderProgram".}
   ## Load compute shader program

@@ -4,6 +4,8 @@ type
   EmbeddedWave* = distinct Wave
   EmbeddedFont* = distinct Font
 
+  ShaderLocsPtr* = distinct ptr UncheckedArray[ShaderLocation]
+
 proc `=destroy`*(x: var EmbeddedImage) = discard
 proc `=copy`*(dest: var EmbeddedImage; source: EmbeddedImage) =
   copyMem(addr dest, addr source, sizeof(Image))
@@ -15,6 +17,9 @@ proc `=copy`*(dest: var EmbeddedWave; source: EmbeddedWave) =
 proc `=destroy`*(x: var EmbeddedFont) = discard
 proc `=copy`*(dest: var EmbeddedFont; source: EmbeddedFont) =
   copyMem(addr dest, addr source, sizeof(Font))
+
+proc `=copy`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
+proc `=sink`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 
 proc `=destroy`*(x: var Image) =
   if x.data != nil: unloadImage(x)

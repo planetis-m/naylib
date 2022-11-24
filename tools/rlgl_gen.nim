@@ -6,10 +6,10 @@ const
   rlglHeader = """
 from raylib import PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex,
   ShaderUniformDataType, ShaderAttributeDataType, MaxShaderLocations, ShaderLocation,
-  Matrix, Vector2, Vector3, Color, ShaderVariable
+  Matrix, Vector2, Vector3, Color, ShaderVariable, ShaderLocsPtr
 export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniformDataType,
   ShaderAttributeDataType, MaxShaderLocations, ShaderLocation, Matrix, Vector2, Vector3,
-  Color, ShaderVariable
+  Color, ShaderVariable, ShaderLocsPtr
 
 const
   RlglVersion* = (4, 2, 0)
@@ -407,7 +407,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
                 ("rlGetGlTextureFormats", "glInternalFormat", "out $1"),
                 ("rlGetGlTextureFormats", "glFormat", "out $1"),
                 ("rlGetGlTextureFormats", "glType", "out $1"),
-                ("rlSetShader", "locs", "var ShaderLocation"),
+                ("rlSetShader", "locs", "sink ShaderLocsPtr"),
                 ("rlMultMatrixf", "matf", "array[16, $1]"),
               ]
             let pat = getReplacement(fnc.name, param.name, replacements)
@@ -424,7 +424,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           var baseKind = ""
           const
             replacements = [
-              ("rlGetShaderLocsDefault", "", "var ShaderLocation"),
+              ("rlGetShaderLocsDefault", "", "ShaderLocsPtr"),
               # ("rlReadScreenPixels", "", ""),
             ]
           let pat = getReplacement(fnc.name, "", replacements)
