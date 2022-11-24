@@ -407,7 +407,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
                 ("rlGetGlTextureFormats", "glInternalFormat", "out $1"),
                 ("rlGetGlTextureFormats", "glFormat", "out $1"),
                 ("rlGetGlTextureFormats", "glType", "out $1"),
-                ("rlSetShader", "locs", "sink ShaderLocsPtr"),
+                ("rlSetShader", "locs", "ShaderLocsPtr"),
                 ("rlMultMatrixf", "matf", "array[16, $1]"),
               ]
             let pat = getReplacement(fnc.name, param.name, replacements)

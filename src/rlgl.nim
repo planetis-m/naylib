@@ -423,7 +423,7 @@ proc setUniformMatrix*(locIndex: ShaderLocation, mat: Matrix) {.importc: "rlSetU
   ## Set shader value matrix
 proc setUniformSampler*(locIndex: ShaderLocation, textureId: uint32) {.importc: "rlSetUniformSampler".}
   ## Set shader value sampler
-proc setShader*(id: uint32, locs: sink ShaderLocsPtr) {.importc: "rlSetShader".}
+proc setShader*(id: uint32, locs: ShaderLocsPtr) {.importc: "rlSetShader".}
   ## Set shader currently active (id and locations)
 proc loadComputeShaderProgram*(shaderId: uint32): uint32 {.importc: "rlLoadComputeShaderProgram".}
   ## Load compute shader program
