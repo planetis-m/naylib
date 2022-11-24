@@ -6,10 +6,10 @@ const
   rlglHeader = """
 from raylib import PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex,
   ShaderUniformDataType, ShaderAttributeDataType, MaxShaderLocations, ShaderLocation,
-  Matrix, Vector2, Vector3, Color, UniformName, AttribName
+  Matrix, Vector2, Vector3, Color, ShaderVariable
 export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniformDataType,
   ShaderAttributeDataType, MaxShaderLocations, ShaderLocation, Matrix, Vector2, Vector3,
-  Color, UniformName, AttribName
+  Color, ShaderVariable
 
 const
   RlglVersion* = (4, 2, 0)
@@ -116,22 +116,22 @@ type
   ComputeShader* = ShaderType(0x91B9) ## GL_COMPUTE_SHADER
 
   # Default shader vertex attribute names to set location points
-  DefaultShaderAttribNamePosition* = AttribName("vertexPosition") ## Binded by default to shader location: 0
-  DefaultShaderAttribNameTexcoord* = AttribName("vertexTexCoord") ## Binded by default to shader location: 1
-  DefaultShaderAttribNameNormal* = AttribName("vertexNormal") ## Binded by default to shader location: 2
-  DefaultShaderAttribNameColor* = AttribName("vertexColor") ## Binded by default to shader location: 3
-  DefaultShaderAttribNameTangent* = AttribName("vertexTangent") ## Binded by default to shader location: 4
-  DefaultShaderAttribNameTexcoord2* = AttribName("vertexTexCoord2") ## Binded by default to shader location: 5
+  DefaultShaderAttribNamePosition* = ShaderVariable("vertexPosition") ## Binded by default to shader location: 0
+  DefaultShaderAttribNameTexcoord* = ShaderVariable("vertexTexCoord") ## Binded by default to shader location: 1
+  DefaultShaderAttribNameNormal* = ShaderVariable("vertexNormal") ## Binded by default to shader location: 2
+  DefaultShaderAttribNameColor* = ShaderVariable("vertexColor") ## Binded by default to shader location: 3
+  DefaultShaderAttribNameTangent* = ShaderVariable("vertexTangent") ## Binded by default to shader location: 4
+  DefaultShaderAttribNameTexcoord2* = ShaderVariable("vertexTexCoord2") ## Binded by default to shader location: 5
 
-  DefaultShaderUniformNameMvp* = UniformName("mvp") ## model-view-projection matrix
-  DefaultShaderUniformNameView* = UniformName("matView") ## view matrix
-  DefaultShaderUniformNameProjection* = UniformName("matProjection") ## projection matrix
-  DefaultShaderUniformNameModel* = UniformName("matModel") ## model matrix
-  DefaultShaderUniformNameNormal* = UniformName("matNormal") ## normal matrix (transpose(inverse(matModelView))
-  DefaultShaderUniformNameColor* = UniformName("colDiffuse") ## color diffuse (base tint color, multiplied by texture color)
-  DefaultShaderSampler2dNameTexture0* = UniformName("texture0") ## texture0 (texture slot active 0)
-  DefaultShaderSampler2dNameTexture1* = UniformName("texture1") ## texture1 (texture slot active 1)
-  DefaultShaderSampler2dNameTexture2* = UniformName("texture2") ## texture2 (texture slot active 2)
+  DefaultShaderUniformNameMvp* = ShaderVariable("mvp") ## model-view-projection matrix
+  DefaultShaderUniformNameView* = ShaderVariable("matView") ## view matrix
+  DefaultShaderUniformNameProjection* = ShaderVariable("matProjection") ## projection matrix
+  DefaultShaderUniformNameModel* = ShaderVariable("matModel") ## model matrix
+  DefaultShaderUniformNameNormal* = ShaderVariable("matNormal") ## normal matrix (transpose(inverse(matModelView))
+  DefaultShaderUniformNameColor* = ShaderVariable("colDiffuse") ## color diffuse (base tint color, multiplied by texture color)
+  DefaultShaderSampler2dNameTexture0* = ShaderVariable("texture0") ## texture0 (texture slot active 0)
+  DefaultShaderSampler2dNameTexture1* = ShaderVariable("texture1") ## texture1 (texture slot active 1)
+  DefaultShaderSampler2dNameTexture2* = ShaderVariable("texture2") ## texture2 (texture slot active 2)
 """
   helpers = """
 
@@ -285,8 +285,8 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     "FramebufferAttachTextureType",
     "CullMode",
     "BlendMode",
-    "UniformName",
-    "AttribName",
+    "ShaderVariable",
+    "ShaderVariable",
     "ShaderUniformDataType",
     "ShaderAttributeDataType",
     "PixelFormat",

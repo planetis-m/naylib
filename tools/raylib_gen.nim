@@ -49,11 +49,9 @@ const
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 
 type
-  UniformName* = distinct cstring
-  AttribName* = distinct cstring
+  ShaderVariable* = distinct cstring
 
-proc `==`*(a, b: UniformName): bool {.borrow.}
-proc `==`*(a, b: AttribName): bool {.borrow.}
+proc `==`*(a, b: ShaderVariable): bool {.borrow.}
 
 proc `==`*(a, b: ConfigFlags): bool {.borrow.}
 
@@ -285,8 +283,8 @@ const
     "Rune",
     "Rune",
     "Rune",
-    "UniformName",
-    "AttribName"
+    "ShaderVariable",
+    "ShaderVariable"
   ]
   excludedFuncs = [
     # Text strings management functions
