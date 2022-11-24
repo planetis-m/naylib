@@ -18,6 +18,7 @@ proc `=destroy`*(x: var EmbeddedFont) = discard
 proc `=copy`*(dest: var EmbeddedFont; source: EmbeddedFont) =
   copyMem(addr dest, addr source, sizeof(Font))
 
+# proc `=destroy`*(x: var ShaderLocsPtr) = discard
 # proc `=copy`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 # proc `=sink`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 
