@@ -17,7 +17,7 @@ raylib `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_ (C spec
 Installation
 ============
 
-Install with ``nimble install naylib`` then cd in the installed directory,
+Install with ``nimble install naylib`` then cd to the installed directory,
 i.e: ``cd $(nimble path naylib)`` and run:
 
 .. code-block::
@@ -35,7 +35,7 @@ Development environment
 =======================
 
 The development environment uses the ``nake`` tool to produce the wrapper, ``nake wrap``
-and the documentation with ``nake docs``. ``buildPlatform`` tasks should be used instead
+and the documentation with ``nake docs``. Nake ``buildPlatform`` tasks should be used instead
 of nimble tasks when developing.
 
 Usage Tips
@@ -156,7 +156,7 @@ TextSubtext        substr
 TextReplace        strutils.replace, strutils.multiReplace
 TextInsert         insert
 TextJoin           strutils.join
-TextSplit          strutils.split
+TextSplit          strutils.split, unicdoe.split
 TextAppend         add
 TextFindIndex      strutils.find
 TextToUpper        strutils.toUpperAscii, unicode.toUpper
