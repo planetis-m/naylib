@@ -344,7 +344,9 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
         if objName != "rlglData":
           removePrefix(objName, "rl")
         ident capitalizeAscii(objName)
-        lit "* {.bycopy.} = object"
+        lit "* {.importc: \""
+        lit obj.name
+        lit "\", nodecl, bycopy.} = object" # header: \"rlgl.h\"
         doc obj
         scope:
           for fld in items(obj.fields):

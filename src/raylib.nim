@@ -426,59 +426,59 @@ proc flags*[E: FlagsEnum](e: varargs[E]): Flags[E] {.inline.} =
   Flags[E](res)
 
 type
-  Vector2* {.header: "raylib.h", bycopy.} = object ## Vector2, 2 components
+  Vector2* {.importc, header: "raylib.h", bycopy.} = object ## Vector2, 2 components
     x*: float32 ## Vector x component
     y*: float32 ## Vector y component
 
-  Vector3* {.header: "raylib.h", bycopy.} = object ## Vector3, 3 components
+  Vector3* {.importc, header: "raylib.h", bycopy.} = object ## Vector3, 3 components
     x*: float32 ## Vector x component
     y*: float32 ## Vector y component
     z*: float32 ## Vector z component
 
-  Vector4* {.header: "raylib.h", bycopy.} = object ## Vector4, 4 components
+  Vector4* {.importc, header: "raylib.h", bycopy.} = object ## Vector4, 4 components
     x*: float32 ## Vector x component
     y*: float32 ## Vector y component
     z*: float32 ## Vector z component
     w*: float32 ## Vector w component
 
-  Matrix* {.header: "raylib.h", bycopy.} = object ## Matrix, 4x4 components, column major, OpenGL style, right handed
+  Matrix* {.importc, header: "raylib.h", bycopy.} = object ## Matrix, 4x4 components, column major, OpenGL style, right handed
     m0*, m4*, m8*, m12*: float32 ## Matrix first row (4 components)
     m1*, m5*, m9*, m13*: float32 ## Matrix second row (4 components)
     m2*, m6*, m10*, m14*: float32 ## Matrix third row (4 components)
     m3*, m7*, m11*, m15*: float32 ## Matrix fourth row (4 components)
 
-  Color* {.header: "raylib.h", bycopy.} = object ## Color, 4 components, R8G8B8A8 (32bit)
+  Color* {.importc, header: "raylib.h", bycopy.} = object ## Color, 4 components, R8G8B8A8 (32bit)
     r*: uint8 ## Color red value
     g*: uint8 ## Color green value
     b*: uint8 ## Color blue value
     a*: uint8 ## Color alpha value
 
-  Rectangle* {.header: "raylib.h", bycopy.} = object ## Rectangle, 4 components
+  Rectangle* {.importc, header: "raylib.h", bycopy.} = object ## Rectangle, 4 components
     x*: float32 ## Rectangle top-left corner position x
     y*: float32 ## Rectangle top-left corner position y
     width*: float32 ## Rectangle width
     height*: float32 ## Rectangle height
 
-  Image* {.header: "raylib.h", bycopy.} = object ## Image, pixel data stored in CPU memory (RAM)
+  Image* {.importc, header: "raylib.h", bycopy.} = object ## Image, pixel data stored in CPU memory (RAM)
     data*: pointer ## Image raw data
     width*: int32 ## Image base width
     height*: int32 ## Image base height
     mipmaps*: int32 ## Mipmap levels, 1 by default
     format*: PixelFormat ## Data format (PixelFormat type)
 
-  Texture* {.header: "raylib.h", bycopy.} = object ## Texture, tex data stored in GPU memory (VRAM)
+  Texture* {.importc, header: "raylib.h", bycopy.} = object ## Texture, tex data stored in GPU memory (VRAM)
     id*: uint32 ## OpenGL texture id
     width*: int32 ## Texture base width
     height*: int32 ## Texture base height
     mipmaps*: int32 ## Mipmap levels, 1 by default
     format*: PixelFormat ## Data format (PixelFormat type)
 
-  RenderTexture* {.header: "raylib.h", bycopy.} = object ## RenderTexture, fbo for texture rendering
+  RenderTexture* {.importc, header: "raylib.h", bycopy.} = object ## RenderTexture, fbo for texture rendering
     id*: uint32 ## OpenGL framebuffer object id
     texture*: Texture ## Color buffer attachment texture
     depth*: Texture ## Depth buffer attachment texture
 
-  NPatchInfo* {.header: "raylib.h", bycopy.} = object ## NPatchInfo, n-patch layout info
+  NPatchInfo* {.importc, header: "raylib.h", bycopy.} = object ## NPatchInfo, n-patch layout info
     source*: Rectangle ## Texture source rectangle
     left*: int32 ## Left border offset
     top*: int32 ## Top border offset
@@ -486,14 +486,14 @@ type
     bottom*: int32 ## Bottom border offset
     layout*: NPatchLayout ## Layout of the n-patch: 3x3, 1x3 or 3x1
 
-  GlyphInfo* {.header: "raylib.h", bycopy.} = object ## GlyphInfo, font characters glyphs info
+  GlyphInfo* {.importc, header: "raylib.h", bycopy.} = object ## GlyphInfo, font characters glyphs info
     value*: int32 ## Character value (Unicode)
     offsetX*: int32 ## Character offset X when drawing
     offsetY*: int32 ## Character offset Y when drawing
     advanceX*: int32 ## Character advance position X
     image*: Image ## Character image data
 
-  Font* {.header: "raylib.h", bycopy.} = object ## Font, font texture and GlyphInfo array data
+  Font* {.importc, header: "raylib.h", bycopy.} = object ## Font, font texture and GlyphInfo array data
     baseSize*: int32 ## Base size (default chars height)
     glyphCount: int32 ## Number of glyph characters
     glyphPadding*: int32 ## Padding around the glyph characters
@@ -501,20 +501,20 @@ type
     recs: ptr UncheckedArray[Rectangle] ## Rectangles in texture for the glyphs
     glyphs: ptr UncheckedArray[GlyphInfo] ## Glyphs info data
 
-  Camera3D* {.header: "raylib.h", bycopy.} = object ## Camera, defines position/orientation in 3d space
+  Camera3D* {.importc, header: "raylib.h", bycopy.} = object ## Camera, defines position/orientation in 3d space
     position*: Vector3 ## Camera position
     target*: Vector3 ## Camera target it looks-at
     up*: Vector3 ## Camera up vector (rotation over its axis)
     fovy*: float32 ## Camera field-of-view aperture in Y (degrees) in perspective, used as near plane width in orthographic
     projection*: CameraProjection ## Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
 
-  Camera2D* {.header: "raylib.h", bycopy.} = object ## Camera2D, defines position/orientation in 2d space
+  Camera2D* {.importc, header: "raylib.h", bycopy.} = object ## Camera2D, defines position/orientation in 2d space
     offset*: Vector2 ## Camera offset (displacement from target)
     target*: Vector2 ## Camera target (rotation and zoom origin)
     rotation*: float32 ## Camera rotation in degrees
     zoom*: float32 ## Camera zoom (scaling), should be 1.0f by default
 
-  Mesh* {.header: "raylib.h", bycopy.} = object ## Mesh, vertex data and vao/vbo
+  Mesh* {.importc, header: "raylib.h", bycopy.} = object ## Mesh, vertex data and vao/vbo
     vertexCount: int32 ## Number of vertices stored in arrays
     triangleCount: int32 ## Number of triangles stored (indexed or not)
     vertices: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
@@ -531,30 +531,30 @@ type
     vaoId*: uint32 ## OpenGL Vertex Array Object id
     vboId: ptr array[MaxMeshVertexBuffers, uint32] ## OpenGL Vertex Buffer Objects id (default vertex data)
 
-  Shader* {.header: "raylib.h", bycopy.} = object ## Shader
+  Shader* {.importc, header: "raylib.h", bycopy.} = object ## Shader
     id*: uint32 ## Shader program id
     locs: ptr UncheckedArray[ShaderLocation] ## Shader locations array (RL_MAX_SHADER_LOCATIONS)
 
-  MaterialMap* {.header: "raylib.h", bycopy.} = object ## MaterialMap
+  MaterialMap* {.importc, header: "raylib.h", bycopy.} = object ## MaterialMap
     texture*: Texture2D ## Material map texture
     color*: Color ## Material map color
     value*: float32 ## Material map value
 
-  Material* {.header: "raylib.h", bycopy.} = object ## Material, includes shader and maps
+  Material* {.importc, header: "raylib.h", bycopy.} = object ## Material, includes shader and maps
     shader*: Shader ## Material shader
     maps: ptr array[MaxMaterialMaps, MaterialMap] ## Material maps array (MAX_MATERIAL_MAPS)
     params*: array[4, float32] ## Material generic parameters (if required)
 
-  Transform* {.header: "raylib.h", bycopy.} = object ## Transform, vertex transformation data
+  Transform* {.importc, header: "raylib.h", bycopy.} = object ## Transform, vertex transformation data
     translation*: Vector3 ## Translation
     rotation*: Quaternion ## Rotation
     scale*: Vector3 ## Scale
 
-  BoneInfo* {.header: "raylib.h", bycopy.} = object ## Bone, skeletal animation bone
+  BoneInfo* {.importc, header: "raylib.h", bycopy.} = object ## Bone, skeletal animation bone
     name*: array[32, char] ## Bone name
     parent*: int32 ## Bone parent
 
-  Model* {.header: "raylib.h", bycopy.} = object ## Model, meshes, materials and animation data
+  Model* {.importc, header: "raylib.h", bycopy.} = object ## Model, meshes, materials and animation data
     transform*: Matrix ## Local transform matrix
     meshCount: int32 ## Number of meshes
     materialCount: int32 ## Number of materials
@@ -565,52 +565,52 @@ type
     bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
     bindPose: ptr UncheckedArray[Transform] ## Bones base transformation (pose)
 
-  ModelAnimation* {.header: "raylib.h", bycopy.} = object ## ModelAnimation
+  ModelAnimation* {.importc, header: "raylib.h", bycopy.} = object ## ModelAnimation
     boneCount: int32 ## Number of bones
     frameCount: int32 ## Number of animation frames
     bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
     framePoses: ptr UncheckedArray[ptr UncheckedArray[Transform]] ## Poses array by frame
 
-  Ray* {.header: "raylib.h", bycopy.} = object ## Ray, ray for raycasting
+  Ray* {.importc, header: "raylib.h", bycopy.} = object ## Ray, ray for raycasting
     position*: Vector3 ## Ray position (origin)
     direction*: Vector3 ## Ray direction
 
-  RayCollision* {.header: "raylib.h", bycopy.} = object ## RayCollision, ray hit information
+  RayCollision* {.importc, header: "raylib.h", bycopy.} = object ## RayCollision, ray hit information
     hit*: bool ## Did the ray hit something?
     distance*: float32 ## Distance to nearest hit
     point*: Vector3 ## Point of nearest hit
     normal*: Vector3 ## Surface normal of hit
 
-  BoundingBox* {.header: "raylib.h", bycopy.} = object ## BoundingBox
+  BoundingBox* {.importc, header: "raylib.h", bycopy.} = object ## BoundingBox
     min*: Vector3 ## Minimum vertex box-corner
     max*: Vector3 ## Maximum vertex box-corner
 
-  Wave* {.header: "raylib.h", bycopy.} = object ## Wave, audio wave data
+  Wave* {.importc, header: "raylib.h", bycopy.} = object ## Wave, audio wave data
     frameCount*: uint32 ## Total number of frames (considering channels)
     sampleRate*: uint32 ## Frequency (samples per second)
     sampleSize*: uint32 ## Bit depth (bits per sample): 8, 16, 32 (24 not supported)
     channels*: uint32 ## Number of channels (1-mono, 2-stereo, ...)
     data*: pointer ## Buffer data pointer
 
-  AudioStream* {.header: "raylib.h", bycopy.} = object ## AudioStream, custom audio stream
+  AudioStream* {.importc, header: "raylib.h", bycopy.} = object ## AudioStream, custom audio stream
     buffer: ptr rAudioBuffer ## Pointer to internal data used by the audio system
     processor: ptr rAudioProcessor ## Pointer to internal data processor, useful for audio effects
     sampleRate*: uint32 ## Frequency (samples per second)
     sampleSize*: uint32 ## Bit depth (bits per sample): 8, 16, 32 (24 not supported)
     channels*: uint32 ## Number of channels (1-mono, 2-stereo, ...)
 
-  Sound* {.header: "raylib.h", bycopy.} = object ## Sound
+  Sound* {.importc, header: "raylib.h", bycopy.} = object ## Sound
     stream*: AudioStream ## Audio stream
     frameCount*: uint32 ## Total number of frames (considering channels)
 
-  Music* {.header: "raylib.h", bycopy.} = object ## Music, audio stream, anything longer than ~10 seconds should be streamed
+  Music* {.importc, header: "raylib.h", bycopy.} = object ## Music, audio stream, anything longer than ~10 seconds should be streamed
     stream*: AudioStream ## Audio stream
     frameCount*: uint32 ## Total number of frames (considering channels)
     looping*: bool ## Music looping enable
     ctxType*: int32 ## Type of music context (audio filetype)
     ctxData*: pointer ## Audio context data, depends on type
 
-  VrDeviceInfo* {.header: "raylib.h", bycopy.} = object ## VrDeviceInfo, Head-Mounted-Display device parameters
+  VrDeviceInfo* {.importc, header: "raylib.h", bycopy.} = object ## VrDeviceInfo, Head-Mounted-Display device parameters
     hResolution*: int32 ## Horizontal resolution in pixels
     vResolution*: int32 ## Vertical resolution in pixels
     hScreenSize*: float32 ## Horizontal size in meters
@@ -622,7 +622,7 @@ type
     lensDistortionValues*: array[4, float32] ## Lens distortion constant parameters
     chromaAbCorrection*: array[4, float32] ## Chromatic aberration correction parameters
 
-  VrStereoConfig* {.header: "raylib.h", bycopy.} = object ## VrStereoConfig, VR stereo rendering configuration for simulator
+  VrStereoConfig* {.importc, header: "raylib.h", bycopy.} = object ## VrStereoConfig, VR stereo rendering configuration for simulator
     projection*: array[2, Matrix] ## VR projection matrices (per eye)
     viewOffset*: array[2, Matrix] ## VR view offset matrices (per eye)
     leftLensCenter*: array[2, float32] ## VR left lens center
@@ -632,7 +632,7 @@ type
     scale*: array[2, float32] ## VR distortion scale
     scaleIn*: array[2, float32] ## VR distortion scale in
 
-  FilePathList {.header: "raylib.h", bycopy.} = object ## File path list
+  FilePathList {.importc, header: "raylib.h", bycopy.} = object ## File path list
     capacity: uint32 ## Filepaths max entries
     count: uint32 ## Filepaths entries count
     paths: cstringArray ## Filepaths entries
@@ -643,8 +643,8 @@ type
   RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture
   Camera* = Camera3D ## Camera type fallback, defaults to Camera3D
 
-  rAudioBuffer {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object
-  rAudioProcessor {.importc: "rAudioProcessor", header: "raylib.h", bycopy.} = object
+  rAudioBuffer {.importc, nodecl, bycopy.} = object
+  rAudioProcessor {.importc, nodecl, bycopy.} = object
 
   FontRecs* = distinct Font
   FontGlyphs* = distinct Font

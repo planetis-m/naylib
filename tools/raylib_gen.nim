@@ -4,8 +4,8 @@ when defined(nimPreviewSlimSystem):
 
 const
   extraTypes = [
-    """rAudioBuffer {.importc: "rAudioBuffer", header: "raylib.h", bycopy.} = object""",
-    """rAudioProcessor {.importc: "rAudioProcessor", header: "raylib.h", bycopy.} = object"""
+    """rAudioBuffer {.importc, nodecl, bycopy.} = object""",
+    """rAudioProcessor {.importc, nodecl, bycopy.} = object"""
   ]
   raylibHeader = """
 from unicode import Rune
@@ -435,8 +435,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         spaces
         ident obj.name
         if obj.name == "FilePathList":
-          lit " {.header: \"raylib.h\", bycopy.} = object"
-        else: lit "* {.header: \"raylib.h\", bycopy.} = object"
+          lit " {.importc, header: \"raylib.h\", bycopy.} = object"
+        else: lit "* {.importc, header: \"raylib.h\", bycopy.} = object"
         doc obj
         scope:
           for fld in items(obj.fields):
