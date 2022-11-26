@@ -210,7 +210,7 @@ proc loadFontFromData*(chars: sink CSeq[GlyphInfo]; baseSize, padding: int32, pa
   if result.texture.id == 0:
     raise newException(IOError, "Error loading font from image.")
 
-proc genImageFontAtlas*(chars: openarray[GlyphInfo]; recs: var CSeq[Rectangle]; fontSize: int32;
+proc genImageFontAtlas*(chars: openarray[GlyphInfo]; recs: out CSeq[Rectangle]; fontSize: int32;
     padding: int32; packMethod: int32): Image =
   ## Generate image font atlas using chars info
   var data: ptr UncheckedArray[Rectangle] = nil

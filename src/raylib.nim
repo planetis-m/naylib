@@ -1603,6 +1603,7 @@ proc `=destroy`*(x: var EmbeddedFont) = discard
 proc `=copy`*(dest: var EmbeddedFont; source: EmbeddedFont) =
   copyMem(addr dest, addr source, sizeof(Font))
 
+# proc `=destroy`*(x: var ShaderLocsPtr) = discard
 # proc `=copy`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 # proc `=sink`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 
@@ -1939,7 +1940,7 @@ proc loadFontFromData*(chars: sink CSeq[GlyphInfo]; baseSize, padding: int32, pa
   if result.texture.id == 0:
     raise newException(IOError, "Error loading font from image.")
 
-proc genImageFontAtlas*(chars: openarray[GlyphInfo]; recs: var CSeq[Rectangle]; fontSize: int32;
+proc genImageFontAtlas*(chars: openarray[GlyphInfo]; recs: out CSeq[Rectangle]; fontSize: int32;
     padding: int32; packMethod: int32): Image =
   ## Generate image font atlas using chars info
   var data: ptr UncheckedArray[Rectangle] = nil

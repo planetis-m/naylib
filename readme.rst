@@ -95,7 +95,8 @@ It can easily be avoided with one of the following ways:
   proc gameShouldClose(x: Game): bool {.inline.} =
     result = windowShouldClose()
 
-  let game = initGame(800, 450, 60, flags(FlagMsaa4xHint, FlagWindowHighdpi), "example")
+  const flags = flags(FlagMsaa4xHint, FlagWindowHighdpi)
+  let game = initGame(800, 450, 60, flags, "example")
   let texture = loadTexture("resources/example.png")
 
 - Using a block or a proc call
