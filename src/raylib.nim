@@ -1878,9 +1878,9 @@ type
 template kind*(x: typedesc[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
 template value*(x: Color): pointer = x.addr
 
-proc loadTextureFromData*(pixels: openarray[byte], width: int32, height: int32, format: PixelFormat): Texture =
+proc loadTextureFromData*[T: Pixel](pixels: openarray[T], width: int32, height: int32, format: PixelFormat): Texture =
   ## Load texture using pixels
-  let image = toEmbedded(pixels, width, height, format)
+  let image = Image(data: cast[pointer](pixels), width: width, height: height, format: format, mipmaps: 1).EmbeddedImage
   result = loadTextureFromImage(image.Image)
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openarray[T]) =
