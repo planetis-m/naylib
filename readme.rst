@@ -11,6 +11,7 @@ Documentation
 - `raylib <https://planetis-m.github.io/naylib/raylib.html>`_
 - `raymath <https://planetis-m.github.io/naylib/raymath.html>`_
 - `rlgl <https://planetis-m.github.io/naylib/rlgl.html>`_
+- `reasings <https://planetis-m.github.io/naylib/reasings.html>`_
 
 raylib `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_ (C specific)
 
@@ -243,3 +244,4 @@ Other changes and improvements
   is properly typechecked. So wrong code like ``isKeyPressed(MouseButtonLeft)`` doesn't compile.
 
 - Raymath was ported to Nim and a integer vector type called ``IndexN`` was added.
+  Reasings was also ported to Nim.

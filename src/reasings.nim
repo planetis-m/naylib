@@ -271,7 +271,7 @@ func elasticInOut*(t, b, c, d: float32): float32 {.inline.} =
   var t = t
   if t == 0:
     result = b
-  elif (t = t / (d / 2); t) == 2:
+  elif (t = t / d * 2; t) == 2:
     result = b + c
   else:
     let p = d * (0.3'f32 * 1.5'f32)
