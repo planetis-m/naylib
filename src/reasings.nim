@@ -62,20 +62,21 @@
 ##
 ## Example:
 ##
-## let currentTime = 0
-## let duration = 100
-## let startPositionX: float32 = 0.0
-## let finalPositionX: float32 = 30.0
-## let currentPositionX: float32 = startPositionX
+## ```nim
+##   let currentTime = 0
+##   let duration = 100
+##   let startPositionX: float32 = 0.0
+##   let finalPositionX: float32 = 30.0
+##   let currentPositionX: float32 = startPositionX
 ##
-## while currentPositionX < finalPositionX:
-##   currentPositionX = linearIn(currentTime, startPositionX, finalPositionX - startPositionX, duration)
-##   inc currentTime
-##
+##   while currentPositionX < finalPositionX:
+##     currentPositionX = linearIn(currentTime, startPositionX, finalPositionX - startPositionX, duration)
+##     inc currentTime
+## ```
 
 import std/math
 
-## Linear Easing functions
+# Linear Easing functions
 func linearNone*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Linear
   result = c * t / d + b
@@ -92,7 +93,7 @@ func linearInOut*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Linear In Out
   result = c * t / d + b
 
-## Sine Easing functions
+# Sine Easing functions
 func sineIn*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Sine In
   result = -c * cos(t / d * (Pi / 2)) + c + b
@@ -105,7 +106,7 @@ func sineInOut*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Sine In Out
   result = -c / 2 * (cos(Pi * t / d) - 1) + b
 
-## Circular Easing functions
+# Circular Easing functions
 func ircIn*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Circular In
   let t = t / d
@@ -125,7 +126,7 @@ func circInOut*(t, b, c, d: float32): float32 {.inline.} =
     t = t - 2
     result = c / 2 * (sqrt(1 - t * t) + 1) + b
 
-## Cubic Easing functions
+# Cubic Easing functions
 func cubicIn*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Cubic In
   let t = t / d
@@ -145,7 +146,7 @@ func cubicInOut*(t, b, c, d: float32): float32 {.inline.} =
     t = t - 2
     result = c / 2 * (t * t * t + 2) + b
 
-## Quadratic Easing functions
+# Quadratic Easing functions
 func quadIn*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Quadratic In
   let t = t / d
@@ -164,7 +165,7 @@ func quadInOut*(t, b, c, d: float32): float32 {.inline.} =
   else:
     result = -c / 2 * ((t - 1) * (t - 3) - 1) + b
 
-## Exponential Easing functions
+# Exponential Easing functions
 func expoIn*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Exponential In
   if t == 0: result = b
@@ -187,7 +188,7 @@ func expoInOut*(t, b, c, d: float32): float32 {.inline.} =
   else:
     result = c / 2 * (-pow(2, -10 * (t - 1)) + 2) + b
 
-## Back Easing functions
+# Back Easing functions
 func backIn*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Back In
   let s: float32 = 1.70158
@@ -211,7 +212,7 @@ func backInOut*(t, b, c, d: float32): float32 {.inline.} =
     t = t - 2
     result = c / 2 * (t * t * ((s + 1) * t + s) + 2) + b
 
-## Bounce Easing functions
+# Bounce Easing functions
 func bounceOut*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Bounce Out
   var t = t / d
@@ -238,7 +239,7 @@ func bounceInOut*(t, b, c, d: float32): float32 {.inline.} =
   else:
     result = bounceOut(t * 2 - d, 0, c, d) * 0.5'f32 + c * 0.5'f32 + b
 
-## Elastic Easing functions
+# Elastic Easing functions
 func elasticIn*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Elastic In
   var t = t
