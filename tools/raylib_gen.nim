@@ -511,7 +511,17 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
     for fnc in items(t.functions):
       if fnc.name in excludedFuncs: continue
       lit "\nproc "
-      ident uncapitalizeAscii(fnc.name) # Follow Nim's naming convention for proc names.
+      var fncName = uncapitalizeAscii(fnc.name) # Follow Nim's naming convention for proc names.
+      if fncName notin ["drawRectangleGradientV", "setShaderValueV", "colorToHSV", "colorFromHSV",
+          "checkCollisionCircleRec", "checkCollisionPointRec", "genImageGradientV"] and
+          (fncName.endsWith("V") and fnc.returnType != "Vector2" or
+          fncName.endsWith("Rec") and fnc.returnType != "Rectangle") or
+          fncName.endsWith("Ex") or fncName.endsWith("Pro"):
+        fncName.removeSuffix("V")
+        fncName.removeSuffix("Rec")
+        fncName.removeSuffix("Ex")
+        fncName.removeSuffix("Pro")
+      ident fncName
       let isPrivate = fnc.name in privateFuncs
       let isAlloc = fnc.name in allocFuncs
       if isPrivate:

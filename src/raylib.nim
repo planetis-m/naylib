@@ -881,7 +881,7 @@ proc getWorldToScreen*(position: Vector3, camera: Camera): Vector2 {.importc: "G
   ## Get the screen space position for a 3d world space position
 proc getScreenToWorld2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetScreenToWorld2D".}
   ## Get the world space position for a 2d camera screen space position
-proc getWorldToScreenEx*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx".}
+proc getWorldToScreen*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx".}
   ## Get size position for a 3d world space position
 proc getWorldToScreen2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetWorldToScreen2D".}
   ## Get the screen space position for a 2d camera world space position
@@ -1022,13 +1022,13 @@ proc setShapesTexture*(texture: Texture2D, source: Rectangle) {.importc: "SetSha
   ## Set texture and rectangle to be used on shapes drawing
 proc drawPixel*(posX: int32, posY: int32, color: Color) {.importc: "DrawPixel".}
   ## Draw a pixel
-proc drawPixelV*(position: Vector2, color: Color) {.importc: "DrawPixelV".}
+proc drawPixel*(position: Vector2, color: Color) {.importc: "DrawPixelV".}
   ## Draw a pixel (Vector version)
 proc drawLine*(startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "DrawLine".}
   ## Draw a line
-proc drawLineV*(startPos: Vector2, endPos: Vector2, color: Color) {.importc: "DrawLineV".}
+proc drawLine*(startPos: Vector2, endPos: Vector2, color: Color) {.importc: "DrawLineV".}
   ## Draw a line (Vector version)
-proc drawLineEx*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineEx".}
+proc drawLine*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineEx".}
   ## Draw a line defining thickness
 proc drawLineBezier*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineBezier".}
   ## Draw a line using cubic-bezier curves in-out
@@ -1045,7 +1045,7 @@ proc drawCircleSectorLines*(center: Vector2, radius: float32, startAngle: float3
   ## Draw circle sector outline
 proc drawCircleGradient*(centerX: int32, centerY: int32, radius: float32, color1: Color, color2: Color) {.importc: "DrawCircleGradient".}
   ## Draw a gradient-filled circle
-proc drawCircleV*(center: Vector2, radius: float32, color: Color) {.importc: "DrawCircleV".}
+proc drawCircle*(center: Vector2, radius: float32, color: Color) {.importc: "DrawCircleV".}
   ## Draw a color-filled circle (Vector version)
 proc drawCircleLines*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircleLines".}
   ## Draw circle outline
@@ -1059,21 +1059,21 @@ proc drawRingLines*(center: Vector2, innerRadius: float32, outerRadius: float32,
   ## Draw ring outline
 proc drawRectangle*(posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "DrawRectangle".}
   ## Draw a color-filled rectangle
-proc drawRectangleV*(position: Vector2, size: Vector2, color: Color) {.importc: "DrawRectangleV".}
+proc drawRectangle*(position: Vector2, size: Vector2, color: Color) {.importc: "DrawRectangleV".}
   ## Draw a color-filled rectangle (Vector version)
-proc drawRectangleRec*(rec: Rectangle, color: Color) {.importc: "DrawRectangleRec".}
+proc drawRectangle*(rec: Rectangle, color: Color) {.importc: "DrawRectangleRec".}
   ## Draw a color-filled rectangle
-proc drawRectanglePro*(rec: Rectangle, origin: Vector2, rotation: float32, color: Color) {.importc: "DrawRectanglePro".}
+proc drawRectangle*(rec: Rectangle, origin: Vector2, rotation: float32, color: Color) {.importc: "DrawRectanglePro".}
   ## Draw a color-filled rectangle with pro parameters
 proc drawRectangleGradientV*(posX: int32, posY: int32, width: int32, height: int32, color1: Color, color2: Color) {.importc: "DrawRectangleGradientV".}
   ## Draw a vertical-gradient-filled rectangle
 proc drawRectangleGradientH*(posX: int32, posY: int32, width: int32, height: int32, color1: Color, color2: Color) {.importc: "DrawRectangleGradientH".}
   ## Draw a horizontal-gradient-filled rectangle
-proc drawRectangleGradientEx*(rec: Rectangle, col1: Color, col2: Color, col3: Color, col4: Color) {.importc: "DrawRectangleGradientEx".}
+proc drawRectangleGradient*(rec: Rectangle, col1: Color, col2: Color, col3: Color, col4: Color) {.importc: "DrawRectangleGradientEx".}
   ## Draw a gradient-filled rectangle with custom vertex colors
 proc drawRectangleLines*(posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "DrawRectangleLines".}
   ## Draw rectangle outline
-proc drawRectangleLinesEx*(rec: Rectangle, lineThick: float32, color: Color) {.importc: "DrawRectangleLinesEx".}
+proc drawRectangleLines*(rec: Rectangle, lineThick: float32, color: Color) {.importc: "DrawRectangleLinesEx".}
   ## Draw rectangle outline with extended parameters
 proc drawRectangleRounded*(rec: Rectangle, roundness: float32, segments: int32, color: Color) {.importc: "DrawRectangleRounded".}
   ## Draw rectangle with rounded edges
@@ -1089,7 +1089,7 @@ proc drawPoly*(center: Vector2, sides: int32, radius: float32, rotation: float32
   ## Draw a regular polygon (Vector version)
 proc drawPolyLines*(center: Vector2, sides: int32, radius: float32, rotation: float32, color: Color) {.importc: "DrawPolyLines".}
   ## Draw a polygon outline of n sides
-proc drawPolyLinesEx*(center: Vector2, sides: int32, radius: float32, rotation: float32, lineThick: float32, color: Color) {.importc: "DrawPolyLinesEx".}
+proc drawPolyLines*(center: Vector2, sides: int32, radius: float32, rotation: float32, lineThick: float32, color: Color) {.importc: "DrawPolyLinesEx".}
   ## Draw a polygon outline of n sides with extended parameters
 proc checkCollisionRecs*(rec1: Rectangle, rec2: Rectangle): bool {.importc: "CheckCollisionRecs".}
   ## Check collision between two rectangles
@@ -1151,7 +1151,7 @@ proc imageFromImage*(image: Image, rec: Rectangle): Image {.importc: "ImageFromI
   ## Create an image from another image piece
 proc imageText*(text: cstring, fontSize: int32, color: Color): Image {.importc: "ImageText".}
   ## Create an image from text (default font)
-proc imageTextEx*(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
+proc imageText*(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
   ## Create an image from text (custom sprite font)
 proc imageFormat*(image: var Image, newFormat: PixelFormat) {.importc: "ImageFormat".}
   ## Convert image data to desired format
@@ -1211,25 +1211,25 @@ proc imageClearBackground*(dst: var Image, color: Color) {.importc: "ImageClearB
   ## Clear image background with given color
 proc imageDrawPixel*(dst: var Image, posX: int32, posY: int32, color: Color) {.importc: "ImageDrawPixel".}
   ## Draw pixel within an image
-proc imageDrawPixelV*(dst: var Image, position: Vector2, color: Color) {.importc: "ImageDrawPixelV".}
+proc imageDrawPixel*(dst: var Image, position: Vector2, color: Color) {.importc: "ImageDrawPixelV".}
   ## Draw pixel within an image (Vector version)
 proc imageDrawLine*(dst: var Image, startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "ImageDrawLine".}
   ## Draw line within an image
-proc imageDrawLineV*(dst: var Image, start: Vector2, `end`: Vector2, color: Color) {.importc: "ImageDrawLineV".}
+proc imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, color: Color) {.importc: "ImageDrawLineV".}
   ## Draw line within an image (Vector version)
 proc imageDrawCircle*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircle".}
   ## Draw a filled circle within an image
-proc imageDrawCircleV*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV".}
+proc imageDrawCircle*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV".}
   ## Draw a filled circle within an image (Vector version)
 proc imageDrawCircleLines*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircleLines".}
   ## Draw circle outline within an image
-proc imageDrawCircleLinesV*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleLinesV".}
+proc imageDrawCircleLines*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleLinesV".}
   ## Draw circle outline within an image (Vector version)
 proc imageDrawRectangle*(dst: var Image, posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "ImageDrawRectangle".}
   ## Draw rectangle within an image
-proc imageDrawRectangleV*(dst: var Image, position: Vector2, size: Vector2, color: Color) {.importc: "ImageDrawRectangleV".}
+proc imageDrawRectangle*(dst: var Image, position: Vector2, size: Vector2, color: Color) {.importc: "ImageDrawRectangleV".}
   ## Draw rectangle within an image (Vector version)
-proc imageDrawRectangleRec*(dst: var Image, rec: Rectangle, color: Color) {.importc: "ImageDrawRectangleRec".}
+proc imageDrawRectangle*(dst: var Image, rec: Rectangle, color: Color) {.importc: "ImageDrawRectangleRec".}
   ## Draw rectangle within an image
 proc imageDrawRectangleLines*(dst: var Image, rec: Rectangle, thick: int32, color: Color) {.importc: "ImageDrawRectangleLines".}
   ## Draw rectangle lines within an image
@@ -1237,7 +1237,7 @@ proc imageDraw*(dst: var Image, src: Image, srcRec: Rectangle, dstRec: Rectangle
   ## Draw a source image within a destination image (tint applied to source)
 proc imageDrawText*(dst: var Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
   ## Draw text (using default font) within an image (destination)
-proc imageDrawTextEx*(dst: var Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
+proc imageDrawText*(dst: var Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
   ## Draw text (custom sprite font) within an image (destination)
 proc loadTexture*(fileName: cstring): Texture2D {.importc: "LoadTexture".}
   ## Load texture from file into GPU memory (VRAM)
@@ -1252,7 +1252,7 @@ proc unloadTexture*(texture: Texture2D) {.importc: "UnloadTexture".}
 proc unloadRenderTexture*(target: RenderTexture2D) {.importc: "UnloadRenderTexture".}
   ## Unload render texture from GPU memory (VRAM)
 proc updateTexturePriv(texture: Texture2D, pixels: pointer) {.importc: "UpdateTexture".}
-proc updateTextureRecPriv(texture: Texture2D, rec: Rectangle, pixels: pointer) {.importc: "UpdateTextureRec".}
+proc updateTexturePriv(texture: Texture2D, rec: Rectangle, pixels: pointer) {.importc: "UpdateTextureRec".}
 proc genTextureMipmaps*(texture: var Texture2D) {.importc: "GenTextureMipmaps".}
   ## Generate GPU mipmaps for a texture
 proc setTextureFilter*(texture: Texture2D, filter: TextureFilter) {.importc: "SetTextureFilter".}
@@ -1261,13 +1261,13 @@ proc setTextureWrap*(texture: Texture2D, wrap: TextureWrap) {.importc: "SetTextu
   ## Set texture wrapping mode
 proc drawTexture*(texture: Texture2D, posX: int32, posY: int32, tint: Color) {.importc: "DrawTexture".}
   ## Draw a Texture2D
-proc drawTextureV*(texture: Texture2D, position: Vector2, tint: Color) {.importc: "DrawTextureV".}
+proc drawTexture*(texture: Texture2D, position: Vector2, tint: Color) {.importc: "DrawTextureV".}
   ## Draw a Texture2D with position defined as Vector2
-proc drawTextureEx*(texture: Texture2D, position: Vector2, rotation: float32, scale: float32, tint: Color) {.importc: "DrawTextureEx".}
+proc drawTexture*(texture: Texture2D, position: Vector2, rotation: float32, scale: float32, tint: Color) {.importc: "DrawTextureEx".}
   ## Draw a Texture2D with extended parameters
-proc drawTextureRec*(texture: Texture2D, source: Rectangle, position: Vector2, tint: Color) {.importc: "DrawTextureRec".}
+proc drawTexture*(texture: Texture2D, source: Rectangle, position: Vector2, tint: Color) {.importc: "DrawTextureRec".}
   ## Draw a part of a texture defined by a rectangle
-proc drawTexturePro*(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTexturePro".}
+proc drawTexture*(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTexturePro".}
   ## Draw a part of a texture defined by a rectangle with 'pro' parameters
 proc drawTextureNPatch*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch".}
   ## Draws a texture (or part of it) that stretches or shrinks nicely
@@ -1297,7 +1297,7 @@ proc getFontDefault*(): Font {.importc: "GetFontDefault".}
   ## Get the default Font
 proc loadFont*(fileName: cstring): Font {.importc: "LoadFont".}
   ## Load font from file into GPU memory (VRAM)
-proc loadFontExPriv(fileName: cstring, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontEx".}
+proc loadFontPriv(fileName: cstring, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontEx".}
 proc loadFontFromImage*(image: Image, key: Color, firstChar: int32): Font {.importc: "LoadFontFromImage".}
   ## Load font from Image (XNA style)
 proc loadFontFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontFromMemory".}
@@ -1312,16 +1312,16 @@ proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS".}
   ## Draw current FPS
 proc drawText*(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "DrawText".}
   ## Draw text (using default font)
-proc drawTextEx*(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextEx".}
+proc drawText*(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextEx".}
   ## Draw text using font and additional parameters
-proc drawTextPro*(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro".}
+proc drawText*(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro".}
   ## Draw text using Font and pro parameters (rotation)
 proc drawTextCodepoint*(font: Font, codepoint: Rune, position: Vector2, fontSize: float32, tint: Color) {.importc: "DrawTextCodepoint".}
   ## Draw one character (codepoint)
 proc drawTextCodepointsPriv(font: Font, codepoints: ptr UncheckedArray[int32], count: int32, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextCodepoints".}
 proc measureText*(text: cstring, fontSize: int32): int32 {.importc: "MeasureText".}
   ## Measure string width for default font
-proc measureTextEx*(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
+proc measureText*(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
   ## Measure string size for Font
 proc getGlyphIndex*(font: Font, codepoint: Rune): int32 {.importc: "GetGlyphIndex".}
   ## Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
@@ -1340,25 +1340,25 @@ proc drawTriangle3D*(v1: Vector3, v2: Vector3, v3: Vector3, color: Color) {.impo
 proc drawTriangleStrip3DPriv(points: ptr UncheckedArray[Vector3], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip3D".}
 proc drawCube*(position: Vector3, width: float32, height: float32, length: float32, color: Color) {.importc: "DrawCube".}
   ## Draw cube
-proc drawCubeV*(position: Vector3, size: Vector3, color: Color) {.importc: "DrawCubeV".}
+proc drawCube*(position: Vector3, size: Vector3, color: Color) {.importc: "DrawCubeV".}
   ## Draw cube (Vector version)
 proc drawCubeWires*(position: Vector3, width: float32, height: float32, length: float32, color: Color) {.importc: "DrawCubeWires".}
   ## Draw cube wires
-proc drawCubeWiresV*(position: Vector3, size: Vector3, color: Color) {.importc: "DrawCubeWiresV".}
+proc drawCubeWires*(position: Vector3, size: Vector3, color: Color) {.importc: "DrawCubeWiresV".}
   ## Draw cube wires (Vector version)
 proc drawSphere*(centerPos: Vector3, radius: float32, color: Color) {.importc: "DrawSphere".}
   ## Draw sphere
-proc drawSphereEx*(centerPos: Vector3, radius: float32, rings: int32, slices: int32, color: Color) {.importc: "DrawSphereEx".}
+proc drawSphere*(centerPos: Vector3, radius: float32, rings: int32, slices: int32, color: Color) {.importc: "DrawSphereEx".}
   ## Draw sphere with extended parameters
 proc drawSphereWires*(centerPos: Vector3, radius: float32, rings: int32, slices: int32, color: Color) {.importc: "DrawSphereWires".}
   ## Draw sphere wires
 proc drawCylinder*(position: Vector3, radiusTop: float32, radiusBottom: float32, height: float32, slices: int32, color: Color) {.importc: "DrawCylinder".}
   ## Draw a cylinder/cone
-proc drawCylinderEx*(startPos: Vector3, endPos: Vector3, startRadius: float32, endRadius: float32, sides: int32, color: Color) {.importc: "DrawCylinderEx".}
+proc drawCylinder*(startPos: Vector3, endPos: Vector3, startRadius: float32, endRadius: float32, sides: int32, color: Color) {.importc: "DrawCylinderEx".}
   ## Draw a cylinder with base at startPos and top at endPos
 proc drawCylinderWires*(position: Vector3, radiusTop: float32, radiusBottom: float32, height: float32, slices: int32, color: Color) {.importc: "DrawCylinderWires".}
   ## Draw a cylinder/cone wires
-proc drawCylinderWiresEx*(startPos: Vector3, endPos: Vector3, startRadius: float32, endRadius: float32, sides: int32, color: Color) {.importc: "DrawCylinderWiresEx".}
+proc drawCylinderWires*(startPos: Vector3, endPos: Vector3, startRadius: float32, endRadius: float32, sides: int32, color: Color) {.importc: "DrawCylinderWiresEx".}
   ## Draw a cylinder wires with base at startPos and top at endPos
 proc drawCapsule*(startPos: Vector3, endPos: Vector3, radius: float32, slices: int32, rings: int32, color: Color) {.importc: "DrawCapsule".}
   ## Draw a capsule with the center of its sphere caps at startPos and endPos
@@ -1382,19 +1382,19 @@ proc getModelBoundingBox*(model: Model): BoundingBox {.importc: "GetModelBoundin
   ## Compute model bounding box limits (considers all meshes)
 proc drawModel*(model: Model, position: Vector3, scale: float32, tint: Color) {.importc: "DrawModel".}
   ## Draw a model (with texture if set)
-proc drawModelEx*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelEx".}
+proc drawModel*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelEx".}
   ## Draw a model with extended parameters
 proc drawModelWires*(model: Model, position: Vector3, scale: float32, tint: Color) {.importc: "DrawModelWires".}
   ## Draw a model wires (with texture if set)
-proc drawModelWiresEx*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelWiresEx".}
+proc drawModelWires*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelWiresEx".}
   ## Draw a model wires (with texture if set) with extended parameters
 proc drawBoundingBox*(box: BoundingBox, color: Color) {.importc: "DrawBoundingBox".}
   ## Draw bounding box (wires)
 proc drawBillboard*(camera: Camera, texture: Texture2D, position: Vector3, size: float32, tint: Color) {.importc: "DrawBillboard".}
   ## Draw a billboard texture
-proc drawBillboardRec*(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, size: Vector2, tint: Color) {.importc: "DrawBillboardRec".}
+proc drawBillboard*(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, size: Vector2, tint: Color) {.importc: "DrawBillboardRec".}
   ## Draw a billboard texture defined by source
-proc drawBillboardPro*(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawBillboardPro".}
+proc drawBillboard*(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawBillboardPro".}
   ## Draw a billboard texture defined by source and rotation
 proc uploadMesh*(mesh: var Mesh, dynamic: bool) {.importc: "UploadMesh".}
   ## Upload mesh vertex data in GPU and provide VAO/VBO ids
@@ -1880,16 +1880,17 @@ template value*(x: Color): pointer = x.addr
 
 proc loadTextureFromData*[T: Pixel](pixels: openarray[T], width: int32, height: int32): Texture =
   ## Load texture using pixels
-  let image = Image(data: cast[pointer](pixels), width: width, height: height, format: kind(T), mipmaps: 1).EmbeddedImage
+  let image = Image(data: cast[pointer](pixels), width: width, height: height,
+      format: kind(T), mipmaps: 1).EmbeddedImage
   result = loadTextureFromImage(image.Image)
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openarray[T]) =
   ## Update GPU texture with new data
   updateTexturePriv(texture, cast[pointer](pixels))
 
-proc updateTextureRec*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openarray[T]) =
+proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openarray[T]) =
   ## Update GPU texture rectangle with new data
-  updateTextureRecPriv(texture, rec, cast[pointer](pixels))
+  updateTexturePriv(texture, rec, cast[pointer](pixels))
 
 proc getPixelColor*[T: Pixel](pixels: T): Color =
   ## Get Color from a source pixel pointer of certain format
@@ -1913,13 +1914,13 @@ proc loadFontData*(fileData: openarray[uint8]; fontSize, glyphCount: int32;
       fontSize, nil, glyphCount, `type`)
   result = CSeq[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
 
-proc loadFontEx*(fileName: string; fontSize: int32; fontChars: openarray[int32]): Font =
+proc loadFont*(fileName: string; fontSize: int32; fontChars: openarray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for fontChars to load the default character set
-  result = loadFontExPriv(fileName.cstring, fontSize,
+  result = loadFontPriv(fileName.cstring, fontSize,
       if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
 
-proc loadFontEx*(fileName: string; fontSize, glyphCount: int32): Font =
-  result = loadFontExPriv(fileName.cstring, fontSize, nil, glyphCount)
+proc loadFont*(fileName: string; fontSize, glyphCount: int32): Font =
+  result = loadFontPriv(fileName.cstring, fontSize, nil, glyphCount)
 
 proc loadFontFromMemory*(fileType: string; fileData: openarray[uint8]; fontSize: int32;
     fontChars: openarray[int32]): Font =

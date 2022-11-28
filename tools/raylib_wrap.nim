@@ -150,16 +150,17 @@ template value*(x: Color): pointer = x.addr
 
 proc loadTextureFromData*[T: Pixel](pixels: openarray[T], width: int32, height: int32): Texture =
   ## Load texture using pixels
-  let image = Image(data: cast[pointer](pixels), width: width, height: height, format: kind(T), mipmaps: 1).EmbeddedImage
+  let image = Image(data: cast[pointer](pixels), width: width, height: height,
+      format: kind(T), mipmaps: 1).EmbeddedImage
   result = loadTextureFromImage(image.Image)
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openarray[T]) =
   ## Update GPU texture with new data
   updateTexturePriv(texture, cast[pointer](pixels))
 
-proc updateTextureRec*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openarray[T]) =
+proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openarray[T]) =
   ## Update GPU texture rectangle with new data
-  updateTextureRecPriv(texture, rec, cast[pointer](pixels))
+  updateTexturePriv(texture, rec, cast[pointer](pixels))
 
 proc getPixelColor*[T: Pixel](pixels: T): Color =
   ## Get Color from a source pixel pointer of certain format
@@ -183,13 +184,13 @@ proc loadFontData*(fileData: openarray[uint8]; fontSize, glyphCount: int32;
       fontSize, nil, glyphCount, `type`)
   result = CSeq[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
 
-proc loadFontEx*(fileName: string; fontSize: int32; fontChars: openarray[int32]): Font =
+proc loadFont*(fileName: string; fontSize: int32; fontChars: openarray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for fontChars to load the default character set
-  result = loadFontExPriv(fileName.cstring, fontSize,
+  result = loadFontPriv(fileName.cstring, fontSize,
       if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
 
-proc loadFontEx*(fileName: string; fontSize, glyphCount: int32): Font =
-  result = loadFontExPriv(fileName.cstring, fontSize, nil, glyphCount)
+proc loadFont*(fileName: string; fontSize, glyphCount: int32): Font =
+  result = loadFontPriv(fileName.cstring, fontSize, nil, glyphCount)
 
 proc loadFontFromMemory*(fileType: string; fileData: openarray[uint8]; fontSize: int32;
     fontChars: openarray[int32]): Font =

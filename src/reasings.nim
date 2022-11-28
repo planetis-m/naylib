@@ -107,7 +107,7 @@ func sineInOut*(t, b, c, d: float32): float32 {.inline.} =
   result = -c / 2 * (cos(Pi * t / d) - 1) + b
 
 # Circular Easing functions
-func ircIn*(t, b, c, d: float32): float32 {.inline.} =
+func circIn*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Circular In
   let t = t / d
   result = -c * (sqrt(1 - t * t) - 1) + b
