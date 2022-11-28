@@ -245,3 +245,6 @@ Other changes and improvements
 
 - Raymath was ported to Nim and a integer vector type called ``IndexN`` was added.
   Reasings was also ported to Nim.
+
+- The names of functions that are overloaded no longer end with ``Ex``, ``Pro``, ``Rec``, ``V``.
+  Functions that return ``Vector2`` or ``Rectangle`` are an exception.
