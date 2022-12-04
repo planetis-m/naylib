@@ -150,22 +150,22 @@ type
   BlendColor* = BlendEquation(0x8005) ## GL_BLEND_COLOR
 
   # Default shader vertex attribute names to set location points
-  ShaderAttribPosition* = ShaderVariable("vertexPosition") ## Binded by default to shader location: 0
-  ShaderAttribTexcoord* = ShaderVariable("vertexTexCoord") ## Binded by default to shader location: 1
-  ShaderAttribNormal* = ShaderVariable("vertexNormal") ## Binded by default to shader location: 2
-  ShaderAttribColor* = ShaderVariable("vertexColor") ## Binded by default to shader location: 3
-  ShaderAttribTangent* = ShaderVariable("vertexTangent") ## Binded by default to shader location: 4
-  ShaderAttribTexcoord2* = ShaderVariable("vertexTexCoord2") ## Binded by default to shader location: 5
+  ShaderVarAttribPosition* = ShaderVariable("vertexPosition") ## Binded by default to shader location: 0
+  ShaderVarAttribTexcoord* = ShaderVariable("vertexTexCoord") ## Binded by default to shader location: 1
+  ShaderVarAttribNormal* = ShaderVariable("vertexNormal") ## Binded by default to shader location: 2
+  ShaderVarAttribColor* = ShaderVariable("vertexColor") ## Binded by default to shader location: 3
+  ShaderVarAttribTangent* = ShaderVariable("vertexTangent") ## Binded by default to shader location: 4
+  ShaderVarAttribTexcoord2* = ShaderVariable("vertexTexCoord2") ## Binded by default to shader location: 5
 
-  ShaderUniformMvp* = ShaderVariable("mvp") ## model-view-projection matrix
-  ShaderUniformView* = ShaderVariable("matView") ## view matrix
-  ShaderUniformProjection* = ShaderVariable("matProjection") ## projection matrix
-  ShaderUniformModel* = ShaderVariable("matModel") ## model matrix
-  ShaderUniformNormal* = ShaderVariable("matNormal") ## normal matrix (transpose(inverse(matModelView))
-  ShaderUniformColor* = ShaderVariable("colDiffuse") ## color diffuse (base tint color, multiplied by texture color)
-  ShaderSampler2dTexture0* = ShaderVariable("texture0") ## texture0 (texture slot active 0)
-  ShaderSampler2dTexture1* = ShaderVariable("texture1") ## texture1 (texture slot active 1)
-  ShaderSampler2dTexture2* = ShaderVariable("texture2") ## texture2 (texture slot active 2)
+  ShaderVarUniformMvp* = ShaderVariable("mvp") ## model-view-projection matrix
+  ShaderVarUniformView* = ShaderVariable("matView") ## view matrix
+  ShaderVarUniformProjection* = ShaderVariable("matProjection") ## projection matrix
+  ShaderVarUniformModel* = ShaderVariable("matModel") ## model matrix
+  ShaderVarUniformNormal* = ShaderVariable("matNormal") ## normal matrix (transpose(inverse(matModelView))
+  ShaderVarUniformColor* = ShaderVariable("colDiffuse") ## color diffuse (base tint color, multiplied by texture color)
+  ShaderVarSampler2dTexture0* = ShaderVariable("texture0") ## texture0 (texture slot active 0)
+  ShaderVarSampler2dTexture1* = ShaderVariable("texture1") ## texture1 (texture slot active 1)
+  ShaderVarSampler2dTexture2* = ShaderVariable("texture2") ## texture2 (texture slot active 2)
 """
   helpers = """
 
