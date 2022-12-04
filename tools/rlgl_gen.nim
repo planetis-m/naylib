@@ -140,7 +140,7 @@ type
   BlendFuncAdd* = BlendEquation(0x8006) ## GL_FUNC_ADD
   BlendFuncSubtract* = BlendEquation(0x800A) ## GL_FUNC_SUBTRACT
   BlendFuncReverseSubtract* = BlendEquation(0x800B) ## GL_FUNC_REVERSE_SUBTRACT
-  BlendEquation* = BlendEquation(0x8009) ## GL_BLEND_EQUATION
+  # BlendEquation* = BlendEquation(0x8009) ## GL_BLEND_EQUATION
   BlendEquationRgb* = BlendEquation(0x8009) ## GL_BLEND_EQUATION_RGB (Same as BLEND_EQUATION)
   BlendEquationAlpha* = BlendEquation(0x883D) ## GL_BLEND_EQUATION_ALPHA
   BlendDstRgb* = BlendEquation(0x80C8) ## GL_BLEND_DST_RGB
