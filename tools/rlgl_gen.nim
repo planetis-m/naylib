@@ -23,6 +23,8 @@ type
   GlType* = distinct int32
   BufferUsageHint* = distinct int32
   ShaderType* = distinct int32
+  BlendFactor* = distinct int32
+  BlendEquation* = distinct int32
 
   GlVersion* = distinct int32
   FramebufferAttachType* = distinct int32
@@ -35,6 +37,8 @@ proc `==`*(a, b: DrawMode): bool {.borrow.}
 proc `==`*(a, b: GlType): bool {.borrow.}
 proc `==`*(a, b: BufferUsageHint): bool {.borrow.}
 proc `==`*(a, b: ShaderType): bool {.borrow.}
+proc `==`*(a, b: BlendFactor): bool {.borrow.}
+proc `==`*(a, b: BlendEquation): bool {.borrow.}
 
 proc `<`*(a, b: GlVersion): bool {.borrow.}
 proc `<=`*(a, b: GlVersion): bool {.borrow.}
@@ -99,39 +103,69 @@ type
   GlUnsignedByte* = GlType(0x1401) ## GL_UNSIGNED_BYTE
   GlFloat* = GlType(0x1406) ## GL_FLOAT
 
-  # Buffer usage hint
-  UsageStreamDraw* = BufferUsageHint(0x88E0) ## GL_STREAM_DRAW
-  UsageStreamRead* = BufferUsageHint(0x88E1) ## GL_STREAM_READ
-  UsageStreamCopy* = BufferUsageHint(0x88E2) ## GL_STREAM_COPY
-  UsageStaticDraw* = BufferUsageHint(0x88E4) ## GL_STATIC_DRAW
-  UsageStaticRead* = BufferUsageHint(0x88E5) ## GL_STATIC_READ
-  UsageStaticCopy* = BufferUsageHint(0x88E6) ## GL_STATIC_COPY
-  UsageDynamicDraw* = BufferUsageHint(0x88E8) ## GL_DYNAMIC_DRAW
-  UsageDynamicRead* = BufferUsageHint(0x88E9) ## GL_DYNAMIC_READ
-  UsageDynamicCopy* = BufferUsageHint(0x88EA) ## GL_DYNAMIC_COPY
+  # GL buffer usage hint
+  HintStreamDraw* = BufferUsageHint(0x88E0) ## GL_STREAM_DRAW
+  HintStreamRead* = BufferUsageHint(0x88E1) ## GL_STREAM_READ
+  HintStreamCopy* = BufferUsageHint(0x88E2) ## GL_STREAM_COPY
+  HintStaticDraw* = BufferUsageHint(0x88E4) ## GL_STATIC_DRAW
+  HintStaticRead* = BufferUsageHint(0x88E5) ## GL_STATIC_READ
+  HintStaticCopy* = BufferUsageHint(0x88E6) ## GL_STATIC_COPY
+  HintDynamicDraw* = BufferUsageHint(0x88E8) ## GL_DYNAMIC_DRAW
+  HintDynamicRead* = BufferUsageHint(0x88E9) ## GL_DYNAMIC_READ
+  HintDynamicCopy* = BufferUsageHint(0x88EA) ## GL_DYNAMIC_COPY
 
   # GL Shader type
   FragmentShader* = ShaderType(0x8B30) ## GL_FRAGMENT_SHADER
   VertexShader* = ShaderType(0x8B31) ## GL_VERTEX_SHADER
   ComputeShader* = ShaderType(0x91B9) ## GL_COMPUTE_SHADER
 
-  # Default shader vertex attribute names to set location points
-  DefaultShaderAttribNamePosition* = ShaderVariable("vertexPosition") ## Binded by default to shader location: 0
-  DefaultShaderAttribNameTexcoord* = ShaderVariable("vertexTexCoord") ## Binded by default to shader location: 1
-  DefaultShaderAttribNameNormal* = ShaderVariable("vertexNormal") ## Binded by default to shader location: 2
-  DefaultShaderAttribNameColor* = ShaderVariable("vertexColor") ## Binded by default to shader location: 3
-  DefaultShaderAttribNameTangent* = ShaderVariable("vertexTangent") ## Binded by default to shader location: 4
-  DefaultShaderAttribNameTexcoord2* = ShaderVariable("vertexTexCoord2") ## Binded by default to shader location: 5
+  # GL blending factors
+  FactorZero* = BlendFactor(0) ## GL_ZERO
+  FactorOne* = BlendFactor(1) ## GL_ONE
+  FactorSrcColor* = BlendFactor(0x0300) ## GL_SRC_COLOR
+  FactorOneMinusSrcColor* = BlendFactor(0x0301) ## GL_ONE_MINUS_SRC_COLOR
+  FactorSrcAlpha* = BlendFactor(0x0302) ## GL_SRC_ALPHA
+  FactorOneMinusSrcAlpha* = BlendFactor(0x0303) ## GL_One_MINUS_SRC_ALPHA
+  FactorDstAlpha* = BlendFactor(0x0304) ## GL_DST_ALPHA
+  FactorOneMinusDstAlpha* = BlendFactor(0x0305) ## GL_ONE_MINUS_DST_ALPHA
+  FactorDstColor* = BlendFactor(0x0306) ## GL_DST_COLOR
+  FactorOneMinusDstColor* = BlendFactor(0x0307) ## GL_ONE_MINUS_DST_COLOR
+  FactorSrcAlphaSaturate* = BlendFactor(0x0308) ## GL_SRC_ALPHA_SATURATE
+  FactorConstantColor* = BlendFactor(0x8001) ## GL_CONSTANT_COLOR
+  FactorOneMinusConstantColor* = BlendFactor(0x8002) ## GL_ONE_MINUS_CONSTANT_COLOR
+  FactorConstantAlpha* = BlendFactor(0x8003) ## GL_CONSTANT_ALPHA
+  FactorOneMinusConstantAlpha* = BlendFactor(0x8004) ## GL_ONE_MINUS_CONSTANT_ALPHA
 
-  DefaultShaderUniformNameMvp* = ShaderVariable("mvp") ## model-view-projection matrix
-  DefaultShaderUniformNameView* = ShaderVariable("matView") ## view matrix
-  DefaultShaderUniformNameProjection* = ShaderVariable("matProjection") ## projection matrix
-  DefaultShaderUniformNameModel* = ShaderVariable("matModel") ## model matrix
-  DefaultShaderUniformNameNormal* = ShaderVariable("matNormal") ## normal matrix (transpose(inverse(matModelView))
-  DefaultShaderUniformNameColor* = ShaderVariable("colDiffuse") ## color diffuse (base tint color, multiplied by texture color)
-  DefaultShaderSampler2dNameTexture0* = ShaderVariable("texture0") ## texture0 (texture slot active 0)
-  DefaultShaderSampler2dNameTexture1* = ShaderVariable("texture1") ## texture1 (texture slot active 1)
-  DefaultShaderSampler2dNameTexture2* = ShaderVariable("texture2") ## texture2 (texture slot active 2)
+  # GL blending functions/equations
+  BlendFuncAdd* = BlendEquation(0x8006) ## GL_FUNC_ADD
+  BlendFuncSubtract* = BlendEquation(0x800A) ## GL_FUNC_SUBTRACT
+  BlendFuncReverseSubtract* = BlendEquation(0x800B) ## GL_FUNC_REVERSE_SUBTRACT
+  BlendEquation* = BlendEquation(0x8009) ## GL_BLEND_EQUATION
+  BlendEquationRgb* = BlendEquation(0x8009) ## GL_BLEND_EQUATION_RGB (Same as BLEND_EQUATION)
+  BlendEquationAlpha* = BlendEquation(0x883D) ## GL_BLEND_EQUATION_ALPHA
+  BlendDstRgb* = BlendEquation(0x80C8) ## GL_BLEND_DST_RGB
+  BlendSrcRgb* = BlendEquation(0x80C9) ## GL_BLEND_SRC_RGB
+  BlendDstAlpha* = BlendEquation(0x80CA) ## GL_BLEND_DST_ALPHA
+  BlendSrcAlpha* = BlendEquation(0x80CB) ## GL_BLEND_SRC_ALPHA
+  BlendColor* = BlendEquation(0x8005) ## GL_BLEND_COLOR
+
+  # Default shader vertex attribute names to set location points
+  ShaderAttribPosition* = ShaderVariable("vertexPosition") ## Binded by default to shader location: 0
+  ShaderAttribTexcoord* = ShaderVariable("vertexTexCoord") ## Binded by default to shader location: 1
+  ShaderAttribNormal* = ShaderVariable("vertexNormal") ## Binded by default to shader location: 2
+  ShaderAttribColor* = ShaderVariable("vertexColor") ## Binded by default to shader location: 3
+  ShaderAttribTangent* = ShaderVariable("vertexTangent") ## Binded by default to shader location: 4
+  ShaderAttribTexcoord2* = ShaderVariable("vertexTexCoord2") ## Binded by default to shader location: 5
+
+  ShaderUniformMvp* = ShaderVariable("mvp") ## model-view-projection matrix
+  ShaderUniformView* = ShaderVariable("matView") ## view matrix
+  ShaderUniformProjection* = ShaderVariable("matProjection") ## projection matrix
+  ShaderUniformModel* = ShaderVariable("matModel") ## model matrix
+  ShaderUniformNormal* = ShaderVariable("matNormal") ## normal matrix (transpose(inverse(matModelView))
+  ShaderUniformColor* = ShaderVariable("colDiffuse") ## color diffuse (base tint color, multiplied by texture color)
+  ShaderSampler2dTexture0* = ShaderVariable("texture0") ## texture0 (texture slot active 0)
+  ShaderSampler2dTexture1* = ShaderVariable("texture1") ## texture1 (texture slot active 1)
+  ShaderSampler2dTexture2* = ShaderVariable("texture2") ## texture2 (texture slot active 2)
 """
   helpers = """
 
@@ -244,7 +278,7 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
   enumInFuncReturn = [
     ("rlGetLocationUniform", 21),
     ("rlGetLocationAttrib", 21),
-    ("rlGetVersion", 25),
+    ("rlGetVersion", 34),
   ]
   enumInFuncParams = [
     # TextureParameter
@@ -273,6 +307,15 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     ("rlSetUniform", "locIndex"),
     ("rlSetUniformMatrix", "locIndex"),
     ("rlSetUniformSampler", "locIndex"),
+    ("rlSetBlendFactors", "glSrcFactor"),
+    ("rlSetBlendFactors", "glDstFactor"),
+    ("rlSetBlendFactorsSeparate", "glSrcRGB"),
+    ("rlSetBlendFactorsSeparate", "glDstRGB"),
+    ("rlSetBlendFactorsSeparate", "glSrcAlpha"),
+    ("rlSetBlendFactorsSeparate", "glDstAlpha"),
+    ("rlSetBlendFactors", "glEquation"),
+    ("rlSetBlendFactorsSeparate", "glEqRGB"),
+    ("rlSetBlendFactorsSeparate", "glEqAlpha"),
   ]
   enumInFuncs = [
     "TextureParameter",
@@ -300,7 +343,16 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     "ShaderLocation",
     "ShaderLocation",
     "ShaderLocation",
-    "GlVersion"
+    "BlendFactor",
+    "BlendFactor",
+    "BlendFactor",
+    "BlendFactor",
+    "BlendFactor",
+    "BlendFactor",
+    "BlendEquation",
+    "BlendEquation",
+    "BlendEquation",
+    "GlVersion",
   ]
 
 proc genBindings(t: TopLevel, fname: string, header, footer: string) =

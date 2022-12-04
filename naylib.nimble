@@ -15,7 +15,7 @@ requires "nim >= 1.6.0"
 #foreignDep "wayland-protocols"
 
 const
-  RayLatestCommit = "2fd6d7e8c09ac9a13d1e8a9d36741934cb6a1f09"
+  RayLatestCommit = "4de64f5750eacd5d7acfb7b41d5b9f251cb502fb"
 
 let
   rayDir = "dist/raylib"
