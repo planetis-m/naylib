@@ -7717,6 +7717,21 @@
       ]
     },
     {
+      "name": "ColorBrightness",
+      "description": "Get color with brightness correction, brightness factor goes from 0.0f to 1.0f",
+      "returnType": "Color",
+      "params": [
+        {
+          "type": "Color",
+          "name": "color"
+        },
+        {
+          "type": "float",
+          "name": "factor"
+        }
+      ]
+    },
+    {
       "name": "ColorAlpha",
       "description": "Get color with alpha applied, alpha goes from 0.0f to 1.0f",
       "returnType": "Color",

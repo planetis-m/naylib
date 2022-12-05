@@ -1283,6 +1283,8 @@ proc colorToHSV*(color: Color): Vector3 {.importc: "ColorToHSV".}
   ## Get HSV values for a Color, hue [0..360], saturation/value [0..1]
 proc colorFromHSV*(hue: float32, saturation: float32, value: float32): Color {.importc: "ColorFromHSV".}
   ## Get a Color from HSV values, hue [0..360], saturation/value [0..1]
+proc colorBrightness*(color: Color, factor: float32): Color {.importc: "ColorBrightness".}
+  ## Get color with brightness correction, brightness factor goes from 0.0f to 1.0f
 proc colorAlpha*(color: Color, alpha: float32): Color {.importc: "ColorAlpha".}
   ## Get color with alpha applied, alpha goes from 0.0f to 1.0f
 proc colorAlphaBlend*(dst: Color, src: Color, tint: Color): Color {.importc: "ColorAlphaBlend".}
