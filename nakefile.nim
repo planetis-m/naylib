@@ -28,13 +28,13 @@ proc buildRaylib(platform: string, wayland = false) =
   withDir(rayDir / "/src"):
     const exe = when defined(windows): "mingw32-make" else: "make"
     direSilentShell "Building raylib static library...",
-        &"{exe} clean && {exe} -j4 PLATFORM={platform}" &
+        &"{exe} clean && {exe} -B -j4 PLATFORM={platform}" &
         (if wayland: " USE_WAYLAND_DISPLAY=TRUE" else: "")
     echo "Copying to C include directory..."
     discard existsOrCreateDir(inclDir)
-    copyFileToDir("libraylib.a", inclDir)
-    copyFileToDir("raylib.h", inclDir)
-    copyFileToDir("rlgl.h", inclDir)
+    copyFile("libraylib.a", inclDir / "libraylib.a")
+    copyFile("raylib.h", inclDir / "raylib.h")
+    copyFile("rlgl.h", inclDir / "rlgl.h")
 
 task "build", "Build the raylib library for the default platform":
   buildRaylib("PLATFORM_DESKTOP")
@@ -50,6 +50,9 @@ task "buildDRM", "Build the raylib library for the DRM platform":
 
 task "buildAndroid", "Build the raylib library for the Android platform":
   buildRaylib("PLATFORM_ANDROID")
+
+task "buildWeb", "Build the raylib library for the Web platform":
+  buildRaylib("PLATFORM_WEB")
 
 # The rest are meant for developers only!
 

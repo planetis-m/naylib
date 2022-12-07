@@ -22,6 +22,15 @@ elif defined(PlatformDrm):
   {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl -latomic".}
 elif defined(PlatformAndroid):
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
+elif defined(PlatformWeb):
+  {.passL: "-s USE_GLFW=3 -s ASSERTIONS=1 -s WASM=1 -s ASYNCIFY".}
+  if defined(NaylibWebResources):
+    const NaylibWebResourcesPath {.strdefine.}: string = "resources"
+    {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
+
+  type emCallbackFunc* = proc() {.cdecl.}
+  proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: cint, simulateInfiniteLoop: cint) {.
+    cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
 
 const
   RaylibVersion* = (4, 5, 0)
