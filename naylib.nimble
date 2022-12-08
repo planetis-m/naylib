@@ -15,7 +15,7 @@ requires "nim >= 1.6.0"
 #foreignDep "wayland-protocols"
 
 const
-  RayLatestCommit = "4de64f5750eacd5d7acfb7b41d5b9f251cb502fb"
+  RayLatestCommit = "2c9d116a5ce835328dc3267313f1b34b2e7ad8c9"
 
 let
   rayDir = "dist/raylib"
@@ -27,7 +27,8 @@ proc fetchLatestRaylib =
     exec "git clone --depth 1 https://github.com/raysan5/raylib.git " & rayDir
   withDir(rayDir):
     # Fetching latest commit...
-    exec "git fetch --depth 1 origin " & RayLatestCommit & "; git checkout " & RayLatestCommit
+    exec "git fetch --depth 1 origin " & RayLatestCommit
+    exec "git checkout " & RayLatestCommit
 
 # proc fetchStableRaylib =
 #   if not dirExists(rayDir):
