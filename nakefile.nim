@@ -28,9 +28,9 @@ proc buildRaylib(platform: string, wayland = false) =
   fetchLatestRaylib()
   withDir(rayDir / "/src"):
     const exe = when defined(windows): "mingw32-make" else: "make"
+    direSilentShell "", &"{exe} clean"
     direSilentShell "Building raylib static library...",
-        &"{exe} clean && {exe} -B -j4 PLATFORM={platform}" &
-        (if wayland: " USE_WAYLAND_DISPLAY=TRUE" else: "")
+        &"{exe} -B -j4 PLATFORM={platform}" & (if wayland: " USE_WAYLAND_DISPLAY=TRUE" else: "")
     echo "Copying to C include directory..."
     discard existsOrCreateDir(inclDir)
     copyFile("libraylib.a", inclDir / "libraylib.a")

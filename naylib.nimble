@@ -1,6 +1,6 @@
 # Package
 
-version     = "1.9.1"
+version     = "1.9.2"
 author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
@@ -38,10 +38,14 @@ proc fetchLatestRaylib =
 proc buildRaylib(platform: string, wayland = false) =
   fetchLatestRaylib()
   withDir(rayDir & "/src"):
-    const exe = when defined(windows): "mingw32-make" else: "make"
+    let exe = when defined(windows):
+        var tmp = findExe("mingw32-make")
+        if tmp.len == 0: tmp = "make"
+        tmp
+      else: "make"
     # Building raylib static library...
-    exec exe & " clean && " & exe & " -B -j4 PLATFORM=" & platform &
-        (if wayland: " USE_WAYLAND_DISPLAY=TRUE" else: "")
+    exec exe & " clean"
+    exec exe & " -B -j4 PLATFORM=" & platform & (if wayland: " USE_WAYLAND_DISPLAY=TRUE" else: "")
   # Copying to C include directory...
   if not dirExists(inclDir):
     mkDir inclDir
