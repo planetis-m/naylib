@@ -30,6 +30,7 @@ else:
     {.passL: "-lGL -lc -lm -lpthread -ldl -lrt".}
     when defined(wayland):
       {.passC: "-D_GLFW_WAYLAND".}
+      {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
       const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
       const WaylandClientDir {.strdefine.} = "/usr/share/wayland"
       template waylandGenerate(protDef, outp) =
