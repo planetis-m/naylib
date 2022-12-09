@@ -1,4 +1,4 @@
-from unicode import Rune
+from std/unicode import Rune
 import std/os
 const raylibDir = currentSourcePath().parentDir / "/raylib/src"
 
@@ -14,7 +14,7 @@ elif defined(emscripten):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
   {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY".}
   when defined(NaylibWebResources):
-    const NaylibWebResourcesPath {.strdefine.} = "resources"
+    const NaylibWebResourcesPath {.strdefine.}: string = "resources"
     {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
 
   type emCallbackFunc* = proc() {.cdecl.}
@@ -33,20 +33,20 @@ else:
       {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
       const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
       const WaylandClientDir {.strdefine.} = "/usr/share/wayland"
-      template waylandGenerate(protDef, outp) =
+      template wlGenerate(protDef, outp) =
         discard staticExec("wayland-scanner client-header " & protDef & " " & raylibDir / outp & ".h")
         discard staticExec("wayland-scanner private-code " & protDef & " " & raylibDir / outp & "-code.h")
       static:
-        waylandGenerate(WaylandClientDir / "/wayland.xml", "wayland-client-protocol")
-        waylandGenerate(WaylandProtocolsDir / "/stable/xdg-shell/xdg-shell.xml", "wayland-xdg-shell-client-protocol")
-        waylandGenerate(WaylandProtocolsDir / "/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml",
+        wlGenerate(WaylandClientDir / "/wayland.xml", "wayland-client-protocol")
+        wlGenerate(WaylandProtocolsDir / "/stable/xdg-shell/xdg-shell.xml", "wayland-xdg-shell-client-protocol")
+        wlGenerate(WaylandProtocolsDir / "/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml",
             "wayland-xdg-decoration-client-protocol")
-        waylandGenerate(WaylandProtocolsDir / "/stable/viewporter/viewporter.xml", "wayland-viewporter-client-protocol")
-        waylandGenerate(WaylandProtocolsDir / "/unstable/relative-pointer/relative-pointer-unstable-v1.xml",
+        wlGenerate(WaylandProtocolsDir / "/stable/viewporter/viewporter.xml", "wayland-viewporter-client-protocol")
+        wlGenerate(WaylandProtocolsDir / "/unstable/relative-pointer/relative-pointer-unstable-v1.xml",
             "wayland-relative-pointer-unstable-v1-client-protocol")
-        waylandGenerate(WaylandProtocolsDir / "/unstable/pointer-constraints/pointer-constraints-unstable-v1.xml",
+        wlGenerate(WaylandProtocolsDir / "/unstable/pointer-constraints/pointer-constraints-unstable-v1.xml",
             "wayland-pointer-constraints-unstable-v1-client-protocol")
-        waylandGenerate(WaylandProtocolsDir / "/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
+        wlGenerate(WaylandProtocolsDir / "/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
             "wayland-idle-inhibit-unstable-v1-client-protocol")
     else: {.passL: "-lX11".}
   elif defined(windows):
