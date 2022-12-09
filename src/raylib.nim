@@ -29,16 +29,24 @@ else:
     {.passC: "-fPIC".}
     {.passL: "-lGL -lc -lm -lpthread -ldl -lrt".}
     when defined(wayland):
-      {.error: "Wayland support is outdated".}
-      # {.passC: "-D_GLFW_WAYLAND".}
-      # const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
-      # const protDef = WaylandProtocolsDir / "/stable/xdg-shell/xdg-shell.xml"
-      # static:
-      #   discard staticExec("wayland-scanner client-header " & protDef & " " &
-      #       raylibDir / "xdg-shell-client-protocol.h")
-      #   discard staticExec("wayland-scanner private-code " & protDef & " " &
-      #       raylibDir / "xdg-shell-protocol.c")
-      # {.compile: raylibDir / "/xdg-shell-protocol.c".}
+      {.passC: "-D_GLFW_WAYLAND".}
+      const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
+      const WaylandClientDir {.strdefine.} = "/usr/share/wayland"
+      proc waylandGenerate(protDef, outp: string) =
+        discard staticExec("wayland-scanner client-header " & protDef & " " & raylibDir / outp & ".h")
+        discard staticExec("wayland-scanner client-header " & protDef & " " & raylibDir / outp & "-code.h")
+      static:
+        waylandGenerate(WaylandClientDir / "/wayland.xml", "wayland-client-protocol")
+        waylandGenerate(WaylandProtocolsDir / "/stable/xdg-shell/xdg-shell.xml", "wayland-xdg-shell-client-protocol")
+        waylandGenerate(WaylandProtocolsDir / "/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml",
+            "wayland-xdg-decoration-client-protocol")
+        waylandGenerate(WaylandProtocolsDir / "/stable/viewporter/viewporter.xml", "wayland-viewporter-client-protocol")
+        waylandGenerate(WaylandProtocolsDir / "/unstable/relative-pointer/relative-pointer-unstable-v1.xml",
+            "wayland-relative-pointer-unstable-v1-client-protocol")
+        waylandGenerate(WaylandProtocolsDir / "/unstable/pointer-constraints/pointer-constraints-unstable-v1.xml",
+            "wayland-pointer-constraints-unstable-v1-client-protocol")
+        waylandGenerate(WaylandProtocolsDir / "/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
+            "wayland-idle-inhibit-unstable-v1-client-protocol")
     else: {.passL: "-lX11".}
   elif defined(windows):
     when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
