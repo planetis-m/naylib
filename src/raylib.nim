@@ -6,8 +6,25 @@ const raylibDir = currentSourcePath().parentDir / "/raylib/src"
 {.passC: "-I" & raylibDir / "/external/glfw/include".}
 {.passC: "-I" & raylibDir / "/external/glfw/deps/mingw".}
 {.passC: "-Wall -D_DEFAULT_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
-when defined(PlatformDesktop):
-  {.passC: "-DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33".}
+when defined(drm):
+  {.passC: "-I/usr/include/libdrm".}
+  {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
+  {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl -latomic".}
+elif defined(emscripten):
+  {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
+  {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY".}
+  when defined(NaylibWebResources):
+    const NaylibWebResourcesPath {.strdefine.}: string = "resources"
+    {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
+
+  type emCallbackFunc* = proc() {.cdecl.}
+  proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: cint, simulateInfiniteLoop: cint) {.
+    cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
+else:
+  {.passC: "-DPLATFORM_DESKTOP".}
+  when defined(GraphicsApiOpenGl11): {.passC: "-DGRAPHICS_API_OPENGL_11".}
+  elif defined(GraphicsApiOpenGl22): {.passC: "-DGRAPHICS_API_OPENGL_22".}
+  else: {.passC: "-DGRAPHICS_API_OPENGL_33".}
   when defined(linux):
     {.passC: "-fPIC".}
     {.passL: "-lGL -lc -lm -lpthread -ldl -lrt".}
@@ -21,20 +38,6 @@ when defined(PlatformDesktop):
   elif defined(bsd):
     {.passC: "-I/usr/local/include".}
     {.passL: "-lGL -lpthread".}
-elif defined(PlatformDrm):
-  {.passC: "-I/usr/include/libdrm".}
-  {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
-  {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl -latomic".}
-elif defined(PlatformWeb):
-  {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
-  {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY".}
-  when defined(NaylibWebResources):
-    const NaylibWebResourcesPath {.strdefine.}: string = "resources"
-    {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
-
-  type emCallbackFunc* = proc() {.cdecl.}
-  proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: cint, simulateInfiniteLoop: cint) {.
-    cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
 
 when defined(emscripten): discard
 elif defined(macosx): {.compile(raylibDir / "/rglfw.c", "-x objective-c").}
