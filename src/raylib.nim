@@ -32,9 +32,9 @@ else:
       {.passC: "-D_GLFW_WAYLAND".}
       const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
       const WaylandClientDir {.strdefine.} = "/usr/share/wayland"
-      proc waylandGenerate(protDef, outp: string) =
+      template waylandGenerate(protDef, outp) =
         discard staticExec("wayland-scanner client-header " & protDef & " " & raylibDir / outp & ".h")
-        discard staticExec("wayland-scanner client-header " & protDef & " " & raylibDir / outp & "-code.h")
+        discard staticExec("wayland-scanner private-code " & protDef & " " & raylibDir / outp & "-code.h")
       static:
         waylandGenerate(WaylandClientDir / "/wayland.xml", "wayland-client-protocol")
         waylandGenerate(WaylandProtocolsDir / "/stable/xdg-shell/xdg-shell.xml", "wayland-xdg-shell-client-protocol")
