@@ -29,12 +29,15 @@ else:
     {.passC: "-fPIC".}
     {.passL: "-lGL -lc -lm -lpthread -ldl -lrt".}
     when defined(wayland):
-      {.passC: "-D_GLFW_WAYLAND".}
-      const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
-      const ProtDef = WaylandProtocolsDir & "/stable/xdg-shell/xdg-shell.xml"
-      withDir(nimcacheDir):
-        discard staticExec("wayland-scanner client-header " & ProtDef & " xdg-shell-client-protocol.h", cache = "0.1")
-        discard staticExec("wayland-scanner private-code " & ProtDef & " xdg-shell-protocol.c", cache = "0.1")
+      {.error: "Wayland target not yet supported".}
+      # {.passC: "-D_GLFW_WAYLAND".}
+      # const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
+      # const protDef = WaylandProtocolsDir / "/stable/xdg-shell/xdg-shell.xml"
+      # static:
+      #   discard staticExec("wayland-scanner client-header " & protDef & " " &
+      #       raylibDir / "xdg-shell-client-protocol.h")
+      #   discard staticExec("wayland-scanner private-code " & protDef & " " &
+      #       raylibDir / "xdg-shell-protocol.c")
     else: {.passL: "-lX11".}
   elif defined(windows):
     when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
