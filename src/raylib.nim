@@ -28,9 +28,10 @@ elif defined(PlatformDrm):
 elif defined(PlatformWeb):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
   {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY".}
-  if defined(NaylibWebResources):
+  when defined(NaylibWebResources):
     const NaylibWebResourcesPath {.strdefine.}: string = "resources"
     {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
+
   type emCallbackFunc* = proc() {.cdecl.}
   proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: cint, simulateInfiniteLoop: cint) {.
     cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
