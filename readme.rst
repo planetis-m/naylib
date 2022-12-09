@@ -18,12 +18,7 @@ raylib `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_ (C spec
 Installation
 ============
 
-Install with ``nimble install naylib`` then cd to the installed directory,
-i.e: ``cd $(nimble path naylib)`` and run:
-
-.. code-block::
-
-  nimble buildDesktop
+Install with ``nimble install naylib``
 
 Examples
 ========
@@ -32,23 +27,14 @@ See the accompanying examples `repo <https://github.com/planetis-m/raylib-exampl
 
 Compile and run an example by running ``nim c -r -d:release example.nim``.
 
-Development environment
-=======================
-
-The development environment uses the ``nake`` tool to produce the wrapper, ``nake wrap``
-and the documentation with ``nake docs``. Nake ``buildPlatform`` tasks should be used instead
-of nimble tasks when developing.
-
 Usage Tips
 ==========
 
 Creating a new project
 ----------------------
 
-TODO
-
-When compiling a new program don't forget to specify the target platform with ``--define:PlatformDesktop``.
-Other available values are ``PlatformRpi`` (deprecated in raylib 4.2), ``PlatformDrm``, ``PlatformAndroid``.
+When compiling a new program specify the target platform with ``-d:PlatformDesktop``. Other supported values
+are ``PlatformDrm``, ``PlatformWeb``.
 
 Replacing raymath
 -----------------
