@@ -188,7 +188,7 @@ const
   ShaderVarSampler2dTexture2* = ShaderVariable("texture2") ## texture2 (texture slot active 2)
 
 type
-  VertexBuffer* {.importc: "rlVertexBuffer", nodecl, bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
+  VertexBuffer* {.importc: "rlVertexBuffer", header: "rlgl.h", bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
     elementCount: int32 ## Number of elements in the buffer (QUADS)
     vertices: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
     texcoords: ptr UncheckedArray[float32] ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
@@ -197,13 +197,13 @@ type
     vaoId*: uint32 ## OpenGL Vertex Array Object id
     vboId*: array[4, uint32] ## OpenGL Vertex Buffer Objects id (4 types of vertex data)
 
-  DrawCall* {.importc: "rlDrawCall", nodecl, bycopy.} = object ## of those state-change happens (this is done in core module)
+  DrawCall* {.importc: "rlDrawCall", header: "rlgl.h", bycopy.} = object ## of those state-change happens (this is done in core module)
     mode*: int32 ## Drawing mode: LINES, TRIANGLES, QUADS
     vertexCount*: int32 ## Number of vertex of the draw
     vertexAlignment*: int32 ## Number of vertex required for index alignment (LINES, TRIANGLES)
     textureId*: uint32 ## Texture id to be used on the draw -> Use to create new draw call if changes
 
-  RenderBatch* {.importc: "rlRenderBatch", nodecl, bycopy.} = object ## rlRenderBatch type
+  RenderBatch* {.importc: "rlRenderBatch", header: "rlgl.h", bycopy.} = object ## rlRenderBatch type
     bufferCount: int32 ## Number of vertex buffers (multi-buffering support)
     currentBuffer*: int32 ## Current buffer tracking in case of multi-buffering
     vertexBuffer: ptr UncheckedArray[VertexBuffer] ## Dynamic buffer(s) for vertex data

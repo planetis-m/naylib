@@ -1,36 +1,49 @@
 from unicode import Rune
-import os
-const inclDir = currentSourcePath().parentDir / "include"
-{.passC: "-I" & inclDir.}
-{.passL: inclDir / "libraylib.a".}
+import std/os
+const raylibDir = currentSourcePath().parentDir / "/raylib/src"
+
+{.passC: "-I" & raylibDir.}
+{.passC: "-I" & raylibDir / "/external/glfw/include".}
+{.passC: "-I" & raylibDir / "/external/glfw/deps/mingw".}
+{.passC: "-Wall -D_DEFAULT_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(PlatformDesktop):
+  {.passC: "-DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33".}
   when defined(linux):
-    {.passC: "-D_DEFAULT_SOURCE".}
-    when not defined(Wayland): {.passL: "-lX11".}
-    {.passL: "-lGL -lm -lpthread -ldl -lrt".}
+    {.passC: "-fPIC".}
+    {.passL: "-lGL -lc -lm -lpthread -ldl -lrt".}
+    when defined(wayland): {.passC: "-D_GLFW_WAYLAND".}
+    else: {.passL: "-lX11".}
   elif defined(windows):
-    {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
-    when defined(release): {.passL: "-Wl,--subsystem,windows".}
+    when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
+    else: {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
   elif defined(macosx):
     {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo".}
   elif defined(bsd):
-    {.passL: "-lGL -lpthread -lX11 -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor".}
-elif defined(PlatformRpi):
-  {.passL: "-lbrcmGLESv2 -lbrcmEGL -lpthread -lrt -lm -lbcm_host -ldl -latomic".}
+    {.passC: "-I/usr/local/include".}
+    {.passL: "-lGL -lpthread".}
 elif defined(PlatformDrm):
-  {.passC: "-DEGL_NO_X11".}
+  {.passC: "-I/usr/include/libdrm".}
+  {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
   {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl -latomic".}
-elif defined(PlatformAndroid):
-  {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
 elif defined(PlatformWeb):
-  {.passL: "-s USE_GLFW=3 -s ASSERTIONS=1 -s WASM=1 -s ASYNCIFY".}
+  {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
+  {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY".}
   if defined(NaylibWebResources):
     const NaylibWebResourcesPath {.strdefine.}: string = "resources"
     {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
-
   type emCallbackFunc* = proc() {.cdecl.}
   proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: cint, simulateInfiniteLoop: cint) {.
     cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
+
+when defined(macosx): {.compile(raylibDir / "/rglfw.c", "-x objective-c").}
+else: {.compile: raylibDir / "/rglfw.c".}
+{.compile: raylibDir / "/rshapes.c".}
+{.compile: raylibDir / "/rtextures.c".}
+{.compile: raylibDir / "/rtext.c".}
+{.compile: raylibDir / "/utils.c".}
+{.compile: raylibDir / "/rmodels.c".}
+{.compile: raylibDir / "/raudio.c".}
+{.compile: raylibDir / "/rcore.c".}
 
 const
   RaylibVersion* = (4, 5, 0)
@@ -1292,8 +1305,12 @@ proc colorToHSV*(color: Color): Vector3 {.importc: "ColorToHSV".}
   ## Get HSV values for a Color, hue [0..360], saturation/value [0..1]
 proc colorFromHSV*(hue: float32, saturation: float32, value: float32): Color {.importc: "ColorFromHSV".}
   ## Get a Color from HSV values, hue [0..360], saturation/value [0..1]
+proc colorTint*(color: Color, tint: Color): Color {.importc: "ColorTint".}
+  ## Get color multiplied with another color
 proc colorBrightness*(color: Color, factor: float32): Color {.importc: "ColorBrightness".}
-  ## Get color with brightness correction, brightness factor goes from 0.0f to 1.0f
+  ## Get color with brightness correction, brightness factor goes from -1.0f to 1.0f
+proc colorContrast*(color: Color, contrast: float32): Color {.importc: "ColorContrast".}
+  ## Get color with contrast correction, contrast values between -1.0f and 1.0f
 proc colorAlpha*(color: Color, alpha: float32): Color {.importc: "ColorAlpha".}
   ## Get color with alpha applied, alpha goes from 0.0f to 1.0f
 proc colorAlphaBlend*(dst: Color, src: Color, tint: Color): Color {.importc: "ColorAlphaBlend".}

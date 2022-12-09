@@ -398,7 +398,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
         ident capitalizeAscii(objName)
         lit "* {.importc: \""
         lit obj.name
-        lit "\", nodecl, bycopy.} = object" # header: \"rlgl.h\"
+        lit "\", header: \"rlgl.h\", bycopy.} = object"
         doc obj
         scope:
           for fld in items(obj.fields):

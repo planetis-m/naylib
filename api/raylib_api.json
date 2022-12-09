@@ -7717,8 +7717,23 @@
       ]
     },
     {
+      "name": "ColorTint",
+      "description": "Get color multiplied with another color",
+      "returnType": "Color",
+      "params": [
+        {
+          "type": "Color",
+          "name": "color"
+        },
+        {
+          "type": "Color",
+          "name": "tint"
+        }
+      ]
+    },
+    {
       "name": "ColorBrightness",
-      "description": "Get color with brightness correction, brightness factor goes from 0.0f to 1.0f",
+      "description": "Get color with brightness correction, brightness factor goes from -1.0f to 1.0f",
       "returnType": "Color",
       "params": [
         {
@@ -7728,6 +7743,21 @@
         {
           "type": "float",
           "name": "factor"
+        }
+      ]
+    },
+    {
+      "name": "ColorContrast",
+      "description": "Get color with contrast correction, contrast values between -1.0f and 1.0f",
+      "returnType": "Color",
+      "params": [
+        {
+          "type": "Color",
+          "name": "color"
+        },
+        {
+          "type": "float",
+          "name": "contrast"
         }
       ]
     },
