@@ -33,8 +33,10 @@ Usage Tips
 Creating a new project
 ----------------------
 
-When compiling a new program specify the target platform with ``-d:PlatformDesktop``. Other supported values
-are ``PlatformDrm``, ``PlatformWeb``.
+On desktop select the OpenGL graphics backend with
+``-d:GraphicsApiOpenGl33|GraphicsApiOpenGl22|GraphicsApiOpenGl11|GraphicsApiOpenGlEs2``.
+By default OpenGL 3.3 is prefered. To compile on linux for wayland, pass ``-d:wayland``.
+To compile to WebAssembly to run on the Web, define ``emscripten``.
 
 Replacing raymath
 -----------------
