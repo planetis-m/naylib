@@ -29,7 +29,7 @@ else:
     {.passC: "-fPIC".}
     {.passL: "-lGL -lc -lm -lpthread -ldl -lrt".}
     when defined(wayland):
-      {.error: "Wayland target not yet supported".}
+      {.error: "Wayland support is outdated".}
       # {.passC: "-D_GLFW_WAYLAND".}
       # const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
       # const protDef = WaylandProtocolsDir / "/stable/xdg-shell/xdg-shell.xml"
@@ -38,6 +38,7 @@ else:
       #       raylibDir / "xdg-shell-client-protocol.h")
       #   discard staticExec("wayland-scanner private-code " & protDef & " " &
       #       raylibDir / "xdg-shell-protocol.c")
+      # {.compile: raylibDir / "/xdg-shell-protocol.c".}
     else: {.passL: "-lX11".}
   elif defined(windows):
     when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
