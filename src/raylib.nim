@@ -14,7 +14,7 @@ elif defined(emscripten):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
   {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY".}
   when defined(NaylibWebResources):
-    const NaylibWebResourcesPath {.strdefine.}: string = "resources"
+    const NaylibWebResourcesPath {.strdefine.} = "resources"
     {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
 
   type emCallbackFunc* = proc() {.cdecl.}
@@ -28,7 +28,13 @@ else:
   when defined(linux):
     {.passC: "-fPIC".}
     {.passL: "-lGL -lc -lm -lpthread -ldl -lrt".}
-    when defined(wayland): {.passC: "-D_GLFW_WAYLAND".}
+    when defined(wayland):
+      {.passC: "-D_GLFW_WAYLAND".}
+      const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
+      const ProtDef = WaylandProtocolsDir & "/stable/xdg-shell/xdg-shell.xml"
+      withDir(nimcacheDir):
+        discard staticExec("wayland-scanner client-header " & ProtDef & " xdg-shell-client-protocol.h", cache = "0.1")
+        discard staticExec("wayland-scanner private-code " & ProtDef & " xdg-shell-protocol.c", cache = "0.1")
     else: {.passL: "-lX11".}
   elif defined(windows):
     when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
