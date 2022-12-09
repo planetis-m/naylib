@@ -36,7 +36,8 @@ elif defined(PlatformWeb):
   proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: cint, simulateInfiniteLoop: cint) {.
     cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
 
-when defined(macosx): {.compile(raylibDir / "/rglfw.c", "-x objective-c").}
+when defined(emscripten): discard
+elif defined(macosx): {.compile(raylibDir / "/rglfw.c", "-x objective-c").}
 else: {.compile: raylibDir / "/rglfw.c".}
 {.compile: raylibDir / "/rshapes.c".}
 {.compile: raylibDir / "/rtextures.c".}
