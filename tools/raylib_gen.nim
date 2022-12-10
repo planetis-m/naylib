@@ -29,7 +29,7 @@ elif defined(emscripten):
 
   type emCallbackFunc* = proc() {.cdecl.}
   proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: cint, simulateInfiniteLoop: cint) {.
-    cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
+      cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
 else:
   {.passC: "-DPLATFORM_DESKTOP".}
   when defined(GraphicsApiOpenGl11): {.passC: "-DGRAPHICS_API_OPENGL_11".}
@@ -43,9 +43,10 @@ else:
       {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
       const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
       const WaylandClientDir {.strdefine.} = "/usr/share/wayland"
-      template wlGenerate(protDef, outp) =
-        discard staticExec("wayland-scanner client-header " & protDef & " " & raylibDir / outp & ".h")
-        discard staticExec("wayland-scanner private-code " & protDef & " " & raylibDir / outp & "-code.h")
+      proc wlGenerate(protocol, outp: string) =
+        discard staticExec("wayland-scanner client-header " & protocol & " " & raylibDir / outp & ".h")
+        discard staticExec("wayland-scanner private-code " & protocol & " " & raylibDir / outp & "-code.h")
+
       static:
         wlGenerate(WaylandClientDir / "/wayland.xml", "wayland-client-protocol")
         wlGenerate(WaylandProtocolsDir / "/stable/xdg-shell/xdg-shell.xml", "wayland-xdg-shell-client-protocol")
