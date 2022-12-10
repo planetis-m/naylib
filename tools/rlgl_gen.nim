@@ -246,9 +246,9 @@ proc `[]=`*(x: var VertexBufferColors, i: int, val: Color) =
   cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i] = val
 
 when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
-  type IndicesArr* = array[6, uint16]
-elif defined(GraphicsApiOpenGlEs2):
   type IndicesArr* = array[6, uint32]
+elif defined(GraphicsApiOpenGlEs2):
+  type IndicesArr* = array[6, uint16]
 
 proc `[]`*(x: VertexBufferIndices, i: int): IndicesArr =
   checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
