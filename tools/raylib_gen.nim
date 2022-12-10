@@ -16,11 +16,7 @@ const raylibDir = currentSourcePath().parentDir / "/raylib/src"
 {.passC: "-I" & raylibDir / "/external/glfw/include".}
 {.passC: "-I" & raylibDir / "/external/glfw/deps/mingw".}
 {.passC: "-Wall -D_DEFAULT_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
-when defined(drm):
-  {.passC: "-I/usr/include/libdrm".}
-  {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
-  {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl -latomic".}
-elif defined(emscripten):
+when defined(emscripten):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
   {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY".}
   when defined(NaylibWebResources):
@@ -38,7 +34,11 @@ else:
   when defined(linux):
     {.passC: "-fPIC".}
     {.passL: "-lGL -lc -lm -lpthread -ldl -lrt".}
-    when defined(wayland):
+    when defined(drm):
+      {.passC: "-I/usr/include/libdrm".}
+      {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
+      {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl -latomic".}
+    elif defined(wayland):
       {.passC: "-D_GLFW_WAYLAND".}
       {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
       const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
