@@ -34,7 +34,7 @@ Creating a new project
 ----------------------
 
 On desktop select the OpenGL graphics backend with
-``-d:GraphicsApiOpenGl33|GraphicsApiOpenGl22|GraphicsApiOpenGl11|GraphicsApiOpenGlEs2``.
+``-d:GraphicsApiOpenGl33|GraphicsApiOpenGl21|GraphicsApiOpenGl11|GraphicsApiOpenGlEs2``.
 By default OpenGL 3.3 is prefered. To compile on linux for wayland, pass ``-d:wayland``.
 To compile to WebAssembly to run on the Web, define ``emscripten``.
 

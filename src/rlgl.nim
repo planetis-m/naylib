@@ -49,6 +49,10 @@ proc `==`*(a, b: CullMode): bool {.borrow.}
 type
   rlglLoadProc* = proc (name: cstring): pointer ## OpenGL extension functions loader signature (same as GLADloadproc)
 
+# Security check in case no GraphicsApiOpenGl* defined
+when not defined(GraphicsApiOpenGl11) and not defined(GraphicsApiOpenGlEs2):
+  const UseDefaultGraphicsApi = true
+
 const
   Opengl11* = GlVersion(1) ## OpenGL 1.1
   Opengl21* = GlVersion(2) ## OpenGL 2.1 (GLSL 120)
@@ -79,8 +83,6 @@ const
   CullFaceFront* = CullMode(0)
   CullFaceBack* = CullMode(1)
 
-  DefaultBatchBufferElements* = 8192 ## This is the maximum amount of elements (quads) per batch
-                                    ## NOTE: Be careful with text, every letter maps to a quad
   DefaultBatchBuffers* = 1 ## Default number of batch buffers (multi-buffering)
   DefaultBatchDrawCalls* = 256 ## Default number of batch draw calls (by state changes: mode, texture)
   DefaultBatchMaxTextureUnits* = 4 ## Maximum number of textures units that can be activated on batch drawing
@@ -187,13 +189,24 @@ const
   ShaderVarSampler2dTexture1* = ShaderVariable("texture1") ## texture1 (texture slot active 1)
   ShaderVarSampler2dTexture2* = ShaderVariable("texture2") ## texture2 (texture slot active 2)
 
+when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
+  const DefaultBatchBufferElements* = 8192 ## This is the maximum amount of elements (quads) per batch
+                                           ## NOTE: Be careful with text, every letter maps to a quad
+elif defined(GraphicsApiOpenGlEs2):
+  const DefaultBatchBufferElements* = 2048 ## We reduce memory sizes for embedded systems (RPI and HTML5)
+                                           ## NOTE: On HTML5 (emscripten) this is allocated on heap,
+                                           ## by default it's only 16MB!...just take care...
+
 type
   VertexBuffer* {.importc: "rlVertexBuffer", header: "rlgl.h", bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
     elementCount: int32 ## Number of elements in the buffer (QUADS)
     vertices: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
     texcoords: ptr UncheckedArray[float32] ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
     colors: ptr UncheckedArray[uint8] ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-    indices: ptr UncheckedArray[uint32] ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
+    when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
+      indices: ptr UncheckedArray[uint32] ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
+    elif defined(GraphicsApiOpenGlEs2):
+      indices: ptr UncheckedArray[uint16]
     vaoId*: uint32 ## OpenGL Vertex Array Object id
     vboId*: array[4, uint32] ## OpenGL Vertex Buffer Objects id (4 types of vertex data)
 
@@ -572,15 +585,20 @@ proc `[]=`*(x: var VertexBufferColors, i: int, val: Color) =
   checkArrayAccess(VertexBuffer(x).colors, i, 4*VertexBuffer(x).elementCount)
   cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i] = val
 
-proc `[]`*(x: VertexBufferIndices, i: int): array[6, uint32] =
+when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
+  type IndicesArr* = array[6, uint16]
+elif defined(GraphicsApiOpenGlEs2):
+  type IndicesArr* = array[6, uint32]
+
+proc `[]`*(x: VertexBufferIndices, i: int): IndicesArr =
   checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
   result = cast[ptr UncheckedArray[typeof(result)]](VertexBuffer(x).indices)[i]
 
-proc `[]`*(x: var VertexBufferIndices, i: int): var array[6, uint32] =
+proc `[]`*(x: var VertexBufferIndices, i: int): var IndicesArr =
   checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
   result = cast[ptr UncheckedArray[typeof(result)]](VertexBuffer(x).indices)[i]
 
-proc `[]=`*(x: var VertexBufferIndices, i: int, val: array[6, uint32]) =
+proc `[]=`*(x: var VertexBufferIndices, i: int, val: IndicesArr) =
   checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
   cast[ptr UncheckedArray[typeof(val)]](VertexBuffer(x).indices)[i] = val
 

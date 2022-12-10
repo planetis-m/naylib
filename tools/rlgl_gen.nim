@@ -56,11 +56,13 @@ proc `==`*(a, b: CullMode): bool {.borrow.}
 
 type
   rlglLoadProc* = proc (name: cstring): pointer ## OpenGL extension functions loader signature (same as GLADloadproc)
+
+# Security check in case no GraphicsApiOpenGl* defined
+when not defined(GraphicsApiOpenGl11) and not defined(GraphicsApiOpenGlEs2):
+  const UseDefaultGraphicsApi = true
 """
   constants = """
 
-  DefaultBatchBufferElements* = 8192 ## This is the maximum amount of elements (quads) per batch
-                                    ## NOTE: Be careful with text, every letter maps to a quad
   DefaultBatchBuffers* = 1 ## Default number of batch buffers (multi-buffering)
   DefaultBatchDrawCalls* = 256 ## Default number of batch draw calls (by state changes: mode, texture)
   DefaultBatchMaxTextureUnits* = 4 ## Maximum number of textures units that can be activated on batch drawing
@@ -166,6 +168,14 @@ type
   ShaderVarSampler2dTexture0* = ShaderVariable("texture0") ## texture0 (texture slot active 0)
   ShaderVarSampler2dTexture1* = ShaderVariable("texture1") ## texture1 (texture slot active 1)
   ShaderVarSampler2dTexture2* = ShaderVariable("texture2") ## texture2 (texture slot active 2)
+
+when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
+  const DefaultBatchBufferElements* = 8192 ## This is the maximum amount of elements (quads) per batch
+                                           ## NOTE: Be careful with text, every letter maps to a quad
+elif defined(GraphicsApiOpenGlEs2):
+  const DefaultBatchBufferElements* = 2048 ## We reduce memory sizes for embedded systems (RPI and HTML5)
+                                           ## NOTE: On HTML5 (emscripten) this is allocated on heap,
+                                           ## by default it's only 16MB!...just take care...
 """
   helpers = """
 
@@ -235,15 +245,20 @@ proc `[]=`*(x: var VertexBufferColors, i: int, val: Color) =
   checkArrayAccess(VertexBuffer(x).colors, i, 4*VertexBuffer(x).elementCount)
   cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i] = val
 
-proc `[]`*(x: VertexBufferIndices, i: int): array[6, uint32] =
+when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
+  type IndicesArr* = array[6, uint16]
+elif defined(GraphicsApiOpenGlEs2):
+  type IndicesArr* = array[6, uint32]
+
+proc `[]`*(x: VertexBufferIndices, i: int): IndicesArr =
   checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
   result = cast[ptr UncheckedArray[typeof(result)]](VertexBuffer(x).indices)[i]
 
-proc `[]`*(x: var VertexBufferIndices, i: int): var array[6, uint32] =
+proc `[]`*(x: var VertexBufferIndices, i: int): var IndicesArr =
   checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
   result = cast[ptr UncheckedArray[typeof(result)]](VertexBuffer(x).indices)[i]
 
-proc `[]=`*(x: var VertexBufferIndices, i: int, val: array[6, uint32]) =
+proc `[]=`*(x: var VertexBufferIndices, i: int, val: IndicesArr) =
   checkArrayAccess(VertexBuffer(x).indices, i, VertexBuffer(x).elementCount)
   cast[ptr UncheckedArray[typeof(val)]](VertexBuffer(x).indices)[i] = val
 
@@ -404,7 +419,12 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           for fld in items(obj.fields):
             spaces
             var name = fld.name
-            ident name
+            if (objName, name) == ("VertexBuffer", "indices"):
+              lit "when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:"
+              scope:
+                spaces
+                ident name
+            else: ident name
             # let kind = getReplacement(obj.name, name, replacement)
             # if kind != "":
             #   lit kind
@@ -419,6 +439,12 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
               lit "*: "
             lit kind
             doc fld
+            if (objName, name) == ("VertexBuffer", "indices"):
+              spaces
+              lit "elif defined(GraphicsApiOpenGlEs2):"
+              scope:
+                spaces
+                lit "indices: ptr UncheckedArray[uint16]"
             if isPrivate:
               procProperties.add (objName, name, kind)
             if many:

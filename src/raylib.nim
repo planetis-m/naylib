@@ -19,9 +19,14 @@ when defined(emscripten):
 else:
   {.passC: "-DPLATFORM_DESKTOP".}
   when defined(GraphicsApiOpenGl11): {.passC: "-DGRAPHICS_API_OPENGL_11".}
-  elif defined(GraphicsApiOpenGl22): {.passC: "-DGRAPHICS_API_OPENGL_22".}
+  elif defined(GraphicsApiOpenGl21): {.passC: "-DGRAPHICS_API_OPENGL_21".}
   else: {.passC: "-DGRAPHICS_API_OPENGL_33".}
-  when defined(linux):
+  when defined(windows):
+    when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
+    else: {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
+  elif defined(macosx):
+    {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo".}
+  elif defined(linux):
     {.passC: "-fPIC".}
     {.passL: "-lGL -lc -lm -lpthread -ldl -lrt".}
     when defined(drm):
@@ -50,11 +55,6 @@ else:
         wlGenerate(WaylandProtocolsDir / "/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
             "wayland-idle-inhibit-unstable-v1-client-protocol")
     else: {.passL: "-lX11".}
-  elif defined(windows):
-    when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
-    else: {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
-  elif defined(macosx):
-    {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo".}
   elif defined(bsd):
     {.passC: "-I/usr/local/include".}
     {.passL: "-lGL -lpthread".}
