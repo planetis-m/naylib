@@ -43,9 +43,9 @@ else:
       {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
       const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
       const WaylandClientDir {.strdefine.} = "/usr/share/wayland"
-      proc wlGenerate(protocol, outp: string) =
-        discard staticExec("wayland-scanner client-header " & protocol & " " & raylibDir / outp & ".h")
-        discard staticExec("wayland-scanner private-code " & protocol & " " & raylibDir / outp & "-code.h")
+      proc wlGenerate(protocol, output: string) =
+        discard staticExec("wayland-scanner client-header " & protocol & " " & raylibDir / output & ".h")
+        discard staticExec("wayland-scanner private-code " & protocol & " " & raylibDir / output & "-code.h")
 
       static:
         wlGenerate(WaylandClientDir / "/wayland.xml", "wayland-client-protocol")
@@ -96,9 +96,7 @@ const
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 
 type
-  ShaderVariable* = distinct cstring
-
-proc `==`*(a, b: ShaderVariable): bool {.borrow.}
+  ShaderVariable* = cstring
 
 proc `==`*(a, b: ConfigFlags): bool {.borrow.}
 
