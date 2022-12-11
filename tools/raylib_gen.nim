@@ -18,7 +18,7 @@ const raylibDir = currentSourcePath().parentDir / "/raylib/src"
 {.passC: "-Wall -D_DEFAULT_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
-  {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY".}
+  {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY -s TOTAL_MEMORY=67108864".}
   when defined(NaylibWebResources):
     const NaylibWebResourcesPath {.strdefine.} = "resources"
     {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
