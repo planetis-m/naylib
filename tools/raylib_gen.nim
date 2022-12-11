@@ -36,14 +36,14 @@ else:
     else: {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
   elif defined(macosx):
     {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo".}
+  elif defined(drm):
+    {.passC: "-I/usr/include/libdrm".}
+    {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
+    {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl -latomic".}
   elif defined(linux):
     {.passC: "-fPIC".}
     {.passL: "-lGL -lc -lm -lpthread -ldl -lrt".}
-    when defined(drm):
-      {.passC: "-I/usr/include/libdrm".}
-      {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
-      {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl -latomic".}
-    elif defined(wayland):
+    when defined(wayland):
       {.passC: "-D_GLFW_WAYLAND".}
       {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
       const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
