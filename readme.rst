@@ -236,3 +236,11 @@ Other changes and improvements
 
 - The names of functions that are overloaded no longer end with ``Ex``, ``Pro``, ``Rec``, ``V``.
   Functions that return ``Vector2`` or ``Rectangle`` are an exception.
+
+Alternatives
+============
+
+No library can be perfect for everyone. If naylib isn’t what you’re looking for, there are alternatives.
+
+- `NimraylibNow! <https://github.com/greenfork/nimraylib_now>`_ are more complete bindings to raylib.
+- `godot-nim <https://github.com/pragmagic/godot-nim>`_ Nim bindings for Godot Engine
