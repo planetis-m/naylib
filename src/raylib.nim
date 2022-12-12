@@ -27,17 +27,20 @@ else:
   elif defined(macosx):
     {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo".}
   elif defined(drm):
-    {.passC: "-I/usr/include/libdrm".}
+    {.passC: staticExec("pkg-config libdrm --cflags").}
     {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
-    {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lpthread -lrt -lm -ldl -latomic".}
+    # pkg-config glesv2 egl libdrm gbm --libs
+    # miniaudio linux 32bit ARM: -ldl -lpthread -lm -latomic
+    {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -ldl -lpthread -lm -latomic".}
   elif defined(linux):
     {.passC: "-fPIC".}
-    {.passL: "-lGL -lc -lm -lpthread -ldl -lrt".}
+    {.passL: "-lGL -lm -lpthread -ldl".} # pkg-config gl --libs, miniaudio linux
     when defined(wayland):
       {.passC: "-D_GLFW_WAYLAND".}
+      # pkg-config wayland-client wayland-cursor wayland-egl xkbcommon --libs
       {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
-      const WaylandProtocolsDir {.strdefine.} = "/usr/share/wayland-protocols"
-      const WaylandClientDir {.strdefine.} = "/usr/share/wayland"
+      const WaylandProtocolsDir = staticExec "pkg-config wayland-protocols --variable=pkgdatadir"
+      const WaylandClientDir = staticExec "pkg-config wayland-client --variable=pkgdatadir"
       proc wlGenerate(protocol, output: string) =
         discard staticExec("wayland-scanner client-header " & protocol & " " & raylibDir / output & ".h")
         discard staticExec("wayland-scanner private-code " & protocol & " " & raylibDir / output & "-code.h")
@@ -54,10 +57,10 @@ else:
             "wayland-pointer-constraints-unstable-v1-client-protocol")
         wlGenerate(WaylandProtocolsDir / "/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
             "wayland-idle-inhibit-unstable-v1-client-protocol")
-    else: {.passL: "-lX11".}
+    else: {.passL: "-lX11".} # pkg-config x11 --libs
   elif defined(bsd):
-    {.passC: "-I/usr/local/include".}
-    {.passL: "-lGL -lpthread".}
+    {.passC: staticExec("pkg-config gl ossaudio --cflags").}
+    {.passL: "-lGL -lossaudio -lpthread -lm -ldl".} # pkg-config gl ossaudio --libs, miniaudio BSD
 
 when defined(emscripten): discard
 elif defined(macosx): {.compile(raylibDir / "/rglfw.c", "-x objective-c").}
