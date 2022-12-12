@@ -49,23 +49,23 @@ else:
       {.passC: "-D_GLFW_WAYLAND".}
       # pkg-config wayland-client wayland-cursor wayland-egl xkbcommon --libs
       {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
-      const WaylandProtocolsDir = staticExec "pkg-config wayland-protocols --variable=pkgdatadir"
-      const WaylandClientDir = staticExec "pkg-config wayland-client --variable=pkgdatadir"
+      const wlProtocolsDir = staticExec "pkg-config wayland-protocols --variable=pkgdatadir"
+      const wlClientDir = staticExec "pkg-config wayland-client --variable=pkgdatadir"
       proc wlGenerate(protocol, output: string) =
         discard staticExec("wayland-scanner client-header " & protocol & " " & raylibDir / output & ".h")
         discard staticExec("wayland-scanner private-code " & protocol & " " & raylibDir / output & "-code.h")
 
       static:
-        wlGenerate(WaylandClientDir / "/wayland.xml", "wayland-client-protocol")
-        wlGenerate(WaylandProtocolsDir / "/stable/xdg-shell/xdg-shell.xml", "wayland-xdg-shell-client-protocol")
-        wlGenerate(WaylandProtocolsDir / "/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml",
+        wlGenerate(wlClientDir / "/wayland.xml", "wayland-client-protocol")
+        wlGenerate(wlProtocolsDir / "/stable/xdg-shell/xdg-shell.xml", "wayland-xdg-shell-client-protocol")
+        wlGenerate(wlProtocolsDir / "/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml",
             "wayland-xdg-decoration-client-protocol")
-        wlGenerate(WaylandProtocolsDir / "/stable/viewporter/viewporter.xml", "wayland-viewporter-client-protocol")
-        wlGenerate(WaylandProtocolsDir / "/unstable/relative-pointer/relative-pointer-unstable-v1.xml",
+        wlGenerate(wlProtocolsDir / "/stable/viewporter/viewporter.xml", "wayland-viewporter-client-protocol")
+        wlGenerate(wlProtocolsDir / "/unstable/relative-pointer/relative-pointer-unstable-v1.xml",
             "wayland-relative-pointer-unstable-v1-client-protocol")
-        wlGenerate(WaylandProtocolsDir / "/unstable/pointer-constraints/pointer-constraints-unstable-v1.xml",
+        wlGenerate(wlProtocolsDir / "/unstable/pointer-constraints/pointer-constraints-unstable-v1.xml",
             "wayland-pointer-constraints-unstable-v1-client-protocol")
-        wlGenerate(WaylandProtocolsDir / "/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
+        wlGenerate(wlProtocolsDir / "/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
             "wayland-idle-inhibit-unstable-v1-client-protocol")
     else: {.passL: "-lX11".} # pkg-config x11 --libs
   elif defined(bsd):
