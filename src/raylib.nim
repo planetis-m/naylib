@@ -59,7 +59,7 @@ else:
             "wayland-idle-inhibit-unstable-v1-client-protocol")
     else: {.passL: "-lX11".} # pkg-config x11 --libs
   elif defined(bsd):
-    {.passC: staticExec("pkg-config gl ossaudio --cflags").}
+    {.passC: staticExec("pkg-config ossaudio --cflags").}
     {.passL: "-lGL -lossaudio -lpthread -lm -ldl".} # pkg-config gl ossaudio --libs, miniaudio BSD
 
 when defined(emscripten): discard
