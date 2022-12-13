@@ -42,9 +42,13 @@ else:
     # pkg-config glesv2 egl libdrm gbm --libs
     # nanosleep: -lrt, miniaudio linux 32bit ARM: -ldl -lpthread -lm -latomic
     {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lrt -ldl -lpthread -lm -latomic".}
-  elif defined(linux):
-    {.passC: "-fPIC".}
-    {.passL: "-lGL -lrt -lm -lpthread -ldl".} # pkg-config gl --libs, nanosleep, miniaudio linux
+  else:
+    when defined(linux):
+      {.passC: "-fPIC".}
+      {.passL: "-lGL -lrt -lm -lpthread -ldl".} # pkg-config gl --libs, nanosleep, miniaudio linux
+    elif defined(bsd):
+      {.passC: staticExec("pkg-config ossaudio --variable=includedir").}
+      {.passL: "-lGL -lrt -lossaudio -lpthread -lm -ldl".} # pkg-config gl ossaudio --libs, nanosleep, miniaudio BSD
     when defined(wayland):
       {.passC: "-D_GLFW_WAYLAND".}
       # pkg-config wayland-client wayland-cursor wayland-egl xkbcommon --libs
@@ -67,10 +71,9 @@ else:
             "wayland-pointer-constraints-unstable-v1-client-protocol")
         wlGenerate(wlProtocolsDir / "/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
             "wayland-idle-inhibit-unstable-v1-client-protocol")
-    else: {.passL: "-lX11".} # pkg-config x11 --libs
-  elif defined(bsd):
-    {.passC: staticExec("pkg-config ossaudio --variable=includedir").}
-    {.passL: "-lGL -lrt -lossaudio -lpthread -lm -ldl".} # pkg-config gl ossaudio --libs, nanosleep, miniaudio BSD
+    else:
+      # pkg-config x11 xrandr xinerama xi xxf86vm xcursor --libs
+      {.passL: "-lX11 -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor".}
 
 when defined(emscripten): discard
 elif defined(macosx): {.compile(raylibDir / "/rglfw.c", "-x objective-c").}
