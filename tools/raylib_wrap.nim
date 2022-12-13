@@ -1,8 +1,8 @@
 
-proc toEmbedded*(data: openarray[byte], width, height: int32, format: PixelFormat): EmbeddedImage {.inline.} =
+proc toEmbedded*(data: openArray[byte], width, height: int32, format: PixelFormat): EmbeddedImage {.inline.} =
   Image(data: addr data, width: width, height: height, mipmaps: 1, format: format).EmbeddedImage
 
-proc toEmbedded*(data: openarray[byte], frameCount, sampleRate, sampleSize, channels: uint32): EmbeddedWave {.inline.} =
+proc toEmbedded*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): EmbeddedWave {.inline.} =
   Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).EmbeddedWave
 
 proc raiseResourceNotFound(filename: string) {.noinline, noreturn.} =
@@ -26,7 +26,7 @@ proc getGamepadName*(gamepad: int32): string {.inline.} =
   ## Get gamepad internal name id
   result = $getGamepadNamePriv(gamepad)
 
-proc exportDataAsCode*(data: openarray[uint8], fileName: string): bool =
+proc exportDataAsCode*(data: openArray[uint8], fileName: string): bool =
   ## Export data to code (.h), returns true on success
   result = exportDataAsCodePriv(cast[ptr UncheckedArray[uint8]](data), data.len.uint32, fileName.string)
 
@@ -82,7 +82,7 @@ proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value
   ## Set shader uniform value
   setShaderValuePriv(shader, locIndex, value.value, kind(T))
 
-proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: openarray[T]) =
+proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: openArray[T]) =
   ## Set shader uniform value vector
   setShaderValueVPriv(shader, locIndex, cast[pointer](value), kind(T), value.len.int32)
 
@@ -120,22 +120,22 @@ proc loadMaterials*(fileName: string): CSeq[Material] =
     raiseResourceNotFound(filename)
   result = CSeq[Material](len: len, data: data)
 
-proc drawLineStrip*(points: openarray[Vector2]; color: Color) {.inline.} =
+proc drawLineStrip*(points: openArray[Vector2]; color: Color) {.inline.} =
   ## Draw lines sequence
   drawLineStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
-proc drawTriangleFan*(points: openarray[Vector2]; color: Color) =
+proc drawTriangleFan*(points: openArray[Vector2]; color: Color) =
   ## Draw a triangle fan defined by points (first vertex is the center)
   drawTriangleFanPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
-proc drawTriangleStrip*(points: openarray[Vector2]; color: Color) =
+proc drawTriangleStrip*(points: openArray[Vector2]; color: Color) =
   ## Draw a triangle strip defined by points
   drawTriangleStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
-proc checkCollisionPointPoly*(point: Vector2, points: openarray[Vector2]): bool =
+proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool =
   checkCollisionPointPolyPriv(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
 
-proc loadImageFromMemory*(fileType: string; fileData: openarray[uint8]): Image =
+proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
   result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
@@ -148,17 +148,17 @@ type
 template kind*(x: typedesc[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
 template value*(x: Color): pointer = x.addr
 
-proc loadTextureFromData*[T: Pixel](pixels: openarray[T], width: int32, height: int32): Texture =
+proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: int32): Texture =
   ## Load texture using pixels
   let image = Image(data: cast[pointer](pixels), width: width, height: height,
       format: kind(T), mipmaps: 1).EmbeddedImage
   result = loadTextureFromImage(image.Image)
 
-proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openarray[T]) =
+proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   ## Update GPU texture with new data
   updateTexturePriv(texture, cast[pointer](pixels))
 
-proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openarray[T]) =
+proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
   ## Update GPU texture rectangle with new data
   updateTexturePriv(texture, rec, cast[pointer](pixels))
 
@@ -170,7 +170,7 @@ proc setPixelColor*[T: Pixel](pixels: T, color: Color) =
   ## Set color formatted into destination pixel pointer
   setPixelColorPriv(pixels.value, color, kind(T))
 
-proc loadFontData*(fileData: openarray[uint8]; fontSize: int32; fontChars: openarray[int32];
+proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; fontChars: openArray[int32];
     `type`: FontType): CSeq[GlyphInfo] =
   ## Load font data for further use
   let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
@@ -178,13 +178,13 @@ proc loadFontData*(fileData: openarray[uint8]; fontSize: int32; fontChars: opena
       fontChars.len.int32, `type`)
   result = CSeq[GlyphInfo](len: if fontChars.len == 0: 95 else: fontChars.len, data: data)
 
-proc loadFontData*(fileData: openarray[uint8]; fontSize, glyphCount: int32;
+proc loadFontData*(fileData: openArray[uint8]; fontSize, glyphCount: int32;
     `type`: FontType): CSeq[GlyphInfo] =
   let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
       fontSize, nil, glyphCount, `type`)
   result = CSeq[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
 
-proc loadFont*(fileName: string; fontSize: int32; fontChars: openarray[int32]): Font =
+proc loadFont*(fileName: string; fontSize: int32; fontChars: openArray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for fontChars to load the default character set
   result = loadFontPriv(fileName.cstring, fontSize,
       if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
@@ -192,14 +192,14 @@ proc loadFont*(fileName: string; fontSize: int32; fontChars: openarray[int32]): 
 proc loadFont*(fileName: string; fontSize, glyphCount: int32): Font =
   result = loadFontPriv(fileName.cstring, fontSize, nil, glyphCount)
 
-proc loadFontFromMemory*(fileType: string; fileData: openarray[uint8]; fontSize: int32;
-    fontChars: openarray[int32]): Font =
+proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
+    fontChars: openArray[int32]): Font =
   ## Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
   result = loadFontFromMemoryPriv(fileType.cstring,
       cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
       if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
 
-proc loadFontFromMemory*(fileType: string; fileData: openarray[uint8]; fontSize: int32;
+proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
     glyphCount: int32): Font =
   result = loadFontFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32, fontSize, nil, glyphCount)
@@ -216,7 +216,7 @@ proc loadFontFromData*(chars: sink CSeq[GlyphInfo]; baseSize, padding: int32, pa
   if result.texture.id == 0:
     raise newException(IOError, "Error loading font from image.")
 
-proc genImageFontAtlas*(chars: openarray[GlyphInfo]; recs: out CSeq[Rectangle]; fontSize: int32;
+proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out CSeq[Rectangle]; fontSize: int32;
     padding: int32; packMethod: int32): Image =
   ## Generate image font atlas using chars info
   var data: ptr UncheckedArray[Rectangle] = nil
@@ -224,26 +224,26 @@ proc genImageFontAtlas*(chars: openarray[GlyphInfo]; recs: out CSeq[Rectangle]; 
       chars.len.int32, fontSize, padding, packMethod)
   recs = CSeq[Rectangle](len: chars.len, data: data)
 
-proc drawTriangleStrip3D*(points: openarray[Vector3]; color: Color) =
+proc drawTriangleStrip3D*(points: openArray[Vector3]; color: Color) =
   ## Draw a triangle strip defined by points
   drawTriangleStrip3DPriv(cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
 
-proc drawMeshInstanced*(mesh: Mesh; material: Material; transforms: openarray[Matrix]) =
+proc drawMeshInstanced*(mesh: Mesh; material: Material; transforms: openArray[Matrix]) =
   ## Draw multiple mesh instances with material and different transforms
   drawMeshInstancedPriv(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms),
       transforms.len.int32)
 
-proc loadWaveFromMemory*(fileType: string; fileData: openarray[uint8]): Wave =
+proc loadWaveFromMemory*(fileType: string; fileData: openArray[uint8]): Wave =
   ## Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
   loadWaveFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
 
-proc loadMusicStreamFromMemory*(fileType: string; data: openarray[uint8]): Music =
+proc loadMusicStreamFromMemory*(fileType: string; data: openArray[uint8]): Music =
   ## Load music stream from data
   loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
       data.len.int32)
 
-proc drawTextCodepoints*(font: Font; codepoints: openarray[Rune]; position: Vector2;
+proc drawTextCodepoints*(font: Font; codepoints: openArray[Rune]; position: Vector2;
     fontSize: float32; spacing: float32; tint: Color) =
   ## Draw multiple character (codepoint)
   drawTextCodepointsPriv(font, cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32,

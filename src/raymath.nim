@@ -110,7 +110,8 @@ func distanceSqr*(v1, v2: Vector2): float32 {.inline.} =
 
 func angle*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate angle from two vectors
-  result = -arccos(v1.x*v2.x + v1.y*v2.y)
+  ## Parameters need to be normalized
+  result = -arccos(v1.x * v2.x + v1.y * v2.y)
 
 func scale*(v: Vector2; scale: float32): Vector2 {.inline.} =
   ## Scale vector (multiply by value)

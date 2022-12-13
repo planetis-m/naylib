@@ -96,15 +96,15 @@ func linearInOut*(t, b, c, d: float32): float32 {.inline.} =
 # Sine Easing functions
 func sineIn*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Sine In
-  result = -c * cos(t / d * (Pi / 2)) + c + b
+  result = -c * cos(t / d * (PI / 2)) + c + b
 
 func sineOut*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Sine Out
-  result = c * sin(t / d * (Pi / 2)) + b
+  result = c * sin(t / d * (PI / 2)) + b
 
 func sineInOut*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Sine In Out
-  result = -c / 2 * (cos(Pi * t / d) - 1) + b
+  result = -c / 2 * (cos(PI * t / d) - 1) + b
 
 # Circular Easing functions
 func circIn*(t, b, c, d: float32): float32 {.inline.} =
@@ -252,7 +252,7 @@ func elasticIn*(t, b, c, d: float32): float32 {.inline.} =
     let a = c
     let s = p / 4
     t = t - 1
-    result = -(a * pow(2, 10 * t) * sin((t * d - s) * (2 * Pi) / p)) + b
+    result = -(a * pow(2, 10 * t) * sin((t * d - s) * (2 * PI) / p)) + b
 
 func elasticOut*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Elastic Out
@@ -265,7 +265,7 @@ func elasticOut*(t, b, c, d: float32): float32 {.inline.} =
     let p = d * 0.3'f32
     let a = c
     let s = p / 4
-    result = a * pow(2, -(10 * t)) * sin((t * d - s) * (2 * Pi) / p) + c + b
+    result = a * pow(2, -(10 * t)) * sin((t * d - s) * (2 * PI) / p) + c + b
 
 func elasticInOut*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Elastic In Out
@@ -280,7 +280,7 @@ func elasticInOut*(t, b, c, d: float32): float32 {.inline.} =
     let s = p / 4
     if t < 1:
       t = t - 1
-      result = -0.5'f32 * (a * pow(2, 10 * t) * sin((t * d - s) * (2 * Pi) / p)) + b
+      result = -0.5'f32 * (a * pow(2, 10 * t) * sin((t * d - s) * (2 * PI) / p)) + b
     else:
       t = t - 1
-      result = a * pow(2, -10 * t) * sin((t * d - s) * (2 * Pi) / p) * 0.5'f32 + c + b
+      result = a * pow(2, -10 * t) * sin((t * d - s) * (2 * PI) / p) * 0.5'f32 + c + b
