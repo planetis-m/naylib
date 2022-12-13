@@ -45,9 +45,9 @@ else:
       {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
       const wlProtocolsDir = staticExec "pkg-config wayland-protocols --variable=pkgdatadir"
       const wlClientDir = staticExec "pkg-config wayland-client --variable=pkgdatadir"
-      proc wlGenerate(protocol, output: string) =
-        discard staticExec("wayland-scanner client-header " & protocol & " " & raylibDir / output & ".h")
-        discard staticExec("wayland-scanner private-code " & protocol & " " & raylibDir / output & "-code.h")
+      proc wlGenerate(protocol, basename: string) =
+        discard staticExec("wayland-scanner client-header " & protocol & " " & raylibDir / basename & ".h")
+        discard staticExec("wayland-scanner private-code " & protocol & " " & raylibDir / basename & "-code.h")
 
       static:
         wlGenerate(wlClientDir / "/wayland.xml", "wayland-client-protocol")
