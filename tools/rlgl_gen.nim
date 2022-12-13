@@ -413,7 +413,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
         ident capitalizeAscii(objName)
         lit "* {.importc: \""
         lit obj.name
-        lit "\", header: \"rlgl.h\", bycopy.} = object"
+        lit "\", nodecl, bycopy.} = object" # .header breaks raylib include order
         doc obj
         scope:
           for fld in items(obj.fields):
