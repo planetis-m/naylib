@@ -40,11 +40,11 @@ else:
     {.passC: staticExec("pkg-config libdrm --cflags").}
     {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
     # pkg-config glesv2 egl libdrm gbm --libs
-    # miniaudio linux 32bit ARM: -ldl -lpthread -lm -latomic
-    {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -ldl -lpthread -lm -latomic".}
+    # nanosleep: -lrt, miniaudio linux 32bit ARM: -ldl -lpthread -lm -latomic
+    {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lrt -ldl -lpthread -lm -latomic".}
   elif defined(linux):
     {.passC: "-fPIC".}
-    {.passL: "-lGL -lm -lpthread -ldl".} # pkg-config gl --libs, miniaudio linux
+    {.passL: "-lGL -lrt -lm -lpthread -ldl".} # pkg-config gl --libs, nanosleep, miniaudio linux
     when defined(wayland):
       {.passC: "-D_GLFW_WAYLAND".}
       # pkg-config wayland-client wayland-cursor wayland-egl xkbcommon --libs
@@ -70,7 +70,7 @@ else:
     else: {.passL: "-lX11".} # pkg-config x11 --libs
   elif defined(bsd):
     {.passC: staticExec("pkg-config ossaudio --variable=includedir").}
-    {.passL: "-lGL -lossaudio -lpthread -lm -ldl".} # pkg-config gl ossaudio --libs, miniaudio BSD
+    {.passL: "-lGL -lrt -lossaudio -lpthread -lm -ldl".} # pkg-config gl ossaudio --libs, nanosleep, miniaudio BSD
 
 when defined(emscripten): discard
 elif defined(macosx): {.compile(raylibDir / "/rglfw.c", "-x objective-c").}
