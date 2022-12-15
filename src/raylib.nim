@@ -16,29 +16,36 @@ when defined(emscripten):
   type emCallbackFunc* = proc() {.cdecl.}
   proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: cint, simulateInfiniteLoop: cint) {.
       cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
+
 else:
   {.passC: "-DPLATFORM_DESKTOP".}
   when defined(GraphicsApiOpenGl11): {.passC: "-DGRAPHICS_API_OPENGL_11".}
   elif defined(GraphicsApiOpenGl21): {.passC: "-DGRAPHICS_API_OPENGL_21".}
   else: {.passC: "-DGRAPHICS_API_OPENGL_33".}
+
   when defined(windows):
     when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
     else: {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
+
   elif defined(macosx):
     {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo".}
+
   elif defined(drm):
     {.passC: staticExec("pkg-config libdrm --cflags").}
     {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
     # pkg-config glesv2 egl libdrm gbm --libs
     # nanosleep: -lrt, miniaudio linux 32bit ARM: -ldl -lpthread -lm -latomic
     {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lrt -ldl -lpthread -lm -latomic".}
+
   else:
     when defined(linux):
       {.passC: "-fPIC".}
       {.passL: "-lGL -lrt -lm -lpthread -ldl".} # pkg-config gl --libs, nanosleep, miniaudio linux
+
     elif defined(bsd):
       {.passC: staticExec("pkg-config ossaudio --variable=includedir").}
       {.passL: "-lGL -lrt -lossaudio -lpthread -lm -ldl".} # pkg-config gl ossaudio --libs, nanosleep, miniaudio BSD
+
     when defined(wayland):
       {.passC: "-D_GLFW_WAYLAND".}
       # pkg-config wayland-client wayland-cursor wayland-egl xkbcommon --libs
@@ -61,6 +68,7 @@ else:
             "wayland-pointer-constraints-unstable-v1-client-protocol")
         wlGenerate(wlProtocolsDir / "/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
             "wayland-idle-inhibit-unstable-v1-client-protocol")
+
     else:
       # pkg-config x11 xrandr xinerama xi xxf86vm xcursor --libs
       {.passL: "-lX11 -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor".}
