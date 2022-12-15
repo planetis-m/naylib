@@ -38,6 +38,10 @@ func remap*(value, inputStart, inputEnd, outputStart, outputEnd: float32): float
   result = (value - inputStart) / (inputEnd - inputStart) *
       (outputEnd - outputStart) + outputStart
 
+proc wrap*(value, min, max: float32): float32 =
+  ## Wrap input value from min to max
+  result = value - (max - min) * floor((value - min) / (max - min))
+
 # ----------------------------------------------------------------------------------
 # Module Functions Definition - Vector2 math
 # ----------------------------------------------------------------------------------
@@ -111,7 +115,7 @@ func distanceSqr*(v1, v2: Vector2): float32 {.inline.} =
 func angle*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate angle from two vectors
   ## Parameters need to be normalized
-  result = -arccos(v1.x * v2.x + v1.y * v2.y)
+  result = arccos(clamp(v1.x * v2.x + v1.y * v2.y, -1, 1))
 
 func scale*(v: Vector2; scale: float32): Vector2 {.inline.} =
   ## Scale vector (multiply by value)
