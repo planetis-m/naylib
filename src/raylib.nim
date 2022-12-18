@@ -479,7 +479,7 @@ type
   Flags*[E: FlagsEnum] = distinct uint32
 
 proc flags*[E: FlagsEnum](e: varargs[E]): Flags[E] {.inline.} =
-  var res = 0'u32
+  var res: uint32 = 0
   for val in items(e):
     res = res or uint32(val)
   Flags[E](res)
