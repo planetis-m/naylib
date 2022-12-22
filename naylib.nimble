@@ -8,8 +8,9 @@ srcDir      = "src"
 
 # Deps
 
-requires "nim >= 1.6.0"
+requires "nim >= 1.9.1"
 #requires "eminim == 2.8.2"
 
 #import std/distros
 #foreignDep "wayland-protocols"
+#foreignDep "wayland"

@@ -113,8 +113,8 @@ func distanceSqr*(v1, v2: Vector2): float32 {.inline.} =
   result = (v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y)
 
 func angle*(v1, v2: Vector2): float32 {.inline.} =
-  ## Calculate angle from two vectors
-  ## Parameters need to be normalized
+  ## NOTE: Parameters need to be normalized
+  ## Current implementation should be aligned with glm::angle
   result = arccos(clamp(v1.x * v2.x + v1.y * v2.y, -1, 1))
 
 func scale*(v: Vector2; scale: float32): Vector2 {.inline.} =

@@ -31,6 +31,7 @@ else:
   {.passC: "-DPLATFORM_DESKTOP".}
   when defined(GraphicsApiOpenGl11): {.passC: "-DGRAPHICS_API_OPENGL_11".}
   elif defined(GraphicsApiOpenGl21): {.passC: "-DGRAPHICS_API_OPENGL_21".}
+  elif defined(GraphicsApiOpenGl43): {.passC: "-DGRAPHICS_API_OPENGL_43".}
   else: {.passC: "-DGRAPHICS_API_OPENGL_33".}
 
   when defined(windows):
