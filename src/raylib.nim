@@ -1170,10 +1170,8 @@ proc checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshol
   ## Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
 proc getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "GetCollisionRec".}
   ## Get collision rectangle for two rectangles collision
-proc loadImage*(fileName: cstring): Image {.importc: "LoadImage".}
-  ## Load image from file into CPU memory (RAM)
-proc loadImageRaw*(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw".}
-  ## Load image from RAW file data
+proc loadImagePriv(fileName: cstring): Image {.importc: "LoadImage".}
+proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw".}
 proc loadImageAnim*(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim".}
   ## Load image sequence from file (frames appended to image.data)
 proc loadImageFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Image {.importc: "LoadImageFromMemory".}
@@ -1931,10 +1929,21 @@ proc drawTriangleStrip*(points: openArray[Vector2]; color: Color) =
 proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool =
   checkCollisionPointPolyPriv(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
 
+proc loadImage*(fileName: string): Image =
+  ## Load image from file into CPU memory (RAM)
+  result = loadImagePriv(fileName.cstring)
+  if result.data == nil: raiseResourceNotFound(fileName)
+
+proc loadImageRaw*(fileName: string, width, height: int32, format: PixelFormat, headerSize: int32): Image =
+  ## Load image sequence from file (frames appended to image.data)
+  result = loadImageRawPriv(fileName.cstring, width, height, format, headerSize)
+  if result.data == nil: raiseResourceNotFound(fileName)
+
 proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
   result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
+  if result.data == nil: raiseResourceNotFound("buffer")
 
 type
   Pixel* = concept

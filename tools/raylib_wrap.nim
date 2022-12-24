@@ -135,10 +135,21 @@ proc drawTriangleStrip*(points: openArray[Vector2]; color: Color) =
 proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool =
   checkCollisionPointPolyPriv(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
 
+proc loadImage*(fileName: string): Image =
+  ## Load image from file into CPU memory (RAM)
+  result = loadImagePriv(fileName.cstring)
+  if result.data == nil: raiseResourceNotFound(fileName)
+
+proc loadImageRaw*(fileName: string, width, height: int32, format: PixelFormat, headerSize: int32): Image =
+  ## Load image sequence from file (frames appended to image.data)
+  result = loadImageRawPriv(fileName.cstring, width, height, format, headerSize)
+  if result.data == nil: raiseResourceNotFound(fileName)
+
 proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
   result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
+  if result.data == nil: raiseResourceNotFound("buffer")
 
 type
   Pixel* = concept
