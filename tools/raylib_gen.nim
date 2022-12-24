@@ -550,7 +550,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
               let kind = convertType(fld.`type`, pat, many, false, baseKind)
               var isArray = many and not endsWith(name.normalize, "data") and
                   (obj.name, name) notin {"Material": "params", "VrDeviceInfo": "lensDistortionValues", "FilePathList": "paths"}
-              if isPrivate or isArray or obj.name == "FilePathList":
+              if isPrivate or isArray or obj.name == "FilePathList" or (obj.name, name) == ("MaterialMap", "texture"):
                 lit ": "
               else:
                 lit "*: "

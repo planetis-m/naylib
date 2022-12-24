@@ -5,6 +5,10 @@ proc toEmbedded*(data: openArray[byte], width, height: int32, format: PixelForma
 proc toEmbedded*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): EmbeddedWave {.inline.} =
   Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).EmbeddedWave
 
+template toWeak*(x: Texture): WeakTexture = WeakTexture(x)
+template toWeak*(x: Shader): WeakShader = WeakShader(x)
+template toWeak*(x: Material): WeakMaterial = WeakMaterial(x)
+
 proc raiseResourceNotFound(filename: string) {.noinline, noreturn.} =
   raise newException(IOError, "Could not load resource from " & filename)
 

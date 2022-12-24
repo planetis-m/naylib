@@ -596,7 +596,7 @@ type
     locs: ptr UncheckedArray[ShaderLocation] ## Shader locations array (RL_MAX_SHADER_LOCATIONS)
 
   MaterialMap* {.importc, header: "raylib.h", bycopy.} = object ## MaterialMap
-    texture*: Texture2D ## Material map texture
+    texture: Texture2D ## Material map texture
     color*: Color ## Material map color
     value*: float32 ## Material map value
 
@@ -1640,6 +1640,10 @@ type
   EmbeddedWave* = distinct Wave
   EmbeddedFont* = distinct Font
 
+  WeakShader* = distinct Shader
+  WeakTexture* = distinct Texture
+  WeakMaterial* = distinct Material
+
   ShaderLocsPtr* = distinct ptr UncheckedArray[ShaderLocation]
 
 proc `=destroy`*(x: var EmbeddedImage) = discard
@@ -1653,6 +1657,22 @@ proc `=copy`*(dest: var EmbeddedWave; source: EmbeddedWave) =
 proc `=destroy`*(x: var EmbeddedFont) = discard
 proc `=copy`*(dest: var EmbeddedFont; source: EmbeddedFont) =
   copyMem(addr dest, addr source, sizeof(Font))
+
+proc `=destroy`*(x: var WeakShader) = discard
+proc `=copy`*(dest: var WeakShader; source: WeakShader) {.error.}
+proc `=sink`*(dest: var WeakShader; source: WeakShader) {.error.}
+
+proc `=destroy`*(x: var WeakTexture) = discard
+proc `=copy`*(dest: var WeakTexture; source: WeakTexture) {.error.}
+proc `=sink`*(dest: var WeakTexture; source: WeakTexture) {.error.}
+
+proc `=destroy`*(x: var WeakMaterial) = discard
+proc `=copy`*(dest: var WeakMaterial; source: WeakMaterial) {.error.}
+proc `=sink`*(dest: var WeakMaterial; source: WeakMaterial) {.error.}
+
+proc `=destroy`*(x: var MaterialMap) = discard
+proc `=copy`*(dest: var MaterialMap; source: MaterialMap) {.error.}
+proc `=sink`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 
 # proc `=destroy`*(x: var ShaderLocsPtr) = discard
 # proc `=copy`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
@@ -1785,6 +1805,10 @@ proc toEmbedded*(data: openArray[byte], width, height: int32, format: PixelForma
 
 proc toEmbedded*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): EmbeddedWave {.inline.} =
   Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).EmbeddedWave
+
+template toWeak*(x: Texture): WeakTexture = WeakTexture(x)
+template toWeak*(x: Shader): WeakShader = WeakShader(x)
+template toWeak*(x: Material): WeakMaterial = WeakMaterial(x)
 
 proc raiseResourceNotFound(filename: string) {.noinline, noreturn.} =
   raise newException(IOError, "Could not load resource from " & filename)
@@ -2386,6 +2410,7 @@ proc `[]=`*(x: var ShaderLocs, i: ShaderLocationIndex, val: ShaderLocation) =
   Shader(x).locs[i.int] = val
 
 template maps*(x: Material): MaterialMaps = MaterialMaps(x)
+template maps*(x: WeakMaterial): MaterialMaps = MaterialMaps(x)
 
 proc `[]`*(x: MaterialMaps, i: MaterialMapIndex): lent MaterialMap =
   checkArrayAccess(Material(x).maps, i.int, MaxMaterialMaps)
@@ -2398,6 +2423,33 @@ proc `[]`*(x: var MaterialMaps, i: MaterialMapIndex): var MaterialMap =
 proc `[]=`*(x: var MaterialMaps, i: MaterialMapIndex, val: MaterialMap) =
   checkArrayAccess(Material(x).maps, i.int, MaxMaterialMaps)
   Material(x).maps[i.int] = val
+
+proc `texture=`*(x: var MaterialMap, val: WeakTexture) {.nodestroy, inline.} =
+  x.texture = Texture(val)
+
+proc `shader=`*(x: var WeakMaterial, val: WeakShader) {.nodestroy, inline.} =
+  Material(x).shader = Shader(val)
+
+proc `params=`*(x: var WeakMaterial, val: array[4, float32]) {.inline.} =
+  Material(x).params = val
+
+proc texture*(x: MaterialMap): lent WeakTexture {.inline.} =
+  result = WeakTexture(x.texture)
+
+proc texture*(x: var MaterialMap): var WeakTexture {.inline.} =
+  result = WeakTexture(x.texture)
+
+proc shader*(x: WeakMaterial): lent WeakShader {.inline.} =
+  result = WeakShader(Material(x).shader)
+
+proc shader*(x: var WeakMaterial): var WeakShader {.inline.} =
+  result = WeakShader(Material(x).shader)
+
+proc params*(x: WeakMaterial): lent array[4, float32] {.inline.} =
+  result = Material(x).params
+
+proc params*(x: var WeakMaterial): var array[4, float32] {.inline.} =
+  result = Material(x).params
 
 template meshes*(x: Model): ModelMeshes = ModelMeshes(x)
 
@@ -2415,17 +2467,17 @@ proc `[]=`*(x: var ModelMeshes, i: int, val: Mesh) =
 
 template materials*(x: Model): ModelMaterials = ModelMaterials(x)
 
-proc `[]`*(x: ModelMaterials, i: int): lent Material =
+proc `[]`*(x: ModelMaterials, i: int): lent WeakMaterial =
   checkArrayAccess(Model(x).materials, i, Model(x).materialCount)
-  result = Model(x).materials[i]
+  result = WeakMaterial(Model(x).materials[i])
 
-proc `[]`*(x: var ModelMaterials, i: int): var Material =
+proc `[]`*(x: var ModelMaterials, i: int): var WeakMaterial =
   checkArrayAccess(Model(x).materials, i, Model(x).materialCount)
-  result = Model(x).materials[i]
+  result = WeakMaterial(Model(x).materials[i])
 
-proc `[]=`*(x: var ModelMaterials, i: int, val: Material) =
+proc `[]=`*(x: var ModelMaterials, i: int, val: WeakMaterial) =
   checkArrayAccess(Model(x).materials, i, Model(x).materialCount)
-  Model(x).materials[i] = val
+  Model(x).materials[i] = Material(val)
 
 template meshMaterial*(x: Model): ModelMeshMaterial = ModelMeshMaterial(x)
 
