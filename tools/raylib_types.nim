@@ -4,10 +4,6 @@ type
   EmbeddedWave* = distinct Wave
   EmbeddedFont* = distinct Font
 
-  WeakShader* = distinct Shader
-  WeakTexture* = distinct Texture
-  WeakMaterial* = distinct Material
-
   ShaderLocsPtr* = distinct ptr UncheckedArray[ShaderLocation]
 
 proc `=destroy`*(x: var EmbeddedImage) = discard
@@ -21,22 +17,6 @@ proc `=copy`*(dest: var EmbeddedWave; source: EmbeddedWave) =
 proc `=destroy`*(x: var EmbeddedFont) = discard
 proc `=copy`*(dest: var EmbeddedFont; source: EmbeddedFont) =
   copyMem(addr dest, addr source, sizeof(Font))
-
-proc `=destroy`*(x: var WeakShader) = discard
-proc `=copy`*(dest: var WeakShader; source: WeakShader) {.error.}
-proc `=sink`*(dest: var WeakShader; source: WeakShader) {.error.}
-
-proc `=destroy`*(x: var WeakTexture) = discard
-proc `=copy`*(dest: var WeakTexture; source: WeakTexture) {.error.}
-proc `=sink`*(dest: var WeakTexture; source: WeakTexture) {.error.}
-
-proc `=destroy`*(x: var WeakMaterial) = discard
-proc `=copy`*(dest: var WeakMaterial; source: WeakMaterial) {.error.}
-proc `=sink`*(dest: var WeakMaterial; source: WeakMaterial) {.error.}
-
-proc `=destroy`*(x: var MaterialMap) = discard
-proc `=copy`*(dest: var MaterialMap; source: MaterialMap) {.error.}
-proc `=sink`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 
 # proc `=destroy`*(x: var ShaderLocsPtr) = discard
 # proc `=copy`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}

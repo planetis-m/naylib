@@ -213,7 +213,6 @@ proc `[]=`*(x: var ShaderLocs, i: ShaderLocationIndex, val: ShaderLocation) =
   Shader(x).locs[i.int] = val
 
 template maps*(x: Material): MaterialMaps = MaterialMaps(x)
-template maps*(x: WeakMaterial): MaterialMaps = MaterialMaps(x)
 
 proc `[]`*(x: MaterialMaps, i: MaterialMapIndex): lent MaterialMap =
   checkArrayAccess(Material(x).maps, i.int, MaxMaterialMaps)
@@ -227,32 +226,23 @@ proc `[]=`*(x: var MaterialMaps, i: MaterialMapIndex, val: MaterialMap) =
   checkArrayAccess(Material(x).maps, i.int, MaxMaterialMaps)
   Material(x).maps[i.int] = val
 
-proc `texture=`*(x: var MaterialMap, val: WeakTexture) {.nodestroy, inline.} =
-  x.texture = Texture(val)
+proc `texture=`*(x: var MaterialMap, val: Texture) {.nodestroy, inline.} =
+  x.texture = val
 
-proc `shader=`*(x: var WeakMaterial, val: WeakShader) {.nodestroy, inline.} =
-  Material(x).shader = Shader(val)
+proc `shader=`*(x: var Material, val: Shader) {.nodestroy, inline.} =
+  x.shader = val
 
-proc `params=`*(x: var WeakMaterial, val: array[4, float32]) {.inline.} =
-  Material(x).params = val
+proc texture*(x: MaterialMap): lent Texture {.inline.} =
+  result = x.texture
 
-proc texture*(x: MaterialMap): lent WeakTexture {.inline.} =
-  result = WeakTexture(x.texture)
+proc texture*(x: var MaterialMap): var Texture {.inline.} =
+  result = x.texture
 
-proc texture*(x: var MaterialMap): var WeakTexture {.inline.} =
-  result = WeakTexture(x.texture)
+proc shader*(x: Material): lent Shader {.inline.} =
+  result = x.shader
 
-proc shader*(x: WeakMaterial): lent WeakShader {.inline.} =
-  result = WeakShader(Material(x).shader)
-
-proc shader*(x: var WeakMaterial): var WeakShader {.inline.} =
-  result = WeakShader(Material(x).shader)
-
-proc params*(x: WeakMaterial): lent array[4, float32] {.inline.} =
-  result = Material(x).params
-
-proc params*(x: var WeakMaterial): var array[4, float32] {.inline.} =
-  result = Material(x).params
+proc shader*(x: var Material): var Shader {.inline.} =
+  result = x.shader
 
 template meshes*(x: Model): ModelMeshes = ModelMeshes(x)
 
@@ -270,17 +260,17 @@ proc `[]=`*(x: var ModelMeshes, i: int, val: Mesh) =
 
 template materials*(x: Model): ModelMaterials = ModelMaterials(x)
 
-proc `[]`*(x: ModelMaterials, i: int): lent WeakMaterial =
+proc `[]`*(x: ModelMaterials, i: int): lent Material =
   checkArrayAccess(Model(x).materials, i, Model(x).materialCount)
-  result = WeakMaterial(Model(x).materials[i])
+  result = Model(x).materials[i]
 
-proc `[]`*(x: var ModelMaterials, i: int): var WeakMaterial =
+proc `[]`*(x: var ModelMaterials, i: int): var Material =
   checkArrayAccess(Model(x).materials, i, Model(x).materialCount)
-  result = WeakMaterial(Model(x).materials[i])
+  result = Model(x).materials[i]
 
-proc `[]=`*(x: var ModelMaterials, i: int, val: WeakMaterial) =
+proc `[]=`*(x: var ModelMaterials, i: int, val: Material) =
   checkArrayAccess(Model(x).materials, i, Model(x).materialCount)
-  Model(x).materials[i] = Material(val)
+  Model(x).materials[i] = val
 
 template meshMaterial*(x: Model): ModelMeshMaterial = ModelMeshMaterial(x)
 
