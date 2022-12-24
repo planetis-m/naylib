@@ -1175,8 +1175,7 @@ proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: Pi
 proc loadImageAnim*(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim".}
   ## Load image sequence from file (frames appended to image.data)
 proc loadImageFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Image {.importc: "LoadImageFromMemory".}
-proc loadImageFromTexture*(texture: Texture2D): Image {.importc: "LoadImageFromTexture".}
-  ## Load image from GPU texture data
+proc loadImageFromTexturePriv(texture: Texture2D): Image {.importc: "LoadImageFromTexture".}
 proc loadImageFromScreen*(): Image {.importc: "LoadImageFromScreen".}
   ## Load image from screen buffer and (screenshot)
 proc unloadImage*(image: Image) {.importc: "UnloadImage".}
@@ -1297,14 +1296,10 @@ proc imageDrawText*(dst: var Image, text: cstring, posX: int32, posY: int32, fon
   ## Draw text (using default font) within an image (destination)
 proc imageDrawText*(dst: var Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
   ## Draw text (custom sprite font) within an image (destination)
-proc loadTexture*(fileName: cstring): Texture2D {.importc: "LoadTexture".}
-  ## Load texture from file into GPU memory (VRAM)
-proc loadTextureFromImage*(image: Image): Texture2D {.importc: "LoadTextureFromImage".}
-  ## Load texture from image data
-proc loadTextureCubemap*(image: Image, layout: CubemapLayout): TextureCubemap {.importc: "LoadTextureCubemap".}
-  ## Load cubemap from image, multiple image cubemap layouts supported
-proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D {.importc: "LoadRenderTexture".}
-  ## Load texture for rendering (framebuffer)
+proc loadTexturePriv(fileName: cstring): Texture2D {.importc: "LoadTexture".}
+proc loadTextureFromImagePriv(image: Image): Texture2D {.importc: "LoadTextureFromImage".}
+proc loadTextureCubemapPriv(image: Image, layout: CubemapLayout): TextureCubemap {.importc: "LoadTextureCubemap".}
+proc loadRenderTexturePriv(width: int32, height: int32): RenderTexture2D {.importc: "LoadRenderTexture".}
 proc unloadTexture*(texture: Texture2D) {.importc: "UnloadTexture".}
   ## Unload texture from GPU memory (VRAM)
 proc unloadRenderTexture*(target: RenderTexture2D) {.importc: "UnloadRenderTexture".}
@@ -1937,6 +1932,11 @@ proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
       fileData.len.int32)
   if result.data == nil: raiseResourceNotFound("buffer")
 
+proc loadImageFromTexture*(texture: Texture2D): Image =
+  ## Load image from GPU texture data
+  result = loadImageFromTexturePriv(texture)
+  if result.data == nil: raiseResourceNotFound("texture")
+
 type
   Pixel* = concept
     proc kind(x: typedesc[Self]): PixelFormat
@@ -1949,7 +1949,28 @@ proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: 
   ## Load texture using pixels
   let image = Image(data: cast[pointer](pixels), width: width, height: height,
       format: kind(T), mipmaps: 1).EmbeddedImage
-  result = loadTextureFromImage(image.Image)
+  result = loadTextureFromImagePriv(image.Image)
+  if result.id == 0: raiseResourceNotFound("buffer")
+
+proc loadTexture*(fileName: string): Texture2D =
+  ## Load texture from file into GPU memory (VRAM)
+  result = loadTexturePriv(fileName.cstring)
+  if result.id == 0: raiseResourceNotFound(fileName)
+
+proc loadTextureFromImage*(image: Image): Texture2D =
+  ## Load texture from image data
+  result = loadTextureFromImagePriv(image)
+  if result.id == 0: raiseResourceNotFound("image")
+
+proc loadTextureCubemap*(image: Image, layout: CubemapLayout): TextureCubemap =
+  ## Load cubemap from image, multiple image cubemap layouts supported
+  result = loadTextureCubemapPriv(image, layout)
+  if result.id == 0: raiseResourceNotFound("image")
+
+proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
+  ## Load texture for rendering (framebuffer)
+  result = loadRenderTexturePriv(width, height)
+  if result.id == 0: raiseResourceNotFound("")
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   ## Update GPU texture with new data
