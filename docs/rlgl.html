@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>src/rlgl</title>
+<title>rlgl</title>
 
 <!-- Favicon -->
 <link rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAUAAAAF////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAIAAABbAAAAlQAAAKIAAACbAAAAmwAAAKIAAACVAAAAWwAAAAL///8A////AP///wD///8A////AAAAABQAAADAAAAAYwAAAA3///8A////AP///wD///8AAAAADQAAAGMAAADAAAAAFP///wD///8A////AP///wAAAACdAAAAOv///wD///8A////AP///wD///8A////AP///wD///8AAAAAOgAAAJ3///8A////AP///wAAAAAnAAAAcP///wAAAAAoAAAASv///wD///8A////AP///wAAAABKAAAAKP///wAAAABwAAAAJ////wD///8AAAAAgQAAABwAAACIAAAAkAAAAJMAAACtAAAAFQAAABUAAACtAAAAkwAAAJAAAACIAAAAHAAAAIH///8A////AAAAAKQAAACrAAAAaP///wD///8AAAAARQAAANIAAADSAAAARf///wD///8AAAAAaAAAAKsAAACk////AAAAADMAAACcAAAAnQAAABj///8A////AP///wAAAAAYAAAAGP///wD///8A////AAAAABgAAACdAAAAnAAAADMAAAB1AAAAwwAAAP8AAADpAAAAsQAAAE4AAAAb////AP///wAAAAAbAAAATgAAALEAAADpAAAA/wAAAMMAAAB1AAAAtwAAAOkAAAD/AAAA/wAAAP8AAADvAAAA3gAAAN4AAADeAAAA3gAAAO8AAAD/AAAA/wAAAP8AAADpAAAAtwAAAGUAAAA/AAAA3wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAADfAAAAPwAAAGX///8A////AAAAAEgAAADtAAAAvwAAAL0AAADGAAAA7wAAAO8AAADGAAAAvQAAAL8AAADtAAAASP///wD///8A////AP///wD///8AAAAAO////wD///8A////AAAAAIcAAACH////AP///wD///8AAAAAO////wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A//8AAP//AAD4HwAA7/cAAN/7AAD//wAAoYUAAJ55AACf+QAAh+EAAAAAAADAAwAA4AcAAP5/AAD//wAA//8AAA=="/>
@@ -20,7 +20,7 @@
 <body>
   <div class="document" id="documentId">
     <div class="container">
-      <h1 class="title">src/rlgl</h1>
+      <h1 class="title">rlgl</h1>
       <div class="row">
   <div class="three columns">
     <div class="theme-select-wrapper">
@@ -58,7 +58,7 @@
 <li><a class="reference" href="#BlendFactor" title="BlendFactor = distinct int32">BlendFactor</a></li>
 <li><a class="reference" href="#BufferUsageHint" title="BufferUsageHint = distinct int32">BufferUsageHint</a></li>
 <li><a class="reference" href="#CullMode" title="CullMode = distinct int32">CullMode</a></li>
-<li><a class="reference" href="#DrawCall" title="DrawCall {.importc: &quot;rlDrawCall&quot;, header: &quot;rlgl.h&quot;, bycopy.} = object
+<li><a class="reference" href="#DrawCall" title="DrawCall {.importc: &quot;rlDrawCall&quot;, nodecl, bycopy.} = object
   mode*: int32               ## Drawing mode: LINES, TRIANGLES, QUADS
   vertexCount*: int32        ## Number of vertex of the draw
   vertexAlignment*: int32    ## Number of vertex required for index alignment (LINES, TRIANGLES)
@@ -70,7 +70,7 @@
 <li><a class="reference" href="#GlVersion" title="GlVersion = distinct int32">GlVersion</a></li>
 <li><a class="reference" href="#IndicesArr" title="IndicesArr = array[6, uint32]">IndicesArr</a></li>
 <li><a class="reference" href="#MatrixMode" title="MatrixMode = distinct int32">MatrixMode</a></li>
-<li><a class="reference" href="#RenderBatch" title="RenderBatch {.importc: &quot;rlRenderBatch&quot;, header: &quot;rlgl.h&quot;, bycopy.} = object
+<li><a class="reference" href="#RenderBatch" title="RenderBatch {.importc: &quot;rlRenderBatch&quot;, nodecl, bycopy.} = object
   bufferCount: int32         ## Number of vertex buffers (multi-buffering support)
   currentBuffer*: int32      ## Current buffer tracking in case of multi-buffering
   vertexBuffer: ptr UncheckedArray[VertexBuffer] ## Dynamic buffer(s) for vertex data
@@ -82,7 +82,7 @@
 <li><a class="reference" href="#rlglLoadProc" title="rlglLoadProc = proc (name: cstring): pointer">rlglLoadProc</a></li>
 <li><a class="reference" href="#ShaderType" title="ShaderType = distinct int32">ShaderType</a></li>
 <li><a class="reference" href="#TextureParameter" title="TextureParameter = distinct int32">TextureParameter</a></li>
-<li><a class="reference" href="#VertexBuffer" title="VertexBuffer {.importc: &quot;rlVertexBuffer&quot;, header: &quot;rlgl.h&quot;, bycopy.} = object
+<li><a class="reference" href="#VertexBuffer" title="VertexBuffer {.importc: &quot;rlVertexBuffer&quot;, nodecl, bycopy.} = object
   elementCount: int32        ## Number of elements in the buffer (QUADS)
   vertices: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
   texcoords: ptr UncheckedArray[float32] ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
@@ -1018,7 +1018,7 @@
   </dd>
 </div>
 <div id="DrawCall">
-  <dt><pre><a href="rlgl.html#DrawCall"><span class="Identifier">DrawCall</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlDrawCall&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
+  <dt><pre><a href="rlgl.html#DrawCall"><span class="Identifier">DrawCall</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlDrawCall&quot;</span><span class="Other">,</span> <span class="Identifier">nodecl</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">mode</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>               <span class="Comment">## Drawing mode: LINES, TRIANGLES, QUADS</span>
   <span class="Identifier">vertexCount</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>        <span class="Comment">## Number of vertex of the draw</span>
   <span class="Identifier">vertexAlignment</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>    <span class="Comment">## Number of vertex required for index alignment (LINES, TRIANGLES)</span>
@@ -1103,7 +1103,7 @@
   </dd>
 </div>
 <div id="RenderBatch">
-  <dt><pre><a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlRenderBatch&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
+  <dt><pre><a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlRenderBatch&quot;</span><span class="Other">,</span> <span class="Identifier">nodecl</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">bufferCount</span><span class="Other">:</span> <span class="Identifier">int32</span>         <span class="Comment">## Number of vertex buffers (multi-buffering support)</span>
   <span class="Identifier">currentBuffer</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>      <span class="Comment">## Current buffer tracking in case of multi-buffering</span>
   <span class="Identifier">vertexBuffer</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">]</span> <span class="Comment">## Dynamic buffer(s) for vertex data</span>
@@ -1170,7 +1170,7 @@
   </dd>
 </div>
 <div id="VertexBuffer">
-  <dt><pre><a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlVertexBuffer&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
+  <dt><pre><a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlVertexBuffer&quot;</span><span class="Other">,</span> <span class="Identifier">nodecl</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">elementCount</span><span class="Other">:</span> <span class="Identifier">int32</span>        <span class="Comment">## Number of elements in the buffer (QUADS)</span>
   <span class="Identifier">vertices</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)</span>
   <span class="Identifier">texcoords</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)</span>
@@ -5037,7 +5037,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-12-11 11:22:01 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-12-24 10:45:15 UTC</small>
       </div>
     </div>
   </div>
