@@ -1359,11 +1359,9 @@ proc getPixelDataSize*(width: int32, height: int32, format: PixelFormat): int32 
   ## Get pixel data size in bytes for certain format
 proc getFontDefault*(): Font {.importc: "GetFontDefault".}
   ## Get the default Font
-proc loadFont*(fileName: cstring): Font {.importc: "LoadFont".}
-  ## Load font from file into GPU memory (VRAM)
+proc loadFontPriv(fileName: cstring): Font {.importc: "LoadFont".}
 proc loadFontPriv(fileName: cstring, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontEx".}
-proc loadFontFromImage*(image: Image, key: Color, firstChar: int32): Font {.importc: "LoadFontFromImage".}
-  ## Load font from Image (XNA style)
+proc loadFontFromImagePriv(image: Image, key: Color, firstChar: int32): Font {.importc: "LoadFontFromImage".}
 proc loadFontFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontFromMemory".}
 proc loadFontDataPriv(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData".}
 proc genImageFontAtlasPriv(chars: ptr UncheckedArray[GlyphInfo], recs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
@@ -1983,13 +1981,25 @@ proc loadFontData*(fileData: openArray[uint8]; fontSize, glyphCount: int32;
       fontSize, nil, glyphCount, `type`)
   result = CSeq[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
 
+proc loadFont*(fileName: string): Font =
+  ## Load font from file into GPU memory (VRAM)
+  result = loadFontPriv(fileName.cstring)
+  if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound(fileName)
+
 proc loadFont*(fileName: string; fontSize: int32; fontChars: openArray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for fontChars to load the default character set
   result = loadFontPriv(fileName.cstring, fontSize,
       if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
+  if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound(fileName)
 
 proc loadFont*(fileName: string; fontSize, glyphCount: int32): Font =
   result = loadFontPriv(fileName.cstring, fontSize, nil, glyphCount)
+  if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound(fileName)
+
+proc loadFontFromImage*(image: Image, key: Color, firstChar: int32): Font =
+  ## Load font from Image (XNA style)
+  result = loadFontFromImagePriv(image, key, firstChar)
+  if result.glyphs == nil: raiseResourceNotFound("image")
 
 proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
     fontChars: openArray[int32]): Font =
@@ -1997,11 +2007,13 @@ proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize:
   result = loadFontFromMemoryPriv(fileType.cstring,
       cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
       if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
+  if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound("buffer")
 
 proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
     glyphCount: int32): Font =
   result = loadFontFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32, fontSize, nil, glyphCount)
+  if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound("buffer")
 
 proc loadFontFromData*(chars: sink CSeq[GlyphInfo]; baseSize, padding: int32, packMethod: int32): Font =
   ## Load font using chars info
@@ -2012,8 +2024,7 @@ proc loadFontFromData*(chars: sink CSeq[GlyphInfo]; baseSize, padding: int32, pa
   let atlas = genImageFontAtlasPriv(result.glyphs, result.recs.addr, result.glyphCount, baseSize,
       padding, packMethod)
   result.texture = loadTextureFromImage(atlas)
-  if result.texture.id == 0:
-    raise newException(IOError, "Error loading font from image.")
+  if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound("image")
 
 proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out CSeq[Rectangle]; fontSize: int32;
     padding: int32; packMethod: int32): Image =
