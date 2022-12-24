@@ -235,13 +235,7 @@ proc `shader=`*(x: var Material, val: Shader) {.nodestroy, inline.} =
 proc texture*(x: MaterialMap): lent Texture {.inline.} =
   result = x.texture
 
-proc texture*(x: var MaterialMap): var Texture {.inline.} =
-  result = x.texture
-
 proc shader*(x: Material): lent Shader {.inline.} =
-  result = x.shader
-
-proc shader*(x: var Material): var Shader {.inline.} =
   result = x.shader
 
 template meshes*(x: Model): ModelMeshes = ModelMeshes(x)
