@@ -244,21 +244,57 @@ proc drawMeshInstanced*(mesh: Mesh; material: Material; transforms: openArray[Ma
   drawMeshInstancedPriv(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms),
       transforms.len.int32)
 
+proc loadWave*(fileName: string): Wave =
+  ## Load wave data from file
+  result = loadWavePriv(fileName.cstring)
+  if result.data == nil: raiseResourceNotFound(fileName)
+
 proc loadWaveFromMemory*(fileType: string; fileData: openArray[uint8]): Wave =
   ## Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
-  loadWaveFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+  result = loadWaveFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
+  if result.data == nil: raiseResourceNotFound("buffer")
+
+proc loadSound*(fileName: string): Sound =
+  ## Load sound from file
+  result = loadSoundPriv(fileName.cstring)
+  if result.stream.buffer == nil: raiseResourceNotFound(fileName)
+
+proc loadSoundFromWave*(wave: Wave): Sound =
+  ## Load sound from wave data
+  result = loadSoundFromWavePriv(wave)
+  if result.stream.buffer == nil: raiseResourceNotFound("wave")
+
+proc loadMusicStream*(fileName: string): Music =
+  ## Load music stream from file
+  result = loadMusicStreamPriv(fileName.cstring)
+  if result.stream.buffer == nil: raiseResourceNotFound(fileName)
 
 proc loadMusicStreamFromMemory*(fileType: string; data: openArray[uint8]): Music =
   ## Load music stream from data
-  loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
+  result = loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
       data.len.int32)
+  if result.stream.buffer == nil: raiseResourceNotFound("buffer")
 
 proc drawTextCodepoints*(font: Font; codepoints: openArray[Rune]; position: Vector2;
     fontSize: float32; spacing: float32; tint: Color) =
   ## Draw multiple character (codepoint)
   drawTextCodepointsPriv(font, cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32,
       position, fontSize, spacing, tint)
+
+proc loadModel*(fileName: string): Model =
+  ## Load model from files (meshes and materials)
+  result = loadModelPriv(fileName.cstring)
+  if result.meshes == nil and result.materials == nil and
+      result.bones == nil and result.bindPose == nil:
+    raiseResourceNotFound(fileName)
+
+proc loadModelFromMesh*(mesh: sink Mesh): Model =
+  ## Load model from generated mesh (default material)
+  result = loadModelFromMeshPriv(mesh)
+  wasMoved(mesh)
+  if result.meshes == nil and result.materials == nil:
+    raiseResourceNotFound("mesh")
 
 template drawing*(body: untyped) =
   ## Setup canvas (framebuffer) to start drawing

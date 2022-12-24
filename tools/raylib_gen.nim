@@ -448,10 +448,16 @@ const
     "GenImageFontAtlas",
     "DrawTriangleStrip3D",
     "DrawMeshInstanced",
-    "LoadWaveFromMemory",
-    "LoadMusicStreamFromMemory",
     "ExportDataAsCode",
     "DrawTextCodepoints",
+    "LoadModel",
+    "LoadModelFromMesh",
+    "LoadWave",
+    "LoadSound",
+    "LoadSoundFromWave",
+    "LoadWaveFromMemory",
+    "LoadMusicStream",
+    "LoadMusicStreamFromMemory",
     "UnloadDroppedFiles",
     "LoadDroppedFiles"
   ]
@@ -609,7 +615,6 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
             const
               replacements = [
                 ("GenImageFontAtlas", "recs", "ptr ptr UncheckedArray[$1]"),
-                ("LoadModelFromMesh", "mesh", "sink Mesh"),
                 ("CheckCollisionLines", "collisionPoint", "out $1"),
                 ("LoadImageAnim", "frames", "out $1"),
               ]
