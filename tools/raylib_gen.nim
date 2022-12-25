@@ -466,7 +466,7 @@ const
     "LoadMusicStream",
     "LoadMusicStreamFromMemory",
     "UnloadDroppedFiles",
-    "LoadDroppedFiles"
+    "LoadDroppedFiles",
   ]
 
 proc genBindings(t: TopLevel, fname: string; header, middle: string) =

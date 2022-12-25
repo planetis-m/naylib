@@ -1663,7 +1663,7 @@ proc `=sink`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 # proc `=sink`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 
 proc `=destroy`*(x: var Image) =
-  if x.data != nil: unloadImage(x)
+  unloadImage(x)
 proc `=copy`*(dest: var Image; source: Image) =
   if dest.data != source.data:
     `=destroy`(dest)
@@ -1671,39 +1671,39 @@ proc `=copy`*(dest: var Image; source: Image) =
     dest = imageCopy(source)
 
 proc `=destroy`*(x: var Texture) =
-  if x.id > 0: unloadTexture(x)
+  unloadTexture(x)
 proc `=copy`*(dest: var Texture; source: Texture) {.error.}
 
 proc `=destroy`*(x: var RenderTexture) =
-  if x.id > 0: unloadRenderTexture(x)
+  unloadRenderTexture(x)
 proc `=copy`*(dest: var RenderTexture; source: RenderTexture) {.error.}
 
 proc `=destroy`*(x: var Font) =
-  if x.texture.id > 0: unloadFont(x)
+  unloadFont(x)
 proc `=copy`*(dest: var Font; source: Font) {.error.}
 
 proc `=destroy`*(x: var Mesh) =
-  if x.vboId != nil: unloadMesh(x)
+  unloadMesh(x)
 proc `=copy`*(dest: var Mesh; source: Mesh) {.error.}
 
 proc `=destroy`*(x: var Shader) =
-  if x.id > 0: unloadShader(x)
+  unloadShader(x)
 proc `=copy`*(dest: var Shader; source: Shader) {.error.}
 
 proc `=destroy`*(x: var Material) =
-  if x.maps != nil: unloadMaterial(x)
+  unloadMaterial(x)
 proc `=copy`*(dest: var Material; source: Material) {.error.}
 
 proc `=destroy`*(x: var Model) =
-  if x.meshes != nil: unloadModel(x)
+  unloadModel(x)
 proc `=copy`*(dest: var Model; source: Model) {.error.}
 
 proc `=destroy`*(x: var ModelAnimation) =
-  if x.framePoses != nil: unloadModelAnimation(x)
+  unloadModelAnimation(x)
 proc `=copy`*(dest: var ModelAnimation; source: ModelAnimation) {.error.}
 
 proc `=destroy`*(x: var Wave) =
-  if x.data != nil: unloadWave(x)
+  unloadWave(x)
 proc `=copy`*(dest: var Wave; source: Wave) =
   if dest.data != source.data:
     `=destroy`(dest)
@@ -1711,15 +1711,15 @@ proc `=copy`*(dest: var Wave; source: Wave) =
     dest = waveCopy(source)
 
 proc `=destroy`*(x: var AudioStream) =
-  if x.buffer != nil: unloadAudioStream(x)
+  unloadAudioStream(x)
 proc `=copy`*(dest: var AudioStream; source: AudioStream) {.error.}
 
 proc `=destroy`*(x: var Sound) =
-  if x.stream.buffer != nil: unloadSound(x)
+  unloadSound(x)
 proc `=copy`*(dest: var Sound; source: Sound) {.error.}
 
 proc `=destroy`*(x: var Music) =
-  if x.stream.buffer != nil: unloadMusicStream(x)
+  unloadMusicStream(x)
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 
 type
