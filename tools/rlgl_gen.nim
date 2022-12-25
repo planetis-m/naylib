@@ -180,7 +180,7 @@ elif defined(GraphicsApiOpenGlEs2):
   helpers = """
 
 proc `=destroy`*(x: var RenderBatch) =
-  if x.vertexBuffer != nil: unloadRenderBatch(x)
+  unloadRenderBatch(x)
 proc `=copy`*(dest: var RenderBatch; source: RenderBatch) {.error.}
 
 proc `=sink`*(dest: var VertexBuffer; source: VertexBuffer) {.error.}

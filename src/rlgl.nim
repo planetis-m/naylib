@@ -520,7 +520,7 @@ proc elementCount*(x: VertexBuffer): int32 {.inline.} = x.elementCount
 proc bufferCount*(x: RenderBatch): int32 {.inline.} = x.bufferCount
 
 proc `=destroy`*(x: var RenderBatch) =
-  if x.vertexBuffer != nil: unloadRenderBatch(x)
+  unloadRenderBatch(x)
 proc `=copy`*(dest: var RenderBatch; source: RenderBatch) {.error.}
 
 proc `=sink`*(dest: var VertexBuffer; source: VertexBuffer) {.error.}
