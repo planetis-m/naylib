@@ -531,7 +531,8 @@ template drawMode*(mode: DrawMode; body: untyped) =
   rlBegin(mode)
   try:
     body
-  finally: rlEnd()
+  finally:
+    rlEnd()
 
 template vertices*(x: VertexBuffer): VertexBufferVertices = VertexBufferVertices(x)
 template texcoords*(x: VertexBuffer): VertexBufferTexcoords = VertexBufferTexcoords(x)

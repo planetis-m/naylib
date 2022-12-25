@@ -146,7 +146,7 @@ TextSubtext        substr
 TextReplace        strutils.replace, strutils.multiReplace
 TextInsert         insert
 TextJoin           strutils.join
-TextSplit          strutils.split, unicdoe.split
+TextSplit          strutils.split, unicode.split
 TextAppend         add
 TextFindIndex      strutils.find
 TextToUpper        strutils.toUpperAscii, unicode.toUpper

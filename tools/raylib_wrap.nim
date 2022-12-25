@@ -328,10 +328,10 @@ proc loadModel*(fileName: string): Model =
       result.bones == nil and result.bindPose == nil:
     raiseResourceNotFound(fileName)
 
-proc loadModelFromMesh*(mesh: sink Mesh): Model =
+proc loadModelFromMesh*(mesh: sink Mesh, ownsMesh = true): Model =
   ## Load model from generated mesh (default material)
   result = loadModelFromMeshPriv(mesh)
-  wasMoved(mesh)
+  if ownsMesh: wasMoved(mesh)
   if result.meshes == nil and result.materials == nil:
     raiseResourceNotFound("mesh")
 
@@ -340,53 +340,61 @@ template drawing*(body: untyped) =
   beginDrawing()
   try:
     body
-  finally: endDrawing()
+  finally:
+    endDrawing()
 
 template mode2D*(camera: Camera2D; body: untyped) =
   ## 2D mode with custom camera (2D)
   beginMode2D(camera)
   try:
     body
-  finally: endMode2D()
+  finally:
+    endMode2D()
 
 template mode3D*(camera: Camera3D; body: untyped) =
   ## 3D mode with custom camera (3D)
   beginMode3D(camera)
   try:
     body
-  finally: endMode3D()
+  finally:
+    endMode3D()
 
 template textureMode*(target: RenderTexture2D; body: untyped) =
   ## Drawing to render texture
   beginTextureMode(target)
   try:
     body
-  finally: endTextureMode()
+  finally:
+    endTextureMode()
 
 template shaderMode*(shader: Shader; body: untyped) =
   ## Custom shader drawing
   beginShaderMode(shader)
   try:
     body
-  finally: endShaderMode()
+  finally:
+    endShaderMode()
 
 template blendMode*(mode: BlendMode; body: untyped) =
   ## Blending mode (alpha, additive, multiplied, subtract, custom)
   beginBlendMode(mode)
   try:
     body
-  finally: endBlendMode()
+  finally:
+    endBlendMode()
 
 template scissorMode*(x, y, width, height: int32; body: untyped) =
   ## Scissor mode (define screen area for following drawing)
   beginScissorMode(x, y, width, height)
   try:
     body
-  finally: endScissorMode()
+  finally:
+    endScissorMode()
 
 template vrStereoMode*(config: VrStereoConfig; body: untyped) =
   ## Stereo rendering (requires VR simulator)
   beginVrStereoMode(config)
   try:
     body
-  finally: endVrStereoMode()
+  finally:
+    endVrStereoMode()
