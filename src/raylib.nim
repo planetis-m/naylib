@@ -1,10 +1,10 @@
 from std/unicode import Rune
 import std/os
-const raylibDir = currentSourcePath().parentDir / "/raylib/src"
+const raylibDir = currentSourcePath().parentDir / "raylib/src"
 
 {.passC: "-I" & raylibDir.}
-{.passC: "-I" & raylibDir / "/external/glfw/include".}
-{.passC: "-I" & raylibDir / "/external/glfw/deps/mingw".}
+{.passC: "-I" & raylibDir / "external/glfw/include".}
+{.passC: "-I" & raylibDir / "external/glfw/deps/mingw".}
 {.passC: "-Wall -D_DEFAULT_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
@@ -58,16 +58,16 @@ else:
         discard staticExec("wayland-scanner private-code " & protocol & " " & raylibDir / basename & "-code.h")
 
       static:
-        wlGenerate(wlClientDir / "/wayland.xml", "wayland-client-protocol")
-        wlGenerate(wlProtocolsDir / "/stable/xdg-shell/xdg-shell.xml", "wayland-xdg-shell-client-protocol")
-        wlGenerate(wlProtocolsDir / "/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml",
+        wlGenerate(wlClientDir / "wayland.xml", "wayland-client-protocol")
+        wlGenerate(wlProtocolsDir / "stable/xdg-shell/xdg-shell.xml", "wayland-xdg-shell-client-protocol")
+        wlGenerate(wlProtocolsDir / "unstable/xdg-decoration/xdg-decoration-unstable-v1.xml",
             "wayland-xdg-decoration-client-protocol")
-        wlGenerate(wlProtocolsDir / "/stable/viewporter/viewporter.xml", "wayland-viewporter-client-protocol")
-        wlGenerate(wlProtocolsDir / "/unstable/relative-pointer/relative-pointer-unstable-v1.xml",
+        wlGenerate(wlProtocolsDir / "stable/viewporter/viewporter.xml", "wayland-viewporter-client-protocol")
+        wlGenerate(wlProtocolsDir / "unstable/relative-pointer/relative-pointer-unstable-v1.xml",
             "wayland-relative-pointer-unstable-v1-client-protocol")
-        wlGenerate(wlProtocolsDir / "/unstable/pointer-constraints/pointer-constraints-unstable-v1.xml",
+        wlGenerate(wlProtocolsDir / "unstable/pointer-constraints/pointer-constraints-unstable-v1.xml",
             "wayland-pointer-constraints-unstable-v1-client-protocol")
-        wlGenerate(wlProtocolsDir / "/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
+        wlGenerate(wlProtocolsDir / "unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
             "wayland-idle-inhibit-unstable-v1-client-protocol")
 
     else:
@@ -75,15 +75,15 @@ else:
       {.passL: "-lX11 -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor".}
 
 when defined(emscripten): discard
-elif defined(macosx): {.compile(raylibDir / "/rglfw.c", "-x objective-c").}
-else: {.compile: raylibDir / "/rglfw.c".}
-{.compile: raylibDir / "/rshapes.c".}
-{.compile: raylibDir / "/rtextures.c".}
-{.compile: raylibDir / "/rtext.c".}
-{.compile: raylibDir / "/utils.c".}
-{.compile: raylibDir / "/rmodels.c".}
-{.compile: raylibDir / "/raudio.c".}
-{.compile: raylibDir / "/rcore.c".}
+elif defined(macosx): {.compile(raylibDir / "rglfw.c", "-x objective-c").}
+else: {.compile: raylibDir / "rglfw.c".}
+{.compile: raylibDir / "rshapes.c".}
+{.compile: raylibDir / "rtextures.c".}
+{.compile: raylibDir / "rtext.c".}
+{.compile: raylibDir / "utils.c".}
+{.compile: raylibDir / "rmodels.c".}
+{.compile: raylibDir / "raudio.c".}
+{.compile: raylibDir / "rcore.c".}
 
 const
   RaylibVersion* = (4, 5, 0)
@@ -2113,10 +2113,10 @@ proc loadModel*(fileName: string): Model =
       result.bones == nil and result.bindPose == nil:
     raiseResourceNotFound(fileName)
 
-proc loadModelFromMesh*(mesh: sink Mesh, ownsMesh = true): Model =
+proc loadModelFromMesh*(mesh: sink Mesh): Model =
   ## Load model from generated mesh (default material)
   result = loadModelFromMeshPriv(mesh)
-  if ownsMesh: wasMoved(mesh)
+  wasMoved(mesh)
   if result.meshes == nil and result.materials == nil:
     raiseResourceNotFound("mesh")
 

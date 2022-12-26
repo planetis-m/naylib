@@ -328,10 +328,10 @@ proc loadModel*(fileName: string): Model =
       result.bones == nil and result.bindPose == nil:
     raiseResourceNotFound(fileName)
 
-proc loadModelFromMesh*(mesh: sink Mesh, ownsMesh = true): Model =
+proc loadModelFromMesh*(mesh: sink Mesh): Model =
   ## Load model from generated mesh (default material)
   result = loadModelFromMeshPriv(mesh)
-  if ownsMesh: wasMoved(mesh)
+  wasMoved(mesh)
   if result.meshes == nil and result.materials == nil:
     raiseResourceNotFound("mesh")
 
