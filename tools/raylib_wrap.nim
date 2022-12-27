@@ -45,37 +45,37 @@ type
     proc kind(x: typedesc[Self]): ShaderUniformDataType
     proc value(x: Self): pointer
 
-template kind*(x: typedesc[float32]): ShaderUniformDataType = ShaderUniformFloat
+template kind*(x: typedesc[float32]): ShaderUniformDataType = Float
 template value*(x: float32): pointer = x.addr
 
-template kind*(x: typedesc[Vector2]): ShaderUniformDataType = ShaderUniformVec2
+template kind*(x: typedesc[Vector2]): ShaderUniformDataType = Vec2
 template value*(x: Vector2): pointer = x.addr
 
-template kind*(x: typedesc[Vector3]): ShaderUniformDataType = ShaderUniformVec3
+template kind*(x: typedesc[Vector3]): ShaderUniformDataType = Vec3
 template value*(x: Vector3): pointer = x.addr
 
-template kind*(x: typedesc[Vector4]): ShaderUniformDataType = ShaderUniformVec4
+template kind*(x: typedesc[Vector4]): ShaderUniformDataType = Vec4
 template value*(x: Vector4): pointer = x.addr
 
-template kind*(x: typedesc[int32]): ShaderUniformDataType = ShaderUniformInt
+template kind*(x: typedesc[int32]): ShaderUniformDataType = Int
 template value*(x: int32): pointer = x.addr
 
-template kind*(x: typedesc[array[2, int32]]): ShaderUniformDataType = ShaderUniformIvec2
+template kind*(x: typedesc[array[2, int32]]): ShaderUniformDataType = Ivec2
 template value*(x: array[2, int32]): pointer = x.addr
 
-template kind*(x: typedesc[array[3, int32]]): ShaderUniformDataType = ShaderUniformIvec3
+template kind*(x: typedesc[array[3, int32]]): ShaderUniformDataType = Ivec3
 template value*(x: array[3, int32]): pointer = x.addr
 
-template kind*(x: typedesc[array[4, int32]]): ShaderUniformDataType = ShaderUniformIvec4
+template kind*(x: typedesc[array[4, int32]]): ShaderUniformDataType = Ivec4
 template value*(x: array[4, int32]): pointer = x.addr
 
-template kind*(x: typedesc[array[2, float32]]): ShaderUniformDataType = ShaderUniformVec2
+template kind*(x: typedesc[array[2, float32]]): ShaderUniformDataType = Vec2
 template value*(x: array[2, float32]): pointer = x.addr
 
-template kind*(x: typedesc[array[3, float32]]): ShaderUniformDataType = ShaderUniformVec3
+template kind*(x: typedesc[array[3, float32]]): ShaderUniformDataType = Vec3
 template value*(x: array[3, float32]): pointer = x.addr
 
-template kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = ShaderUniformVec4
+template kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = Vec4
 template value*(x: array[4, float32]): pointer = x.addr
 
 proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: T) =
@@ -161,7 +161,7 @@ type
     proc kind(x: typedesc[Self]): PixelFormat
     proc value(x: Self): pointer
 
-template kind*(x: typedesc[Color]): PixelFormat = PixelformatUncompressedR8g8b8a8
+template kind*(x: typedesc[Color]): PixelFormat = UncompressedR8g8b8a8
 template value*(x: Color): pointer = x.addr
 
 proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: int32): Texture =
