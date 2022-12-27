@@ -54,18 +54,7 @@
   <details open>
     <summary><a class="reference reference-toplevel" href="#7" id="57">Types</a></summary>
     <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#BlendEquation" title="BlendEquation {.size: 4.} = enum
-  BlendColor = 32773,       ## GL_BLEND_COLOR
-  FuncAdd = 32774,          ## GL_FUNC_ADD
-  BlendEquationRgb = 32777, ## GL_BLEND_EQUATION_RGB (Same as BLEND_EQUATION)
-  FuncSubtract = 32778,     ## GL_FUNC_SUBTRACT
-  FuncReverseSubtract = 32779, ## GL_FUNC_REVERSE_SUBTRACT
-  BlendDstRgb = 32968,      ## GL_BLEND_DST_RGB
-  BlendSrcRgb = 32969,      ## GL_BLEND_SRC_RGB
-  BlendDstAlpha = 32970,    ## GL_BLEND_DST_ALPHA
-  BlendSrcAlpha = 32971,    ## GL_BLEND_SRC_ALPHA
-  BlendEquationAlpha = 34877 ## GL_BLEND_EQUATION_ALPHA">BlendEquation</a></li>
-<li><a class="reference" href="#BlendFactor" title="BlendFactor {.size: 4.} = enum
+      <li><a class="reference" href="#BlendFactor" title="BlendFactor {.size: 4.} = enum
   Zero,                     ## GL_ZERO
   One,                      ## GL_ONE
   SrcColor = 768,           ## GL_SRC_COLOR
@@ -81,6 +70,17 @@
   OneMinusConstantColor = 32770, ## GL_ONE_MINUS_CONSTANT_COLOR
   ConstantAlpha = 32771,    ## GL_CONSTANT_ALPHA
   OneMinusConstantAlpha = 32772 ## GL_ONE_MINUS_CONSTANT_ALPHA">BlendFactor</a></li>
+<li><a class="reference" href="#BlendFuncOrEq" title="BlendFuncOrEq {.size: 4.} = enum
+  BlendColor = 32773,       ## GL_BLEND_COLOR
+  FuncAdd = 32774,          ## GL_FUNC_ADD
+  BlendEquation = 32777,    ## GL_BLEND_EQUATION
+  FuncSubtract = 32778,     ## GL_FUNC_SUBTRACT
+  FuncReverseSubtract = 32779, ## GL_FUNC_REVERSE_SUBTRACT
+  BlendDstRgb = 32968,      ## GL_BLEND_DST_RGB
+  BlendSrcRgb = 32969,      ## GL_BLEND_SRC_RGB
+  BlendDstAlpha = 32970,    ## GL_BLEND_DST_ALPHA
+  BlendSrcAlpha = 32971,    ## GL_BLEND_SRC_ALPHA
+  BlendEquationAlpha = 34877 ## GL_BLEND_EQUATION_ALPHA">BlendFuncOrEq</a></li>
 <li><a class="reference" href="#BufferUsageHint" title="BufferUsageHint {.size: 4.} = enum
   StreamDraw = 35040,       ## GL_STREAM_DRAW
   StreamRead = 35041,       ## GL_STREAM_READ
@@ -150,6 +150,22 @@
   FragmentShader = 35632,   ## GL_FRAGMENT_SHADER
   VertexShader = 35633,     ## GL_VERTEX_SHADER
   ComputeShader = 37305      ## GL_COMPUTE_SHADER">ShaderType</a></li>
+<li><a class="reference" href="#ShaderVariable" title="ShaderVariable = enum
+  AttribPosition = &quot;vertexPosition&quot;, ## Binded by default to shader location: 0
+  AttribTexcoord = &quot;vertexTexCoord&quot;, ## Binded by default to shader location: 1
+  AttribNormal = &quot;vertexNormal&quot;, ## Binded by default to shader location: 2
+  AttribColor = &quot;vertexColor&quot;, ## Binded by default to shader location: 3
+  AttribTangent = &quot;vertexTangent&quot;, ## Binded by default to shader location: 4
+  AttribTexcoord2 = &quot;vertexTexCoord2&quot;, ## Binded by default to shader location: 5
+  UniformMvp = &quot;mvp&quot;,       ## model-view-projection matrix
+  UniformView = &quot;matView&quot;,  ## view matrix
+  UniformProjection = &quot;matProjection&quot;, ## projection matrix
+  UniformModel = &quot;matModel&quot;, ## model matrix
+  UniformNormal = &quot;matNormal&quot;, ## normal matrix (transpose(inverse(matModelView))
+  UniformColor = &quot;colDiffuse&quot;, ## color diffuse (base tint color, multiplied by texture color)
+  Sampler2dTexture0 = &quot;texture0&quot;, ## texture0 (texture slot active 0)
+  Sampler2dTexture1 = &quot;texture1&quot;, ## texture1 (texture slot active 1)
+  Sampler2dTexture2 = &quot;texture2&quot; ## texture2 (texture slot active 2)">ShaderVariable</a></li>
 <li><a class="reference" href="#TextureParameter" title="TextureParameter {.size: 4.} = enum
   FilterNearest = 9728,     ## GL_NEAREST
   FilterLinear = 9729,      ## GL_LINEAR
@@ -192,13 +208,7 @@
   <details open>
     <summary><a class="reference reference-toplevel" href="#10" id="60">Consts</a></summary>
     <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#AttribColor" title="AttribColor = &quot;vertexColor&quot;">AttribColor</a></li>
-<li><a class="reference" href="#AttribNormal" title="AttribNormal = &quot;vertexNormal&quot;">AttribNormal</a></li>
-<li><a class="reference" href="#AttribPosition" title="AttribPosition = &quot;vertexPosition&quot;">AttribPosition</a></li>
-<li><a class="reference" href="#AttribTangent" title="AttribTangent = &quot;vertexTangent&quot;">AttribTangent</a></li>
-<li><a class="reference" href="#AttribTexcoord" title="AttribTexcoord = &quot;vertexTexCoord&quot;">AttribTexcoord</a></li>
-<li><a class="reference" href="#AttribTexcoord2" title="AttribTexcoord2 = &quot;vertexTexCoord2&quot;">AttribTexcoord2</a></li>
-<li><a class="reference" href="#CullDistanceFar" title="CullDistanceFar = 1000.0">CullDistanceFar</a></li>
+      <li><a class="reference" href="#CullDistanceFar" title="CullDistanceFar = 1000.0">CullDistanceFar</a></li>
 <li><a class="reference" href="#CullDistanceNear" title="CullDistanceNear = 0.01">CullDistanceNear</a></li>
 <li><a class="reference" href="#DefaultBatchBufferElements" title="DefaultBatchBufferElements = 8192">DefaultBatchBufferElements</a></li>
 <li><a class="reference" href="#DefaultBatchBuffers" title="DefaultBatchBuffers = 1">DefaultBatchBuffers</a></li>
@@ -206,15 +216,6 @@
 <li><a class="reference" href="#DefaultBatchMaxTextureUnits" title="DefaultBatchMaxTextureUnits = 4">DefaultBatchMaxTextureUnits</a></li>
 <li><a class="reference" href="#MaxMatrixStackSize" title="MaxMatrixStackSize = 32">MaxMatrixStackSize</a></li>
 <li><a class="reference" href="#RlglVersion" title="RlglVersion = (4, 2, 0)">RlglVersion</a></li>
-<li><a class="reference" href="#Sampler2dTexture0" title="Sampler2dTexture0 = &quot;texture0&quot;">Sampler2dTexture0</a></li>
-<li><a class="reference" href="#Sampler2dTexture1" title="Sampler2dTexture1 = &quot;texture1&quot;">Sampler2dTexture1</a></li>
-<li><a class="reference" href="#Sampler2dTexture2" title="Sampler2dTexture2 = &quot;texture2&quot;">Sampler2dTexture2</a></li>
-<li><a class="reference" href="#UniformColor" title="UniformColor = &quot;colDiffuse&quot;">UniformColor</a></li>
-<li><a class="reference" href="#UniformModel" title="UniformModel = &quot;matModel&quot;">UniformModel</a></li>
-<li><a class="reference" href="#UniformMvp" title="UniformMvp = &quot;mvp&quot;">UniformMvp</a></li>
-<li><a class="reference" href="#UniformNormal" title="UniformNormal = &quot;matNormal&quot;">UniformNormal</a></li>
-<li><a class="reference" href="#UniformProjection" title="UniformProjection = &quot;matProjection&quot;">UniformProjection</a></li>
-<li><a class="reference" href="#UniformView" title="UniformView = &quot;matView&quot;">UniformView</a></li>
 
     </ul>
   </details>
@@ -529,11 +530,11 @@
 
 </ul>
 <ul class="simple nested-toc-section">getLocationAttrib
-  <li><a class="reference" href="#getLocationAttrib%2Cuint32%2CShaderVariable" title="getLocationAttrib(shaderId: uint32; attribName: ShaderVariable): ShaderLocation">getLocationAttrib(shaderId: uint32; attribName: ShaderVariable): ShaderLocation</a></li>
+  <li><a class="reference" href="#getLocationAttrib%2Cuint32%2Ccstring" title="getLocationAttrib(shaderId: uint32; attribName: cstring): ShaderLocation">getLocationAttrib(shaderId: uint32; attribName: cstring): ShaderLocation</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">getLocationUniform
-  <li><a class="reference" href="#getLocationUniform%2Cuint32%2CShaderVariable" title="getLocationUniform(shaderId: uint32; uniformName: ShaderVariable): ShaderLocation">getLocationUniform(shaderId: uint32; uniformName: ShaderVariable): ShaderLocation</a></li>
+  <li><a class="reference" href="#getLocationUniform%2Cuint32%2Ccstring" title="getLocationUniform(shaderId: uint32; uniformName: cstring): ShaderLocation">getLocationUniform(shaderId: uint32; uniformName: cstring): ShaderLocation</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">getMatrixModelview
@@ -717,17 +718,17 @@
 
 </ul>
 <ul class="simple nested-toc-section">setBlendFactors
-  <li><a class="reference" href="#setBlendFactors%2CBlendFactor%2CBlendFactor%2CBlendEquation" title="setBlendFactors(glSrcFactor: BlendFactor; glDstFactor: BlendFactor;
-                glEquation: BlendEquation)">setBlendFactors(glSrcFactor: BlendFactor; glDstFactor: BlendFactor;
-                glEquation: BlendEquation)</a></li>
+  <li><a class="reference" href="#setBlendFactors%2CBlendFactor%2CBlendFactor%2CBlendFuncOrEq" title="setBlendFactors(glSrcFactor: BlendFactor; glDstFactor: BlendFactor;
+                glEquation: BlendFuncOrEq)">setBlendFactors(glSrcFactor: BlendFactor; glDstFactor: BlendFactor;
+                glEquation: BlendFuncOrEq)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">setBlendFactorsSeparate
-  <li><a class="reference" href="#setBlendFactorsSeparate%2CBlendFactor%2CBlendFactor%2CBlendFactor%2CBlendFactor%2CBlendEquation%2CBlendEquation" title="setBlendFactorsSeparate(glSrcRGB: BlendFactor; glDstRGB: BlendFactor;
+  <li><a class="reference" href="#setBlendFactorsSeparate%2CBlendFactor%2CBlendFactor%2CBlendFactor%2CBlendFactor%2CBlendFuncOrEq%2CBlendFuncOrEq" title="setBlendFactorsSeparate(glSrcRGB: BlendFactor; glDstRGB: BlendFactor;
                         glSrcAlpha: BlendFactor; glDstAlpha: BlendFactor;
-                        glEqRGB: BlendEquation; glEqAlpha: BlendEquation)">setBlendFactorsSeparate(glSrcRGB: BlendFactor; glDstRGB: BlendFactor;
+                        glEqRGB: BlendFuncOrEq; glEqAlpha: BlendFuncOrEq)">setBlendFactorsSeparate(glSrcRGB: BlendFactor; glDstRGB: BlendFactor;
                         glSrcAlpha: BlendFactor; glDstAlpha: BlendFactor;
-                        glEqRGB: BlendEquation; glEqAlpha: BlendEquation)</a></li>
+                        glEqRGB: BlendFuncOrEq; glEqAlpha: BlendFuncOrEq)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">setBlendMode
@@ -894,7 +895,11 @@
   <details open>
     <summary><a class="reference reference-toplevel" href="#18" id="68">Templates</a></summary>
     <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">colors
+      <ul class="simple nested-toc-section">BlendEquationRgb
+  <li><a class="reference" href="#BlendEquationRgb.t%2Ctypedesc%5BBlendFuncOrEq%5D" title="BlendEquationRgb(_: typedesc[BlendFuncOrEq]): untyped">BlendEquationRgb(_: typedesc[BlendFuncOrEq]): untyped</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">colors
   <li><a class="reference" href="#colors.t%2CVertexBuffer" title="colors(x: VertexBuffer): VertexBufferColors">colors(x: VertexBuffer): VertexBufferColors</a></li>
 
 </ul>
@@ -949,27 +954,7 @@
 <div class="section" id="7">
   <h1><a class="toc-backref" href="#7">Types</a></h1>
   <dl class="item">
-    <div id="BlendEquation">
-  <dt><pre><a href="rlgl.html#BlendEquation"><span class="Identifier">BlendEquation</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">BlendColor</span> <span class="Other">=</span> <span class="DecNumber">32773</span><span class="Other">,</span>       <span class="Comment">## GL_BLEND_COLOR</span>
-  <span class="Identifier">FuncAdd</span> <span class="Other">=</span> <span class="DecNumber">32774</span><span class="Other">,</span>          <span class="Comment">## GL_FUNC_ADD</span>
-  <span class="Identifier">BlendEquationRgb</span> <span class="Other">=</span> <span class="DecNumber">32777</span><span class="Other">,</span> <span class="Comment">## GL_BLEND_EQUATION_RGB (Same as BLEND_EQUATION)</span>
-  <span class="Identifier">FuncSubtract</span> <span class="Other">=</span> <span class="DecNumber">32778</span><span class="Other">,</span>     <span class="Comment">## GL_FUNC_SUBTRACT</span>
-  <span class="Identifier">FuncReverseSubtract</span> <span class="Other">=</span> <span class="DecNumber">32779</span><span class="Other">,</span> <span class="Comment">## GL_FUNC_REVERSE_SUBTRACT</span>
-  <span class="Identifier">BlendDstRgb</span> <span class="Other">=</span> <span class="DecNumber">32968</span><span class="Other">,</span>      <span class="Comment">## GL_BLEND_DST_RGB</span>
-  <span class="Identifier">BlendSrcRgb</span> <span class="Other">=</span> <span class="DecNumber">32969</span><span class="Other">,</span>      <span class="Comment">## GL_BLEND_SRC_RGB</span>
-  <span class="Identifier">BlendDstAlpha</span> <span class="Other">=</span> <span class="DecNumber">32970</span><span class="Other">,</span>    <span class="Comment">## GL_BLEND_DST_ALPHA</span>
-  <span class="Identifier">BlendSrcAlpha</span> <span class="Other">=</span> <span class="DecNumber">32971</span><span class="Other">,</span>    <span class="Comment">## GL_BLEND_SRC_ALPHA</span>
-  <span class="Identifier">BlendEquationAlpha</span> <span class="Other">=</span> <span class="DecNumber">34877</span> <span class="Comment">## GL_BLEND_EQUATION_ALPHA</span></pre></dt>
-  <dd>
-    
-    GL blending functions/equations
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L124" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L124" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="BlendFactor">
+    <div id="BlendFactor">
   <dt><pre><a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">Zero</span><span class="Other">,</span>                     <span class="Comment">## GL_ZERO</span>
   <span class="Identifier">One</span><span class="Other">,</span>                      <span class="Comment">## GL_ONE</span>
@@ -989,8 +974,28 @@
   <dd>
     
     GL blending factors
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L106" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L106" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L82" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L82" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="BlendFuncOrEq">
+  <dt><pre><a href="rlgl.html#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">BlendColor</span> <span class="Other">=</span> <span class="DecNumber">32773</span><span class="Other">,</span>       <span class="Comment">## GL_BLEND_COLOR</span>
+  <span class="Identifier">FuncAdd</span> <span class="Other">=</span> <span class="DecNumber">32774</span><span class="Other">,</span>          <span class="Comment">## GL_FUNC_ADD</span>
+  <span class="Identifier">BlendEquation</span> <span class="Other">=</span> <span class="DecNumber">32777</span><span class="Other">,</span>    <span class="Comment">## GL_BLEND_EQUATION</span>
+  <span class="Identifier">FuncSubtract</span> <span class="Other">=</span> <span class="DecNumber">32778</span><span class="Other">,</span>     <span class="Comment">## GL_FUNC_SUBTRACT</span>
+  <span class="Identifier">FuncReverseSubtract</span> <span class="Other">=</span> <span class="DecNumber">32779</span><span class="Other">,</span> <span class="Comment">## GL_FUNC_REVERSE_SUBTRACT</span>
+  <span class="Identifier">BlendDstRgb</span> <span class="Other">=</span> <span class="DecNumber">32968</span><span class="Other">,</span>      <span class="Comment">## GL_BLEND_DST_RGB</span>
+  <span class="Identifier">BlendSrcRgb</span> <span class="Other">=</span> <span class="DecNumber">32969</span><span class="Other">,</span>      <span class="Comment">## GL_BLEND_SRC_RGB</span>
+  <span class="Identifier">BlendDstAlpha</span> <span class="Other">=</span> <span class="DecNumber">32970</span><span class="Other">,</span>    <span class="Comment">## GL_BLEND_DST_ALPHA</span>
+  <span class="Identifier">BlendSrcAlpha</span> <span class="Other">=</span> <span class="DecNumber">32971</span><span class="Other">,</span>    <span class="Comment">## GL_BLEND_SRC_ALPHA</span>
+  <span class="Identifier">BlendEquationAlpha</span> <span class="Other">=</span> <span class="DecNumber">34877</span> <span class="Comment">## GL_BLEND_EQUATION_ALPHA</span></pre></dt>
+  <dd>
+    
+    GL blending functions/equations
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L99" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L99" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1008,8 +1013,8 @@
   <dd>
     
     GL buffer usage hint
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L88" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L88" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L66" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L66" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1019,8 +1024,8 @@
   <dd>
     
     Face culling mode
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L166" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L166" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L157" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L157" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1034,8 +1039,8 @@
   <dd>
     
     of those state-change happens (this is done in core module)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L183" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L183" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L176" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L176" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1047,8 +1052,8 @@
   <dd>
     
     Primitive assembly draw modes
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L77" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L77" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L57" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L57" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1065,8 +1070,8 @@
   <dd>
     
     Framebuffer texture attachment type
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L156" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L156" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L147" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L147" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1085,8 +1090,8 @@
   <dd>
     
     Framebuffer attachment type
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L144" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L144" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L135" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L135" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1097,8 +1102,8 @@
   <dd>
     
     GL equivalent data types
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L83" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L83" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L62" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L62" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1112,8 +1117,8 @@
   <dd>
     
     OpenGL version
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L137" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L137" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L128" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L128" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1122,8 +1127,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L560" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L560" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L553" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L553" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1135,8 +1140,8 @@
   <dd>
     
     Matrix modes (equivalent to OpenGL)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L71" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L71" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L52" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L52" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1152,8 +1157,8 @@
   <dd>
     
     rlRenderBatch type
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L189" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L189" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L182" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L182" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1162,8 +1167,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L202" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L202" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L195" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L195" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1172,8 +1177,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L201" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L201" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L194" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L194" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1182,8 +1187,8 @@
   <dd>
     
     OpenGL extension functions loader signature (same as GLADloadproc)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L50" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L50" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L32" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L32" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1195,8 +1200,33 @@
   <dd>
     
     GL Shader type
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L100" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L100" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L77" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L77" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="ShaderVariable">
+  <dt><pre><a href="rlgl.html#ShaderVariable"><span class="Identifier">ShaderVariable</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">AttribPosition</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexPosition&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 0</span>
+  <span class="Identifier">AttribTexcoord</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexTexCoord&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 1</span>
+  <span class="Identifier">AttribNormal</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexNormal&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 2</span>
+  <span class="Identifier">AttribColor</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexColor&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 3</span>
+  <span class="Identifier">AttribTangent</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexTangent&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 4</span>
+  <span class="Identifier">AttribTexcoord2</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexTexCoord2&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 5</span>
+  <span class="Identifier">UniformMvp</span> <span class="Other">=</span> <span class="StringLit">&quot;mvp&quot;</span><span class="Other">,</span>       <span class="Comment">## model-view-projection matrix</span>
+  <span class="Identifier">UniformView</span> <span class="Other">=</span> <span class="StringLit">&quot;matView&quot;</span><span class="Other">,</span>  <span class="Comment">## view matrix</span>
+  <span class="Identifier">UniformProjection</span> <span class="Other">=</span> <span class="StringLit">&quot;matProjection&quot;</span><span class="Other">,</span> <span class="Comment">## projection matrix</span>
+  <span class="Identifier">UniformModel</span> <span class="Other">=</span> <span class="StringLit">&quot;matModel&quot;</span><span class="Other">,</span> <span class="Comment">## model matrix</span>
+  <span class="Identifier">UniformNormal</span> <span class="Other">=</span> <span class="StringLit">&quot;matNormal&quot;</span><span class="Other">,</span> <span class="Comment">## normal matrix (transpose(inverse(matModelView))</span>
+  <span class="Identifier">UniformColor</span> <span class="Other">=</span> <span class="StringLit">&quot;colDiffuse&quot;</span><span class="Other">,</span> <span class="Comment">## color diffuse (base tint color, multiplied by texture color)</span>
+  <span class="Identifier">Sampler2dTexture0</span> <span class="Other">=</span> <span class="StringLit">&quot;texture0&quot;</span><span class="Other">,</span> <span class="Comment">## texture0 (texture slot active 0)</span>
+  <span class="Identifier">Sampler2dTexture1</span> <span class="Other">=</span> <span class="StringLit">&quot;texture1&quot;</span><span class="Other">,</span> <span class="Comment">## texture1 (texture slot active 1)</span>
+  <span class="Identifier">Sampler2dTexture2</span> <span class="Other">=</span> <span class="StringLit">&quot;texture2&quot;</span> <span class="Comment">## texture2 (texture slot active 2)</span></pre></dt>
+  <dd>
+    
+    Default shader vertex attribute names to set location points
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L111" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L111" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1221,8 +1251,8 @@
   <dd>
     
     Texture parameters (equivalent to OpenGL defines)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L52" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L52" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L34" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L34" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1244,8 +1274,8 @@
   <dd>
     
     Dynamic vertex buffers (position + texcoords + colors + indices arrays)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L171" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L171" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L164" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L164" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1254,8 +1284,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L199" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L199" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L192" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L192" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1264,8 +1294,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L200" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L200" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L193" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L193" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1274,8 +1304,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L198" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L198" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L191" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L191" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1284,8 +1314,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L197" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L197" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L190" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L190" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1295,67 +1325,7 @@
 <div class="section" id="10">
   <h1><a class="toc-backref" href="#10">Consts</a></h1>
   <dl class="item">
-    <div id="AttribColor">
-  <dt><pre><a href="rlgl.html#AttribColor"><span class="Identifier">AttribColor</span></a> <span class="Other">=</span> <span class="StringLit">&quot;vertexColor&quot;</span></pre></dt>
-  <dd>
-    
-    Binded by default to shader location: 3
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L27" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L27" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="AttribNormal">
-  <dt><pre><a href="rlgl.html#AttribNormal"><span class="Identifier">AttribNormal</span></a> <span class="Other">=</span> <span class="StringLit">&quot;vertexNormal&quot;</span></pre></dt>
-  <dd>
-    
-    Binded by default to shader location: 2
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L26" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L26" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="AttribPosition">
-  <dt><pre><a href="rlgl.html#AttribPosition"><span class="Identifier">AttribPosition</span></a> <span class="Other">=</span> <span class="StringLit">&quot;vertexPosition&quot;</span></pre></dt>
-  <dd>
-    
-    Binded by default to shader location: 0
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L24" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L24" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="AttribTangent">
-  <dt><pre><a href="rlgl.html#AttribTangent"><span class="Identifier">AttribTangent</span></a> <span class="Other">=</span> <span class="StringLit">&quot;vertexTangent&quot;</span></pre></dt>
-  <dd>
-    
-    Binded by default to shader location: 4
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L28" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L28" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="AttribTexcoord">
-  <dt><pre><a href="rlgl.html#AttribTexcoord"><span class="Identifier">AttribTexcoord</span></a> <span class="Other">=</span> <span class="StringLit">&quot;vertexTexCoord&quot;</span></pre></dt>
-  <dd>
-    
-    Binded by default to shader location: 1
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L25" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L25" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="AttribTexcoord2">
-  <dt><pre><a href="rlgl.html#AttribTexcoord2"><span class="Identifier">AttribTexcoord2</span></a> <span class="Other">=</span> <span class="StringLit">&quot;vertexTexCoord2&quot;</span></pre></dt>
-  <dd>
-    
-    Binded by default to shader location: 5
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L29" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L29" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="CullDistanceFar">
+    <div id="CullDistanceFar">
   <dt><pre><a href="rlgl.html#CullDistanceFar"><span class="Identifier">CullDistanceFar</span></a> <span class="Other">=</span> <span class="FloatNumber">1000.0</span></pre></dt>
   <dd>
     
@@ -1380,8 +1350,8 @@
   <dd>
     
     This is the maximum amount of elements (quads) per batch NOTE: Be careful with text, every letter maps to a quad
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L42" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L42" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L24" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L24" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1435,96 +1405,6 @@
 
   </dd>
 </div>
-<div id="Sampler2dTexture0">
-  <dt><pre><a href="rlgl.html#Sampler2dTexture0"><span class="Identifier">Sampler2dTexture0</span></a> <span class="Other">=</span> <span class="StringLit">&quot;texture0&quot;</span></pre></dt>
-  <dd>
-    
-    texture0 (texture slot active 0)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L37" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L37" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="Sampler2dTexture1">
-  <dt><pre><a href="rlgl.html#Sampler2dTexture1"><span class="Identifier">Sampler2dTexture1</span></a> <span class="Other">=</span> <span class="StringLit">&quot;texture1&quot;</span></pre></dt>
-  <dd>
-    
-    texture1 (texture slot active 1)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L38" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L38" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="Sampler2dTexture2">
-  <dt><pre><a href="rlgl.html#Sampler2dTexture2"><span class="Identifier">Sampler2dTexture2</span></a> <span class="Other">=</span> <span class="StringLit">&quot;texture2&quot;</span></pre></dt>
-  <dd>
-    
-    texture2 (texture slot active 2)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L39" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L39" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="UniformColor">
-  <dt><pre><a href="rlgl.html#UniformColor"><span class="Identifier">UniformColor</span></a> <span class="Other">=</span> <span class="StringLit">&quot;colDiffuse&quot;</span></pre></dt>
-  <dd>
-    
-    color diffuse (base tint color, multiplied by texture color)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L36" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L36" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="UniformModel">
-  <dt><pre><a href="rlgl.html#UniformModel"><span class="Identifier">UniformModel</span></a> <span class="Other">=</span> <span class="StringLit">&quot;matModel&quot;</span></pre></dt>
-  <dd>
-    
-    model matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L34" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L34" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="UniformMvp">
-  <dt><pre><a href="rlgl.html#UniformMvp"><span class="Identifier">UniformMvp</span></a> <span class="Other">=</span> <span class="StringLit">&quot;mvp&quot;</span></pre></dt>
-  <dd>
-    
-    model-view-projection matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L31" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L31" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="UniformNormal">
-  <dt><pre><a href="rlgl.html#UniformNormal"><span class="Identifier">UniformNormal</span></a> <span class="Other">=</span> <span class="StringLit">&quot;matNormal&quot;</span></pre></dt>
-  <dd>
-    
-    normal matrix (transpose(inverse(matModelView))
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L35" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L35" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="UniformProjection">
-  <dt><pre><a href="rlgl.html#UniformProjection"><span class="Identifier">UniformProjection</span></a> <span class="Other">=</span> <span class="StringLit">&quot;matProjection&quot;</span></pre></dt>
-  <dd>
-    
-    projection matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L33" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L33" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="UniformView">
-  <dt><pre><a href="rlgl.html#UniformView"><span class="Identifier">UniformView</span></a> <span class="Other">=</span> <span class="StringLit">&quot;matView&quot;</span></pre></dt>
-  <dd>
-    
-    view matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L32" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L32" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
 
   </dl>
 </div>
@@ -1537,8 +1417,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L494" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L494" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L487" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L487" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1547,8 +1427,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L497" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L497" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L490" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L490" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1560,8 +1440,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L492" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L492" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L485" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L485" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1573,8 +1453,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L496" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L496" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L489" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L489" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1587,8 +1467,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L584" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L584" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L577" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L577" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1598,8 +1478,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L576" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L576" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L569" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L569" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1609,8 +1489,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L588" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L588" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L581" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L581" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1620,8 +1500,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L580" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L580" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L573" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L573" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1631,8 +1511,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L551" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L551" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L544" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L544" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1642,8 +1522,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L568" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L568" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L561" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L561" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1653,8 +1533,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L539" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L539" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L532" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L532" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1664,8 +1544,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L527" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L527" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L520" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L520" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1675,8 +1555,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L547" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L547" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L540" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L540" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1686,8 +1566,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L564" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L564" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L557" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L557" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1697,8 +1577,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L535" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L535" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L528" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L528" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1708,8 +1588,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L523" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L523" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L516" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L516" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1722,8 +1602,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L555" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L555" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L548" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L548" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1733,8 +1613,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L572" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L572" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L565" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L565" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1744,8 +1624,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L543" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L543" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L536" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L536" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1755,8 +1635,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L531" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L531" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L524" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L524" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1770,8 +1650,8 @@
   <dd>
     
     Activate multiple draw color buffers
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L285" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L285" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L278" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L278" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1785,8 +1665,8 @@
   <dd>
     
     Select and active a texture slot
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L265" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L265" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L258" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L258" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1800,8 +1680,8 @@
   <dd>
     
     Bind image texture
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L463" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L463" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L456" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L456" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1815,8 +1695,8 @@
   <dd>
     
     Bind SSBO buffer
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L455" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L455" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L448" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L448" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1829,8 +1709,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L490" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L490" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L483" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L483" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1843,8 +1723,8 @@
   <dd>
     
     Check and log OpenGL error codes
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L333" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L333" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L326" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L326" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1858,8 +1738,8 @@
   <dd>
     
     Check internal buffer overflow for a given number of vertex
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L373" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L373" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L366" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L366" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1872,8 +1752,8 @@
   <dd>
     
     Clear color buffer with color
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L329" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L329" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L322" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L322" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1886,8 +1766,8 @@
   <dd>
     
     Clear used screen buffers (color and depth)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L331" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L331" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L324" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L324" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1900,8 +1780,8 @@
   <dd>
     
     Define one vertex (color) - 3 float
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L241" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L241" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L234" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L234" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1914,8 +1794,8 @@
   <dd>
     
     Define one vertex (color) - 4 float
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L243" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L243" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L236" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L236" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1928,8 +1808,8 @@
   <dd>
     
     Define one vertex (color) - 4 byte
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L239" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L239" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L232" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L232" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1943,8 +1823,8 @@
   <dd>
     
     Compile custom shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L427" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L427" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L420" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L420" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1958,8 +1838,8 @@
   <dd>
     
     Dispatch compute shader (equivalent to <em>draw</em> for graphics pilepine)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L447" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L447" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L440" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L440" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1974,8 +1854,8 @@
   <dd>
     
     Copy SSBO data between buffers
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L459" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L459" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L452" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L452" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1989,8 +1869,8 @@
   <dd>
     
     Disable backface culling
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L301" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L301" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L294" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L294" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2003,8 +1883,8 @@
   <dd>
     
     Disable color blending
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L289" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L289" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L282" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L282" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2017,8 +1897,8 @@
   <dd>
     
     Disable depth write
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L297" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L297" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L290" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L290" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2031,8 +1911,8 @@
   <dd>
     
     Disable depth test
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L293" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L293" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L286" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L286" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2045,8 +1925,8 @@
   <dd>
     
     Disable render texture (fbo), return to default framebuffer
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L283" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L283" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L276" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L276" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2059,8 +1939,8 @@
   <dd>
     
     Disable scissor test
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L307" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L307" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L300" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L300" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2073,8 +1953,8 @@
   <dd>
     
     Disable shader program
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L279" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L279" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L272" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L272" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2087,8 +1967,8 @@
   <dd>
     
     Disable line aliasing
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L321" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L321" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L314" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L314" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2102,8 +1982,8 @@
   <dd>
     
     Disable attribute state pointer
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L263" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L263" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L256" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L256" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2116,8 +1996,8 @@
   <dd>
     
     Disable stereo rendering
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L325" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L325" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L318" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L318" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2130,8 +2010,8 @@
   <dd>
     
     Disable texture
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L269" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L269" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L262" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L262" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2145,8 +2025,8 @@
   <dd>
     
     Disable texture cubemap
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L273" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L273" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L266" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L266" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2159,8 +2039,8 @@
   <dd>
     
     Disable vertex array (VAO, if supported)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L247" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L247" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L240" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L240" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2174,8 +2054,8 @@
   <dd>
     
     Disable vertex attribute index
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L259" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L259" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L252" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L252" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2188,8 +2068,8 @@
   <dd>
     
     Disable vertex buffer (VBO)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L251" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L251" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L244" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L244" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2203,8 +2083,8 @@
   <dd>
     
     Disable vertex buffer element (VBO element)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L255" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L255" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L248" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L248" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2217,8 +2097,8 @@
   <dd>
     
     Disable wire mode
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L313" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L313" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L306" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L306" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2231,8 +2111,8 @@
   <dd>
     
     Draw render batch data (Update-&gt;Draw-&gt;Reset)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L367" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L367" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L360" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L360" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2246,8 +2126,8 @@
   <dd>
     
     Update and draw internal render batch
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L371" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L371" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L364" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L364" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2261,8 +2141,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L393" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L393" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L386" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L386" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2276,8 +2156,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L394" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L394" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L387" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L387" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2292,8 +2172,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L396" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L396" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L389" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L389" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2307,8 +2187,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L395" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L395" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L388" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L388" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2321,8 +2201,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L489" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L489" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L482" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L482" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2336,8 +2216,8 @@
   <dd>
     
     Enable backface culling
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L299" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L299" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L292" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L292" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2350,8 +2230,8 @@
   <dd>
     
     Enable color blending
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L287" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L287" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L280" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L280" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2364,8 +2244,8 @@
   <dd>
     
     Enable depth write
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L295" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L295" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L288" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L288" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2378,8 +2258,8 @@
   <dd>
     
     Enable depth test
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L291" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L291" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L284" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L284" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2393,8 +2273,8 @@
   <dd>
     
     Enable render texture (fbo)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L281" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L281" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L274" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L274" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2407,8 +2287,8 @@
   <dd>
     
     Enable scissor test
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L305" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L305" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L298" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L298" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2421,8 +2301,8 @@
   <dd>
     
     Enable shader program
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L277" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L277" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L270" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L270" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2435,8 +2315,8 @@
   <dd>
     
     Enable line aliasing
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L319" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L319" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L312" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L312" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2450,8 +2330,8 @@
   <dd>
     
     Enable attribute state pointer
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L261" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L261" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L254" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L254" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2464,8 +2344,8 @@
   <dd>
     
     Enable stereo rendering
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L323" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L323" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L316" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L316" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2478,8 +2358,8 @@
   <dd>
     
     Enable texture
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L267" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L267" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L260" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L260" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2493,8 +2373,8 @@
   <dd>
     
     Enable texture cubemap
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L271" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L271" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L264" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L264" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2507,8 +2387,8 @@
   <dd>
     
     Enable vertex array (VAO, if supported)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L245" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L245" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L238" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L238" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2521,8 +2401,8 @@
   <dd>
     
     Enable vertex attribute index
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L257" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L257" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L250" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L250" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2536,8 +2416,8 @@
   <dd>
     
     Enable vertex buffer (VBO)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L249" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L249" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L242" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L242" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2551,8 +2431,8 @@
   <dd>
     
     Enable vertex buffer element (VBO element)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L253" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L253" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L246" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L246" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2565,8 +2445,8 @@
   <dd>
     
     Enable wire mode
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L311" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L311" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L304" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L304" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2582,8 +2462,8 @@
   <dd>
     
     Attach texture/renderbuffer to a framebuffer
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L419" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L419" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L412" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L412" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2596,8 +2476,8 @@
   <dd>
     
     Verify framebuffer is complete
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L421" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L421" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L414" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L414" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2611,8 +2491,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L221" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L221" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L214" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L214" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2627,8 +2507,8 @@
   <dd>
     
     Generate mipmap data for selected texture
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L411" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L411" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L404" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L404" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2642,8 +2522,8 @@
   <dd>
     
     Get default framebuffer height
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L355" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L355" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L348" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L348" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2657,8 +2537,8 @@
   <dd>
     
     Get default framebuffer width
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L351" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L351" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L344" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L344" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2673,8 +2553,8 @@
   <dd>
     
     Get OpenGL internal formats
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L405" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L405" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L398" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L398" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2687,38 +2567,38 @@
   <dd>
     
     Get the line drawing width
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L317" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L317" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L310" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L310" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="getLocationAttrib-procs-all">
-  <div id="getLocationAttrib,uint32,ShaderVariable">
-  <dt><pre><span class="Keyword">proc</span> <a href="#getLocationAttrib%2Cuint32%2CShaderVariable"><span class="Identifier">getLocationAttrib</span></a><span class="Other">(</span><span class="Identifier">shaderId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">attribName</span><span class="Other">:</span> <a href="raylib.html#ShaderVariable"><span class="Identifier">ShaderVariable</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderLocation"><span class="Identifier">ShaderLocation</span></a> {.
+  <div id="getLocationAttrib,uint32,cstring">
+  <dt><pre><span class="Keyword">proc</span> <a href="#getLocationAttrib%2Cuint32%2Ccstring"><span class="Identifier">getLocationAttrib</span></a><span class="Other">(</span><span class="Identifier">shaderId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">attribName</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderLocation"><span class="Identifier">ShaderLocation</span></a> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlGetLocationAttrib&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     Get shader location attribute
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L435" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L435" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L428" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L428" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="getLocationUniform-procs-all">
-  <div id="getLocationUniform,uint32,ShaderVariable">
-  <dt><pre><span class="Keyword">proc</span> <a href="#getLocationUniform%2Cuint32%2CShaderVariable"><span class="Identifier">getLocationUniform</span></a><span class="Other">(</span><span class="Identifier">shaderId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">uniformName</span><span class="Other">:</span> <a href="raylib.html#ShaderVariable"><span class="Identifier">ShaderVariable</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderLocation"><span class="Identifier">ShaderLocation</span></a> {.
+  <div id="getLocationUniform,uint32,cstring">
+  <dt><pre><span class="Keyword">proc</span> <a href="#getLocationUniform%2Cuint32%2Ccstring"><span class="Identifier">getLocationUniform</span></a><span class="Other">(</span><span class="Identifier">shaderId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">uniformName</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderLocation"><span class="Identifier">ShaderLocation</span></a> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlGetLocationUniform&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     Get shader location uniform
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L433" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L433" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L426" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L426" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2732,8 +2612,8 @@
   <dd>
     
     Get internal modelview matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L465" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L465" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L458" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L458" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2747,8 +2627,8 @@
   <dd>
     
     Get internal projection matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L467" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L467" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L460" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L460" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2762,8 +2642,8 @@
   <dd>
     
     Get internal projection matrix for stereo render (selected eye)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L471" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L471" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L464" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L464" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2777,8 +2657,8 @@
   <dd>
     
     Get internal accumulated transform matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L469" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L469" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L462" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L462" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2792,8 +2672,8 @@
   <dd>
     
     Get internal view offset matrix for stereo render (selected eye)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L473" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L473" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L466" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L466" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2807,8 +2687,8 @@
   <dd>
     
     Get name string for pixel format
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L407" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L407" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L400" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L400" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2821,8 +2701,8 @@
   <dd>
     
     Get SSBO buffer size
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L461" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L461" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L454" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L454" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2836,8 +2716,8 @@
   <dd>
     
     Get default shader id
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L359" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L359" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L352" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L352" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2850,8 +2730,8 @@
   <dd>
     
     Get default shader locations
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L361" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L361" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L354" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L354" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2865,8 +2745,8 @@
   <dd>
     
     Get default texture id
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L357" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L357" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L350" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L350" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2879,8 +2759,8 @@
   <dd>
     
     Get current OpenGL version
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L347" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L347" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L340" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L340" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2894,8 +2774,8 @@
   <dd>
     
     Check if stereo render is enabled
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L327" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L327" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L320" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L320" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2909,8 +2789,8 @@
   <dd>
     
     Load compute shader program
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L445" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L445" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L438" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L438" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2923,8 +2803,8 @@
   <dd>
     
     Load and draw a cube
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L483" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L483" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L476" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L476" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2937,8 +2817,8 @@
   <dd>
     
     Load and draw a quad
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L485" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L485" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L478" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L478" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2951,8 +2831,8 @@
   <dd>
     
     Load OpenGL extensions (loader function required)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L345" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L345" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L338" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L338" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2966,8 +2846,8 @@
   <dd>
     
     Load an empty framebuffer
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L417" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L417" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L410" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L410" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2980,8 +2860,8 @@
   <dd>
     
     Reset current matrix to identity matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L211" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L211" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L204" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L204" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2995,8 +2875,8 @@
   <dd>
     
     Load a render batch system
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L363" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L363" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L356" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L356" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3010,8 +2890,8 @@
   <dd>
     
     Load shader storage buffer object (SSBO)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L449" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L449" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L442" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L442" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3025,8 +2905,8 @@
   <dd>
     
     Load shader from code strings
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L425" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L425" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L418" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L418" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3040,8 +2920,8 @@
   <dd>
     
     Load custom shader program
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L429" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L429" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L422" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L422" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3055,8 +2935,8 @@
   <dd>
     
     Load texture in GPU
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L397" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L397" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L390" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L390" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3070,8 +2950,8 @@
   <dd>
     
     Load texture cubemap
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L401" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L401" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L394" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L394" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3085,8 +2965,8 @@
   <dd>
     
     Load depth texture/renderbuffer (to be attached to fbo)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L399" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L399" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L392" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L392" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3099,8 +2979,8 @@
   <dd>
     
     Load vertex array (vao) if supported
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L377" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L377" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L370" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L370" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3114,8 +2994,8 @@
   <dd>
     
     Load a vertex buffer attribute
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L379" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L379" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L372" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L372" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3129,8 +3009,8 @@
   <dd>
     
     Load a new attributes element buffer
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L381" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L381" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L374" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L374" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3143,8 +3023,8 @@
   <dd>
     
     Choose the current matrix to be transformed
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L205" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L205" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L198" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L198" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3157,8 +3037,8 @@
   <dd>
     
     Multiply the current matrix by another matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L219" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L219" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L212" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L212" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3171,8 +3051,8 @@
   <dd>
     
     Define one vertex (normal) - 3 float
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L237" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L237" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L230" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L230" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3186,8 +3066,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L222" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L222" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L215" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L215" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3200,8 +3080,8 @@
   <dd>
     
     Pop lattest inserted matrix from stack
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L209" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L209" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L202" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L202" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3214,8 +3094,8 @@
   <dd>
     
     Push the current matrix to stack
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L207" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L207" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L200" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L200" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3229,8 +3109,8 @@
   <dd>
     
     Read screen pixel data (color buffer)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L415" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L415" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L408" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L408" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3244,8 +3124,8 @@
   <dd>
     
     Read SSBO buffer data (GPU-&gt;CPU)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L457" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L457" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L450" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L450" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3260,8 +3140,8 @@
   <dd>
     
     Read texture pixel data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L413" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L413" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L406" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L406" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3274,8 +3154,8 @@
   <dd>
     
     Initialize drawing mode (how to organize vertex)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L225" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L225" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L218" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L218" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3288,8 +3168,8 @@
   <dd>
     
     Finish vertex providing
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L227" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L227" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L220" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L220" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3302,8 +3182,8 @@
   <dd>
     
     De-inititialize rlgl (buffers, shaders, textures)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L343" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L343" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L336" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L336" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3316,8 +3196,8 @@
   <dd>
     
     Initialize rlgl (buffers, shaders, textures, states)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L341" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L341" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L334" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L334" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3330,8 +3210,8 @@
   <dd>
     
     Multiply the current matrix by a rotation matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L215" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L215" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L208" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L208" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3344,8 +3224,8 @@
   <dd>
     
     Multiply the current matrix by a scaling matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L217" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L217" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L210" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L210" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3358,40 +3238,40 @@
   <dd>
     
     Scissor test
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L309" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L309" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L302" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L302" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="setBlendFactors-procs-all">
-  <div id="setBlendFactors,BlendFactor,BlendFactor,BlendEquation">
-  <dt><pre><span class="Keyword">proc</span> <a href="#setBlendFactors%2CBlendFactor%2CBlendFactor%2CBlendEquation"><span class="Identifier">setBlendFactors</span></a><span class="Other">(</span><span class="Identifier">glSrcFactor</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span> <span class="Identifier">glDstFactor</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span>
-                     <span class="Identifier">glEquation</span><span class="Other">:</span> <a href="rlgl.html#BlendEquation"><span class="Identifier">BlendEquation</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlSetBlendFactors&quot;</span><span class="Other">,</span>
+  <div id="setBlendFactors,BlendFactor,BlendFactor,BlendFuncOrEq">
+  <dt><pre><span class="Keyword">proc</span> <a href="#setBlendFactors%2CBlendFactor%2CBlendFactor%2CBlendFuncOrEq"><span class="Identifier">setBlendFactors</span></a><span class="Other">(</span><span class="Identifier">glSrcFactor</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span> <span class="Identifier">glDstFactor</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span>
+                     <span class="Identifier">glEquation</span><span class="Other">:</span> <a href="rlgl.html#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlSetBlendFactors&quot;</span><span class="Other">,</span>
     <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     Set blending mode factor and equation (using OpenGL factors)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L337" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L337" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L330" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L330" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="setBlendFactorsSeparate-procs-all">
-  <div id="setBlendFactorsSeparate,BlendFactor,BlendFactor,BlendFactor,BlendFactor,BlendEquation,BlendEquation">
-  <dt><pre><span class="Keyword">proc</span> <a href="#setBlendFactorsSeparate%2CBlendFactor%2CBlendFactor%2CBlendFactor%2CBlendFactor%2CBlendEquation%2CBlendEquation"><span class="Identifier">setBlendFactorsSeparate</span></a><span class="Other">(</span><span class="Identifier">glSrcRGB</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span> <span class="Identifier">glDstRGB</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span>
+  <div id="setBlendFactorsSeparate,BlendFactor,BlendFactor,BlendFactor,BlendFactor,BlendFuncOrEq,BlendFuncOrEq">
+  <dt><pre><span class="Keyword">proc</span> <a href="#setBlendFactorsSeparate%2CBlendFactor%2CBlendFactor%2CBlendFactor%2CBlendFactor%2CBlendFuncOrEq%2CBlendFuncOrEq"><span class="Identifier">setBlendFactorsSeparate</span></a><span class="Other">(</span><span class="Identifier">glSrcRGB</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span> <span class="Identifier">glDstRGB</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span>
                              <span class="Identifier">glSrcAlpha</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span> <span class="Identifier">glDstAlpha</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span>
-                             <span class="Identifier">glEqRGB</span><span class="Other">:</span> <a href="rlgl.html#BlendEquation"><span class="Identifier">BlendEquation</span></a><span class="Other">;</span> <span class="Identifier">glEqAlpha</span><span class="Other">:</span> <a href="rlgl.html#BlendEquation"><span class="Identifier">BlendEquation</span></a><span class="Other">)</span> {.
+                             <span class="Identifier">glEqRGB</span><span class="Other">:</span> <a href="rlgl.html#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">;</span> <span class="Identifier">glEqAlpha</span><span class="Other">:</span> <a href="rlgl.html#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">)</span> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlSetBlendFactorsSeparate&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     Set blending mode factors and equations separately (using OpenGL factors)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L339" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L339" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L332" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L332" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3405,8 +3285,8 @@
   <dd>
     
     Set blending mode
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L335" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L335" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L328" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L328" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3419,8 +3299,8 @@
   <dd>
     
     Set face culling mode
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L303" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L303" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L296" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L296" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3433,8 +3313,8 @@
   <dd>
     
     Set current framebuffer height
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L353" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L353" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L346" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L346" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3447,8 +3327,8 @@
   <dd>
     
     Set current framebuffer width
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L349" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L349" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L342" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L342" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3461,8 +3341,8 @@
   <dd>
     
     Set the line drawing width
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L315" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L315" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L308" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L308" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3476,8 +3356,8 @@
   <dd>
     
     Set a custom modelview matrix (replaces internal modelview matrix)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L477" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L477" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L470" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L470" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3490,8 +3370,8 @@
   <dd>
     
     Set a custom projection matrix (replaces internal projection matrix)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L475" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L475" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L468" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L468" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3505,8 +3385,8 @@
   <dd>
     
     Set eyes projection matrices for stereo rendering
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L479" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L479" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L472" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L472" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3520,8 +3400,8 @@
   <dd>
     
     Set eyes view offsets matrices for stereo rendering
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L481" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L481" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L474" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L474" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3535,8 +3415,8 @@
   <dd>
     
     Set the active render batch for rlgl (NULL for default internal)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L369" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L369" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L362" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L362" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3549,8 +3429,8 @@
   <dd>
     
     Set shader currently active (id and locations)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L443" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L443" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L436" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L436" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3563,8 +3443,8 @@
   <dd>
     
     Set current texture for render batch and check buffers limits
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L375" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L375" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L368" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L368" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3578,8 +3458,8 @@
   <dd>
     
     Set shader value uniform
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L437" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L437" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L430" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L430" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3593,8 +3473,8 @@
   <dd>
     
     Set shader value matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L439" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L439" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L432" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L432" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3608,8 +3488,8 @@
   <dd>
     
     Set shader value sampler
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L441" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L441" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L434" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L434" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3624,8 +3504,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L389" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L389" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L382" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L382" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3640,8 +3520,8 @@
   <dd>
     
     Set vertex attribute default value
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L391" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L391" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L384" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L384" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3655,8 +3535,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L390" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L390" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L383" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L383" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3669,8 +3549,8 @@
   <dd>
     
     Define one vertex (texture coordinate) - 2 float
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L235" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L235" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L228" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L228" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3684,8 +3564,8 @@
   <dd>
     
     Set texture parameters (filter, wrap)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L275" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L275" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L268" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L268" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3698,8 +3578,8 @@
   <dd>
     
     Multiply the current matrix by a translation matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L213" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L213" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L206" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L206" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3713,8 +3593,8 @@
   <dd>
     
     Delete framebuffer from GPU
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L423" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L423" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L416" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L416" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3727,8 +3607,8 @@
   <dd>
     
     Unload render batch system
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L365" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L365" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L358" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L358" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3741,8 +3621,8 @@
   <dd>
     
     Unload shader storage buffer object (SSBO)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L451" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L451" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L444" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L444" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3756,8 +3636,8 @@
   <dd>
     
     Unload shader program
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L431" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L431" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L424" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L424" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3770,8 +3650,8 @@
   <dd>
     
     Unload texture from GPU memory
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L409" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L409" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L402" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L402" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3785,8 +3665,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L387" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L387" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L380" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L380" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3799,8 +3679,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L388" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L388" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L381" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L381" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3814,8 +3694,8 @@
   <dd>
     
     Update SSBO buffer data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L453" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L453" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L446" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L446" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3830,8 +3710,8 @@
   <dd>
     
     Update GPU texture with new data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L403" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L403" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L396" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L396" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3845,8 +3725,8 @@
   <dd>
     
     Update GPU buffer with new data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L383" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L383" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L376" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L376" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3861,8 +3741,8 @@
   <dd>
     
     Update vertex buffer elements with new data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L385" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L385" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L378" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L378" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3875,8 +3755,8 @@
   <dd>
     
     Define one vertex (position) - 2 float
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L231" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L231" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L224" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L224" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3889,8 +3769,8 @@
   <dd>
     
     Define one vertex (position) - 2 int
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L229" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L229" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L222" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L222" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3903,8 +3783,8 @@
   <dd>
     
     Define one vertex (position) - 3 float
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L233" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L233" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L226" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L226" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3917,8 +3797,8 @@
   <dd>
     
     Set the viewport area
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L223" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L223" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L216" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L216" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3930,14 +3810,27 @@
 <div class="section" id="18">
   <h1><a class="toc-backref" href="#18">Templates</a></h1>
   <dl class="item">
-    <div id="colors-templates-all">
+    <div id="BlendEquationRgb-templates-all">
+  <div id="BlendEquationRgb.t,typedesc[BlendFuncOrEq]">
+  <dt><pre><span class="Keyword">template</span> <a href="#BlendEquationRgb.t%2Ctypedesc%5BBlendFuncOrEq%5D"><span class="Identifier">BlendEquationRgb</span></a><span class="Other">(</span><span class="Operator">_</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="rlgl.html#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L161" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L161" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="colors-templates-all">
   <div id="colors.t,VertexBuffer">
   <dt><pre><span class="Keyword">template</span> <a href="#colors.t%2CVertexBuffer"><span class="Identifier">colors</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <a href="rlgl.html#VertexBufferColors"><span class="Identifier">VertexBufferColors</span></a></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L509" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L509" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L502" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L502" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3949,8 +3842,8 @@
   <dd>
     
     Drawing mode (how to organize vertex)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L499" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L499" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L492" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L492" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3962,8 +3855,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L512" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L512" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L505" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L505" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3975,8 +3868,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L510" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L510" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L503" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L503" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3988,8 +3881,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L508" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L508" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L501" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L501" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4001,8 +3894,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L511" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L511" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L504" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L504" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4014,8 +3907,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L507" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L507" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L500" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L500" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4027,7 +3920,7 @@
 <div class="section" id="19">
   <h1><a class="toc-backref" href="#19">Exports</a></h1>
   <dl class="item">
-    <a href="raylib.html#PixelFormat"><span class="Identifier">PixelFormat</span></a>, <a href="raylib.html#TextureFilter"><span class="Identifier">TextureFilter</span></a>, <a href="raylib.html#BlendMode"><span class="Identifier">BlendMode</span></a>, <a href="raylib.html#ShaderLocationIndex"><span class="Identifier">ShaderLocationIndex</span></a>, <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a>, <a href="raylib.html#ShaderAttributeDataType"><span class="Identifier">ShaderAttributeDataType</span></a>, <a href="raylib.html#MaxShaderLocations"><span class="Identifier">MaxShaderLocations</span></a>, <a href="raylib.html#ShaderLocation"><span class="Identifier">ShaderLocation</span></a>, <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a>, <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a>, <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a>, <a href="raylib.html#Color"><span class="Identifier">Color</span></a>, <a href="raylib.html#ShaderVariable"><span class="Identifier">ShaderVariable</span></a>, <a href="raylib.html#ShaderLocsPtr"><span class="Identifier">ShaderLocsPtr</span></a>
+    <a href="raylib.html#PixelFormat"><span class="Identifier">PixelFormat</span></a>, <a href="raylib.html#TextureFilter"><span class="Identifier">TextureFilter</span></a>, <a href="raylib.html#BlendMode"><span class="Identifier">BlendMode</span></a>, <a href="raylib.html#ShaderLocationIndex"><span class="Identifier">ShaderLocationIndex</span></a>, <a href="raylib.html#ShaderUniformDataType"><span class="Identifier">ShaderUniformDataType</span></a>, <a href="raylib.html#ShaderAttributeDataType"><span class="Identifier">ShaderAttributeDataType</span></a>, <a href="raylib.html#MaxShaderLocations"><span class="Identifier">MaxShaderLocations</span></a>, <a href="raylib.html#ShaderLocation"><span class="Identifier">ShaderLocation</span></a>, <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a>, <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a>, <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a>, <a href="raylib.html#Color"><span class="Identifier">Color</span></a>, <a href="raylib.html#ShaderLocsPtr"><span class="Identifier">ShaderLocsPtr</span></a>
   </dl>
 </div>
 
@@ -4037,7 +3930,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-12-27 13:56:03 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-12-27 15:32:01 UTC</small>
       </div>
     </div>
   </div>
