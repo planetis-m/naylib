@@ -330,10 +330,10 @@ type
     Sampler2d ## Shader uniform type: sampler2d
 
   ShaderAttributeDataType* {.size: sizeof(int32).} = enum ## Shader attribute data types
-    ShaderAttribFloat ## Shader attribute type: float
-    ShaderAttribVec2 ## Shader attribute type: vec2 (2 float)
-    ShaderAttribVec3 ## Shader attribute type: vec3 (3 float)
-    ShaderAttribVec4 ## Shader attribute type: vec4 (4 float)
+    Float ## Shader attribute type: float
+    Vec2 ## Shader attribute type: vec2 (2 float)
+    Vec3 ## Shader attribute type: vec3 (3 float)
+    Vec4 ## Shader attribute type: vec4 (4 float)
 
   PixelFormat* {.size: sizeof(int32).} = enum ## Pixel formats
     UncompressedGrayscale = 1 ## 8 bit per pixel (no alpha)

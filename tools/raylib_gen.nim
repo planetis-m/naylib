@@ -475,6 +475,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
             removePrefix(valName, "MATERIAL_MAP_")
             removePrefix(valName, "SHADER_LOC_")
             removePrefix(valName, "SHADER_UNIFORM_")
+            removePrefix(valName, "SHADER_ATTRIB_")
             removePrefix(valName, "PIXELFORMAT_")
             removePrefix(valName, "TEXTURE_FILTER_")
             removePrefix(valName, "TEXTURE_WRAP_")
