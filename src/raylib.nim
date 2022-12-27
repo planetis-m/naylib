@@ -90,245 +90,244 @@ const
 
 type
   ConfigFlags* {.size: sizeof(int32).} = enum ## System/Window config flags
-    FlagFullscreenMode = 2 ## Set to run program in fullscreen
-    FlagWindowResizable = 4 ## Set to allow resizable window
-    FlagWindowUndecorated = 8 ## Set to disable window decoration (frame and buttons)
-    FlagWindowTransparent = 16 ## Set to allow transparent framebuffer
-    FlagMsaa4xHint = 32 ## Set to try enabling MSAA 4X
-    FlagVsyncHint = 64 ## Set to try enabling V-Sync on GPU
-    FlagWindowHidden = 128 ## Set to hide window
-    FlagWindowAlwaysRun = 256 ## Set to allow windows running while minimized
-    FlagWindowMinimized = 512 ## Set to minimize window (iconify)
-    FlagWindowMaximized = 1024 ## Set to maximize window (expanded to monitor)
-    FlagWindowUnfocused = 2048 ## Set to window non focused
-    FlagWindowTopmost = 4096 ## Set to window always on top
-    FlagWindowHighdpi = 8192 ## Set to support HighDPI
-    FlagWindowMousePassthrough = 16384 ## Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
-    FlagInterlacedHint = 65536 ## Set to try enabling interlaced video format (for V3D)
+    FullscreenMode = 2 ## Set to run program in fullscreen
+    WindowResizable = 4 ## Set to allow resizable window
+    WindowUndecorated = 8 ## Set to disable window decoration (frame and buttons)
+    WindowTransparent = 16 ## Set to allow transparent framebuffer
+    Msaa4xHint = 32 ## Set to try enabling MSAA 4X
+    VsyncHint = 64 ## Set to try enabling V-Sync on GPU
+    WindowHidden = 128 ## Set to hide window
+    WindowAlwaysRun = 256 ## Set to allow windows running while minimized
+    WindowMinimized = 512 ## Set to minimize window (iconify)
+    WindowMaximized = 1024 ## Set to maximize window (expanded to monitor)
+    WindowUnfocused = 2048 ## Set to window non focused
+    WindowTopmost = 4096 ## Set to window always on top
+    WindowHighdpi = 8192 ## Set to support HighDPI
+    WindowMousePassthrough = 16384 ## Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
+    InterlacedHint = 65536 ## Set to try enabling interlaced video format (for V3D)
 
   TraceLogLevel* {.size: sizeof(int32).} = enum ## Trace log level
-    LogAll ## Display all logs
-    LogTrace ## Trace logging, intended for internal use only
-    LogDebug ## Debug logging, used for internal debugging, it should be disabled on release builds
-    LogInfo ## Info logging, used for program execution info
-    LogWarning ## Warning logging, used on recoverable failures
-    LogError ## Error logging, used on unrecoverable failures
-    LogFatal ## Fatal logging, used to abort program: exit(EXIT_FAILURE)
-    LogNone ## Disable logging
+    All ## Display all logs
+    Trace ## Trace logging, intended for internal use only
+    Debug ## Debug logging, used for internal debugging, it should be disabled on release builds
+    Info ## Info logging, used for program execution info
+    Warning ## Warning logging, used on recoverable failures
+    Error ## Error logging, used on unrecoverable failures
+    Fatal ## Fatal logging, used to abort program: exit(EXIT_FAILURE)
+    None ## Disable logging
 
   KeyboardKey* {.size: sizeof(int32).} = enum ## Keyboard keys (US keyboard layout)
-    KeyNull ## Key: NULL, used for no key pressed
-    KeyBack = 4 ## Key: Android back button
-    KeyVolumeUp = 24 ## Key: Android volume up button
-    KeyVolumeDown ## Key: Android volume down button
-    KeySpace = 32 ## Key: Space
-    KeyApostrophe = 39 ## Key: '
-    KeyComma = 44 ## Key: ,
-    KeyMinus ## Key: -
-    KeyPeriod ## Key: .
-    KeySlash ## Key: /
-    KeyZero ## Key: 0
-    KeyOne ## Key: 1
-    KeyTwo ## Key: 2
-    KeyThree ## Key: 3
-    KeyFour ## Key: 4
-    KeyFive ## Key: 5
-    KeySix ## Key: 6
-    KeySeven ## Key: 7
-    KeyEight ## Key: 8
-    KeyNine ## Key: 9
-    KeySemicolon = 59 ## Key: ;
-    KeyEqual = 61 ## Key: =
-    KeyA = 65 ## Key: A | a
-    KeyB ## Key: B | b
-    KeyC ## Key: C | c
-    KeyD ## Key: D | d
-    KeyE ## Key: E | e
-    KeyF ## Key: F | f
-    KeyG ## Key: G | g
-    KeyH ## Key: H | h
-    KeyI ## Key: I | i
-    KeyJ ## Key: J | j
-    KeyK ## Key: K | k
-    KeyL ## Key: L | l
-    KeyM ## Key: M | m
-    KeyN ## Key: N | n
-    KeyO ## Key: O | o
-    KeyP ## Key: P | p
-    KeyQ ## Key: Q | q
-    KeyR ## Key: R | r
-    
-    KeyS ## Key: S | s
-    KeyT ## Key: T | t
-    KeyU ## Key: U | u
-    KeyV ## Key: V | v
-    KeyW ## Key: W | w
-    KeyX ## Key: X | x
-    KeyY ## Key: Y | y
-    KeyZ ## Key: Z | z
-    KeyLeftBracket ## Key: [
-    KeyBackslash ## Key: '\'
-    KeyRightBracket ## Key: ]
-    KeyGrave = 96 ## Key: `
-    KeyEscape = 256 ## Key: Esc
-    KeyEnter ## Key: Enter
-    KeyTab ## Key: Tab
-    KeyBackspace ## Key: Backspace
-    KeyInsert ## Key: Ins
-    KeyDelete ## Key: Del
-    KeyRight ## Key: Cursor right
-    KeyLeft ## Key: Cursor left
-    KeyDown ## Key: Cursor down
-    KeyUp ## Key: Cursor up
-    KeyPageUp ## Key: Page up
-    KeyPageDown ## Key: Page down
-    KeyHome ## Key: Home
-    KeyEnd ## Key: End
-    KeyCapsLock = 280 ## Key: Caps lock
-    KeyScrollLock ## Key: Scroll down
-    KeyNumLock ## Key: Num lock
-    KeyPrintScreen ## Key: Print screen
-    KeyPause ## Key: Pause
-    KeyF1 = 290 ## Key: F1
-    KeyF2 ## Key: F2
-    KeyF3 ## Key: F3
-    KeyF4 ## Key: F4
-    KeyF5 ## Key: F5
-    KeyF6 ## Key: F6
-    KeyF7 ## Key: F7
-    KeyF8 ## Key: F8
-    KeyF9 ## Key: F9
-    KeyF10 ## Key: F10
-    KeyF11 ## Key: F11
-    KeyF12 ## Key: F12
-    KeyKp0 = 320 ## Key: Keypad 0
-    KeyKp1 ## Key: Keypad 1
-    KeyKp2 ## Key: Keypad 2
-    KeyKp3 ## Key: Keypad 3
-    KeyKp4 ## Key: Keypad 4
-    KeyKp5 ## Key: Keypad 5
-    KeyKp6 ## Key: Keypad 6
-    KeyKp7 ## Key: Keypad 7
-    KeyKp8 ## Key: Keypad 8
-    KeyKp9 ## Key: Keypad 9
-    KeyKpDecimal ## Key: Keypad .
-    KeyKpDivide ## Key: Keypad /
-    KeyKpMultiply ## Key: Keypad *
-    KeyKpSubtract ## Key: Keypad -
-    KeyKpAdd ## Key: Keypad +
-    KeyKpEnter ## Key: Keypad Enter
-    KeyKpEqual ## Key: Keypad =
-    KeyLeftShift = 340 ## Key: Shift left
-    KeyLeftControl ## Key: Control left
-    KeyLeftAlt ## Key: Alt left
-    KeyLeftSuper ## Key: Super left
-    KeyRightShift ## Key: Shift right
-    KeyRightControl ## Key: Control right
-    KeyRightAlt ## Key: Alt right
-    KeyRightSuper ## Key: Super right
-    KeyKbMenu ## Key: KB menu
+    Null ## Key: NULL, used for no key pressed
+    Back = 4 ## Key: Android back button
+    VolumeUp = 24 ## Key: Android volume up button
+    VolumeDown ## Key: Android volume down button
+    Space = 32 ## Key: Space
+    Apostrophe = 39 ## Key: '
+    Comma = 44 ## Key: ,
+    Minus ## Key: -
+    Period ## Key: .
+    Slash ## Key: /
+    Zero ## Key: 0
+    One ## Key: 1
+    Two ## Key: 2
+    Three ## Key: 3
+    Four ## Key: 4
+    Five ## Key: 5
+    Six ## Key: 6
+    Seven ## Key: 7
+    Eight ## Key: 8
+    Nine ## Key: 9
+    Semicolon = 59 ## Key: ;
+    Equal = 61 ## Key: =
+    A = 65 ## Key: A | a
+    B ## Key: B | b
+    C ## Key: C | c
+    D ## Key: D | d
+    E ## Key: E | e
+    F ## Key: F | f
+    G ## Key: G | g
+    H ## Key: H | h
+    I ## Key: I | i
+    J ## Key: J | j
+    K ## Key: K | k
+    L ## Key: L | l
+    M ## Key: M | m
+    N ## Key: N | n
+    O ## Key: O | o
+    P ## Key: P | p
+    Q ## Key: Q | q
+    R ## Key: R | r
+    S ## Key: S | s
+    T ## Key: T | t
+    U ## Key: U | u
+    V ## Key: V | v
+    W ## Key: W | w
+    X ## Key: X | x
+    Y ## Key: Y | y
+    Z ## Key: Z | z
+    LeftBracket ## Key: [
+    Backslash ## Key: '\'
+    RightBracket ## Key: ]
+    Grave = 96 ## Key: `
+    Escape = 256 ## Key: Esc
+    Enter ## Key: Enter
+    Tab ## Key: Tab
+    Backspace ## Key: Backspace
+    Insert ## Key: Ins
+    Delete ## Key: Del
+    Right ## Key: Cursor right
+    Left ## Key: Cursor left
+    Down ## Key: Cursor down
+    Up ## Key: Cursor up
+    PageUp ## Key: Page up
+    PageDown ## Key: Page down
+    Home ## Key: Home
+    End ## Key: End
+    CapsLock = 280 ## Key: Caps lock
+    ScrollLock ## Key: Scroll down
+    NumLock ## Key: Num lock
+    PrintScreen ## Key: Print screen
+    Pause ## Key: Pause
+    F1 = 290 ## Key: F1
+    F2 ## Key: F2
+    F3 ## Key: F3
+    F4 ## Key: F4
+    F5 ## Key: F5
+    F6 ## Key: F6
+    F7 ## Key: F7
+    F8 ## Key: F8
+    F9 ## Key: F9
+    F10 ## Key: F10
+    F11 ## Key: F11
+    F12 ## Key: F12
+    Kp0 = 320 ## Key: Keypad 0
+    Kp1 ## Key: Keypad 1
+    Kp2 ## Key: Keypad 2
+    Kp3 ## Key: Keypad 3
+    Kp4 ## Key: Keypad 4
+    Kp5 ## Key: Keypad 5
+    Kp6 ## Key: Keypad 6
+    Kp7 ## Key: Keypad 7
+    Kp8 ## Key: Keypad 8
+    Kp9 ## Key: Keypad 9
+    KpDecimal ## Key: Keypad .
+    KpDivide ## Key: Keypad /
+    KpMultiply ## Key: Keypad *
+    KpSubtract ## Key: Keypad -
+    KpAdd ## Key: Keypad +
+    KpEnter ## Key: Keypad Enter
+    KpEqual ## Key: Keypad =
+    LeftShift = 340 ## Key: Shift left
+    LeftControl ## Key: Control left
+    LeftAlt ## Key: Alt left
+    LeftSuper ## Key: Super left
+    RightShift ## Key: Shift right
+    RightControl ## Key: Control right
+    RightAlt ## Key: Alt right
+    RightSuper ## Key: Super right
+    KbMenu ## Key: KB menu
 
   MouseButton* {.size: sizeof(int32).} = enum ## Mouse buttons
-    MouseButtonLeft ## Mouse button left
-    MouseButtonRight ## Mouse button right
-    MouseButtonMiddle ## Mouse button middle (pressed wheel)
-    MouseButtonSide ## Mouse button side (advanced mouse device)
-    MouseButtonExtra ## Mouse button extra (advanced mouse device)
-    MouseButtonForward ## Mouse button forward (advanced mouse device)
-    MouseButtonBack ## Mouse button back (advanced mouse device)
+    Left ## Mouse button left
+    Right ## Mouse button right
+    Middle ## Mouse button middle (pressed wheel)
+    Side ## Mouse button side (advanced mouse device)
+    Extra ## Mouse button extra (advanced mouse device)
+    Forward ## Mouse button forward (advanced mouse device)
+    Back ## Mouse button back (advanced mouse device)
 
   MouseCursor* {.size: sizeof(int32).} = enum ## Mouse cursor
-    MouseCursorDefault ## Default pointer shape
-    MouseCursorArrow ## Arrow shape
-    MouseCursorIbeam ## Text writing cursor shape
-    MouseCursorCrosshair ## Cross shape
-    MouseCursorPointingHand ## Pointing hand cursor
-    MouseCursorResizeEw ## Horizontal resize/move arrow shape
-    MouseCursorResizeNs ## Vertical resize/move arrow shape
-    MouseCursorResizeNwse ## Top-left to bottom-right diagonal resize/move arrow shape
-    MouseCursorResizeNesw ## The top-right to bottom-left diagonal resize/move arrow shape
-    MouseCursorResizeAll ## The omni-directional resize/move cursor shape
-    MouseCursorNotAllowed ## The operation-not-allowed shape
+    Default ## Default pointer shape
+    Arrow ## Arrow shape
+    Ibeam ## Text writing cursor shape
+    Crosshair ## Cross shape
+    PointingHand ## Pointing hand cursor
+    ResizeEw ## Horizontal resize/move arrow shape
+    ResizeNs ## Vertical resize/move arrow shape
+    ResizeNwse ## Top-left to bottom-right diagonal resize/move arrow shape
+    ResizeNesw ## The top-right to bottom-left diagonal resize/move arrow shape
+    ResizeAll ## The omni-directional resize/move cursor shape
+    NotAllowed ## The operation-not-allowed shape
 
   GamepadButton* {.size: sizeof(int32).} = enum ## Gamepad buttons
-    GamepadButtonUnknown ## Unknown button, just for error checking
-    GamepadButtonLeftFaceUp ## Gamepad left DPAD up button
-    GamepadButtonLeftFaceRight ## Gamepad left DPAD right button
-    GamepadButtonLeftFaceDown ## Gamepad left DPAD down button
-    GamepadButtonLeftFaceLeft ## Gamepad left DPAD left button
-    GamepadButtonRightFaceUp ## Gamepad right button up (i.e. PS3: Triangle, Xbox: Y)
-    GamepadButtonRightFaceRight ## Gamepad right button right (i.e. PS3: Square, Xbox: X)
-    GamepadButtonRightFaceDown ## Gamepad right button down (i.e. PS3: Cross, Xbox: A)
-    GamepadButtonRightFaceLeft ## Gamepad right button left (i.e. PS3: Circle, Xbox: B)
-    GamepadButtonLeftTrigger1 ## Gamepad top/back trigger left (first), it could be a trailing button
-    GamepadButtonLeftTrigger2 ## Gamepad top/back trigger left (second), it could be a trailing button
-    GamepadButtonRightTrigger1 ## Gamepad top/back trigger right (one), it could be a trailing button
-    GamepadButtonRightTrigger2 ## Gamepad top/back trigger right (second), it could be a trailing button
-    GamepadButtonMiddleLeft ## Gamepad center buttons, left one (i.e. PS3: Select)
-    GamepadButtonMiddle ## Gamepad center buttons, middle one (i.e. PS3: PS, Xbox: XBOX)
-    GamepadButtonMiddleRight ## Gamepad center buttons, right one (i.e. PS3: Start)
-    GamepadButtonLeftThumb ## Gamepad joystick pressed button left
-    GamepadButtonRightThumb ## Gamepad joystick pressed button right
+    Unknown ## Unknown button, just for error checking
+    LeftFaceUp ## Gamepad left DPAD up button
+    LeftFaceRight ## Gamepad left DPAD right button
+    LeftFaceDown ## Gamepad left DPAD down button
+    LeftFaceLeft ## Gamepad left DPAD left button
+    RightFaceUp ## Gamepad right button up (i.e. PS3: Triangle, Xbox: Y)
+    RightFaceRight ## Gamepad right button right (i.e. PS3: Square, Xbox: X)
+    RightFaceDown ## Gamepad right button down (i.e. PS3: Cross, Xbox: A)
+    RightFaceLeft ## Gamepad right button left (i.e. PS3: Circle, Xbox: B)
+    LeftTrigger1 ## Gamepad top/back trigger left (first), it could be a trailing button
+    LeftTrigger2 ## Gamepad top/back trigger left (second), it could be a trailing button
+    RightTrigger1 ## Gamepad top/back trigger right (one), it could be a trailing button
+    RightTrigger2 ## Gamepad top/back trigger right (second), it could be a trailing button
+    MiddleLeft ## Gamepad center buttons, left one (i.e. PS3: Select)
+    Middle ## Gamepad center buttons, middle one (i.e. PS3: PS, Xbox: XBOX)
+    MiddleRight ## Gamepad center buttons, right one (i.e. PS3: Start)
+    LeftThumb ## Gamepad joystick pressed button left
+    RightThumb ## Gamepad joystick pressed button right
 
   GamepadAxis* {.size: sizeof(int32).} = enum ## Gamepad axis
-    GamepadAxisLeftX ## Gamepad left stick X axis
-    GamepadAxisLeftY ## Gamepad left stick Y axis
-    GamepadAxisRightX ## Gamepad right stick X axis
-    GamepadAxisRightY ## Gamepad right stick Y axis
-    GamepadAxisLeftTrigger ## Gamepad back trigger left, pressure level: [1..-1]
-    GamepadAxisRightTrigger ## Gamepad back trigger right, pressure level: [1..-1]
+    LeftX ## Gamepad left stick X axis
+    LeftY ## Gamepad left stick Y axis
+    RightX ## Gamepad right stick X axis
+    RightY ## Gamepad right stick Y axis
+    LeftTrigger ## Gamepad back trigger left, pressure level: [1..-1]
+    RightTrigger ## Gamepad back trigger right, pressure level: [1..-1]
 
   MaterialMapIndex* {.size: sizeof(int32).} = enum ## Material map index
-    MaterialMapAlbedo ## Albedo material (same as: MATERIAL_MAP_DIFFUSE)
-    MaterialMapMetalness ## Metalness material (same as: MATERIAL_MAP_SPECULAR)
-    MaterialMapNormal ## Normal material
-    MaterialMapRoughness ## Roughness material
-    MaterialMapOcclusion ## Ambient occlusion material
-    MaterialMapEmission ## Emission material
-    MaterialMapHeight ## Heightmap material
-    MaterialMapCubemap ## Cubemap material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-    MaterialMapIrradiance ## Irradiance material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-    MaterialMapPrefilter ## Prefilter material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-    MaterialMapBrdf ## Brdf material
+    Albedo ## Albedo material (same as: MATERIAL_MAP_DIFFUSE)
+    Metalness ## Metalness material (same as: MATERIAL_MAP_SPECULAR)
+    Normal ## Normal material
+    Roughness ## Roughness material
+    Occlusion ## Ambient occlusion material
+    Emission ## Emission material
+    Height ## Heightmap material
+    Cubemap ## Cubemap material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
+    Irradiance ## Irradiance material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
+    Prefilter ## Prefilter material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
+    Brdf ## Brdf material
 
   ShaderLocationIndex* {.size: sizeof(int32).} = enum ## Shader location index
-    ShaderLocVertexPosition ## Shader location: vertex attribute: position
-    ShaderLocVertexTexcoord01 ## Shader location: vertex attribute: texcoord01
-    ShaderLocVertexTexcoord02 ## Shader location: vertex attribute: texcoord02
-    ShaderLocVertexNormal ## Shader location: vertex attribute: normal
-    ShaderLocVertexTangent ## Shader location: vertex attribute: tangent
-    ShaderLocVertexColor ## Shader location: vertex attribute: color
-    ShaderLocMatrixMvp ## Shader location: matrix uniform: model-view-projection
-    ShaderLocMatrixView ## Shader location: matrix uniform: view (camera transform)
-    ShaderLocMatrixProjection ## Shader location: matrix uniform: projection
-    ShaderLocMatrixModel ## Shader location: matrix uniform: model (transform)
-    ShaderLocMatrixNormal ## Shader location: matrix uniform: normal
-    ShaderLocVectorView ## Shader location: vector uniform: view
-    ShaderLocColorDiffuse ## Shader location: vector uniform: diffuse color
-    ShaderLocColorSpecular ## Shader location: vector uniform: specular color
-    ShaderLocColorAmbient ## Shader location: vector uniform: ambient color
-    ShaderLocMapAlbedo ## Shader location: sampler2d texture: albedo (same as: SHADER_LOC_MAP_DIFFUSE)
-    ShaderLocMapMetalness ## Shader location: sampler2d texture: metalness (same as: SHADER_LOC_MAP_SPECULAR)
-    ShaderLocMapNormal ## Shader location: sampler2d texture: normal
-    ShaderLocMapRoughness ## Shader location: sampler2d texture: roughness
-    ShaderLocMapOcclusion ## Shader location: sampler2d texture: occlusion
-    ShaderLocMapEmission ## Shader location: sampler2d texture: emission
-    ShaderLocMapHeight ## Shader location: sampler2d texture: height
-    ShaderLocMapCubemap ## Shader location: samplerCube texture: cubemap
-    ShaderLocMapIrradiance ## Shader location: samplerCube texture: irradiance
-    ShaderLocMapPrefilter ## Shader location: samplerCube texture: prefilter
-    ShaderLocMapBrdf ## Shader location: sampler2d texture: brdf
+    VertexPosition ## Shader location: vertex attribute: position
+    VertexTexcoord01 ## Shader location: vertex attribute: texcoord01
+    VertexTexcoord02 ## Shader location: vertex attribute: texcoord02
+    VertexNormal ## Shader location: vertex attribute: normal
+    VertexTangent ## Shader location: vertex attribute: tangent
+    VertexColor ## Shader location: vertex attribute: color
+    MatrixMvp ## Shader location: matrix uniform: model-view-projection
+    MatrixView ## Shader location: matrix uniform: view (camera transform)
+    MatrixProjection ## Shader location: matrix uniform: projection
+    MatrixModel ## Shader location: matrix uniform: model (transform)
+    MatrixNormal ## Shader location: matrix uniform: normal
+    VectorView ## Shader location: vector uniform: view
+    ColorDiffuse ## Shader location: vector uniform: diffuse color
+    ColorSpecular ## Shader location: vector uniform: specular color
+    ColorAmbient ## Shader location: vector uniform: ambient color
+    MapAlbedo ## Shader location: sampler2d texture: albedo (same as: SHADER_LOC_MAP_DIFFUSE)
+    MapMetalness ## Shader location: sampler2d texture: metalness (same as: SHADER_LOC_MAP_SPECULAR)
+    MapNormal ## Shader location: sampler2d texture: normal
+    MapRoughness ## Shader location: sampler2d texture: roughness
+    MapOcclusion ## Shader location: sampler2d texture: occlusion
+    MapEmission ## Shader location: sampler2d texture: emission
+    MapHeight ## Shader location: sampler2d texture: height
+    MapCubemap ## Shader location: samplerCube texture: cubemap
+    MapIrradiance ## Shader location: samplerCube texture: irradiance
+    MapPrefilter ## Shader location: samplerCube texture: prefilter
+    MapBrdf ## Shader location: sampler2d texture: brdf
 
   ShaderUniformDataType* {.size: sizeof(int32).} = enum ## Shader uniform data type
-    ShaderUniformFloat ## Shader uniform type: float
-    ShaderUniformVec2 ## Shader uniform type: vec2 (2 float)
-    ShaderUniformVec3 ## Shader uniform type: vec3 (3 float)
-    ShaderUniformVec4 ## Shader uniform type: vec4 (4 float)
-    ShaderUniformInt ## Shader uniform type: int
-    ShaderUniformIvec2 ## Shader uniform type: ivec2 (2 int)
-    ShaderUniformIvec3 ## Shader uniform type: ivec3 (3 int)
-    ShaderUniformIvec4 ## Shader uniform type: ivec4 (4 int)
-    ShaderUniformSampler2d ## Shader uniform type: sampler2d
+    Float ## Shader uniform type: float
+    Vec2 ## Shader uniform type: vec2 (2 float)
+    Vec3 ## Shader uniform type: vec3 (3 float)
+    Vec4 ## Shader uniform type: vec4 (4 float)
+    Int ## Shader uniform type: int
+    Ivec2 ## Shader uniform type: ivec2 (2 int)
+    Ivec3 ## Shader uniform type: ivec3 (3 int)
+    Ivec4 ## Shader uniform type: ivec4 (4 int)
+    Sampler2d ## Shader uniform type: sampler2d
 
   ShaderAttributeDataType* {.size: sizeof(int32).} = enum ## Shader attribute data types
     ShaderAttribFloat ## Shader attribute type: float
@@ -337,93 +336,93 @@ type
     ShaderAttribVec4 ## Shader attribute type: vec4 (4 float)
 
   PixelFormat* {.size: sizeof(int32).} = enum ## Pixel formats
-    PixelformatUncompressedGrayscale = 1 ## 8 bit per pixel (no alpha)
-    PixelformatUncompressedGrayAlpha ## 8*2 bpp (2 channels)
-    PixelformatUncompressedR5g6b5 ## 16 bpp
-    PixelformatUncompressedR8g8b8 ## 24 bpp
-    PixelformatUncompressedR5g5b5a1 ## 16 bpp (1 bit alpha)
-    PixelformatUncompressedR4g4b4a4 ## 16 bpp (4 bit alpha)
-    PixelformatUncompressedR8g8b8a8 ## 32 bpp
-    PixelformatUncompressedR32 ## 32 bpp (1 channel - float)
-    PixelformatUncompressedR32g32b32 ## 32*3 bpp (3 channels - float)
-    PixelformatUncompressedR32g32b32a32 ## 32*4 bpp (4 channels - float)
-    PixelformatCompressedDxt1Rgb ## 4 bpp (no alpha)
-    PixelformatCompressedDxt1Rgba ## 4 bpp (1 bit alpha)
-    PixelformatCompressedDxt3Rgba ## 8 bpp
-    PixelformatCompressedDxt5Rgba ## 8 bpp
-    PixelformatCompressedEtc1Rgb ## 4 bpp
-    PixelformatCompressedEtc2Rgb ## 4 bpp
-    PixelformatCompressedEtc2EacRgba ## 8 bpp
-    PixelformatCompressedPvrtRgb ## 4 bpp
-    PixelformatCompressedPvrtRgba ## 4 bpp
-    PixelformatCompressedAstc4x4Rgba ## 8 bpp
-    PixelformatCompressedAstc8x8Rgba ## 2 bpp
+    UncompressedGrayscale = 1 ## 8 bit per pixel (no alpha)
+    UncompressedGrayAlpha ## 8*2 bpp (2 channels)
+    UncompressedR5g6b5 ## 16 bpp
+    UncompressedR8g8b8 ## 24 bpp
+    UncompressedR5g5b5a1 ## 16 bpp (1 bit alpha)
+    UncompressedR4g4b4a4 ## 16 bpp (4 bit alpha)
+    UncompressedR8g8b8a8 ## 32 bpp
+    UncompressedR32 ## 32 bpp (1 channel - float)
+    UncompressedR32g32b32 ## 32*3 bpp (3 channels - float)
+    UncompressedR32g32b32a32 ## 32*4 bpp (4 channels - float)
+    CompressedDxt1Rgb ## 4 bpp (no alpha)
+    CompressedDxt1Rgba ## 4 bpp (1 bit alpha)
+    CompressedDxt3Rgba ## 8 bpp
+    CompressedDxt5Rgba ## 8 bpp
+    CompressedEtc1Rgb ## 4 bpp
+    CompressedEtc2Rgb ## 4 bpp
+    CompressedEtc2EacRgba ## 8 bpp
+    CompressedPvrtRgb ## 4 bpp
+    CompressedPvrtRgba ## 4 bpp
+    CompressedAstc4x4Rgba ## 8 bpp
+    CompressedAstc8x8Rgba ## 2 bpp
 
   TextureFilter* {.size: sizeof(int32).} = enum ## Texture parameters: filter mode
-    TextureFilterPoint ## No filter, just pixel approximation
-    TextureFilterBilinear ## Linear filtering
-    TextureFilterTrilinear ## Trilinear filtering (linear with mipmaps)
-    TextureFilterAnisotropic4x ## Anisotropic filtering 4x
-    TextureFilterAnisotropic8x ## Anisotropic filtering 8x
-    TextureFilterAnisotropic16x ## Anisotropic filtering 16x
+    Point ## No filter, just pixel approximation
+    Bilinear ## Linear filtering
+    Trilinear ## Trilinear filtering (linear with mipmaps)
+    Anisotropic4x ## Anisotropic filtering 4x
+    Anisotropic8x ## Anisotropic filtering 8x
+    Anisotropic16x ## Anisotropic filtering 16x
 
   TextureWrap* {.size: sizeof(int32).} = enum ## Texture parameters: wrap mode
-    TextureWrapRepeat ## Repeats texture in tiled mode
-    TextureWrapClamp ## Clamps texture to edge pixel in tiled mode
-    TextureWrapMirrorRepeat ## Mirrors and repeats the texture in tiled mode
-    TextureWrapMirrorClamp ## Mirrors and clamps to border the texture in tiled mode
+    Repeat ## Repeats texture in tiled mode
+    Clamp ## Clamps texture to edge pixel in tiled mode
+    MirrorRepeat ## Mirrors and repeats the texture in tiled mode
+    MirrorClamp ## Mirrors and clamps to border the texture in tiled mode
 
   CubemapLayout* {.size: sizeof(int32).} = enum ## Cubemap layouts
-    CubemapLayoutAutoDetect ## Automatically detect layout type
-    CubemapLayoutLineVertical ## Layout is defined by a vertical line with faces
-    CubemapLayoutLineHorizontal ## Layout is defined by an horizontal line with faces
-    CubemapLayoutCrossThreeByFour ## Layout is defined by a 3x4 cross with cubemap faces
-    CubemapLayoutCrossFourByThree ## Layout is defined by a 4x3 cross with cubemap faces
-    CubemapLayoutPanorama ## Layout is defined by a panorama image (equirectangular map)
+    AutoDetect ## Automatically detect layout type
+    LineVertical ## Layout is defined by a vertical line with faces
+    LineHorizontal ## Layout is defined by an horizontal line with faces
+    CrossThreeByFour ## Layout is defined by a 3x4 cross with cubemap faces
+    CrossFourByThree ## Layout is defined by a 4x3 cross with cubemap faces
+    Panorama ## Layout is defined by a panorama image (equirectangular map)
 
   FontType* {.size: sizeof(int32).} = enum ## Font type, defines generation method
-    FontDefault ## Default font generation, anti-aliased
-    FontBitmap ## Bitmap font generation, no anti-aliasing
-    FontSdf ## SDF font generation, requires external shader
+    Default ## Default font generation, anti-aliased
+    Bitmap ## Bitmap font generation, no anti-aliasing
+    Sdf ## SDF font generation, requires external shader
 
   BlendMode* {.size: sizeof(int32).} = enum ## Color blending modes (pre-defined)
-    BlendAlpha ## Blend textures considering alpha (default)
-    BlendAdditive ## Blend textures adding colors
-    BlendMultiplied ## Blend textures multiplying colors
-    BlendAddColors ## Blend textures adding colors (alternative)
-    BlendSubtractColors ## Blend textures subtracting colors (alternative)
-    BlendAlphaPremultiply ## Blend premultiplied textures considering alpha
-    BlendCustom ## Blend textures using custom src/dst factors (use rlSetBlendFactors())
-    BlendCustomSeparate ## Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendFactorsSeparate())
+    Alpha ## Blend textures considering alpha (default)
+    Additive ## Blend textures adding colors
+    Multiplied ## Blend textures multiplying colors
+    AddColors ## Blend textures adding colors (alternative)
+    SubtractColors ## Blend textures subtracting colors (alternative)
+    AlphaPremultiply ## Blend premultiplied textures considering alpha
+    Custom ## Blend textures using custom src/dst factors (use rlSetBlendFactors())
+    CustomSeparate ## Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendFactorsSeparate())
 
   Gesture* {.size: sizeof(int32).} = enum ## Gesture
-    GestureNone ## No gesture
-    GestureTap ## Tap gesture
-    GestureDoubletap ## Double tap gesture
-    GestureHold = 4 ## Hold gesture
-    GestureDrag = 8 ## Drag gesture
-    GestureSwipeRight = 16 ## Swipe right gesture
-    GestureSwipeLeft = 32 ## Swipe left gesture
-    GestureSwipeUp = 64 ## Swipe up gesture
-    GestureSwipeDown = 128 ## Swipe down gesture
-    GesturePinchIn = 256 ## Pinch in gesture
-    GesturePinchOut = 512 ## Pinch out gesture
+    None ## No gesture
+    Tap ## Tap gesture
+    Doubletap ## Double tap gesture
+    Hold = 4 ## Hold gesture
+    Drag = 8 ## Drag gesture
+    SwipeRight = 16 ## Swipe right gesture
+    SwipeLeft = 32 ## Swipe left gesture
+    SwipeUp = 64 ## Swipe up gesture
+    SwipeDown = 128 ## Swipe down gesture
+    PinchIn = 256 ## Pinch in gesture
+    PinchOut = 512 ## Pinch out gesture
 
   CameraMode* {.size: sizeof(int32).} = enum ## Camera system modes
-    CameraCustom ## Custom camera
-    CameraFree ## Free camera
-    CameraOrbital ## Orbital camera
-    CameraFirstPerson ## First person camera
-    CameraThirdPerson ## Third person camera
+    Custom ## Custom camera
+    Free ## Free camera
+    Orbital ## Orbital camera
+    FirstPerson ## First person camera
+    ThirdPerson ## Third person camera
 
   CameraProjection* {.size: sizeof(int32).} = enum ## Camera projection
-    CameraPerspective ## Perspective projection
-    CameraOrthographic ## Orthographic projection
+    Perspective ## Perspective projection
+    Orthographic ## Orthographic projection
 
   NPatchLayout* {.size: sizeof(int32).} = enum ## N-patch layout
-    NpatchNinePatch ## Npatch layout: 3x3 tiles
-    NpatchThreePatchVertical ## Npatch layout: 1x3 tiles
-    NpatchThreePatchHorizontal ## Npatch layout: 3x1 tiles
+    NinePatch ## Npatch layout: 3x3 tiles
+    ThreePatchVertical ## Npatch layout: 1x3 tiles
+    ThreePatchHorizontal ## Npatch layout: 3x1 tiles
 
   ShaderLocation* = distinct int32 ## Shader location
 

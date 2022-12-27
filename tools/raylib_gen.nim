@@ -458,9 +458,29 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         scope:
           var prev = -1
           for i, val in pairs(enm.values):
-            spaces
             if val.value == prev: continue
-            ident camelCaseAscii(val.name)
+            spaces
+            var valName = val.name
+            removePrefix(valName, "FLAG_")
+            removePrefix(valName, "LOG_")
+            removePrefix(valName, "KEY_")
+            removePrefix(valName, "MOUSE_CURSOR_")
+            removePrefix(valName, "MOUSE_BUTTON_")
+            removePrefix(valName, "GAMEPAD_BUTTON_")
+            removePrefix(valName, "GAMEPAD_AXIS_")
+            removePrefix(valName, "FONT_")
+            removePrefix(valName, "BLEND_")
+            removePrefix(valName, "GESTURE_")
+            removePrefix(valName, "CAMERA_")
+            removePrefix(valName, "MATERIAL_MAP_")
+            removePrefix(valName, "SHADER_LOC_")
+            removePrefix(valName, "SHADER_UNIFORM_")
+            removePrefix(valName, "PIXELFORMAT_")
+            removePrefix(valName, "TEXTURE_FILTER_")
+            removePrefix(valName, "TEXTURE_WRAP_")
+            removePrefix(valName, "NPATCH_")
+            removePrefix(valName, "CUBEMAP_LAYOUT_")
+            ident camelCaseAscii(valName)
             if prev + 1 != val.value:
               lit " = "
               lit $val.value
