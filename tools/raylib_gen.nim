@@ -105,7 +105,6 @@ const
 """
   extraDistinct = """
   ShaderLocation* = distinct int32 ## Shader location
-  ShaderVariable* = cstring
 
   FlagsEnum = ConfigFlags|Gesture
   Flags*[E: FlagsEnum] = distinct uint32
@@ -251,9 +250,6 @@ const
     ("GetGlyphIndex", "codepoint"),
     ("GetGlyphInfo", "codepoint"),
     ("GetGlyphAtlasRec", "codepoint"),
-    # Shader attribure name
-    ("GetShaderLocation", "uniformName"),
-    ("GetShaderLocationAttrib", "attribName")
   ]
   enumInFuncs = [
     "KeyboardKey",
@@ -310,8 +306,6 @@ const
     "Rune",
     "Rune",
     "Rune",
-    "ShaderVariable",
-    "ShaderVariable"
   ]
   excludedFuncs = [
     # Text strings management functions

@@ -431,7 +431,6 @@ type
     ThreePatchHorizontal ## Npatch layout: 3x1 tiles
 
   ShaderLocation* = distinct int32 ## Shader location
-  ShaderVariable* = cstring
 
   FlagsEnum = ConfigFlags|Gesture
   Flags*[E: FlagsEnum] = distinct uint32
@@ -884,9 +883,9 @@ proc unloadVrStereoConfig*(config: VrStereoConfig) {.importc: "UnloadVrStereoCon
   ## Unload VR stereo config
 proc loadShaderPriv(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader".}
 proc loadShaderFromMemoryPriv(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory".}
-proc getShaderLocation*(shader: Shader, uniformName: ShaderVariable): ShaderLocation {.importc: "GetShaderLocation".}
+proc getShaderLocation*(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation".}
   ## Get shader uniform location
-proc getShaderLocationAttrib*(shader: Shader, attribName: ShaderVariable): ShaderLocation {.importc: "GetShaderLocationAttrib".}
+proc getShaderLocationAttrib*(shader: Shader, attribName: cstring): ShaderLocation {.importc: "GetShaderLocationAttrib".}
   ## Get shader attribute location
 proc setShaderValuePriv(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue".}
 proc setShaderValueVPriv(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV".}

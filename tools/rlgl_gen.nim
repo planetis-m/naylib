@@ -6,10 +6,10 @@ const
   rlglHeader = """
 from raylib import PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex,
   ShaderUniformDataType, ShaderAttributeDataType, MaxShaderLocations, ShaderLocation,
-  Matrix, Vector2, Vector3, Color, ShaderVariable, ShaderLocsPtr
+  Matrix, Vector2, Vector3, Color, ShaderLocsPtr
 export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniformDataType,
   ShaderAttributeDataType, MaxShaderLocations, ShaderLocation, Matrix, Vector2, Vector3,
-  Color, ShaderVariable, ShaderLocsPtr
+  Color, ShaderLocsPtr
 
 # Security check in case no GraphicsApiOpenGl* defined
 when not defined(GraphicsApiOpenGl11) and not defined(GraphicsApiOpenGlEs2):
@@ -25,24 +25,6 @@ const
   # MaxShaderLocations* = 32 ## Maximum number of shader locations supported
   CullDistanceNear* = 0.01 ## Default near cull distance
   CullDistanceFar* = 1000.0 ## Default far cull distance
-
-  # Default shader vertex attribute names to set location points
-  AttribPosition* = ShaderVariable("vertexPosition") ## Binded by default to shader location: 0
-  AttribTexcoord* = ShaderVariable("vertexTexCoord") ## Binded by default to shader location: 1
-  AttribNormal* = ShaderVariable("vertexNormal") ## Binded by default to shader location: 2
-  AttribColor* = ShaderVariable("vertexColor") ## Binded by default to shader location: 3
-  AttribTangent* = ShaderVariable("vertexTangent") ## Binded by default to shader location: 4
-  AttribTexcoord2* = ShaderVariable("vertexTexCoord2") ## Binded by default to shader location: 5
-
-  UniformMvp* = ShaderVariable("mvp") ## model-view-projection matrix
-  UniformView* = ShaderVariable("matView") ## view matrix
-  UniformProjection* = ShaderVariable("matProjection") ## projection matrix
-  UniformModel* = ShaderVariable("matModel") ## model matrix
-  UniformNormal* = ShaderVariable("matNormal") ## normal matrix (transpose(inverse(matModelView))
-  UniformColor* = ShaderVariable("colDiffuse") ## color diffuse (base tint color, multiplied by texture color)
-  Sampler2dTexture0* = ShaderVariable("texture0") ## texture0 (texture slot active 0)
-  Sampler2dTexture1* = ShaderVariable("texture1") ## texture1 (texture slot active 1)
-  Sampler2dTexture2* = ShaderVariable("texture2") ## texture2 (texture slot active 2)
 
 when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
   const DefaultBatchBufferElements* = 8192 ## This is the maximum amount of elements (quads) per batch
@@ -133,6 +115,23 @@ type
     BlendDstAlpha = 0x80CA ## GL_BLEND_DST_ALPHA
     BlendSrcAlpha = 0x80CB ## GL_BLEND_SRC_ALPHA
     BlendEquationAlpha = 0x883D ## GL_BLEND_EQUATION_ALPHA
+
+  ShaderVariable* = enum ## Default shader vertex attribute names to set location points
+    AttribPosition = "vertexPosition" ## Binded by default to shader location: 0
+    AttribTexcoord = "vertexTexCoord" ## Binded by default to shader location: 1
+    AttribNormal = "vertexNormal" ## Binded by default to shader location: 2
+    AttribColor = "vertexColor" ## Binded by default to shader location: 3
+    AttribTangent = "vertexTangent" ## Binded by default to shader location: 4
+    AttribTexcoord2 = "vertexTexCoord2" ## Binded by default to shader location: 5
+    UniformMvp = "mvp" ## model-view-projection matrix
+    UniformView = "matView" ## view matrix
+    UniformProjection = "matProjection" ## projection matrix
+    UniformModel = "matModel" ## model matrix
+    UniformNormal = "matNormal" ## normal matrix (transpose(inverse(matModelView))
+    UniformColor = "colDiffuse" ## color diffuse (base tint color, multiplied by texture color)
+    Sampler2dTexture0 = "texture0" ## texture0 (texture slot active 0)
+    Sampler2dTexture1 = "texture1" ## texture1 (texture slot active 1)
+    Sampler2dTexture2 = "texture2" ## texture2 (texture slot active 2)
 """
   helpers = """
 
@@ -249,9 +248,9 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     "Matrix"
   ]
   enumInFuncReturn = [
-    ("rlGetLocationUniform", 21),
-    ("rlGetLocationAttrib", 21),
-    ("rlGetVersion", 34),
+    ("rlGetLocationUniform", 19),
+    ("rlGetLocationAttrib", 19),
+    ("rlGetVersion", 32),
   ]
   enumInFuncParams = [
     # TextureParameter
@@ -265,8 +264,6 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     ("rlFramebufferAttach", "texType"),
     ("rlSetCullFace", "mode"),
     ("rlSetBlendMode", "mode"),
-    ("rlGetLocationUniform", "uniformName"),
-    ("rlGetLocationAttrib", "attribName"),
     ("rlSetUniform", "uniformType"),
     ("rlSetVertexAttributeDefault", "attribType"),
     ("rlGetPixelFormatName", "format"),
@@ -301,8 +298,6 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     "FramebufferAttachTextureType",
     "CullMode",
     "BlendMode",
-    "ShaderVariable",
-    "ShaderVariable",
     "ShaderUniformDataType",
     "ShaderAttributeDataType",
     "PixelFormat",
