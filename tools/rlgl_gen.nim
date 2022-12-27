@@ -57,8 +57,7 @@ elif defined(GraphicsApiOpenGlEs2):
 type
   rlglLoadProc* = proc (name: cstring): pointer ## OpenGL extension functions loader signature (same as GLADloadproc)
 
-  TextureParameter* {.size: sizeof(int32).} = enum
-    ## Texture parameters (equivalent to OpenGL defines)
+  TextureParameter* {.size: sizeof(int32).} = enum ## Texture parameters (equivalent to OpenGL defines)
     FilterNearest = 0x2600 ## GL_NEAREST
     FilterLinear = 0x2601 ## GL_LINEAR
     FilterMipNearest = 0x2700 ## GL_NEAREST_MIPMAP_NEAREST
@@ -76,25 +75,21 @@ type
     WrapMirrorRepeat = 0x8370 ## GL_MIRRORED_REPEAT
     WrapMirrorClamp = 0x8742 ## GL_MIRROR_CLAMP_EXT
 
-  MatrixMode* {.size: sizeof(int32).} = enum
-    ## Matrix modes (equivalent to OpenGL)
+  MatrixMode* {.size: sizeof(int32).} = enum ## Matrix modes (equivalent to OpenGL)
     Modelview = 0x1700 ## GL_MODELVIEW
     Projection = 0x1701 ## GL_PROJECTION
     Texture = 0x1702 ## GL_TEXTURE
 
-  DrawMode* {.size: sizeof(int32).} = enum
-    ## Primitive assembly draw modes
+  DrawMode* {.size: sizeof(int32).} = enum ## Primitive assembly draw modes
     Lines = 0x0001 ## GL_LINES
     Triangles = 0x0004 ## GL_TRIANGLES
     Quads = 0x0007 ## GL_QUADS
 
-  GlType* {.size: sizeof(int32).} = enum
-    ## GL equivalent data types
+  GlType* {.size: sizeof(int32).} = enum ## GL equivalent data types
     UnsignedByte = 0x1401 ## GL_UNSIGNED_BYTE
     Float = 0x1406 ## GL_FLOAT
 
-  BufferUsageHint* {.size: sizeof(int32).} = enum
-    ## GL buffer usage hint
+  BufferUsageHint* {.size: sizeof(int32).} = enum ## GL buffer usage hint
     StreamDraw = 0x88E0 ## GL_STREAM_DRAW
     StreamRead = 0x88E1 ## GL_STREAM_READ
     StreamCopy = 0x88E2 ## GL_STREAM_COPY
@@ -105,14 +100,12 @@ type
     DynamicRead = 0x88E9 ## GL_DYNAMIC_READ
     DynamicCopy = 0x88EA ## GL_DYNAMIC_COPY
 
-  ShaderType* {.size: sizeof(int32).} = enum
-    ## GL Shader type
+  ShaderType* {.size: sizeof(int32).} = enum ## GL Shader type
     FragmentShader = 0x8B30 ## GL_FRAGMENT_SHADER
     VertexShader = 0x8B31 ## GL_VERTEX_SHADER
     ComputeShader = 0x91B9 ## GL_COMPUTE_SHADER
 
-  BlendFactor* {.size: sizeof(int32).} = enum
-    ## GL blending factors
+  BlendFactor* {.size: sizeof(int32).} = enum ## GL blending factors
     Zero ## GL_ZERO
     One ## GL_ONE
     SrcColor = 0x0300 ## GL_SRC_COLOR
@@ -129,11 +122,10 @@ type
     ConstantAlpha = 0x8003 ## GL_CONSTANT_ALPHA
     OneMinusConstantAlpha = 0x8004 ## GL_ONE_MINUS_CONSTANT_ALPHA
 
-  BlendEquation* {.size: sizeof(int32).} = enum
-    ## GL blending functions/equations
+  BlendFuncOrEq* {.size: sizeof(int32).} = enum ## GL blending functions/equations
     BlendColor = 0x8005 ## GL_BLEND_COLOR
     FuncAdd = 0x8006 ## GL_FUNC_ADD
-    BlendEquationRgb = 0x8009 ## GL_BLEND_EQUATION_RGB (Same as BLEND_EQUATION)
+    BlendEquation = 0x8009 ## GL_BLEND_EQUATION
     FuncSubtract = 0x800A ## GL_FUNC_SUBTRACT
     FuncReverseSubtract = 0x800B ## GL_FUNC_REVERSE_SUBTRACT
     BlendDstRgb = 0x80C8 ## GL_BLEND_DST_RGB
@@ -330,9 +322,9 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     "BlendFactor",
     "BlendFactor",
     "BlendFactor",
-    "BlendEquation",
-    "BlendEquation",
-    "BlendEquation",
+    "BlendFuncOrEq",
+    "BlendFuncOrEq",
+    "BlendFuncOrEq",
     "GlVersion",
   ]
 
@@ -375,9 +367,10 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
             prev = val.value
           lit "\n"
       lit "\n"
+    lit "template BlendEquationRgb*(_: typedesc[BlendFuncOrEq]): untyped = BlendEquation"
     var procProperties: seq[(string, string, string)] = @[]
     var procArrays: seq[(string, string, string)] = @[]
-    lit "type"
+    lit "\n\ntype"
     scope:
       for obj in items(t.structs):
         if obj.name in excludedTypes: continue
