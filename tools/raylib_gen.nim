@@ -107,13 +107,13 @@ const
   MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 
-template Albedo(_: typedesc[MaterialMapIndex]): untyped = Diffuse
-template Specular(_: typedesc[MaterialMapIndex]): untyped = Metalness
+template Diffuse*(_: typedesc[MaterialMapIndex]): untyped = Albedo
+template Specular*(_: typedesc[MaterialMapIndex]): untyped = Metalness
 
-template MapAlbedo(_: typedesc[ShaderLocationIndex]): untyped = MapDiffuse
-template MapSpecular(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
+template MapDiffuse*(_: typedesc[ShaderLocationIndex]): untyped = MapAlbedo
+template MapSpecular*(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
 
-template Menu(_: typedesc[KeyboardKey]): untyped = R ## Key: Android menu button
+template Menu*(_: typedesc[KeyboardKey]): untyped = R ## Key: Android menu button
 
 type
   ShaderVariable* = cstring
