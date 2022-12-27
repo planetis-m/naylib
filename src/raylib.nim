@@ -89,391 +89,360 @@ const
   RaylibVersion* = (4, 5, 0)
 
 type
-  ConfigFlags* = distinct int32 ## System/Window config flags
-  TraceLogLevel* = distinct int32 ## Trace log level
-  KeyboardKey* = distinct int32 ## Keyboard keys (US keyboard layout)
-  MouseButton* = distinct int32 ## Mouse buttons
-  MouseCursor* = distinct int32 ## Mouse cursor
-  GamepadButton* = distinct int32 ## Gamepad buttons
-  GamepadAxis* = distinct int32 ## Gamepad axis
-  MaterialMapIndex* = distinct int32 ## Material map index
-  ShaderLocationIndex* = distinct int32 ## Shader location index
-  ShaderUniformDataType* = distinct int32 ## Shader uniform data type
-  ShaderAttributeDataType* = distinct int32 ## Shader attribute data types
-  PixelFormat* = distinct int32 ## Pixel formats
-  TextureFilter* = distinct int32 ## Texture parameters: filter mode
-  TextureWrap* = distinct int32 ## Texture parameters: wrap mode
-  CubemapLayout* = distinct int32 ## Cubemap layouts
-  FontType* = distinct int32 ## Font type, defines generation method
-  BlendMode* = distinct int32 ## Color blending modes (pre-defined)
-  Gesture* = distinct int32 ## Gesture
-  CameraMode* = distinct int32 ## Camera system modes
-  CameraProjection* = distinct int32 ## Camera projection
-  NPatchLayout* = distinct int32 ## N-patch layout
+  ConfigFlags* {.size: sizeof(int32).} = enum ## System/Window config flags
+    FlagFullscreenMode = 2 ## Set to run program in fullscreen
+    FlagWindowResizable = 4 ## Set to allow resizable window
+    FlagWindowUndecorated = 8 ## Set to disable window decoration (frame and buttons)
+    FlagWindowTransparent = 16 ## Set to allow transparent framebuffer
+    FlagMsaa4xHint = 32 ## Set to try enabling MSAA 4X
+    FlagVsyncHint = 64 ## Set to try enabling V-Sync on GPU
+    FlagWindowHidden = 128 ## Set to hide window
+    FlagWindowAlwaysRun = 256 ## Set to allow windows running while minimized
+    FlagWindowMinimized = 512 ## Set to minimize window (iconify)
+    FlagWindowMaximized = 1024 ## Set to maximize window (expanded to monitor)
+    FlagWindowUnfocused = 2048 ## Set to window non focused
+    FlagWindowTopmost = 4096 ## Set to window always on top
+    FlagWindowHighdpi = 8192 ## Set to support HighDPI
+    FlagWindowMousePassthrough = 16384 ## Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
+    FlagInterlacedHint = 65536 ## Set to try enabling interlaced video format (for V3D)
+
+  TraceLogLevel* {.size: sizeof(int32).} = enum ## Trace log level
+    LogAll ## Display all logs
+    LogTrace ## Trace logging, intended for internal use only
+    LogDebug ## Debug logging, used for internal debugging, it should be disabled on release builds
+    LogInfo ## Info logging, used for program execution info
+    LogWarning ## Warning logging, used on recoverable failures
+    LogError ## Error logging, used on unrecoverable failures
+    LogFatal ## Fatal logging, used to abort program: exit(EXIT_FAILURE)
+    LogNone ## Disable logging
+
+  KeyboardKey* {.size: sizeof(int32).} = enum ## Keyboard keys (US keyboard layout)
+    KeyNull ## Key: NULL, used for no key pressed
+    KeyBack = 4 ## Key: Android back button
+    KeyVolumeUp = 24 ## Key: Android volume up button
+    KeyVolumeDown ## Key: Android volume down button
+    KeySpace = 32 ## Key: Space
+    KeyApostrophe = 39 ## Key: '
+    KeyComma = 44 ## Key: ,
+    KeyMinus ## Key: -
+    KeyPeriod ## Key: .
+    KeySlash ## Key: /
+    KeyZero ## Key: 0
+    KeyOne ## Key: 1
+    KeyTwo ## Key: 2
+    KeyThree ## Key: 3
+    KeyFour ## Key: 4
+    KeyFive ## Key: 5
+    KeySix ## Key: 6
+    KeySeven ## Key: 7
+    KeyEight ## Key: 8
+    KeyNine ## Key: 9
+    KeySemicolon = 59 ## Key: ;
+    KeyEqual = 61 ## Key: =
+    KeyA = 65 ## Key: A | a
+    KeyB ## Key: B | b
+    KeyC ## Key: C | c
+    KeyD ## Key: D | d
+    KeyE ## Key: E | e
+    KeyF ## Key: F | f
+    KeyG ## Key: G | g
+    KeyH ## Key: H | h
+    KeyI ## Key: I | i
+    KeyJ ## Key: J | j
+    KeyK ## Key: K | k
+    KeyL ## Key: L | l
+    KeyM ## Key: M | m
+    KeyN ## Key: N | n
+    KeyO ## Key: O | o
+    KeyP ## Key: P | p
+    KeyQ ## Key: Q | q
+    KeyR ## Key: R | r
+    
+    KeyS ## Key: S | s
+    KeyT ## Key: T | t
+    KeyU ## Key: U | u
+    KeyV ## Key: V | v
+    KeyW ## Key: W | w
+    KeyX ## Key: X | x
+    KeyY ## Key: Y | y
+    KeyZ ## Key: Z | z
+    KeyLeftBracket ## Key: [
+    KeyBackslash ## Key: '\'
+    KeyRightBracket ## Key: ]
+    KeyGrave = 96 ## Key: `
+    KeyEscape = 256 ## Key: Esc
+    KeyEnter ## Key: Enter
+    KeyTab ## Key: Tab
+    KeyBackspace ## Key: Backspace
+    KeyInsert ## Key: Ins
+    KeyDelete ## Key: Del
+    KeyRight ## Key: Cursor right
+    KeyLeft ## Key: Cursor left
+    KeyDown ## Key: Cursor down
+    KeyUp ## Key: Cursor up
+    KeyPageUp ## Key: Page up
+    KeyPageDown ## Key: Page down
+    KeyHome ## Key: Home
+    KeyEnd ## Key: End
+    KeyCapsLock = 280 ## Key: Caps lock
+    KeyScrollLock ## Key: Scroll down
+    KeyNumLock ## Key: Num lock
+    KeyPrintScreen ## Key: Print screen
+    KeyPause ## Key: Pause
+    KeyF1 = 290 ## Key: F1
+    KeyF2 ## Key: F2
+    KeyF3 ## Key: F3
+    KeyF4 ## Key: F4
+    KeyF5 ## Key: F5
+    KeyF6 ## Key: F6
+    KeyF7 ## Key: F7
+    KeyF8 ## Key: F8
+    KeyF9 ## Key: F9
+    KeyF10 ## Key: F10
+    KeyF11 ## Key: F11
+    KeyF12 ## Key: F12
+    KeyKp0 = 320 ## Key: Keypad 0
+    KeyKp1 ## Key: Keypad 1
+    KeyKp2 ## Key: Keypad 2
+    KeyKp3 ## Key: Keypad 3
+    KeyKp4 ## Key: Keypad 4
+    KeyKp5 ## Key: Keypad 5
+    KeyKp6 ## Key: Keypad 6
+    KeyKp7 ## Key: Keypad 7
+    KeyKp8 ## Key: Keypad 8
+    KeyKp9 ## Key: Keypad 9
+    KeyKpDecimal ## Key: Keypad .
+    KeyKpDivide ## Key: Keypad /
+    KeyKpMultiply ## Key: Keypad *
+    KeyKpSubtract ## Key: Keypad -
+    KeyKpAdd ## Key: Keypad +
+    KeyKpEnter ## Key: Keypad Enter
+    KeyKpEqual ## Key: Keypad =
+    KeyLeftShift = 340 ## Key: Shift left
+    KeyLeftControl ## Key: Control left
+    KeyLeftAlt ## Key: Alt left
+    KeyLeftSuper ## Key: Super left
+    KeyRightShift ## Key: Shift right
+    KeyRightControl ## Key: Control right
+    KeyRightAlt ## Key: Alt right
+    KeyRightSuper ## Key: Super right
+    KeyKbMenu ## Key: KB menu
+
+  MouseButton* {.size: sizeof(int32).} = enum ## Mouse buttons
+    MouseButtonLeft ## Mouse button left
+    MouseButtonRight ## Mouse button right
+    MouseButtonMiddle ## Mouse button middle (pressed wheel)
+    MouseButtonSide ## Mouse button side (advanced mouse device)
+    MouseButtonExtra ## Mouse button extra (advanced mouse device)
+    MouseButtonForward ## Mouse button forward (advanced mouse device)
+    MouseButtonBack ## Mouse button back (advanced mouse device)
+
+  MouseCursor* {.size: sizeof(int32).} = enum ## Mouse cursor
+    MouseCursorDefault ## Default pointer shape
+    MouseCursorArrow ## Arrow shape
+    MouseCursorIbeam ## Text writing cursor shape
+    MouseCursorCrosshair ## Cross shape
+    MouseCursorPointingHand ## Pointing hand cursor
+    MouseCursorResizeEw ## Horizontal resize/move arrow shape
+    MouseCursorResizeNs ## Vertical resize/move arrow shape
+    MouseCursorResizeNwse ## Top-left to bottom-right diagonal resize/move arrow shape
+    MouseCursorResizeNesw ## The top-right to bottom-left diagonal resize/move arrow shape
+    MouseCursorResizeAll ## The omni-directional resize/move cursor shape
+    MouseCursorNotAllowed ## The operation-not-allowed shape
+
+  GamepadButton* {.size: sizeof(int32).} = enum ## Gamepad buttons
+    GamepadButtonUnknown ## Unknown button, just for error checking
+    GamepadButtonLeftFaceUp ## Gamepad left DPAD up button
+    GamepadButtonLeftFaceRight ## Gamepad left DPAD right button
+    GamepadButtonLeftFaceDown ## Gamepad left DPAD down button
+    GamepadButtonLeftFaceLeft ## Gamepad left DPAD left button
+    GamepadButtonRightFaceUp ## Gamepad right button up (i.e. PS3: Triangle, Xbox: Y)
+    GamepadButtonRightFaceRight ## Gamepad right button right (i.e. PS3: Square, Xbox: X)
+    GamepadButtonRightFaceDown ## Gamepad right button down (i.e. PS3: Cross, Xbox: A)
+    GamepadButtonRightFaceLeft ## Gamepad right button left (i.e. PS3: Circle, Xbox: B)
+    GamepadButtonLeftTrigger1 ## Gamepad top/back trigger left (first), it could be a trailing button
+    GamepadButtonLeftTrigger2 ## Gamepad top/back trigger left (second), it could be a trailing button
+    GamepadButtonRightTrigger1 ## Gamepad top/back trigger right (one), it could be a trailing button
+    GamepadButtonRightTrigger2 ## Gamepad top/back trigger right (second), it could be a trailing button
+    GamepadButtonMiddleLeft ## Gamepad center buttons, left one (i.e. PS3: Select)
+    GamepadButtonMiddle ## Gamepad center buttons, middle one (i.e. PS3: PS, Xbox: XBOX)
+    GamepadButtonMiddleRight ## Gamepad center buttons, right one (i.e. PS3: Start)
+    GamepadButtonLeftThumb ## Gamepad joystick pressed button left
+    GamepadButtonRightThumb ## Gamepad joystick pressed button right
+
+  GamepadAxis* {.size: sizeof(int32).} = enum ## Gamepad axis
+    GamepadAxisLeftX ## Gamepad left stick X axis
+    GamepadAxisLeftY ## Gamepad left stick Y axis
+    GamepadAxisRightX ## Gamepad right stick X axis
+    GamepadAxisRightY ## Gamepad right stick Y axis
+    GamepadAxisLeftTrigger ## Gamepad back trigger left, pressure level: [1..-1]
+    GamepadAxisRightTrigger ## Gamepad back trigger right, pressure level: [1..-1]
+
+  MaterialMapIndex* {.size: sizeof(int32).} = enum ## Material map index
+    MaterialMapAlbedo ## Albedo material (same as: MATERIAL_MAP_DIFFUSE)
+    MaterialMapMetalness ## Metalness material (same as: MATERIAL_MAP_SPECULAR)
+    MaterialMapNormal ## Normal material
+    MaterialMapRoughness ## Roughness material
+    MaterialMapOcclusion ## Ambient occlusion material
+    MaterialMapEmission ## Emission material
+    MaterialMapHeight ## Heightmap material
+    MaterialMapCubemap ## Cubemap material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
+    MaterialMapIrradiance ## Irradiance material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
+    MaterialMapPrefilter ## Prefilter material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
+    MaterialMapBrdf ## Brdf material
+
+  ShaderLocationIndex* {.size: sizeof(int32).} = enum ## Shader location index
+    ShaderLocVertexPosition ## Shader location: vertex attribute: position
+    ShaderLocVertexTexcoord01 ## Shader location: vertex attribute: texcoord01
+    ShaderLocVertexTexcoord02 ## Shader location: vertex attribute: texcoord02
+    ShaderLocVertexNormal ## Shader location: vertex attribute: normal
+    ShaderLocVertexTangent ## Shader location: vertex attribute: tangent
+    ShaderLocVertexColor ## Shader location: vertex attribute: color
+    ShaderLocMatrixMvp ## Shader location: matrix uniform: model-view-projection
+    ShaderLocMatrixView ## Shader location: matrix uniform: view (camera transform)
+    ShaderLocMatrixProjection ## Shader location: matrix uniform: projection
+    ShaderLocMatrixModel ## Shader location: matrix uniform: model (transform)
+    ShaderLocMatrixNormal ## Shader location: matrix uniform: normal
+    ShaderLocVectorView ## Shader location: vector uniform: view
+    ShaderLocColorDiffuse ## Shader location: vector uniform: diffuse color
+    ShaderLocColorSpecular ## Shader location: vector uniform: specular color
+    ShaderLocColorAmbient ## Shader location: vector uniform: ambient color
+    ShaderLocMapAlbedo ## Shader location: sampler2d texture: albedo (same as: SHADER_LOC_MAP_DIFFUSE)
+    ShaderLocMapMetalness ## Shader location: sampler2d texture: metalness (same as: SHADER_LOC_MAP_SPECULAR)
+    ShaderLocMapNormal ## Shader location: sampler2d texture: normal
+    ShaderLocMapRoughness ## Shader location: sampler2d texture: roughness
+    ShaderLocMapOcclusion ## Shader location: sampler2d texture: occlusion
+    ShaderLocMapEmission ## Shader location: sampler2d texture: emission
+    ShaderLocMapHeight ## Shader location: sampler2d texture: height
+    ShaderLocMapCubemap ## Shader location: samplerCube texture: cubemap
+    ShaderLocMapIrradiance ## Shader location: samplerCube texture: irradiance
+    ShaderLocMapPrefilter ## Shader location: samplerCube texture: prefilter
+    ShaderLocMapBrdf ## Shader location: sampler2d texture: brdf
+
+  ShaderUniformDataType* {.size: sizeof(int32).} = enum ## Shader uniform data type
+    ShaderUniformFloat ## Shader uniform type: float
+    ShaderUniformVec2 ## Shader uniform type: vec2 (2 float)
+    ShaderUniformVec3 ## Shader uniform type: vec3 (3 float)
+    ShaderUniformVec4 ## Shader uniform type: vec4 (4 float)
+    ShaderUniformInt ## Shader uniform type: int
+    ShaderUniformIvec2 ## Shader uniform type: ivec2 (2 int)
+    ShaderUniformIvec3 ## Shader uniform type: ivec3 (3 int)
+    ShaderUniformIvec4 ## Shader uniform type: ivec4 (4 int)
+    ShaderUniformSampler2d ## Shader uniform type: sampler2d
+
+  ShaderAttributeDataType* {.size: sizeof(int32).} = enum ## Shader attribute data types
+    ShaderAttribFloat ## Shader attribute type: float
+    ShaderAttribVec2 ## Shader attribute type: vec2 (2 float)
+    ShaderAttribVec3 ## Shader attribute type: vec3 (3 float)
+    ShaderAttribVec4 ## Shader attribute type: vec4 (4 float)
+
+  PixelFormat* {.size: sizeof(int32).} = enum ## Pixel formats
+    PixelformatUncompressedGrayscale = 1 ## 8 bit per pixel (no alpha)
+    PixelformatUncompressedGrayAlpha ## 8*2 bpp (2 channels)
+    PixelformatUncompressedR5g6b5 ## 16 bpp
+    PixelformatUncompressedR8g8b8 ## 24 bpp
+    PixelformatUncompressedR5g5b5a1 ## 16 bpp (1 bit alpha)
+    PixelformatUncompressedR4g4b4a4 ## 16 bpp (4 bit alpha)
+    PixelformatUncompressedR8g8b8a8 ## 32 bpp
+    PixelformatUncompressedR32 ## 32 bpp (1 channel - float)
+    PixelformatUncompressedR32g32b32 ## 32*3 bpp (3 channels - float)
+    PixelformatUncompressedR32g32b32a32 ## 32*4 bpp (4 channels - float)
+    PixelformatCompressedDxt1Rgb ## 4 bpp (no alpha)
+    PixelformatCompressedDxt1Rgba ## 4 bpp (1 bit alpha)
+    PixelformatCompressedDxt3Rgba ## 8 bpp
+    PixelformatCompressedDxt5Rgba ## 8 bpp
+    PixelformatCompressedEtc1Rgb ## 4 bpp
+    PixelformatCompressedEtc2Rgb ## 4 bpp
+    PixelformatCompressedEtc2EacRgba ## 8 bpp
+    PixelformatCompressedPvrtRgb ## 4 bpp
+    PixelformatCompressedPvrtRgba ## 4 bpp
+    PixelformatCompressedAstc4x4Rgba ## 8 bpp
+    PixelformatCompressedAstc8x8Rgba ## 2 bpp
+
+  TextureFilter* {.size: sizeof(int32).} = enum ## Texture parameters: filter mode
+    TextureFilterPoint ## No filter, just pixel approximation
+    TextureFilterBilinear ## Linear filtering
+    TextureFilterTrilinear ## Trilinear filtering (linear with mipmaps)
+    TextureFilterAnisotropic4x ## Anisotropic filtering 4x
+    TextureFilterAnisotropic8x ## Anisotropic filtering 8x
+    TextureFilterAnisotropic16x ## Anisotropic filtering 16x
+
+  TextureWrap* {.size: sizeof(int32).} = enum ## Texture parameters: wrap mode
+    TextureWrapRepeat ## Repeats texture in tiled mode
+    TextureWrapClamp ## Clamps texture to edge pixel in tiled mode
+    TextureWrapMirrorRepeat ## Mirrors and repeats the texture in tiled mode
+    TextureWrapMirrorClamp ## Mirrors and clamps to border the texture in tiled mode
+
+  CubemapLayout* {.size: sizeof(int32).} = enum ## Cubemap layouts
+    CubemapLayoutAutoDetect ## Automatically detect layout type
+    CubemapLayoutLineVertical ## Layout is defined by a vertical line with faces
+    CubemapLayoutLineHorizontal ## Layout is defined by an horizontal line with faces
+    CubemapLayoutCrossThreeByFour ## Layout is defined by a 3x4 cross with cubemap faces
+    CubemapLayoutCrossFourByThree ## Layout is defined by a 4x3 cross with cubemap faces
+    CubemapLayoutPanorama ## Layout is defined by a panorama image (equirectangular map)
+
+  FontType* {.size: sizeof(int32).} = enum ## Font type, defines generation method
+    FontDefault ## Default font generation, anti-aliased
+    FontBitmap ## Bitmap font generation, no anti-aliasing
+    FontSdf ## SDF font generation, requires external shader
+
+  BlendMode* {.size: sizeof(int32).} = enum ## Color blending modes (pre-defined)
+    BlendAlpha ## Blend textures considering alpha (default)
+    BlendAdditive ## Blend textures adding colors
+    BlendMultiplied ## Blend textures multiplying colors
+    BlendAddColors ## Blend textures adding colors (alternative)
+    BlendSubtractColors ## Blend textures subtracting colors (alternative)
+    BlendAlphaPremultiply ## Blend premultiplied textures considering alpha
+    BlendCustom ## Blend textures using custom src/dst factors (use rlSetBlendFactors())
+    BlendCustomSeparate ## Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendFactorsSeparate())
+
+  Gesture* {.size: sizeof(int32).} = enum ## Gesture
+    GestureNone ## No gesture
+    GestureTap ## Tap gesture
+    GestureDoubletap ## Double tap gesture
+    GestureHold = 4 ## Hold gesture
+    GestureDrag = 8 ## Drag gesture
+    GestureSwipeRight = 16 ## Swipe right gesture
+    GestureSwipeLeft = 32 ## Swipe left gesture
+    GestureSwipeUp = 64 ## Swipe up gesture
+    GestureSwipeDown = 128 ## Swipe down gesture
+    GesturePinchIn = 256 ## Pinch in gesture
+    GesturePinchOut = 512 ## Pinch out gesture
+
+  CameraMode* {.size: sizeof(int32).} = enum ## Camera system modes
+    CameraCustom ## Custom camera
+    CameraFree ## Free camera
+    CameraOrbital ## Orbital camera
+    CameraFirstPerson ## First person camera
+    CameraThirdPerson ## Third person camera
+
+  CameraProjection* {.size: sizeof(int32).} = enum ## Camera projection
+    CameraPerspective ## Perspective projection
+    CameraOrthographic ## Orthographic projection
+
+  NPatchLayout* {.size: sizeof(int32).} = enum ## N-patch layout
+    NpatchNinePatch ## Npatch layout: 3x3 tiles
+    NpatchThreePatchVertical ## Npatch layout: 1x3 tiles
+    NpatchThreePatchHorizontal ## Npatch layout: 3x1 tiles
+
   ShaderLocation* = distinct int32 ## Shader location
 
 const
-  FlagVsyncHint* = ConfigFlags(64) ## Set to try enabling V-Sync on GPU
-  FlagFullscreenMode* = ConfigFlags(2) ## Set to run program in fullscreen
-  FlagWindowResizable* = ConfigFlags(4) ## Set to allow resizable window
-  FlagWindowUndecorated* = ConfigFlags(8) ## Set to disable window decoration (frame and buttons)
-  FlagWindowHidden* = ConfigFlags(128) ## Set to hide window
-  FlagWindowMinimized* = ConfigFlags(512) ## Set to minimize window (iconify)
-  FlagWindowMaximized* = ConfigFlags(1024) ## Set to maximize window (expanded to monitor)
-  FlagWindowUnfocused* = ConfigFlags(2048) ## Set to window non focused
-  FlagWindowTopmost* = ConfigFlags(4096) ## Set to window always on top
-  FlagWindowAlwaysRun* = ConfigFlags(256) ## Set to allow windows running while minimized
-  FlagWindowTransparent* = ConfigFlags(16) ## Set to allow transparent framebuffer
-  FlagWindowHighdpi* = ConfigFlags(8192) ## Set to support HighDPI
-  FlagWindowMousePassthrough* = ConfigFlags(16384) ## Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
-  FlagMsaa4xHint* = ConfigFlags(32) ## Set to try enabling MSAA 4X
-  FlagInterlacedHint* = ConfigFlags(65536) ## Set to try enabling interlaced video format (for V3D)
-
-  LogAll* = TraceLogLevel(0) ## Display all logs
-  LogTrace* = TraceLogLevel(1) ## Trace logging, intended for internal use only
-  LogDebug* = TraceLogLevel(2) ## Debug logging, used for internal debugging, it should be disabled on release builds
-  LogInfo* = TraceLogLevel(3) ## Info logging, used for program execution info
-  LogWarning* = TraceLogLevel(4) ## Warning logging, used on recoverable failures
-  LogError* = TraceLogLevel(5) ## Error logging, used on unrecoverable failures
-  LogFatal* = TraceLogLevel(6) ## Fatal logging, used to abort program: exit(EXIT_FAILURE)
-  LogNone* = TraceLogLevel(7) ## Disable logging
-
-  KeyNull* = KeyboardKey(0) ## Key: NULL, used for no key pressed
-  KeyApostrophe* = KeyboardKey(39) ## Key: '
-  KeyComma* = KeyboardKey(44) ## Key: ,
-  KeyMinus* = KeyboardKey(45) ## Key: -
-  KeyPeriod* = KeyboardKey(46) ## Key: .
-  KeySlash* = KeyboardKey(47) ## Key: /
-  KeyZero* = KeyboardKey(48) ## Key: 0
-  KeyOne* = KeyboardKey(49) ## Key: 1
-  KeyTwo* = KeyboardKey(50) ## Key: 2
-  KeyThree* = KeyboardKey(51) ## Key: 3
-  KeyFour* = KeyboardKey(52) ## Key: 4
-  KeyFive* = KeyboardKey(53) ## Key: 5
-  KeySix* = KeyboardKey(54) ## Key: 6
-  KeySeven* = KeyboardKey(55) ## Key: 7
-  KeyEight* = KeyboardKey(56) ## Key: 8
-  KeyNine* = KeyboardKey(57) ## Key: 9
-  KeySemicolon* = KeyboardKey(59) ## Key: ;
-  KeyEqual* = KeyboardKey(61) ## Key: =
-  KeyA* = KeyboardKey(65) ## Key: A | a
-  KeyB* = KeyboardKey(66) ## Key: B | b
-  KeyC* = KeyboardKey(67) ## Key: C | c
-  KeyD* = KeyboardKey(68) ## Key: D | d
-  KeyE* = KeyboardKey(69) ## Key: E | e
-  KeyF* = KeyboardKey(70) ## Key: F | f
-  KeyG* = KeyboardKey(71) ## Key: G | g
-  KeyH* = KeyboardKey(72) ## Key: H | h
-  KeyI* = KeyboardKey(73) ## Key: I | i
-  KeyJ* = KeyboardKey(74) ## Key: J | j
-  KeyK* = KeyboardKey(75) ## Key: K | k
-  KeyL* = KeyboardKey(76) ## Key: L | l
-  KeyM* = KeyboardKey(77) ## Key: M | m
-  KeyN* = KeyboardKey(78) ## Key: N | n
-  KeyO* = KeyboardKey(79) ## Key: O | o
-  KeyP* = KeyboardKey(80) ## Key: P | p
-  KeyQ* = KeyboardKey(81) ## Key: Q | q
-  KeyR* = KeyboardKey(82) ## Key: R | r
-  KeyS* = KeyboardKey(83) ## Key: S | s
-  KeyT* = KeyboardKey(84) ## Key: T | t
-  KeyU* = KeyboardKey(85) ## Key: U | u
-  KeyV* = KeyboardKey(86) ## Key: V | v
-  KeyW* = KeyboardKey(87) ## Key: W | w
-  KeyX* = KeyboardKey(88) ## Key: X | x
-  KeyY* = KeyboardKey(89) ## Key: Y | y
-  KeyZ* = KeyboardKey(90) ## Key: Z | z
-  KeyLeftBracket* = KeyboardKey(91) ## Key: [
-  KeyBackslash* = KeyboardKey(92) ## Key: '\'
-  KeyRightBracket* = KeyboardKey(93) ## Key: ]
-  KeyGrave* = KeyboardKey(96) ## Key: `
-  KeySpace* = KeyboardKey(32) ## Key: Space
-  KeyEscape* = KeyboardKey(256) ## Key: Esc
-  KeyEnter* = KeyboardKey(257) ## Key: Enter
-  KeyTab* = KeyboardKey(258) ## Key: Tab
-  KeyBackspace* = KeyboardKey(259) ## Key: Backspace
-  KeyInsert* = KeyboardKey(260) ## Key: Ins
-  KeyDelete* = KeyboardKey(261) ## Key: Del
-  KeyRight* = KeyboardKey(262) ## Key: Cursor right
-  KeyLeft* = KeyboardKey(263) ## Key: Cursor left
-  KeyDown* = KeyboardKey(264) ## Key: Cursor down
-  KeyUp* = KeyboardKey(265) ## Key: Cursor up
-  KeyPageUp* = KeyboardKey(266) ## Key: Page up
-  KeyPageDown* = KeyboardKey(267) ## Key: Page down
-  KeyHome* = KeyboardKey(268) ## Key: Home
-  KeyEnd* = KeyboardKey(269) ## Key: End
-  KeyCapsLock* = KeyboardKey(280) ## Key: Caps lock
-  KeyScrollLock* = KeyboardKey(281) ## Key: Scroll down
-  KeyNumLock* = KeyboardKey(282) ## Key: Num lock
-  KeyPrintScreen* = KeyboardKey(283) ## Key: Print screen
-  KeyPause* = KeyboardKey(284) ## Key: Pause
-  KeyF1* = KeyboardKey(290) ## Key: F1
-  KeyF2* = KeyboardKey(291) ## Key: F2
-  KeyF3* = KeyboardKey(292) ## Key: F3
-  KeyF4* = KeyboardKey(293) ## Key: F4
-  KeyF5* = KeyboardKey(294) ## Key: F5
-  KeyF6* = KeyboardKey(295) ## Key: F6
-  KeyF7* = KeyboardKey(296) ## Key: F7
-  KeyF8* = KeyboardKey(297) ## Key: F8
-  KeyF9* = KeyboardKey(298) ## Key: F9
-  KeyF10* = KeyboardKey(299) ## Key: F10
-  KeyF11* = KeyboardKey(300) ## Key: F11
-  KeyF12* = KeyboardKey(301) ## Key: F12
-  KeyLeftShift* = KeyboardKey(340) ## Key: Shift left
-  KeyLeftControl* = KeyboardKey(341) ## Key: Control left
-  KeyLeftAlt* = KeyboardKey(342) ## Key: Alt left
-  KeyLeftSuper* = KeyboardKey(343) ## Key: Super left
-  KeyRightShift* = KeyboardKey(344) ## Key: Shift right
-  KeyRightControl* = KeyboardKey(345) ## Key: Control right
-  KeyRightAlt* = KeyboardKey(346) ## Key: Alt right
-  KeyRightSuper* = KeyboardKey(347) ## Key: Super right
-  KeyKbMenu* = KeyboardKey(348) ## Key: KB menu
-  KeyKp0* = KeyboardKey(320) ## Key: Keypad 0
-  KeyKp1* = KeyboardKey(321) ## Key: Keypad 1
-  KeyKp2* = KeyboardKey(322) ## Key: Keypad 2
-  KeyKp3* = KeyboardKey(323) ## Key: Keypad 3
-  KeyKp4* = KeyboardKey(324) ## Key: Keypad 4
-  KeyKp5* = KeyboardKey(325) ## Key: Keypad 5
-  KeyKp6* = KeyboardKey(326) ## Key: Keypad 6
-  KeyKp7* = KeyboardKey(327) ## Key: Keypad 7
-  KeyKp8* = KeyboardKey(328) ## Key: Keypad 8
-  KeyKp9* = KeyboardKey(329) ## Key: Keypad 9
-  KeyKpDecimal* = KeyboardKey(330) ## Key: Keypad .
-  KeyKpDivide* = KeyboardKey(331) ## Key: Keypad /
-  KeyKpMultiply* = KeyboardKey(332) ## Key: Keypad *
-  KeyKpSubtract* = KeyboardKey(333) ## Key: Keypad -
-  KeyKpAdd* = KeyboardKey(334) ## Key: Keypad +
-  KeyKpEnter* = KeyboardKey(335) ## Key: Keypad Enter
-  KeyKpEqual* = KeyboardKey(336) ## Key: Keypad =
-  KeyBack* = KeyboardKey(4) ## Key: Android back button
-  KeyMenu* = KeyboardKey(82) ## Key: Android menu button
-  KeyVolumeUp* = KeyboardKey(24) ## Key: Android volume up button
-  KeyVolumeDown* = KeyboardKey(25) ## Key: Android volume down button
-
-  MouseButtonLeft* = MouseButton(0) ## Mouse button left
-  MouseButtonRight* = MouseButton(1) ## Mouse button right
-  MouseButtonMiddle* = MouseButton(2) ## Mouse button middle (pressed wheel)
-  MouseButtonSide* = MouseButton(3) ## Mouse button side (advanced mouse device)
-  MouseButtonExtra* = MouseButton(4) ## Mouse button extra (advanced mouse device)
-  MouseButtonForward* = MouseButton(5) ## Mouse button forward (advanced mouse device)
-  MouseButtonBack* = MouseButton(6) ## Mouse button back (advanced mouse device)
-
-  MouseCursorDefault* = MouseCursor(0) ## Default pointer shape
-  MouseCursorArrow* = MouseCursor(1) ## Arrow shape
-  MouseCursorIbeam* = MouseCursor(2) ## Text writing cursor shape
-  MouseCursorCrosshair* = MouseCursor(3) ## Cross shape
-  MouseCursorPointingHand* = MouseCursor(4) ## Pointing hand cursor
-  MouseCursorResizeEw* = MouseCursor(5) ## Horizontal resize/move arrow shape
-  MouseCursorResizeNs* = MouseCursor(6) ## Vertical resize/move arrow shape
-  MouseCursorResizeNwse* = MouseCursor(7) ## Top-left to bottom-right diagonal resize/move arrow shape
-  MouseCursorResizeNesw* = MouseCursor(8) ## The top-right to bottom-left diagonal resize/move arrow shape
-  MouseCursorResizeAll* = MouseCursor(9) ## The omni-directional resize/move cursor shape
-  MouseCursorNotAllowed* = MouseCursor(10) ## The operation-not-allowed shape
-
-  GamepadButtonUnknown* = GamepadButton(0) ## Unknown button, just for error checking
-  GamepadButtonLeftFaceUp* = GamepadButton(1) ## Gamepad left DPAD up button
-  GamepadButtonLeftFaceRight* = GamepadButton(2) ## Gamepad left DPAD right button
-  GamepadButtonLeftFaceDown* = GamepadButton(3) ## Gamepad left DPAD down button
-  GamepadButtonLeftFaceLeft* = GamepadButton(4) ## Gamepad left DPAD left button
-  GamepadButtonRightFaceUp* = GamepadButton(5) ## Gamepad right button up (i.e. PS3: Triangle, Xbox: Y)
-  GamepadButtonRightFaceRight* = GamepadButton(6) ## Gamepad right button right (i.e. PS3: Square, Xbox: X)
-  GamepadButtonRightFaceDown* = GamepadButton(7) ## Gamepad right button down (i.e. PS3: Cross, Xbox: A)
-  GamepadButtonRightFaceLeft* = GamepadButton(8) ## Gamepad right button left (i.e. PS3: Circle, Xbox: B)
-  GamepadButtonLeftTrigger1* = GamepadButton(9) ## Gamepad top/back trigger left (first), it could be a trailing button
-  GamepadButtonLeftTrigger2* = GamepadButton(10) ## Gamepad top/back trigger left (second), it could be a trailing button
-  GamepadButtonRightTrigger1* = GamepadButton(11) ## Gamepad top/back trigger right (one), it could be a trailing button
-  GamepadButtonRightTrigger2* = GamepadButton(12) ## Gamepad top/back trigger right (second), it could be a trailing button
-  GamepadButtonMiddleLeft* = GamepadButton(13) ## Gamepad center buttons, left one (i.e. PS3: Select)
-  GamepadButtonMiddle* = GamepadButton(14) ## Gamepad center buttons, middle one (i.e. PS3: PS, Xbox: XBOX)
-  GamepadButtonMiddleRight* = GamepadButton(15) ## Gamepad center buttons, right one (i.e. PS3: Start)
-  GamepadButtonLeftThumb* = GamepadButton(16) ## Gamepad joystick pressed button left
-  GamepadButtonRightThumb* = GamepadButton(17) ## Gamepad joystick pressed button right
-
-  GamepadAxisLeftX* = GamepadAxis(0) ## Gamepad left stick X axis
-  GamepadAxisLeftY* = GamepadAxis(1) ## Gamepad left stick Y axis
-  GamepadAxisRightX* = GamepadAxis(2) ## Gamepad right stick X axis
-  GamepadAxisRightY* = GamepadAxis(3) ## Gamepad right stick Y axis
-  GamepadAxisLeftTrigger* = GamepadAxis(4) ## Gamepad back trigger left, pressure level: [1..-1]
-  GamepadAxisRightTrigger* = GamepadAxis(5) ## Gamepad back trigger right, pressure level: [1..-1]
-
-  MaterialMapAlbedo* = MaterialMapIndex(0) ## Albedo material (same as: MATERIAL_MAP_DIFFUSE)
-  MaterialMapMetalness* = MaterialMapIndex(1) ## Metalness material (same as: MATERIAL_MAP_SPECULAR)
-  MaterialMapNormal* = MaterialMapIndex(2) ## Normal material
-  MaterialMapRoughness* = MaterialMapIndex(3) ## Roughness material
-  MaterialMapOcclusion* = MaterialMapIndex(4) ## Ambient occlusion material
-  MaterialMapEmission* = MaterialMapIndex(5) ## Emission material
-  MaterialMapHeight* = MaterialMapIndex(6) ## Heightmap material
-  MaterialMapCubemap* = MaterialMapIndex(7) ## Cubemap material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-  MaterialMapIrradiance* = MaterialMapIndex(8) ## Irradiance material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-  MaterialMapPrefilter* = MaterialMapIndex(9) ## Prefilter material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-  MaterialMapBrdf* = MaterialMapIndex(10) ## Brdf material
-
-  ShaderLocVertexPosition* = ShaderLocationIndex(0) ## Shader location: vertex attribute: position
-  ShaderLocVertexTexcoord01* = ShaderLocationIndex(1) ## Shader location: vertex attribute: texcoord01
-  ShaderLocVertexTexcoord02* = ShaderLocationIndex(2) ## Shader location: vertex attribute: texcoord02
-  ShaderLocVertexNormal* = ShaderLocationIndex(3) ## Shader location: vertex attribute: normal
-  ShaderLocVertexTangent* = ShaderLocationIndex(4) ## Shader location: vertex attribute: tangent
-  ShaderLocVertexColor* = ShaderLocationIndex(5) ## Shader location: vertex attribute: color
-  ShaderLocMatrixMvp* = ShaderLocationIndex(6) ## Shader location: matrix uniform: model-view-projection
-  ShaderLocMatrixView* = ShaderLocationIndex(7) ## Shader location: matrix uniform: view (camera transform)
-  ShaderLocMatrixProjection* = ShaderLocationIndex(8) ## Shader location: matrix uniform: projection
-  ShaderLocMatrixModel* = ShaderLocationIndex(9) ## Shader location: matrix uniform: model (transform)
-  ShaderLocMatrixNormal* = ShaderLocationIndex(10) ## Shader location: matrix uniform: normal
-  ShaderLocVectorView* = ShaderLocationIndex(11) ## Shader location: vector uniform: view
-  ShaderLocColorDiffuse* = ShaderLocationIndex(12) ## Shader location: vector uniform: diffuse color
-  ShaderLocColorSpecular* = ShaderLocationIndex(13) ## Shader location: vector uniform: specular color
-  ShaderLocColorAmbient* = ShaderLocationIndex(14) ## Shader location: vector uniform: ambient color
-  ShaderLocMapAlbedo* = ShaderLocationIndex(15) ## Shader location: sampler2d texture: albedo (same as: SHADER_LOC_MAP_DIFFUSE)
-  ShaderLocMapMetalness* = ShaderLocationIndex(16) ## Shader location: sampler2d texture: metalness (same as: SHADER_LOC_MAP_SPECULAR)
-  ShaderLocMapNormal* = ShaderLocationIndex(17) ## Shader location: sampler2d texture: normal
-  ShaderLocMapRoughness* = ShaderLocationIndex(18) ## Shader location: sampler2d texture: roughness
-  ShaderLocMapOcclusion* = ShaderLocationIndex(19) ## Shader location: sampler2d texture: occlusion
-  ShaderLocMapEmission* = ShaderLocationIndex(20) ## Shader location: sampler2d texture: emission
-  ShaderLocMapHeight* = ShaderLocationIndex(21) ## Shader location: sampler2d texture: height
-  ShaderLocMapCubemap* = ShaderLocationIndex(22) ## Shader location: samplerCube texture: cubemap
-  ShaderLocMapIrradiance* = ShaderLocationIndex(23) ## Shader location: samplerCube texture: irradiance
-  ShaderLocMapPrefilter* = ShaderLocationIndex(24) ## Shader location: samplerCube texture: prefilter
-  ShaderLocMapBrdf* = ShaderLocationIndex(25) ## Shader location: sampler2d texture: brdf
-
-  ShaderUniformFloat* = ShaderUniformDataType(0) ## Shader uniform type: float
-  ShaderUniformVec2* = ShaderUniformDataType(1) ## Shader uniform type: vec2 (2 float)
-  ShaderUniformVec3* = ShaderUniformDataType(2) ## Shader uniform type: vec3 (3 float)
-  ShaderUniformVec4* = ShaderUniformDataType(3) ## Shader uniform type: vec4 (4 float)
-  ShaderUniformInt* = ShaderUniformDataType(4) ## Shader uniform type: int
-  ShaderUniformIvec2* = ShaderUniformDataType(5) ## Shader uniform type: ivec2 (2 int)
-  ShaderUniformIvec3* = ShaderUniformDataType(6) ## Shader uniform type: ivec3 (3 int)
-  ShaderUniformIvec4* = ShaderUniformDataType(7) ## Shader uniform type: ivec4 (4 int)
-  ShaderUniformSampler2d* = ShaderUniformDataType(8) ## Shader uniform type: sampler2d
-
-  ShaderAttribFloat* = ShaderAttributeDataType(0) ## Shader attribute type: float
-  ShaderAttribVec2* = ShaderAttributeDataType(1) ## Shader attribute type: vec2 (2 float)
-  ShaderAttribVec3* = ShaderAttributeDataType(2) ## Shader attribute type: vec3 (3 float)
-  ShaderAttribVec4* = ShaderAttributeDataType(3) ## Shader attribute type: vec4 (4 float)
-
-  PixelformatUncompressedGrayscale* = PixelFormat(1) ## 8 bit per pixel (no alpha)
-  PixelformatUncompressedGrayAlpha* = PixelFormat(2) ## 8*2 bpp (2 channels)
-  PixelformatUncompressedR5g6b5* = PixelFormat(3) ## 16 bpp
-  PixelformatUncompressedR8g8b8* = PixelFormat(4) ## 24 bpp
-  PixelformatUncompressedR5g5b5a1* = PixelFormat(5) ## 16 bpp (1 bit alpha)
-  PixelformatUncompressedR4g4b4a4* = PixelFormat(6) ## 16 bpp (4 bit alpha)
-  PixelformatUncompressedR8g8b8a8* = PixelFormat(7) ## 32 bpp
-  PixelformatUncompressedR32* = PixelFormat(8) ## 32 bpp (1 channel - float)
-  PixelformatUncompressedR32g32b32* = PixelFormat(9) ## 32*3 bpp (3 channels - float)
-  PixelformatUncompressedR32g32b32a32* = PixelFormat(10) ## 32*4 bpp (4 channels - float)
-  PixelformatCompressedDxt1Rgb* = PixelFormat(11) ## 4 bpp (no alpha)
-  PixelformatCompressedDxt1Rgba* = PixelFormat(12) ## 4 bpp (1 bit alpha)
-  PixelformatCompressedDxt3Rgba* = PixelFormat(13) ## 8 bpp
-  PixelformatCompressedDxt5Rgba* = PixelFormat(14) ## 8 bpp
-  PixelformatCompressedEtc1Rgb* = PixelFormat(15) ## 4 bpp
-  PixelformatCompressedEtc2Rgb* = PixelFormat(16) ## 4 bpp
-  PixelformatCompressedEtc2EacRgba* = PixelFormat(17) ## 8 bpp
-  PixelformatCompressedPvrtRgb* = PixelFormat(18) ## 4 bpp
-  PixelformatCompressedPvrtRgba* = PixelFormat(19) ## 4 bpp
-  PixelformatCompressedAstc4x4Rgba* = PixelFormat(20) ## 8 bpp
-  PixelformatCompressedAstc8x8Rgba* = PixelFormat(21) ## 2 bpp
-
-  TextureFilterPoint* = TextureFilter(0) ## No filter, just pixel approximation
-  TextureFilterBilinear* = TextureFilter(1) ## Linear filtering
-  TextureFilterTrilinear* = TextureFilter(2) ## Trilinear filtering (linear with mipmaps)
-  TextureFilterAnisotropic4x* = TextureFilter(3) ## Anisotropic filtering 4x
-  TextureFilterAnisotropic8x* = TextureFilter(4) ## Anisotropic filtering 8x
-  TextureFilterAnisotropic16x* = TextureFilter(5) ## Anisotropic filtering 16x
-
-  TextureWrapRepeat* = TextureWrap(0) ## Repeats texture in tiled mode
-  TextureWrapClamp* = TextureWrap(1) ## Clamps texture to edge pixel in tiled mode
-  TextureWrapMirrorRepeat* = TextureWrap(2) ## Mirrors and repeats the texture in tiled mode
-  TextureWrapMirrorClamp* = TextureWrap(3) ## Mirrors and clamps to border the texture in tiled mode
-
-  CubemapLayoutAutoDetect* = CubemapLayout(0) ## Automatically detect layout type
-  CubemapLayoutLineVertical* = CubemapLayout(1) ## Layout is defined by a vertical line with faces
-  CubemapLayoutLineHorizontal* = CubemapLayout(2) ## Layout is defined by an horizontal line with faces
-  CubemapLayoutCrossThreeByFour* = CubemapLayout(3) ## Layout is defined by a 3x4 cross with cubemap faces
-  CubemapLayoutCrossFourByThree* = CubemapLayout(4) ## Layout is defined by a 4x3 cross with cubemap faces
-  CubemapLayoutPanorama* = CubemapLayout(5) ## Layout is defined by a panorama image (equirectangular map)
-
-  FontDefault* = FontType(0) ## Default font generation, anti-aliased
-  FontBitmap* = FontType(1) ## Bitmap font generation, no anti-aliasing
-  FontSdf* = FontType(2) ## SDF font generation, requires external shader
-
-  BlendAlpha* = BlendMode(0) ## Blend textures considering alpha (default)
-  BlendAdditive* = BlendMode(1) ## Blend textures adding colors
-  BlendMultiplied* = BlendMode(2) ## Blend textures multiplying colors
-  BlendAddColors* = BlendMode(3) ## Blend textures adding colors (alternative)
-  BlendSubtractColors* = BlendMode(4) ## Blend textures subtracting colors (alternative)
-  BlendAlphaPremultiply* = BlendMode(5) ## Blend premultiplied textures considering alpha
-  BlendCustom* = BlendMode(6) ## Blend textures using custom src/dst factors (use rlSetBlendFactors())
-  BlendCustomSeparate* = BlendMode(7) ## Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendFactorsSeparate())
-
-  GestureNone* = Gesture(0) ## No gesture
-  GestureTap* = Gesture(1) ## Tap gesture
-  GestureDoubletap* = Gesture(2) ## Double tap gesture
-  GestureHold* = Gesture(4) ## Hold gesture
-  GestureDrag* = Gesture(8) ## Drag gesture
-  GestureSwipeRight* = Gesture(16) ## Swipe right gesture
-  GestureSwipeLeft* = Gesture(32) ## Swipe left gesture
-  GestureSwipeUp* = Gesture(64) ## Swipe up gesture
-  GestureSwipeDown* = Gesture(128) ## Swipe down gesture
-  GesturePinchIn* = Gesture(256) ## Pinch in gesture
-  GesturePinchOut* = Gesture(512) ## Pinch out gesture
-
-  CameraCustom* = CameraMode(0) ## Custom camera
-  CameraFree* = CameraMode(1) ## Free camera
-  CameraOrbital* = CameraMode(2) ## Orbital camera
-  CameraFirstPerson* = CameraMode(3) ## First person camera
-  CameraThirdPerson* = CameraMode(4) ## Third person camera
-
-  CameraPerspective* = CameraProjection(0) ## Perspective projection
-  CameraOrthographic* = CameraProjection(1) ## Orthographic projection
-
-  NpatchNinePatch* = NPatchLayout(0) ## Npatch layout: 3x3 tiles
-  NpatchThreePatchVertical* = NPatchLayout(1) ## Npatch layout: 1x3 tiles
-  NpatchThreePatchHorizontal* = NPatchLayout(2) ## Npatch layout: 3x1 tiles
-
-  MaterialMapDiffuse* = MaterialMapAlbedo
-  MaterialMapSpecular* = MaterialMapMetalness
-
-  ShaderLocMapDiffuse* = ShaderLocMapAlbedo
-  ShaderLocMapSpecular* = ShaderLocMapMetalness
   # Taken from raylib/src/config.h
   MaxShaderLocations* = 32 ## Maximum number of shader locations supported
   MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 
+template Albedo(_: typedesc[MaterialMap]): untyped = Diffuse
+template Specular(_: typedesc[MaterialMap]): untyped = Metalness
+
+template MapAlbedo(_: typedesc[ShaderLocationIndex]): untyped = MapDiffuse
+template MapSpecular(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
+
+template Menu(_: typedesc[KeyboardKey]): untyped = R ## Key: Android menu button
+
 type
   ShaderVariable* = cstring
-
-proc `==`*(a, b: ConfigFlags): bool {.borrow.}
-
-proc `<`*(a, b: TraceLogLevel): bool {.borrow.}
-proc `<=`*(a, b: TraceLogLevel): bool {.borrow.}
-proc `==`*(a, b: TraceLogLevel): bool {.borrow.}
-
-proc `==`*(a, b: KeyboardKey): bool {.borrow.}
-proc `==`*(a, b: MouseButton): bool {.borrow.}
-proc `==`*(a, b: MouseCursor): bool {.borrow.}
-proc `==`*(a, b: GamepadButton): bool {.borrow.}
-proc `==`*(a, b: GamepadAxis): bool {.borrow.}
-
-proc `<`*(a, b: MaterialMapIndex): bool {.borrow.}
-proc `<=`*(a, b: MaterialMapIndex): bool {.borrow.}
-proc `==`*(a, b: MaterialMapIndex): bool {.borrow.}
-
-proc `<`*(a, b: ShaderLocationIndex): bool {.borrow.}
-proc `<=`*(a, b: ShaderLocationIndex): bool {.borrow.}
-proc `==`*(a, b: ShaderLocationIndex): bool {.borrow.}
-
-proc `==`*(a, b: ShaderLocation): bool {.borrow.}
-proc `==`*(a, b: ShaderUniformDataType): bool {.borrow.}
-proc `==`*(a, b: ShaderAttributeDataType): bool {.borrow.}
-proc `==`*(a, b: PixelFormat): bool {.borrow.}
-proc `==`*(a, b: TextureFilter): bool {.borrow.}
-proc `==`*(a, b: TextureWrap): bool {.borrow.}
-proc `==`*(a, b: CubemapLayout): bool {.borrow.}
-proc `==`*(a, b: FontType): bool {.borrow.}
-proc `==`*(a, b: BlendMode): bool {.borrow.}
-proc `==`*(a, b: Gesture): bool {.borrow.}
-proc `==`*(a, b: CameraMode): bool {.borrow.}
-proc `==`*(a, b: CameraProjection): bool {.borrow.}
-proc `==`*(a, b: NPatchLayout): bool {.borrow.}
 
 type
   FlagsEnum = ConfigFlags|Gesture

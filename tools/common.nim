@@ -80,6 +80,8 @@ proc parseApi*(fname: string): TopLevel =
   try:
     inp = openFileStream(fname)
     result = inp.jsonTo(TopLevel)
+    for enm in mitems(result.enums):
+      sort(enm.values, proc (x, y: ValueInfo): int = cmp(x.value, y.value))
   finally:
     if inp != nil: inp.close()
 

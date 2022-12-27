@@ -100,52 +100,23 @@ const
 """
   extraDistinct = """
 
-  MaterialMapDiffuse* = MaterialMapAlbedo
-  MaterialMapSpecular* = MaterialMapMetalness
 
-  ShaderLocMapDiffuse* = ShaderLocMapAlbedo
-  ShaderLocMapSpecular* = ShaderLocMapMetalness
+const
   # Taken from raylib/src/config.h
   MaxShaderLocations* = 32 ## Maximum number of shader locations supported
   MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 
+template Albedo(_: typedesc[MaterialMap]): untyped = Diffuse
+template Specular(_: typedesc[MaterialMap]): untyped = Metalness
+
+template MapAlbedo(_: typedesc[ShaderLocationIndex]): untyped = MapDiffuse
+template MapSpecular(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
+
+template Menu(_: typedesc[KeyboardKey]): untyped = R ## Key: Android menu button
+
 type
   ShaderVariable* = cstring
-
-proc `==`*(a, b: ConfigFlags): bool {.borrow.}
-
-proc `<`*(a, b: TraceLogLevel): bool {.borrow.}
-proc `<=`*(a, b: TraceLogLevel): bool {.borrow.}
-proc `==`*(a, b: TraceLogLevel): bool {.borrow.}
-
-proc `==`*(a, b: KeyboardKey): bool {.borrow.}
-proc `==`*(a, b: MouseButton): bool {.borrow.}
-proc `==`*(a, b: MouseCursor): bool {.borrow.}
-proc `==`*(a, b: GamepadButton): bool {.borrow.}
-proc `==`*(a, b: GamepadAxis): bool {.borrow.}
-
-proc `<`*(a, b: MaterialMapIndex): bool {.borrow.}
-proc `<=`*(a, b: MaterialMapIndex): bool {.borrow.}
-proc `==`*(a, b: MaterialMapIndex): bool {.borrow.}
-
-proc `<`*(a, b: ShaderLocationIndex): bool {.borrow.}
-proc `<=`*(a, b: ShaderLocationIndex): bool {.borrow.}
-proc `==`*(a, b: ShaderLocationIndex): bool {.borrow.}
-
-proc `==`*(a, b: ShaderLocation): bool {.borrow.}
-proc `==`*(a, b: ShaderUniformDataType): bool {.borrow.}
-proc `==`*(a, b: ShaderAttributeDataType): bool {.borrow.}
-proc `==`*(a, b: PixelFormat): bool {.borrow.}
-proc `==`*(a, b: TextureFilter): bool {.borrow.}
-proc `==`*(a, b: TextureWrap): bool {.borrow.}
-proc `==`*(a, b: CubemapLayout): bool {.borrow.}
-proc `==`*(a, b: FontType): bool {.borrow.}
-proc `==`*(a, b: BlendMode): bool {.borrow.}
-proc `==`*(a, b: Gesture): bool {.borrow.}
-proc `==`*(a, b: CameraMode): bool {.borrow.}
-proc `==`*(a, b: CameraProjection): bool {.borrow.}
-proc `==`*(a, b: NPatchLayout): bool {.borrow.}
 
 type
   FlagsEnum = ConfigFlags|Gesture
@@ -482,24 +453,23 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
       for enm in items(t.enums):
         spaces
         ident enm.name
-        lit "* = distinct int32"
+        lit "* {.size: sizeof(int32).} = enum"
         doc enm
+        scope:
+          var prev = -1
+          for i, val in pairs(enm.values):
+            spaces
+            if val.value == prev: continue
+            ident camelCaseAscii(val.name)
+            if prev + 1 != val.value:
+              lit " = "
+              lit $val.value
+            doc val
+            prev = val.value
+          lit "\n"
       spaces
       # Extra distinct type used in GetShaderLocation, SetShaderValue
       lit "ShaderLocation* = distinct int32 ## Shader location"
-    lit "\n\nconst"
-    scope:
-      for enm in items(t.enums):
-        for i, val in pairs(enm.values):
-          spaces
-          ident camelCaseAscii(val.name)
-          lit "* = "
-          ident enm.name
-          lit "("
-          lit $val.value
-          lit ")"
-          doc val
-        lit "\n"
     lit extraDistinct
     # Generate type definitions
     var procProperties: seq[(string, string, string)] = @[]
