@@ -93,6 +93,22 @@
   DynamicCopy = 35050        ## GL_DYNAMIC_COPY">BufferUsageHint</a></li>
 <li><a class="reference" href="#CullMode" title="CullMode {.size: 4.} = enum
   FaceFront, FaceBack">CullMode</a></li>
+<li><a class="reference" href="#DefaultShaderVariableName" title="DefaultShaderVariableName = enum
+  AttribPosition = &quot;vertexPosition&quot;, ## Binded by default to shader location: 0
+  AttribTexcoord = &quot;vertexTexCoord&quot;, ## Binded by default to shader location: 1
+  AttribNormal = &quot;vertexNormal&quot;, ## Binded by default to shader location: 2
+  AttribColor = &quot;vertexColor&quot;, ## Binded by default to shader location: 3
+  AttribTangent = &quot;vertexTangent&quot;, ## Binded by default to shader location: 4
+  AttribTexcoord2 = &quot;vertexTexCoord2&quot;, ## Binded by default to shader location: 5
+  UniformMvp = &quot;mvp&quot;,       ## model-view-projection matrix
+  UniformView = &quot;matView&quot;,  ## view matrix
+  UniformProjection = &quot;matProjection&quot;, ## projection matrix
+  UniformModel = &quot;matModel&quot;, ## model matrix
+  UniformNormal = &quot;matNormal&quot;, ## normal matrix (transpose(inverse(matModelView))
+  UniformColor = &quot;colDiffuse&quot;, ## color diffuse (base tint color, multiplied by texture color)
+  Sampler2dTexture0 = &quot;texture0&quot;, ## texture0 (texture slot active 0)
+  Sampler2dTexture1 = &quot;texture1&quot;, ## texture1 (texture slot active 1)
+  Sampler2dTexture2 = &quot;texture2&quot; ## texture2 (texture slot active 2)">DefaultShaderVariableName</a></li>
 <li><a class="reference" href="#DrawCall" title="DrawCall {.importc: &quot;rlDrawCall&quot;, nodecl, bycopy.} = object
   mode*: int32               ## Drawing mode: LINES, TRIANGLES, QUADS
   vertexCount*: int32        ## Number of vertex of the draw
@@ -150,22 +166,6 @@
   FragmentShader = 35632,   ## GL_FRAGMENT_SHADER
   VertexShader = 35633,     ## GL_VERTEX_SHADER
   ComputeShader = 37305      ## GL_COMPUTE_SHADER">ShaderType</a></li>
-<li><a class="reference" href="#ShaderVariable" title="ShaderVariable = enum
-  AttribPosition = &quot;vertexPosition&quot;, ## Binded by default to shader location: 0
-  AttribTexcoord = &quot;vertexTexCoord&quot;, ## Binded by default to shader location: 1
-  AttribNormal = &quot;vertexNormal&quot;, ## Binded by default to shader location: 2
-  AttribColor = &quot;vertexColor&quot;, ## Binded by default to shader location: 3
-  AttribTangent = &quot;vertexTangent&quot;, ## Binded by default to shader location: 4
-  AttribTexcoord2 = &quot;vertexTexCoord2&quot;, ## Binded by default to shader location: 5
-  UniformMvp = &quot;mvp&quot;,       ## model-view-projection matrix
-  UniformView = &quot;matView&quot;,  ## view matrix
-  UniformProjection = &quot;matProjection&quot;, ## projection matrix
-  UniformModel = &quot;matModel&quot;, ## model matrix
-  UniformNormal = &quot;matNormal&quot;, ## normal matrix (transpose(inverse(matModelView))
-  UniformColor = &quot;colDiffuse&quot;, ## color diffuse (base tint color, multiplied by texture color)
-  Sampler2dTexture0 = &quot;texture0&quot;, ## texture0 (texture slot active 0)
-  Sampler2dTexture1 = &quot;texture1&quot;, ## texture1 (texture slot active 1)
-  Sampler2dTexture2 = &quot;texture2&quot; ## texture2 (texture slot active 2)">ShaderVariable</a></li>
 <li><a class="reference" href="#TextureParameter" title="TextureParameter {.size: 4.} = enum
   FilterNearest = 9728,     ## GL_NEAREST
   FilterLinear = 9729,      ## GL_LINEAR
@@ -1029,6 +1029,31 @@
 
   </dd>
 </div>
+<div id="DefaultShaderVariableName">
+  <dt><pre><a href="rlgl.html#DefaultShaderVariableName"><span class="Identifier">DefaultShaderVariableName</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">AttribPosition</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexPosition&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 0</span>
+  <span class="Identifier">AttribTexcoord</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexTexCoord&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 1</span>
+  <span class="Identifier">AttribNormal</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexNormal&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 2</span>
+  <span class="Identifier">AttribColor</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexColor&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 3</span>
+  <span class="Identifier">AttribTangent</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexTangent&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 4</span>
+  <span class="Identifier">AttribTexcoord2</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexTexCoord2&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 5</span>
+  <span class="Identifier">UniformMvp</span> <span class="Other">=</span> <span class="StringLit">&quot;mvp&quot;</span><span class="Other">,</span>       <span class="Comment">## model-view-projection matrix</span>
+  <span class="Identifier">UniformView</span> <span class="Other">=</span> <span class="StringLit">&quot;matView&quot;</span><span class="Other">,</span>  <span class="Comment">## view matrix</span>
+  <span class="Identifier">UniformProjection</span> <span class="Other">=</span> <span class="StringLit">&quot;matProjection&quot;</span><span class="Other">,</span> <span class="Comment">## projection matrix</span>
+  <span class="Identifier">UniformModel</span> <span class="Other">=</span> <span class="StringLit">&quot;matModel&quot;</span><span class="Other">,</span> <span class="Comment">## model matrix</span>
+  <span class="Identifier">UniformNormal</span> <span class="Other">=</span> <span class="StringLit">&quot;matNormal&quot;</span><span class="Other">,</span> <span class="Comment">## normal matrix (transpose(inverse(matModelView))</span>
+  <span class="Identifier">UniformColor</span> <span class="Other">=</span> <span class="StringLit">&quot;colDiffuse&quot;</span><span class="Other">,</span> <span class="Comment">## color diffuse (base tint color, multiplied by texture color)</span>
+  <span class="Identifier">Sampler2dTexture0</span> <span class="Other">=</span> <span class="StringLit">&quot;texture0&quot;</span><span class="Other">,</span> <span class="Comment">## texture0 (texture slot active 0)</span>
+  <span class="Identifier">Sampler2dTexture1</span> <span class="Other">=</span> <span class="StringLit">&quot;texture1&quot;</span><span class="Other">,</span> <span class="Comment">## texture1 (texture slot active 1)</span>
+  <span class="Identifier">Sampler2dTexture2</span> <span class="Other">=</span> <span class="StringLit">&quot;texture2&quot;</span> <span class="Comment">## texture2 (texture slot active 2)</span></pre></dt>
+  <dd>
+    
+    Default shader vertex attribute names to set location points
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L111" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L111" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
 <div id="DrawCall">
   <dt><pre><a href="rlgl.html#DrawCall"><span class="Identifier">DrawCall</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlDrawCall&quot;</span><span class="Other">,</span> <span class="Identifier">nodecl</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">mode</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>               <span class="Comment">## Drawing mode: LINES, TRIANGLES, QUADS</span>
@@ -1202,31 +1227,6 @@
     GL Shader type
     <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L77" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L77" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="ShaderVariable">
-  <dt><pre><a href="rlgl.html#ShaderVariable"><span class="Identifier">ShaderVariable</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">AttribPosition</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexPosition&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 0</span>
-  <span class="Identifier">AttribTexcoord</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexTexCoord&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 1</span>
-  <span class="Identifier">AttribNormal</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexNormal&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 2</span>
-  <span class="Identifier">AttribColor</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexColor&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 3</span>
-  <span class="Identifier">AttribTangent</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexTangent&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 4</span>
-  <span class="Identifier">AttribTexcoord2</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexTexCoord2&quot;</span><span class="Other">,</span> <span class="Comment">## Binded by default to shader location: 5</span>
-  <span class="Identifier">UniformMvp</span> <span class="Other">=</span> <span class="StringLit">&quot;mvp&quot;</span><span class="Other">,</span>       <span class="Comment">## model-view-projection matrix</span>
-  <span class="Identifier">UniformView</span> <span class="Other">=</span> <span class="StringLit">&quot;matView&quot;</span><span class="Other">,</span>  <span class="Comment">## view matrix</span>
-  <span class="Identifier">UniformProjection</span> <span class="Other">=</span> <span class="StringLit">&quot;matProjection&quot;</span><span class="Other">,</span> <span class="Comment">## projection matrix</span>
-  <span class="Identifier">UniformModel</span> <span class="Other">=</span> <span class="StringLit">&quot;matModel&quot;</span><span class="Other">,</span> <span class="Comment">## model matrix</span>
-  <span class="Identifier">UniformNormal</span> <span class="Other">=</span> <span class="StringLit">&quot;matNormal&quot;</span><span class="Other">,</span> <span class="Comment">## normal matrix (transpose(inverse(matModelView))</span>
-  <span class="Identifier">UniformColor</span> <span class="Other">=</span> <span class="StringLit">&quot;colDiffuse&quot;</span><span class="Other">,</span> <span class="Comment">## color diffuse (base tint color, multiplied by texture color)</span>
-  <span class="Identifier">Sampler2dTexture0</span> <span class="Other">=</span> <span class="StringLit">&quot;texture0&quot;</span><span class="Other">,</span> <span class="Comment">## texture0 (texture slot active 0)</span>
-  <span class="Identifier">Sampler2dTexture1</span> <span class="Other">=</span> <span class="StringLit">&quot;texture1&quot;</span><span class="Other">,</span> <span class="Comment">## texture1 (texture slot active 1)</span>
-  <span class="Identifier">Sampler2dTexture2</span> <span class="Other">=</span> <span class="StringLit">&quot;texture2&quot;</span> <span class="Comment">## texture2 (texture slot active 2)</span></pre></dt>
-  <dd>
-    
-    Default shader vertex attribute names to set location points
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L111" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L111" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3930,7 +3930,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-12-27 15:32:01 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-12-27 15:55:28 UTC</small>
       </div>
     </div>
   </div>
