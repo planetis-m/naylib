@@ -97,28 +97,18 @@ else: {.compile: raylibDir / "rglfw.c".}
 
 const
   RaylibVersion* = (4, 5, 0)
-"""
-  extraDistinct = """
 
-
-const
   # Taken from raylib/src/config.h
   MaxShaderLocations* = 32 ## Maximum number of shader locations supported
   MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
+"""
+  extraDistinct = """
 
-template Diffuse*(_: typedesc[MaterialMapIndex]): untyped = Albedo
-template Specular*(_: typedesc[MaterialMapIndex]): untyped = Metalness
 
-template MapDiffuse*(_: typedesc[ShaderLocationIndex]): untyped = MapAlbedo
-template MapSpecular*(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
-
-template Menu*(_: typedesc[KeyboardKey]): untyped = R ## Key: Android menu button
-
-type
+  ShaderLocation* = distinct int32 ## Shader location
   ShaderVariable* = cstring
 
-type
   FlagsEnum = ConfigFlags|Gesture
   Flags*[E: FlagsEnum] = distinct uint32
 
@@ -127,6 +117,14 @@ proc flags*[E: FlagsEnum](e: varargs[E]): Flags[E] {.inline.} =
   for val in items(e):
     res = res or uint32(val)
   Flags[E](res)
+
+template Diffuse*(_: typedesc[MaterialMapIndex]): untyped = Albedo
+template Specular*(_: typedesc[MaterialMapIndex]): untyped = Metalness
+
+template MapDiffuse*(_: typedesc[ShaderLocationIndex]): untyped = MapAlbedo
+template MapSpecular*(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
+
+template Menu*(_: typedesc[KeyboardKey]): untyped = R ## Key: Android menu button
 """
   helpers = """
 
@@ -492,8 +490,6 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
             prev = val.value
           lit "\n"
       spaces
-      # Extra distinct type used in GetShaderLocation, SetShaderValue
-      lit "ShaderLocation* = distinct int32 ## Shader location"
     lit extraDistinct
     # Generate type definitions
     var procProperties: seq[(string, string, string)] = @[]

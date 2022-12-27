@@ -88,6 +88,11 @@ else: {.compile: raylibDir / "rglfw.c".}
 const
   RaylibVersion* = (4, 5, 0)
 
+  # Taken from raylib/src/config.h
+  MaxShaderLocations* = 32 ## Maximum number of shader locations supported
+  MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
+  MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
+
 type
   ConfigFlags* {.size: sizeof(int32).} = enum ## System/Window config flags
     FullscreenMode = 2 ## Set to run program in fullscreen
@@ -425,26 +430,11 @@ type
     ThreePatchVertical ## Npatch layout: 1x3 tiles
     ThreePatchHorizontal ## Npatch layout: 3x1 tiles
 
+  
+
   ShaderLocation* = distinct int32 ## Shader location
-
-const
-  # Taken from raylib/src/config.h
-  MaxShaderLocations* = 32 ## Maximum number of shader locations supported
-  MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
-  MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
-
-template Diffuse*(_: typedesc[MaterialMapIndex]): untyped = Albedo
-template Specular*(_: typedesc[MaterialMapIndex]): untyped = Metalness
-
-template MapDiffuse*(_: typedesc[ShaderLocationIndex]): untyped = MapAlbedo
-template MapSpecular*(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
-
-template Menu*(_: typedesc[KeyboardKey]): untyped = R ## Key: Android menu button
-
-type
   ShaderVariable* = cstring
 
-type
   FlagsEnum = ConfigFlags|Gesture
   Flags*[E: FlagsEnum] = distinct uint32
 
@@ -453,6 +443,14 @@ proc flags*[E: FlagsEnum](e: varargs[E]): Flags[E] {.inline.} =
   for val in items(e):
     res = res or uint32(val)
   Flags[E](res)
+
+template Diffuse*(_: typedesc[MaterialMapIndex]): untyped = Albedo
+template Specular*(_: typedesc[MaterialMapIndex]): untyped = Metalness
+
+template MapDiffuse*(_: typedesc[ShaderLocationIndex]): untyped = MapAlbedo
+template MapSpecular*(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
+
+template Menu*(_: typedesc[KeyboardKey]): untyped = R ## Key: Android menu button
 
 type
   Vector2* {.importc, header: "raylib.h", bycopy.} = object ## Vector2, 2 components
