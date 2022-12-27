@@ -432,8 +432,8 @@ const
   MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 
-template Albedo(_: typedesc[MaterialMap]): untyped = Diffuse
-template Specular(_: typedesc[MaterialMap]): untyped = Metalness
+template Albedo(_: typedesc[MaterialMapIndex]): untyped = Diffuse
+template Specular(_: typedesc[MaterialMapIndex]): untyped = Metalness
 
 template MapAlbedo(_: typedesc[ShaderLocationIndex]): untyped = MapDiffuse
 template MapSpecular(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
