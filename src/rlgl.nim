@@ -47,28 +47,93 @@ elif defined(GraphicsApiOpenGlEs2):
                                            ## by default it's only 16MB!...just take care...
 
 type
-  TextureParameter* = distinct int32
-  MatrixMode* = distinct int32
-  DrawMode* = distinct int32
-  GlType* = distinct int32
-  BufferUsageHint* = distinct int32
-  ShaderType* = distinct int32
-  BlendFactor* = distinct int32
-  BlendEquation* = distinct int32
-
-proc `==`*(a, b: TextureParameter): bool {.borrow.}
-proc `==`*(a, b: MatrixMode): bool {.borrow.}
-proc `==`*(a, b: DrawMode): bool {.borrow.}
-proc `==`*(a, b: GlType): bool {.borrow.}
-proc `==`*(a, b: BufferUsageHint): bool {.borrow.}
-proc `==`*(a, b: ShaderType): bool {.borrow.}
-proc `==`*(a, b: BlendFactor): bool {.borrow.}
-proc `==`*(a, b: BlendEquation): bool {.borrow.}
-
-type
   rlglLoadProc* = proc (name: cstring): pointer ## OpenGL extension functions loader signature (same as GLADloadproc)
 
-type
+  TextureParameter* {.size: sizeof(int32).} = enum
+    ## Texture parameters (equivalent to OpenGL defines)
+    FilterNearest = 0x2600 ## GL_NEAREST
+    FilterLinear = 0x2601 ## GL_LINEAR
+    FilterMipNearest = 0x2700 ## GL_NEAREST_MIPMAP_NEAREST
+    FilterLinearMipNearest = 0x2701 ## GL_LINEAR_MIPMAP_NEAREST
+    FilterNearestMipLinear = 0x2702 ## GL_NEAREST_MIPMAP_LINEAR
+    FilterMipLinear = 0x2703 ## GL_LINEAR_MIPMAP_LINEAR
+    MagFilter = 0x2800 ## GL_TEXTURE_MAG_FILTER
+    MinFilter = 0x2801 ## GL_TEXTURE_MIN_FILTER
+    WrapS = 0x2802 ## GL_TEXTURE_WRAP_S
+    WrapT = 0x2803 ## GL_TEXTURE_WRAP_T
+    WrapRepeat = 0x2901 ## GL_REPEAT
+    FilterAnisotropic = 0x3000 ## Anisotropic filter (custom identifier)
+    MipmapBiasRatio = 0x4000 ## Texture mipmap bias, percentage ratio (custom identifier)
+    WrapClamp = 0x812F ## GL_CLAMP_TO_EDGE
+    WrapMirrorRepeat = 0x8370 ## GL_MIRRORED_REPEAT
+    WrapMirrorClamp = 0x8742 ## GL_MIRROR_CLAMP_EXT
+
+  MatrixMode* {.size: sizeof(int32).} = enum
+    ## Matrix modes (equivalent to OpenGL)
+    Modelview = 0x1700 ## GL_MODELVIEW
+    Projection = 0x1701 ## GL_PROJECTION
+    Texture = 0x1702 ## GL_TEXTURE
+
+  DrawMode* {.size: sizeof(int32).} = enum
+    ## Primitive assembly draw modes
+    Lines = 0x0001 ## GL_LINES
+    Triangles = 0x0004 ## GL_TRIANGLES
+    Quads = 0x0007 ## GL_QUADS
+
+  GlType* {.size: sizeof(int32).} = enum
+    ## GL equivalent data types
+    UnsignedByte = 0x1401 ## GL_UNSIGNED_BYTE
+    Float = 0x1406 ## GL_FLOAT
+
+  BufferUsageHint* {.size: sizeof(int32).} = enum
+    ## GL buffer usage hint
+    StreamDraw = 0x88E0 ## GL_STREAM_DRAW
+    StreamRead = 0x88E1 ## GL_STREAM_READ
+    StreamCopy = 0x88E2 ## GL_STREAM_COPY
+    StaticDraw = 0x88E4 ## GL_STATIC_DRAW
+    StaticRead = 0x88E5 ## GL_STATIC_READ
+    StaticCopy = 0x88E6 ## GL_STATIC_COPY
+    DynamicDraw = 0x88E8 ## GL_DYNAMIC_DRAW
+    DynamicRead = 0x88E9 ## GL_DYNAMIC_READ
+    DynamicCopy = 0x88EA ## GL_DYNAMIC_COPY
+
+  ShaderType* {.size: sizeof(int32).} = enum
+    ## GL Shader type
+    FragmentShader = 0x8B30 ## GL_FRAGMENT_SHADER
+    VertexShader = 0x8B31 ## GL_VERTEX_SHADER
+    ComputeShader = 0x91B9 ## GL_COMPUTE_SHADER
+
+  BlendFactor* {.size: sizeof(int32).} = enum
+    ## GL blending factors
+    Zero ## GL_ZERO
+    One ## GL_ONE
+    SrcColor = 0x0300 ## GL_SRC_COLOR
+    OneMinusSrcColor = 0x0301 ## GL_ONE_MINUS_SRC_COLOR
+    SrcAlpha = 0x0302 ## GL_SRC_ALPHA
+    OneMinusSrcAlpha = 0x0303 ## GL_One_MINUS_SRC_ALPHA
+    DstAlpha = 0x0304 ## GL_DST_ALPHA
+    OneMinusDstAlpha = 0x0305 ## GL_ONE_MINUS_DST_ALPHA
+    DstColor = 0x0306 ## GL_DST_COLOR
+    OneMinusDstColor = 0x0307 ## GL_ONE_MINUS_DST_COLOR
+    SrcAlphaSaturate = 0x0308 ## GL_SRC_ALPHA_SATURATE
+    ConstantColor = 0x8001 ## GL_CONSTANT_COLOR
+    OneMinusConstantColor = 0x8002 ## GL_ONE_MINUS_CONSTANT_COLOR
+    ConstantAlpha = 0x8003 ## GL_CONSTANT_ALPHA
+    OneMinusConstantAlpha = 0x8004 ## GL_ONE_MINUS_CONSTANT_ALPHA
+
+  BlendEquation* {.size: sizeof(int32).} = enum
+    ## GL blending functions/equations
+    BlendColor = 0x8005 ## GL_BLEND_COLOR
+    FuncAdd = 0x8006 ## GL_FUNC_ADD
+    BlendEquationRgb = 0x8009 ## GL_BLEND_EQUATION_RGB (Same as BLEND_EQUATION)
+    FuncSubtract = 0x800A ## GL_FUNC_SUBTRACT
+    FuncReverseSubtract = 0x800B ## GL_FUNC_REVERSE_SUBTRACT
+    BlendDstRgb = 0x80C8 ## GL_BLEND_DST_RGB
+    BlendSrcRgb = 0x80C9 ## GL_BLEND_SRC_RGB
+    BlendDstAlpha = 0x80CA ## GL_BLEND_DST_ALPHA
+    BlendSrcAlpha = 0x80CB ## GL_BLEND_SRC_ALPHA
+    BlendEquationAlpha = 0x883D ## GL_BLEND_EQUATION_ALPHA
+
   GlVersion* {.size: sizeof(int32).} = enum ## OpenGL version
     Opengl11 = 1 ## OpenGL 1.1
     Opengl21 ## OpenGL 2.1 (GLSL 120)
@@ -101,89 +166,6 @@ type
   CullMode* {.size: sizeof(int32).} = enum ## Face culling mode
     FaceFront
     FaceBack
-
-
-const
-  # Texture parameters (equivalent to OpenGL defines)
-  TextureWrapS* = TextureParameter(0x2802) ## GL_TEXTURE_WRAP_S
-  TextureWrapT* = TextureParameter(0x2803) ## GL_TEXTURE_WRAP_T
-  TextureMagFilter* = TextureParameter(0x2800) ## GL_TEXTURE_MAG_FILTER
-  TextureMinFilter* = TextureParameter(0x2801) ## GL_TEXTURE_MIN_FILTER
-
-  TextureFilterNearest* = TextureParameter(0x2600) ## GL_NEAREST
-  TextureFilterLinear* = TextureParameter(0x2601) ## GL_LINEAR
-  TextureFilterMipNearest* = TextureParameter(0x2700) ## GL_NEAREST_MIPMAP_NEAREST
-  TextureFilterNearestMipLinear* = TextureParameter(0x2702) ## GL_NEAREST_MIPMAP_LINEAR
-  TextureFilterLinearMipNearest* = TextureParameter(0x2701) ## GL_LINEAR_MIPMAP_NEAREST
-  TextureFilterMipLinear* = TextureParameter(0x2703) ## GL_LINEAR_MIPMAP_LINEAR
-  TextureFilterAnisotropic* = TextureParameter(0x3000) ## Anisotropic filter (custom identifier)
-  TextureMipmapBiasRatio* = TextureParameter(0x4000) ## Texture mipmap bias, percentage ratio (custom identifier)
-
-  TextureWrapRepeat* = TextureParameter(0x2901) ## GL_REPEAT
-  TextureWrapClamp* = TextureParameter(0x812F) ## GL_CLAMP_TO_EDGE
-  TextureWrapMirrorRepeat* = TextureParameter(0x8370) ## GL_MIRRORED_REPEAT
-  TextureWrapMirrorClamp* = TextureParameter(0x8742) ## GL_MIRROR_CLAMP_EXT
-
-  # Matrix modes (equivalent to OpenGL)
-  MatrixModelview* = MatrixMode(0x1700) ## GL_MODELVIEW
-  MatrixProjection* = MatrixMode(0x1701) ## GL_PROJECTION
-  MatrixTexture* = MatrixMode(0x1702) ## GL_TEXTURE
-
-  # Primitive assembly draw modes
-  DrawLines* = DrawMode(0x0001) ## GL_LINES
-  DrawTriangles* = DrawMode(0x0004) ## GL_TRIANGLES
-  DrawQuads* = DrawMode(0x0007) ## GL_QUADS
-
-  # GL equivalent data types
-  GlUnsignedByte* = GlType(0x1401) ## GL_UNSIGNED_BYTE
-  GlFloat* = GlType(0x1406) ## GL_FLOAT
-
-  # GL buffer usage hint
-  HintStreamDraw* = BufferUsageHint(0x88E0) ## GL_STREAM_DRAW
-  HintStreamRead* = BufferUsageHint(0x88E1) ## GL_STREAM_READ
-  HintStreamCopy* = BufferUsageHint(0x88E2) ## GL_STREAM_COPY
-  HintStaticDraw* = BufferUsageHint(0x88E4) ## GL_STATIC_DRAW
-  HintStaticRead* = BufferUsageHint(0x88E5) ## GL_STATIC_READ
-  HintStaticCopy* = BufferUsageHint(0x88E6) ## GL_STATIC_COPY
-  HintDynamicDraw* = BufferUsageHint(0x88E8) ## GL_DYNAMIC_DRAW
-  HintDynamicRead* = BufferUsageHint(0x88E9) ## GL_DYNAMIC_READ
-  HintDynamicCopy* = BufferUsageHint(0x88EA) ## GL_DYNAMIC_COPY
-
-  # GL Shader type
-  FragmentShader* = ShaderType(0x8B30) ## GL_FRAGMENT_SHADER
-  VertexShader* = ShaderType(0x8B31) ## GL_VERTEX_SHADER
-  ComputeShader* = ShaderType(0x91B9) ## GL_COMPUTE_SHADER
-
-  # GL blending factors
-  FactorZero* = BlendFactor(0) ## GL_ZERO
-  FactorOne* = BlendFactor(1) ## GL_ONE
-  FactorSrcColor* = BlendFactor(0x0300) ## GL_SRC_COLOR
-  FactorOneMinusSrcColor* = BlendFactor(0x0301) ## GL_ONE_MINUS_SRC_COLOR
-  FactorSrcAlpha* = BlendFactor(0x0302) ## GL_SRC_ALPHA
-  FactorOneMinusSrcAlpha* = BlendFactor(0x0303) ## GL_One_MINUS_SRC_ALPHA
-  FactorDstAlpha* = BlendFactor(0x0304) ## GL_DST_ALPHA
-  FactorOneMinusDstAlpha* = BlendFactor(0x0305) ## GL_ONE_MINUS_DST_ALPHA
-  FactorDstColor* = BlendFactor(0x0306) ## GL_DST_COLOR
-  FactorOneMinusDstColor* = BlendFactor(0x0307) ## GL_ONE_MINUS_DST_COLOR
-  FactorSrcAlphaSaturate* = BlendFactor(0x0308) ## GL_SRC_ALPHA_SATURATE
-  FactorConstantColor* = BlendFactor(0x8001) ## GL_CONSTANT_COLOR
-  FactorOneMinusConstantColor* = BlendFactor(0x8002) ## GL_ONE_MINUS_CONSTANT_COLOR
-  FactorConstantAlpha* = BlendFactor(0x8003) ## GL_CONSTANT_ALPHA
-  FactorOneMinusConstantAlpha* = BlendFactor(0x8004) ## GL_ONE_MINUS_CONSTANT_ALPHA
-
-  # GL blending functions/equations
-  BlendFuncAdd* = BlendEquation(0x8006) ## GL_FUNC_ADD
-  BlendFuncSubtract* = BlendEquation(0x800A) ## GL_FUNC_SUBTRACT
-  BlendFuncReverseSubtract* = BlendEquation(0x800B) ## GL_FUNC_REVERSE_SUBTRACT
-  # BlendEquation* = BlendEquation(0x8009) ## GL_BLEND_EQUATION
-  BlendEquationRgb* = BlendEquation(0x8009) ## GL_BLEND_EQUATION_RGB (Same as BLEND_EQUATION)
-  BlendEquationAlpha* = BlendEquation(0x883D) ## GL_BLEND_EQUATION_ALPHA
-  BlendDstRgb* = BlendEquation(0x80C8) ## GL_BLEND_DST_RGB
-  BlendSrcRgb* = BlendEquation(0x80C9) ## GL_BLEND_SRC_RGB
-  BlendDstAlpha* = BlendEquation(0x80CA) ## GL_BLEND_DST_ALPHA
-  BlendSrcAlpha* = BlendEquation(0x80CB) ## GL_BLEND_SRC_ALPHA
-  BlendColor* = BlendEquation(0x8005) ## GL_BLEND_COLOR
-
 
 type
   VertexBuffer* {.importc: "rlVertexBuffer", nodecl, bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
