@@ -116,7 +116,7 @@ type
     BlendSrcAlpha = 0x80CB ## GL_BLEND_SRC_ALPHA
     BlendEquationAlpha = 0x883D ## GL_BLEND_EQUATION_ALPHA
 
-  DefaultShaderName* = enum ## Default shader vertex attribute names to set location points
+  DefaultShaderAttributeName* = enum ## Default shader vertex attribute names to set location points
     AttribPosition = "vertexPosition" ## Binded by default to shader location: 0
     AttribTexcoord = "vertexTexCoord" ## Binded by default to shader location: 1
     AttribNormal = "vertexNormal" ## Binded by default to shader location: 2
