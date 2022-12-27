@@ -5,8 +5,46 @@ export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniform
   ShaderAttributeDataType, MaxShaderLocations, ShaderLocation, Matrix, Vector2, Vector3,
   Color, ShaderVariable, ShaderLocsPtr
 
+# Security check in case no GraphicsApiOpenGl* defined
+when not defined(GraphicsApiOpenGl11) and not defined(GraphicsApiOpenGlEs2):
+  const UseDefaultGraphicsApi = true
+
 const
   RlglVersion* = (4, 2, 0)
+
+  DefaultBatchBuffers* = 1 ## Default number of batch buffers (multi-buffering)
+  DefaultBatchDrawCalls* = 256 ## Default number of batch draw calls (by state changes: mode, texture)
+  DefaultBatchMaxTextureUnits* = 4 ## Maximum number of textures units that can be activated on batch drawing
+  MaxMatrixStackSize* = 32 ## Maximum size of Matrix stack
+  # MaxShaderLocations* = 32 ## Maximum number of shader locations supported
+  CullDistanceNear* = 0.01 ## Default near cull distance
+  CullDistanceFar* = 1000.0 ## Default far cull distance
+
+  # Default shader vertex attribute names to set location points
+  AttribPosition* = ShaderVariable("vertexPosition") ## Binded by default to shader location: 0
+  AttribTexcoord* = ShaderVariable("vertexTexCoord") ## Binded by default to shader location: 1
+  AttribNormal* = ShaderVariable("vertexNormal") ## Binded by default to shader location: 2
+  AttribColor* = ShaderVariable("vertexColor") ## Binded by default to shader location: 3
+  AttribTangent* = ShaderVariable("vertexTangent") ## Binded by default to shader location: 4
+  AttribTexcoord2* = ShaderVariable("vertexTexCoord2") ## Binded by default to shader location: 5
+
+  UniformMvp* = ShaderVariable("mvp") ## model-view-projection matrix
+  UniformView* = ShaderVariable("matView") ## view matrix
+  UniformProjection* = ShaderVariable("matProjection") ## projection matrix
+  UniformModel* = ShaderVariable("matModel") ## model matrix
+  UniformNormal* = ShaderVariable("matNormal") ## normal matrix (transpose(inverse(matModelView))
+  UniformColor* = ShaderVariable("colDiffuse") ## color diffuse (base tint color, multiplied by texture color)
+  Sampler2dTexture0* = ShaderVariable("texture0") ## texture0 (texture slot active 0)
+  Sampler2dTexture1* = ShaderVariable("texture1") ## texture1 (texture slot active 1)
+  Sampler2dTexture2* = ShaderVariable("texture2") ## texture2 (texture slot active 2)
+
+when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
+  const DefaultBatchBufferElements* = 8192 ## This is the maximum amount of elements (quads) per batch
+                                           ## NOTE: Be careful with text, every letter maps to a quad
+elif defined(GraphicsApiOpenGlEs2):
+  const DefaultBatchBufferElements* = 2048 ## We reduce memory sizes for embedded systems (RPI and HTML5)
+                                           ## NOTE: On HTML5 (emscripten) this is allocated on heap,
+                                           ## by default it's only 16MB!...just take care...
 
 type
   TextureParameter* = distinct int32
@@ -18,11 +56,6 @@ type
   BlendFactor* = distinct int32
   BlendEquation* = distinct int32
 
-  GlVersion* = distinct int32
-  FramebufferAttachType* = distinct int32
-  FramebufferAttachTextureType* = distinct int32
-  CullMode* = distinct int32
-
 proc `==`*(a, b: TextureParameter): bool {.borrow.}
 proc `==`*(a, b: MatrixMode): bool {.borrow.}
 proc `==`*(a, b: DrawMode): bool {.borrow.}
@@ -32,65 +65,45 @@ proc `==`*(a, b: ShaderType): bool {.borrow.}
 proc `==`*(a, b: BlendFactor): bool {.borrow.}
 proc `==`*(a, b: BlendEquation): bool {.borrow.}
 
-proc `<`*(a, b: GlVersion): bool {.borrow.}
-proc `<=`*(a, b: GlVersion): bool {.borrow.}
-proc `==`*(a, b: GlVersion): bool {.borrow.}
-
-proc `<`*(a, b: FramebufferAttachType): bool {.borrow.}
-proc `<=`*(a, b: FramebufferAttachType): bool {.borrow.}
-proc `==`*(a, b: FramebufferAttachType): bool {.borrow.}
-
-proc `<`*(a, b: FramebufferAttachTextureType): bool {.borrow.}
-proc `<=`*(a, b: FramebufferAttachTextureType): bool {.borrow.}
-proc `==`*(a, b: FramebufferAttachTextureType): bool {.borrow.}
-
-proc `==`*(a, b: CullMode): bool {.borrow.}
-
 type
   rlglLoadProc* = proc (name: cstring): pointer ## OpenGL extension functions loader signature (same as GLADloadproc)
 
-# Security check in case no GraphicsApiOpenGl* defined
-when not defined(GraphicsApiOpenGl11) and not defined(GraphicsApiOpenGlEs2):
-  const UseDefaultGraphicsApi = true
+type
+  GlVersion* {.size: sizeof(int32).} = enum ## OpenGL version
+    Opengl11 = 1 ## OpenGL 1.1
+    Opengl21 ## OpenGL 2.1 (GLSL 120)
+    Opengl33 ## OpenGL 3.3 (GLSL 330)
+    Opengl43 ## OpenGL 4.3 (using GLSL 330)
+    OpenglEs20 ## OpenGL ES 2.0 (GLSL 100)
+
+  FramebufferAttachType* {.size: sizeof(int32).} = enum ## Framebuffer attachment type
+    ColorChannel0 ## Framebuffer attachmment type: color 0
+    ColorChannel1 ## Framebuffer attachmment type: color 1
+    ColorChannel2 ## Framebuffer attachmment type: color 2
+    ColorChannel3 ## Framebuffer attachmment type: color 3
+    ColorChannel4 ## Framebuffer attachmment type: color 4
+    ColorChannel5 ## Framebuffer attachmment type: color 5
+    ColorChannel6 ## Framebuffer attachmment type: color 6
+    ColorChannel7 ## Framebuffer attachmment type: color 7
+    Depth = 100 ## Framebuffer attachmment type: depth
+    Stencil = 200 ## Framebuffer attachmment type: stencil
+
+  FramebufferAttachTextureType* {.size: sizeof(int32).} = enum ## Framebuffer texture attachment type
+    CubemapPositiveX ## Framebuffer texture attachment type: cubemap, +X side
+    CubemapNegativeX ## Framebuffer texture attachment type: cubemap, -X side
+    CubemapPositiveY ## Framebuffer texture attachment type: cubemap, +Y side
+    CubemapNegativeY ## Framebuffer texture attachment type: cubemap, -Y side
+    CubemapPositiveZ ## Framebuffer texture attachment type: cubemap, +Z side
+    CubemapNegativeZ ## Framebuffer texture attachment type: cubemap, -Z side
+    Texture2d = 100 ## Framebuffer texture attachment type: texture2d
+    Renderbuffer = 200 ## Framebuffer texture attachment type: renderbuffer
+
+  CullMode* {.size: sizeof(int32).} = enum ## Face culling mode
+    FaceFront
+    FaceBack
+
 
 const
-  Opengl11* = GlVersion(1) ## OpenGL 1.1
-  Opengl21* = GlVersion(2) ## OpenGL 2.1 (GLSL 120)
-  Opengl33* = GlVersion(3) ## OpenGL 3.3 (GLSL 330)
-  Opengl43* = GlVersion(4) ## OpenGL 4.3 (using GLSL 330)
-  OpenglEs20* = GlVersion(5) ## OpenGL ES 2.0 (GLSL 100)
-
-  AttachmentColorChannel0* = FramebufferAttachType(0) ## Framebuffer attachmment type: color 0
-  AttachmentColorChannel1* = FramebufferAttachType(1) ## Framebuffer attachmment type: color 1
-  AttachmentColorChannel2* = FramebufferAttachType(2) ## Framebuffer attachmment type: color 2
-  AttachmentColorChannel3* = FramebufferAttachType(3) ## Framebuffer attachmment type: color 3
-  AttachmentColorChannel4* = FramebufferAttachType(4) ## Framebuffer attachmment type: color 4
-  AttachmentColorChannel5* = FramebufferAttachType(5) ## Framebuffer attachmment type: color 5
-  AttachmentColorChannel6* = FramebufferAttachType(6) ## Framebuffer attachmment type: color 6
-  AttachmentColorChannel7* = FramebufferAttachType(7) ## Framebuffer attachmment type: color 7
-  AttachmentDepth* = FramebufferAttachType(100) ## Framebuffer attachmment type: depth
-  AttachmentStencil* = FramebufferAttachType(200) ## Framebuffer attachmment type: stencil
-
-  AttachmentCubemapPositiveX* = FramebufferAttachTextureType(0) ## Framebuffer texture attachment type: cubemap, +X side
-  AttachmentCubemapNegativeX* = FramebufferAttachTextureType(1) ## Framebuffer texture attachment type: cubemap, -X side
-  AttachmentCubemapPositiveY* = FramebufferAttachTextureType(2) ## Framebuffer texture attachment type: cubemap, +Y side
-  AttachmentCubemapNegativeY* = FramebufferAttachTextureType(3) ## Framebuffer texture attachment type: cubemap, -Y side
-  AttachmentCubemapPositiveZ* = FramebufferAttachTextureType(4) ## Framebuffer texture attachment type: cubemap, +Z side
-  AttachmentCubemapNegativeZ* = FramebufferAttachTextureType(5) ## Framebuffer texture attachment type: cubemap, -Z side
-  AttachmentTexture2d* = FramebufferAttachTextureType(100) ## Framebuffer texture attachment type: texture2d
-  AttachmentRenderbuffer* = FramebufferAttachTextureType(200) ## Framebuffer texture attachment type: renderbuffer
-
-  CullFaceFront* = CullMode(0)
-  CullFaceBack* = CullMode(1)
-
-  DefaultBatchBuffers* = 1 ## Default number of batch buffers (multi-buffering)
-  DefaultBatchDrawCalls* = 256 ## Default number of batch draw calls (by state changes: mode, texture)
-  DefaultBatchMaxTextureUnits* = 4 ## Maximum number of textures units that can be activated on batch drawing
-  MaxMatrixStackSize* = 32 ## Maximum size of Matrix stack
-  # MaxShaderLocations* = 32 ## Maximum number of shader locations supported
-  CullDistanceNear* = 0.01 ## Default near cull distance
-  CullDistanceFar* = 1000.0 ## Default far cull distance
-
   # Texture parameters (equivalent to OpenGL defines)
   TextureWrapS* = TextureParameter(0x2802) ## GL_TEXTURE_WRAP_S
   TextureWrapT* = TextureParameter(0x2803) ## GL_TEXTURE_WRAP_T
@@ -171,31 +184,6 @@ const
   BlendSrcAlpha* = BlendEquation(0x80CB) ## GL_BLEND_SRC_ALPHA
   BlendColor* = BlendEquation(0x8005) ## GL_BLEND_COLOR
 
-  # Default shader vertex attribute names to set location points
-  ShaderVarAttribPosition* = ShaderVariable("vertexPosition") ## Binded by default to shader location: 0
-  ShaderVarAttribTexcoord* = ShaderVariable("vertexTexCoord") ## Binded by default to shader location: 1
-  ShaderVarAttribNormal* = ShaderVariable("vertexNormal") ## Binded by default to shader location: 2
-  ShaderVarAttribColor* = ShaderVariable("vertexColor") ## Binded by default to shader location: 3
-  ShaderVarAttribTangent* = ShaderVariable("vertexTangent") ## Binded by default to shader location: 4
-  ShaderVarAttribTexcoord2* = ShaderVariable("vertexTexCoord2") ## Binded by default to shader location: 5
-
-  ShaderVarUniformMvp* = ShaderVariable("mvp") ## model-view-projection matrix
-  ShaderVarUniformView* = ShaderVariable("matView") ## view matrix
-  ShaderVarUniformProjection* = ShaderVariable("matProjection") ## projection matrix
-  ShaderVarUniformModel* = ShaderVariable("matModel") ## model matrix
-  ShaderVarUniformNormal* = ShaderVariable("matNormal") ## normal matrix (transpose(inverse(matModelView))
-  ShaderVarUniformColor* = ShaderVariable("colDiffuse") ## color diffuse (base tint color, multiplied by texture color)
-  ShaderVarSampler2dTexture0* = ShaderVariable("texture0") ## texture0 (texture slot active 0)
-  ShaderVarSampler2dTexture1* = ShaderVariable("texture1") ## texture1 (texture slot active 1)
-  ShaderVarSampler2dTexture2* = ShaderVariable("texture2") ## texture2 (texture slot active 2)
-
-when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
-  const DefaultBatchBufferElements* = 8192 ## This is the maximum amount of elements (quads) per batch
-                                           ## NOTE: Be careful with text, every letter maps to a quad
-elif defined(GraphicsApiOpenGlEs2):
-  const DefaultBatchBufferElements* = 2048 ## We reduce memory sizes for embedded systems (RPI and HTML5)
-                                           ## NOTE: On HTML5 (emscripten) this is allocated on heap,
-                                           ## by default it's only 16MB!...just take care...
 
 type
   VertexBuffer* {.importc: "rlVertexBuffer", nodecl, bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)

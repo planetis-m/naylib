@@ -104,8 +104,6 @@ const
   MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
 """
   extraDistinct = """
-
-
   ShaderLocation* = distinct int32 ## Shader location
   ShaderVariable* = cstring
 
@@ -489,7 +487,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
             doc val
             prev = val.value
           lit "\n"
-      spaces
+      lit "\n"
     lit extraDistinct
     # Generate type definitions
     var procProperties: seq[(string, string, string)] = @[]

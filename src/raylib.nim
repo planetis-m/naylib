@@ -430,8 +430,6 @@ type
     ThreePatchVertical ## Npatch layout: 1x3 tiles
     ThreePatchHorizontal ## Npatch layout: 3x1 tiles
 
-  
-
   ShaderLocation* = distinct int32 ## Shader location
   ShaderVariable* = cstring
 
