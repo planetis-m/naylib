@@ -1604,7 +1604,7 @@ type
   EmbeddedWave* = distinct Wave
   EmbeddedFont* = distinct Font
 
-  ShaderLocsPtr* = distinct ptr UncheckedArray[ShaderLocation]
+  ShaderLocsPtr* = distinct typeof(Shader.locs)
 
 proc `=destroy`*(x: var EmbeddedImage) = discard
 proc `=copy`*(dest: var EmbeddedImage; source: EmbeddedImage) =
@@ -2345,7 +2345,7 @@ proc `[]=`*(x: var MeshVboId, i: int, val: uint32) =
   Mesh(x).vboId[i] = val
 
 proc `locs=`*(x: var Shader; locs: ShaderLocsPtr) {.inline.} =
-  x.locs = (ptr UncheckedArray[ShaderLocation])(locs)
+  x.locs = (typeof(x.locs))(locs)
 
 template locs*(x: Shader): ShaderLocs = ShaderLocs(x)
 

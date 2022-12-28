@@ -196,7 +196,7 @@ proc `[]=`*(x: var MeshVboId, i: int, val: uint32) =
   Mesh(x).vboId[i] = val
 
 proc `locs=`*(x: var Shader; locs: ShaderLocsPtr) {.inline.} =
-  x.locs = (ptr UncheckedArray[ShaderLocation])(locs)
+  x.locs = (typeof(x.locs))(locs)
 
 template locs*(x: Shader): ShaderLocs = ShaderLocs(x)
 

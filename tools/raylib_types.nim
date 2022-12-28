@@ -4,7 +4,7 @@ type
   EmbeddedWave* = distinct Wave
   EmbeddedFont* = distinct Font
 
-  ShaderLocsPtr* = distinct ptr UncheckedArray[ShaderLocation]
+  ShaderLocsPtr* = distinct typeof(Shader.locs)
 
 proc `=destroy`*(x: var EmbeddedImage) = discard
 proc `=copy`*(dest: var EmbeddedImage; source: EmbeddedImage) =
