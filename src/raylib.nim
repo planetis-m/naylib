@@ -1687,15 +1687,15 @@ proc `=destroy`*(x: var Music) =
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 
 type
-  Array*[T] = object
+  RArray*[T] = object
     len: int
     data: ptr UncheckedArray[T]
 
-proc `=destroy`*[T](x: var Array[T]) =
+proc `=destroy`*[T](x: var RArray[T]) =
   if x.data != nil:
     for i in 0..<x.len: `=destroy`(x.data[i])
     memFree(x.data)
-proc `=copy`*[T](dest: var Array[T]; source: Array[T]) =
+proc `=copy`*[T](dest: var RArray[T]; source: RArray[T]) =
   if dest.data != source.data:
     `=destroy`(dest)
     wasMoved(dest)
@@ -1713,28 +1713,28 @@ template checkArrayAccess(a, x, len) =
       if x < 0 or x >= len:
         raiseIndexDefect(x, len-1)
 
-proc `[]`*[T](x: Array[T], i: int): lent T =
+proc `[]`*[T](x: RArray[T], i: int): lent T =
   checkArrayAccess(x.data, i, x.len)
   result = x.data[i]
 
-proc `[]`*[T](x: var Array[T], i: int): var T =
+proc `[]`*[T](x: var RArray[T], i: int): var T =
   checkArrayAccess(x.data, i, x.len)
   result = x.data[i]
 
-proc `[]=`*[T](x: var Array[T], i: int, val: sink T) =
+proc `[]=`*[T](x: var RArray[T], i: int, val: sink T) =
   checkArrayAccess(x.data, i, x.len)
   x.data[i] = val
 
-proc len*[T](x: Array[T]): int {.inline.} = x.len
+proc len*[T](x: RArray[T]): int {.inline.} = x.len
 
-proc `@`*[T](x: Array[T]): seq[T] {.inline.} =
+proc `@`*[T](x: RArray[T]): seq[T] {.inline.} =
   newSeq(result, x.len)
   for i in 0..x.len-1: result[i] = x[i]
 
-template toOpenArray*(x: Array, first, last: int): untyped =
+template toOpenArray*(x: RArray, first, last: int): untyped =
   toOpenArray(x.data, first, last)
 
-template toOpenArray*(x: Array): untyped =
+template toOpenArray*(x: RArray): untyped =
   toOpenArray(x.data, 0, x.len-1)
 
 proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
@@ -1835,39 +1835,39 @@ proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, valu
   ## Set shader uniform value vector
   setShaderValueVPriv(shader, locIndex, cast[pointer](value), kind(T), value.len.int32)
 
-proc loadModelAnimations*(fileName: string): Array[ModelAnimation] =
+proc loadModelAnimations*(fileName: string): RArray[ModelAnimation] =
   ## Load model animations from file
   var len = 0'u32
   let data = loadModelAnimationsPriv(fileName.cstring, len.addr)
   if len <= 0:
     raiseResourceNotFound(filename)
-  result = Array[ModelAnimation](len: len.int, data: data)
+  result = RArray[ModelAnimation](len: len.int, data: data)
 
-proc loadWaveSamples*(wave: Wave): Array[float32] =
+proc loadWaveSamples*(wave: Wave): RArray[float32] =
   ## Load samples data from wave as a floats array
   let data = loadWaveSamplesPriv(wave)
   let len = int(wave.frameCount * wave.channels)
-  result = Array[float32](len: len, data: data)
+  result = RArray[float32](len: len, data: data)
 
-proc loadImageColors*(image: Image): Array[Color] =
+proc loadImageColors*(image: Image): RArray[Color] =
   ## Load color data from image as a Color array (RGBA - 32bit)
   let data = loadImageColorsPriv(image)
   let len = int(image.width * image.height)
-  result = Array[Color](len: len, data: data)
+  result = RArray[Color](len: len, data: data)
 
-proc loadImagePalette*(image: Image; maxPaletteSize: int32): Array[Color] =
+proc loadImagePalette*(image: Image; maxPaletteSize: int32): RArray[Color] =
   ## Load colors palette from image as a Color array (RGBA - 32bit)
   var len = 0'i32
   let data = loadImagePalettePriv(image, maxPaletteSize, len.addr)
-  result = Array[Color](len: len, data: data)
+  result = RArray[Color](len: len, data: data)
 
-proc loadMaterials*(fileName: string): Array[Material] =
+proc loadMaterials*(fileName: string): RArray[Material] =
   ## Load materials from model file
   var len = 0'i32
   let data = loadMaterialsPriv(fileName.cstring, len.addr)
   if len <= 0:
     raiseResourceNotFound(filename)
-  result = Array[Material](len: len, data: data)
+  result = RArray[Material](len: len, data: data)
 
 proc drawLineStrip*(points: openArray[Vector2]; color: Color) {.inline.} =
   ## Draw lines sequence
@@ -1957,18 +1957,18 @@ proc setPixelColor*[T: Pixel](pixels: T, color: Color) =
   setPixelColorPriv(pixels.value, color, kind(T))
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; fontChars: openArray[int32];
-    `type`: FontType): Array[GlyphInfo] =
+    `type`: FontType): RArray[GlyphInfo] =
   ## Load font data for further use
   let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
       fontSize, if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars),
       fontChars.len.int32, `type`)
-  result = Array[GlyphInfo](len: if fontChars.len == 0: 95 else: fontChars.len, data: data)
+  result = RArray[GlyphInfo](len: if fontChars.len == 0: 95 else: fontChars.len, data: data)
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize, glyphCount: int32;
-    `type`: FontType): Array[GlyphInfo] =
+    `type`: FontType): RArray[GlyphInfo] =
   let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
       fontSize, nil, glyphCount, `type`)
-  result = Array[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
+  result = RArray[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
 
 proc loadFont*(fileName: string): Font =
   ## Load font from file into GPU memory (VRAM)
@@ -2004,7 +2004,7 @@ proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize:
       fileData.len.int32, fontSize, nil, glyphCount)
   if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound("buffer")
 
-proc loadFontFromData*(chars: sink Array[GlyphInfo]; baseSize, padding: int32, packMethod: int32): Font =
+proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, packMethod: int32): Font =
   ## Load font using chars info
   result.baseSize = baseSize
   result.glyphCount = chars.len.int32
@@ -2015,13 +2015,13 @@ proc loadFontFromData*(chars: sink Array[GlyphInfo]; baseSize, padding: int32, p
   result.texture = loadTextureFromImage(atlas)
   if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound("image")
 
-proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out Array[Rectangle]; fontSize: int32;
+proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out RArray[Rectangle]; fontSize: int32;
     padding: int32; packMethod: int32): Image =
   ## Generate image font atlas using chars info
   var data: ptr UncheckedArray[Rectangle] = nil
   result = genImageFontAtlasPriv(cast[ptr UncheckedArray[GlyphInfo]](chars), data.addr,
       chars.len.int32, fontSize, padding, packMethod)
-  recs = Array[Rectangle](len: chars.len, data: data)
+  recs = RArray[Rectangle](len: chars.len, data: data)
 
 proc drawTriangleStrip3D*(points: openArray[Vector3]; color: Color) =
   ## Draw a triangle strip defined by points
