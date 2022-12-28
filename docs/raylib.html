@@ -51,7 +51,10 @@
   <details open>
     <summary><a class="reference reference-toplevel" href="#7" id="57">Types</a></summary>
     <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#AudioCallback" title="AudioCallback = proc (bufferData: pointer; frames: uint32) {.cdecl.}">AudioCallback</a></li>
+      <li><a class="reference" href="#Array" title="Array[T] = object
+  len: int
+  data: ptr UncheckedArray[T]">Array</a></li>
+<li><a class="reference" href="#AudioCallback" title="AudioCallback = proc (bufferData: pointer; frames: uint32) {.cdecl.}">AudioCallback</a></li>
 <li><a class="reference" href="#AudioStream" title="AudioStream {.importc, header: &quot;raylib.h&quot;, bycopy.} = object
   buffer: ptr rAudioBuffer   ## Pointer to internal data used by the audio system
   processor: ptr rAudioProcessor ## Pointer to internal data processor, useful for audio effects
@@ -115,9 +118,6 @@
   WindowHighdpi = 8192,     ## Set to support HighDPI
   WindowMousePassthrough = 16384, ## Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
   InterlacedHint = 65536     ## Set to try enabling interlaced video format (for V3D)">ConfigFlags</a></li>
-<li><a class="reference" href="#CSeq" title="CSeq[T] = object
-  len: int
-  data: ptr UncheckedArray[T]">CSeq</a></li>
 <li><a class="reference" href="#CubemapLayout" title="CubemapLayout {.size: 4.} = enum
   AutoDetect,               ## Automatically detect layout type
   LineVertical,             ## Layout is defined by a vertical line with faces
@@ -503,7 +503,7 @@
   MapPrefilter,             ## Shader location: samplerCube texture: prefilter
   MapBrdf                    ## Shader location: sampler2d texture: brdf">ShaderLocationIndex</a></li>
 <li><a class="reference" href="#ShaderLocs" title="ShaderLocs = distinct Shader">ShaderLocs</a></li>
-<li><a class="reference" href="#ShaderLocsPtr" title="ShaderLocsPtr = distinct ptr UncheckedArray[ShaderLocation]">ShaderLocsPtr</a></li>
+<li><a class="reference" href="#ShaderLocsPtr" title="ShaderLocsPtr = distinct typeof(Shader.locs)">ShaderLocsPtr</a></li>
 <li><a class="reference" href="#ShaderUniformDataType" title="ShaderUniformDataType {.size: 4.} = enum
   Float,                    ## Shader uniform type: float
   Vec2,                     ## Shader uniform type: vec2 (2 float)
@@ -658,7 +658,7 @@
 <li><a class="reference" href="#%3Dcopy%2CSound%2CSound" title="`=copy`(dest: var Sound; source: Sound)">`=copy`(dest: var Sound; source: Sound)</a></li>
 <li><a class="reference" href="#%3Dcopy%2CTexture%2CTexture" title="`=copy`(dest: var Texture; source: Texture)">`=copy`(dest: var Texture; source: Texture)</a></li>
 <li><a class="reference" href="#%3Dcopy%2CWave%2CWave" title="`=copy`(dest: var Wave; source: Wave)">`=copy`(dest: var Wave; source: Wave)</a></li>
-<li><a class="reference" href="#%3Dcopy%2CCSeq%5BT%5D%2CCSeq%5BT%5D" title="`=copy`[T](dest: var CSeq[T]; source: CSeq[T])">`=copy`[T](dest: var CSeq[T]; source: CSeq[T])</a></li>
+<li><a class="reference" href="#%3Dcopy%2CArray%5BT%5D%2CArray%5BT%5D" title="`=copy`[T](dest: var Array[T]; source: Array[T])">`=copy`[T](dest: var Array[T]; source: Array[T])</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">=destroy
@@ -679,7 +679,7 @@
 <li><a class="reference" href="#%3Ddestroy%2CSound" title="`=destroy`(x: var Sound)">`=destroy`(x: var Sound)</a></li>
 <li><a class="reference" href="#%3Ddestroy%2CTexture" title="`=destroy`(x: var Texture)">`=destroy`(x: var Texture)</a></li>
 <li><a class="reference" href="#%3Ddestroy%2CWave" title="`=destroy`(x: var Wave)">`=destroy`(x: var Wave)</a></li>
-<li><a class="reference" href="#%3Ddestroy%2CCSeq%5BT%5D" title="`=destroy`[T](x: var CSeq[T])">`=destroy`[T](x: var CSeq[T])</a></li>
+<li><a class="reference" href="#%3Ddestroy%2CArray%5BT%5D" title="`=destroy`[T](x: var Array[T])">`=destroy`[T](x: var Array[T])</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">=sink
@@ -687,7 +687,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">@
-  <li><a class="reference" href="#%40%2CCSeq%5BT%5D" title="`@`[T](x: CSeq[T]): seq[T]">`@`[T](x: CSeq[T]): seq[T]</a></li>
+  <li><a class="reference" href="#%40%2CArray%5BT%5D" title="`@`[T](x: Array[T]): seq[T]">`@`[T](x: Array[T]): seq[T]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">[]
@@ -737,8 +737,8 @@
 <li><a class="reference" href="#%5B%5D%2CModelMeshes%2Cint_2" title="`[]`(x: var ModelMeshes; i: int): var Mesh">`[]`(x: var ModelMeshes; i: int): var Mesh</a></li>
 <li><a class="reference" href="#%5B%5D%2CModelMeshMaterial%2Cint_2" title="`[]`(x: var ModelMeshMaterial; i: int): var int32">`[]`(x: var ModelMeshMaterial; i: int): var int32</a></li>
 <li><a class="reference" href="#%5B%5D%2CShaderLocs%2CShaderLocationIndex_2" title="`[]`(x: var ShaderLocs; i: ShaderLocationIndex): var ShaderLocation">`[]`(x: var ShaderLocs; i: ShaderLocationIndex): var ShaderLocation</a></li>
-<li><a class="reference" href="#%5B%5D%2CCSeq%5BT%5D%2Cint" title="`[]`[T](x: CSeq[T]; i: int): lent T">`[]`[T](x: CSeq[T]; i: int): lent T</a></li>
-<li><a class="reference" href="#%5B%5D%2CCSeq%5BT%5D%2Cint_2" title="`[]`[T](x: var CSeq[T]; i: int): var T">`[]`[T](x: var CSeq[T]; i: int): var T</a></li>
+<li><a class="reference" href="#%5B%5D%2CArray%5BT%5D%2Cint" title="`[]`[T](x: Array[T]; i: int): lent T">`[]`[T](x: Array[T]; i: int): lent T</a></li>
+<li><a class="reference" href="#%5B%5D%2CArray%5BT%5D%2Cint_2" title="`[]`[T](x: var Array[T]; i: int): var T">`[]`[T](x: var Array[T]; i: int): var T</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">[]=
@@ -765,7 +765,7 @@
 <li><a class="reference" href="#%5B%5D%3D%2CModelMeshes%2Cint%2CMesh" title="`[]=`(x: var ModelMeshes; i: int; val: Mesh)">`[]=`(x: var ModelMeshes; i: int; val: Mesh)</a></li>
 <li><a class="reference" href="#%5B%5D%3D%2CModelMeshMaterial%2Cint%2Cint32" title="`[]=`(x: var ModelMeshMaterial; i: int; val: int32)">`[]=`(x: var ModelMeshMaterial; i: int; val: int32)</a></li>
 <li><a class="reference" href="#%5B%5D%3D%2CShaderLocs%2CShaderLocationIndex%2CShaderLocation" title="`[]=`(x: var ShaderLocs; i: ShaderLocationIndex; val: ShaderLocation)">`[]=`(x: var ShaderLocs; i: ShaderLocationIndex; val: ShaderLocation)</a></li>
-<li><a class="reference" href="#%5B%5D%3D%2CCSeq%5BT%5D%2Cint%2CsinkT" title="`[]=`[T](x: var CSeq[T]; i: int; val: sink T)">`[]=`[T](x: var CSeq[T]; i: int; val: sink T)</a></li>
+<li><a class="reference" href="#%5B%5D%3D%2CArray%5BT%5D%2Cint%2CsinkT" title="`[]=`[T](x: var Array[T]; i: int; val: sink T)">`[]=`[T](x: var Array[T]; i: int; val: sink T)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">attachAudioStreamProcessor
@@ -1376,8 +1376,8 @@
 
 </ul>
 <ul class="simple nested-toc-section">genImageFontAtlas
-  <li><a class="reference" href="#genImageFontAtlas%2CopenArray%5BGlyphInfo%5D%2C%2Cint32%2Cint32%2Cint32" title="genImageFontAtlas(chars: openArray[GlyphInfo]; recs: out CSeq[Rectangle];
-                  fontSize: int32; padding: int32; packMethod: int32): Image">genImageFontAtlas(chars: openArray[GlyphInfo]; recs: out CSeq[Rectangle];
+  <li><a class="reference" href="#genImageFontAtlas%2CopenArray%5BGlyphInfo%5D%2C%2Cint32%2Cint32%2Cint32" title="genImageFontAtlas(chars: openArray[GlyphInfo]; recs: out Array[Rectangle];
+                  fontSize: int32; padding: int32; packMethod: int32): Image">genImageFontAtlas(chars: openArray[GlyphInfo]; recs: out Array[Rectangle];
                   fontSize: int32; padding: int32; packMethod: int32): Image</a></li>
 
 </ul>
@@ -2063,7 +2063,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">len
-  <li><a class="reference" href="#len%2CCSeq%5BT%5D" title="len[T](x: CSeq[T]): int">len[T](x: CSeq[T]): int</a></li>
+  <li><a class="reference" href="#len%2CArray%5BT%5D" title="len[T](x: Array[T]): int">len[T](x: Array[T]): int</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">loadAudioStream
@@ -2078,16 +2078,16 @@
 </ul>
 <ul class="simple nested-toc-section">loadFontData
   <li><a class="reference" href="#loadFontData%2CopenArray%5Buint8%5D%2Cint32%2Cint32%2CFontType" title="loadFontData(fileData: openArray[uint8]; fontSize, glyphCount: int32;
-             type: FontType): CSeq[GlyphInfo]">loadFontData(fileData: openArray[uint8]; fontSize, glyphCount: int32;
-             type: FontType): CSeq[GlyphInfo]</a></li>
+             type: FontType): Array[GlyphInfo]">loadFontData(fileData: openArray[uint8]; fontSize, glyphCount: int32;
+             type: FontType): Array[GlyphInfo]</a></li>
 <li><a class="reference" href="#loadFontData%2CopenArray%5Buint8%5D%2Cint32%2CopenArray%5Bint32%5D%2CFontType" title="loadFontData(fileData: openArray[uint8]; fontSize: int32;
-             fontChars: openArray[int32]; type: FontType): CSeq[GlyphInfo]">loadFontData(fileData: openArray[uint8]; fontSize: int32;
-             fontChars: openArray[int32]; type: FontType): CSeq[GlyphInfo]</a></li>
+             fontChars: openArray[int32]; type: FontType): Array[GlyphInfo]">loadFontData(fileData: openArray[uint8]; fontSize: int32;
+             fontChars: openArray[int32]; type: FontType): Array[GlyphInfo]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">loadFontFromData
-  <li><a class="reference" href="#loadFontFromData%2CsinkCSeq%5BGlyphInfo%5D%2Cint32%2Cint32%2Cint32" title="loadFontFromData(chars: sink CSeq[GlyphInfo]; baseSize, padding: int32;
-                 packMethod: int32): Font">loadFontFromData(chars: sink CSeq[GlyphInfo]; baseSize, padding: int32;
+  <li><a class="reference" href="#loadFontFromData%2CsinkArray%5BGlyphInfo%5D%2Cint32%2Cint32%2Cint32" title="loadFontFromData(chars: sink Array[GlyphInfo]; baseSize, padding: int32;
+                 packMethod: int32): Font">loadFontFromData(chars: sink Array[GlyphInfo]; baseSize, padding: int32;
                  packMethod: int32): Font</a></li>
 
 </ul>
@@ -2113,7 +2113,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">loadImageColors
-  <li><a class="reference" href="#loadImageColors%2CImage" title="loadImageColors(image: Image): CSeq[Color]">loadImageColors(image: Image): CSeq[Color]</a></li>
+  <li><a class="reference" href="#loadImageColors%2CImage" title="loadImageColors(image: Image): Array[Color]">loadImageColors(image: Image): Array[Color]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">loadImageFromMemory
@@ -2129,7 +2129,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">loadImagePalette
-  <li><a class="reference" href="#loadImagePalette%2CImage%2Cint32" title="loadImagePalette(image: Image; maxPaletteSize: int32): CSeq[Color]">loadImagePalette(image: Image; maxPaletteSize: int32): CSeq[Color]</a></li>
+  <li><a class="reference" href="#loadImagePalette%2CImage%2Cint32" title="loadImagePalette(image: Image; maxPaletteSize: int32): Array[Color]">loadImagePalette(image: Image; maxPaletteSize: int32): Array[Color]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">loadImageRaw
@@ -2143,7 +2143,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">loadMaterials
-  <li><a class="reference" href="#loadMaterials%2Cstring" title="loadMaterials(fileName: string): CSeq[Material]">loadMaterials(fileName: string): CSeq[Material]</a></li>
+  <li><a class="reference" href="#loadMaterials%2Cstring" title="loadMaterials(fileName: string): Array[Material]">loadMaterials(fileName: string): Array[Material]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">loadModel
@@ -2151,7 +2151,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">loadModelAnimations
-  <li><a class="reference" href="#loadModelAnimations%2Cstring" title="loadModelAnimations(fileName: string): CSeq[ModelAnimation]">loadModelAnimations(fileName: string): CSeq[ModelAnimation]</a></li>
+  <li><a class="reference" href="#loadModelAnimations%2Cstring" title="loadModelAnimations(fileName: string): Array[ModelAnimation]">loadModelAnimations(fileName: string): Array[ModelAnimation]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">loadModelFromMesh
@@ -2215,7 +2215,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">loadWaveSamples
-  <li><a class="reference" href="#loadWaveSamples%2CWave" title="loadWaveSamples(wave: Wave): CSeq[float32]">loadWaveSamples(wave: Wave): CSeq[float32]</a></li>
+  <li><a class="reference" href="#loadWaveSamples%2CWave" title="loadWaveSamples(wave: Wave): Array[float32]">loadWaveSamples(wave: Wave): Array[float32]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">locs=
@@ -2852,8 +2852,8 @@
 
 </ul>
 <ul class="simple nested-toc-section">toOpenArray
-  <li><a class="reference" href="#toOpenArray.t%2CCSeq" title="toOpenArray(x: CSeq): untyped">toOpenArray(x: CSeq): untyped</a></li>
-<li><a class="reference" href="#toOpenArray.t%2CCSeq%2Cint%2Cint" title="toOpenArray(x: CSeq; first, last: int): untyped">toOpenArray(x: CSeq; first, last: int): untyped</a></li>
+  <li><a class="reference" href="#toOpenArray.t%2CArray" title="toOpenArray(x: Array): untyped">toOpenArray(x: Array): untyped</a></li>
+<li><a class="reference" href="#toOpenArray.t%2CArray%2Cint%2Cint" title="toOpenArray(x: Array; first, last: int): untyped">toOpenArray(x: Array; first, last: int): untyped</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">value
@@ -2901,7 +2901,20 @@
     <div class="section" id="7">
   <h1><a class="toc-backref" href="#7">Types</a></h1>
   <dl class="item">
-    <div id="AudioCallback">
+    <div id="Array">
+  <dt><pre><a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">len</span><span class="Other">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span>
+</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1690" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1690" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="AudioCallback">
   <dt><pre><a href="raylib.html#AudioCallback"><span class="Identifier">AudioCallback</span></a> <span class="Other">=</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">bufferData</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">frames</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span> {.<span class="Identifier">cdecl</span>.}</pre></dt>
   <dd>
     
@@ -3076,19 +3089,6 @@
     System/Window config flags
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L97" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L97" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="CSeq">
-  <dt><pre><a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Identifier">len</span><span class="Other">:</span> <span class="Identifier">int</span>
-  <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span>
-</pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1690" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1690" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4070,7 +4070,7 @@
   </dd>
 </div>
 <div id="ShaderLocsPtr">
-  <dt><pre><a href="raylib.html#ShaderLocsPtr"><span class="Identifier">ShaderLocsPtr</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="raylib.html#ShaderLocation"><span class="Identifier">ShaderLocation</span></a><span class="Other">]</span></pre></dt>
+  <dt><pre><a href="raylib.html#ShaderLocsPtr"><span class="Identifier">ShaderLocsPtr</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <span class="Identifier">typeof</span><span class="Other">(</span><a href="raylib.html#Shader"><span class="Identifier">Shader</span></a><span class="Other">.</span><span class="Identifier">locs</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -4826,8 +4826,8 @@
 
   </dd>
 </div>
-<div id="=copy,CSeq[T],CSeq[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dcopy%2CCSeq%5BT%5D%2CCSeq%5BT%5D"><span class="Identifier">`=copy`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+<div id="=copy,Array[T],Array[T]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dcopy%2CArray%5BT%5D%2CArray%5BT%5D"><span class="Identifier">`=copy`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -5009,8 +5009,8 @@
 
   </dd>
 </div>
-<div id="=destroy,CSeq[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CCSeq%5BT%5D"><span class="Identifier">`=destroy`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+<div id="=destroy,Array[T]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CArray%5BT%5D"><span class="Identifier">`=destroy`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -5035,8 +5035,8 @@
 
 </div>
 <div id="@-procs-all">
-  <div id="@,CSeq[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%40%2CCSeq%5BT%5D"><span class="Identifier">`@`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> {.<span class="Identifier">inline</span>.}</pre></dt>
+  <div id="@,Array[T]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%40%2CArray%5BT%5D"><span class="Identifier">`@`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> {.<span class="Identifier">inline</span>.}</pre></dt>
   <dd>
     
     
@@ -5546,8 +5546,8 @@
 
   </dd>
 </div>
-<div id="[],CSeq[T],int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CCSeq%5BT%5D%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">lent</span> <span class="Identifier">T</span></pre></dt>
+<div id="[],Array[T],int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CArray%5BT%5D%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">lent</span> <span class="Identifier">T</span></pre></dt>
   <dd>
     
     
@@ -5556,8 +5556,8 @@
 
   </dd>
 </div>
-<div id="[],CSeq[T],int_2">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CCSeq%5BT%5D%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span></pre></dt>
+<div id="[],Array[T],int_2">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CArray%5BT%5D%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span></pre></dt>
   <dd>
     
     
@@ -5822,8 +5822,8 @@
 
   </dd>
 </div>
-<div id="[]=,CSeq[T],int,sinkT">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%3D%2CCSeq%5BT%5D%2Cint%2CsinkT"><span class="Identifier">`[]=`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">sink</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
+<div id="[]=,Array[T],int,sinkT">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%3D%2CArray%5BT%5D%2Cint%2CsinkT"><span class="Identifier">`[]=`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">sink</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -7909,7 +7909,7 @@
 </div>
 <div id="genImageFontAtlas-procs-all">
   <div id="genImageFontAtlas,openArray[GlyphInfo],,int32,int32,int32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#genImageFontAtlas%2CopenArray%5BGlyphInfo%5D%2C%2Cint32%2Cint32%2Cint32"><span class="Identifier">genImageFontAtlas</span></a><span class="Other">(</span><span class="Identifier">chars</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><a href="raylib.html#GlyphInfo"><span class="Identifier">GlyphInfo</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">recs</span><span class="Other">:</span> <span class="Keyword">out</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><a href="raylib.html#Rectangle"><span class="Identifier">Rectangle</span></a><span class="Other">]</span><span class="Other">;</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#genImageFontAtlas%2CopenArray%5BGlyphInfo%5D%2C%2Cint32%2Cint32%2Cint32"><span class="Identifier">genImageFontAtlas</span></a><span class="Other">(</span><span class="Identifier">chars</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><a href="raylib.html#GlyphInfo"><span class="Identifier">GlyphInfo</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">recs</span><span class="Other">:</span> <span class="Keyword">out</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><a href="raylib.html#Rectangle"><span class="Identifier">Rectangle</span></a><span class="Other">]</span><span class="Other">;</span>
                        <span class="Identifier">fontSize</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">padding</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">packMethod</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Image"><span class="Identifier">Image</span></a> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -10389,8 +10389,8 @@
 
 </div>
 <div id="len-procs-all">
-  <div id="len,CSeq[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#len%2CCSeq%5BT%5D"><span class="Identifier">len</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.<span class="Identifier">inline</span>.}</pre></dt>
+  <div id="len,Array[T]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#len%2CArray%5BT%5D"><span class="Identifier">len</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.<span class="Identifier">inline</span>.}</pre></dt>
   <dd>
     
     
@@ -10454,7 +10454,7 @@
 <div id="loadFontData-procs-all">
   <div id="loadFontData,openArray[uint8],int32,int32,FontType">
   <dt><pre><span class="Keyword">proc</span> <a href="#loadFontData%2CopenArray%5Buint8%5D%2Cint32%2Cint32%2CFontType"><span class="Identifier">loadFontData</span></a><span class="Other">(</span><span class="Identifier">fileData</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">fontSize</span><span class="Other">,</span> <span class="Identifier">glyphCount</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span>
-                  <span class="Identifier">type</span><span class="Other">:</span> <a href="raylib.html#FontType"><span class="Identifier">FontType</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><a href="raylib.html#GlyphInfo"><span class="Identifier">GlyphInfo</span></a><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+                  <span class="Identifier">type</span><span class="Other">:</span> <a href="raylib.html#FontType"><span class="Identifier">FontType</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><a href="raylib.html#GlyphInfo"><span class="Identifier">GlyphInfo</span></a><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -10466,7 +10466,7 @@
 </div>
 <div id="loadFontData,openArray[uint8],int32,openArray[int32],FontType">
   <dt><pre><span class="Keyword">proc</span> <a href="#loadFontData%2CopenArray%5Buint8%5D%2Cint32%2CopenArray%5Bint32%5D%2CFontType"><span class="Identifier">loadFontData</span></a><span class="Other">(</span><span class="Identifier">fileData</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">fontSize</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span>
-                  <span class="Identifier">fontChars</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">type</span><span class="Other">:</span> <a href="raylib.html#FontType"><span class="Identifier">FontType</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><a href="raylib.html#GlyphInfo"><span class="Identifier">GlyphInfo</span></a><span class="Other">]</span> {.
+                  <span class="Identifier">fontChars</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">type</span><span class="Other">:</span> <a href="raylib.html#FontType"><span class="Identifier">FontType</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><a href="raylib.html#GlyphInfo"><span class="Identifier">GlyphInfo</span></a><span class="Other">]</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -10479,8 +10479,8 @@
 
 </div>
 <div id="loadFontFromData-procs-all">
-  <div id="loadFontFromData,sinkCSeq[GlyphInfo],int32,int32,int32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadFontFromData%2CsinkCSeq%5BGlyphInfo%5D%2Cint32%2Cint32%2Cint32"><span class="Identifier">loadFontFromData</span></a><span class="Other">(</span><span class="Identifier">chars</span><span class="Other">:</span> <span class="Identifier">sink</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><a href="raylib.html#GlyphInfo"><span class="Identifier">GlyphInfo</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">baseSize</span><span class="Other">,</span> <span class="Identifier">padding</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span>
+  <div id="loadFontFromData,sinkArray[GlyphInfo],int32,int32,int32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadFontFromData%2CsinkArray%5BGlyphInfo%5D%2Cint32%2Cint32%2Cint32"><span class="Identifier">loadFontFromData</span></a><span class="Other">(</span><span class="Identifier">chars</span><span class="Other">:</span> <span class="Identifier">sink</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><a href="raylib.html#GlyphInfo"><span class="Identifier">GlyphInfo</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">baseSize</span><span class="Other">,</span> <span class="Identifier">padding</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span>
                       <span class="Identifier">packMethod</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Font"><span class="Identifier">Font</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -10565,7 +10565,7 @@
 </div>
 <div id="loadImageColors-procs-all">
   <div id="loadImageColors,Image">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadImageColors%2CImage"><span class="Identifier">loadImageColors</span></a><span class="Other">(</span><span class="Identifier">image</span><span class="Other">:</span> <a href="raylib.html#Image"><span class="Identifier">Image</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><a href="raylib.html#Color"><span class="Identifier">Color</span></a><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadImageColors%2CImage"><span class="Identifier">loadImageColors</span></a><span class="Other">(</span><span class="Identifier">image</span><span class="Other">:</span> <a href="raylib.html#Image"><span class="Identifier">Image</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><a href="raylib.html#Color"><span class="Identifier">Color</span></a><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -10622,7 +10622,7 @@
 </div>
 <div id="loadImagePalette-procs-all">
   <div id="loadImagePalette,Image,int32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadImagePalette%2CImage%2Cint32"><span class="Identifier">loadImagePalette</span></a><span class="Other">(</span><span class="Identifier">image</span><span class="Other">:</span> <a href="raylib.html#Image"><span class="Identifier">Image</span></a><span class="Other">;</span> <span class="Identifier">maxPaletteSize</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><a href="raylib.html#Color"><span class="Identifier">Color</span></a><span class="Other">]</span> {.
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadImagePalette%2CImage%2Cint32"><span class="Identifier">loadImagePalette</span></a><span class="Other">(</span><span class="Identifier">image</span><span class="Other">:</span> <a href="raylib.html#Image"><span class="Identifier">Image</span></a><span class="Other">;</span> <span class="Identifier">maxPaletteSize</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><a href="raylib.html#Color"><span class="Identifier">Color</span></a><span class="Other">]</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -10666,7 +10666,7 @@
 </div>
 <div id="loadMaterials-procs-all">
   <div id="loadMaterials,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadMaterials%2Cstring"><span class="Identifier">loadMaterials</span></a><span class="Other">(</span><span class="Identifier">fileName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><a href="raylib.html#Material"><span class="Identifier">Material</span></a><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadMaterials%2Cstring"><span class="Identifier">loadMaterials</span></a><span class="Other">(</span><span class="Identifier">fileName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><a href="raylib.html#Material"><span class="Identifier">Material</span></a><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -10694,7 +10694,7 @@
 </div>
 <div id="loadModelAnimations-procs-all">
   <div id="loadModelAnimations,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadModelAnimations%2Cstring"><span class="Identifier">loadModelAnimations</span></a><span class="Other">(</span><span class="Identifier">fileName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><a href="raylib.html#ModelAnimation"><span class="Identifier">ModelAnimation</span></a><span class="Other">]</span> {.
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadModelAnimations%2Cstring"><span class="Identifier">loadModelAnimations</span></a><span class="Other">(</span><span class="Identifier">fileName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><a href="raylib.html#ModelAnimation"><span class="Identifier">ModelAnimation</span></a><span class="Other">]</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -10918,7 +10918,7 @@
 </div>
 <div id="loadWaveSamples-procs-all">
   <div id="loadWaveSamples,Wave">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadWaveSamples%2CWave"><span class="Identifier">loadWaveSamples</span></a><span class="Other">(</span><span class="Identifier">wave</span><span class="Other">:</span> <a href="raylib.html#Wave"><span class="Identifier">Wave</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadWaveSamples%2CWave"><span class="Identifier">loadWaveSamples</span></a><span class="Other">(</span><span class="Identifier">wave</span><span class="Other">:</span> <a href="raylib.html#Wave"><span class="Identifier">Wave</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -13187,8 +13187,8 @@
 
 </div>
 <div id="toOpenArray-templates-all">
-  <div id="toOpenArray.t,CSeq">
-  <dt><pre><span class="Keyword">template</span> <a href="#toOpenArray.t%2CCSeq"><span class="Identifier">toOpenArray</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+  <div id="toOpenArray.t,Array">
+  <dt><pre><span class="Keyword">template</span> <a href="#toOpenArray.t%2CArray"><span class="Identifier">toOpenArray</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
   <dd>
     
     
@@ -13197,8 +13197,8 @@
 
   </dd>
 </div>
-<div id="toOpenArray.t,CSeq,int,int">
-  <dt><pre><span class="Keyword">template</span> <a href="#toOpenArray.t%2CCSeq%2Cint%2Cint"><span class="Identifier">toOpenArray</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#CSeq"><span class="Identifier">CSeq</span></a><span class="Other">;</span> <span class="Identifier">first</span><span class="Other">,</span> <span class="Identifier">last</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<div id="toOpenArray.t,Array,int,int">
+  <dt><pre><span class="Keyword">template</span> <a href="#toOpenArray.t%2CArray%2Cint%2Cint"><span class="Identifier">toOpenArray</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="raylib.html#Array"><span class="Identifier">Array</span></a><span class="Other">;</span> <span class="Identifier">first</span><span class="Other">,</span> <span class="Identifier">last</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
   <dd>
     
     
@@ -13381,7 +13381,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-12-27 15:55:27 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-12-28 11:04:37 UTC</small>
       </div>
     </div>
   </div>
