@@ -87,15 +87,15 @@ proc `=destroy`*(x: var Music) =
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 
 type
-  CSeq*[T] = object
+  Array*[T] = object
     len: int
     data: ptr UncheckedArray[T]
 
-proc `=destroy`*[T](x: var CSeq[T]) =
+proc `=destroy`*[T](x: var Array[T]) =
   if x.data != nil:
     for i in 0..<x.len: `=destroy`(x.data[i])
     memFree(x.data)
-proc `=copy`*[T](dest: var CSeq[T]; source: CSeq[T]) =
+proc `=copy`*[T](dest: var Array[T]; source: Array[T]) =
   if dest.data != source.data:
     `=destroy`(dest)
     wasMoved(dest)
@@ -113,26 +113,26 @@ template checkArrayAccess(a, x, len) =
       if x < 0 or x >= len:
         raiseIndexDefect(x, len-1)
 
-proc `[]`*[T](x: CSeq[T], i: int): lent T =
+proc `[]`*[T](x: Array[T], i: int): lent T =
   checkArrayAccess(x.data, i, x.len)
   result = x.data[i]
 
-proc `[]`*[T](x: var CSeq[T], i: int): var T =
+proc `[]`*[T](x: var Array[T], i: int): var T =
   checkArrayAccess(x.data, i, x.len)
   result = x.data[i]
 
-proc `[]=`*[T](x: var CSeq[T], i: int, val: sink T) =
+proc `[]=`*[T](x: var Array[T], i: int, val: sink T) =
   checkArrayAccess(x.data, i, x.len)
   x.data[i] = val
 
-proc len*[T](x: CSeq[T]): int {.inline.} = x.len
+proc len*[T](x: Array[T]): int {.inline.} = x.len
 
-proc `@`*[T](x: CSeq[T]): seq[T] {.inline.} =
+proc `@`*[T](x: Array[T]): seq[T] {.inline.} =
   newSeq(result, x.len)
   for i in 0..x.len-1: result[i] = x[i]
 
-template toOpenArray*(x: CSeq, first, last: int): untyped =
+template toOpenArray*(x: Array, first, last: int): untyped =
   toOpenArray(x.data, first, last)
 
-template toOpenArray*(x: CSeq): untyped =
+template toOpenArray*(x: Array): untyped =
   toOpenArray(x.data, 0, x.len-1)
