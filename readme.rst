@@ -84,8 +84,7 @@ It can easily be avoided with one of the following ways:
   proc gameShouldClose(x: Game): bool {.inline.} =
     result = windowShouldClose()
 
-  const flags = flags(FlagMsaa4xHint, FlagWindowHighdpi)
-  let game = initGame(800, 450, 60, flags, "example")
+  let game = initGame(800, 450, 60, flags(Msaa4xHint, WindowHighdpi), "example")
   let texture = loadTexture("resources/example.png")
 
 - Using a block or a proc call
@@ -229,7 +228,9 @@ Other changes and improvements
   encapsulated and offer index operators for a safe and idiomatic API.
 
 - Every function argument or struct field, that is supposed to use a specific C enum type,
-  is properly typechecked. So wrong code like ``isKeyPressed(MouseButtonLeft)`` doesn't compile.
+  is properly typechecked. So wrong code like ``isKeyPressed(Left)`` doesn't compile.
+
+- Mapped C to Nim enums and shortened values by removing the prefix.
 
 - Raymath was ported to Nim and a integer vector type called ``IndexN`` was added.
   Reasings was also ported to Nim.
