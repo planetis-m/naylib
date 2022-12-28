@@ -335,6 +335,13 @@ proc loadModelFromMesh*(mesh: sink Mesh): Model =
   if result.meshes == nil and result.materials == nil:
     raiseResourceNotFound("mesh")
 
+proc loadModelFromSharedMesh*(mesh: Mesh): Model =
+  ## NOTE: Model needs to be freed with unloadModelKeepMeshes
+  ## Load model from generated mesh (default material)
+  result = loadModelFromMeshPriv(mesh)
+  if result.meshes == nil and result.materials == nil:
+    raiseResourceNotFound("mesh")
+
 template drawing*(body: untyped) =
   ## Setup canvas (framebuffer) to start drawing
   beginDrawing()
