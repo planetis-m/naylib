@@ -246,5 +246,6 @@ No library can be perfect for everyone. If naylib isn’t what you’re looking 
 - `NimraylibNow! <https://github.com/greenfork/nimraylib_now>`_ are more complete bindings to raylib.
 - `godot-nim <https://github.com/pragmagic/godot-nim>`_ Nim bindings for Godot Engine
 - `nico <https://github.com/ftsf/nico>`_ a Game Framework in Nim inspired by Pico-8.
+- `p5nim <https://github.com/pietroppeter/p5nim>`_ processing for nim
 
 You can find more at `awesome-nim <https://github.com/ringabout/awesome-nim#game-development>`_
