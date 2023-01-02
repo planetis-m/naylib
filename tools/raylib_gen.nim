@@ -450,9 +450,6 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
           for i, val in pairs(enm.values):
             if val.value == prev: continue
             spaces
-            if prev == -1 and enm.name == "GamepadButton":
-              lit "None = -1 ## No button pressed"
-              spaces
             var valName = val.name
             removePrefix(valName, "FLAG_")
             removePrefix(valName, "LOG_")

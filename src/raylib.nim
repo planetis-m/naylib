@@ -255,7 +255,6 @@ type
     NotAllowed ## The operation-not-allowed shape
 
   GamepadButton* {.size: sizeof(int32).} = enum ## Gamepad buttons
-    None = -1 ## No button pressed
     Unknown ## Unknown button, just for error checking
     LeftFaceUp ## Gamepad left DPAD up button
     LeftFaceRight ## Gamepad left DPAD right button
