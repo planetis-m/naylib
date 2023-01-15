@@ -32,6 +32,7 @@ else:
   when defined(GraphicsApiOpenGl11): {.passC: "-DGRAPHICS_API_OPENGL_11".}
   elif defined(GraphicsApiOpenGl21): {.passC: "-DGRAPHICS_API_OPENGL_21".}
   elif defined(GraphicsApiOpenGl43): {.passC: "-DGRAPHICS_API_OPENGL_43".}
+  elif defined(GraphicsApiOpenGlEs2): {.passC: "-GRAPHICS_API_OPENGL_ES2".}
   else: {.passC: "-DGRAPHICS_API_OPENGL_33".}
 
   when defined(windows):
