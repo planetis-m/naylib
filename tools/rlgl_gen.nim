@@ -245,7 +245,8 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     "rlShaderAttributeDataType"
   ]
   excludedTypes = [
-    "Matrix"
+    "Matrix",
+    "rlglData"
   ]
   enumInFuncReturn = [
     ("rlGetLocationUniform", 19),

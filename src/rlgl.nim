@@ -453,7 +453,7 @@ proc copyShaderBuffer*(destId: uint32, srcId: uint32, destOffset: uint32, srcOff
   ## Copy SSBO data between buffers
 proc getShaderBufferSize*(id: uint32): uint32 {.importc: "rlGetShaderBufferSize".}
   ## Get SSBO buffer size
-proc bindImageTexture*(id: uint32, index: uint32, format: PixelFormat, readonly: int32) {.importc: "rlBindImageTexture".}
+proc bindImageTexture*(id: uint32, index: uint32, format: PixelFormat, readonly: bool) {.importc: "rlBindImageTexture".}
   ## Bind image texture
 proc getMatrixModelview*(): Matrix {.importc: "rlGetMatrixModelview".}
   ## Get internal modelview matrix
@@ -477,6 +477,8 @@ proc loadDrawCube*() {.importc: "rlLoadDrawCube".}
   ## Load and draw a cube
 proc loadDrawQuad*() {.importc: "rlLoadDrawQuad".}
   ## Load and draw a quad
+proc getMatrixProjectionStereo*(eye: int32): Matrix {.importc: "rlGetMatrixProjectionStereo".}
+proc getMatrixViewOffsetStereo*(eye: int32): Matrix {.importc: "rlGetMatrixViewOffsetStereo".}
 {.pop.}
 
 proc elementCount*(x: VertexBuffer): int32 {.inline.} = x.elementCount
