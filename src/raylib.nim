@@ -1942,10 +1942,14 @@ proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   ## Update GPU texture with new data
+  assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(T),
+      "Mismatch between pixels and texture size"
   updateTexturePriv(texture, cast[pointer](pixels))
 
 proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
   ## Update GPU texture rectangle with new data
+  assert getPixelDataSize(rec.width, rec.height, texture.format) == pixels.len*sizeof(T),
+      "Mismatch between pixels and texture size"
   updateTexturePriv(texture, rec, cast[pointer](pixels))
 
 proc getPixelColor*[T: Pixel](pixels: T): Color =
