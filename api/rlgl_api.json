@@ -3734,28 +3734,6 @@
       "name": "rlLoadDrawQuad",
       "description": "Load and draw a quad",
       "returnType": "void"
-    },
-    {
-      "name": "rlGetMatrixProjectionStereo",
-      "description": "",
-      "returnType": "Matrix",
-      "params": [
-        {
-          "type": "int",
-          "name": "eye"
-        }
-      ]
-    },
-    {
-      "name": "rlGetMatrixViewOffsetStereo",
-      "description": "",
-      "returnType": "Matrix",
-      "params": [
-        {
-          "type": "int",
-          "name": "eye"
-        }
-      ]
     }
   ]
 }

@@ -477,8 +477,6 @@ proc loadDrawCube*() {.importc: "rlLoadDrawCube".}
   ## Load and draw a cube
 proc loadDrawQuad*() {.importc: "rlLoadDrawQuad".}
   ## Load and draw a quad
-proc getMatrixProjectionStereo*(eye: int32): Matrix {.importc: "rlGetMatrixProjectionStereo".}
-proc getMatrixViewOffsetStereo*(eye: int32): Matrix {.importc: "rlGetMatrixViewOffsetStereo".}
 {.pop.}
 
 proc elementCount*(x: VertexBuffer): int32 {.inline.} = x.elementCount
