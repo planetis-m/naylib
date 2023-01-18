@@ -1915,6 +1915,8 @@ template value*(x: Color): pointer = x.addr
 
 proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: int32): Texture =
   ## Load texture using pixels
+  assert getPixelDataSize(width, height, kind(T)) == pixels.len*sizeof(T),
+      "Mismatch between pixels and texture size"
   let image = Image(data: cast[pointer](pixels), width: width, height: height,
       format: kind(T), mipmaps: 1).EmbeddedImage
   result = loadTextureFromImagePriv(image.Image)
