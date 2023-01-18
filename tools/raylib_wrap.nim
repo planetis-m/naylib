@@ -167,7 +167,7 @@ template value*(x: Color): pointer = x.addr
 proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: int32): Texture =
   ## Load texture using pixels
   assert getPixelDataSize(width, height, kind(T)) == pixels.len*sizeof(T),
-      "Mismatch between pixels and texture size"
+      "Mismatch between expected and actual data size"
   let image = Image(data: cast[pointer](pixels), width: width, height: height,
       format: kind(T), mipmaps: 1).EmbeddedImage
   result = loadTextureFromImagePriv(image.Image)
@@ -196,13 +196,13 @@ proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   ## Update GPU texture with new data
   assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(T),
-      "Mismatch between pixels and texture size"
+      "Mismatch between expected and actual data size"
   updateTexturePriv(texture, cast[pointer](pixels))
 
 proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
   ## Update GPU texture rectangle with new data
   assert getPixelDataSize(rec.width, rec.height, texture.format) == pixels.len*sizeof(T),
-      "Mismatch between pixels and texture size"
+      "Mismatch between expected and actual data size"
   updateTexturePriv(texture, rec, cast[pointer](pixels))
 
 proc getPixelColor*[T: Pixel](pixels: T): Color =
