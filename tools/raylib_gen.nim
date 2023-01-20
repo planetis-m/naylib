@@ -26,13 +26,23 @@ when defined(emscripten):
   type emCallbackFunc* = proc() {.cdecl.}
   proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: cint, simulateInfiniteLoop: cint) {.
       cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
+elif defined(android):
+  const AndroidApi = 29
+  const AndroidNdk = "/opt/android-ndk"
+  {.passC: "-I" & AndroidNdk / "sources/android/native_app_glue".}
+
+  {.passC: "-D__ANDROID__ -DPLATFORM_ANDROID -DGRAPHICS_API_OPENGL_ES2 -D__ANDROID_API__=" & $AndroidApi & " -DMAL_NO_OSS".}
+  {.passC: "-ffunction-sections -funwind-tables -fstack-protector-strong -fPIE -fPIC".}
+  {.passC: "-Wa,--noexecstack -Wformat -no-canonical-prefixes".}
+
+  {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
 
 else:
   {.passC: "-DPLATFORM_DESKTOP".}
   when defined(GraphicsApiOpenGl11): {.passC: "-DGRAPHICS_API_OPENGL_11".}
   elif defined(GraphicsApiOpenGl21): {.passC: "-DGRAPHICS_API_OPENGL_21".}
   elif defined(GraphicsApiOpenGl43): {.passC: "-DGRAPHICS_API_OPENGL_43".}
-  elif defined(GraphicsApiOpenGlEs2): {.passC: "-GRAPHICS_API_OPENGL_ES2".}
+  elif defined(GraphicsApiOpenGlEs2): {.passC: "-DGRAPHICS_API_OPENGL_ES2".}
   else: {.passC: "-DGRAPHICS_API_OPENGL_33".}
 
   when defined(windows):
@@ -95,6 +105,7 @@ else: {.compile: raylibDir / "rglfw.c".}
 {.compile: raylibDir / "rmodels.c".}
 {.compile: raylibDir / "raudio.c".}
 {.compile: raylibDir / "rcore.c".}
+when defined(android): {.compile: AndroidNdk / "sources/android/native_app_glue/android_native_app_glue.c".}
 
 const
   RaylibVersion* = (4, 5, 0)
