@@ -38,7 +38,7 @@ elif defined(android):
   {.passC: "-Wa,--noexecstack -Wformat -no-canonical-prefixes".}
 
   {.passL: "-Wl,-soname,lib" & ProjectLibraryName & ".so -Wl,--exclude-libs,libatomic.a".}
-  {.passL: "-Wl,--build-id -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -Wl,--warn-shared-textrel -Wl,--fatal-warnings".}
+  {.passL: "-Wl,--build-id -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -Wl,--warn-shared-textrel".}
   {.passL: "-Wl,--fatal-warnings -u ANativeActivity_onCreate -Wl,-undefined,dynamic_lookup".}
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
 
@@ -101,6 +101,7 @@ else:
       {.passL: "-lX11 -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor".}
 
 when defined(emscripten): discard
+elif defined(android): discard
 elif defined(macosx): {.compile(raylibDir / "rglfw.c", "-x objective-c").}
 else: {.compile: raylibDir / "rglfw.c".}
 {.compile: raylibDir / "rshapes.c".}
