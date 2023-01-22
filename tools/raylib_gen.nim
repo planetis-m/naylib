@@ -40,7 +40,7 @@ elif defined(android):
   {.passL: "-Wl,-soname,lib" & ProjectLibraryName & ".so -Wl,--exclude-libs,libatomic.a".}
   {.passL: "-Wl,--build-id -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -Wl,--warn-shared-textrel".}
   {.passL: "-Wl,--fatal-warnings -u ANativeActivity_onCreate -Wl,-undefined,dynamic_lookup".}
-  {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
+  {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm -ldl".}
 
 else:
   {.passC: "-DPLATFORM_DESKTOP".}
