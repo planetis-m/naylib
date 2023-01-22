@@ -30,12 +30,16 @@ when defined(emscripten):
 elif defined(android):
   const AndroidApiVersion {.intdefine.} = 29
   const AndroidNdk {.strdefine.} = "/opt/android-ndk"
+  const ProjectLibraryName = "main"
   {.passC: "-I" & AndroidNdk / "sources/android/native_app_glue".}
 
   {.passC: "-D__ANDROID__ -DPLATFORM_ANDROID -DGRAPHICS_API_OPENGL_ES2 -D__ANDROID_API__=" & $AndroidApiVersion & " -DMAL_NO_OSS".}
-  {.passC: "-ffunction-sections -funwind-tables -fstack-protector-strong -fPIE -fPIC".}
+  {.passC: "-ffunction-sections -funwind-tables -fstack-protector-strong -fPIC".}
   {.passC: "-Wa,--noexecstack -Wformat -no-canonical-prefixes".}
 
+  {.passL: "-Wl,-soname,lib" & ProjectLibraryName & ".so -Wl,--exclude-libs,libatomic.a".}
+  {.passL: "-Wl,--build-id -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -Wl,--warn-shared-textrel -Wl,--fatal-warnings".}
+  {.passL: "-Wl,--fatal-warnings -u ANativeActivity_onCreate -Wl,-undefined,dynamic_lookup".}
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm".}
 
 else:
