@@ -26,12 +26,13 @@ when defined(emscripten):
   type emCallbackFunc* = proc() {.cdecl.}
   proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: cint, simulateInfiniteLoop: cint) {.
       cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
+
 elif defined(android):
-  const AndroidApi {.intdefine.} = 29
+  const AndroidApiVersion {.intdefine.} = 29
   const AndroidNdk {.strdefine.} = "/opt/android-ndk"
   {.passC: "-I" & AndroidNdk / "sources/android/native_app_glue".}
 
-  {.passC: "-D__ANDROID__ -DPLATFORM_ANDROID -DGRAPHICS_API_OPENGL_ES2 -D__ANDROID_API__=" & $AndroidApi & " -DMAL_NO_OSS".}
+  {.passC: "-D__ANDROID__ -DPLATFORM_ANDROID -DGRAPHICS_API_OPENGL_ES2 -D__ANDROID_API__=" & $AndroidApiVersion & " -DMAL_NO_OSS".}
   {.passC: "-ffunction-sections -funwind-tables -fstack-protector-strong -fPIE -fPIC".}
   {.passC: "-Wa,--noexecstack -Wformat -no-canonical-prefixes".}
 
