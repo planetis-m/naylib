@@ -55,9 +55,9 @@ that can be customized to suit your needs.
   nimble --cpu:arm64 setupAndroid
   nimble --cpu:arm64 buildAndroid
 
-Note that you may need to adjust the `--cpu` flag depending on the architecture of the device you are targeting.
+Note that you may need to adjust the ``--cpu`` flag depending on the architecture of the device you are targeting.
 
-If all goes well, you will be able to see a file named `raylib_game.apk` on the same directory.
+If all goes well, you will be able to see a file named ``raylib_game.apk`` on the same directory.
 
 Enable USB Debugging on your Android device, plug it in your computer and install the package with:
 
