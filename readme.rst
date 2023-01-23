@@ -39,12 +39,14 @@ Building for Android
 Note that you can use the latest versions of the software.
 
 On Arch linux you can install the following AUR packages instead:
-`android-sdk android-sdk-build-tools android-sdk-platform-tools android-ndk android-platform`
+``android-sdk android-sdk-build-tools android-sdk-platform-tools android-ndk android-platform``
 
 **2. Fork the `planetis-m/raylib-game-template <https://github.com/planetis-m/raylib-game-template>`_ repository.**
 
-Edit the paths to OpenJDK, Android SDK, Android NDK and other important constants in the
-`raylib_game.nimble <https://github.com/planetis-m/raylib-game-template/blob/master/raylib_game.nimble#L14-L52>`_ file.
+The `raylib_game.nimble
+<https://github.com/planetis-m/raylib-game-template/blob/master/raylib_game.nimble#L14-L52
+>`_ file allows you to specify the locations of the OpenJDK, Android SDK, and Android NDK
+on your computer by setting variables in the file.
 
 **3. Run the following command to setup and then build the project for Android:**
 
