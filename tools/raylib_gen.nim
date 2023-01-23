@@ -34,7 +34,7 @@ elif defined(android):
   {.passC: "-I" & AndroidNdk / "sources/android/native_app_glue".}
 
   {.passC: "-D__ANDROID__ -DPLATFORM_ANDROID -DGRAPHICS_API_OPENGL_ES2 -D__ANDROID_API__=" & $AndroidApiVersion & " -DMAL_NO_OSS".}
-  {.passC: "-ffunction-sections -funwind-tables -fstack-protector-strong -fPIC".}
+  {.passC: "-ffunction-sections -funwind-tables -fstack-protector-strong -fPIE -fPIC".}
   {.passC: "-Wa,--noexecstack -Wformat -no-canonical-prefixes".}
 
   {.passL: "-Wl,-soname,lib" & ProjectLibraryName & ".so -Wl,--exclude-libs,libatomic.a".}
