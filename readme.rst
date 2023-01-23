@@ -27,6 +27,43 @@ See the accompanying examples `repo <https://github.com/planetis-m/raylib-exampl
 
 Compile and run an example by running ``nim c -r -d:release example.nim``.
 
+Building for Android
+====================
+
+**1. Install OpenJDK, Android SDK and Android NDK by following the instructions on the official raylib wiki:**
+
+  - `Working for Android <https://github.com/raysan5/raylib/wiki/Working-for-Android>`_
+  - `Working for Android (on Linux) <https://github.com/raysan5/raylib/wiki/Working-for-Android-(on-Linux)>`_
+  - `Working for Android (on macOS) <https://github.com/raysan5/raylib/wiki/Working-for-Android-(on-macOS)>`_
+
+Note that you can use the latest versions of the software.
+
+On Arch linux you can install the following AUR packages instead:
+`android-sdk android-sdk-build-tools android-sdk-platform-tools android-ndk android-platform`
+
+**2. Fork the `planetis-m/raylib-game-template <https://github.com/planetis-m/raylib-game-template>`_ repository.**
+
+Edit the paths to OpenJDK, Android SDK, Android NDK and other important constants in the
+`raylib_game.nimble <https://github.com/planetis-m/raylib-game-template/blob/master/raylib_game.nimble#L14-L52>`_ file.
+
+**3. Run the following command to setup and then build the project for Android:**
+
+.. code-block:: bash
+
+  nimble --cpu:arm64 setupAndroid
+  nimble --cpu:arm64 buildAndroid
+
+Note that you may need to adjust the `--cpu` flag depending on the architecture of the device you are targeting.
+
+If all goes well, you will be able to see a file named `raylib_game.apk` on the same directory.
+
+Enable USB Debugging on your Android device, plug it in your computer and install the package with:
+
+.. code-block:: bash
+
+  adb -d install raylib_game.apk
+
+
 Usage Tips
 ==========
 
