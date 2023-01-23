@@ -32,9 +32,9 @@ Building for Android
 
 **1. Install OpenJDK, Android SDK and Android NDK by following the instructions on the official raylib wiki:**
 
-  - `Working for Android <https://github.com/raysan5/raylib/wiki/Working-for-Android>`_
-  - `Working for Android (on Linux) <https://github.com/raysan5/raylib/wiki/Working-for-Android-(on-Linux)>`_
-  - `Working for Android (on macOS) <https://github.com/raysan5/raylib/wiki/Working-for-Android-(on-macOS)>`_
+- `Working for Android <https://github.com/raysan5/raylib/wiki/Working-for-Android>`_
+- `Working for Android (on Linux) <https://github.com/raysan5/raylib/wiki/Working-for-Android-(on-Linux)>`_
+- `Working for Android (on macOS) <https://github.com/raysan5/raylib/wiki/Working-for-Android-(on-macOS)>`_
 
 Note that you can use the latest versions of the software.
 
