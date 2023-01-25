@@ -43,7 +43,7 @@ On Arch linux you can install the following AUR packages instead:
 
 **2. Fork the** `planetis-m/raylib-game-template <https://github.com/planetis-m/raylib-game-template>`_ **repository.**
 
-The `raylib_game.nimble <https://github.com/planetis-m/raylib-game-template/blob/master/raylib_game.nimble#L14-L52>`_
+The `build_android.nims <https://github.com/planetis-m/raylib-game-template/blob/master/build_android.nims#L16-L49>`_
 file allows you to specify the locations of the OpenJDK, Android SDK, NDK on your computer
 by setting variables in the file. It also contains several configuration options that can
 be customized to suit your needs, such as the architecture of the device you are targeting
