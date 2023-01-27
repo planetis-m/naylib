@@ -7,6 +7,24 @@
       "description": ""
     },
     {
+      "name": "RAYLIB_VERSION_MAJOR",
+      "type": "INT",
+      "value": 4,
+      "description": ""
+    },
+    {
+      "name": "RAYLIB_VERSION_MINOR",
+      "type": "INT",
+      "value": 5,
+      "description": ""
+    },
+    {
+      "name": "RAYLIB_VERSION_PATCH",
+      "type": "INT",
+      "value": 0,
+      "description": ""
+    },
+    {
       "name": "RAYLIB_VERSION",
       "type": "STRING",
       "value": "4.5-dev",
@@ -3633,6 +3651,17 @@
       ]
     },
     {
+      "name": "IsShaderReady",
+      "description": "Check if a shader is ready",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "Shader",
+          "name": "shader"
+        }
+      ]
+    },
+    {
       "name": "GetShaderLocation",
       "description": "Get shader uniform location",
       "returnType": "int",
@@ -6173,6 +6202,17 @@
       "returnType": "Image"
     },
     {
+      "name": "IsImageReady",
+      "description": "Check if an image is ready",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "Image",
+          "name": "image"
+        }
+      ]
+    },
+    {
       "name": "UnloadImage",
       "description": "Unload image from CPU memory (RAM)",
       "returnType": "void",
@@ -7945,6 +7985,17 @@
         {
           "type": "int",
           "name": "glyphCount"
+        }
+      ]
+    },
+    {
+      "name": "IsFontReady",
+      "description": "Check if a font is ready",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "Font",
+          "name": "font"
         }
       ]
     },
@@ -10144,6 +10195,17 @@
       ]
     },
     {
+      "name": "IsWaveReady",
+      "description": "Checks if wave data is ready",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "Wave",
+          "name": "wave"
+        }
+      ]
+    },
+    {
       "name": "LoadSound",
       "description": "Load sound from file",
       "returnType": "Sound",
@@ -10162,6 +10224,17 @@
         {
           "type": "Wave",
           "name": "wave"
+        }
+      ]
+    },
+    {
+      "name": "IsSoundReady",
+      "description": "Checks if a sound is ready",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "Sound",
+          "name": "sound"
         }
       ]
     },
@@ -10463,6 +10536,17 @@
       ]
     },
     {
+      "name": "IsMusicReady",
+      "description": "Checks if a music stream is ready",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "Music",
+          "name": "music"
+        }
+      ]
+    },
+    {
       "name": "UnloadMusicStream",
       "description": "Unload music stream",
       "returnType": "void",
@@ -10637,6 +10721,17 @@
         {
           "type": "unsigned int",
           "name": "channels"
+        }
+      ]
+    },
+    {
+      "name": "IsAudioStreamReady",
+      "description": "Checks if an audio stream is ready",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "AudioStream",
+          "name": "stream"
         }
       ]
     },
