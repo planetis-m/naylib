@@ -386,6 +386,14 @@ const
     "CodepointToUTF8",
     "LoadUTF8",
     "UnloadUTF8",
+    # IsReady
+    "IsShaderReady",
+    "IsImageReady",
+    "IsFontReady",
+    "IsWaveReady",
+    "IsSoundReady",
+    "IsMusicReady",
+    "IsAudioStreamReady",
   ]
   allocFuncs = [
     "MemAlloc",

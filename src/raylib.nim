@@ -900,8 +900,6 @@ proc unloadVrStereoConfig*(config: VrStereoConfig) {.importc: "UnloadVrStereoCon
   ## Unload VR stereo config
 proc loadShaderPriv(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader".}
 proc loadShaderFromMemoryPriv(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory".}
-proc isShaderReady*(shader: Shader): bool {.importc: "IsShaderReady".}
-  ## Check if a shader is ready
 proc getShaderLocation*(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation".}
   ## Get shader uniform location
 proc getShaderLocationAttrib*(shader: Shader, attribName: cstring): ShaderLocation {.importc: "GetShaderLocationAttrib".}
@@ -1161,8 +1159,6 @@ proc loadImageFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uin
 proc loadImageFromTexturePriv(texture: Texture2D): Image {.importc: "LoadImageFromTexture".}
 proc loadImageFromScreen*(): Image {.importc: "LoadImageFromScreen".}
   ## Load image from screen buffer and (screenshot)
-proc isImageReady*(image: Image): bool {.importc: "IsImageReady".}
-  ## Check if an image is ready
 proc unloadImage*(image: Image) {.importc: "UnloadImage".}
   ## Unload image from CPU memory (RAM)
 proc exportImage*(image: Image, fileName: cstring): bool {.importc: "ExportImage".}
@@ -1343,8 +1339,6 @@ proc loadFontPriv(fileName: cstring): Font {.importc: "LoadFont".}
 proc loadFontPriv(fileName: cstring, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontEx".}
 proc loadFontFromImagePriv(image: Image, key: Color, firstChar: int32): Font {.importc: "LoadFontFromImage".}
 proc loadFontFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontFromMemory".}
-proc isFontReady*(font: Font): bool {.importc: "IsFontReady".}
-  ## Check if a font is ready
 proc loadFontDataPriv(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData".}
 proc genImageFontAtlasPriv(chars: ptr UncheckedArray[GlyphInfo], recs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
 proc unloadFontDataPriv(chars: ptr UncheckedArray[GlyphInfo], glyphCount: int32) {.importc: "UnloadFontData".}
@@ -1518,12 +1512,8 @@ proc setMasterVolume*(volume: float32) {.importc: "SetMasterVolume".}
   ## Set master volume (listener)
 proc loadWavePriv(fileName: cstring): Wave {.importc: "LoadWave".}
 proc loadWaveFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Wave {.importc: "LoadWaveFromMemory".}
-proc isWaveReady*(wave: Wave): bool {.importc: "IsWaveReady".}
-  ## Checks if wave data is ready
 proc loadSoundPriv(fileName: cstring): Sound {.importc: "LoadSound".}
 proc loadSoundFromWavePriv(wave: Wave): Sound {.importc: "LoadSoundFromWave".}
-proc isSoundReady*(sound: Sound): bool {.importc: "IsSoundReady".}
-  ## Checks if a sound is ready
 proc updateSound*(sound: Sound, data: pointer, sampleCount: int32) {.importc: "UpdateSound".}
   ## Update sound buffer with new data
 proc unloadWave*(wave: Wave) {.importc: "UnloadWave".}
@@ -1566,8 +1556,6 @@ proc loadWaveSamplesPriv(wave: Wave): ptr UncheckedArray[float32] {.importc: "Lo
 proc unloadWaveSamplesPriv(samples: ptr UncheckedArray[float32]) {.importc: "UnloadWaveSamples".}
 proc loadMusicStreamPriv(fileName: cstring): Music {.importc: "LoadMusicStream".}
 proc loadMusicStreamFromMemoryPriv(fileType: cstring, data: ptr UncheckedArray[uint8], dataSize: int32): Music {.importc: "LoadMusicStreamFromMemory".}
-proc isMusicReady*(music: Music): bool {.importc: "IsMusicReady".}
-  ## Checks if a music stream is ready
 proc unloadMusicStream*(music: Music) {.importc: "UnloadMusicStream".}
   ## Unload music stream
 proc playMusicStream*(music: Music) {.importc: "PlayMusicStream".}
@@ -1596,8 +1584,6 @@ proc getMusicTimePlayed*(music: Music): float32 {.importc: "GetMusicTimePlayed".
   ## Get current music time played (in seconds)
 proc loadAudioStream*(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream {.importc: "LoadAudioStream".}
   ## Load audio stream (to stream raw audio pcm data)
-proc isAudioStreamReady*(stream: AudioStream): bool {.importc: "IsAudioStreamReady".}
-  ## Checks if an audio stream is ready
 proc unloadAudioStream*(stream: AudioStream) {.importc: "UnloadAudioStream".}
   ## Unload audio stream and free memory
 proc updateAudioStream*(stream: AudioStream, data: pointer, frameCount: int32) {.importc: "UpdateAudioStream".}
