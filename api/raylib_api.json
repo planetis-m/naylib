@@ -7428,6 +7428,17 @@
       ]
     },
     {
+      "name": "IsTextureReady",
+      "description": "Check if a texture is ready",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "Texture2D",
+          "name": "texture"
+        }
+      ]
+    },
+    {
       "name": "UnloadTexture",
       "description": "Unload texture from GPU memory (VRAM)",
       "returnType": "void",
@@ -7435,6 +7446,17 @@
         {
           "type": "Texture2D",
           "name": "texture"
+        }
+      ]
+    },
+    {
+      "name": "IsRenderTextureReady",
+      "description": "Check if a render texture is ready",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "RenderTexture2D",
+          "name": "target"
         }
       ]
     },
@@ -9237,6 +9259,17 @@
       ]
     },
     {
+      "name": "IsModelReady",
+      "description": "Check if a model is ready",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "Model",
+          "name": "model"
+        }
+      ]
+    },
+    {
       "name": "UnloadModel",
       "description": "Unload model (including meshes) from memory (RAM and/or VRAM)",
       "returnType": "void",
@@ -9853,6 +9886,17 @@
       "name": "LoadMaterialDefault",
       "description": "Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)",
       "returnType": "Material"
+    },
+    {
+      "name": "IsMaterialReady",
+      "description": "Check if a material is ready",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "Material",
+          "name": "material"
+        }
+      ]
     },
     {
       "name": "UnloadMaterial",

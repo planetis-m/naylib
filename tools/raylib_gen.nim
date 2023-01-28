@@ -394,6 +394,10 @@ const
     "IsSoundReady",
     "IsMusicReady",
     "IsAudioStreamReady",
+    "IsModelReady",
+    "IsMaterialReady",
+    "IsTextureReady",
+    "IsRenderTextureReady",
   ]
   allocFuncs = [
     "MemAlloc",
