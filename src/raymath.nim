@@ -486,7 +486,7 @@ func unproject*(source: Vector3; projection, view: Matrix): Vector3 {.inline.} =
   ## Projects a Vector3 from screen space into object space
   ## NOTE: We are avoiding calling other raymath functions despite available
   result = Vector3()
-  # Calculate unproject matrix (multiply view patrix by projection matrix) and invert it
+  # Calculate unproject matrix (multiply view matrix by projection matrix) and invert it
   let matViewProj = Matrix(m0: view.m0 * projection.m0 +
       view.m1 * projection.m4 + view.m2 * projection.m8 + view.m3 * projection.m12, m4: view.m0 *
       projection.m1 + view.m1 * projection.m5 + view.m2 * projection.m9 +

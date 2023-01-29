@@ -458,6 +458,9 @@ const
     "LoadMusicStreamFromMemory",
     "UnloadDroppedFiles",
     "LoadDroppedFiles",
+    "UpdateMeshBuffer",
+    "UpdateSound",
+    "UpdateAudioStream",
   ]
 
 proc genBindings(t: TopLevel, fname: string; header, middle: string) =

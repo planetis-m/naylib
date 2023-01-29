@@ -1434,8 +1434,7 @@ proc drawBillboard*(camera: Camera, texture: Texture2D, source: Rectangle, posit
   ## Draw a billboard texture defined by source and rotation
 proc uploadMesh*(mesh: var Mesh, dynamic: bool) {.importc: "UploadMesh".}
   ## Upload mesh vertex data in GPU and provide VAO/VBO ids
-proc updateMeshBuffer*(mesh: Mesh, index: int32, data: pointer, dataSize: int32, offset: int32) {.importc: "UpdateMeshBuffer".}
-  ## Update mesh vertex data in GPU for a specific buffer index
+proc updateMeshBufferPriv(mesh: Mesh, index: int32, data: pointer, dataSize: int32, offset: int32) {.importc: "UpdateMeshBuffer".}
 proc unloadMesh*(mesh: Mesh) {.importc: "UnloadMesh".}
   ## Unload mesh data from CPU and GPU
 proc drawMesh*(mesh: Mesh, material: Material, transform: Matrix) {.importc: "DrawMesh".}
@@ -1514,8 +1513,7 @@ proc loadWavePriv(fileName: cstring): Wave {.importc: "LoadWave".}
 proc loadWaveFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Wave {.importc: "LoadWaveFromMemory".}
 proc loadSoundPriv(fileName: cstring): Sound {.importc: "LoadSound".}
 proc loadSoundFromWavePriv(wave: Wave): Sound {.importc: "LoadSoundFromWave".}
-proc updateSound*(sound: Sound, data: pointer, sampleCount: int32) {.importc: "UpdateSound".}
-  ## Update sound buffer with new data
+proc updateSoundPriv(sound: Sound, data: pointer, sampleCount: int32) {.importc: "UpdateSound".}
 proc unloadWave*(wave: Wave) {.importc: "UnloadWave".}
   ## Unload wave data
 proc unloadSound*(sound: Sound) {.importc: "UnloadSound".}
@@ -1586,8 +1584,7 @@ proc loadAudioStream*(sampleRate: uint32, sampleSize: uint32, channels: uint32):
   ## Load audio stream (to stream raw audio pcm data)
 proc unloadAudioStream*(stream: AudioStream) {.importc: "UnloadAudioStream".}
   ## Unload audio stream and free memory
-proc updateAudioStream*(stream: AudioStream, data: pointer, frameCount: int32) {.importc: "UpdateAudioStream".}
-  ## Update audio stream buffers with data
+proc updateAudioStreamPriv(stream: AudioStream, data: pointer, frameCount: int32) {.importc: "UpdateAudioStream".}
 proc isAudioStreamProcessed*(stream: AudioStream): bool {.importc: "IsAudioStreamProcessed".}
   ## Check if any audio stream buffers requires refill
 proc playAudioStream*(stream: AudioStream) {.importc: "PlayAudioStream".}
@@ -1975,7 +1972,7 @@ proc getPixelColor*[T: Pixel](pixels: T): Color =
   ## Get Color from a source pixel pointer of certain format
   getPixelColorPriv(pixels.value, kind(T))
 
-proc setPixelColor*[T: Pixel](pixels: T, color: Color) =
+proc setPixelColor*[T: Pixel](pixels: var T, color: Color) =
   ## Set color formatted into destination pixel pointer
   setPixelColorPriv(pixels.value, color, kind(T))
 
@@ -2050,6 +2047,10 @@ proc drawTriangleStrip3D*(points: openArray[Vector3]; color: Color) =
   ## Draw a triangle strip defined by points
   drawTriangleStrip3DPriv(cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
 
+proc updateMeshBuffer*[T](mesh: var Mesh, index: int32, data: openArray[T], offset: int32) =
+  ## Update mesh vertex data in GPU for a specific buffer index
+  updateMeshBufferPriv(mesh, index, cast[ptr UncheckedArray[T]](data), data.len.int32, offset)
+
 proc drawMeshInstanced*(mesh: Mesh; material: Material; transforms: openArray[Matrix]) =
   ## Draw multiple mesh instances with material and different transforms
   drawMeshInstancedPriv(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms),
@@ -2076,6 +2077,10 @@ proc loadSoundFromWave*(wave: Wave): Sound =
   result = loadSoundFromWavePriv(wave)
   if result.stream.buffer == nil: raiseResourceNotFound("wave")
 
+proc updateSound*[T](sound: var Sound, data: openArray[T]) =
+  ## Update sound buffer with new data
+  updateSoundPriv(sound, cast[ptr UncheckedArray[T]](data), data.len.int32)
+
 proc loadMusicStream*(fileName: string): Music =
   ## Load music stream from file
   result = loadMusicStreamPriv(fileName.cstring)
@@ -2086,6 +2091,10 @@ proc loadMusicStreamFromMemory*(fileType: string; data: openArray[uint8]): Music
   result = loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
       data.len.int32)
   if result.stream.buffer == nil: raiseResourceNotFound("buffer")
+
+proc updateAudioStream*[T](stream: var AudioStream, data: openArray[T]) =
+  ## Update audio stream buffers with data
+  updateAudioStreamPriv(stream, cast[ptr UncheckedArray[T]](data), data.len.int32)
 
 proc drawTextCodepoints*(font: Font; codepoints: openArray[Rune]; position: Vector2;
     fontSize: float32; spacing: float32; tint: Color) =

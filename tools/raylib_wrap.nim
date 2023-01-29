@@ -209,7 +209,7 @@ proc getPixelColor*[T: Pixel](pixels: T): Color =
   ## Get Color from a source pixel pointer of certain format
   getPixelColorPriv(pixels.value, kind(T))
 
-proc setPixelColor*[T: Pixel](pixels: T, color: Color) =
+proc setPixelColor*[T: Pixel](pixels: var T, color: Color) =
   ## Set color formatted into destination pixel pointer
   setPixelColorPriv(pixels.value, color, kind(T))
 
@@ -284,6 +284,10 @@ proc drawTriangleStrip3D*(points: openArray[Vector3]; color: Color) =
   ## Draw a triangle strip defined by points
   drawTriangleStrip3DPriv(cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
 
+proc updateMeshBuffer*[T](mesh: var Mesh, index: int32, data: openArray[T], offset: int32) =
+  ## Update mesh vertex data in GPU for a specific buffer index
+  updateMeshBufferPriv(mesh, index, cast[ptr UncheckedArray[T]](data), data.len.int32, offset)
+
 proc drawMeshInstanced*(mesh: Mesh; material: Material; transforms: openArray[Matrix]) =
   ## Draw multiple mesh instances with material and different transforms
   drawMeshInstancedPriv(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms),
@@ -310,6 +314,10 @@ proc loadSoundFromWave*(wave: Wave): Sound =
   result = loadSoundFromWavePriv(wave)
   if result.stream.buffer == nil: raiseResourceNotFound("wave")
 
+proc updateSound*[T](sound: var Sound, data: openArray[T]) =
+  ## Update sound buffer with new data
+  updateSoundPriv(sound, cast[ptr UncheckedArray[T]](data), data.len.int32)
+
 proc loadMusicStream*(fileName: string): Music =
   ## Load music stream from file
   result = loadMusicStreamPriv(fileName.cstring)
@@ -320,6 +328,10 @@ proc loadMusicStreamFromMemory*(fileType: string; data: openArray[uint8]): Music
   result = loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
       data.len.int32)
   if result.stream.buffer == nil: raiseResourceNotFound("buffer")
+
+proc updateAudioStream*[T](stream: var AudioStream, data: openArray[T]) =
+  ## Update audio stream buffers with data
+  updateAudioStreamPriv(stream, cast[ptr UncheckedArray[T]](data), data.len.int32)
 
 proc drawTextCodepoints*(font: Font; codepoints: openArray[Rune]; position: Vector2;
     fontSize: float32; spacing: float32; tint: Color) =
