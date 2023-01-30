@@ -2387,6 +2387,8 @@ proc `[]=`*(x: var MaterialMaps, i: MaterialMapIndex, val: MaterialMap) =
   Material(x).maps[i.int] = val
 
 proc `texture=`*(x: var MaterialMap, val: Texture) {.nodestroy, inline.} =
+  ## Set texture for a material map type (Diffuse, Specular...)
+  ## NOTE: Previous texture should be manually unloaded
   x.texture = val
 
 proc `shader=`*(x: var Material, val: Shader) {.nodestroy, inline.} =
@@ -2437,6 +2439,7 @@ proc `[]`*(x: var ModelMeshMaterial, i: int): var int32 =
   result = Model(x).meshMaterial[i]
 
 proc `[]=`*(x: var ModelMeshMaterial, i: int, val: int32) =
+  ## Set the material for a mesh
   checkArrayAccess(Model(x).meshMaterial, i, Model(x).meshCount)
   Model(x).meshMaterial[i] = val
 
