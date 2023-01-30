@@ -244,6 +244,9 @@ proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
     "rlShaderUniformDataType",
     "rlShaderAttributeDataType"
   ]
+  excludedFuncs = [
+    "rlGetPixelFormatName",
+  ]
   excludedTypes = [
     "Matrix",
     "rlglData"
@@ -424,6 +427,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
     # Generate functions
     lit "\n{.push callconv: cdecl, header: \"rlgl.h\".}"
     for fnc in items(t.functions):
+      if fnc.name in excludedFuncs: continue
       lit "\nproc "
       var name = fnc.name
       if name notin ["rlBegin", "rlEnd", "rlglInit", "rlglClose"]:

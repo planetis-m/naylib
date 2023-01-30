@@ -397,8 +397,6 @@ proc updateTexture*(id: uint32, offsetX: int32, offsetY: int32, width: int32, he
   ## Update GPU texture with new data
 proc getGlTextureFormats*(format: PixelFormat, glInternalFormat: out uint32, glFormat: out uint32, glType: out uint32) {.importc: "rlGetGlTextureFormats".}
   ## Get OpenGL internal formats
-proc getPixelFormatName*(format: PixelFormat): cstring {.importc: "rlGetPixelFormatName".}
-  ## Get name string for pixel format
 proc unloadTexture*(id: uint32) {.importc: "rlUnloadTexture".}
   ## Unload texture from GPU memory
 proc genTextureMipmaps*(id: uint32, width: int32, height: int32, format: PixelFormat, mipmaps: out int32) {.importc: "rlGenTextureMipmaps".}
