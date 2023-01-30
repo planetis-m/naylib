@@ -268,7 +268,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">bindImageTexture
-  <li><a class="reference" href="#bindImageTexture%2Cuint32%2Cuint32%2CPixelFormat%2Cint32" title="bindImageTexture(id: uint32; index: uint32; format: PixelFormat; readonly: int32)">bindImageTexture(id: uint32; index: uint32; format: PixelFormat; readonly: int32)</a></li>
+  <li><a class="reference" href="#bindImageTexture%2Cuint32%2Cuint32%2CPixelFormat%2Cbool" title="bindImageTexture(id: uint32; index: uint32; format: PixelFormat; readonly: bool)">bindImageTexture(id: uint32; index: uint32; format: PixelFormat; readonly: bool)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">bindShaderBuffer
@@ -896,7 +896,7 @@
     <summary><a class="reference reference-toplevel" href="#18" id="68">Templates</a></summary>
     <ul class="simple simple-toc-section">
       <ul class="simple nested-toc-section">BlendEquationRgb
-  <li><a class="reference" href="#BlendEquationRgb.t%2Ctypedesc%5BBlendFuncOrEq%5D" title="BlendEquationRgb(_: typedesc[BlendFuncOrEq]): untyped">BlendEquationRgb(_: typedesc[BlendFuncOrEq]): untyped</a></li>
+  <li><a class="reference" href="#BlendEquationRgb.t%2Ctypedesc%5BBlendFuncOrEq%5D" title="BlendEquationRgb(__570425513: typedesc[BlendFuncOrEq]): untyped">BlendEquationRgb(__570425513: typedesc[BlendFuncOrEq]): untyped</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">colors
@@ -1673,10 +1673,11 @@
 
 </div>
 <div id="bindImageTexture-procs-all">
-  <div id="bindImageTexture,uint32,uint32,PixelFormat,int32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#bindImageTexture%2Cuint32%2Cuint32%2CPixelFormat%2Cint32"><span class="Identifier">bindImageTexture</span></a><span class="Other">(</span><span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">index</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">format</span><span class="Other">:</span> <a href="raylib.html#PixelFormat"><span class="Identifier">PixelFormat</span></a><span class="Other">;</span>
-                      <span class="Identifier">readonly</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlBindImageTexture&quot;</span><span class="Other">,</span>
-    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <div id="bindImageTexture,uint32,uint32,PixelFormat,bool">
+  <dt><pre><span class="Keyword">proc</span> <a href="#bindImageTexture%2Cuint32%2Cuint32%2CPixelFormat%2Cbool"><span class="Identifier">bindImageTexture</span></a><span class="Other">(</span><span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">index</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">format</span><span class="Other">:</span> <a href="raylib.html#PixelFormat"><span class="Identifier">PixelFormat</span></a><span class="Other">;</span>
+                      <span class="Identifier">readonly</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlBindImageTexture&quot;</span><span class="Other">,</span>
+                                        <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+                                        <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     Bind image texture
@@ -3812,7 +3813,7 @@
   <dl class="item">
     <div id="BlendEquationRgb-templates-all">
   <div id="BlendEquationRgb.t,typedesc[BlendFuncOrEq]">
-  <dt><pre><span class="Keyword">template</span> <a href="#BlendEquationRgb.t%2Ctypedesc%5BBlendFuncOrEq%5D"><span class="Identifier">BlendEquationRgb</span></a><span class="Other">(</span><span class="Operator">_</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="rlgl.html#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#BlendEquationRgb.t%2Ctypedesc%5BBlendFuncOrEq%5D"><span class="Identifier">BlendEquationRgb</span></a><span class="Other">(</span><span class="Operator">__570425513</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="rlgl.html#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
   <dd>
     
     
@@ -3930,7 +3931,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-12-28 11:04:38 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-01-30 00:47:06 UTC</small>
       </div>
     </div>
   </div>
