@@ -579,3 +579,28 @@ proc `[]`*(x: RenderBatchDraws, i: int): lent DrawCall =
 proc `[]`*(x: var RenderBatchDraws, i: int): var DrawCall =
   checkArrayAccess(RenderBatch(x).draws, i, DefaultBatchDrawCalls)
   result = RenderBatch(x).draws[i]
+
+proc getPixelFormatName*(format: PixelFormat): string =
+  ## Get name string for pixel format
+  case format
+  of UncompressedGrayscale: "GRAYSCALE" # 8 bit per pixel (no alpha)
+  of UncompressedGrayAlpha: "GRAY_ALPHA" # 8*2 bpp (2 channels)
+  of UncompressedR5g6b5: "R5G6B5" # 16 bpp
+  of UncompressedR8g8b8: "R8G8B8" # 24 bpp
+  of UncompressedR5g5b5a1: "R5G5B5A1" # 16 bpp (1 bit alpha)
+  of UncompressedR4g4b4a4: "R4G4B4A4" # 16 bpp (4 bit alpha)
+  of UncompressedR8g8b8a8: "R8G8B8A8" # 32 bpp
+  of UncompressedR32: "R32" # 32 bpp (1 channel - float)
+  of UncompressedR32g32b32: "R32G32B32" # 32*3 bpp (3 channels - float)
+  of UncompressedR32g32b32a32: "R32G32B32A32" # 32*4 bpp (4 channels - float)
+  of CompressedDxt1Rgb: "DXT1_RGB" # 4 bpp (no alpha)
+  of CompressedDxt1Rgba: "DXT1_RGBA" # 4 bpp (1 bit alpha)
+  of CompressedDxt3Rgba: "DXT3_RGBA" # 8 bpp
+  of CompressedDxt5Rgba: "DXT5_RGBA" # 8 bpp
+  of CompressedEtc1Rgb: "ETC1_RGB" # 4 bpp
+  of CompressedEtc2Rgb: "ETC2_RGB" # 4 bpp
+  of CompressedEtc2EacRgba: "ETC2_RGBA" # 8 bpp
+  of CompressedPvrtRgb: "PVRT_RGB" # 4 bpp
+  of CompressedPvrtRgba: "PVRT_RGBA" # 4 bpp
+  of CompressedAstc4x4Rgba: "ASTC_4x4_RGBA" # 8 bpp
+  of CompressedAstc8x8Rgba: "ASTC_8x8_RGBA" # 2 bpp
