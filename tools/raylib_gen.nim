@@ -398,6 +398,9 @@ const
     "IsMaterialReady",
     "IsTextureReady",
     "IsRenderTextureReady",
+    # Setters
+    "SetMaterialTexture",
+    "SetModelMeshMaterial",
   ]
   allocFuncs = [
     "MemAlloc",

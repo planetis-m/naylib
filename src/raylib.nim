@@ -1473,10 +1473,6 @@ proc loadMaterialDefault*(): Material {.importc: "LoadMaterialDefault".}
   ## Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 proc unloadMaterial*(material: Material) {.importc: "UnloadMaterial".}
   ## Unload material from GPU memory (VRAM)
-proc setMaterialTexture*(material: var Material, mapType: MaterialMapIndex, texture: Texture2D) {.importc: "SetMaterialTexture".}
-  ## Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
-proc setModelMeshMaterial*(model: var Model, meshId: int32, materialId: int32) {.importc: "SetModelMeshMaterial".}
-  ## Set material for a mesh
 proc loadModelAnimationsPriv(fileName: cstring, animCount: ptr uint32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations".}
 proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation".}
   ## Update model animation pose
