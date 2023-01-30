@@ -1806,44 +1806,22 @@ proc loadShaderFromMemory*(vsCode, fsCode: string): Shader =
 type
   ShaderV* = concept
     proc kind(x: typedesc[Self]): ShaderUniformDataType
-    proc value(x: Self): pointer
 
 template kind*(x: typedesc[float32]): ShaderUniformDataType = Float
-template value*(x: float32): pointer = x.addr
-
 template kind*(x: typedesc[Vector2]): ShaderUniformDataType = Vec2
-template value*(x: Vector2): pointer = x.addr
-
 template kind*(x: typedesc[Vector3]): ShaderUniformDataType = Vec3
-template value*(x: Vector3): pointer = x.addr
-
 template kind*(x: typedesc[Vector4]): ShaderUniformDataType = Vec4
-template value*(x: Vector4): pointer = x.addr
-
 template kind*(x: typedesc[int32]): ShaderUniformDataType = Int
-template value*(x: int32): pointer = x.addr
-
 template kind*(x: typedesc[array[2, int32]]): ShaderUniformDataType = Ivec2
-template value*(x: array[2, int32]): pointer = x.addr
-
 template kind*(x: typedesc[array[3, int32]]): ShaderUniformDataType = Ivec3
-template value*(x: array[3, int32]): pointer = x.addr
-
 template kind*(x: typedesc[array[4, int32]]): ShaderUniformDataType = Ivec4
-template value*(x: array[4, int32]): pointer = x.addr
-
 template kind*(x: typedesc[array[2, float32]]): ShaderUniformDataType = Vec2
-template value*(x: array[2, float32]): pointer = x.addr
-
 template kind*(x: typedesc[array[3, float32]]): ShaderUniformDataType = Vec3
-template value*(x: array[3, float32]): pointer = x.addr
-
 template kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = Vec4
-template value*(x: array[4, float32]): pointer = x.addr
 
 proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: T) =
   ## Set shader uniform value
-  setShaderValuePriv(shader, locIndex, value.value, kind(T))
+  setShaderValuePriv(shader, locIndex, addr value, kind(T))
 
 proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: openArray[T]) =
   ## Set shader uniform value vector
@@ -1852,7 +1830,7 @@ proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, valu
 proc loadModelAnimations*(fileName: string): RArray[ModelAnimation] =
   ## Load model animations from file
   var len = 0'u32
-  let data = loadModelAnimationsPriv(fileName.cstring, len.addr)
+  let data = loadModelAnimationsPriv(fileName.cstring, addr len)
   if len <= 0:
     raiseResourceNotFound(filename)
   result = RArray[ModelAnimation](len: len.int, data: data)
@@ -1872,13 +1850,13 @@ proc loadImageColors*(image: Image): RArray[Color] =
 proc loadImagePalette*(image: Image; maxPaletteSize: int32): RArray[Color] =
   ## Load colors palette from image as a Color array (RGBA - 32bit)
   var len = 0'i32
-  let data = loadImagePalettePriv(image, maxPaletteSize, len.addr)
+  let data = loadImagePalettePriv(image, maxPaletteSize, addr len)
   result = RArray[Color](len: len, data: data)
 
 proc loadMaterials*(fileName: string): RArray[Material] =
   ## Load materials from model file
   var len = 0'i32
-  let data = loadMaterialsPriv(fileName.cstring, len.addr)
+  let data = loadMaterialsPriv(fileName.cstring, addr len)
   if len <= 0:
     raiseResourceNotFound(filename)
   result = RArray[Material](len: len, data: data)
@@ -1922,10 +1900,8 @@ proc loadImageFromTexture*(texture: Texture2D): Image =
 type
   Pixel* = concept
     proc kind(x: typedesc[Self]): PixelFormat
-    proc value(x: Self): pointer
 
 template kind*(x: typedesc[Color]): PixelFormat = UncompressedR8g8b8a8
-template value*(x: Color): pointer = x.addr
 
 proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: int32): Texture =
   ## Load texture using pixels
@@ -1968,13 +1944,13 @@ proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openAr
       "Mismatch between expected and actual data size"
   updateTexturePriv(texture, rec, cast[pointer](pixels))
 
-proc getPixelColor*[T: Pixel](pixels: T): Color =
+proc getPixelColor*[T: Pixel](pixel: T): Color =
   ## Get Color from a source pixel pointer of certain format
-  getPixelColorPriv(pixels.value, kind(T))
+  getPixelColorPriv(addr pixels, kind(T))
 
-proc setPixelColor*[T: Pixel](pixels: var T, color: Color) =
+proc setPixelColor*[T: Pixel](pixel: var T, color: Color) =
   ## Set color formatted into destination pixel pointer
-  setPixelColorPriv(pixels.value, color, kind(T))
+  setPixelColorPriv(addr pixels, color, kind(T))
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; fontChars: openArray[int32];
     `type`: FontType): RArray[GlyphInfo] =
@@ -2030,7 +2006,7 @@ proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, 
   result.glyphCount = chars.len.int32
   result.glyphs = chars.data
   wasMoved(chars)
-  let atlas = genImageFontAtlasPriv(result.glyphs, result.recs.addr, result.glyphCount, baseSize,
+  let atlas = genImageFontAtlasPriv(result.glyphs, addr result.recs, result.glyphCount, baseSize,
       padding, packMethod)
   result.texture = loadTextureFromImage(atlas)
   if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound("image")
@@ -2039,7 +2015,7 @@ proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out RArray[Rectangle]
     padding: int32; packMethod: int32): Image =
   ## Generate image font atlas using chars info
   var data: ptr UncheckedArray[Rectangle] = nil
-  result = genImageFontAtlasPriv(cast[ptr UncheckedArray[GlyphInfo]](chars), data.addr,
+  result = genImageFontAtlasPriv(cast[ptr UncheckedArray[GlyphInfo]](chars), addr data,
       chars.len.int32, fontSize, padding, packMethod)
   recs = RArray[Rectangle](len: chars.len, data: data)
 
