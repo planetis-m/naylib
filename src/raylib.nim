@@ -1768,8 +1768,8 @@ proc toEmbedded*(data: openArray[byte], width, height: int32, format: PixelForma
 proc toEmbedded*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): EmbeddedWave {.inline.} =
   Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).EmbeddedWave
 
-proc raiseResourceNotFound(filename: string) {.noinline, noreturn.} =
-  raise newException(IOError, "Could not load resource from " & filename)
+proc raiseResourceNotFound(fileName: string) {.noinline, noreturn.} =
+  raise newException(IOError, "Could not load resource from " & fileName)
 
 proc getMonitorName*(monitor: int32): string {.inline.} =
   ## Get the human-readable, UTF-8 encoded name of the primary monitor
@@ -1791,7 +1791,7 @@ proc getGamepadName*(gamepad: int32): string {.inline.} =
 
 proc exportDataAsCode*(data: openArray[uint8], fileName: string): bool =
   ## Export data to code (.h), returns true on success
-  result = exportDataAsCodePriv(cast[ptr UncheckedArray[uint8]](data), data.len.uint32, fileName.string)
+  result = exportDataAsCodePriv(cast[ptr UncheckedArray[uint8]](data), data.len.uint32, fileName.cstring)
 
 proc loadShader*(vsFileName, fsFileName: string): Shader =
   ## Load shader from files and bind default locations
@@ -1832,7 +1832,7 @@ proc loadModelAnimations*(fileName: string): RArray[ModelAnimation] =
   var len = 0'u32
   let data = loadModelAnimationsPriv(fileName.cstring, addr len)
   if len <= 0:
-    raiseResourceNotFound(filename)
+    raiseResourceNotFound(fileName)
   result = RArray[ModelAnimation](len: len.int, data: data)
 
 proc loadWaveSamples*(wave: Wave): RArray[float32] =
@@ -1858,7 +1858,7 @@ proc loadMaterials*(fileName: string): RArray[Material] =
   var len = 0'i32
   let data = loadMaterialsPriv(fileName.cstring, addr len)
   if len <= 0:
-    raiseResourceNotFound(filename)
+    raiseResourceNotFound(fileName)
   result = RArray[Material](len: len, data: data)
 
 proc drawLineStrip*(points: openArray[Vector2]; color: Color) {.inline.} =
@@ -1946,11 +1946,11 @@ proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openAr
 
 proc getPixelColor*[T: Pixel](pixel: T): Color =
   ## Get Color from a source pixel pointer of certain format
-  getPixelColorPriv(addr pixels, kind(T))
+  getPixelColorPriv(addr pixel, kind(T))
 
 proc setPixelColor*[T: Pixel](pixel: var T, color: Color) =
   ## Set color formatted into destination pixel pointer
-  setPixelColorPriv(addr pixels, color, kind(T))
+  setPixelColorPriv(addr pixel, color, kind(T))
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; fontChars: openArray[int32];
     `type`: FontType): RArray[GlyphInfo] =
