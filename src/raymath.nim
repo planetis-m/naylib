@@ -112,7 +112,13 @@ func distanceSqr*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate square distance between two vectors
   result = (v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y)
 
-func angle*(v1, v2: Vector2): float32 {.inline.} =
+func angle*(v1: Vector2; v2: Vector2): float32 {.inline.} =
+  ## Calculate angle between two vectors
+  ## NOTE: Angle is calculated from origin point (0, 0)
+  result = atan2(v2.y - v1.y, v2.x - v1.x)
+
+func lineAngle*(v1, v2: Vector2): float32 {.inline.} =
+  ## Calculate angle defined by a two vectors line
   ## NOTE: Parameters need to be normalized
   ## Current implementation should be aligned with glm::angle
   result = arccos(clamp(v1.x * v2.x + v1.y * v2.y, -1, 1))
