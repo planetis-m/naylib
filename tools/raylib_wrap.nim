@@ -1,4 +1,21 @@
 
+type
+  TraceLogCallback* = proc (logLevel: TraceLogLevel;
+      text: string) {.nimcall.} ## Logging: Redirect trace log messages
+
+var
+  traceLogCallback: TraceLogCallback # TraceLog callback function pointer
+
+proc wrapperTraceLogCallback(logLevel: int32; text: cstring; args: va_list) {.cdecl.} =
+  var buf = newString(128)
+  vsprintf(buf.cstring, text, args)
+  traceLogCallback(logLevel.TraceLogLevel, buf)
+
+proc setTraceLogCallback*(callback: TraceLogCallback) =
+  ## Set custom trace log
+  traceLogCallback = callback
+  setTraceLogCallbackPriv(wrapperTraceLogCallback)
+
 proc toEmbedded*(data: openArray[byte], width, height: int32, format: PixelFormat): EmbeddedImage {.inline.} =
   Image(data: addr data, width: width, height: height, mipmaps: 1, format: format).EmbeddedImage
 

@@ -143,13 +143,13 @@ template Menu*(_: typedesc[KeyboardKey]): untyped = R ## Key: Android menu butto
 """
   helpers = """
 
-type va_list* {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
-proc vsprintf*(s: cstring, format: cstring, args: va_list) {.cdecl, importc: "vsprintf", header: "<stdio.h>".}
+type va_list {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
+proc vsprintf(s: cstring, format: cstring, args: va_list) {.cdecl, importc: "vsprintf", header: "<stdio.h>".}
 
 ## Callbacks to hook some internal functions
 ## WARNING: This callbacks are intended for advance users
 type
-  TraceLogCallback* = proc (logLevel: TraceLogLevel; text: cstring; args: va_list) {.
+  TraceLogCallbackImpl = proc (logLevel: int32; text: cstring; args: va_list) {.
       cdecl.} ## Logging: Redirect trace log messages
   LoadFileDataCallback* = proc (fileName: cstring; bytesRead: ptr uint32): ptr UncheckedArray[uint8] {.
       cdecl.} ## FileIO: Load binary data
@@ -430,6 +430,7 @@ const
     "LoadImageFromMemory",
     "LoadImageColors",
     "UnloadImageColors",
+    "SetTraceLogCallback",
     "LoadFontData",
     "UnloadFontData",
     "LoadMaterials",
@@ -639,6 +640,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
                 ("GenImageFontAtlas", "recs", "ptr ptr UncheckedArray[$1]"),
                 ("CheckCollisionLines", "collisionPoint", "out $1"),
                 ("LoadImageAnim", "frames", "out $1"),
+                ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),
               ]
             let pat = getReplacement(fnc.name, param.name, replacements)
             var baseKind = ""
