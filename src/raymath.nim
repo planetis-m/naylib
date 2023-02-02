@@ -27,7 +27,7 @@ type
 
 func equals*(x, y: float32, tol = 1.0e-6'f32): bool {.inline.} =
   ## Check whether two given floats are almost equal
-  result = abs(x - y) <= tol * max(1'f32, max(abs(x), abs(y)))
+  result = abs(x - y) <= tol
 
 func lerp*(start, `end`, amount: float32): float32 {.inline.} =
   ## Calculate linear interpolation between two floats
@@ -60,8 +60,8 @@ func vector2One*(): Vector2 {.inline.} =
 
 func equals*(p, q: Vector2, tol = 1.0e-6'f32): bool {.inline.} =
   ## Check whether two given vectors are almost equal
-  result = abs(p.x - q.x) <= tol * max(1'f32, max(abs(p.x), abs(q.x))) and
-      abs(p.y - q.y) <= tol * max(1'f32, max(abs(p.y), abs(q.y)))
+  result = abs(p.x - q.x) <= tol and
+      abs(p.y - q.y) <= tol
 
 func clamp*(v, min, max: Vector2): Vector2 {.inline.} =
   ## Clamp the components of the vector between
@@ -220,9 +220,9 @@ func vector3One*(): Vector3 {.inline.} =
 
 func equals*(p, q: Vector3, tol = 1.0e-6'f32): bool {.inline.} =
   ## Check whether two given vectors are almost equal
-  result = abs(p.x - q.x) <= tol * max(1'f32, max(abs(p.x), abs(q.x))) and
-      abs(p.y - q.y) <= tol * max(1'f32, max(abs(p.y), abs(q.y))) and
-      abs(p.z - q.z) <= tol * max(1'f32, max(abs(p.z), abs(q.z)))
+  result = abs(p.x - q.x) <= tol and
+      abs(p.y - q.y) <= tol and
+      abs(p.z - q.z) <= tol
 
 func clamp*(v, min, max: Vector3): Vector3 {.inline.} =
   ## Clamp the components of the vector between
@@ -1084,10 +1084,10 @@ func toFloatV*(mat: Matrix): Float16 {.inline, noinit.} =
 
 func equals*(p, q: Quaternion, tol = 1.0e-6'f32): bool {.inline.} =
   ## Check whether two given quaternions are almost equal
-  result = abs(p.x - q.x) <= tol * max(1'f32, max(abs(p.x), abs(q.x))) and
-      abs(p.y - q.y) <= tol * max(1'f32, max(abs(p.y), abs(q.y))) and
-      abs(p.z - q.z) <= tol * max(1'f32, max(abs(p.z), abs(q.z))) and
-      abs(p.w - q.w) <= tol * max(1'f32, max(abs(p.w), abs(q.w)))
+  result = abs(p.x - q.x) <= tol and
+      abs(p.y - q.y) <= tol and
+      abs(p.z - q.z) <= tol and
+      abs(p.w - q.w) <= tol
 
 func add*(q1, q2: Quaternion): Quaternion {.inline.} =
   ## Add two quaternions
