@@ -150,7 +150,7 @@ proc vsprintf(s: cstring, format: cstring, args: va_list) {.cdecl, importc: "vsp
 ## WARNING: This callbacks are intended for advance users
 type
   TraceLogCallbackImpl = proc (logLevel: int32; text: cstring; args: va_list) {.
-      cdecl.} ## Logging: Redirect trace log messages
+      cdecl.}
   LoadFileDataCallback* = proc (fileName: cstring; bytesRead: ptr uint32): ptr UncheckedArray[uint8] {.
       cdecl.} ## FileIO: Load binary data
   SaveFileDataCallback* = proc (fileName: cstring; data: pointer; bytesToWrite: uint32): bool {.

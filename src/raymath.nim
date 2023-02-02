@@ -25,6 +25,10 @@ type
 # Module Functions Definition - Utils math
 # ----------------------------------------------------------------------------------
 
+func equals*(x, y: float32, tol = 1.0e-6'f32): bool {.inline.} =
+  ## Check whether two given floats are almost equal
+  result = abs(x - y) <= tol * max(1'f32, max(abs(x), abs(y)))
+
 func lerp*(start, `end`, amount: float32): float32 {.inline.} =
   ## Calculate linear interpolation between two floats
   result = start + amount * (`end` - start)
@@ -53,6 +57,11 @@ func vector2Zero*(): Vector2 {.inline.} =
 func vector2One*(): Vector2 {.inline.} =
   ## Vector with components value 1'f32
   result = Vector2(x: 1, y: 1)
+
+func equals*(p, q: Vector2, tol = 1.0e-6'f32): bool {.inline.} =
+  ## Check whether two given vectors are almost equal
+  result = abs(p.x - q.x) <= tol * max(1'f32, max(abs(p.x), abs(q.x))) and
+      abs(p.y - q.y) <= tol * max(1'f32, max(abs(p.y), abs(q.y)))
 
 func clamp*(v, min, max: Vector2): Vector2 {.inline.} =
   ## Clamp the components of the vector between
@@ -208,6 +217,12 @@ func vector3Zero*(): Vector3 {.inline.} =
 func vector3One*(): Vector3 {.inline.} =
   ## Vector with components value 1'f32
   result = Vector3(x: 1, y: 1, z: 1)
+
+func equals*(p, q: Vector3, tol = 1.0e-6'f32): bool {.inline.} =
+  ## Check whether two given vectors are almost equal
+  result = abs(p.x - q.x) <= tol * max(1'f32, max(abs(p.x), abs(q.x))) and
+      abs(p.y - q.y) <= tol * max(1'f32, max(abs(p.y), abs(q.y))) and
+      abs(p.z - q.z) <= tol * max(1'f32, max(abs(p.z), abs(q.z)))
 
 func clamp*(v, min, max: Vector3): Vector3 {.inline.} =
   ## Clamp the components of the vector between
@@ -1067,6 +1082,13 @@ func toFloatV*(mat: Matrix): Float16 {.inline, noinit.} =
 # Module Functions Definition - Quaternion math
 # ----------------------------------------------------------------------------------
 
+func equals*(p, q: Quaternion, tol = 1.0e-6'f32): bool {.inline.} =
+  ## Check whether two given quaternions are almost equal
+  result = abs(p.x - q.x) <= tol * max(1'f32, max(abs(p.x), abs(q.x))) and
+      abs(p.y - q.y) <= tol * max(1'f32, max(abs(p.y), abs(q.y))) and
+      abs(p.z - q.z) <= tol * max(1'f32, max(abs(p.z), abs(q.z))) and
+      abs(p.w - q.w) <= tol * max(1'f32, max(abs(p.w), abs(q.w)))
+
 func add*(q1, q2: Quaternion): Quaternion {.inline.} =
   ## Add two quaternions
   result = Quaternion(x: q1.x + q2.x, y: q1.y + q2.y, z: q1.z + q2.z,
@@ -1536,6 +1558,8 @@ func divide*(v1, v2: Index4): Index4 {.inline.} =
   ## Divide two indexes
   result = Index4(x: v1.x div v2.x, y: v1.y div v2.y, z: v1.z div v2.z,
                                   w: v1.w div v2.w)
+
+# template `=~`*[T: float32|Vector2|Vector3|Quaternion](v1, v2: T): bool = equals(v1, v2)
 
 template `+`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4|Matrix](v1, v2: T): T = add(v1, v2)
 template `+=`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4|Matrix](v1: var T, v2: T) = v1 = add(v1, v2)
