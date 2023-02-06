@@ -42,7 +42,7 @@ func remap*(value, inputStart, inputEnd, outputStart, outputEnd: float32): float
   result = (value - inputStart) / (inputEnd - inputStart) *
       (outputEnd - outputStart) + outputStart
 
-proc wrap*(value, min, max: float32): float32 =
+func wrap*(value, min, max: float32): float32 {.inline.} =
   ## Wrap input value from min to max
   result = value - (max - min) * floor((value - min) / (max - min))
 
@@ -404,7 +404,7 @@ func rotateByQuaternion*(v: Vector3; q: Quaternion): Vector3 {.inline.} =
   result.z = v.x * (-(2 * q.w * q.y) + 2 * q.x * q.z) + v.y * (2 * q.w * q.x + 2 * q.y * q.z) +
       v.z * (q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z)
 
-proc rotateByAxisAngle*(v, axis: Vector3; angle: float32): Vector3 =
+func rotateByAxisAngle*(v, axis: Vector3; angle: float32): Vector3 {.inline.} =
   ## Rotates a vector around an axis
   # Using Euler-Rodrigues Formula
   # Ref.: https://en.wikipedia.org/w/index.php?title=Euler%E2%80%93Rodrigues_formula
@@ -507,7 +507,7 @@ func unproject*(source: Vector3; projection, view: Matrix): Vector3 {.inline.} =
   ## Projects a Vector3 from screen space into object space
   ## NOTE: We are avoiding calling other raymath functions despite available
   result = Vector3()
-  # Calculate unproject matrix (multiply view matrix by projection matrix) and invert it
+  # Calculate unprojected matrix (multiply view matrix by projection matrix) and invert it
   let matViewProj = Matrix(m0: view.m0 * projection.m0 +
       view.m1 * projection.m4 + view.m2 * projection.m8 + view.m3 * projection.m12, m4: view.m0 *
       projection.m1 + view.m1 * projection.m5 + view.m2 * projection.m9 +
@@ -579,7 +579,7 @@ func unproject*(source: Vector3; projection, view: Matrix): Vector3 {.inline.} =
       -(a30 * b03) + a31 * b01 - a32 * b00) * invDet, m15: (a20 * b03 - a21 * b01 + a22 * b00) * invDet)
   # Create quaternion from source point
   let quat = Quaternion(x: source.x, y: source.y, z: source.z, w: 1'f32)
-  # Multiply quat point by unproject matrix
+  # Multiply quat point by unprojected matrix
   let qtransformed = Quaternion(x: matViewProjInv.m0 * quat.x +
       matViewProjInv.m4 * quat.y + matViewProjInv.m8 * quat.z +
       matViewProjInv.m12 * quat.w, y: matViewProjInv.m1 * quat.x +
