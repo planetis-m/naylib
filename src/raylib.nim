@@ -268,7 +268,7 @@ type
     ResizeNs ## Vertical resize/move arrow shape
     ResizeNwse ## Top-left to bottom-right diagonal resize/move arrow shape
     ResizeNesw ## The top-right to bottom-left diagonal resize/move arrow shape
-    ResizeAll ## The omni-directional resize/move cursor shape
+    ResizeAll ## The omnidirectional resize/move cursor shape
     NotAllowed ## The operation-not-allowed shape
 
   GamepadButton* {.size: sizeof(int32).} = enum ## Gamepad buttons
@@ -397,10 +397,10 @@ type
   CubemapLayout* {.size: sizeof(int32).} = enum ## Cubemap layouts
     AutoDetect ## Automatically detect layout type
     LineVertical ## Layout is defined by a vertical line with faces
-    LineHorizontal ## Layout is defined by an horizontal line with faces
+    LineHorizontal ## Layout is defined by a horizontal line with faces
     CrossThreeByFour ## Layout is defined by a 3x4 cross with cubemap faces
     CrossFourByThree ## Layout is defined by a 4x3 cross with cubemap faces
-    Panorama ## Layout is defined by a panorama image (equirectangular map)
+    Panorama ## Layout is defined by a panorama image (equirrectangular map)
 
   FontType* {.size: sizeof(int32).} = enum ## Font type, defines generation method
     Default ## Default font generation, anti-aliased
@@ -481,7 +481,7 @@ type
     z*: float32 ## Vector z component
     w*: float32 ## Vector w component
 
-  Matrix* {.importc, header: "raylib.h", bycopy.} = object ## Matrix, 4x4 components, column major, OpenGL style, right handed
+  Matrix* {.importc, header: "raylib.h", bycopy.} = object ## Matrix, 4x4 components, column major, OpenGL style, right-handed
     m0*, m4*, m8*, m12*: float32 ## Matrix first row (4 components)
     m1*, m5*, m9*, m13*: float32 ## Matrix second row (4 components)
     m2*, m6*, m10*, m14*: float32 ## Matrix third row (4 components)
@@ -617,8 +617,8 @@ type
 
   RayCollision* {.importc, header: "raylib.h", bycopy.} = object ## RayCollision, ray hit information
     hit*: bool ## Did the ray hit something?
-    distance*: float32 ## Distance to nearest hit
-    point*: Vector3 ## Point of nearest hit
+    distance*: float32 ## Distance to the nearest hit
+    point*: Vector3 ## Point of the nearest hit
     normal*: Vector3 ## Surface normal of hit
 
   BoundingBox* {.importc, header: "raylib.h", bycopy.} = object ## BoundingBox
@@ -717,7 +717,7 @@ proc vsprintf(s: cstring, format: cstring, args: va_list) {.cdecl, importc: "vsp
 ## WARNING: This callbacks are intended for advance users
 type
   TraceLogCallbackImpl = proc (logLevel: int32; text: cstring; args: va_list) {.
-      cdecl.} ## Logging: Redirect trace log messages
+      cdecl.}
   LoadFileDataCallback* = proc (fileName: cstring; bytesRead: ptr uint32): ptr UncheckedArray[uint8] {.
       cdecl.} ## FileIO: Load binary data
   SaveFileDataCallback* = proc (fileName: cstring; data: pointer; bytesToWrite: uint32): bool {.

@@ -403,7 +403,7 @@
     },
     {
       "name": "Matrix",
-      "description": "Matrix, 4x4 components, column major, OpenGL style, right handed",
+      "description": "Matrix, 4x4 components, column major, OpenGL style, right-handed",
       "fields": [
         {
           "type": "float",
@@ -1063,12 +1063,12 @@
         {
           "type": "float",
           "name": "distance",
-          "description": "Distance to nearest hit"
+          "description": "Distance to the nearest hit"
         },
         {
           "type": "Vector3",
           "name": "point",
-          "description": "Point of nearest hit"
+          "description": "Point of the nearest hit"
         },
         {
           "type": "Vector3",
@@ -2130,7 +2130,7 @@
         {
           "name": "MOUSE_CURSOR_RESIZE_ALL",
           "value": 9,
-          "description": "The omni-directional resize/move cursor shape"
+          "description": "The omnidirectional resize/move cursor shape"
         },
         {
           "name": "MOUSE_CURSOR_NOT_ALLOWED",
@@ -2735,7 +2735,7 @@
         {
           "name": "CUBEMAP_LAYOUT_LINE_HORIZONTAL",
           "value": 2,
-          "description": "Layout is defined by an horizontal line with faces"
+          "description": "Layout is defined by a horizontal line with faces"
         },
         {
           "name": "CUBEMAP_LAYOUT_CROSS_THREE_BY_FOUR",
@@ -2750,7 +2750,7 @@
         {
           "name": "CUBEMAP_LAYOUT_PANORAMA",
           "value": 5,
-          "description": "Layout is defined by a panorama image (equirectangular map)"
+          "description": "Layout is defined by a panorama image (equirrectangular map)"
         }
       ]
     },
