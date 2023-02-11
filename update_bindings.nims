@@ -1,18 +1,18 @@
 import std/os
 
 const
-  originUrl = "https://github.com/planetis-m/naylib"
-  pkgDir = thisDir().quoteShell
-  rayDir = pkgDir / "src/raylib"
-  apiDir = pkgDir / "api"
-  docsDir = pkgDir / "docs"
+  OriginUrl = "https://github.com/planetis-m/naylib"
+  PkgDir = thisDir().quoteShell
+  RaylibDir = PkgDir / "src/raylib"
+  ApiDir = PkgDir / "api"
+  DocsDir = PkgDir / "docs"
 
 template `/.`(x: string): string =
   (when defined(posix): "./" & x else: x)
 
 proc genWrapper(lib: string) =
   let src = lib & "_gen.nim"
-  withDir(pkgDir / "tools"):
+  withDir(PkgDir / "tools"):
     let exe = toExe(lib & "_gen")
     # Build the ray2nim tool
     exec("nim c --mm:arc --panics:on -d:release -d:emiLenient " & src)
@@ -21,13 +21,13 @@ proc genWrapper(lib: string) =
 
 proc genApiJson(lib, prefix: string) =
   let src = "raylib_parser.c"
-  withDir(rayDir / "parser"):
+  withDir(RaylibDir / "parser"):
     let exe = toExe("raylib_parser")
     # Building raylib API parser
     exec("cc " & src & " -o " & exe)
-    mkDir(apiDir)
-    let header = rayDir / "src" / (lib & ".h")
-    let apiJson = apiDir / (lib & "_api.json")
+    mkDir(ApiDir)
+    let header = RaylibDir / "src" / (lib & ".h")
+    let apiJson = ApiDir / (lib & "_api.json")
     # Generate {lib} API JSON file
     exec(/.exe & " -f JSON " & (if prefix != "": "-d " & prefix else: "") &
         " -i " & header & " -o " & apiJson)
@@ -44,10 +44,10 @@ task wrap, "Produce all raylib nim wrappers":
 
 task docs, "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
-  withDir(pkgDir):
+  withDir(PkgDir):
     for tmp in items(["raymath", "raylib", "rlgl", "reasings"]):
-      let doc = docsDir / tmp.addFileExt(".html")
+      let doc = DocsDir / (tmp & ".html")
       let src = "src" / tmp
       # Generate the docs for {src}
-      exec("nim doc --verbosity:0 --git.url:" & originUrl &
+      exec("nim doc --verbosity:0 --git.url:" & OriginUrl &
           " --git.devel:main --git.commit:main --out:" & doc & " " & src)
