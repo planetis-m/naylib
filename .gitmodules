@@ -1,3 +1,4 @@
 [submodule "src/raylib"]
 	path = src/raylib
 	url = https://github.com/raysan5/raylib.git
+	shallow = true
