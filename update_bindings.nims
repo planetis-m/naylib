@@ -1,7 +1,7 @@
 import std/os
 
 const
-  OriginUrl = "https://github.com/planetis-m/naylib"
+  ProjectUrl = "https://github.com/planetis-m/naylib"
   PkgDir = thisDir().quoteShell
   RaylibDir = PkgDir / "src/raylib"
   ApiDir = PkgDir / "api"
@@ -49,5 +49,5 @@ task docs, "Generate documentation":
       let doc = DocsDir / (tmp & ".html")
       let src = "src" / tmp
       # Generate the docs for {src}
-      exec("nim doc --verbosity:0 --git.url:" & OriginUrl &
+      exec("nim doc --verbosity:0 --git.url:" & ProjectUrl &
           " --git.devel:main --git.commit:main --out:" & doc & " " & src)

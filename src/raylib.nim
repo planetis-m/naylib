@@ -1045,18 +1045,8 @@ proc getGesturePinchVector*(): Vector2 {.importc: "GetGesturePinchVector".}
   ## Get gesture pinch delta
 proc getGesturePinchAngle*(): float32 {.importc: "GetGesturePinchAngle".}
   ## Get gesture pinch angle
-proc setCameraMode*(camera: Camera, mode: CameraMode) {.importc: "SetCameraMode".}
-  ## Set camera mode (multiple camera modes available)
-proc updateCamera*(camera: var Camera) {.importc: "UpdateCamera".}
+proc updateCamera*(camera: var Camera, mode: CameraMode) {.importc: "UpdateCamera".}
   ## Update camera position for selected mode
-proc setCameraPanControl*(keyPan: MouseButton) {.importc: "SetCameraPanControl".}
-  ## Set camera pan key to combine with mouse movement (free camera)
-proc setCameraAltControl*(keyAlt: KeyboardKey) {.importc: "SetCameraAltControl".}
-  ## Set camera alt key to combine with mouse movement (free camera)
-proc setCameraSmoothZoomControl*(keySmoothZoom: KeyboardKey) {.importc: "SetCameraSmoothZoomControl".}
-  ## Set camera smooth zoom key to combine with mouse (free camera)
-proc setCameraMoveControls*(keyFront: KeyboardKey, keyBack: KeyboardKey, keyRight: KeyboardKey, keyLeft: KeyboardKey, keyUp: KeyboardKey, keyDown: KeyboardKey) {.importc: "SetCameraMoveControls".}
-  ## Set camera move controls (1st person and 3rd person cameras)
 proc setShapesTexture*(texture: Texture2D, source: Rectangle) {.importc: "SetShapesTexture".}
   ## Set texture and rectangle to be used on shapes drawing
 proc drawPixel*(posX: int32, posY: int32, color: Color) {.importc: "DrawPixel".}

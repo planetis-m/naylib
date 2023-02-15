@@ -235,7 +235,7 @@ const
     ("TraceLog", "logLevel"),
     ("SetTraceLogLevel", "logLevel"),
     # CameraMode
-    ("SetCameraMode", "mode"),
+    ("UpdateCamera", "mode"),
     # BlendMode
     ("BeginBlendMode", "mode"),
     # MaterialMapIndex

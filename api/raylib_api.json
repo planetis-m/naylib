@@ -4892,21 +4892,6 @@
       "returnType": "float"
     },
     {
-      "name": "SetCameraMode",
-      "description": "Set camera mode (multiple camera modes available)",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "Camera",
-          "name": "camera"
-        },
-        {
-          "type": "int",
-          "name": "mode"
-        }
-      ]
-    },
-    {
       "name": "UpdateCamera",
       "description": "Update camera position for selected mode",
       "returnType": "void",
@@ -4914,70 +4899,10 @@
         {
           "type": "Camera *",
           "name": "camera"
-        }
-      ]
-    },
-    {
-      "name": "SetCameraPanControl",
-      "description": "Set camera pan key to combine with mouse movement (free camera)",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "int",
-          "name": "keyPan"
-        }
-      ]
-    },
-    {
-      "name": "SetCameraAltControl",
-      "description": "Set camera alt key to combine with mouse movement (free camera)",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "int",
-          "name": "keyAlt"
-        }
-      ]
-    },
-    {
-      "name": "SetCameraSmoothZoomControl",
-      "description": "Set camera smooth zoom key to combine with mouse (free camera)",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "int",
-          "name": "keySmoothZoom"
-        }
-      ]
-    },
-    {
-      "name": "SetCameraMoveControls",
-      "description": "Set camera move controls (1st person and 3rd person cameras)",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "int",
-          "name": "keyFront"
         },
         {
           "type": "int",
-          "name": "keyBack"
-        },
-        {
-          "type": "int",
-          "name": "keyRight"
-        },
-        {
-          "type": "int",
-          "name": "keyLeft"
-        },
-        {
-          "type": "int",
-          "name": "keyUp"
-        },
-        {
-          "type": "int",
-          "name": "keyDown"
+          "name": "mode"
         }
       ]
     },
