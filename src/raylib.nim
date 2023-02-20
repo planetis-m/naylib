@@ -1595,6 +1595,10 @@ proc attachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) 
   ## Attach audio stream processor to stream
 proc detachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "DetachAudioStreamProcessor".}
   ## Detach audio stream processor from stream
+proc attachAudioMixedProcessor*(processor: AudioCallback) {.importc: "AttachAudioMixedProcessor".}
+  ## Attach audio stream processor to the entire audio pipeline
+proc detachAudioMixedProcessor*(processor: AudioCallback) {.importc: "DetachAudioMixedProcessor".}
+  ## Detach audio stream processor from the entire audio pipeline
 {.pop.}
 
 type
