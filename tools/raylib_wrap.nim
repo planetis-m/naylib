@@ -353,6 +353,11 @@ proc loadModelFromSharedMesh*(mesh: Mesh): Model =
   if result.meshes == nil and result.materials == nil:
     raiseResourceNotFound("mesh")
 
+proc unloadModelKeepMeshes*(model: var Model) =
+  ## Unload model (but not meshes) from memory (RAM and/or VRAM)
+  unloadModelKeepMeshesPriv(model)
+  zeroMem(addr model, sizeof(Model))
+
 template drawing*(body: untyped) =
   ## Setup canvas (framebuffer) to start drawing
   beginDrawing()

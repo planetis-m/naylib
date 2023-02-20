@@ -400,11 +400,31 @@ const
     # Setters
     "SetMaterialTexture",
     "SetModelMeshMaterial",
+    # MemFree
+    "UnloadImageColors",
+    "UnloadImagePalette",
+    "UnloadFontData",
+    "UnloadModelAnimations",
+    "UnloadWaveSamples",
   ]
   allocFuncs = [
     "MemAlloc",
     "MemRealloc",
-    "MemFree"
+    "MemFree",
+    "UnloadVrStereoConfig",
+    "UnloadShader",
+    "UnloadImage",
+    "UnloadTexture",
+    "UnloadRenderTexture",
+    "UnloadFont",
+    "UnloadModel",
+    "UnloadMesh",
+    "UnloadMaterial",
+    "UnloadModelAnimation",
+    "UnloadWave",
+    "UnloadSound",
+    "UnloadMusicStream",
+    "UnloadAudioStream",
   ]
   privateFuncs = [
     "GetMonitorName",
@@ -419,19 +439,14 @@ const
     "SetShaderValue",
     "SetShaderValueV",
     "LoadModelAnimations",
-    "UnloadModelAnimations",
     "LoadWaveSamples",
-    "UnloadWaveSamples",
     "LoadImagePalette",
-    "UnloadImagePalette",
     "LoadImage",
     "LoadImageRaw",
     "LoadImageFromMemory",
     "LoadImageColors",
-    "UnloadImageColors",
     "SetTraceLogCallback",
     "LoadFontData",
-    "UnloadFontData",
     "LoadMaterials",
     "LoadImageFromTexture",
     "LoadTextureFromImage",
@@ -459,11 +474,12 @@ const
     "LoadWaveFromMemory",
     "LoadMusicStream",
     "LoadMusicStreamFromMemory",
-    "UnloadDroppedFiles",
     "LoadDroppedFiles",
+    "UnloadDroppedFiles",
     "UpdateMeshBuffer",
     "UpdateSound",
     "UpdateAudioStream",
+    "UnloadModelKeepMeshes",
   ]
 
 proc genBindings(t: TopLevel, fname: string; header, middle: string) =

@@ -895,8 +895,7 @@ proc endVrStereoMode*() {.importc: "EndVrStereoMode".}
   ## End stereo rendering (requires VR simulator)
 proc loadVrStereoConfig*(device: VrDeviceInfo): VrStereoConfig {.importc: "LoadVrStereoConfig".}
   ## Load VR stereo config for VR simulator device parameters
-proc unloadVrStereoConfig*(config: VrStereoConfig) {.importc: "UnloadVrStereoConfig".}
-  ## Unload VR stereo config
+proc unloadVrStereoConfig(config: VrStereoConfig) {.importc: "UnloadVrStereoConfig".}
 proc loadShaderPriv(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader".}
 proc loadShaderFromMemoryPriv(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory".}
 proc getShaderLocation*(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation".}
@@ -909,8 +908,7 @@ proc setShaderValueMatrix*(shader: Shader, locIndex: ShaderLocation, mat: Matrix
   ## Set shader uniform value (matrix 4x4)
 proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocation, texture: Texture2D) {.importc: "SetShaderValueTexture".}
   ## Set shader uniform value for texture (sampler2d)
-proc unloadShader*(shader: Shader) {.importc: "UnloadShader".}
-  ## Unload shader from GPU memory (VRAM)
+proc unloadShader(shader: Shader) {.importc: "UnloadShader".}
 proc getMouseRay*(mousePosition: Vector2, camera: Camera): Ray {.importc: "GetMouseRay".}
   ## Get a ray trace from mouse position
 proc getCameraMatrix*(camera: Camera): Matrix {.importc: "GetCameraMatrix".}
@@ -1147,8 +1145,7 @@ proc loadImageFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uin
 proc loadImageFromTexturePriv(texture: Texture2D): Image {.importc: "LoadImageFromTexture".}
 proc loadImageFromScreen*(): Image {.importc: "LoadImageFromScreen".}
   ## Load image from screen buffer and (screenshot)
-proc unloadImage*(image: Image) {.importc: "UnloadImage".}
-  ## Unload image from CPU memory (RAM)
+proc unloadImage(image: Image) {.importc: "UnloadImage".}
 proc exportImage*(image: Image, fileName: cstring): bool {.importc: "ExportImage".}
   ## Export image data to file, returns true on success
 proc exportImageAsCode*(image: Image, fileName: cstring): bool {.importc: "ExportImageAsCode".}
@@ -1227,8 +1224,6 @@ proc imageColorReplace*(image: var Image, color: Color, replace: Color) {.import
   ## Modify image color: replace color
 proc loadImageColorsPriv(image: Image): ptr UncheckedArray[Color] {.importc: "LoadImageColors".}
 proc loadImagePalettePriv(image: Image, maxPaletteSize: int32, colorCount: ptr int32): ptr UncheckedArray[Color] {.importc: "LoadImagePalette".}
-proc unloadImageColorsPriv(colors: ptr UncheckedArray[Color]) {.importc: "UnloadImageColors".}
-proc unloadImagePalettePriv(colors: ptr UncheckedArray[Color]) {.importc: "UnloadImagePalette".}
 proc getImageAlphaBorder*(image: Image, threshold: float32): Rectangle {.importc: "GetImageAlphaBorder".}
   ## Get image alpha border rectangle
 proc getImageColor*(image: Image, x: int32, y: int32): Color {.importc: "GetImageColor".}
@@ -1269,10 +1264,8 @@ proc loadTexturePriv(fileName: cstring): Texture2D {.importc: "LoadTexture".}
 proc loadTextureFromImagePriv(image: Image): Texture2D {.importc: "LoadTextureFromImage".}
 proc loadTextureCubemapPriv(image: Image, layout: CubemapLayout): TextureCubemap {.importc: "LoadTextureCubemap".}
 proc loadRenderTexturePriv(width: int32, height: int32): RenderTexture2D {.importc: "LoadRenderTexture".}
-proc unloadTexture*(texture: Texture2D) {.importc: "UnloadTexture".}
-  ## Unload texture from GPU memory (VRAM)
-proc unloadRenderTexture*(target: RenderTexture2D) {.importc: "UnloadRenderTexture".}
-  ## Unload render texture from GPU memory (VRAM)
+proc unloadTexture(texture: Texture2D) {.importc: "UnloadTexture".}
+proc unloadRenderTexture(target: RenderTexture2D) {.importc: "UnloadRenderTexture".}
 proc updateTexturePriv(texture: Texture2D, pixels: pointer) {.importc: "UpdateTexture".}
 proc updateTexturePriv(texture: Texture2D, rec: Rectangle, pixels: pointer) {.importc: "UpdateTextureRec".}
 proc genTextureMipmaps*(texture: var Texture2D) {.importc: "GenTextureMipmaps".}
@@ -1329,9 +1322,7 @@ proc loadFontFromImagePriv(image: Image, key: Color, firstChar: int32): Font {.i
 proc loadFontFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32): Font {.importc: "LoadFontFromMemory".}
 proc loadFontDataPriv(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, fontChars: ptr UncheckedArray[int32], glyphCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData".}
 proc genImageFontAtlasPriv(chars: ptr UncheckedArray[GlyphInfo], recs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
-proc unloadFontDataPriv(chars: ptr UncheckedArray[GlyphInfo], glyphCount: int32) {.importc: "UnloadFontData".}
-proc unloadFont*(font: Font) {.importc: "UnloadFont".}
-  ## Unload font from GPU memory (VRAM)
+proc unloadFont(font: Font) {.importc: "UnloadFont".}
 proc exportFontAsCode*(font: Font, fileName: cstring): bool {.importc: "ExportFontAsCode".}
   ## Export font as code file, returns true on success
 proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS".}
@@ -1398,10 +1389,8 @@ proc drawGrid*(slices: int32, spacing: float32) {.importc: "DrawGrid".}
   ## Draw a grid (centered at (0, 0, 0))
 proc loadModelPriv(fileName: cstring): Model {.importc: "LoadModel".}
 proc loadModelFromMeshPriv(mesh: Mesh): Model {.importc: "LoadModelFromMesh".}
-proc unloadModel*(model: Model) {.importc: "UnloadModel".}
-  ## Unload model (including meshes) from memory (RAM and/or VRAM)
-proc unloadModelKeepMeshes*(model: Model) {.importc: "UnloadModelKeepMeshes".}
-  ## Unload model (but not meshes) from memory (RAM and/or VRAM)
+proc unloadModel(model: Model) {.importc: "UnloadModel".}
+proc unloadModelKeepMeshesPriv(model: Model) {.importc: "UnloadModelKeepMeshes".}
 proc getModelBoundingBox*(model: Model): BoundingBox {.importc: "GetModelBoundingBox".}
   ## Compute model bounding box limits (considers all meshes)
 proc drawModel*(model: Model, position: Vector3, scale: float32, tint: Color) {.importc: "DrawModel".}
@@ -1423,8 +1412,7 @@ proc drawBillboard*(camera: Camera, texture: Texture2D, source: Rectangle, posit
 proc uploadMesh*(mesh: var Mesh, dynamic: bool) {.importc: "UploadMesh".}
   ## Upload mesh vertex data in GPU and provide VAO/VBO ids
 proc updateMeshBufferPriv(mesh: Mesh, index: int32, data: pointer, dataSize: int32, offset: int32) {.importc: "UpdateMeshBuffer".}
-proc unloadMesh*(mesh: Mesh) {.importc: "UnloadMesh".}
-  ## Unload mesh data from CPU and GPU
+proc unloadMesh(mesh: Mesh) {.importc: "UnloadMesh".}
 proc drawMesh*(mesh: Mesh, material: Material, transform: Matrix) {.importc: "DrawMesh".}
   ## Draw a 3d mesh with material and transform
 proc drawMeshInstancedPriv(mesh: Mesh, material: Material, transforms: ptr UncheckedArray[Matrix], instances: int32) {.importc: "DrawMeshInstanced".}
@@ -1459,14 +1447,11 @@ proc genMeshCubicmap*(cubicmap: Image, cubeSize: Vector3): Mesh {.importc: "GenM
 proc loadMaterialsPriv(fileName: cstring, materialCount: ptr int32): ptr UncheckedArray[Material] {.importc: "LoadMaterials".}
 proc loadMaterialDefault*(): Material {.importc: "LoadMaterialDefault".}
   ## Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
-proc unloadMaterial*(material: Material) {.importc: "UnloadMaterial".}
-  ## Unload material from GPU memory (VRAM)
+proc unloadMaterial(material: Material) {.importc: "UnloadMaterial".}
 proc loadModelAnimationsPriv(fileName: cstring, animCount: ptr uint32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations".}
 proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation".}
   ## Update model animation pose
-proc unloadModelAnimation*(anim: ModelAnimation) {.importc: "UnloadModelAnimation".}
-  ## Unload animation data
-proc unloadModelAnimationsPriv(animations: ptr UncheckedArray[ModelAnimation], count: uint32) {.importc: "UnloadModelAnimations".}
+proc unloadModelAnimation(anim: ModelAnimation) {.importc: "UnloadModelAnimation".}
 proc isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
   ## Check model animation skeleton match
 proc checkCollisionSpheres*(center1: Vector3, radius1: float32, center2: Vector3, radius2: float32): bool {.importc: "CheckCollisionSpheres".}
@@ -1498,10 +1483,8 @@ proc loadWaveFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint
 proc loadSoundPriv(fileName: cstring): Sound {.importc: "LoadSound".}
 proc loadSoundFromWavePriv(wave: Wave): Sound {.importc: "LoadSoundFromWave".}
 proc updateSoundPriv(sound: Sound, data: pointer, sampleCount: int32) {.importc: "UpdateSound".}
-proc unloadWave*(wave: Wave) {.importc: "UnloadWave".}
-  ## Unload wave data
-proc unloadSound*(sound: Sound) {.importc: "UnloadSound".}
-  ## Unload sound
+proc unloadWave(wave: Wave) {.importc: "UnloadWave".}
+proc unloadSound(sound: Sound) {.importc: "UnloadSound".}
 proc exportWave*(wave: Wave, fileName: cstring): bool {.importc: "ExportWave".}
   ## Export wave data to file, returns true on success
 proc exportWaveAsCode*(wave: Wave, fileName: cstring): bool {.importc: "ExportWaveAsCode".}
@@ -1535,11 +1518,9 @@ proc waveCrop*(wave: var Wave, initSample: int32, finalSample: int32) {.importc:
 proc waveFormat*(wave: var Wave, sampleRate: int32, sampleSize: int32, channels: int32) {.importc: "WaveFormat".}
   ## Convert wave data to desired format
 proc loadWaveSamplesPriv(wave: Wave): ptr UncheckedArray[float32] {.importc: "LoadWaveSamples".}
-proc unloadWaveSamplesPriv(samples: ptr UncheckedArray[float32]) {.importc: "UnloadWaveSamples".}
 proc loadMusicStreamPriv(fileName: cstring): Music {.importc: "LoadMusicStream".}
 proc loadMusicStreamFromMemoryPriv(fileType: cstring, data: ptr UncheckedArray[uint8], dataSize: int32): Music {.importc: "LoadMusicStreamFromMemory".}
-proc unloadMusicStream*(music: Music) {.importc: "UnloadMusicStream".}
-  ## Unload music stream
+proc unloadMusicStream(music: Music) {.importc: "UnloadMusicStream".}
 proc playMusicStream*(music: Music) {.importc: "PlayMusicStream".}
   ## Start music playing
 proc isMusicStreamPlaying*(music: Music): bool {.importc: "IsMusicStreamPlaying".}
@@ -1566,8 +1547,7 @@ proc getMusicTimePlayed*(music: Music): float32 {.importc: "GetMusicTimePlayed".
   ## Get current music time played (in seconds)
 proc loadAudioStream*(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream {.importc: "LoadAudioStream".}
   ## Load audio stream (to stream raw audio pcm data)
-proc unloadAudioStream*(stream: AudioStream) {.importc: "UnloadAudioStream".}
-  ## Unload audio stream and free memory
+proc unloadAudioStream(stream: AudioStream) {.importc: "UnloadAudioStream".}
 proc updateAudioStreamPriv(stream: AudioStream, data: pointer, frameCount: int32) {.importc: "UpdateAudioStream".}
 proc isAudioStreamProcessed*(stream: AudioStream): bool {.importc: "IsAudioStreamProcessed".}
   ## Check if any audio stream buffers requires refill
@@ -2103,6 +2083,11 @@ proc loadModelFromSharedMesh*(mesh: Mesh): Model =
   result = loadModelFromMeshPriv(mesh)
   if result.meshes == nil and result.materials == nil:
     raiseResourceNotFound("mesh")
+
+proc unloadModelKeepMeshes*(model: var Model) =
+  ## Unload model (but not meshes) from memory (RAM and/or VRAM)
+  unloadModelKeepMeshesPriv(model)
+  zeroMem(addr model, sizeof(Model))
 
 template drawing*(body: untyped) =
   ## Setup canvas (framebuffer) to start drawing
