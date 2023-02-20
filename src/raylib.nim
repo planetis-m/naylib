@@ -2087,7 +2087,7 @@ proc loadModelFromSharedMesh*(mesh: Mesh): Model =
 proc unloadModelKeepMeshes*(model: var Model) =
   ## Unload model (but not meshes) from memory (RAM and/or VRAM)
   unloadModelKeepMeshesPriv(model)
-  zeroMem(addr model, sizeof(Model))
+  wasMoved(model)
 
 template drawing*(body: untyped) =
   ## Setup canvas (framebuffer) to start drawing
