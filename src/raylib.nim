@@ -790,7 +790,9 @@ proc minimizeWindow*() {.importc: "MinimizeWindow".}
 proc restoreWindow*() {.importc: "RestoreWindow".}
   ## Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
 proc setWindowIcon*(image: Image) {.importc: "SetWindowIcon".}
-  ## Set icon for window (only PLATFORM_DESKTOP)
+  ## Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
+proc setWindowIcons*(images: ptr UncheckedArray[Image], count: int32) {.importc: "SetWindowIcons".}
+  ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
 proc setWindowTitle*(title: cstring) {.importc: "SetWindowTitle".}
   ## Set title for window (only PLATFORM_DESKTOP)
 proc setWindowPosition*(x: int32, y: int32) {.importc: "SetWindowPosition".}

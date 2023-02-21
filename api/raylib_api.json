@@ -3167,12 +3167,27 @@
     },
     {
       "name": "SetWindowIcon",
-      "description": "Set icon for window (only PLATFORM_DESKTOP)",
+      "description": "Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)",
       "returnType": "void",
       "params": [
         {
           "type": "Image",
           "name": "image"
+        }
+      ]
+    },
+    {
+      "name": "SetWindowIcons",
+      "description": "Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Image *",
+          "name": "images"
+        },
+        {
+          "type": "int",
+          "name": "count"
         }
       ]
     },
