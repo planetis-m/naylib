@@ -427,6 +427,7 @@ const
     "UnloadAudioStream",
   ]
   privateFuncs = [
+    "SetWindowIcons",
     "GetMonitorName",
     "GetClipboardText",
     "GetGamepadName",

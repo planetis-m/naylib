@@ -25,6 +25,10 @@ proc toEmbedded*(data: openArray[byte], frameCount, sampleRate, sampleSize, chan
 proc raiseResourceNotFound(fileName: string) {.noinline, noreturn.} =
   raise newException(IOError, "Could not load resource from " & fileName)
 
+proc setWindowIcons*(images: openArray[Image]) =
+  ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
+  setWindowIconsPriv(cast[ptr UncheckedArray[Vector2]](images), images.len.int32)
+
 proc getMonitorName*(monitor: int32): string {.inline.} =
   ## Get the human-readable, UTF-8 encoded name of the primary monitor
   result = $getMonitorNamePriv(monitor)

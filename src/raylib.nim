@@ -791,8 +791,7 @@ proc restoreWindow*() {.importc: "RestoreWindow".}
   ## Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
 proc setWindowIcon*(image: Image) {.importc: "SetWindowIcon".}
   ## Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
-proc setWindowIcons*(images: ptr UncheckedArray[Image], count: int32) {.importc: "SetWindowIcons".}
-  ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
+proc setWindowIconsPriv(images: ptr UncheckedArray[Image], count: int32) {.importc: "SetWindowIcons".}
 proc setWindowTitle*(title: cstring) {.importc: "SetWindowTitle".}
   ## Set title for window (only PLATFORM_DESKTOP)
 proc setWindowPosition*(x: int32, y: int32) {.importc: "SetWindowPosition".}
@@ -1757,6 +1756,10 @@ proc toEmbedded*(data: openArray[byte], frameCount, sampleRate, sampleSize, chan
 
 proc raiseResourceNotFound(fileName: string) {.noinline, noreturn.} =
   raise newException(IOError, "Could not load resource from " & fileName)
+
+proc setWindowIcons*(images: openArray[Image]) =
+  ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
+  setWindowIconsPriv(cast[ptr UncheckedArray[Vector2]](images), images.len.int32)
 
 proc getMonitorName*(monitor: int32): string {.inline.} =
   ## Get the human-readable, UTF-8 encoded name of the primary monitor
