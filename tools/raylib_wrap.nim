@@ -27,7 +27,7 @@ proc raiseResourceNotFound(fileName: string) {.noinline, noreturn.} =
 
 proc setWindowIcons*(images: openArray[Image]) =
   ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
-  setWindowIconsPriv(cast[ptr UncheckedArray[Vector2]](images), images.len.int32)
+  setWindowIconsPriv(cast[ptr UncheckedArray[Image]](images), images.len.int32)
 
 proc getMonitorName*(monitor: int32): string {.inline.} =
   ## Get the human-readable, UTF-8 encoded name of the primary monitor
