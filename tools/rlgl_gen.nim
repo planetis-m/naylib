@@ -107,6 +107,8 @@ type
   BlendFuncOrEq* {.size: sizeof(int32).} = enum ## GL blending functions/equations
     BlendColor = 0x8005 ## GL_BLEND_COLOR
     FuncAdd = 0x8006 ## GL_FUNC_ADD
+    Min = 0x8007 ## GL_MIN
+    Max = 0x8008 ## GL_MAX
     BlendEquation = 0x8009 ## GL_BLEND_EQUATION
     FuncSubtract = 0x800A ## GL_FUNC_SUBTRACT
     FuncReverseSubtract = 0x800B ## GL_FUNC_REVERSE_SUBTRACT
