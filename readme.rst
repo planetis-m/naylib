@@ -113,6 +113,7 @@ It can easily be avoided with one of the following ways:
 
   proc `=sink`(x: var Game; y: Game) {.error.}
   proc `=copy`(x: var Game; y: Game) {.error.}
+  proc `=wasMoved`(x: var Game) {.error.}
 
   proc initGame(width, height, fps: int32, flags: Flags[ConfigFlags], title: string): Game =
     assert not isWindowReady(), "Window is already opened"
