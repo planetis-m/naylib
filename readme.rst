@@ -283,6 +283,7 @@ Alternatives
 
 No library can be perfect for everyone. If naylib isn’t what you’re looking for, there are alternatives.
 
+- `NimForUE <https://github.com/jmgomez/NimForUE>`_ Nim plugin for UE5
 - `godot-nim <https://github.com/pragmagic/godot-nim>`_ Nim bindings for Godot Engine
 - `nico <https://github.com/ftsf/nico>`_ a Game Framework in Nim inspired by Pico-8.
 - `p5nim <https://github.com/pietroppeter/p5nim>`_ processing for nim
