@@ -755,8 +755,7 @@ const
   RayWhite* = Color(r: 245, g: 245, b: 245, a: 255)
 
 {.push callconv: cdecl, header: "raylib.h".}
-proc initWindow*(width: int32, height: int32, title: cstring) {.importc: "InitWindow".}
-  ## Initialize window and OpenGL context
+proc initWindowPriv(width: int32, height: int32, title: cstring) {.importc: "InitWindow".}
 proc windowShouldClose*(): bool {.importc: "WindowShouldClose".}
   ## Check if KEY_ESCAPE pressed or Close icon pressed
 proc closeWindow*() {.importc: "CloseWindow".}
@@ -1773,6 +1772,11 @@ proc toEmbedded*(data: openArray[byte], width, height: int32, format: PixelForma
 
 proc toEmbedded*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): EmbeddedWave {.inline.} =
   Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).EmbeddedWave
+
+proc initWindow*(width: int32, height: int32, title: string) =
+  ## Initialize window and OpenGL context
+  initWindowPriv(width, height, title.cstring)
+  if not isWindowReady(): raiseRaylibError("Failed to create Window")
 
 proc setWindowIcons*(images: openArray[Image]) =
   ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)

@@ -415,6 +415,7 @@ const
     "UnloadAudioStream",
   ]
   privateFuncs = [
+    "InitWindow",
     "SetWindowIcons",
     "GetMonitorName",
     "GetClipboardText",
