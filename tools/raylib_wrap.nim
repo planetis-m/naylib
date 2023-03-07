@@ -1,5 +1,11 @@
 
 type
+  RaylibError* = object of CatchableError
+
+proc raiseRaylibError(msg: string) {.noinline, noreturn.} =
+  raise newException(RaylibError, msg)
+
+type
   TraceLogCallback* = proc (logLevel: TraceLogLevel;
       text: string) {.nimcall.} ## Logging: Redirect trace log messages
 
@@ -21,9 +27,6 @@ proc toEmbedded*(data: openArray[byte], width, height: int32, format: PixelForma
 
 proc toEmbedded*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): EmbeddedWave {.inline.} =
   Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).EmbeddedWave
-
-proc raiseResourceNotFound(fileName: string) {.noinline, noreturn.} =
-  raise newException(IOError, "Could not load resource from " & fileName)
 
 proc setWindowIcons*(images: openArray[Image]) =
   ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
@@ -89,8 +92,7 @@ proc loadModelAnimations*(fileName: string): RArray[ModelAnimation] =
   ## Load model animations from file
   var len = 0'u32
   let data = loadModelAnimationsPriv(fileName.cstring, addr len)
-  if len <= 0:
-    raiseResourceNotFound(fileName)
+  if len <= 0: raiseRaylibError("Failed to load ModelAnimations from " & fileName)
   result = RArray[ModelAnimation](len: len.int, data: data)
 
 proc loadWaveSamples*(wave: Wave): RArray[float32] =
@@ -115,8 +117,7 @@ proc loadMaterials*(fileName: string): RArray[Material] =
   ## Load materials from model file
   var len = 0'i32
   let data = loadMaterialsPriv(fileName.cstring, addr len)
-  if len <= 0:
-    raiseResourceNotFound(fileName)
+  if len <= 0: raiseRaylibError("Failed to load Materials from " & fileName)
   result = RArray[Material](len: len, data: data)
 
 proc drawLineStrip*(points: openArray[Vector2]; color: Color) {.inline.} =
@@ -137,23 +138,23 @@ proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool 
 proc loadImage*(fileName: string): Image =
   ## Load image from file into CPU memory (RAM)
   result = loadImagePriv(fileName.cstring)
-  if result.data == nil: raiseResourceNotFound(fileName)
+  if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
 
 proc loadImageRaw*(fileName: string, width, height: int32, format: PixelFormat, headerSize: int32): Image =
   ## Load image sequence from file (frames appended to image.data)
   result = loadImageRawPriv(fileName.cstring, width, height, format, headerSize)
-  if result.data == nil: raiseResourceNotFound(fileName)
+  if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
 
 proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
   result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
-  if result.data == nil: raiseResourceNotFound("buffer")
+  if not isImageReady(result): raiseRaylibError("Failed to load Image from buffer")
 
 proc loadImageFromTexture*(texture: Texture2D): Image =
   ## Load image from GPU texture data
   result = loadImageFromTexturePriv(texture)
-  if result.data == nil: raiseResourceNotFound("texture")
+  if not isImageReady(result): raiseRaylibError("Failed to load Image from Texture")
 
 type
   Pixel* = concept
@@ -168,27 +169,27 @@ proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: 
   let image = Image(data: cast[pointer](pixels), width: width, height: height,
       format: kind(T), mipmaps: 1).EmbeddedImage
   result = loadTextureFromImagePriv(image.Image)
-  if result.id == 0: raiseResourceNotFound("buffer")
+  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from buffer")
 
 proc loadTexture*(fileName: string): Texture2D =
   ## Load texture from file into GPU memory (VRAM)
   result = loadTexturePriv(fileName.cstring)
-  if result.id == 0: raiseResourceNotFound(fileName)
+  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from " & fileName)
 
 proc loadTextureFromImage*(image: Image): Texture2D =
   ## Load texture from image data
   result = loadTextureFromImagePriv(image)
-  if result.id == 0: raiseResourceNotFound("image")
+  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from Image")
 
 proc loadTextureCubemap*(image: Image, layout: CubemapLayout): TextureCubemap =
   ## Load cubemap from image, multiple image cubemap layouts supported
   result = loadTextureCubemapPriv(image, layout)
-  if result.id == 0: raiseResourceNotFound("image")
+  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from Cubemap")
 
 proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
   ## Load texture for rendering (framebuffer)
   result = loadRenderTexturePriv(width, height)
-  if result.id == 0: raiseResourceNotFound("")
+  if not isRenderTextureReady(result): raiseRaylibError("Failed to load RenderTexture")
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   ## Update GPU texture with new data
@@ -227,22 +228,22 @@ proc loadFontData*(fileData: openArray[uint8]; fontSize, glyphCount: int32;
 proc loadFont*(fileName: string): Font =
   ## Load font from file into GPU memory (VRAM)
   result = loadFontPriv(fileName.cstring)
-  if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound(fileName)
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFont*(fileName: string; fontSize: int32; fontChars: openArray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for fontChars to load the default character set
   result = loadFontPriv(fileName.cstring, fontSize,
       if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
-  if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound(fileName)
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFont*(fileName: string; fontSize, glyphCount: int32): Font =
   result = loadFontPriv(fileName.cstring, fontSize, nil, glyphCount)
-  if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound(fileName)
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFontFromImage*(image: Image, key: Color, firstChar: int32): Font =
   ## Load font from Image (XNA style)
   result = loadFontFromImagePriv(image, key, firstChar)
-  if result.glyphs == nil: raiseResourceNotFound("image")
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
 
 proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
     fontChars: openArray[int32]): Font =
@@ -250,13 +251,13 @@ proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize:
   result = loadFontFromMemoryPriv(fileType.cstring,
       cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
       if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
-  if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound("buffer")
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
 
 proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
     glyphCount: int32): Font =
   result = loadFontFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32, fontSize, nil, glyphCount)
-  if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound("buffer")
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
 
 proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, packMethod: int32): Font =
   ## Load font using chars info
@@ -267,7 +268,7 @@ proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, 
   let atlas = genImageFontAtlasPriv(result.glyphs, addr result.recs, result.glyphCount, baseSize,
       padding, packMethod)
   result.texture = loadTextureFromImage(atlas)
-  if result.glyphs == nil or result.texture.id == 0: raiseResourceNotFound("image")
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
 
 proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out RArray[Rectangle]; fontSize: int32;
     padding: int32; packMethod: int32): Image =
@@ -293,23 +294,23 @@ proc drawMeshInstanced*(mesh: Mesh; material: Material; transforms: openArray[Ma
 proc loadWave*(fileName: string): Wave =
   ## Load wave data from file
   result = loadWavePriv(fileName.cstring)
-  if result.data == nil: raiseResourceNotFound(fileName)
+  if not isWaveReady(result): raiseRaylibError("Failed to load Wave from " & fileName)
 
 proc loadWaveFromMemory*(fileType: string; fileData: openArray[uint8]): Wave =
   ## Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
   result = loadWaveFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
-  if result.data == nil: raiseResourceNotFound("buffer")
+  if not isWaveReady(result): raiseRaylibError("Failed to load Wave from buffer")
 
 proc loadSound*(fileName: string): Sound =
   ## Load sound from file
   result = loadSoundPriv(fileName.cstring)
-  if result.stream.buffer == nil: raiseResourceNotFound(fileName)
+  if not isSoundReady(result): raiseRaylibError("Failed to load Sound from " & fileName)
 
 proc loadSoundFromWave*(wave: Wave): Sound =
   ## Load sound from wave data
   result = loadSoundFromWavePriv(wave)
-  if result.stream.buffer == nil: raiseResourceNotFound("wave")
+  if not isSoundReady(result): raiseRaylibError("Failed to load Sound from Wave")
 
 proc updateSound*[T](sound: var Sound, data: openArray[T]) =
   ## Update sound buffer with new data
@@ -318,13 +319,18 @@ proc updateSound*[T](sound: var Sound, data: openArray[T]) =
 proc loadMusicStream*(fileName: string): Music =
   ## Load music stream from file
   result = loadMusicStreamPriv(fileName.cstring)
-  if result.stream.buffer == nil: raiseResourceNotFound(fileName)
+  if not isMusicReady(result): raiseRaylibError("Failed to load Music from " & fileName)
 
 proc loadMusicStreamFromMemory*(fileType: string; data: openArray[uint8]): Music =
   ## Load music stream from data
   result = loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
       data.len.int32)
-  if result.stream.buffer == nil: raiseResourceNotFound("buffer")
+  if not isMusicReady(result): raiseRaylibError("Failed to load Music from buffer")
+
+proc loadAudioStream*(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream =
+  ## Load audio stream (to stream raw audio pcm data)
+  result = loadAudioStreamPriv(sampleRate, sampleSize, channels)
+  if not isAudioStreamReady(result): raiseRaylibError("Failed to load AudioStream")
 
 proc updateAudioStream*[T](stream: var AudioStream, data: openArray[T]) =
   ## Update audio stream buffers with data
@@ -339,16 +345,13 @@ proc drawTextCodepoints*(font: Font; codepoints: openArray[Rune]; position: Vect
 proc loadModel*(fileName: string): Model =
   ## Load model from files (meshes and materials)
   result = loadModelPriv(fileName.cstring)
-  if result.meshes == nil and result.materials == nil and
-      result.bones == nil and result.bindPose == nil:
-    raiseResourceNotFound(fileName)
+  if not isModelReady(result): raiseRaylibError("Failed to load Model from " & fileName)
 
 proc loadModelFromMesh*(mesh: sink Mesh): Model =
   ## Load model from generated mesh (default material)
   result = loadModelFromMeshPriv(mesh)
   wasMoved(mesh)
-  if result.meshes == nil and result.materials == nil:
-    raiseResourceNotFound("mesh")
+  if not isModelReady(result): raiseRaylibError("Failed to load Model from Mesh")
 
 template drawing*(body: untyped) =
   ## Setup canvas (framebuffer) to start drawing

@@ -385,18 +385,6 @@ const
     "CodepointToUTF8",
     "LoadUTF8",
     "UnloadUTF8",
-    # IsReady
-    "IsShaderReady",
-    "IsImageReady",
-    "IsFontReady",
-    "IsWaveReady",
-    "IsSoundReady",
-    "IsMusicReady",
-    "IsAudioStreamReady",
-    "IsModelReady",
-    "IsMaterialReady",
-    "IsTextureReady",
-    "IsRenderTextureReady",
     # Setters
     "SetMaterialTexture",
     "SetModelMeshMaterial",
@@ -479,6 +467,7 @@ const
     "UnloadDroppedFiles",
     "UpdateMeshBuffer",
     "UpdateSound",
+    "LoadAudioStream",
     "UpdateAudioStream",
   ]
 
