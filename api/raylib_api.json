@@ -9221,17 +9221,6 @@
       ]
     },
     {
-      "name": "UnloadModelKeepMeshes",
-      "description": "Unload model (but not meshes) from memory (RAM and/or VRAM)",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "Model",
-          "name": "model"
-        }
-      ]
-    },
-    {
       "name": "GetModelBoundingBox",
       "description": "Compute model bounding box limits (considers all meshes)",
       "returnType": "BoundingBox",
@@ -10336,27 +10325,6 @@
           "name": "sound"
         }
       ]
-    },
-    {
-      "name": "PlaySoundMulti",
-      "description": "Play a sound (using multichannel buffer pool)",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "Sound",
-          "name": "sound"
-        }
-      ]
-    },
-    {
-      "name": "StopSoundMulti",
-      "description": "Stop any sound playing (using multichannel buffer pool)",
-      "returnType": "void"
-    },
-    {
-      "name": "GetSoundsPlaying",
-      "description": "Get number of sounds playing in the multichannel",
-      "returnType": "int"
     },
     {
       "name": "IsSoundPlaying",

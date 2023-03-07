@@ -480,7 +480,6 @@ const
     "UpdateMeshBuffer",
     "UpdateSound",
     "UpdateAudioStream",
-    "UnloadModelKeepMeshes",
   ]
 
 proc genBindings(t: TopLevel, fname: string; header, middle: string) =

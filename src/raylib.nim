@@ -1391,7 +1391,6 @@ proc drawGrid*(slices: int32, spacing: float32) {.importc: "DrawGrid".}
 proc loadModelPriv(fileName: cstring): Model {.importc: "LoadModel".}
 proc loadModelFromMeshPriv(mesh: Mesh): Model {.importc: "LoadModelFromMesh".}
 proc unloadModel(model: Model) {.importc: "UnloadModel".}
-proc unloadModelKeepMeshesPriv(model: Model) {.importc: "UnloadModelKeepMeshes".}
 proc getModelBoundingBox*(model: Model): BoundingBox {.importc: "GetModelBoundingBox".}
   ## Compute model bounding box limits (considers all meshes)
 proc drawModel*(model: Model, position: Vector3, scale: float32, tint: Color) {.importc: "DrawModel".}
@@ -1498,12 +1497,6 @@ proc pauseSound*(sound: Sound) {.importc: "PauseSound".}
   ## Pause a sound
 proc resumeSound*(sound: Sound) {.importc: "ResumeSound".}
   ## Resume a paused sound
-proc playSoundMulti*(sound: Sound) {.importc: "PlaySoundMulti".}
-  ## Play a sound (using multichannel buffer pool)
-proc stopSoundMulti*() {.importc: "StopSoundMulti".}
-  ## Stop any sound playing (using multichannel buffer pool)
-proc getSoundsPlaying*(): int32 {.importc: "GetSoundsPlaying".}
-  ## Get number of sounds playing in the multichannel
 proc isSoundPlaying*(sound: Sound): bool {.importc: "IsSoundPlaying".}
   ## Check if a sound is currently playing
 proc setSoundVolume*(sound: Sound, volume: float32) {.importc: "SetSoundVolume".}
@@ -2088,11 +2081,6 @@ proc loadModelFromSharedMesh*(mesh: Mesh): Model =
   result = loadModelFromMeshPriv(mesh)
   if result.meshes == nil and result.materials == nil:
     raiseResourceNotFound("mesh")
-
-proc unloadModelKeepMeshes*(model: var Model) =
-  ## Unload model (but not meshes) from memory (RAM and/or VRAM)
-  unloadModelKeepMeshesPriv(model)
-  wasMoved(model)
 
 template drawing*(body: untyped) =
   ## Setup canvas (framebuffer) to start drawing
