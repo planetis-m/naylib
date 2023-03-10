@@ -160,49 +160,65 @@ Raylib functions to Nim
 -----------------------
 
 While most of raylib functions are wrapped in Naylib, some functions are not wrapped
-because the API is deemed too C-like and better alternatives exist in the Nim standard
-library. Here is a `table <rayfunc_alt.rst>`_ Here is a table that can help you convert
-those functions to native Nim functions.
-
+because they closely reflect the C API and are considered less idiomatic or harder to use.
+Here is a `table <alternatives_table.rst>`_ that provides their equivalent Nim functions.
 
 Other changes and improvements
 ------------------------------
 
-- Raw pointers were abstracted from the public API, except ``cstring`` parameters which are
-  implicitly converted from ``string``. Use ``--warning:CStringConv:off`` to silence
-  the warning.
+- The use of raw pointers has been abstracted from the public API, except for ``cstring``
+  parameters that are automatically converted from ``string``. If you encounter a warning
+  related to ``CStringConv``, you can silence it by using the ``--warning:CStringConv:off`` flag.
 
-- ``LoadDroppedFiles``, ``UnloadDroppedFiles`` added in raylib 4.2 were removed and
-  replaced by the older ``getDroppedFiles`` which is more efficient and simpler to wrap,
-  as it doesn't require as many copies.
+- In raylib 4.2, the functions ``LoadDroppedFiles`` and ``UnloadDroppedFiles`` were introduced
+  but were later removed. Instead, the older function ``getDroppedFiles`` was reintroduced as
+  it is more efficient and easier to wrap, requiring fewer copies.
 
-- ``ConfigFlags`` and ``Gesture`` are used in raylib as bitflags. There is a convenient
-  ``flags`` proc that returns ``Flags[T]``.
+- Raylib uses bitflags for ``ConfigFlags`` and ``Gesture``. To work with these flags in Nim,
+  you can use the ``flags`` procedure which returns ``Flags[T]``.
 
-- ``CSeq`` type is added which encapsulates memory managed by raylib for zero copies.
-  Provided are index operators, len, and ``@`` (seq) and ``toOpenArray`` converters.
+- The ``RArray`` type has been added to encapsulate memory managed by raylib. It provides
+  index operators, len, and @ (seq) and toOpenArray converters. You can use this type to work
+  with raylib functions that manage memory without needing to make copies.
 
 - ``toEmbedded`` procs that return ``EmbeddedImage``, ``EmbeddedWave``, that are not
   destroyed, for embedding files directly to source code. Use ``exportImageAsCode``
   and ``exportWaveAsCode`` first and translate the output to Nim with a tool such as c2nim
   or manually. See `others/embedded_files_loading` example.
 
-- ``ShaderV`` and ``Pixel`` concepts allow plugging-in foreign data types to procs that
-  use them (``setShaderValue``, ``updateTexture``, etc).
+- Use the ``toEmbedded`` procs to get an ``EmbeddedImage`` or ``EmbeddedWave``, which are
+  not memory managed and can be embedded directly into source code. To use this feature, first export
+  the image or wave as code using the ``exportImageAsCode`` or ``exportWaveAsCode`` procs,
+  and then translate the output to Nim using a tool such as ``c2nim`` or by manual conversion.
+  An example of how to use this feature can be found in the file ``others/embedded_files_loading.nim``
+  which is available at https://github.com/planetis-m/raylib-examples/blob/master/embedded_files_loading.nim.
 
-- Data types that hold pointers to arrays of structs, most notably ``Mesh``, are properly
-  encapsulated and offer index operators for a safe and idiomatic API.
+- The concepts of ``ShaderV`` and ``Pixel`` permit the integration of external data types
+  into procs that employ them, such as ``setShaderValue`` and ``updateTexture``.
 
-- Every function argument or struct field, that is supposed to use a specific C enum type,
-  is properly typechecked. So wrong code like ``isKeyPressed(Left)`` doesn't compile.
+- The data types which contain pointers to arrays of structures, particularly the Mesh
+  type, are encapsulated appropriately and provide index operators to ensure a secure and
+  idiomatic API. As an example, the code snippet
+  ``model.materials[0].maps[MaterialMapIndex.Diffuse].texture = texture`` includes a runtime
+  bounds check on the index.
 
-- Mapped C to Nim enums and shortened values by removing the prefix.
+- Each function argument or struct field that is intended to employ a particular C enum
+  type undergoes type checking. Consequently, erroneous code such as ``isKeyPressed(Left)``
+  fails to compile.
 
-- Raymath was ported to Nim and a integer vector type called ``IndexN`` was added.
-  Reasings was also ported to Nim.
+- The C enums have been mapped to Nim, and their values have been shortened by removing
+  their prefix. For instance, LOG_TRACE is represented as Trace.
 
-- The names of functions that are overloaded no longer end with ``Ex``, ``Pro``, ``Rec``, ``V``.
-  Functions that return ``Vector2`` or ``Rectangle`` are an exception.
+- The ``raymath`` library has been ported to Nim, and an integer vector type named ``IndexN`` has
+  been introduced. Additionally, the ``reasings`` library has also been ported to Nim.
+
+- In raylib, various functions have similar names that differ in suffixes based on the
+  type of arguments they receive, such as ``DrawRectangleV`` vs ``DrawRectangleV`` vs
+  ``DrawRectangleRec`` vs ``DrawRectanglePro``. However, in ``naylib``, this naming
+  convention has changed. Functions that return ``Vector2`` or ``Rectangle`` still follow
+  the previous naming convention, but function overloading is now used for cases that
+  previously employed different suffixes. This allows for a more uniform and intuitive
+  naming convention.
 
 Alternatives
 ============
