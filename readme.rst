@@ -70,7 +70,7 @@ You can find instructions on how to install OpenJDK, Android SDK, and Android ND
 
 Note that you can use the latest versions of the software. Alternatively, on Arch Linux,
 you can install the following AUR packages instead:
-``android-sdk android-sdk-build-tools android-sdk-platform-tools android-ndk android-platform``.
+``android-sdk android-sdk-build-tools android-sdk-platform-tools android-ndk android-platform(-29)``.
 
 **2. Fork the** `planetis-m/raylib-game-template <https://github.com/planetis-m/raylib-game-template>`_ **repository.**
 
@@ -111,7 +111,7 @@ that are destroyed after the last statement in your program.
 
 To avoid these conflicts, you can use one of the following methods:
 
-- Use the ``defer`` statement (which is not available at the top level) or the ``try/finally`` block.
+- Use the ``defer`` statement (which is not available at the top level) or the ``try-finally`` block.
 
 .. code-block:: nim
 
@@ -163,59 +163,93 @@ While most of raylib functions are wrapped in Naylib, some functions are not wra
 because they closely reflect the C API and are considered less idiomatic or harder to use.
 Here is a `table <alternatives_table.rst>`_ that provides their equivalent Nim functions.
 
-Other changes and improvements
-------------------------------
+Overview of Changes and Features
+================================
 
-- In raylib, various functions have similar names that differ in suffixes based on the
-  type of arguments they receive, such as ``DrawRectangle`` vs ``DrawRectangleV`` vs
-  ``DrawRectangleRec`` vs ``DrawRectanglePro``. However, in ``naylib``, this naming
-  convention has changed. Functions that return ``Vector2`` or ``Rectangle`` still follow
-  the previous naming convention, but function overloading is now used for cases that
-  previously employed different suffixes. This allows for a more uniform and intuitive
-  naming convention.
+Change in Naming Convention
+---------------------------
 
-- Data types that hold pointers to arrays of structures, such as ``Model``, are
-  encapsulated and offer index operators to provide a safe and idiomatic API. As an example,
-  the code snippet ``model.materials[0].maps[MaterialMapIndex.Diffuse].texture = texture``
-  includes a runtime bounds check on the index to ensure safe access to the data.
+In raylib, various functions have similar names that differ in suffixes based on the type
+of arguments they receive, such as ``DrawRectangle`` vs ``DrawRectangleV`` vs
+``DrawRectangleRec`` vs ``DrawRectanglePro``. However, in ``naylib``, this naming
+convention has changed. Functions that return ``Vector2`` or ``Rectangle`` still follow
+the previous naming convention, but function overloading is now used for cases that
+previously employed different suffixes. This allows for a more uniform and intuitive
+naming convention.
 
-- The C enums have been mapped to Nim, and their values have been shortened by removing
-  their prefix. For instance, ``LOG_TRACE`` is represented as ``Trace``.
+Encapsulation and Safe API for Pointers to Arrays of Structures
+---------------------------------------------------------------
 
-- Each function argument or struct field that is intended to employ a particular C enum
-  type undergoes type checking. Consequently, erroneous code such as ``isKeyPressed(Left)``
-  fails to compile.
+Data types that hold pointers to arrays of structures, such as ``Model``, are encapsulated
+and offer index operators to provide a safe and idiomatic API. As an example, the code
+snippet ``model.materials[0].maps[MaterialMapIndex.Diffuse].texture = texture`` includes a
+runtime bounds check on the index to ensure safe access to the data.
 
-- To improve the safety and usability of the public API, naylib has abstracted the use of
-  raw pointers through the use of ``openArray[T]``, with the exception of ``cstring``
-  parameters, which are automatically converted from ``string``. If you encounter a warning
-  related to ``CStringConv``, you can silence it by using the ``--warning:CStringConv:off``
-  flag.
+Mapping of C Enums to Nim
+-------------------------
 
-- The ``RArray`` type has been added to encapsulate memory managed by raylib. It provides
-  index operators, len, and ``@`` (converts to ``seq``) and ``toOpenArray``. You can use
-  this type to work with raylib functions that manage memory without needing to make copies.
+The C enums have been mapped to Nim, and their values have been shortened by removing
+their prefix. For instance, ``LOG_TRACE`` is represented as ``Trace``.
 
-- Raylib uses bitflags for ``ConfigFlags`` and ``Gesture``. To work with these flags in Nim,
-  you can use the ``flags`` procedure which returns ``Flags[T]``.
+Type Checking for Enums
+-----------------------
 
-- In raylib 4.2, the functions ``LoadDroppedFiles`` and ``UnloadDroppedFiles`` were introduced
-  but were later removed. Instead, the older function ``getDroppedFiles`` was reintroduced as
-  it is more efficient and easier to wrap, requiring fewer copies.
+Each function argument or struct field that is intended to employ a particular C enum type
+undergoes type checking. Consequently, erroneous code such as
+``isKeyPressed(MouseButton.Left)`` fails to compile.
 
-- Use the ``toEmbedded`` procs to get an ``EmbeddedImage`` or ``EmbeddedWave``, which are
-  not memory managed and can be embedded directly into source code. To use this feature, first export
-  the image or wave as code using the ``exportImageAsCode`` or ``exportWaveAsCode`` procs,
-  and then translate the output to Nim using a tool such as ``c2nim`` or by manual conversion.
-  An example of how to use this feature can be found in the file ``others/embedded_files_loading.nim``
-  which is available at https://github.com/planetis-m/raylib-examples/blob/master/embedded_files_loading.nim.
+Abstraction of Raw Pointers and CString Parameters
+--------------------------------------------------
 
-- The concepts of ``ShaderV`` and ``Pixel`` permit the integration of external data types
-  into procs that employ them, such as ``setShaderValue`` and ``updateTexture``.
+To improve the safety and usability of the public API, naylib has abstracted the use of
+raw pointers through the use of ``openArray[T]``, with the exception of ``cstring``
+parameters, which are automatically converted from ``string``. If you encounter a warning
+related to ``CStringConv``, you can silence it by using the ``--warning:CStringConv:off``
+flag.
 
-- In addition to porting the ``raymath`` and ``reasings`` libraries to Nim, naylib also
-  provides math operators for convenience. Furthermore, Naylib introduces an integer vector
-  type called ``IndexN`` to facilitate operations with indices.
+Addition of RArray Type
+-----------------------
+
+The ``RArray[T]`` type has been added to encapsulate memory managed by raylib. It provides
+index operators, len, and ``@`` (converts to ``seq``) and ``toOpenArray``. You can use
+this type to work with raylib functions that manage memory without needing to make copies.
+
+Working with Bitflags in Nim
+----------------------------
+
+Raylib uses bitflags for ``ConfigFlags`` and ``Gesture``. To work with these flags in
+Nim, you can use the ``flags`` procedure which returns ``Flags[T]``.
+
+Change in Dropped Files Functions
+---------------------------------
+
+In raylib 4.2, the functions ``LoadDroppedFiles`` and ``UnloadDroppedFiles`` were
+introduced but were later removed. Instead, the older function ``getDroppedFiles`` was
+reintroduced as it is more efficient and easier to wrap, requiring fewer copies.
+
+Using Embedded Images and Waves in Naylib
+-----------------------------------------
+
+Use the ``toEmbedded`` procs to get an ``EmbeddedImage`` or ``EmbeddedWave``, which are
+not memory managed and can be embedded directly into source code. To use this feature,
+first export the image or wave as code using the ``exportImageAsCode`` or
+``exportWaveAsCode`` procs, and then translate the output to Nim using a tool such as
+``c2nim`` or by manual conversion. An example of how to use this feature can be found in
+the file ``others/embedded_files_loading.nim`` which is available at
+https://github.com/planetis-m/raylib-examples/blob/master/embedded_files_loading.nim.
+
+Integration of External Data Types with ShaderV and Pixel
+---------------------------------------------------------
+
+The concepts of ``ShaderV`` and ``Pixel`` permit the integration of external data types
+into procs that employ them, such as ``setShaderValue`` and ``updateTexture``.
+
+Math Libraries and Integer Vector Type in Naylib
+------------------------------------------------
+
+In addition to porting the ``raymath`` and ``reasings`` libraries to Nim, naylib also
+provides math operators for convenience. Furthermore, Naylib introduces an integer vector
+type called ``IndexN`` to facilitate operations with indices.
 
 Alternatives
 ============
