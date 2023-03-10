@@ -5,6 +5,9 @@ Naylib - Your Nimble Companion for Game Development Adventures
 Welcome to this repository! Here you'll find a Nim wrapper for raylib, a library for
 creating 2D and 3D games. The Nim API is designed to be user-friendly and easy to use.
 
+> **WARNING**: Currently Naylib only works with Nim version 2.0.0 which is expected to be released soon.
+> Use a `nightlies build <https://github.com/nim-lang/nightlies/releases>`_ in the meantime.
+
 Documentation
 =============
 
@@ -52,7 +55,7 @@ emscripten. Additionally, you will need to create a configuration file. You can 
 example configuration file at
 https://github.com/planetis-m/raylib-examples/blob/main/core/basic_window_web.nims.
 
-Note: By default, naylib will use OpenGL 3.3 on desktop platforms.
+Note: By default, Naylib will use OpenGL 3.3 on desktop platforms.
 
 Building for Android
 --------------------
@@ -166,12 +169,18 @@ Here is a `table <alternatives_table.rst>`_ that provides their equivalent Nim f
 Overview of Changes and Features
 ================================
 
+Destructor-based Memory Management of Raylib Types
+--------------------------------------------------
+
+Types in Naylib like ``Image``, ``Wave`` use destructors and as a nice bonus they do not
+require manual ``Unload`` calls anymore.
+
 Change in Naming Convention
 ---------------------------
 
 In raylib, various functions have similar names that differ in suffixes based on the type
 of arguments they receive, such as ``DrawRectangle`` vs ``DrawRectangleV`` vs
-``DrawRectangleRec`` vs ``DrawRectanglePro``. However, in ``naylib``, this naming
+``DrawRectangleRec`` vs ``DrawRectanglePro``. However, in Naylib, this naming
 convention has changed. Functions that return ``Vector2`` or ``Rectangle`` still follow
 the previous naming convention, but function overloading is now used for cases that
 previously employed different suffixes. This allows for a more uniform and intuitive
@@ -201,17 +210,25 @@ undergoes type checking. Consequently, erroneous code such as
 Abstraction of Raw Pointers and CString Parameters
 --------------------------------------------------
 
-To improve the safety and usability of the public API, naylib has abstracted the use of
+To improve the safety and usability of the public API, Naylib has abstracted the use of
 raw pointers through the use of ``openArray[T]``, with the exception of ``cstring``
 parameters, which are automatically converted from ``string``. If you encounter a warning
 related to ``CStringConv``, you can silence it by using the ``--warning:CStringConv:off``
 flag.
 
+Compliment Begin-End Pairs with Extra Sugar
+-------------------------------------------
+
+For begin-end pairs, such as ``beginDrawing``, ``endDrawing`` extra syntactic sugar was
+added in the form of templates like ``drawing``, ``mode3D`` that accept a block of code,
+and provide extra safety in case of errors since the programs is not left in an invalid
+state, because the "end" part is always executed.
+
 Addition of RArray Type
 -----------------------
 
 The ``RArray[T]`` type has been added to encapsulate memory managed by raylib. It provides
-index operators, len, and ``@`` (converts to ``seq``) and ``toOpenArray``. You can use
+index operators, len, and ``@`` (which converts to ``seq``) and ``toOpenArray``. You can use
 this type to work with raylib functions that manage memory without needing to make copies.
 
 Working with Bitflags in Nim
@@ -247,14 +264,14 @@ into procs that employ them, such as ``setShaderValue`` and ``updateTexture``.
 Math Libraries and Integer Vector Type in Naylib
 ------------------------------------------------
 
-In addition to porting the ``raymath`` and ``reasings`` libraries to Nim, naylib also
-provides math operators for convenience. Furthermore, Naylib introduces an integer vector
-type called ``IndexN`` to facilitate operations with indices.
+In addition to porting the ``raymath`` and ``reasings`` libraries to Nim, Naylib also
+provides math operators like ``+``, ``*``, ``-=`` for convenience. Furthermore, Naylib
+introduces an integer vector type called ``IndexN`` to facilitate operations with indices.
 
 Alternatives
 ============
 
-While we believe that naylib provides a great option for game development with Nim, we
+While we believe that Naylib provides a great option for game development with Nim, we
 understand that it may not be the perfect fit for everyone. Here are some alternative
 libraries that you may want to check out:
 
