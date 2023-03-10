@@ -69,16 +69,16 @@ You can find instructions on how to install OpenJDK, Android SDK, and Android ND
 - `Working for Android (on macOS) <https://github.com/raysan5/raylib/wiki/Working-for-Android-(on-macOS)>`_
 
 Note that you can use the latest versions of the software. Alternatively, on Arch Linux,
-you can install the following AUR packages instead: ``android-sdk android-sdk-build-tools
-android-sdk-platform-tools android-ndk android-platform``.
+you can install the following AUR packages instead:
+``android-sdk android-sdk-build-tools android-sdk-platform-tools android-ndk android-platform``.
 
 **2. Fork the** `planetis-m/raylib-game-template <https://github.com/planetis-m/raylib-game-template>`_ **repository.**
 
-The `build_android.nims <https://github.com/planetis-m/raylib-game-template/blob/master/build_android.nims#L16-L49>`_
+The `build_android.nims <https://github.com/planetis-m/raylib-game-template/blob/master/build_android.nims#L22-L55>`_
 file allows you to specify the locations of the OpenJDK, Android SDK, NDK on your computer
 by setting variables in the file. It also contains several configuration options that can
-be customized to suit your needs, such as the architecture of the device you are targeting
-or making multiplatform APKs.
+be customized to suit your needs, such as the application name and icon or the architecture of
+the device you are targeting.
 
 **3. Run the following commands to setup and then build the project for Android:**
 
@@ -102,14 +102,16 @@ package with the following command:
 
 Now you should be able to run your raylib game on your Android device!
 
-How to call closeWindow
------------------------
+How to properly call closeWindow
+--------------------------------
 
-Types are wrapped with Nim's destructors but ``closeWindow`` must be called at the very end.
-This might create a conflict with variables that are destroyed after the last statement in your program.
-It can easily be avoided with one of the following ways:
+While types in Naylib are wrapped with Nim's destructors, ``closeWindow`` needs to be
+called at the very end of the program. However, this can cause conflicts with variables
+that are destroyed after the last statement in your program.
 
-- Using defer (not available at the top level) or try/finally
+To avoid these conflicts, you can use one of the following methods:
+
+- Use the ``defer`` statement (which is not available at the top level) or the ``try/finally`` block.
 
 .. code-block:: nim
 
@@ -117,7 +119,7 @@ It can easily be avoided with one of the following ways:
   defer: closeWindow()
   let texture = loadTexture("resources/example.png")
 
-- Wrap everything in a game object
+- Wrap everything inside a game object.
 
 .. code-block:: nim
 
@@ -144,7 +146,7 @@ It can easily be avoided with one of the following ways:
   let game = initGame(800, 450, 60, flags(Msaa4xHint, WindowHighdpi), "example")
   let texture = loadTexture("resources/example.png")
 
-- Using a block or a proc call
+- Open a new scope
 
 .. code-block:: nim
 
@@ -153,11 +155,14 @@ It can easily be avoided with one of the following ways:
     let texture = loadTexture("resources/example.png")
   closeWindow()
 
+
 Raylib functions to Nim
 -----------------------
 
-Some raylib functions are not wrapped as the API is deemed too C-like and better alternatives exist in the Nim stdlib.
-Bellow is a table that will help you convert those functions to native Nim functions.
+While most of raylib functions are wrapped in Naylib, some functions are not wrapped
+because the API is deemed too C-like and better alternatives exist in the Nim standard
+library. Below is a table that can help you convert those functions to native Nim
+functions.
 
 Files management functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -228,7 +233,8 @@ LoadUTF8                toUTF8
 UnloadUTF8              None                  Not needed
 ======================= ===================== ==============================
 
-See also proc ``graphemeLen``, ``runeSubStr`` and everything else provided by std/unicode.
+See also procs like ``graphemeLen``, ``runeSubStr``, and other functions provided by the standard
+library's ``std/unicode`` module that can be used for working with Unicode strings in Nim.
 
 Compression/Encoding functionality
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
