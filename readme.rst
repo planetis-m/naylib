@@ -179,6 +179,9 @@ Other changes and improvements
   the code snippet ``model.materials[0].maps[MaterialMapIndex.Diffuse].texture = texture``
   includes a runtime bounds check on the index to ensure safe access to the data.
 
+- The C enums have been mapped to Nim, and their values have been shortened by removing
+  their prefix. For instance, ``LOG_TRACE`` is represented as ``Trace``.
+
 - Each function argument or struct field that is intended to employ a particular C enum
   type undergoes type checking. Consequently, erroneous code such as ``isKeyPressed(Left)``
   fails to compile.
@@ -189,19 +192,16 @@ Other changes and improvements
   related to ``CStringConv``, you can silence it by using the ``--warning:CStringConv:off``
   flag.
 
-- In raylib 4.2, the functions ``LoadDroppedFiles`` and ``UnloadDroppedFiles`` were introduced
-  but were later removed. Instead, the older function ``getDroppedFiles`` was reintroduced as
-  it is more efficient and easier to wrap, requiring fewer copies.
-
-- The C enums have been mapped to Nim, and their values have been shortened by removing
-  their prefix. For instance, ``LOG_TRACE`` is represented as ``Trace``.
+- The ``RArray`` type has been added to encapsulate memory managed by raylib. It provides
+  index operators, len, and ``@`` (converts to ``seq``) and ``toOpenArray``. You can use
+  this type to work with raylib functions that manage memory without needing to make copies.
 
 - Raylib uses bitflags for ``ConfigFlags`` and ``Gesture``. To work with these flags in Nim,
   you can use the ``flags`` procedure which returns ``Flags[T]``.
 
-- The ``RArray`` type has been added to encapsulate memory managed by raylib. It provides
-  index operators, len, and ``@`` (converts to ``seq``) and ``toOpenArray``. You can use
-  this type to work with raylib functions that manage memory without needing to make copies.
+- In raylib 4.2, the functions ``LoadDroppedFiles`` and ``UnloadDroppedFiles`` were introduced
+  but were later removed. Instead, the older function ``getDroppedFiles`` was reintroduced as
+  it is more efficient and easier to wrap, requiring fewer copies.
 
 - Use the ``toEmbedded`` procs to get an ``EmbeddedImage`` or ``EmbeddedWave``, which are
   not memory managed and can be embedded directly into source code. To use this feature, first export
