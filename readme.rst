@@ -207,10 +207,11 @@ Other changes and improvements
   fails to compile.
 
 - The C enums have been mapped to Nim, and their values have been shortened by removing
-  their prefix. For instance, LOG_TRACE is represented as Trace.
+  their prefix. For instance, ``LOG_TRACE`` is represented as ``Trace``.
 
-- The ``raymath`` library has been ported to Nim, and an integer vector type named ``IndexN`` has
-  been introduced. Additionally, the ``reasings`` library has also been ported to Nim.
+- In addition to porting the ``raymath`` and ``reasings`` libraries to Nim, naylib also
+  provides math operators for convenience. Furthermore, Naylib introduces an integer vector
+  type called ``IndexN`` to facilitate operations with indices.
 
 - In raylib, various functions have similar names that differ in suffixes based on the
   type of arguments they receive, such as ``DrawRectangleV`` vs ``DrawRectangleV`` vs
