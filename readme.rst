@@ -169,11 +169,13 @@ Here is a `table <alternatives_table.rst>`_ that provides their equivalent Nim f
 Overview of Changes and Features
 ================================
 
-Destructor-based Memory Management of Raylib Types
---------------------------------------------------
+Memory Management of Raylib Types using Destructors
+---------------------------------------------------
 
-Types in Naylib like ``Image``, ``Wave`` use destructors and as a nice bonus they do not
-require manual ``Unload`` calls anymore.
+In Naylib, types such as ``Image`` and ``Wave`` utilize destructors for memory management.
+This approach not only eliminates the need for manual ``Unload`` calls but also offers other
+benefits, including more reliable and safer memory management, reduced code complexity,
+and easier maintenance.
 
 Change in Naming Convention
 ---------------------------
@@ -216,13 +218,14 @@ parameters, which are automatically converted from ``string``. If you encounter 
 related to ``CStringConv``, you can silence it by using the ``--warning:CStringConv:off``
 flag.
 
-Compliment Begin-End Pairs with Extra Sugar
--------------------------------------------
+Safer Begin-End Pairs with Syntactic Sugar
+------------------------------------------
 
-For begin-end pairs, such as ``beginDrawing``, ``endDrawing`` extra syntactic sugar was
-added in the form of templates like ``drawing``, ``mode3D`` that accept a block of code,
-and provide extra safety in case of errors since the programs is not left in an invalid
-state, because the "end" part is always executed.
+To enhance the usability of begin-end pairs like ``beginDrawing`` and ``endDrawing`` in
+naylib, additional syntactic sugar has been introduced in the form of templates such as
+``drawing`` and ``mode3D``. These templates can accept a block of code and offer added
+safety measures in case of any errors. As a result, even if an error occurs, the program
+will not be left in an invalid state, as the "end" part will always be executed.
 
 Addition of RArray Type
 -----------------------
@@ -252,7 +255,7 @@ not memory managed and can be embedded directly into source code. To use this fe
 first export the image or wave as code using the ``exportImageAsCode`` or
 ``exportWaveAsCode`` procs, and then translate the output to Nim using a tool such as
 ``c2nim`` or by manual conversion. An example of how to use this feature can be found in
-the file ``others/embedded_files_loading.nim`` which is available at
+the example ``others/embedded_files_loading.nim`` which is available at
 https://github.com/planetis-m/raylib-examples/blob/master/embedded_files_loading.nim.
 
 Integration of External Data Types with ShaderV and Pixel
