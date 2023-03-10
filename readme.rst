@@ -5,7 +5,7 @@ Naylib - Your Nimble Companion for Game Development Adventures
 Welcome to this repository! Here you'll find a Nim wrapper for raylib, a library for
 creating 2D and 3D games. The Nim API is designed to be user-friendly and easy to use.
 
-  **WARNING**: Currently Naylib only works with Nim version 2.0.0 which is expected to be released soon.
+  **WARNING**: Currently Naylib only works with Nim version 2.0 which is expected to be released soon.
   Use a `nightlies build <https://github.com/nim-lang/nightlies/releases>`_ in the meantime.
 
 Documentation
@@ -37,8 +37,8 @@ terminal.
 Usage Tips
 ==========
 
-Creating a new project
-----------------------
+Choosing the OpenGL Graphics Backend Version
+--------------------------------------------
 
 To choose a version of the OpenGL graphics backend on desktop, select one of the following options:
 
@@ -48,14 +48,17 @@ To choose a version of the OpenGL graphics backend on desktop, select one of the
 - ``-d:GraphicsApiOpenGl11`` (OpenGL 1.1)
 - ``-d:GraphicsApiOpenGlEs2`` (OpenGL ES 2.0)
 
+Note: By default, Naylib will use OpenGL 3.3 on desktop platforms.
+
 If you're compiling on Linux for Wayland, add the ``-d:wayland`` flag.
 
+Building for the Web
+--------------------
+
 To compile your code to run on the web using WebAssembly, you will need to define
-emscripten. Additionally, you will need to create a configuration file. You can find an
+``emscripten``. Additionally, you will need to create a configuration file. You can find an
 example configuration file at
 https://github.com/planetis-m/raylib-examples/blob/main/core/basic_window_web.nims.
-
-Note: By default, Naylib will use OpenGL 3.3 on desktop platforms.
 
 Building for Android
 --------------------
@@ -181,12 +184,12 @@ Change in Naming Convention
 ---------------------------
 
 In raylib, various functions have similar names that differ in suffixes based on the type
-of arguments they receive, such as ``DrawRectangle`` vs ``DrawRectangleV`` vs
-``DrawRectangleRec`` vs ``DrawRectanglePro``. However, in Naylib, this naming
-convention has changed. Functions that return ``Vector2`` or ``Rectangle`` still follow
-the previous naming convention, but function overloading is now used for cases that
-previously employed different suffixes. This allows for a more uniform and intuitive
-naming convention.
+of arguments they receive. For instance, functions like ``DrawRectangle``,
+``DrawRectangleV``, ``DrawRectangleRec``, and ``DrawRectanglePro`` vary in their suffixes.
+However, in Naylib, this naming convention has changed. Functions that return ``Vector2``
+or ``Rectangle`` still follow the previous naming convention, but function overloading is
+now used for cases that previously employed different suffixes. This allows for a more
+uniform and intuitive naming convention.
 
 Encapsulation and Safe API for Pointers to Arrays of Structures
 ---------------------------------------------------------------
@@ -205,8 +208,8 @@ their prefix. For instance, ``LOG_TRACE`` is represented as ``Trace``.
 Type Checking for Enums
 -----------------------
 
-Each function argument or struct field that is intended to employ a particular C enum type
-undergoes type checking. Consequently, erroneous code such as
+Each function argument, array index or object field that is intended to employ a
+particular C enum type undergoes type checking. Consequently, erroneous code such as
 ``isKeyPressed(MouseButton.Left)`` fails to compile.
 
 Abstraction of Raw Pointers and CString Parameters
@@ -237,8 +240,9 @@ this type to work with raylib functions that manage memory without needing to ma
 Working with Bitflags in Nim
 ----------------------------
 
-Raylib uses bitflags for ``ConfigFlags`` and ``Gesture``. To work with these flags in
-Nim, you can use the ``flags`` procedure which returns ``Flags[T]``.
+Raylib uses bitflags for ``ConfigFlags`` and ``Gesture``. To work with these flags in Nim,
+you can use the ``flags`` procedure which returns ``Flags[T]``. An example of this would
+be ``flags(Msaa4xHint, WindowHighdpi)``.
 
 Change in Dropped Files Functions
 ---------------------------------
