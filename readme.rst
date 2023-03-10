@@ -1,45 +1,76 @@
-=============================================================
-          Naylib - Yet another raylib Nim wrapper
-=============================================================
+==============================================================
+Naylib - Your Nimble Companion for Game Development Adventures
+==============================================================
 
-This repo contains raylib wrapper generated using raylib_parser.
-It focuses on an idiomatic Nim API.
+Welcome to this repository! Here you'll find a Nim wrapper for raylib, a library for
+creating 2D and 3D games. The Nim API is designed to be user-friendly and easy to use.
 
 Documentation
 =============
 
-- `raylib <https://planetis-m.github.io/naylib/raylib.html>`_
-- `raymath <https://planetis-m.github.io/naylib/raymath.html>`_
-- `rlgl <https://planetis-m.github.io/naylib/rlgl.html>`_
-- `reasings <https://planetis-m.github.io/naylib/reasings.html>`_
+To learn more about how to use this wrapper, you can check out the documentation:
 
-raylib `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_ (C specific)
+- `raylib <https://planetis-m.github.io/naylib/raylib.html>`_ - documentation for the raylib module
+- `raymath <https://planetis-m.github.io/naylib/raymath.html>`_ - documentation for the raymath module
+- `rlgl <https://planetis-m.github.io/naylib/rlgl.html>`_ - documentation for the rlgl module
+- `reasings <https://planetis-m.github.io/naylib/reasings.html>`_ - documentation for the reasings module
+
+If you're familiar with the C version of raylib, you may find the
+`cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_ useful.
 
 Installation
 ============
 
-Install with ``nimble install naylib``
+To install this wrapper, simply run ``nimble install naylib``.
 
 Examples
 ========
 
-See the accompanying examples `repo <https://github.com/planetis-m/raylib-examples>`_
+We've also provided some example code to help you get started. You can find it in the
+accompanying `example repository <https://github.com/planetis-m/raylib-examples>`_. To
+compile and run an example, run the command ``nim c -r -d:release example.nim`` in your
+terminal.
 
-Compile and run an example by running ``nim c -r -d:release example.nim``.
+Usage Tips
+==========
+
+Creating a new project
+----------------------
+
+To use the OpenGL graphics backend on desktop, select one of the options below:
+
+- ``-d:GraphicsApiOpenGl43`` (OpenGL 4.3)
+- ``-d:GraphicsApiOpenGl33`` (OpenGL 3.3 - default)
+- ``-d:GraphicsApiOpenGl21`` (OpenGL 2.1)
+- ``-d:GraphicsApiOpenGl11`` (OpenGL 1.1)
+- ``-d:GraphicsApiOpenGlEs2`` (OpenGL ES 2.0)
+
+If you're compiling on Linux for Wayland, add the ``-d:wayland`` flag.
+
+To compile your code to run on the web using WebAssembly, you will need to define
+emscripten. Additionally, you will need to create a configuration file. You can find an
+example configuration file at
+https://github.com/planetis-m/raylib-examples/blob/main/core/basic_window_web.nims.
+
+Note: By default, naylib will use OpenGL 3.3 on desktop platforms.
 
 Building for Android
-====================
+--------------------
+
+Building your raylib project for Android is a bit different than building for desktop.
+Here are the steps you need to follow:
 
 **1. Install OpenJDK, Android SDK and Android NDK by following the instructions on the official raylib wiki:**
+
+You can find instructions on how to install OpenJDK, Android SDK, and Android NDK on the official raylib wiki. Here are the links to the instructions for different platforms:
 
 - `Working for Android <https://github.com/raysan5/raylib/wiki/Working-for-Android>`_
 - `Working for Android (on Linux) <https://github.com/raysan5/raylib/wiki/Working-for-Android-(on-Linux)>`_
 - `Working for Android (on macOS) <https://github.com/raysan5/raylib/wiki/Working-for-Android-(on-macOS)>`_
 
-Note that you can use the latest versions of the software.
-
-On Arch linux you can install the following AUR packages instead:
-``android-sdk android-sdk-build-tools android-sdk-platform-tools android-ndk android-platform``
+Note that you can use the latest versions of the software. Alternatively, on Arch Linux,
+you can install the following AUR packages instead: ``android-sdk android-sdk-build-tools
+android-sdk-platform-tools android-ndk android-platform``.
 
 **2. Fork the** `planetis-m/raylib-game-template <https://github.com/planetis-m/raylib-game-template>`_ **repository.**
 
@@ -49,41 +80,27 @@ by setting variables in the file. It also contains several configuration options
 be customized to suit your needs, such as the architecture of the device you are targeting
 or making multiplatform APKs.
 
-**3. Run the following command to setup and then build the project for Android:**
+**3. Run the following commands to setup and then build the project for Android:**
+
+Use the following command to set up and build the project for Android:
 
 .. code-block:: bash
 
   nimble setupAndroid
   nimble buildAndroid
 
+If everything goes smoothly, you will see a file named raylib_game.apk in the same directory.
 
-If all goes well, you will be able to see a file named ``raylib_game.apk`` on the same directory.
+**4. Install and run the APK on your Android device.**
 
-Enable USB Debugging on your Android device, plug it in your computer and install the package with:
+Enable USB Debugging on your Android device, plug it into your computer, and install the
+package with the following command:
 
 .. code-block:: bash
 
   adb -d install raylib_game.apk
 
-
-Usage Tips
-==========
-
-Creating a new project
-----------------------
-
-On desktop select the OpenGL graphics backend with
-``-d:GraphicsApiOpenGl43|GraphicsApiOpenGl33|GraphicsApiOpenGl21|GraphicsApiOpenGl11|GraphicsApiOpenGlEs2``.
-By default OpenGL 3.3 is prefered. To compile on linux for wayland, pass ``-d:wayland``.
-To compile to WebAssembly to run on the Web, define ``emscripten``.
-
-Replacing raymath
------------------
-
-Raylib doesn't depend on raymath and shouldn't. The reason is you could replace it with another vector math
-library that's `available via nimble <https://nimble.directory/search?query=vector+math>`_
-
-Keep in mind though, that you need converters from ``Vector2``, ``Vector3``, ``Quaternion``, ``Matrix`` and back.
+Now you should be able to run your raylib game on your Android device!
 
 How to call closeWindow
 -----------------------
@@ -281,11 +298,14 @@ Other changes and improvements
 Alternatives
 ============
 
-No library can be perfect for everyone. If naylib isn’t what you’re looking for, there are alternatives.
+While we believe that naylib provides a great option for game development with Nim, we
+understand that it may not be the perfect fit for everyone. Here are some alternative
+libraries that you may want to check out:
 
-- `NimForUE <https://github.com/jmgomez/NimForUE>`_ Nim plugin for UE5
-- `godot-nim <https://github.com/pragmagic/godot-nim>`_ Nim bindings for Godot Engine
-- `nico <https://github.com/ftsf/nico>`_ a Game Framework in Nim inspired by Pico-8.
-- `p5nim <https://github.com/pietroppeter/p5nim>`_ processing for nim
+- `NimForUE <https://github.com/jmgomez/NimForUE>`_ - a Nim plugin for the Unreal Engine 5.
+- `godot-nim <https://github.com/pragmagic/godot-nim>`_ - Nim bindings for the Godot game engine.
+- `nico <https://github.com/ftsf/nico>`_ - a Nim-based game framework inspired by Pico-8.
+- `p5nim <https://github.com/pietroppeter/p5nim>`_ - a processing library for Nim.
 
-You can find more at `awesome-nim <https://github.com/ringabout/awesome-nim#game-development>`_
+For more game development options in Nim, you can check out
+`awesome-nim <https://github.com/ringabout/awesome-nim#game-development>`_.
