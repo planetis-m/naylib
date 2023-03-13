@@ -27,7 +27,7 @@
     {
       "name": "RAYLIB_VERSION",
       "type": "STRING",
-      "value": "4.5-dev",
+      "value": "4.5",
       "description": ""
     },
     {
@@ -4918,6 +4918,29 @@
         {
           "type": "int",
           "name": "mode"
+        }
+      ]
+    },
+    {
+      "name": "UpdateCameraPro",
+      "description": "Update camera movement/rotation",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        },
+        {
+          "type": "Vector3",
+          "name": "movement"
+        },
+        {
+          "type": "Vector3",
+          "name": "rotation"
+        },
+        {
+          "type": "float",
+          "name": "zoom"
         }
       ]
     },

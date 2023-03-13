@@ -1047,6 +1047,8 @@ proc getGesturePinchAngle*(): float32 {.importc: "GetGesturePinchAngle".}
   ## Get gesture pinch angle
 proc updateCamera*(camera: var Camera, mode: CameraMode) {.importc: "UpdateCamera".}
   ## Update camera position for selected mode
+proc updateCamera*(camera: var Camera, movement: Vector3, rotation: Vector3, zoom: float32) {.importc: "UpdateCameraPro".}
+  ## Update camera movement/rotation
 proc setShapesTexture*(texture: Texture2D, source: Rectangle) {.importc: "SetShapesTexture".}
   ## Set texture and rectangle to be used on shapes drawing
 proc drawPixel*(posX: int32, posY: int32, color: Color) {.importc: "DrawPixel".}

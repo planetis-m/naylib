@@ -209,7 +209,7 @@ Type Checking for Enums
 -----------------------
 
 Each function argument, array index or object field that is intended to employ a
-particular C enum type undergoes type checking. Consequently, erroneous code such as
+particular enum type undergoes type checking. Consequently, erroneous code such as
 ``isKeyPressed(MouseButton.Left)`` fails to compile.
 
 Abstraction of Raw Pointers and CString Parameters
