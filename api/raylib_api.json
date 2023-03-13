@@ -514,7 +514,7 @@
       ]
     },
     {
-      "name": "Rectangle",
+      "name": "rlRectangle",
       "description": "Rectangle, 4 components",
       "fields": [
         {
@@ -627,7 +627,7 @@
       "description": "NPatchInfo, n-patch layout info",
       "fields": [
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "source",
           "description": "Texture source rectangle"
         },
@@ -714,7 +714,7 @@
           "description": "Texture atlas containing the glyphs"
         },
         {
-          "type": "Rectangle *",
+          "type": "rlRectangle *",
           "name": "recs",
           "description": "Rectangles in texture for the glyphs"
         },
@@ -3073,7 +3073,7 @@
       "returnType": "bool"
     },
     {
-      "name": "CloseWindow",
+      "name": "rlCloseWindow",
       "description": "Close window and unload OpenGL context",
       "returnType": "void"
     },
@@ -3439,7 +3439,7 @@
       ]
     },
     {
-      "name": "ShowCursor",
+      "name": "rlShowCursor",
       "description": "Shows cursor",
       "returnType": "void"
     },
@@ -4954,7 +4954,7 @@
           "name": "texture"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "source"
         }
       ]
@@ -5492,7 +5492,7 @@
       "returnType": "void",
       "params": [
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec"
         },
         {
@@ -5507,7 +5507,7 @@
       "returnType": "void",
       "params": [
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec"
         },
         {
@@ -5592,7 +5592,7 @@
       "returnType": "void",
       "params": [
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec"
         },
         {
@@ -5646,7 +5646,7 @@
       "returnType": "void",
       "params": [
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec"
         },
         {
@@ -5665,7 +5665,7 @@
       "returnType": "void",
       "params": [
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec"
         },
         {
@@ -5688,7 +5688,7 @@
       "returnType": "void",
       "params": [
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec"
         },
         {
@@ -5884,11 +5884,11 @@
       "returnType": "bool",
       "params": [
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec1"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec2"
         }
       ]
@@ -5930,7 +5930,7 @@
           "name": "radius"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec"
         }
       ]
@@ -5945,7 +5945,7 @@
           "name": "point"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec"
         }
       ]
@@ -6064,14 +6064,14 @@
     {
       "name": "GetCollisionRec",
       "description": "Get collision rectangle for two rectangles collision",
-      "returnType": "Rectangle",
+      "returnType": "rlRectangle",
       "params": [
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec1"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec2"
         }
       ]
@@ -6444,7 +6444,7 @@
           "name": "image"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec"
         }
       ]
@@ -6535,7 +6535,7 @@
           "name": "image"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "crop"
         }
       ]
@@ -6907,7 +6907,7 @@
     {
       "name": "GetImageAlphaBorder",
       "description": "Get image alpha border rectangle",
-      "returnType": "Rectangle",
+      "returnType": "rlRectangle",
       "params": [
         {
           "type": "Image",
@@ -7213,7 +7213,7 @@
           "name": "dst"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec"
         },
         {
@@ -7232,7 +7232,7 @@
           "name": "dst"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec"
         },
         {
@@ -7259,11 +7259,11 @@
           "name": "src"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "srcRec"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "dstRec"
         },
         {
@@ -7459,7 +7459,7 @@
           "name": "texture"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "rec"
         },
         {
@@ -7588,7 +7588,7 @@
           "name": "texture"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "source"
         },
         {
@@ -7611,11 +7611,11 @@
           "name": "texture"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "source"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "dest"
         },
         {
@@ -7646,7 +7646,7 @@
           "name": "nPatchInfo"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "dest"
         },
         {
@@ -8025,7 +8025,7 @@
           "name": "chars"
         },
         {
-          "type": "Rectangle **",
+          "type": "rlRectangle **",
           "name": "recs"
         },
         {
@@ -8332,7 +8332,7 @@
     {
       "name": "GetGlyphAtlasRec",
       "description": "Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found",
-      "returnType": "Rectangle",
+      "returnType": "rlRectangle",
       "params": [
         {
           "type": "Font",
@@ -9418,7 +9418,7 @@
           "name": "texture"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "source"
         },
         {
@@ -9449,7 +9449,7 @@
           "name": "texture"
         },
         {
-          "type": "Rectangle",
+          "type": "rlRectangle",
           "name": "source"
         },
         {
