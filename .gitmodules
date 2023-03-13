@@ -1,5 +1,4 @@
 [submodule "src/raylib"]
 	path = src/raylib
 	url = https://github.com/planetis-m/raylib.git
-	shallow = true
 	branch = windows
