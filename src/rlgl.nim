@@ -10,7 +10,7 @@ when not defined(GraphicsApiOpenGl11) and not defined(GraphicsApiOpenGlEs2):
   const UseDefaultGraphicsApi = true
 
 const
-  RlglVersion* = (4, 2, 0)
+  RlglVersion* = (4, 5, 0)
 
   DefaultBatchBuffers* = 1 ## Default number of batch buffers (multi-buffering)
   DefaultBatchDrawCalls* = 256 ## Default number of batch draw calls (by state changes: mode, texture)
