@@ -5,8 +5,11 @@ Naylib - Your Nimble Companion for Game Development Adventures
 Welcome to this repository! Here you'll find a Nim wrapper for raylib, a library for
 creating 2D and 3D games. The Nim API is designed to be user-friendly and easy to use.
 
-  **WARNING**: Currently Naylib only works with Nim version 2.0 which is expected to be released soon.
+  **WARNING 1**: Currently Naylib only works with Nim version 2.0 which is expected to be released soon.
   Use a `nightlies build <https://github.com/nim-lang/nightlies/releases>`_ in the meantime.
+
+  **WARNING 2**: Windows support is experimental and only available through the windows branch.
+  Refer to Installation for details on using nimble to install.
 
 Documentation
 =============
@@ -24,7 +27,7 @@ If you're familiar with the C version of raylib, you may find the
 Installation
 ============
 
-To install this wrapper, simply run ``nimble install naylib``.
+To install this wrapper, run ``nimble install naylib``. For Windows, use ``nimble install naylib@#windows`` instead.
 
 Examples
 ========
