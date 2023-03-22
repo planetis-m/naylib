@@ -275,8 +275,7 @@ Math Libraries and Integer Vector Type in Naylib
 ------------------------------------------------
 
 In addition to porting the ``raymath`` and ``reasings`` libraries to Nim, Naylib also
-provides math operators like ``+``, ``*``, ``-=`` for convenience. Furthermore, Naylib
-introduces an integer vector type called ``IndexN`` to facilitate operations with indices.
+provides math operators like ``+``, ``*``, ``-=`` for convenience.
 
 Alternatives
 ============

@@ -6,21 +6,6 @@ type
   Float3* = array[3, float32]
   Float16* = array[16, float32]
 
-  Index2* {.bycopy.} = object ## Index2, 2 components
-    x*: int32 ## Index x component
-    y*: int32 ## Index y component
-
-  Index3* {.bycopy.} = object ## Index3, 3 components
-    x*: int32 ## Index x component
-    y*: int32 ## Index y component
-    z*: int32 ## Index z component
-
-  Index4* {.bycopy.} = object ## Index4, 4 components
-    x*: int32 ## Index x component
-    y*: int32 ## Index y component
-    z*: int32 ## Index z component
-    w*: int32 ## Index w component
-
 # ----------------------------------------------------------------------------------
 # Module Functions Definition - Utils math
 # ----------------------------------------------------------------------------------
@@ -1429,162 +1414,26 @@ func transform*(q: Quaternion; mat: Matrix): Quaternion {.inline.} =
   result.z = mat.m2 * q.x + mat.m6 * q.y + mat.m10 * q.z + mat.m14 * q.w
   result.w = mat.m3 * q.x + mat.m7 * q.y + mat.m11 * q.z + mat.m15 * q.w
 
-# ----------------------------------------------------------------------------------
-# Module Functions Definition - Indexes math
-# ----------------------------------------------------------------------------------
-
-func zero*(_: typedesc[Index2]): Index2 {.inline.} =
-  ## Index with components value 0'f32
-  result = Index2(x: 0, y: 0)
-
-func one*(_: typedesc[Index2]): Index2 {.inline.} =
-  ## Index with components value 1'f32
-  result = Index2(x: 1, y: 1)
-
-func clamp*(v, min, max: Index2): Index2 {.inline.} =
-  ## Clamp the components of the index between
-  ## min and max values specified by the given indexes
-  result = Index2()
-  result.x = clamp(v.x, min.x, max.x)
-  result.y = clamp(v.y, min.y, max.y)
-
-func add*(v1, v2: Index2): Index2 {.inline.} =
-  ## Add two indexes (v1 + v2)
-  result = Index2(x: v1.x + v2.x, y: v1.y + v2.y)
-
-func addValue*(v: Index2; add: int32): Index2 {.inline.} =
-  ## Add index and float value
-  result = Index2(x: v.x + add, y: v.y + add)
-
-func subtract*(v1, v2: Index2): Index2 {.inline.} =
-  ## Subtract two indexes (v1 - v2)
-  result = Index2(x: v1.x - v2.x, y: v1.y - v2.y)
-
-func subtractValue*(v: Index2; sub: int32): Index2 {.inline.} =
-  ## Subtract index by float value
-  result = Index2(x: v.x - sub, y: v.y - sub)
-
-func scale*(v: Index2; scale: int32): Index2 {.inline.} =
-  ## Scale index (multiply by value)
-  result = Index2(x: v.x * scale, y: v.y * scale)
-
-func multiply*(v1, v2: Index2): Index2 {.inline.} =
-  ## Multiply index by index
-  result = Index2(x: v1.x * v2.x, y: v1.y * v2.y)
-
-func negate*(v: Index2): Index2 {.inline.} =
-  ## Negate index
-  result = Index2(x: -v.x, y: -v.y)
-
-func divide*(v1, v2: Index2): Index2 {.inline.} =
-  ## Divide index by index
-  result = Index2(x: v1.x div v2.x, y: v1.y div v2.y)
-
-func zero*(_: typedesc[Index3]): Index3 {.inline.} =
-  ## Index with components value 0'f32
-  result = Index3(x: 0, y: 0, z: 0)
-
-func one*(_: typedesc[Index3]): Index3 {.inline.} =
-  ## Index with components value 1'f32
-  result = Index3(x: 1, y: 1, z: 1)
-
-func clamp*(v, min, max: Index3): Index3 {.inline.} =
-  ## Clamp the components of the index between
-  ## min and max values specified by the given indexes
-  result = Index3()
-  result.x = clamp(v.x, min.x, max.x)
-  result.y = clamp(v.y, min.y, max.y)
-  result.z = clamp(v.z, min.z, max.z)
-
-func add*(v1, v2: Index3): Index3 {.inline.} =
-  ## Add two indexes
-  result = Index3(x: v1.x + v2.x, y: v1.y + v2.y, z: v1.z + v2.z)
-
-func addValue*(v: Index3; add: int32): Index3 {.inline.} =
-  ## Add index and float value
-  result = Index3(x: v.x + add, y: v.y + add, z: v.z + add)
-
-func subtract*(v1, v2: Index3): Index3 {.inline.} =
-  ## Subtract two indexes
-  result = Index3(x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z)
-
-func subtractValue*(v: Index3; sub: int32): Index3 {.inline.} =
-  ## Subtract index by float value
-  result = Index3(x: v.x - sub, y: v.y - sub, z: v.z - sub)
-
-func scale*(v: Index3; scalar: int32): Index3 {.inline.} =
-  ## Multiply index by scalar
-  result = Index3(x: v.x * scalar, y: v.y * scalar, z: v.z * scalar)
-
-func multiply*(v1, v2: Index3): Index3 {.inline.} =
-  ## Multiply index by index
-  result = Index3(x: v1.x * v2.x, y: v1.y * v2.y, z: v1.z * v2.z)
-
-func negate*(v: Index3): Index3 {.inline.} =
-  ## Negate provided index (invert direction)
-  result = Index3(x: -v.x, y: -v.y, z: -v.z)
-
-func divide*(v1, v2: Index3): Index3 {.inline.} =
-  ## Divide index by index
-  result = Index3(x: v1.x div v2.x, y: v1.y div v2.y, z: v1.z div v2.z)
-
-func add*(v1, v2: Index4): Index4 {.inline.} =
-  ## Add two indexes
-  result = Index4(x: v1.x + v2.x, y: v1.y + v2.y, z: v1.z + v2.z,
-                                  w: v1.w + v2.w)
-
-func addValue*(v: Index4; add: int32): Index4 {.inline.} =
-  ## Add index and float value
-  result = Index4(x: v.x + add, y: v.y + add, z: v.z + add, w: v.w + add)
-
-func subtract*(v1, v2: Index4): Index4 {.inline.} =
-  ## Subtract two indexes
-  result = Index4(x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z,
-                                  w: v1.w - v2.w)
-
-func subtractValue*(v: Index4; sub: int32): Index4 {.inline.} =
-  ## Subtract index and float value
-  result = Index4(x: v.x - sub, y: v.y - sub, z: v.z - sub, w: v.w - sub)
-
-func scale*(v: Index4; scalar: int32): Index4 {.inline.} =
-  ## Multiply index by scalar
-  result = Index4(x: v.x * scalar, y: v.y * scalar, z: v.z * scalar, w: v.w * scalar)
-
-func multiply*(v1, v2: Index4): Index4 {.inline.} =
-  ## Multiply index by index
-  result = Index4(x: v1.x * v2.x, y: v1.y * v2.y, z: v1.z * v2.z, w: v1.w * v2.w)
-
-func divide*(v1, v2: Index4): Index4 {.inline.} =
-  ## Divide two indexes
-  result = Index4(x: v1.x div v2.x, y: v1.y div v2.y, z: v1.z div v2.z,
-                                  w: v1.w div v2.w)
-
-# proc toVector2*(index: Index2): Vector2 =
-#   result = Vector2(x: float32(index.x), y: float32(index.y))
-#
-# proc toIndex2*(vec: Vector2): Index2 =
-#   result = Index2(x: int32(vec.x), y: int32(vec.y))
-
 # template `=~`*[T: float32|Vector2|Vector3|Quaternion](v1, v2: T): bool = equals(v1, v2)
 
-template `+`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4|Matrix](v1, v2: T): T = add(v1, v2)
-template `+=`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4|Matrix](v1: var T, v2: T) = v1 = add(v1, v2)
-template `+`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4](v1: T, value: int32|float32): T = addValue(v1, value)
-template `+=`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4](v1: var T, value: int32|float32) = v1 = addValue(v1, value)
+template `+`*[T: Vector2|Vector3|Quaternion|Matrix](v1, v2: T): T = add(v1, v2)
+template `+=`*[T: Vector2|Vector3|Quaternion|Matrix](v1: var T, v2: T) = v1 = add(v1, v2)
+template `+`*[T: Vector2|Vector3|Quaternion](v1: T, value: float32): T = addValue(v1, value)
+template `+=`*[T: Vector2|Vector3|Quaternion](v1: var T, value: float32) = v1 = addValue(v1, value)
 
-template `-`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4|Matrix](v1, v2: T): T = subtract(v1, v2)
-template `-=`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4|Matrix](v1: var T, v2: T) = v1 = subtract(v1, v2)
-template `-`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4](v1: T, value: int32|float32): T = subtractValue(v1, value)
-template `-=`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4](v1: var T, value: int32|float32) = v1 = subtractValue(v1, value)
+template `-`*[T: Vector2|Vector3|Quaternion|Matrix](v1, v2: T): T = subtract(v1, v2)
+template `-=`*[T: Vector2|Vector3|Quaternion|Matrix](v1: var T, v2: T) = v1 = subtract(v1, v2)
+template `-`*[T: Vector2|Vector3|Quaternion](v1: T, value: float32): T = subtractValue(v1, value)
+template `-=`*[T: Vector2|Vector3|Quaternion](v1: var T, value: float32) = v1 = subtractValue(v1, value)
 
-template `*`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4|Matrix](v1, v2: T): T = multiply(v1, v2)
-template `*=`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4|Matrix](v1: var T, v2: T) = v1 = multiply(v1, v2)
-template `*`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4](v1: T, value: int32|float32): T = scale(v1, value)
-template `*=`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4](v1: var T, value: int32|float32) = v1 = scale(v1, value)
+template `*`*[T: Vector2|Vector3|Quaternion|Matrix](v1, v2: T): T = multiply(v1, v2)
+template `*=`*[T: Vector2|Vector3|Quaternion|Matrix](v1: var T, v2: T) = v1 = multiply(v1, v2)
+template `*`*[T: Vector2|Vector3|Quaternion](v1: T, value: float32): T = scale(v1, value)
+template `*=`*[T: Vector2|Vector3|Quaternion](v1: var T, value: float32) = v1 = scale(v1, value)
 
-template `/`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4|Matrix](v1, v2: T): T = divide(v1, v2)
-template `/=`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4|Matrix](v1: var T, v2: T) = v1 = divide(v1, v2)
-template `/`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4](v1: T, value: int32|float32): T = scale(v1, 1'f32/value)
-template `/=`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4](v1: var T, value: int32|float32) = v1 = scale(v1, 1'f32/value)
+template `/`*[T: Vector2|Vector3|Quaternion|Matrix](v1, v2: T): T = divide(v1, v2)
+template `/=`*[T: Vector2|Vector3|Quaternion|Matrix](v1: var T, v2: T) = v1 = divide(v1, v2)
+template `/`*[T: Vector2|Vector3|Quaternion](v1: T, value: float32): T = scale(v1, 1'f32/value)
+template `/=`*[T: Vector2|Vector3|Quaternion](v1: var T, value: float32) = v1 = scale(v1, 1'f32/value)
 
-template `-`*[T: Vector2|Index2|Vector3|Index3](v1: T): T = negate(v1)
+template `-`*[T: Vector2|Vector3](v1: T): T = negate(v1)
