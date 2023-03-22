@@ -1559,6 +1559,12 @@ func divide*(v1, v2: Index4): Index4 {.inline.} =
   result = Index4(x: v1.x div v2.x, y: v1.y div v2.y, z: v1.z div v2.z,
                                   w: v1.w div v2.w)
 
+# proc toVector2*(index: Index2): Vector2 =
+#   result = Vector2(x: float32(index.x), y: float32(index.y))
+#
+# proc toIndex2*(vec: Vector2): Index2 =
+#   result = Index2(x: int32(vec.x), y: int32(vec.y))
+
 # template `=~`*[T: float32|Vector2|Vector3|Quaternion](v1, v2: T): bool = equals(v1, v2)
 
 template `+`*[T: Vector2|Index2|Vector3|Index3|Quaternion|Index4|Matrix](v1, v2: T): T = add(v1, v2)
