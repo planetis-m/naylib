@@ -50,11 +50,11 @@ func wrap*(value, min, max: float32): float32 {.inline.} =
 # Module Functions Definition - Vector2 math
 # ----------------------------------------------------------------------------------
 
-func vector2Zero*(): Vector2 {.inline.} =
+func zero*(_: typedesc[Vector2]): Vector2 {.inline.} =
   ## Vector with components value 0'f32
   result = Vector2(x: 0, y: 0)
 
-func vector2One*(): Vector2 {.inline.} =
+func one*(_: typedesc[Vector2]): Vector2 {.inline.} =
   ## Vector with components value 1'f32
   result = Vector2(x: 1, y: 1)
 
@@ -210,11 +210,11 @@ func invert*(v: Vector2): Vector2 {.inline.} =
 # Module Functions Definition - Vector3 math
 # ----------------------------------------------------------------------------------
 
-func vector3Zero*(): Vector3 {.inline.} =
+func zero*(_: typedesc[Vector3]): Vector3 {.inline.} =
   ## Vector with components value 0'f32
   result = Vector3(x: 0, y: 0, z: 0)
 
-func vector3One*(): Vector3 {.inline.} =
+func one*(_: typedesc[Vector3]): Vector3 {.inline.} =
   ## Vector with components value 1'f32
   result = Vector3(x: 1, y: 1, z: 1)
 
@@ -1433,11 +1433,11 @@ func transform*(q: Quaternion; mat: Matrix): Quaternion {.inline.} =
 # Module Functions Definition - Indexes math
 # ----------------------------------------------------------------------------------
 
-func index2Zero*(): Index2 {.inline.} =
+func zero*(_: typedesc[Index2]): Index2 {.inline.} =
   ## Index with components value 0'f32
   result = Index2(x: 0, y: 0)
 
-func index2One*(): Index2 {.inline.} =
+func one*(_: typedesc[Index2]): Index2 {.inline.} =
   ## Index with components value 1'f32
   result = Index2(x: 1, y: 1)
 
@@ -1480,11 +1480,11 @@ func divide*(v1, v2: Index2): Index2 {.inline.} =
   ## Divide index by index
   result = Index2(x: v1.x div v2.x, y: v1.y div v2.y)
 
-func index3Zero*(): Index3 {.inline.} =
+func zero*(_: typedesc[Index3]): Index3 {.inline.} =
   ## Index with components value 0'f32
   result = Index3(x: 0, y: 0, z: 0)
 
-func index3One*(): Index3 {.inline.} =
+func one*(_: typedesc[Index3]): Index3 {.inline.} =
   ## Index with components value 1'f32
   result = Index3(x: 1, y: 1, z: 1)
 
