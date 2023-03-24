@@ -271,6 +271,14 @@ Integration of External Data Types with ShaderV and Pixel
 The concepts of ``ShaderV`` and ``Pixel`` permit the integration of external data types
 into procs that employ them, such as ``setShaderValue`` and ``updateTexture``.
 
+Using IsReady() in Asset Loading
+--------------------------------
+
+To prevent unexpected behavior or crashes, Load() functions utilize IsReady() to confirm
+asset loading success and raise ``RaylibError`` if an asset is not found. This approach
+ensures that the program not only logs an error but also immediately takes action to
+handle it appropriately.
+
 Math Libraries and Integer Vector Type in Naylib
 ------------------------------------------------
 
