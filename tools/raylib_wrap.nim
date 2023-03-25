@@ -61,7 +61,7 @@ proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
   const TextBytesPerLine = 20
   # NOTE: Text data buffer size is estimated considering raw data size in bytes
   # and requiring 6 char bytes for every byte: "0x00, "
-  var txtData = newStringOfCap(data.len*6 + 2000)
+  var txtData = newStringOfCap(data.len*6 + 300)
   txtData.add("""
 #
 # DataAsCode exporter v1.0 - Raw data exported as an array of bytes
