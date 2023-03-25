@@ -8,6 +8,7 @@ const
     """rAudioProcessor {.importc, nodecl, bycopy.} = object"""
   ]
   raylibHeader = """
+from std/strutils import addf, toHex
 from std/unicode import Rune
 import std/os
 const raylibDir = currentSourcePath().parentDir / "raylib/src"
@@ -346,6 +347,7 @@ const
     "SetRandomSeed",
     "OpenURL",
     # Files management functions
+    "ExportDataAsCode",
     "LoadFileData",
     "UnloadFileData",
     "SaveFileData",
@@ -454,7 +456,6 @@ const
     "GenImageFontAtlas",
     "DrawTriangleStrip3D",
     "DrawMeshInstanced",
-    "ExportDataAsCode",
     "DrawTextCodepoints",
     "LoadModel",
     "LoadModelFromMesh",

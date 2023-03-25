@@ -55,9 +55,41 @@ proc getGamepadName*(gamepad: int32): string {.inline.} =
   ## Get gamepad internal name id
   result = $getGamepadNamePriv(gamepad)
 
-proc exportDataAsCode*(data: openArray[uint8], fileName: string): bool =
-  ## Export data to code (.h), returns true on success
-  result = exportDataAsCodePriv(cast[ptr UncheckedArray[uint8]](data), data.len.uint32, fileName.cstring)
+proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
+  ## Export data to code (.nim), returns true on success
+  result = false
+  const TextBytesPerLine = 20
+  # NOTE: Text data buffer size is estimated considering raw data size in bytes
+  # and requiring 6 char bytes for every byte: "0x00, "
+  var txtData = newStringOfCap(data.len*6 + 2000)
+  txtData.add("""
+#
+# DataAsCode exporter v1.0 - Raw data exported as an array of bytes
+#
+# more info and bugs-report:  github.com/raysan5/raylib
+# feedback and support:       ray[at]raylib.com
+#
+# Copyright (c) 2022-2023 Ramon Santamaria (@raysan5)
+#
+""")
+  # Get file name from path and convert variable name to uppercase
+  var (_, name, _) = splitFile(fileName)
+  txtData.addf("const $1Data: array[$2, byte] = [ ", name, data.len)
+  for i in 0..<data.high:
+    txtData.addf(
+        if i mod TextBytesPerLine == 0: "0x$1,\n" else: "0x$1, ", data[i].toHex)
+  txtData.addf("0x$1 ]\n", data[^1].toHex)
+  # NOTE: Text data size exported is determined by '\0' (NULL) character
+  try:
+    writeFile(fileName, txtData)
+    result = true
+  except IOError:
+    discard
+
+  if result:
+    traceLog(Info, "FILEIO: [%s] Data as code exported successfully", fileName)
+  else:
+    traceLog(Warning, "FILEIO: [%s] Failed to export data as code", fileName)
 
 proc loadShader*(vsFileName, fsFileName: string): Shader =
   ## Load shader from files and bind default locations
