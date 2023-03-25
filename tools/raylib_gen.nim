@@ -8,7 +8,7 @@ const
     """rAudioProcessor {.importc, nodecl, bycopy.} = object"""
   ]
   raylibHeader = """
-from std/strutils import addf, toHex, capitalizeAscii
+from std/strutils import addf, toHex
 from std/unicode import Rune
 import std/os
 const raylibDir = currentSourcePath().parentDir / "raylib/src"
