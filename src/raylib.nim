@@ -1,4 +1,4 @@
-from std/strutils import addf, toHex
+from std/strutils import addf, toHex, capitalizeAscii
 from std/unicode import Rune
 import std/os
 const raylibDir = currentSourcePath().parentDir / "raylib/src"
@@ -1819,14 +1819,13 @@ proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
 # Copyright (c) 2022-2023 Ramon Santamaria (@raysan5)
 #
 """)
-  # Get file name from path and convert variable name to uppercase
+  # Get the file name from path and capitalize the variable name
   var (_, name, _) = splitFile(fileName)
-  txtData.addf("const $1Data: array[$2, byte] = [ ", name, data.len)
-  for i in 0..<data.high:
+  txtData.addf("const $1Data: array[$2, byte] = [ ", name.capitalizeAscii, data.len)
+  for i in 0..data.high - 1:
     txtData.addf(
         if i mod TextBytesPerLine == 0: "0x$1,\n" else: "0x$1, ", data[i].toHex)
   txtData.addf("0x$1 ]\n", data[^1].toHex)
-  # NOTE: Text data size exported is determined by '\0' (NULL) character
   try:
     writeFile(fileName, txtData)
     result = true
