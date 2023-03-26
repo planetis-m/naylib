@@ -177,7 +177,7 @@ Swapping out Raymath
 
 Raylib is designed to be independent of ``raymath``, and it's important to maintain this
 separation. This allows you to swap out ``raymath`` for another vector math library that
-is available through nimble, such as ``vmath``, ``geometrymath``, ``glm``.
+is available through nimble, including options like ``vmath``, ``geometrymath``, or ``glm``.
 
 However, it's worth noting that if you do decide to switch to a different library, you'll
 need to have converters in place for ``Vector2``, ``Vector3``, ``Vector4``, ``Matrix``,
