@@ -180,9 +180,9 @@ separation. This allows you to swap out ``raymath`` for another vector math libr
 is available through nimble, such as ``vmath``, ``geometrymath``, ``glm``.
 
 However, it's worth noting that if you do decide to switch to a different library, you'll
-need to have converters in place for ``Vector2``, ``Vector3``, ``Vector4``,
-``Quaternion``, ``Matrix``, and their respective counterparts. Here's an example of how
-you can implement these converters:
+need to have converters in place for ``Vector2``, ``Vector3``, ``Vector4``, ``Matrix``,
+and their respective counterparts. Here's an example of how you can implement these
+converters:
 
 .. code-block:: nim
 
