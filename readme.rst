@@ -172,6 +172,26 @@ While most of raylib functions are wrapped in Naylib, some functions are not wra
 because they closely reflect the C API and are considered less idiomatic or harder to use.
 Here is a `table <alternatives_table.rst>`_ that provides their equivalent Nim functions.
 
+Swapping out Raymath
+--------------------
+
+Raylib is designed to be independent of ``raymath``, and it's important to maintain this
+separation. This allows you to swap out ``raymath`` for another vector math library that
+is available through nimble, such as ``vmath``, ``geometrymath``, ``glm``.
+
+However, it's worth noting that if you do decide to switch to a different library, you'll
+need to have converters in place for ``Vector2``, ``Vector3``, ``Vector4``,
+``Quaternion``, ``Matrix``, and their respective counterparts. Here's an example of how
+you can implement these converters:
+
+.. code-block:: nim
+
+  converter toVector2*(x: geometrymath.Vector2[float32]): raylib.Vector2 {.inline.} =
+    cast[raylib.Vector2](x)
+
+  converter fromVector2*(x: raylib.Vector2): geometrymath.Vector2[float32] {.inline.} =
+    cast[geometrymath.Vector2[float32]](x)
+
 Overview of Changes and Features
 ================================
 
