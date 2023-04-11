@@ -582,7 +582,7 @@ type
     value*: float32 ## Material map value
 
   Material* {.importc, header: "raylib.h", bycopy.} = object ## Material, includes shader and maps
-    shader*: Shader ## Material shader
+    shader: Shader ## Material shader
     maps: ptr array[MaxMaterialMaps, MaterialMap] ## Material maps array (MAX_MATERIAL_MAPS)
     params*: array[4, float32] ## Material generic parameters (if required)
 
