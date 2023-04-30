@@ -1,3 +1,8 @@
+static:
+  assert sizeof(Color) == 4*sizeof(uint8)
+  assert sizeof(Vector2) == 2*sizeof(float32)
+  assert sizeof(Vector3) == 3*sizeof(float32)
+  assert sizeof(Vector4) == 4*sizeof(float32)
 
 template recs*(x: Font): FontRecs = FontRecs(x)
 

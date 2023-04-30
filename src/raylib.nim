@@ -467,16 +467,16 @@ template MapSpecular*(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
 template Menu*(_: typedesc[KeyboardKey]): untyped = R ## Key: Android menu button
 
 type
-  Vector2* {.importc, header: "raylib.h", bycopy.} = object ## Vector2, 2 components
+  Vector2* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Vector2, 2 components
     x*: float32 ## Vector x component
     y*: float32 ## Vector y component
 
-  Vector3* {.importc, header: "raylib.h", bycopy.} = object ## Vector3, 3 components
+  Vector3* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Vector3, 3 components
     x*: float32 ## Vector x component
     y*: float32 ## Vector y component
     z*: float32 ## Vector z component
 
-  Vector4* {.importc, header: "raylib.h", bycopy.} = object ## Vector4, 4 components
+  Vector4* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Vector4, 4 components
     x*: float32 ## Vector x component
     y*: float32 ## Vector y component
     z*: float32 ## Vector z component
@@ -488,7 +488,7 @@ type
     m2*, m6*, m10*, m14*: float32 ## Matrix third row (4 components)
     m3*, m7*, m11*, m15*: float32 ## Matrix fourth row (4 components)
 
-  Color* {.importc, header: "raylib.h", bycopy.} = object ## Color, 4 components, R8G8B8A8 (32bit)
+  Color* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Color, 4 components, R8G8B8A8 (32bit)
     r*: uint8 ## Color red value
     g*: uint8 ## Color green value
     b*: uint8 ## Color blue value
@@ -2199,6 +2199,11 @@ template vrStereoMode*(config: VrStereoConfig; body: untyped) =
     body
   finally:
     endVrStereoMode()
+static:
+  assert sizeof(Color) == 4*sizeof(uint8)
+  assert sizeof(Vector2) == 2*sizeof(float32)
+  assert sizeof(Vector3) == 3*sizeof(float32)
+  assert sizeof(Vector4) == 4*sizeof(float32)
 
 template recs*(x: Font): FontRecs = FontRecs(x)
 

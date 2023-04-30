@@ -533,6 +533,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         ident obj.name
         if obj.name == "FilePathList":
           lit " {.importc, header: \"raylib.h\", bycopy.} = object"
+        elif obj.name in ["Color", "Vector2", "Vector3", "Vector4"]:
+          lit "* {.importc, header: \"raylib.h\", completeStruct, bycopy.} = object"
         else: lit "* {.importc, header: \"raylib.h\", bycopy.} = object"
         doc obj
         scope:
