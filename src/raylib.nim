@@ -1974,6 +1974,13 @@ proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
   result = loadRenderTexturePriv(width, height)
   if not isRenderTextureReady(result): raiseRaylibError("Failed to load RenderTexture")
 
+proc updateTexture*(texture: Texture2D, pixels: openArray[byte]; format = PixelFormat.UncompressedR8g8b8a8) =
+  ## Update GPU texture with new data, bytes overload
+  assert texture.format == format, "Incompatible texture format"
+  assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(byte),
+      "Mismatch between expected and actual data size"
+  updateTexturePriv(texture, cast[pointer](pixels))
+
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   ## Update GPU texture with new data
   assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(T),
@@ -2199,6 +2206,7 @@ template vrStereoMode*(config: VrStereoConfig; body: untyped) =
     body
   finally:
     endVrStereoMode()
+
 static:
   assert sizeof(Color) == 4*sizeof(uint8)
   assert sizeof(Vector2) == 2*sizeof(float32)

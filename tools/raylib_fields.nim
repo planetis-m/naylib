@@ -1,3 +1,4 @@
+
 static:
   assert sizeof(Color) == 4*sizeof(uint8)
   assert sizeof(Vector2) == 2*sizeof(float32)
