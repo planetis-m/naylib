@@ -14,3 +14,10 @@ requires "nim >= 1.9.1"
 #import std/distros
 #foreignDep "wayland-protocols"
 #foreignDep "wayland"
+
+before install:
+  discard
+
+after install:
+  when defined(linux):
+    echo "Package Installed!"
