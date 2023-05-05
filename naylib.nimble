@@ -15,9 +15,16 @@ requires "nim >= 1.9.1"
 #foreignDep "wayland-protocols"
 #foreignDep "wayland"
 
+from std/os import `/`, quoteShell
+
+const
+  PkgDir = thisDir().quoteShell
+
 before install:
   discard
 
 after install:
-  when defined(linux):
-    echo "Package Installed!"
+  when defined(windows):
+    let patchPath = PkgDir / "mangle_names.patch"
+    withDir(PkgDir / "src/raylib"):
+      exec "git apply " & patchPath
