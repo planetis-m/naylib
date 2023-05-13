@@ -611,6 +611,7 @@ type
     frameCount: int32 ## Number of animation frames
     bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
     framePoses: ptr UncheckedArray[ptr UncheckedArray[Transform]] ## Poses array by frame
+    name*: array[32, char] ## Animation name
 
   Ray* {.importc, header: "raylib.h", bycopy.} = object ## Ray, ray for raycasting
     position*: Vector3 ## Ray position (origin)

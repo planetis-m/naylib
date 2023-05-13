@@ -1032,6 +1032,11 @@
           "type": "Transform **",
           "name": "framePoses",
           "description": "Poses array by frame"
+        },
+        {
+          "type": "char[32]",
+          "name": "name",
+          "description": "Animation name"
         }
       ]
     },
