@@ -236,6 +236,7 @@ proc updateTexture*(texture: Texture2D, pixels: openArray[byte], format = PixelF
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   ## Update GPU texture with new data
+  assert texture.format == kind(T), "Incompatible texture format"
   assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
   updateTexturePriv(texture, cast[pointer](pixels))
@@ -250,6 +251,7 @@ proc updateTexture*(texture: Texture2D, rec: Rectangle, pixels: openArray[byte],
 
 proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
   ## Update GPU texture rectangle with new data
+  assert texture.format == kind(T), "Incompatible texture format"
   assert getPixelDataSize(rec.width.int32, rec.height.int32, texture.format) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
   updateTexturePriv(texture, rec, cast[pointer](pixels))
