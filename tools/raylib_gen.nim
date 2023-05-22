@@ -613,7 +613,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
       lit "\nproc "
       var fncName = uncapitalizeAscii(fnc.name) # Follow Nim's naming convention for proc names.
       if fncName notin ["drawRectangleGradientV", "setShaderValueV", "colorToHSV", "colorFromHSV",
-          "checkCollisionCircleRec", "checkCollisionPointRec", "genImageGradientV"] and
+          "checkCollisionCircleRec", "checkCollisionPointRec"] and
           (fncName.endsWith("V") and fnc.returnType != "Vector2" or
           fncName.endsWith("Rec") and fnc.returnType != "Rectangle") or
           fncName.endsWith("Ex") or fncName.endsWith("Pro"):

@@ -6241,8 +6241,8 @@
       ]
     },
     {
-      "name": "GenImageGradientV",
-      "description": "Generate image: vertical gradient",
+      "name": "GenImageGradientLinear",
+      "description": "Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient",
       "returnType": "Image",
       "params": [
         {
@@ -6254,41 +6254,49 @@
           "name": "height"
         },
         {
-          "type": "Color",
-          "name": "top"
-        },
-        {
-          "type": "Color",
-          "name": "bottom"
-        }
-      ]
-    },
-    {
-      "name": "GenImageGradientH",
-      "description": "Generate image: horizontal gradient",
-      "returnType": "Image",
-      "params": [
-        {
           "type": "int",
-          "name": "width"
-        },
-        {
-          "type": "int",
-          "name": "height"
+          "name": "direction"
         },
         {
           "type": "Color",
-          "name": "left"
+          "name": "start"
         },
         {
           "type": "Color",
-          "name": "right"
+          "name": "end"
         }
       ]
     },
     {
       "name": "GenImageGradientRadial",
       "description": "Generate image: radial gradient",
+      "returnType": "Image",
+      "params": [
+        {
+          "type": "int",
+          "name": "width"
+        },
+        {
+          "type": "int",
+          "name": "height"
+        },
+        {
+          "type": "float",
+          "name": "density"
+        },
+        {
+          "type": "Color",
+          "name": "inner"
+        },
+        {
+          "type": "Color",
+          "name": "outer"
+        }
+      ]
+    },
+    {
+      "name": "GenImageGradientSquare",
+      "description": "Generate image: square gradient",
       "returnType": "Image",
       "params": [
         {

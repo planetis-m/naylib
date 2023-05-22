@@ -1159,12 +1159,12 @@ proc exportImageAsCode*(image: Image, fileName: cstring): bool {.importc: "Expor
   ## Export image as code file defining an array of bytes, returns true on success
 proc genImageColor*(width: int32, height: int32, color: Color): Image {.importc: "GenImageColor".}
   ## Generate image: plain color
-proc genImageGradientV*(width: int32, height: int32, top: Color, bottom: Color): Image {.importc: "GenImageGradientV".}
-  ## Generate image: vertical gradient
-proc genImageGradientH*(width: int32, height: int32, left: Color, right: Color): Image {.importc: "GenImageGradientH".}
-  ## Generate image: horizontal gradient
+proc genImageGradientLinear*(width: int32, height: int32, direction: int32, start: Color, `end`: Color): Image {.importc: "GenImageGradientLinear".}
+  ## Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
 proc genImageGradientRadial*(width: int32, height: int32, density: float32, inner: Color, outer: Color): Image {.importc: "GenImageGradientRadial".}
   ## Generate image: radial gradient
+proc genImageGradientSquare*(width: int32, height: int32, density: float32, inner: Color, outer: Color): Image {.importc: "GenImageGradientSquare".}
+  ## Generate image: square gradient
 proc genImageChecked*(width: int32, height: int32, checksX: int32, checksY: int32, col1: Color, col2: Color): Image {.importc: "GenImageChecked".}
   ## Generate image: checked
 proc genImageWhiteNoise*(width: int32, height: int32, factor: float32): Image {.importc: "GenImageWhiteNoise".}
