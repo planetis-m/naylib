@@ -6,8 +6,11 @@ export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniform
   Color, ShaderLocsPtr
 
 # Security check in case no GraphicsApiOpenGl* defined
-when not defined(GraphicsApiOpenGl11) and not defined(GraphicsApiOpenGlEs2):
+when not defined(GraphicsApiOpenGl11) and not defined(GraphicsApiOpenGlEs2) and
+    not defined(GraphicsApiOpenGlEs3):
   const UseDefaultGraphicsApi = true
+elif defined(GraphicsApiOpenGlEs2) or defined(GraphicsApiOpenGlEs3):
+  const UseEmbeddedGraphicsApi = true
 
 const
   RlglVersion* = (4, 5, 0)
@@ -23,7 +26,7 @@ const
 when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
   const DefaultBatchBufferElements* = 8192 ## This is the maximum amount of elements (quads) per batch
                                            ## NOTE: Be careful with text, every letter maps to a quad
-elif defined(GraphicsApiOpenGlEs2):
+elif UseEmbeddedGraphicsApi:
   const DefaultBatchBufferElements* = 2048 ## We reduce memory sizes for embedded systems (RPI and HTML5)
                                            ## NOTE: On HTML5 (emscripten) this is allocated on heap,
                                            ## by default it's only 16MB!...just take care...
@@ -133,18 +136,19 @@ type
     Opengl33 ## OpenGL 3.3 (GLSL 330)
     Opengl43 ## OpenGL 4.3 (using GLSL 330)
     OpenglEs20 ## OpenGL ES 2.0 (GLSL 100)
+    OpenglEs30 ## OpenGL ES 3.0 (GLSL 300 es)    
 
   FramebufferAttachType* {.size: sizeof(int32).} = enum ## Framebuffer attachment type
-    ColorChannel0 ## Framebuffer attachmment type: color 0
-    ColorChannel1 ## Framebuffer attachmment type: color 1
-    ColorChannel2 ## Framebuffer attachmment type: color 2
-    ColorChannel3 ## Framebuffer attachmment type: color 3
-    ColorChannel4 ## Framebuffer attachmment type: color 4
-    ColorChannel5 ## Framebuffer attachmment type: color 5
-    ColorChannel6 ## Framebuffer attachmment type: color 6
-    ColorChannel7 ## Framebuffer attachmment type: color 7
-    Depth = 100 ## Framebuffer attachmment type: depth
-    Stencil = 200 ## Framebuffer attachmment type: stencil
+    ColorChannel0 ## Framebuffer attachment type: color 0
+    ColorChannel1 ## Framebuffer attachment type: color 1
+    ColorChannel2 ## Framebuffer attachment type: color 2
+    ColorChannel3 ## Framebuffer attachment type: color 3
+    ColorChannel4 ## Framebuffer attachment type: color 4
+    ColorChannel5 ## Framebuffer attachment type: color 5
+    ColorChannel6 ## Framebuffer attachment type: color 6
+    ColorChannel7 ## Framebuffer attachment type: color 7
+    Depth = 100 ## Framebuffer attachment type: depth
+    Stencil = 200 ## Framebuffer attachment type: stencil
 
   FramebufferAttachTextureType* {.size: sizeof(int32).} = enum ## Framebuffer texture attachment type
     CubemapPositiveX ## Framebuffer texture attachment type: cubemap, +X side
@@ -170,7 +174,7 @@ type
     colors: ptr UncheckedArray[uint8] ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
     when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
       indices: ptr UncheckedArray[uint32] ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
-    elif defined(GraphicsApiOpenGlEs2):
+    when UseEmbeddedGraphicsApi:
       indices: ptr UncheckedArray[uint16]
     vaoId*: uint32 ## OpenGL Vertex Array Object id
     vboId*: array[4, uint32] ## OpenGL Vertex Buffer Objects id (4 types of vertex data)
@@ -202,7 +206,7 @@ proc matrixMode*(mode: MatrixMode) {.importc: "rlMatrixMode".}
 proc pushMatrix*() {.importc: "rlPushMatrix".}
   ## Push the current matrix to stack
 proc popMatrix*() {.importc: "rlPopMatrix".}
-  ## Pop lattest inserted matrix from stack
+  ## Pop latest inserted matrix from stack
 proc loadIdentity*() {.importc: "rlLoadIdentity".}
   ## Reset current matrix to identity matrix
 proc translatef*(x: float32, y: float32, z: float32) {.importc: "rlTranslatef".}
@@ -269,6 +273,8 @@ proc disableTextureCubemap*() {.importc: "rlDisableTextureCubemap".}
   ## Disable texture cubemap
 proc textureParameters*(id: uint32, param: TextureParameter, value: int32) {.importc: "rlTextureParameters".}
   ## Set texture parameters (filter, wrap)
+proc cubemapParameters*(id: uint32, param: int32, value: int32) {.importc: "rlCubemapParameters".}
+  ## Set cubemap parameters (filter, wrap)
 proc enableShader*(id: uint32) {.importc: "rlEnableShader".}
   ## Enable shader program
 proc disableShader*() {.importc: "rlDisableShader".}
@@ -336,7 +342,7 @@ proc setBlendFactorsSeparate*(glSrcRGB: BlendFactor, glDstRGB: BlendFactor, glSr
 proc rlglInit*(width: int32, height: int32) {.importc: "rlglInit".}
   ## Initialize rlgl (buffers, shaders, textures, states)
 proc rlglClose*() {.importc: "rlglClose".}
-  ## De-inititialize rlgl (buffers, shaders, textures)
+  ## De-initialize rlgl (buffers, shaders, textures)
 proc loadExtensions*(loader: rlglLoadProc) {.importc: "rlLoadExtensions".}
   ## Load OpenGL extensions (loader function required)
 proc getVersion*(): GlVersion {.importc: "rlGetVersion".}
@@ -438,7 +444,7 @@ proc setShader*(id: uint32, locs: ShaderLocsPtr) {.importc: "rlSetShader".}
 proc loadComputeShaderProgram*(shaderId: uint32): uint32 {.importc: "rlLoadComputeShaderProgram".}
   ## Load compute shader program
 proc computeShaderDispatch*(groupX: uint32, groupY: uint32, groupZ: uint32) {.importc: "rlComputeShaderDispatch".}
-  ## Dispatch compute shader (equivalent to *draw* for graphics pilepine)
+  ## Dispatch compute shader (equivalent to *draw* for graphics pipeline)
 proc loadShaderBuffer*(size: uint32, data: pointer, usageHint: BufferUsageHint): uint32 {.importc: "rlLoadShaderBuffer".}
   ## Load shader storage buffer object (SSBO)
 proc unloadShaderBuffer*(ssboId: uint32) {.importc: "rlUnloadShaderBuffer".}
@@ -551,7 +557,7 @@ proc `[]=`*(x: var VertexBufferColors, i: int, val: Color) =
 
 when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
   type IndicesArr* = array[6, uint32]
-elif defined(GraphicsApiOpenGlEs2):
+elif UseEmbeddedGraphicsApi:
   type IndicesArr* = array[6, uint16]
 
 proc `[]`*(x: VertexBufferIndices, i: int): IndicesArr =

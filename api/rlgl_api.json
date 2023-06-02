@@ -9,7 +9,7 @@
     {
       "name": "RLGL_VERSION",
       "type": "STRING",
-      "value": "4.2",
+      "value": "4.5",
       "description": ""
     },
     {
@@ -56,6 +56,12 @@
     },
     {
       "name": "GRAPHICS_API_OPENGL_33",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "GRAPHICS_API_OPENGL_ES2",
       "type": "GUARD",
       "value": "",
       "description": ""
@@ -340,67 +346,67 @@
       "name": "RL_ONE",
       "type": "INT",
       "value": 1,
-      "description": "GL_ONE  "
+      "description": "GL_ONE"
     },
     {
       "name": "RL_SRC_COLOR",
       "type": "INT",
       "value": 768,
-      "description": "GL_SRC_COLOR            "
+      "description": "GL_SRC_COLOR"
     },
     {
       "name": "RL_ONE_MINUS_SRC_COLOR",
       "type": "INT",
       "value": 769,
-      "description": "GL_ONE_MINUS_SRC_COLOR "
+      "description": "GL_ONE_MINUS_SRC_COLOR"
     },
     {
       "name": "RL_SRC_ALPHA",
       "type": "INT",
       "value": 770,
-      "description": "GL_SRC_ALPHA           "
+      "description": "GL_SRC_ALPHA"
     },
     {
       "name": "RL_ONE_MINUS_SRC_ALPHA",
       "type": "INT",
       "value": 771,
-      "description": "GL_ONE_MINUS_SRC_ALPHA "
+      "description": "GL_ONE_MINUS_SRC_ALPHA"
     },
     {
       "name": "RL_DST_ALPHA",
       "type": "INT",
       "value": 772,
-      "description": "GL_DST_ALPHA           "
+      "description": "GL_DST_ALPHA"
     },
     {
       "name": "RL_ONE_MINUS_DST_ALPHA",
       "type": "INT",
       "value": 773,
-      "description": "GL_ONE_MINUS_DST_ALPHA "
+      "description": "GL_ONE_MINUS_DST_ALPHA"
     },
     {
       "name": "RL_DST_COLOR",
       "type": "INT",
       "value": 774,
-      "description": "GL_DST_COLOR           "
+      "description": "GL_DST_COLOR"
     },
     {
       "name": "RL_ONE_MINUS_DST_COLOR",
       "type": "INT",
       "value": 775,
-      "description": "GL_ONE_MINUS_DST_COLOR "
+      "description": "GL_ONE_MINUS_DST_COLOR"
     },
     {
       "name": "RL_SRC_ALPHA_SATURATE",
       "type": "INT",
       "value": 776,
-      "description": "GL_SRC_ALPHA_SATURATE  "
+      "description": "GL_SRC_ALPHA_SATURATE"
     },
     {
       "name": "RL_CONSTANT_COLOR",
       "type": "INT",
       "value": 32769,
-      "description": "GL_CONSTANT_COLOR          "
+      "description": "GL_CONSTANT_COLOR"
     },
     {
       "name": "RL_ONE_MINUS_CONSTANT_COLOR",
@@ -412,7 +418,7 @@
       "name": "RL_CONSTANT_ALPHA",
       "type": "INT",
       "value": 32771,
-      "description": "GL_CONSTANT_ALPHA          "
+      "description": "GL_CONSTANT_ALPHA"
     },
     {
       "name": "RL_ONE_MINUS_CONSTANT_ALPHA",
@@ -424,13 +430,25 @@
       "name": "RL_FUNC_ADD",
       "type": "INT",
       "value": 32774,
-      "description": "GL_FUNC_ADD             "
+      "description": "GL_FUNC_ADD"
+    },
+    {
+      "name": "RL_MIN",
+      "type": "INT",
+      "value": 32775,
+      "description": "GL_MIN"
+    },
+    {
+      "name": "RL_MAX",
+      "type": "INT",
+      "value": 32776,
+      "description": "GL_MAX"
     },
     {
       "name": "RL_FUNC_SUBTRACT",
       "type": "INT",
       "value": 32778,
-      "description": "GL_FUNC_SUBTRACT        "
+      "description": "GL_FUNC_SUBTRACT"
     },
     {
       "name": "RL_FUNC_REVERSE_SUBTRACT",
@@ -442,7 +460,7 @@
       "name": "RL_BLEND_EQUATION",
       "type": "INT",
       "value": 32777,
-      "description": "GL_BLEND_EQUATION       "
+      "description": "GL_BLEND_EQUATION"
     },
     {
       "name": "RL_BLEND_EQUATION_RGB",
@@ -454,37 +472,37 @@
       "name": "RL_BLEND_EQUATION_ALPHA",
       "type": "INT",
       "value": 34877,
-      "description": "GL_BLEND_EQUATION_ALPHA "
+      "description": "GL_BLEND_EQUATION_ALPHA"
     },
     {
       "name": "RL_BLEND_DST_RGB",
       "type": "INT",
       "value": 32968,
-      "description": "GL_BLEND_DST_RGB        "
+      "description": "GL_BLEND_DST_RGB"
     },
     {
       "name": "RL_BLEND_SRC_RGB",
       "type": "INT",
       "value": 32969,
-      "description": "GL_BLEND_SRC_RGB        "
+      "description": "GL_BLEND_SRC_RGB"
     },
     {
       "name": "RL_BLEND_DST_ALPHA",
       "type": "INT",
       "value": 32970,
-      "description": "GL_BLEND_DST_ALPHA      "
+      "description": "GL_BLEND_DST_ALPHA"
     },
     {
       "name": "RL_BLEND_SRC_ALPHA",
       "type": "INT",
       "value": 32971,
-      "description": "GL_BLEND_SRC_ALPHA                   "
+      "description": "GL_BLEND_SRC_ALPHA"
     },
     {
       "name": "RL_BLEND_COLOR",
       "type": "INT",
       "value": 32773,
-      "description": "GL_BLEND_COLOR               "
+      "description": "GL_BLEND_COLOR"
     },
     {
       "name": "RL_MATRIX_TYPE",
@@ -700,37 +718,37 @@
       "name": "RL_DEFAULT_SHADER_ATTRIB_NAME_POSITION",
       "type": "STRING",
       "value": "vertexPosition",
-      "description": "Binded by default to shader location: 0"
+      "description": "Bound by default to shader location: 0"
     },
     {
       "name": "RL_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD",
       "type": "STRING",
       "value": "vertexTexCoord",
-      "description": "Binded by default to shader location: 1"
+      "description": "Bound by default to shader location: 1"
     },
     {
       "name": "RL_DEFAULT_SHADER_ATTRIB_NAME_NORMAL",
       "type": "STRING",
       "value": "vertexNormal",
-      "description": "Binded by default to shader location: 2"
+      "description": "Bound by default to shader location: 2"
     },
     {
       "name": "RL_DEFAULT_SHADER_ATTRIB_NAME_COLOR",
       "type": "STRING",
       "value": "vertexColor",
-      "description": "Binded by default to shader location: 3"
+      "description": "Bound by default to shader location: 3"
     },
     {
       "name": "RL_DEFAULT_SHADER_ATTRIB_NAME_TANGENT",
       "type": "STRING",
       "value": "vertexTangent",
-      "description": "Binded by default to shader location: 4"
+      "description": "Bound by default to shader location: 4"
     },
     {
       "name": "RL_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD2",
       "type": "STRING",
       "value": "vertexTexCoord2",
-      "description": "Binded by default to shader location: 5"
+      "description": "Bound by default to shader location: 5"
     },
     {
       "name": "RL_DEFAULT_SHADER_UNIFORM_NAME_MVP",
@@ -1247,6 +1265,11 @@
           "name": "RL_OPENGL_ES_20",
           "value": 5,
           "description": "OpenGL ES 2.0 (GLSL 100)"
+        },
+        {
+          "name": "RL_OPENGL_ES_30",
+          "value": 6,
+          "description": "OpenGL ES 3.0 (GLSL 300 es)    "
         }
       ]
     },
@@ -1709,52 +1732,52 @@
         {
           "name": "RL_ATTACHMENT_COLOR_CHANNEL0",
           "value": 0,
-          "description": "Framebuffer attachmment type: color 0"
+          "description": "Framebuffer attachment type: color 0"
         },
         {
           "name": "RL_ATTACHMENT_COLOR_CHANNEL1",
           "value": 1,
-          "description": "Framebuffer attachmment type: color 1"
+          "description": "Framebuffer attachment type: color 1"
         },
         {
           "name": "RL_ATTACHMENT_COLOR_CHANNEL2",
           "value": 2,
-          "description": "Framebuffer attachmment type: color 2"
+          "description": "Framebuffer attachment type: color 2"
         },
         {
           "name": "RL_ATTACHMENT_COLOR_CHANNEL3",
           "value": 3,
-          "description": "Framebuffer attachmment type: color 3"
+          "description": "Framebuffer attachment type: color 3"
         },
         {
           "name": "RL_ATTACHMENT_COLOR_CHANNEL4",
           "value": 4,
-          "description": "Framebuffer attachmment type: color 4"
+          "description": "Framebuffer attachment type: color 4"
         },
         {
           "name": "RL_ATTACHMENT_COLOR_CHANNEL5",
           "value": 5,
-          "description": "Framebuffer attachmment type: color 5"
+          "description": "Framebuffer attachment type: color 5"
         },
         {
           "name": "RL_ATTACHMENT_COLOR_CHANNEL6",
           "value": 6,
-          "description": "Framebuffer attachmment type: color 6"
+          "description": "Framebuffer attachment type: color 6"
         },
         {
           "name": "RL_ATTACHMENT_COLOR_CHANNEL7",
           "value": 7,
-          "description": "Framebuffer attachmment type: color 7"
+          "description": "Framebuffer attachment type: color 7"
         },
         {
           "name": "RL_ATTACHMENT_DEPTH",
           "value": 100,
-          "description": "Framebuffer attachmment type: depth"
+          "description": "Framebuffer attachment type: depth"
         },
         {
           "name": "RL_ATTACHMENT_STENCIL",
           "value": 200,
-          "description": "Framebuffer attachmment type: stencil"
+          "description": "Framebuffer attachment type: stencil"
         }
       ]
     },
@@ -1853,7 +1876,7 @@
     },
     {
       "name": "rlPopMatrix",
-      "description": "Pop lattest inserted matrix from stack",
+      "description": "Pop latest inserted matrix from stack",
       "returnType": "void"
     },
     {
@@ -2341,6 +2364,25 @@
       ]
     },
     {
+      "name": "rlCubemapParameters",
+      "description": "Set cubemap parameters (filter, wrap)",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "unsigned int",
+          "name": "id"
+        },
+        {
+          "type": "int",
+          "name": "param"
+        },
+        {
+          "type": "int",
+          "name": "value"
+        }
+      ]
+    },
+    {
       "name": "rlEnableShader",
       "description": "Enable shader program",
       "returnType": "void",
@@ -2629,7 +2671,7 @@
     },
     {
       "name": "rlglClose",
-      "description": "De-inititialize rlgl (buffers, shaders, textures)",
+      "description": "De-initialize rlgl (buffers, shaders, textures)",
       "returnType": "void"
     },
     {
@@ -3467,7 +3509,7 @@
     },
     {
       "name": "rlComputeShaderDispatch",
-      "description": "Dispatch compute shader (equivalent to *draw* for graphics pilepine)",
+      "description": "Dispatch compute shader (equivalent to *draw* for graphics pipeline)",
       "returnType": "void",
       "params": [
         {
