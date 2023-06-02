@@ -12,11 +12,10 @@ export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniform
   Color, ShaderLocsPtr
 
 # Security check in case no GraphicsApiOpenGl* defined
-when not defined(GraphicsApiOpenGl11) and not defined(GraphicsApiOpenGlEs2) and
-    not defined(GraphicsApiOpenGlEs3):
-  const UseDefaultGraphicsApi = true
-elif not defined(GraphicsApiOpenGl11):
-  const UseDefaultGraphicsApi = false
+when defined(GraphicsApiOpenGlEs2) or defined(GraphicsApiOpenGlEs3):
+  const UseEmbeddedGraphicsApi = true
+else:
+  const UseEmbeddedGraphicsApi = false
 
 const
   RlglVersion* = (4, 5, 0)
@@ -29,7 +28,7 @@ const
   CullDistanceNear* = 0.01 ## Default near cull distance
   CullDistanceFar* = 1000.0 ## Default far cull distance
 
-when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
+when not UseEmbeddedGraphicsApi:
   const DefaultBatchBufferElements* = 8192 ## This is the maximum amount of elements (quads) per batch
                                            ## NOTE: Be careful with text, every letter maps to a quad
 else:
@@ -207,7 +206,7 @@ proc `[]=`*(x: var VertexBufferColors, i: int, val: Color) =
   checkArrayAccess(VertexBuffer(x).colors, i, 4*VertexBuffer(x).elementCount)
   cast[ptr UncheckedArray[Color]](VertexBuffer(x).colors)[i] = val
 
-when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
+when not UseEmbeddedGraphicsApi:
   type IndicesArr* = array[6, uint32]
 else:
   type IndicesArr* = array[6, uint16]
@@ -417,7 +416,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
             spaces
             var name = fld.name
             if (objName, name) == ("VertexBuffer", "indices"):
-              lit "when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:"
+              lit "when not UseEmbeddedGraphicsApi:"
               scope:
                 spaces
                 ident name
