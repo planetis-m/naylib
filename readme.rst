@@ -47,6 +47,7 @@ To choose a version of the OpenGL graphics backend on desktop, select one of the
 - ``-d:GraphicsApiOpenGl21`` (OpenGL 2.1)
 - ``-d:GraphicsApiOpenGl11`` (OpenGL 1.1)
 - ``-d:GraphicsApiOpenGlEs2`` (OpenGL ES 2.0)
+- ``-d:GraphicsApiOpenGlEs3`` (OpenGL ES 3.0)
 
 Note: By default, Naylib will use OpenGL 3.3 on desktop platforms.
 
