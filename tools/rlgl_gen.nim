@@ -12,10 +12,11 @@ export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniform
   Color, ShaderLocsPtr
 
 # Security check in case no GraphicsApiOpenGl* defined
-when not defined(GraphicsApiOpenGl11) and not defined(GraphicsApiOpenGlEs2):
+when not defined(GraphicsApiOpenGl11) and not defined(GraphicsApiOpenGlEs2) and
+    not defined(GraphicsApiOpenGlEs3):
   const UseDefaultGraphicsApi = true
-elif defined(GraphicsApiOpenGlEs2) or defined(GraphicsApiOpenGlEs3):
-  const UseEmbeddedGraphicsApi = true
+elif not defined(GraphicsApiOpenGl11):
+  const UseDefaultGraphicsApi = false
 
 const
   RlglVersion* = (4, 5, 0)
@@ -31,7 +32,7 @@ const
 when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
   const DefaultBatchBufferElements* = 8192 ## This is the maximum amount of elements (quads) per batch
                                            ## NOTE: Be careful with text, every letter maps to a quad
-elif UseEmbeddedGraphicsApi:
+else:
   const DefaultBatchBufferElements* = 2048 ## We reduce memory sizes for embedded systems (RPI and HTML5)
                                            ## NOTE: On HTML5 (emscripten) this is allocated on heap,
                                            ## by default it's only 16MB!...just take care...
@@ -208,7 +209,7 @@ proc `[]=`*(x: var VertexBufferColors, i: int, val: Color) =
 
 when defined(GraphicsApiOpenGl11) or UseDefaultGraphicsApi:
   type IndicesArr* = array[6, uint32]
-elif UseEmbeddedGraphicsApi:
+else:
   type IndicesArr* = array[6, uint16]
 
 proc `[]`*(x: VertexBufferIndices, i: int): IndicesArr =
@@ -437,7 +438,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
             doc fld
             if (objName, name) == ("VertexBuffer", "indices"):
               spaces
-              lit "elif UseEmbeddedGraphicsApi:"
+              lit "else:"
               scope:
                 spaces
                 lit "indices: ptr UncheckedArray[uint16]"
