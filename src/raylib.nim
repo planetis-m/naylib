@@ -1213,6 +1213,8 @@ proc imageFlipVertical*(image: var Image) {.importc: "ImageFlipVertical".}
   ## Flip image vertically
 proc imageFlipHorizontal*(image: var Image) {.importc: "ImageFlipHorizontal".}
   ## Flip image horizontally
+proc imageRotate*(image: var Image, degrees: int32) {.importc: "ImageRotate".}
+  ## Rotate image by input angle in degrees (-359 to 359) 
 proc imageRotateCW*(image: var Image) {.importc: "ImageRotateCW".}
   ## Rotate image clockwise 90deg
 proc imageRotateCCW*(image: var Image) {.importc: "ImageRotateCCW".}
