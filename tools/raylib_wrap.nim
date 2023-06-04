@@ -7,7 +7,7 @@ proc raiseRaylibError(msg: string) {.noinline, noreturn.} =
 
 type
   TraceLogCallback* = proc (logLevel: TraceLogLevel;
-      text: string) {.nimcall.} ## Logging: Redirect trace log messages
+    text: string) {.nimcall.} ## Logging: Redirect trace log messages
 
 var
   traceLogCallback: TraceLogCallback # TraceLog callback function pointer
@@ -191,6 +191,12 @@ proc loadImageFromTexture*(texture: Texture2D): Image =
   ## Load image from GPU texture data
   result = loadImageFromTexturePriv(texture)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from Texture")
+
+proc exportImageToMemory*(image: Image, fileType: string): RArray[byte] =
+  ## Export image to memory buffer
+  var len = 0'i32
+  let data = exportImageToMemoryPriv(image, fileType.cstring, addr len)
+  result = RArray[byte](len: len, data: cast[ptr UncheckedArray[uint8]](data))
 
 type
   Pixel* = concept

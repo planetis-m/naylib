@@ -489,10 +489,12 @@ proc bufferCount*(x: RenderBatch): int32 {.inline.} = x.bufferCount
 
 proc `=destroy`*(x: var RenderBatch) =
   unloadRenderBatch(x)
+proc `=dup`*(source: RenderBatch): RenderBatch {.error.}
 proc `=copy`*(dest: var RenderBatch; source: RenderBatch) {.error.}
 
-proc `=sink`*(dest: var VertexBuffer; source: VertexBuffer) {.error.}
+proc `=dup`*(source: VertexBuffer): VertexBuffer {.error.}
 proc `=copy`*(dest: var VertexBuffer; source: VertexBuffer) {.error.}
+proc `=sink`*(dest: var VertexBuffer; source: VertexBuffer) {.error.}
 
 template drawMode*(mode: DrawMode; body: untyped) =
   ## Drawing mode (how to organize vertex)

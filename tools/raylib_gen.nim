@@ -437,6 +437,7 @@ const
     "LoadImage",
     "LoadImageRaw",
     "LoadImageFromMemory",
+    "ExportImageToMemory",
     "LoadImageColors",
     "SetTraceLogCallback",
     "LoadFontData",

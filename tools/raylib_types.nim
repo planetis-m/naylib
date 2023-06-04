@@ -7,83 +7,99 @@ type
   ShaderLocsPtr* = distinct typeof(Shader.locs)
 
 proc `=destroy`*(x: var EmbeddedImage) = discard
-proc `=copy`*(dest: var EmbeddedImage; source: EmbeddedImage) =
-  copyMem(addr dest, addr source, sizeof(Image))
+proc `=dup`*(source: EmbeddedImage): EmbeddedImage {.nodestroy.} = source
+proc `=copy`*(dest: var EmbeddedImage; source: EmbeddedImage) {.nodestroy.} =
+  dest = source
 
 proc `=destroy`*(x: var EmbeddedWave) = discard
-proc `=copy`*(dest: var EmbeddedWave; source: EmbeddedWave) =
-  copyMem(addr dest, addr source, sizeof(Wave))
+proc `=dup`*(source: EmbeddedWave): EmbeddedWave {.nodestroy.} = source
+proc `=copy`*(dest: var EmbeddedWave; source: EmbeddedWave) {.nodestroy.} =
+  dest = source
 
 proc `=destroy`*(x: var EmbeddedFont) = discard
-proc `=copy`*(dest: var EmbeddedFont; source: EmbeddedFont) =
-  copyMem(addr dest, addr source, sizeof(Font))
+proc `=dup`*(source: EmbeddedFont): EmbeddedFont {.nodestroy.} = source
+proc `=copy`*(dest: var EmbeddedFont; source: EmbeddedFont) {.nodestroy.} =
+  dest = source
 
 proc `=destroy`*(x: var MaterialMap) = discard
+proc `=dup`*(source: MaterialMap): MaterialMap {.error.}
 proc `=copy`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 proc `=sink`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 
 # proc `=destroy`*(x: var ShaderLocsPtr) = discard
+# proc `=dup`*(source: ShaderLocsPtr): ShaderLocsPtr {.error.}
 # proc `=copy`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 # proc `=sink`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 
 proc `=destroy`*(x: var Image) =
   unloadImage(x)
+proc `=dup`*(source: Image): Image {.nodestroy.} =
+  result = imageCopy(source)
 proc `=copy`*(dest: var Image; source: Image) =
   if dest.data != source.data:
-    `=destroy`(dest)
-    wasMoved(dest)
-    dest = imageCopy(source)
+    dest = imageCopy(source) # generates =sink
 
 proc `=destroy`*(x: var Texture) =
   unloadTexture(x)
+proc `=dup`*(source: Texture): Texture {.error.}
 proc `=copy`*(dest: var Texture; source: Texture) {.error.}
 
 proc `=destroy`*(x: var RenderTexture) =
   unloadRenderTexture(x)
+proc `=dup`*(source: RenderTexture): RenderTexture {.error.}
 proc `=copy`*(dest: var RenderTexture; source: RenderTexture) {.error.}
 
 proc `=destroy`*(x: var Font) =
   unloadFont(x)
+proc `=dup`*(source: Font): Font {.error.}
 proc `=copy`*(dest: var Font; source: Font) {.error.}
 
 proc `=destroy`*(x: var Mesh) =
   unloadMesh(x)
+proc `=dup`*(source: Mesh): Mesh {.error.}
 proc `=copy`*(dest: var Mesh; source: Mesh) {.error.}
 
 proc `=destroy`*(x: var Shader) =
   unloadShader(x)
+proc `=dup`*(source: Shader): Shader {.error.}
 proc `=copy`*(dest: var Shader; source: Shader) {.error.}
 
 proc `=destroy`*(x: var Material) =
   unloadMaterial(x)
+# proc `=dup`*(source: Material): Material {.error.}
 proc `=copy`*(dest: var Material; source: Material) {.error.}
 
 proc `=destroy`*(x: var Model) =
   unloadModel(x)
+proc `=dup`*(source: Model): Model {.error.}
 proc `=copy`*(dest: var Model; source: Model) {.error.}
 
 proc `=destroy`*(x: var ModelAnimation) =
   unloadModelAnimation(x)
+# proc `=dup`*(source: ModelAnimation): ModelAnimation {.error.}
 proc `=copy`*(dest: var ModelAnimation; source: ModelAnimation) {.error.}
 
 proc `=destroy`*(x: var Wave) =
   unloadWave(x)
+proc `=dup`*(source: Wave): Wave {.nodestroy.} =
+  result = waveCopy(source)
 proc `=copy`*(dest: var Wave; source: Wave) =
   if dest.data != source.data:
-    `=destroy`(dest)
-    wasMoved(dest)
     dest = waveCopy(source)
 
 proc `=destroy`*(x: var AudioStream) =
   unloadAudioStream(x)
+proc `=dup`*(source: AudioStream): AudioStream {.error.}
 proc `=copy`*(dest: var AudioStream; source: AudioStream) {.error.}
 
 proc `=destroy`*(x: var Sound) =
   unloadSound(x)
+proc `=dup`*(source: Sound): Sound {.error.}
 proc `=copy`*(dest: var Sound; source: Sound) {.error.}
 
 proc `=destroy`*(x: var Music) =
   unloadMusicStream(x)
+proc `=dup`*(source: Music): Music {.error.}
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 
 type
@@ -95,12 +111,17 @@ proc `=destroy`*[T](x: var RArray[T]) =
   if x.data != nil:
     for i in 0..<x.len: `=destroy`(x.data[i])
     memFree(x.data)
+proc `=dup`*[T](source: RArray[T]): RArray[T] {.nodestroy.} =
+  result.len = source.len
+  if source.data != nil:
+    result.data = cast[typeof(result.data)](memAlloc(result.len.uint32))
+    for i in 0..<result.len: result.data[i] = `=dup`(source.data[i])
 proc `=copy`*[T](dest: var RArray[T]; source: RArray[T]) =
   if dest.data != source.data:
     `=destroy`(dest)
     wasMoved(dest)
     dest.len = source.len
-    if dest.len > 0:
+    if source.data != nil:
       dest.data = cast[typeof(dest.data)](memAlloc(dest.len.uint32))
       for i in 0..<dest.len: dest.data[i] = source.data[i]
 
