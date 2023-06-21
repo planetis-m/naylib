@@ -12,10 +12,8 @@ export PixelFormat, TextureFilter, BlendMode, ShaderLocationIndex, ShaderUniform
   Color, ShaderLocsPtr
 
 # Security check in case no GraphicsApiOpenGl* defined
-when defined(GraphicsApiOpenGlEs2) or defined(GraphicsApiOpenGlEs3):
-  const UseEmbeddedGraphicsApi = true
-else:
-  const UseEmbeddedGraphicsApi = false
+const
+  UseEmbeddedGraphicsApi = defined(GraphicsApiOpenGlEs2) or defined(GraphicsApiOpenGlEs3)
 
 const
   RlglVersion* = (4, 5, 0)

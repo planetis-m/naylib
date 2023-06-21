@@ -2,8 +2,13 @@
 Naylib
 ======
 
+.. image:: assets/naylib.png
+   :width: 15%
+
 Welcome to this repository! Here you'll find a Nim wrapper for raylib, a library for
 creating 2D and 3D games. The Nim API is designed to be user-friendly and easy to use.
+
+---
 
   **WARNING 1**: Currently Naylib only works with Nim version 2.0 which is expected to be released soon.
   Use a `nightlies build <https://github.com/nim-lang/nightlies/releases>`_ in the meantime.
