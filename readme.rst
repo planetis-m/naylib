@@ -304,8 +304,8 @@ asset loading success and raise ``RaylibError`` if an asset is not found. This a
 ensures that the program not only logs an error but also immediately takes action to
 handle it appropriately.
 
-Math Libraries and Integer Vector Type in Naylib
-------------------------------------------------
+Math Libraries
+--------------
 
 In addition to porting the ``raymath`` and ``reasings`` libraries to Nim, Naylib also
 provides math operators like ``+``, ``*``, ``-=`` for convenience.
