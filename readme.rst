@@ -101,8 +101,8 @@ Use the following command to set up and build the project for Android:
 
 If everything goes smoothly, you will see a file named raylib_game.apk in the same directory.
 
-For a detailed tutorial on getting started with naylib for Android, you can check out the
-YouTube tutorial: `Getting started with naylib for Android <https://youtu.be/fDIKu_kBa78>`_
+For a step-by-step video tutorial on getting started with naylib for Android, you can also watch
+`this <https://youtu.be/fDIKu_kBa78>`_
 
 **4. Install and run the APK on your Android device.**
 
