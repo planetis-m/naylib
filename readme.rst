@@ -9,6 +9,7 @@ Naylib
    Welcome to this repository! Here you'll find a Nim wrapper for raylib, a library for
    creating 2D and 3D games. The Nim API is designed to be user-friendly and easy to use.
 
+
   **WARNING 1**: Currently Naylib only works with Nim version 2.0 which is expected to be released soon.
   Use a `nightlies build <https://github.com/nim-lang/nightlies/releases>`_ in the meantime.
 
@@ -17,10 +18,10 @@ Documentation
 
 To learn more about how to use this wrapper, you can check out the documentation:
 
-- `raylib https://planetis-m.github.io/naylib/raylib.html>`_ - module documentation
-- `raymath https://planetis-m.github.io/naylib/raymath.html>`_ - module documentation
-- `rlgl https://planetis-m.github.io/naylib/rlgl.html>`_ - module documentation
-- `reasings https://planetis-m.github.io/naylib/reasings.html>`_ - module documentation
+- `raylib <https://planetis-m.github.io/naylib/raylib.html>`_ - module documentation
+- `raymath <https://planetis-m.github.io/naylib/raymath.html>`_ - module documentation
+- `rlgl <https://planetis-m.github.io/naylib/rlgl.html>`_ - module documentation
+- `reasings <https://planetis-m.github.io/naylib/reasings.html>`_ - module documentation
 
 If you're familiar with the C version of raylib, you may find the
 `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_ useful.
