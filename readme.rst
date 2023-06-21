@@ -1,6 +1,6 @@
-==============================================================
-Naylib - Your Nimble Companion for Game Development Adventures
-==============================================================
+======
+Naylib
+======
 
 Welcome to this repository! Here you'll find a Nim wrapper for raylib, a library for
 creating 2D and 3D games. The Nim API is designed to be user-friendly and easy to use.
