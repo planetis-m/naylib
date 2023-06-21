@@ -16,7 +16,9 @@ Documentation
 
 To learn more about how to use this wrapper, you can check out the documentation:
 
-- `raylib <https://planetis-m.github.io/naylib/raylib.html>`_ - module documentation
+.. |base_url| replace:: https://planetis-m.github.io/naylib/
+
+- `raylib <|base_url|raylib.html>`_ - module documentation
 - `raymath <https://planetis-m.github.io/naylib/raymath.html>`_ - module documentation
 - `rlgl <https://planetis-m.github.io/naylib/rlgl.html>`_ - module documentation
 - `reasings <https://planetis-m.github.io/naylib/reasings.html>`_ - module documentation
