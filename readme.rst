@@ -16,10 +16,10 @@ Documentation
 
 To learn more about how to use this wrapper, you can check out the documentation:
 
-- `raylib <https://planetis-m.github.io/naylib/raylib.html>`_ - module
-- `raymath <https://planetis-m.github.io/naylib/raymath.html>`_ - module
-- `rlgl <https://planetis-m.github.io/naylib/rlgl.html>`_ - module
-- `reasings <https://planetis-m.github.io/naylib/reasings.html>`_ - module
+- `raylib <https://planetis-m.github.io/naylib/raylib.html>`_ - Main raylib module
+- `raymath <https://planetis-m.github.io/naylib/raymath.html>`_ - Mathematical functions for vectors, matrices, and quaternions
+- `rlgl <https://planetis-m.github.io/naylib/rlgl.html>`_ - Abstraction layer for OpenGL with immediate-mode API
+- `reasings <https://planetis-m.github.io/naylib/reasings.html>`_ - Smooth animation transitions using raylib easings (based on Robert Penner library)
 
 If you're familiar with the C version of raylib, you may find the
 `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_ useful.
