@@ -101,6 +101,9 @@ Use the following command to set up and build the project for Android:
 
 If everything goes smoothly, you will see a file named raylib_game.apk in the same directory.
 
+For a detailed tutorial on getting started with naylib for Android, you can check out the
+YouTube tutorial: `Getting started with naylib for Android <https://youtu.be/fDIKu_kBa78>`_
+
 **4. Install and run the APK on your Android device.**
 
 Enable USB Debugging on your Android device, plug it into your computer, and install the
@@ -136,11 +139,12 @@ To avoid these conflicts, you can use one of the following methods:
   type
     Game = object
 
-  proc `=destroy`(x: var Game) =
+  proc `=destroy`(x: Game) =
     assert isWindowReady(), "Window is already closed"
     closeWindow()
 
   proc `=sink`(x: var Game; y: Game) {.error.}
+  proc `=dup`(y: Game): Game {.error.}
   proc `=copy`(x: var Game; y: Game) {.error.}
   proc `=wasMoved`(x: var Game) {.error.}
 
@@ -315,6 +319,7 @@ libraries that you may want to check out:
 
 - `NimForUE <https://github.com/jmgomez/NimForUE>`_ - a Nim plugin for the Unreal Engine 5.
 - `godot-nim <https://github.com/pragmagic/godot-nim>`_ - Nim bindings for the Godot game engine.
+- `nimrodot <https://github.com/chmod222/nimrodot>`_ - Nim Godot 4.x GDExtension wrapper (POC)
 - `nico <https://github.com/ftsf/nico>`_ - a Nim-based game framework inspired by Pico-8.
 - `p5nim <https://github.com/pietroppeter/p5nim>`_ - a processing library for Nim.
 

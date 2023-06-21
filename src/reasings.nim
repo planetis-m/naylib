@@ -252,7 +252,7 @@ func elasticIn*(t, b, c, d: float32): float32 {.inline.} =
     let a = c
     let s = p / 4
     t = t - 1
-    result = -(a * pow(2, 10 * t) * sin((t * d - s) * (2 * PI) / p)) + b
+    result = -(a * pow(2, 10 * t) * sin((t * d - s) * TAU / p)) + b
 
 func elasticOut*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Elastic Out
@@ -265,7 +265,7 @@ func elasticOut*(t, b, c, d: float32): float32 {.inline.} =
     let p = d * 0.3'f32
     let a = c
     let s = p / 4
-    result = a * pow(2, -(10 * t)) * sin((t * d - s) * (2 * PI) / p) + c + b
+    result = a * pow(2, -(10 * t)) * sin((t * d - s) * TAU / p) + c + b
 
 func elasticInOut*(t, b, c, d: float32): float32 {.inline.} =
   ## Ease: Elastic In Out
@@ -280,7 +280,7 @@ func elasticInOut*(t, b, c, d: float32): float32 {.inline.} =
     let s = p / 4
     if t < 1:
       t = t - 1
-      result = -0.5'f32 * (a * pow(2, 10 * t) * sin((t * d - s) * (2 * PI) / p)) + b
+      result = -0.5'f32 * (a * pow(2, 10 * t) * sin((t * d - s) * TAU / p)) + b
     else:
       t = t - 1
-      result = a * pow(2, -10 * t) * sin((t * d - s) * (2 * PI) / p) * 0.5'f32 + c + b
+      result = a * pow(2, -10 * t) * sin((t * d - s) * TAU / p) * 0.5'f32 + c + b
