@@ -139,7 +139,7 @@ type
 """
   helpers = """
 
-proc `=destroy`*(x: var RenderBatch) =
+proc `=destroy`*(x: RenderBatch) =
   unloadRenderBatch(x)
 proc `=dup`*(source: RenderBatch): RenderBatch {.error.}
 proc `=copy`*(dest: var RenderBatch; source: RenderBatch) {.error.}

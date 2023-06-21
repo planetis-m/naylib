@@ -20,9 +20,6 @@ from std/os import `/`, quoteShell
 const
   PkgDir = thisDir().quoteShell
 
-before install:
-  discard
-
 after install:
   when defined(windows):
     let patchPath = PkgDir / "mangle_names.patch"

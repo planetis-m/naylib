@@ -487,7 +487,7 @@ proc loadDrawQuad*() {.importc: "rlLoadDrawQuad".}
 proc elementCount*(x: VertexBuffer): int32 {.inline.} = x.elementCount
 proc bufferCount*(x: RenderBatch): int32 {.inline.} = x.bufferCount
 
-proc `=destroy`*(x: var RenderBatch) =
+proc `=destroy`*(x: RenderBatch) =
   unloadRenderBatch(x)
 proc `=dup`*(source: RenderBatch): RenderBatch {.error.}
 proc `=copy`*(dest: var RenderBatch; source: RenderBatch) {.error.}

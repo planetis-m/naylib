@@ -192,11 +192,11 @@ proc loadImageFromTexture*(texture: Texture2D): Image =
   result = loadImageFromTexturePriv(texture)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from Texture")
 
-proc exportImageToMemory*(image: Image, fileType: string): RArray[byte] =
+proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
   ## Export image to memory buffer
   var len = 0'i32
   let data = exportImageToMemoryPriv(image, fileType.cstring, addr len)
-  result = RArray[byte](len: len, data: cast[ptr UncheckedArray[uint8]](data))
+  result = RArray[uint8](len: len, data: cast[ptr UncheckedArray[uint8]](data))
 
 type
   Pixel* = concept

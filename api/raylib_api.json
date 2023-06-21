@@ -6778,7 +6778,7 @@
     },
     {
       "name": "ImageRotate",
-      "description": "Rotate image by input angle in degrees (-359 to 359) ",
+      "description": "Rotate image by input angle in degrees (-359 to 359)",
       "returnType": "void",
       "params": [
         {
