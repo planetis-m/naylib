@@ -1,6 +1,6 @@
 # Package
 
-version     = "4.5.1"
+version     = "4.6.0"
 author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
@@ -20,7 +20,7 @@ from std/os import `/`, quoteShell
 const
   PkgDir = thisDir().quoteShell
 
-after install:
+before install:
   when defined(windows):
     let patchPath = PkgDir / "mangle_names.patch"
     withDir(PkgDir / "src/raylib"):
