@@ -319,6 +319,7 @@ libraries that you may want to check out:
 
 - `NimForUE <https://github.com/jmgomez/NimForUE>`_ - a Nim plugin for the Unreal Engine 5.
 - `godot-nim <https://github.com/pragmagic/godot-nim>`_ - Nim bindings for the Godot game engine.
+- `sokol-nim <https://github.com/floooh/sokol-nim>`_ - Auto-generated Nim bindings for the sokol headers.
 - `nimrodot <https://github.com/chmod222/nimrodot>`_ - Nim Godot 4.x GDExtension wrapper (POC)
 - `nico <https://github.com/ftsf/nico>`_ - a Nim-based game framework inspired by Pico-8.
 - `p5nim <https://github.com/pietroppeter/p5nim>`_ - a processing library for Nim.

@@ -8,7 +8,7 @@ srcDir      = "src"
 
 # Deps
 
-requires "nim >= 1.9.1"
+requires "nim >= 1.9.5"
 #requires "eminim == 2.8.2"
 
 #import std/distros
