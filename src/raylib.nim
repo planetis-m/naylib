@@ -495,7 +495,8 @@ type
     b*: uint8 ## Color blue value
     a*: uint8 ## Color alpha value
 
-  Rectangle* {.importc, header: "raylib.h", bycopy.} = object ## Rectangle, 4 components
+  Rectangle* {.importc: when defined(windows): "rlRectangle" else: "Rectangle",
+      header: "raylib.h", bycopy.} = object ## Rectangle, 4 components
     x*: float32 ## Rectangle top-left corner position x
     y*: float32 ## Rectangle top-left corner position y
     width*: float32 ## Rectangle width
@@ -761,7 +762,7 @@ const
 proc initWindowPriv(width: int32, height: int32, title: cstring) {.importc: "InitWindow".}
 proc windowShouldClose*(): bool {.importc: "WindowShouldClose".}
   ## Check if KEY_ESCAPE pressed or Close icon pressed
-proc closeWindow*() {.importc: "CloseWindow".}
+proc closeWindow*() {.importc: when defined(windows): "rlCloseWindow" else: "CloseWindow".}
   ## Close window and unload OpenGL context
 proc isWindowReady*(): bool {.importc: "IsWindowReady".}
   ## Check if window has been initialized successfully
@@ -850,7 +851,7 @@ proc pollInputEvents*() {.importc: "PollInputEvents".}
   ## Register all input events
 proc waitTime*(seconds: float) {.importc: "WaitTime".}
   ## Wait for some time (halt program execution)
-proc showCursor*() {.importc: "ShowCursor".}
+proc showCursor*() {.importc: when defined(windows): "rlShowCursor" else: "ShowCursor".}
   ## Shows cursor
 proc hideCursor*() {.importc: "HideCursor".}
   ## Hides cursor

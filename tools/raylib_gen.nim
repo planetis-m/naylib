@@ -537,6 +537,12 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
           lit " {.importc, header: \"raylib.h\", bycopy.} = object"
         elif obj.name in ["Color", "Vector2", "Vector3", "Vector4"]:
           lit "* {.importc, header: \"raylib.h\", completeStruct, bycopy.} = object"
+        elif obj.name in ["Rectangle", "rlRectangle"]:
+          lit "* {.importc: when defined(windows): \"rlRectangle\" else: \"Rectangle\","
+          scope:
+            scope:
+              spaces
+              lit "header: \"raylib.h\", bycopy.} = object"
         else: lit "* {.importc, header: \"raylib.h\", bycopy.} = object"
         doc obj
         scope:
@@ -669,7 +675,13 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
           var baseKind = ""
           let kind = convertType(fnc.returnType, "", many, not isPrivate, baseKind)
           lit kind
-      lit " {.importc: \""
+      lit " {.importc: "
+      if fnc.name in ["ShowCursor", "rlShowCursor", "CloseWindow", "rlCloseWindow"]:
+        lit "when defined(windows): \""
+        if not startsWith(fnc.name, "rl"): lit "rl"
+        ident fnc.name
+        lit "\" else: "
+      lit "\""
       ident fnc.name
       lit "\""
       if hasVarargs:
