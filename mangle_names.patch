@@ -258,10 +258,10 @@ index d02ea2b..1976f11 100644
                  #endif
  
 diff --git a/src/rmodels.c b/src/rmodels.c
-index 73fb023..6d46628 100644
+index 49f9226..6e6741c 100644
 --- a/src/rmodels.c
 +++ b/src/rmodels.c
-@@ -3476,13 +3476,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
+@@ -3475,13 +3475,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
  // Draw a billboard
  void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float size, Color tint)
  {
@@ -277,7 +277,7 @@ index 73fb023..6d46628 100644
  {
      // NOTE: Billboard locked on axis-Y
      Vector3 up = { 0.0f, 1.0f, 0.0f };
-@@ -3490,7 +3490,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector
+@@ -3489,7 +3489,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector
      DrawBillboardPro(camera, texture, source, position, up, size, Vector2Zero(), 0.0f, tint);
  }
  
@@ -287,13 +287,13 @@ index 73fb023..6d46628 100644
      // NOTE: Billboard size will maintain source rectangle aspect ratio, size will represent billboard width
      Vector2 sizeRatio = { size.x*(float)source.width/source.height, size.y };
 diff --git a/src/rshapes.c b/src/rshapes.c
-index 2788864..8ffcb3c 100644
+index d726ff0..c836ffd 100644
 --- a/src/rshapes.c
 +++ b/src/rshapes.c
 @@ -81,7 +81,7 @@
  // Global Variables Definition
  //----------------------------------------------------------------------------------
- Texture2D texShapes = { 1, 1, 1, 1, 7 };                // Texture used on shapes drawing (usually a white pixel)
+ Texture2D texShapes = { 1, 1, 1, 1, 7 };                // Texture used on shapes drawing (white pixel loaded by rlgl)
 -Rectangle texShapesRec = { 0.0f, 0.0f, 1.0f, 1.0f };    // Texture source rectangle used on shapes drawing
 +rlRectangle texShapesRec = { 0.0f, 0.0f, 1.0f, 1.0f };    // Texture source rectangle used on shapes drawing
  
@@ -306,9 +306,18 @@ index 2788864..8ffcb3c 100644
 -void SetShapesTexture(Texture2D texture, Rectangle source)
 +void SetShapesTexture(Texture2D texture, rlRectangle source)
  {
-     texShapes = texture;
-     texShapesRec = source;
-@@ -727,17 +727,17 @@ void DrawRectangle(int posX, int posY, int width, int height, Color color)
+     // Reset texture to default pixel if required
+     // WARNING: Shapes texture should be probably better validated,
+@@ -103,7 +103,7 @@ void SetShapesTexture(Texture2D texture, Rectangle source)
+     if ((texture.id == 0) || (source.width == 0) || (source.height == 0))
+     {
+         texShapes = (Texture2D){ 1, 1, 1, 1, 7 };
+-        texShapesRec = (Rectangle){ 0.0f, 0.0f, 1.0f, 1.0f };
++        texShapesRec = (rlRectangle){ 0.0f, 0.0f, 1.0f, 1.0f };
+     }
+     else
+     {
+@@ -738,17 +738,17 @@ void DrawRectangle(int posX, int posY, int width, int height, Color color)
  // NOTE: On OpenGL 3.3 and ES2 we use QUADS to avoid drawing order issues
  void DrawRectangleV(Vector2 position, Vector2 size, Color color)
  {
@@ -329,7 +338,7 @@ index 2788864..8ffcb3c 100644
  {
      Vector2 topLeft = { 0 };
      Vector2 topRight = { 0 };
-@@ -820,19 +820,19 @@ void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color
+@@ -831,19 +831,19 @@ void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color
  // NOTE: Gradient goes from bottom (color1) to top (color2)
  void DrawRectangleGradientV(int posX, int posY, int width, int height, Color color1, Color color2)
  {
@@ -352,7 +361,7 @@ index 2788864..8ffcb3c 100644
  {
      rlSetTexture(texShapes.id);
  
-@@ -888,7 +888,7 @@ void DrawRectangleLines(int posX, int posY, int width, int height, Color color)
+@@ -899,7 +899,7 @@ void DrawRectangleLines(int posX, int posY, int width, int height, Color color)
  }
  
  // Draw rectangle outline with extended parameters
@@ -361,7 +370,7 @@ index 2788864..8ffcb3c 100644
  {
      if ((lineThick > rec.width) || (lineThick > rec.height))
      {
-@@ -907,10 +907,10 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
+@@ -918,10 +918,10 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
      //   BBBBBBBB
      //
  
@@ -376,7 +385,7 @@ index 2788864..8ffcb3c 100644
  
      DrawRectangleRec(top, color);
      DrawRectangleRec(bottom, color);
-@@ -919,7 +919,7 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
+@@ -930,7 +930,7 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
  }
  
  // Draw rectangle with rounded edges
@@ -385,7 +394,7 @@ index 2788864..8ffcb3c 100644
  {
      // Not a rounded rectangle
      if ((roundness <= 0.0f) || (rec.width < 1) || (rec.height < 1 ))
-@@ -1137,14 +1137,14 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
+@@ -1148,14 +1148,14 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
  }
  
  // Draw rectangle with rounded edges outline
@@ -402,7 +411,7 @@ index 2788864..8ffcb3c 100644
          return;
      }
  
-@@ -1596,7 +1596,7 @@ void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, fl
+@@ -1607,7 +1607,7 @@ void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, fl
  //----------------------------------------------------------------------------------
  
  // Check if point is inside rectangle
@@ -411,7 +420,7 @@ index 2788864..8ffcb3c 100644
  {
      bool collision = false;
  
-@@ -1655,7 +1655,7 @@ bool CheckCollisionPointPoly(Vector2 point, Vector2 *points, int pointCount)
+@@ -1666,7 +1666,7 @@ bool CheckCollisionPointPoly(Vector2 point, Vector2 *points, int pointCount)
  }
  
  // Check collision between two rectangles
@@ -420,7 +429,7 @@ index 2788864..8ffcb3c 100644
  {
      bool collision = false;
  
-@@ -1682,7 +1682,7 @@ bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, floa
+@@ -1693,7 +1693,7 @@ bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, floa
  
  // Check collision between circle and rectangle
  // NOTE: Reviewed version to take into account corner limit case
@@ -429,7 +438,7 @@ index 2788864..8ffcb3c 100644
  {
      bool collision = false;
  
-@@ -1756,9 +1756,9 @@ bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshol
+@@ -1767,9 +1767,9 @@ bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshol
  }
  
  // Get collision rectangle for two rectangles collision
@@ -558,7 +567,7 @@ index dce838c..916b4f0 100644
          // Save data properly in sprite font
          font.glyphs[i].value = charId;
 diff --git a/src/rtextures.c b/src/rtextures.c
-index b6186d9..4ece9ca 100644
+index 2d422b1..5e2660f 100644
 --- a/src/rtextures.c
 +++ b/src/rtextures.c
 @@ -1058,7 +1058,7 @@ Image ImageCopy(Image image)
