@@ -1,4 +1,4 @@
-import eminim, std/[algorithm, strscans, streams]
+import eminim, std/[algorithm, strscans, streams, json]
 import strutils except indent
 
 const
@@ -45,7 +45,7 @@ type
   DefineInfo* = object
     name*: string
     `type`*: DefineType
-    value*: string
+    value*: JsonNode
     description*: string
     isHex*: bool
 

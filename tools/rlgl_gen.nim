@@ -534,7 +534,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
     if otp != nil: otp.close()
 
 const
-  rlglApi = "../api/rlgl_api.json"
+  rlglApi = "../api/rlgl.json"
   outputname = "../src/rlgl.nim"
 
 proc main =

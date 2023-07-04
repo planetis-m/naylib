@@ -117,7 +117,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
     if otp != nil: otp.close()
 
 const
-  raymathApi = "../api/raymath_api.json"
+  raymathApi = "../api/raymath.json"
   outputname = "../src/raymath.nim"
 
 proc main =

@@ -27,7 +27,7 @@ proc genApiJson(lib, prefix: string) =
     exec("cc " & src & " -o " & exe)
     mkDir(ApiDir)
     let header = RaylibDir / "src" / (lib & ".h")
-    let apiJson = ApiDir / (lib & "_api.json")
+    let apiJson = ApiDir / (lib & ".json")
     # Generate {lib} API JSON file
     exec(/.exe & " -f JSON " & (if prefix != "": "-d " & prefix else: "") &
         " -i " & header & " -o " & apiJson)
