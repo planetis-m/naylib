@@ -85,13 +85,13 @@ DecodeDataBase64   base64.decode
 Misc
 ~~~~
 
-================== ============================== ========
+================== ============================== =========================
 raylib function    Native alternative             Notes
-================== ============================== ========
+================== ============================== =========================
 GetRandomValue     random.rand
 SetRandomSeed      random.randomize
 OpenURL            browsers.openDefaultBrowser
 PI (C macros)      math.PI
-DEG2RAD            math.degToRad
+DEG2RAD            math.degToRad                  A function not a constant
 RAD2DEG            math.radToDeg
-================== ============================== ========
+================== ============================== =========================
