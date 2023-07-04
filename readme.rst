@@ -80,7 +80,7 @@ You can find instructions on how to install OpenJDK, Android SDK, and Android ND
 
 Note that you can use the latest versions of the software. Alternatively, on Arch Linux,
 you can install the following AUR packages instead:
-``android-sdk android-sdk-build-tools android-sdk-platform-tools android-ndk android-platform(-29)``.
+``android-sdk android-sdk-build-tools android-sdk-platform-tools android-ndk android-platform(-33)``.
 
 **2. Fork the** `planetis-m/raylib-game-template <https://github.com/planetis-m/raylib-game-template>`_ **repository.**
 
@@ -106,8 +106,8 @@ For a step-by-step video tutorial on getting started with naylib for Android, yo
 
 **4. Install and run the APK on your Android device.**
 
-Enable USB Debugging on your Android device, plug it into your computer, and install the
-package with the following command:
+Enable USB Debugging on your Android device, plug it into your computer, select File Transfer,
+accept the RSA key and install the package with the following command:
 
 .. code-block:: bash
 
