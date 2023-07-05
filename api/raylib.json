@@ -3275,6 +3275,11 @@
       ]
     },
     {
+      "name": "SetWindowFocused",
+      "description": "Set window focused (only PLATFORM_DESKTOP)",
+      "returnType": "void"
+    },
+    {
       "name": "GetWindowHandle",
       "description": "Get native window handle",
       "returnType": "void *"
@@ -8305,6 +8310,17 @@
         {
           "type": "Color",
           "name": "tint"
+        }
+      ]
+    },
+    {
+      "name": "SetTextLineSpacing",
+      "description": "Set vertical line spacing when drawing with line-breaks",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "spacing"
         }
       ]
     },

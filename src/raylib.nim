@@ -807,6 +807,8 @@ proc setWindowSize*(width: int32, height: int32) {.importc: "SetWindowSize".}
   ## Set window dimensions
 proc setWindowOpacity*(opacity: float32) {.importc: "SetWindowOpacity".}
   ## Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
+proc setWindowFocused*() {.importc: "SetWindowFocused".}
+  ## Set window focused (only PLATFORM_DESKTOP)
 proc getWindowHandle*(): pointer {.importc: "GetWindowHandle".}
   ## Get native window handle
 proc getScreenWidth*(): int32 {.importc: "GetScreenWidth".}
@@ -1324,8 +1326,6 @@ proc colorAlpha*(color: Color, alpha: float32): Color {.importc: "ColorAlpha".}
   ## Get color with alpha applied, alpha goes from 0.0f to 1.0f
 proc colorAlphaBlend*(dst: Color, src: Color, tint: Color): Color {.importc: "ColorAlphaBlend".}
   ## Get src alpha-blended into dst color with tint
-proc getColor*(hexValue: uint32): Color {.importc: "GetColor".}
-  ## Get Color structure from hexadecimal value
 proc getPixelColorPriv(srcPtr: pointer, format: PixelFormat): Color {.importc: "GetPixelColor".}
 proc setPixelColorPriv(dstPtr: pointer, color: Color, format: PixelFormat) {.importc: "SetPixelColor".}
 proc getPixelDataSize*(width: int32, height: int32, format: PixelFormat): int32 {.importc: "GetPixelDataSize".}
@@ -1354,6 +1354,8 @@ proc drawText*(font: Font, text: cstring, position: Vector2, origin: Vector2, ro
 proc drawTextCodepoint*(font: Font, codepoint: Rune, position: Vector2, fontSize: float32, tint: Color) {.importc: "DrawTextCodepoint".}
   ## Draw one character (codepoint)
 proc drawTextCodepointsPriv(font: Font, codepoints: ptr UncheckedArray[int32], count: int32, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextCodepoints".}
+proc setTextLineSpacing*(spacing: int32) {.importc: "SetTextLineSpacing".}
+  ## Set vertical line spacing when drawing with line-breaks
 proc measureText*(text: cstring, fontSize: int32): int32 {.importc: "MeasureText".}
   ## Measure string width for default font
 proc measureText*(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
@@ -2185,6 +2187,15 @@ proc loadModelFromMesh*(mesh: sink Mesh): Model =
   result = loadModelFromMeshPriv(mesh)
   wasMoved(mesh)
   if not isModelReady(result): raiseRaylibError("Failed to load Model from Mesh")
+
+proc getColor*(hexValue: uint32): Color =
+  ## Get Color structure from hexadecimal value
+  result = Color(
+    r: uint8(hexValue shr 24 and 0xff),
+    g: uint8(hexValue shr 16 and 0xff),
+    b: uint8(hexValue shr 8 and 0xff),
+    a: uint8(hexValue and 0xff)
+  )
 
 template drawing*(body: untyped) =
   ## Setup canvas (framebuffer) to start drawing

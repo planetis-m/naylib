@@ -347,6 +347,7 @@ const
     "GetRandomValue",
     "SetRandomSeed",
     "OpenURL",
+    "GetColor",
     # Files management functions
     "ExportDataAsCode",
     "LoadFileData",

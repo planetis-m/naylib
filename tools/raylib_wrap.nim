@@ -412,6 +412,15 @@ proc loadModelFromMesh*(mesh: sink Mesh): Model =
   wasMoved(mesh)
   if not isModelReady(result): raiseRaylibError("Failed to load Model from Mesh")
 
+proc getColor*(hexValue: uint32): Color =
+  ## Get Color structure from hexadecimal value
+  result = Color(
+    r: uint8(hexValue shr 24 and 0xff),
+    g: uint8(hexValue shr 16 and 0xff),
+    b: uint8(hexValue shr 8 and 0xff),
+    a: uint8(hexValue and 0xff)
+  )
+
 template drawing*(body: untyped) =
   ## Setup canvas (framebuffer) to start drawing
   beginDrawing()
