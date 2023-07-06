@@ -109,8 +109,9 @@ func distanceSqr*(v1, v2: Vector2): float32 {.inline.} =
 func angle*(v1: Vector2; v2: Vector2): float32 {.inline.} =
   ## Calculate angle between two vectors
   ## NOTE: Angle is calculated from origin point (0, 0)
-  ## Current implementation should be aligned with glm::angle
-  result = arccos(clamp(v1.x * v2.x + v1.y * v2.y, -1, 1))
+  let dot = v1.x*v2.x + v1.y*v2.y
+  let det = v1.x*v2.y - v1.y*v2.x
+  result = -arctan2(det, dot)
 
 func lineAngle*(start, `end`: Vector2): float32 {.inline.} =
   ## Calculate angle defined by a two vectors line
