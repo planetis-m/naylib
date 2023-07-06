@@ -115,6 +115,25 @@ accept the RSA key and install the package with the following command:
 
 Now you should be able to run your raylib game on your Android device!
 
+Define a PixelFormat for your custom type
+-----------------------------------------
+
+To make your external type compatible with the ``Pixel`` concept, you need to define a
+template named ``kind`` that returns the corresponding pixel format for your external type.
+
+For example, if you have a type called ``RGBAPixel`` that represents a 32-bit color value,
+you can write:
+
+.. code-block:: nim
+
+  from raylib import PixelFormat
+
+  type RGBAPixel* = distinct byte
+
+  template kind*(x: typedesc[RGBAPixel]): PixelFormat = UncompressedR8g8b8a8
+
+This way, you can use ``RGBAPixel`` as a ``Pixel`` in your code.
+
 How to properly call closeWindow
 --------------------------------
 
@@ -295,22 +314,6 @@ Integration of External Data Types with ShaderV and Pixel
 
 The concepts of ``ShaderV`` and ``Pixel`` permit the integration of external data types
 into procs that employ them, such as ``setShaderValue`` and ``updateTexture``.
-
-To make your external type compatible with the ``Pixel`` concept, you need to define a
-template named ``kind`` that returns the corresponding pixel format for your external type.
-
-For example, if you have a type called ``RGBAPixel`` that represents a 32-bit color value,
-you can write:
-
-.. code-block:: nim
-
-  from raylib import PixelFormat
-
-  type RGBAPixel* = distinct byte
-
-  template kind*(x: typedesc[RGBAPixel]): PixelFormat = UncompressedR8g8b8a8
-
-This way, you can use ``RGBAPixel`` as a ``Pixel`` in your code.
 
 Using IsReady() in Asset Loading
 --------------------------------
