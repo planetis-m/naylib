@@ -296,9 +296,8 @@ Integration of External Data Types with ShaderV and Pixel
 The concepts of ``ShaderV`` and ``Pixel`` permit the integration of external data types
 into procs that employ them, such as ``setShaderValue`` and ``updateTexture``.
 
-To make your external type compatible with the ``Pixel`` concept, you need to import the
-``PixelFormat`` enum from the ``raylib`` module and define a template that returns the
-corresponding pixel format for your external type.
+To make your external type compatible with the ``Pixel`` concept, you need to define a
+template named ``kind`` that returns the corresponding pixel format for your external type.
 
 For example, if you have a type called ``RGBAPixel`` that represents a 32-bit color value,
 you can write:
