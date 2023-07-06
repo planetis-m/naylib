@@ -213,6 +213,16 @@ proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: 
   result = loadTextureFromImagePriv(image.Image)
   if not isTextureReady(result): raiseRaylibError("Failed to load Texture from buffer")
 
+proc loadTextureFromData*(pixels: openArray[byte], width: int32, height: int32,
+    format = PixelFormat.UncompressedR8g8b8a8): Texture =
+  ## Load texture using pixels
+  assert getPixelDataSize(width, height, format) == pixels.len,
+      "Mismatch between expected and actual data size"
+  let image = Image(data: cast[pointer](pixels), width: width, height: height,
+      format: format, mipmaps: 1).EmbeddedImage
+  result = loadTextureFromImagePriv(image.Image)
+  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from buffer")
+
 proc loadTexture*(fileName: string): Texture2D =
   ## Load texture from file into GPU memory (VRAM)
   result = loadTexturePriv(fileName.cstring)
