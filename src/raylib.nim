@@ -1983,7 +1983,10 @@ template kind*(x: typedesc[Color]): PixelFormat = UncompressedR8g8b8a8
 template toColorArray*(a: openArray[byte]): untyped =
   ## Note: that `a` should be properly formatted, with a byte representation that aligns
   ## with the memory layout of the Color type.
-  toOpenArray(cast[ptr UncheckedArray[Color]](addr a[0]), 0, a.len div sizeof(Color) - 1)
+  let newLen = a.len div sizeof(Color)
+  assert(newLen * sizeof(Color) == a.len,
+      "The length of the byte array is not a multiple of the size of the Color type")
+  toOpenArray(cast[ptr UncheckedArray[Color]](addr a[0]), 0, newLen - 1)
 
 proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: int32): Texture =
   ## Load texture using pixels
