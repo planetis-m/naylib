@@ -204,22 +204,17 @@ type
 
 template kind*(x: typedesc[Color]): PixelFormat = UncompressedR8g8b8a8
 
+template toColorArray*(a: openArray[byte]): untyped =
+  ## Note: that `a` should be properly formatted, with a byte representation that aligns
+  ## with the memory layout of the Color type.
+  toOpenArray(cast[ptr UncheckedArray[Color]](addr a[0]), 0, a.len div sizeof(Color) - 1)
+
 proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: int32): Texture =
   ## Load texture using pixels
   assert getPixelDataSize(width, height, kind(T)) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
   let image = Image(data: cast[pointer](pixels), width: width, height: height,
       format: kind(T), mipmaps: 1).EmbeddedImage
-  result = loadTextureFromImagePriv(image.Image)
-  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from buffer")
-
-proc loadTextureFromData*(pixels: openArray[byte], width: int32, height: int32,
-    format = PixelFormat.UncompressedR8g8b8a8): Texture =
-  ## Load texture using pixels
-  assert getPixelDataSize(width, height, format) == pixels.len,
-      "Mismatch between expected and actual data size"
-  let image = Image(data: cast[pointer](pixels), width: width, height: height,
-      format: format, mipmaps: 1).EmbeddedImage
   result = loadTextureFromImagePriv(image.Image)
   if not isTextureReady(result): raiseRaylibError("Failed to load Texture from buffer")
 
@@ -243,27 +238,12 @@ proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
   result = loadRenderTexturePriv(width, height)
   if not isRenderTextureReady(result): raiseRaylibError("Failed to load RenderTexture")
 
-proc updateTexture*(texture: Texture2D, pixels: openArray[byte], format = PixelFormat.UncompressedR8g8b8a8) =
-  ## Update GPU texture with new data, bytes overload
-  assert texture.format == format, "Incompatible texture format"
-  assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(byte),
-      "Mismatch between expected and actual data size"
-  updateTexturePriv(texture, cast[pointer](pixels))
-
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   ## Update GPU texture with new data
   assert texture.format == kind(T), "Incompatible texture format"
   assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
   updateTexturePriv(texture, cast[pointer](pixels))
-
-proc updateTexture*(texture: Texture2D, rec: Rectangle, pixels: openArray[byte],
-    format = PixelFormat.UncompressedR8g8b8a8) =
-  ## Update GPU texture rectangle with new data
-  assert texture.format == format, "Incompatible texture format"
-  assert getPixelDataSize(rec.width.int32, rec.height.int32, texture.format) == pixels.len*sizeof(byte),
-      "Mismatch between expected and actual data size"
-  updateTexturePriv(texture, rec, cast[pointer](pixels))
 
 proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
   ## Update GPU texture rectangle with new data
