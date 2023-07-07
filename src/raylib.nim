@@ -2033,10 +2033,12 @@ proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openAr
 
 proc getPixelColor*[T: Pixel](pixel: T): Color =
   ## Get Color from a source pixel pointer of certain format
+  assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
   getPixelColorPriv(addr pixel, kind(T))
 
 proc setPixelColor*[T: Pixel](pixel: var T, color: Color) =
   ## Set color formatted into destination pixel pointer
+  assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
   setPixelColorPriv(addr pixel, color, kind(T))
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; fontChars: openArray[int32];
