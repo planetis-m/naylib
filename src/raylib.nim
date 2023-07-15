@@ -15,7 +15,7 @@ when defined(emscripten):
     {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
 
   type emCallbackFunc* = proc() {.cdecl.}
-  proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: cint, simulateInfiniteLoop: cint) {.
+  proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: int32, simulateInfiniteLoop: int32) {.
       cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
 
 elif defined(android):
