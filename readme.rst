@@ -301,7 +301,7 @@ reintroduced as it is more efficient and easier to wrap, requiring fewer copies.
 Using Embedded Images and Waves in Naylib
 -----------------------------------------
 
-Use the ``toEmbedded`` procs to get an ``EmbeddedImage`` or ``EmbeddedWave``, which are
+Use the ``toWeak*`` procs to get an ``WeakImage`` or ``WeakWave``, which are
 not memory managed and can be embedded directly into source code. To use this feature,
 first export the image or wave as code using the ``exportImageAsCode`` or
 ``exportWaveAsCode`` procs, and then translate the output to Nim using a tool such as
