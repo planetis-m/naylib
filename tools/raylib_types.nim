@@ -1,24 +1,24 @@
 
 type
-  EmbeddedImage* = distinct Image
-  EmbeddedWave* = distinct Wave
-  EmbeddedFont* = distinct Font
+  WeakImage* = distinct Image
+  WeakWave* = distinct Wave
+  WeakFont* = distinct Font
 
   ShaderLocsPtr* = distinct typeof(Shader.locs)
 
-proc `=destroy`*(x: EmbeddedImage) = discard
-proc `=dup`*(source: EmbeddedImage): EmbeddedImage {.nodestroy.} = source
-proc `=copy`*(dest: var EmbeddedImage; source: EmbeddedImage) {.nodestroy.} =
+proc `=destroy`*(x: WeakImage) = discard
+proc `=dup`*(source: WeakImage): WeakImage {.nodestroy.} = source
+proc `=copy`*(dest: var WeakImage; source: WeakImage) {.nodestroy.} =
   dest = source
 
-proc `=destroy`*(x: EmbeddedWave) = discard
-proc `=dup`*(source: EmbeddedWave): EmbeddedWave {.nodestroy.} = source
-proc `=copy`*(dest: var EmbeddedWave; source: EmbeddedWave) {.nodestroy.} =
+proc `=destroy`*(x: WeakWave) = discard
+proc `=dup`*(source: WeakWave): WeakWave {.nodestroy.} = source
+proc `=copy`*(dest: var WeakWave; source: WeakWave) {.nodestroy.} =
   dest = source
 
-proc `=destroy`*(x: EmbeddedFont) = discard
-proc `=dup`*(source: EmbeddedFont): EmbeddedFont {.nodestroy.} = source
-proc `=copy`*(dest: var EmbeddedFont; source: EmbeddedFont) {.nodestroy.} =
+proc `=destroy`*(x: WeakFont) = discard
+proc `=dup`*(source: WeakFont): WeakFont {.nodestroy.} = source
+proc `=copy`*(dest: var WeakFont; source: WeakFont) {.nodestroy.} =
   dest = source
 
 proc `=destroy`*(x: MaterialMap) = discard

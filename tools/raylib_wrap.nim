@@ -22,11 +22,11 @@ proc setTraceLogCallback*(callback: TraceLogCallback) =
   traceLogCallback = callback
   setTraceLogCallbackPriv(wrapperTraceLogCallback)
 
-proc toEmbedded*(data: openArray[byte], width, height: int32, format: PixelFormat): EmbeddedImage {.inline.} =
-  Image(data: addr data, width: width, height: height, mipmaps: 1, format: format).EmbeddedImage
+proc toWeakImage*(data: openArray[byte], width, height: int32, format: PixelFormat): WeakImage {.inline.} =
+  Image(data: addr data, width: width, height: height, mipmaps: 1, format: format).WeakImage
 
-proc toEmbedded*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): EmbeddedWave {.inline.} =
-  Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).EmbeddedWave
+proc toWeakWave*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): WeakWave {.inline.} =
+  Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).WeakWave
 
 proc initWindow*(width: int32, height: int32, title: string) =
   ## Initialize window and OpenGL context
@@ -217,7 +217,7 @@ proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: 
   assert getPixelDataSize(width, height, kind(T)) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
   let image = Image(data: cast[pointer](pixels), width: width, height: height,
-      format: kind(T), mipmaps: 1).EmbeddedImage
+      format: kind(T), mipmaps: 1).WeakImage
   result = loadTextureFromImagePriv(image.Image)
   if not isTextureReady(result): raiseRaylibError("Failed to load Texture from buffer")
 

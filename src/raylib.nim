@@ -1606,25 +1606,25 @@ proc detachAudioMixedProcessor*(processor: AudioCallback) {.importc: "DetachAudi
 {.pop.}
 
 type
-  EmbeddedImage* = distinct Image
-  EmbeddedWave* = distinct Wave
-  EmbeddedFont* = distinct Font
+  WeakImage* = distinct Image
+  WeakWave* = distinct Wave
+  WeakFont* = distinct Font
 
   ShaderLocsPtr* = distinct typeof(Shader.locs)
 
-proc `=destroy`*(x: EmbeddedImage) = discard
-proc `=dup`*(source: EmbeddedImage): EmbeddedImage {.nodestroy.} = source
-proc `=copy`*(dest: var EmbeddedImage; source: EmbeddedImage) {.nodestroy.} =
+proc `=destroy`*(x: WeakImage) = discard
+proc `=dup`*(source: WeakImage): WeakImage {.nodestroy.} = source
+proc `=copy`*(dest: var WeakImage; source: WeakImage) {.nodestroy.} =
   dest = source
 
-proc `=destroy`*(x: EmbeddedWave) = discard
-proc `=dup`*(source: EmbeddedWave): EmbeddedWave {.nodestroy.} = source
-proc `=copy`*(dest: var EmbeddedWave; source: EmbeddedWave) {.nodestroy.} =
+proc `=destroy`*(x: WeakWave) = discard
+proc `=dup`*(source: WeakWave): WeakWave {.nodestroy.} = source
+proc `=copy`*(dest: var WeakWave; source: WeakWave) {.nodestroy.} =
   dest = source
 
-proc `=destroy`*(x: EmbeddedFont) = discard
-proc `=dup`*(source: EmbeddedFont): EmbeddedFont {.nodestroy.} = source
-proc `=copy`*(dest: var EmbeddedFont; source: EmbeddedFont) {.nodestroy.} =
+proc `=destroy`*(x: WeakFont) = discard
+proc `=dup`*(source: WeakFont): WeakFont {.nodestroy.} = source
+proc `=copy`*(dest: var WeakFont; source: WeakFont) {.nodestroy.} =
   dest = source
 
 proc `=destroy`*(x: MaterialMap) = discard
@@ -1798,11 +1798,11 @@ proc setTraceLogCallback*(callback: TraceLogCallback) =
   traceLogCallback = callback
   setTraceLogCallbackPriv(wrapperTraceLogCallback)
 
-proc toEmbedded*(data: openArray[byte], width, height: int32, format: PixelFormat): EmbeddedImage {.inline.} =
-  Image(data: addr data, width: width, height: height, mipmaps: 1, format: format).EmbeddedImage
+proc toWeakImage*(data: openArray[byte], width, height: int32, format: PixelFormat): WeakImage {.inline.} =
+  Image(data: addr data, width: width, height: height, mipmaps: 1, format: format).WeakImage
 
-proc toEmbedded*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): EmbeddedWave {.inline.} =
-  Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).EmbeddedWave
+proc toWeakWave*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): WeakWave {.inline.} =
+  Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).WeakWave
 
 proc initWindow*(width: int32, height: int32, title: string) =
   ## Initialize window and OpenGL context
@@ -1993,7 +1993,7 @@ proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: 
   assert getPixelDataSize(width, height, kind(T)) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
   let image = Image(data: cast[pointer](pixels), width: width, height: height,
-      format: kind(T), mipmaps: 1).EmbeddedImage
+      format: kind(T), mipmaps: 1).WeakImage
   result = loadTextureFromImagePriv(image.Image)
   if not isTextureReady(result): raiseRaylibError("Failed to load Texture from buffer")
 
