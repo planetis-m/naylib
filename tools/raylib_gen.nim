@@ -25,7 +25,7 @@ when defined(emscripten):
     {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
 
   type emCallbackFunc* = proc() {.cdecl.}
-  proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: int32, simulateInfiniteLoop: int32) {.
+  proc emscriptenSetMainLoop*(f: emCallbackFunc, fps, simulateInfiniteLoop: int32) {.
       cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
 
 elif defined(android):
@@ -349,6 +349,8 @@ const
     "GetRandomValue",
     "SetRandomSeed",
     "OpenURL",
+    "Fade",
+    "ColorToInt",
     "GetColor",
     # Files management functions
     "ExportDataAsCode",

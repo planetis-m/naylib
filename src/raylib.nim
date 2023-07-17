@@ -15,7 +15,7 @@ when defined(emscripten):
     {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
 
   type emCallbackFunc* = proc() {.cdecl.}
-  proc emscriptenSetMainLoop*(f: emCallbackFunc, fps: int32, simulateInfiniteLoop: int32) {.
+  proc emscriptenSetMainLoop*(f: emCallbackFunc, fps, simulateInfiniteLoop: int32) {.
       cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
 
 elif defined(android):
@@ -1306,10 +1306,6 @@ proc drawTexture*(texture: Texture2D, source: Rectangle, dest: Rectangle, origin
   ## Draw a part of a texture defined by a rectangle with 'pro' parameters
 proc drawTextureNPatch*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch".}
   ## Draws a texture (or part of it) that stretches or shrinks nicely
-proc fade*(color: Color, alpha: float32): Color {.importc: "Fade".}
-  ## Get color with alpha applied, alpha goes from 0.0f to 1.0f
-proc colorToInt*(color: Color): int32 {.importc: "ColorToInt".}
-  ## Get hexadecimal value for a Color
 proc colorNormalize*(color: Color): Vector4 {.importc: "ColorNormalize".}
   ## Get Color normalized as float [0..1]
 proc colorFromNormalized*(normalized: Vector4): Color {.importc: "ColorFromNormalized".}
@@ -2184,6 +2180,17 @@ proc loadModelFromMesh*(mesh: sink Mesh): Model =
   result = loadModelFromMeshPriv(mesh)
   wasMoved(mesh)
   if not isModelReady(result): raiseRaylibError("Failed to load Model from Mesh")
+
+proc fade*(color: Color, alpha: float32): Color =
+  ## Get color with alpha applied, alpha goes from 0.0 to 1.0
+  var alpha = alpha
+  if alpha < 0: alpha = 0
+  elif alpha > 1: alpha = 1
+  Color(r: color.r, g: color.g, b: color.b, a: uint8(255*alpha))
+
+proc colorToInt*(color: Color): int32 =
+  ## Get hexadecimal value for a Color
+  (color.r.int32 shl 24) or (color.g.int32 shl 16) or (color.b.int32 shl 8) or color.a.int32
 
 proc getColor*(hexValue: uint32): Color =
   ## Get Color structure from hexadecimal value

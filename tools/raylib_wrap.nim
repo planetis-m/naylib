@@ -407,6 +407,17 @@ proc loadModelFromMesh*(mesh: sink Mesh): Model =
   wasMoved(mesh)
   if not isModelReady(result): raiseRaylibError("Failed to load Model from Mesh")
 
+proc fade*(color: Color, alpha: float32): Color =
+  ## Get color with alpha applied, alpha goes from 0.0 to 1.0
+  var alpha = alpha
+  if alpha < 0: alpha = 0
+  elif alpha > 1: alpha = 1
+  Color(r: color.r, g: color.g, b: color.b, a: uint8(255*alpha))
+
+proc colorToInt*(color: Color): int32 =
+  ## Get hexadecimal value for a Color
+  (color.r.int32 shl 24) or (color.g.int32 shl 16) or (color.b.int32 shl 8) or color.a.int32
+
 proc getColor*(hexValue: uint32): Color =
   ## Get Color structure from hexadecimal value
   result = Color(
