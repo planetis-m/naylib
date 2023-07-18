@@ -2183,9 +2183,7 @@ proc loadModelFromMesh*(mesh: sink Mesh): Model =
 
 proc fade*(color: Color, alpha: float32): Color =
   ## Get color with alpha applied, alpha goes from 0.0 to 1.0
-  var alpha = alpha
-  if alpha < 0: alpha = 0
-  elif alpha > 1: alpha = 1
+  let alpha = clamp(alpha, 0, 1)
   Color(r: color.r, g: color.g, b: color.b, a: uint8(255*alpha))
 
 proc colorToInt*(color: Color): int32 =
