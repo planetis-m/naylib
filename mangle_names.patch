@@ -194,7 +194,7 @@ index f9f3662..f09ca81 100644
  // Mesh management functions
  RLAPI void UploadMesh(Mesh *mesh, bool dynamic);                                            // Upload mesh vertex data in GPU and provide VAO/VBO ids
 diff --git a/src/rcore.c b/src/rcore.c
-index 6fd7a4f..3e962ba 100644
+index 45495bb..56878da 100644
 --- a/src/rcore.c
 +++ b/src/rcore.c
 @@ -359,7 +359,7 @@ typedef struct {
@@ -244,7 +244,7 @@ index 6fd7a4f..3e962ba 100644
  {
  #if defined(PLATFORM_DESKTOP)
      glfwSetInputMode(CORE.Window.handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-@@ -5723,10 +5723,10 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
+@@ -5729,10 +5729,10 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
                      // Load default font
                      // WARNING: External function: Module required: rtext
                      LoadFontDefault();
@@ -287,7 +287,7 @@ index 49f9226..6e6741c 100644
      // NOTE: Billboard size will maintain source rectangle aspect ratio, size will represent billboard width
      Vector2 sizeRatio = { size.x*(float)source.width/source.height, size.y };
 diff --git a/src/rshapes.c b/src/rshapes.c
-index d726ff0..c836ffd 100644
+index 86e998a..8179a9f 100644
 --- a/src/rshapes.c
 +++ b/src/rshapes.c
 @@ -81,7 +81,7 @@
@@ -394,7 +394,7 @@ index d726ff0..c836ffd 100644
  {
      // Not a rounded rectangle
      if ((roundness <= 0.0f) || (rec.width < 1) || (rec.height < 1 ))
-@@ -1148,14 +1148,14 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
+@@ -1155,14 +1155,14 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
  }
  
  // Draw rectangle with rounded edges outline
@@ -411,7 +411,7 @@ index d726ff0..c836ffd 100644
          return;
      }
  
-@@ -1607,7 +1607,7 @@ void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, fl
+@@ -1625,7 +1625,7 @@ void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, fl
  //----------------------------------------------------------------------------------
  
  // Check if point is inside rectangle
@@ -420,7 +420,7 @@ index d726ff0..c836ffd 100644
  {
      bool collision = false;
  
-@@ -1666,7 +1666,7 @@ bool CheckCollisionPointPoly(Vector2 point, Vector2 *points, int pointCount)
+@@ -1684,7 +1684,7 @@ bool CheckCollisionPointPoly(Vector2 point, Vector2 *points, int pointCount)
  }
  
  // Check collision between two rectangles
@@ -429,7 +429,7 @@ index d726ff0..c836ffd 100644
  {
      bool collision = false;
  
-@@ -1693,7 +1693,7 @@ bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, floa
+@@ -1711,7 +1711,7 @@ bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, floa
  
  // Check collision between circle and rectangle
  // NOTE: Reviewed version to take into account corner limit case
@@ -438,7 +438,7 @@ index d726ff0..c836ffd 100644
  {
      bool collision = false;
  
-@@ -1767,9 +1767,9 @@ bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshol
+@@ -1785,9 +1785,9 @@ bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshol
  }
  
  // Get collision rectangle for two rectangles collision
@@ -451,10 +451,10 @@ index d726ff0..c836ffd 100644
      float left = (rec1.x > rec2.x)? rec1.x : rec2.x;
      float right1 = rec1.x + rec1.width;
 diff --git a/src/rtext.c b/src/rtext.c
-index 3b21a93..c1a6e08 100644
+index a7d9903..a1b8d30 100644
 --- a/src/rtext.c
 +++ b/src/rtext.c
-@@ -229,7 +229,7 @@ extern void LoadFontDefault(void)
+@@ -234,7 +234,7 @@ extern void LoadFontDefault(void)
      // Allocate space for our characters info data
      // NOTE: This memory must be freed at end! --> Done by CloseWindow()
      defaultFont.glyphs = (GlyphInfo *)RL_MALLOC(defaultFont.glyphCount*sizeof(GlyphInfo));
@@ -463,7 +463,7 @@ index 3b21a93..c1a6e08 100644
  
      int currentLine = 0;
      int currentPosX = charsDivisor;
-@@ -384,7 +384,7 @@ Font LoadFontFromImage(Image image, Color key, int firstChar)
+@@ -389,7 +389,7 @@ Font LoadFontFromImage(Image image, Color key, int firstChar)
      // We allocate a temporal arrays for chars data measures,
      // once we get the actual number of chars, we copy data to a sized arrays
      int tempCharValues[MAX_GLYPHS_FROM_IMAGE] = { 0 };
@@ -472,7 +472,7 @@ index 3b21a93..c1a6e08 100644
  
      Color *pixels = LoadImageColors(image);
  
-@@ -464,7 +464,7 @@ Font LoadFontFromImage(Image image, Color key, int firstChar)
+@@ -469,7 +469,7 @@ Font LoadFontFromImage(Image image, Color key, int firstChar)
      // We got tempCharValues and tempCharsRecs populated with chars data
      // Now we move temp data to sized charValues and charRecs arrays
      font.glyphs = (GlyphInfo *)RL_MALLOC(font.glyphCount*sizeof(GlyphInfo));
@@ -481,7 +481,7 @@ index 3b21a93..c1a6e08 100644
  
      for (int i = 0; i < font.glyphCount; i++)
      {
-@@ -674,7 +674,7 @@ GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSiz
+@@ -679,7 +679,7 @@ GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSiz
  // Generate image font atlas using chars info
  // NOTE: Packing method: 0-Default, 1-Skyline
  #if defined(SUPPORT_FILEFORMAT_TTF)
@@ -490,7 +490,7 @@ index 3b21a93..c1a6e08 100644
  {
      Image atlas = { 0 };
  
-@@ -690,7 +690,7 @@ Image GenImageFontAtlas(const GlyphInfo *chars, Rectangle **charRecs, int glyphC
+@@ -695,7 +695,7 @@ Image GenImageFontAtlas(const GlyphInfo *chars, Rectangle **charRecs, int glyphC
      glyphCount = (glyphCount > 0)? glyphCount : 95;
  
      // NOTE: Rectangles memory is loaded here!
@@ -499,7 +499,7 @@ index 3b21a93..c1a6e08 100644
  
      // Calculate image size based on total glyph width and glyph row count
      int totalWidth = 0;
-@@ -961,7 +961,7 @@ bool ExportFontAsCode(Font font, const char *fileName)
+@@ -978,7 +978,7 @@ bool ExportFontAsCode(Font font, const char *fileName)
  
      // Save font recs data
      byteCount += sprintf(txtData + byteCount, "// Font characters rectangles data\n");
@@ -508,7 +508,7 @@ index 3b21a93..c1a6e08 100644
      for (int i = 0; i < font.glyphCount; i++)
      {
          byteCount += sprintf(txtData + byteCount, "    { %1.0f, %1.0f, %1.0f , %1.0f },\n", font.recs[i].x, font.recs[i].y, font.recs[i].width, font.recs[i].height);
-@@ -1009,8 +1009,8 @@ bool ExportFontAsCode(Font font, const char *fileName)
+@@ -1026,8 +1026,8 @@ bool ExportFontAsCode(Font font, const char *fileName)
  #if defined(SUPPORT_FONT_DATA_COPY)
      byteCount += sprintf(txtData + byteCount, "    // Copy glyph recs data from global fontRecs\n");
      byteCount += sprintf(txtData + byteCount, "    // NOTE: Required to avoid issues if trying to free font\n");
@@ -519,7 +519,7 @@ index 3b21a93..c1a6e08 100644
  
      byteCount += sprintf(txtData + byteCount, "    // Copy font glyph info data from global fontChars\n");
      byteCount += sprintf(txtData + byteCount, "    // NOTE: Required to avoid issues if trying to free font\n");
-@@ -1135,14 +1135,14 @@ void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSiz
+@@ -1152,14 +1152,14 @@ void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSiz
  
      // Character destination rectangle on screen
      // NOTE: We consider glyphPadding on drawing
@@ -536,7 +536,7 @@ index 3b21a93..c1a6e08 100644
                           font.recs[index].width + 2.0f*font.glyphPadding, font.recs[index].height + 2.0f*font.glyphPadding };
  
      // Draw the character texture on the screen
-@@ -1303,9 +1303,9 @@ GlyphInfo GetGlyphInfo(Font font, int codepoint)
+@@ -1320,9 +1320,9 @@ GlyphInfo GetGlyphInfo(Font font, int codepoint)
  
  // Get glyph rectangle in font atlas for a codepoint (unicode character)
  // NOTE: If codepoint is not found in the font it fallbacks to '?'
@@ -548,7 +548,7 @@ index 3b21a93..c1a6e08 100644
  
      rec = font.recs[GetGlyphIndex(font, codepoint)];
  
-@@ -2076,7 +2076,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2093,7 +2093,7 @@ static Font LoadBMFont(const char *fileName)
      font.glyphCount = glyphCount;
      font.glyphPadding = 0;
      font.glyphs = (GlyphInfo *)RL_MALLOC(glyphCount*sizeof(GlyphInfo));
@@ -557,7 +557,7 @@ index 3b21a93..c1a6e08 100644
  
      int charId, charX, charY, charWidth, charHeight, charOffsetX, charOffsetY, charAdvanceX;
  
-@@ -2088,7 +2088,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2105,7 +2105,7 @@ static Font LoadBMFont(const char *fileName)
          fileTextPtr += (lineBytes + 1);
  
          // Get character rectangle in the font atlas texture
