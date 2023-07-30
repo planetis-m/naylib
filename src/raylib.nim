@@ -802,7 +802,7 @@ proc setWindowTitle*(title: cstring) {.importc: "SetWindowTitle".}
 proc setWindowPosition*(x: int32, y: int32) {.importc: "SetWindowPosition".}
   ## Set window position on screen (only PLATFORM_DESKTOP)
 proc setWindowMonitor*(monitor: int32) {.importc: "SetWindowMonitor".}
-  ## Set monitor for the current window (fullscreen mode)
+  ## Set monitor for the current window
 proc setWindowMinSize*(width: int32, height: int32) {.importc: "SetWindowMinSize".}
   ## Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
 proc setWindowSize*(width: int32, height: int32) {.importc: "SetWindowSize".}
@@ -1594,11 +1594,11 @@ proc setAudioStreamBufferSizeDefault*(size: int32) {.importc: "SetAudioStreamBuf
 proc setAudioStreamCallback*(stream: AudioStream, callback: AudioCallback) {.importc: "SetAudioStreamCallback".}
   ## Audio thread callback to request new data
 proc attachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "AttachAudioStreamProcessor".}
-  ## Attach audio stream processor to stream
+  ## Attach audio stream processor to stream, receives the samples as <float>s
 proc detachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "DetachAudioStreamProcessor".}
   ## Detach audio stream processor from stream
 proc attachAudioMixedProcessor*(processor: AudioCallback) {.importc: "AttachAudioMixedProcessor".}
-  ## Attach audio stream processor to the entire audio pipeline
+  ## Attach audio stream processor to the entire audio pipeline, receives the samples as <float>s
 proc detachAudioMixedProcessor*(processor: AudioCallback) {.importc: "DetachAudioMixedProcessor".}
   ## Detach audio stream processor from the entire audio pipeline
 {.pop.}

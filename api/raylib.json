@@ -3224,7 +3224,7 @@
     },
     {
       "name": "SetWindowMonitor",
-      "description": "Set monitor for the current window (fullscreen mode)",
+      "description": "Set monitor for the current window",
       "returnType": "void",
       "params": [
         {
@@ -3392,7 +3392,7 @@
     },
     {
       "name": "GetMonitorName",
-      "description": "Get the human-readable, UTF-8 encoded name of the primary monitor",
+      "description": "Get the human-readable, UTF-8 encoded name of the specified monitor",
       "returnType": "const char *",
       "params": [
         {
@@ -10942,7 +10942,7 @@
     },
     {
       "name": "AttachAudioStreamProcessor",
-      "description": "Attach audio stream processor to stream",
+      "description": "Attach audio stream processor to stream, receives the samples as <float>s",
       "returnType": "void",
       "params": [
         {
@@ -10972,7 +10972,7 @@
     },
     {
       "name": "AttachAudioMixedProcessor",
-      "description": "Attach audio stream processor to the entire audio pipeline",
+      "description": "Attach audio stream processor to the entire audio pipeline, receives the samples as <float>s",
       "returnType": "void",
       "params": [
         {
