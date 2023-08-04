@@ -1429,6 +1429,11 @@
           "description": "Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED"
         },
         {
+          "name": "FLAG_BORDERLESS_WINDOWED_MODE",
+          "value": 32768,
+          "description": "Set to run program in borderless windowed mode"
+        },
+        {
           "name": "FLAG_MSAA_4X_HINT",
           "value": 32,
           "description": "Set to try enabling MSAA 4X"
@@ -3156,6 +3161,11 @@
       "returnType": "void"
     },
     {
+      "name": "ToggleBorderlessWindowed",
+      "description": "Toggle window state: borderless windowed (only PLATFORM_DESKTOP)",
+      "returnType": "void"
+    },
+    {
       "name": "MaximizeWindow",
       "description": "Set window state: maximized, if resizable (only PLATFORM_DESKTOP)",
       "returnType": "void"
@@ -3198,7 +3208,7 @@
     },
     {
       "name": "SetWindowTitle",
-      "description": "Set title for window (only PLATFORM_DESKTOP)",
+      "description": "Set title for window (only PLATFORM_DESKTOP and PLATFORM_WEB)",
       "returnType": "void",
       "params": [
         {

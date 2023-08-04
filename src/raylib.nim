@@ -130,6 +130,7 @@ type
     WindowTopmost = 4096 ## Set to window always on top
     WindowHighdpi = 8192 ## Set to support HighDPI
     WindowMousePassthrough = 16384 ## Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
+    BorderlessWindowedMode = 32768 ## Set to run program in borderless windowed mode
     InterlacedHint = 65536 ## Set to try enabling interlaced video format (for V3D)
 
   TraceLogLevel* {.size: sizeof(int32).} = enum ## Trace log level
@@ -788,6 +789,8 @@ proc clearWindowState*(flags: Flags[ConfigFlags]) {.importc: "ClearWindowState".
   ## Clear window configuration state flags
 proc toggleFullscreen*() {.importc: "ToggleFullscreen".}
   ## Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
+proc toggleBorderlessWindowed*() {.importc: "ToggleBorderlessWindowed".}
+  ## Toggle window state: borderless windowed (only PLATFORM_DESKTOP)
 proc maximizeWindow*() {.importc: "MaximizeWindow".}
   ## Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
 proc minimizeWindow*() {.importc: "MinimizeWindow".}
@@ -798,7 +801,7 @@ proc setWindowIcon*(image: Image) {.importc: "SetWindowIcon".}
   ## Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
 proc setWindowIconsPriv(images: ptr UncheckedArray[Image], count: int32) {.importc: "SetWindowIcons".}
 proc setWindowTitle*(title: cstring) {.importc: "SetWindowTitle".}
-  ## Set title for window (only PLATFORM_DESKTOP)
+  ## Set title for window (only PLATFORM_DESKTOP and PLATFORM_WEB)
 proc setWindowPosition*(x: int32, y: int32) {.importc: "SetWindowPosition".}
   ## Set window position on screen (only PLATFORM_DESKTOP)
 proc setWindowMonitor*(monitor: int32) {.importc: "SetWindowMonitor".}
