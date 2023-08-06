@@ -373,6 +373,9 @@ type
     UncompressedR32 ## 32 bpp (1 channel - float)
     UncompressedR32g32b32 ## 32*3 bpp (3 channels - float)
     UncompressedR32g32b32a32 ## 32*4 bpp (4 channels - float)
+    UncompressedR16 ## 16 bpp (1 channel - half float)
+    UncompressedR16g16b16 ## 16*3 bpp (3 channels - half float)
+    UncompressedR16g16b16a16 ## 16*4 bpp (4 channels - half float)
     CompressedDxt1Rgb ## 4 bpp (no alpha)
     CompressedDxt1Rgba ## 4 bpp (1 bit alpha)
     CompressedDxt3Rgba ## 8 bpp
@@ -1508,11 +1511,15 @@ proc isWaveReady*(wave: Wave): bool {.importc: "IsWaveReady".}
   ## Checks if wave data is ready
 proc loadSoundPriv(fileName: cstring): Sound {.importc: "LoadSound".}
 proc loadSoundFromWavePriv(wave: Wave): Sound {.importc: "LoadSoundFromWave".}
+proc loadSoundAlias*(source: Sound): Sound {.importc: "LoadSoundAlias".}
+  ## Create a new sound that shares the same sample data as the source sound, does not own the sound data
 proc isSoundReady*(sound: Sound): bool {.importc: "IsSoundReady".}
   ## Checks if a sound is ready
 proc updateSoundPriv(sound: Sound, data: pointer, sampleCount: int32) {.importc: "UpdateSound".}
 proc unloadWave(wave: Wave) {.importc: "UnloadWave".}
 proc unloadSound(sound: Sound) {.importc: "UnloadSound".}
+proc unloadSoundAlias*(alias: Sound) {.importc: "UnloadSoundAlias".}
+  ## Unload a sound alias (does not deallocate sample data)
 proc exportWave*(wave: Wave, fileName: cstring): bool {.importc: "ExportWave".}
   ## Export wave data to file, returns true on success
 proc exportWaveAsCode*(wave: Wave, fileName: cstring): bool {.importc: "ExportWaveAsCode".}
