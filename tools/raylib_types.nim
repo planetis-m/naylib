@@ -111,6 +111,8 @@ proc `=destroy`*[T](x: RArray[T]) =
   if x.data != nil:
     for i in 0..<x.len: `=destroy`(x.data[i])
     memFree(x.data)
+proc `=wasMoved`*[T](x: var RArray[T]) =
+  x.data = nil
 proc `=dup`*[T](source: RArray[T]): RArray[T] {.nodestroy.} =
   result.len = source.len
   if source.data != nil:
@@ -119,7 +121,7 @@ proc `=dup`*[T](source: RArray[T]): RArray[T] {.nodestroy.} =
 proc `=copy`*[T](dest: var RArray[T]; source: RArray[T]) =
   if dest.data != source.data:
     `=destroy`(dest)
-    wasMoved(dest)
+    `=wasMoved`(dest)
     dest.len = source.len
     if source.data != nil:
       dest.data = cast[typeof(dest.data)](memAlloc(dest.len.uint32))

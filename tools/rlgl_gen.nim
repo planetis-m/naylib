@@ -252,6 +252,9 @@ proc getPixelFormatName*(format: PixelFormat): string =
   of UncompressedR32: "R32" # 32 bpp (1 channel - float)
   of UncompressedR32g32b32: "R32G32B32" # 32*3 bpp (3 channels - float)
   of UncompressedR32g32b32a32: "R32G32B32A32" # 32*4 bpp (4 channels - float)
+  of UncompressedR16: "R16" ## 16 bpp (1 channel - half float)
+  of UncompressedR16g16b16: "R16G16B16" ## 16*3 bpp (3 channels - half float)
+  of UncompressedR16g16b16a16: "R16G16B16A16" ## 16*4 bpp (4 channels - half float)
   of CompressedDxt1Rgb: "DXT1_RGB" # 4 bpp (no alpha)
   of CompressedDxt1Rgba: "DXT1_RGBA" # 4 bpp (1 bit alpha)
   of CompressedDxt3Rgba: "DXT3_RGBA" # 8 bpp
