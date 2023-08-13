@@ -453,6 +453,8 @@ const
     "LoadTexture",
     "LoadRenderTexture",
     "DrawLineStrip",
+    "DrawLineBSpline",
+    "DrawLineCatmullRom",
     "DrawTriangleFan",
     "DrawTriangleStrip",
     "CheckCollisionPointPoly",

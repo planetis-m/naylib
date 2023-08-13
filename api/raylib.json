@@ -5179,6 +5179,52 @@
       ]
     },
     {
+      "name": "DrawLineBSpline",
+      "description": "Draw a B-Spline line, minimum 4 points",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Vector2 *",
+          "name": "points"
+        },
+        {
+          "type": "int",
+          "name": "pointCount"
+        },
+        {
+          "type": "float",
+          "name": "thick"
+        },
+        {
+          "type": "Color",
+          "name": "color"
+        }
+      ]
+    },
+    {
+      "name": "DrawLineCatmullRom",
+      "description": "Draw a Catmull Rom spline line, minimum 4 points",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Vector2 *",
+          "name": "points"
+        },
+        {
+          "type": "int",
+          "name": "pointCount"
+        },
+        {
+          "type": "float",
+          "name": "thick"
+        },
+        {
+          "type": "Color",
+          "name": "color"
+        }
+      ]
+    },
+    {
       "name": "DrawLineStrip",
       "description": "Draw lines sequence",
       "returnType": "void",

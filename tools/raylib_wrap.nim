@@ -156,6 +156,14 @@ proc loadMaterials*(fileName: string): RArray[Material] =
   if len <= 0: raiseRaylibError("Failed to load Materials from " & fileName)
   result = RArray[Material](len: len, data: data)
 
+proc drawLineBSpline*(points: openArray[Vector2], thick: float32, color: Color) =
+  ## Draw a B-Spline line, minimum 4 points
+  drawLineBSplinePriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawLineCatmullRom*(points: openArray[Vector2], thick: float32, color: Color) =
+  ## Draw a Catmull Rom spline line, minimum 4 points
+  drawLineCatmullRomPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
 proc drawLineStrip*(points: openArray[Vector2]; color: Color) {.inline.} =
   ## Draw lines sequence
   drawLineStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)

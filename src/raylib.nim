@@ -1080,6 +1080,8 @@ proc drawLineBezierQuad*(startPos: Vector2, endPos: Vector2, controlPos: Vector2
   ## Draw line using quadratic bezier curves with a control point
 proc drawLineBezierCubic*(startPos: Vector2, endPos: Vector2, startControlPos: Vector2, endControlPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineBezierCubic".}
   ## Draw line using cubic bezier curves with 2 control points
+proc drawLineBSplinePriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawLineBSpline".}
+proc drawLineCatmullRomPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawLineCatmullRom".}
 proc drawLineStripPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawLineStrip".}
 proc drawCircle*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircle".}
   ## Draw a color-filled circle
@@ -1941,6 +1943,14 @@ proc loadMaterials*(fileName: string): RArray[Material] =
   let data = loadMaterialsPriv(fileName.cstring, addr len)
   if len <= 0: raiseRaylibError("Failed to load Materials from " & fileName)
   result = RArray[Material](len: len, data: data)
+
+proc drawLineBSpline*(points: openArray[Vector2], thick: float32, color: Color) =
+  ## Draw a B-Spline line, minimum 4 points
+  drawLineBSplinePriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawLineCatmullRom*(points: openArray[Vector2], thick: float32, color: Color) =
+  ## Draw a Catmull Rom spline line, minimum 4 points
+  drawLineCatmullRomPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc drawLineStrip*(points: openArray[Vector2]; color: Color) {.inline.} =
   ## Draw lines sequence
