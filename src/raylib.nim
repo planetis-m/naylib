@@ -973,6 +973,8 @@ proc loadDroppedFilesPriv(): FilePathList {.importc: "LoadDroppedFiles".}
 proc unloadDroppedFilesPriv(files: FilePathList) {.importc: "UnloadDroppedFiles".}
 proc isKeyPressed*(key: KeyboardKey): bool {.importc: "IsKeyPressed".}
   ## Check if a key has been pressed once
+proc isKeyPressedRepeat*(key: KeyboardKey): bool {.importc: "IsKeyPressedRepeat".}
+  ## Check if a key has been pressed again (Only PLATFORM_DESKTOP)
 proc isKeyDown*(key: KeyboardKey): bool {.importc: "IsKeyDown".}
   ## Check if a key is being pressed
 proc isKeyReleased*(key: KeyboardKey): bool {.importc: "IsKeyReleased".}

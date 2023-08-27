@@ -192,14 +192,15 @@ const
 """
   enumInFuncReturn = [
     ("GetKeyPressed", 0),
-    ("GetGamepadButtonPressed", 14),
-    ("GetGestureDetected", 25),
-    ("GetShaderLocation", 35),
-    ("GetShaderLocationAttrib", 35)
+    ("GetGamepadButtonPressed", 15),
+    ("GetGestureDetected", 26),
+    ("GetShaderLocation", 36),
+    ("GetShaderLocationAttrib", 36)
   ]
   enumInFuncParams = [
     # KeyboardKey
     ("IsKeyPressed", "key"),
+    ("IsKeyPressedRepeat", "key"),
     ("IsKeyDown", "key"),
     ("IsKeyReleased", "key"),
     ("IsKeyUp", "key"),
@@ -273,6 +274,7 @@ const
     ("GetGlyphAtlasRec", "codepoint"),
   ]
   enumInFuncs = [
+    "KeyboardKey",
     "KeyboardKey",
     "KeyboardKey",
     "KeyboardKey",

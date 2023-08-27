@@ -4545,6 +4545,17 @@
       ]
     },
     {
+      "name": "IsKeyPressedRepeat",
+      "description": "Check if a key has been pressed again (Only PLATFORM_DESKTOP)",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "int",
+          "name": "key"
+        }
+      ]
+    },
+    {
       "name": "IsKeyDown",
       "description": "Check if a key is being pressed",
       "returnType": "bool",
