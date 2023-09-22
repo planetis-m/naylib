@@ -663,7 +663,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
             let many = (fnc.name, param.name) != ("LoadImageAnim", "frames") and isPlural(param.name)
             const
               replacements = [
-                ("GenImageFontAtlas", "recs", "ptr ptr UncheckedArray[$1]"),
+                ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[$1]"),
                 ("CheckCollisionLines", "collisionPoint", "out $1"),
                 ("LoadImageAnim", "frames", "out $1"),
                 ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),

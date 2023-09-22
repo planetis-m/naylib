@@ -3006,8 +3006,8 @@
           "name": "fileName"
         },
         {
-          "type": "unsigned int *",
-          "name": "bytesRead"
+          "type": "int *",
+          "name": "dataSize"
         }
       ]
     },
@@ -3025,8 +3025,8 @@
           "name": "data"
         },
         {
-          "type": "unsigned int",
-          "name": "bytesToWrite"
+          "type": "int",
+          "name": "dataSize"
         }
       ]
     },
@@ -3261,6 +3261,21 @@
     {
       "name": "SetWindowMinSize",
       "description": "Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "width"
+        },
+        {
+          "type": "int",
+          "name": "height"
+        }
+      ]
+    },
+    {
+      "name": "SetWindowMaxSize",
+      "description": "Set window maximum dimensions (for FLAG_WINDOW_RESIZABLE)",
       "returnType": "void",
       "params": [
         {
@@ -4162,8 +4177,8 @@
           "name": "fileName"
         },
         {
-          "type": "unsigned int *",
-          "name": "bytesRead"
+          "type": "int *",
+          "name": "dataSize"
         }
       ]
     },
@@ -4192,8 +4207,8 @@
           "name": "data"
         },
         {
-          "type": "unsigned int",
-          "name": "bytesToWrite"
+          "type": "int",
+          "name": "dataSize"
         }
       ]
     },
@@ -4207,8 +4222,8 @@
           "name": "data"
         },
         {
-          "type": "unsigned int",
-          "name": "size"
+          "type": "int",
+          "name": "dataSize"
         },
         {
           "type": "const char *",
@@ -4363,7 +4378,7 @@
     },
     {
       "name": "GetApplicationDirectory",
-      "description": "Get the directory if the running application (uses static string)",
+      "description": "Get the directory of the running application (uses static string)",
       "returnType": "const char *"
     },
     {
@@ -4917,7 +4932,7 @@
       "returnType": "bool",
       "params": [
         {
-          "type": "int",
+          "type": "unsigned int",
           "name": "gesture"
         }
       ]
@@ -6203,6 +6218,25 @@
         {
           "type": "int",
           "name": "headerSize"
+        }
+      ]
+    },
+    {
+      "name": "LoadImageSvg",
+      "description": "Load image from SVG file data or string with specified size",
+      "returnType": "Image",
+      "params": [
+        {
+          "type": "const char *",
+          "name": "fileNameOrString"
+        },
+        {
+          "type": "int",
+          "name": "width"
+        },
+        {
+          "type": "int",
+          "name": "height"
         }
       ]
     },
@@ -8036,7 +8070,7 @@
     },
     {
       "name": "LoadFontEx",
-      "description": "Load font from file with extended parameters, use NULL for fontChars and 0 for glyphCount to load the default character set",
+      "description": "Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character setFont",
       "returnType": "Font",
       "params": [
         {
@@ -8049,11 +8083,11 @@
         },
         {
           "type": "int *",
-          "name": "fontChars"
+          "name": "codepoints"
         },
         {
           "type": "int",
-          "name": "glyphCount"
+          "name": "codepointCount"
         }
       ]
     },
@@ -8099,11 +8133,11 @@
         },
         {
           "type": "int *",
-          "name": "fontChars"
+          "name": "codepoints"
         },
         {
           "type": "int",
-          "name": "glyphCount"
+          "name": "codepointCount"
         }
       ]
     },
@@ -8137,11 +8171,11 @@
         },
         {
           "type": "int *",
-          "name": "fontChars"
+          "name": "codepoints"
         },
         {
           "type": "int",
-          "name": "glyphCount"
+          "name": "codepointCount"
         },
         {
           "type": "int",
@@ -8156,11 +8190,11 @@
       "params": [
         {
           "type": "const GlyphInfo *",
-          "name": "chars"
+          "name": "glyphs"
         },
         {
           "type": "Rectangle **",
-          "name": "recs"
+          "name": "glyphRecs"
         },
         {
           "type": "int",
@@ -8187,7 +8221,7 @@
       "params": [
         {
           "type": "GlyphInfo *",
-          "name": "chars"
+          "name": "glyphs"
         },
         {
           "type": "int",
@@ -8375,7 +8409,7 @@
         },
         {
           "type": "int",
-          "name": "count"
+          "name": "codepointCount"
         },
         {
           "type": "Vector2",
@@ -10054,7 +10088,7 @@
           "name": "fileName"
         },
         {
-          "type": "unsigned int *",
+          "type": "int *",
           "name": "animCount"
         }
       ]
@@ -10099,8 +10133,8 @@
           "name": "animations"
         },
         {
-          "type": "unsigned int",
-          "name": "count"
+          "type": "int",
+          "name": "animCount"
         }
       ]
     },

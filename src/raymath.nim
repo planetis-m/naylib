@@ -341,16 +341,13 @@ func project*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Calculate the projection of the vector v1 on to v2
   let v1dv2 = v1.x*v2.x + v1.y*v2.y + v1.z*v2.z
   let v2dv2 = v2.x*v2.x + v2.y*v2.y + v2.z*v2.z
-
   let mag = v1dv2/v2dv2
-
   result = Vector3(x: v2.x*mag, y: v2.y*mag, z: v2.z*mag)
 
 func reject*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Calculate the rejection of the vector v1 on to v2
   let v1dv2 = v1.x*v2.x + v1.y*v2.y + v1.z*v2.z
   let v2dv2 = v2.x*v2.x + v2.y*v2.y + v2.z*v2.z
-
   let mag = v1dv2/v2dv2
   result = Vector3(x: v1.x - (v2.x*mag), y: v1.y - (v2.y*mag), z: v1.z - (v2.z*mag))
 

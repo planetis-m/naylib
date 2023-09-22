@@ -126,7 +126,7 @@ proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, valu
 
 proc loadModelAnimations*(fileName: string): RArray[ModelAnimation] =
   ## Load model animations from file
-  var len = 0'u32
+  var len = 0'i32
   let data = loadModelAnimationsPriv(fileName.cstring, addr len)
   if len <= 0: raiseRaylibError("Failed to load ModelAnimations from " & fileName)
   result = RArray[ModelAnimation](len: len.int, data: data)
@@ -273,13 +273,13 @@ proc setPixelColor*[T: Pixel](pixel: var T, color: Color) =
   assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
   setPixelColorPriv(addr pixel, color, kind(T))
 
-proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; fontChars: openArray[int32];
+proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; codepoints: openArray[int32];
     `type`: FontType): RArray[GlyphInfo] =
   ## Load font data for further use
   let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
-      fontSize, if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars),
-      fontChars.len.int32, `type`)
-  result = RArray[GlyphInfo](len: if fontChars.len == 0: 95 else: fontChars.len, data: data)
+      fontSize, if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints),
+      codepoints.len.int32, `type`)
+  result = RArray[GlyphInfo](len: if codepoints.len == 0: 95 else: codepoints.len, data: data)
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize, glyphCount: int32;
     `type`: FontType): RArray[GlyphInfo] =
@@ -292,10 +292,10 @@ proc loadFont*(fileName: string): Font =
   result = loadFontPriv(fileName.cstring)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
 
-proc loadFont*(fileName: string; fontSize: int32; fontChars: openArray[int32]): Font =
-  ## Load font from file with extended parameters, use an empty array for fontChars to load the default character set
+proc loadFont*(fileName: string; fontSize: int32; codepoints: openArray[int32]): Font =
+  ## Load font from file with extended parameters, use an empty array for codepoints to load the default character set
   result = loadFontPriv(fileName.cstring, fontSize,
-      if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
+      if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFont*(fileName: string; fontSize, glyphCount: int32): Font =
@@ -308,11 +308,11 @@ proc loadFontFromImage*(image: Image, key: Color, firstChar: int32): Font =
   if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
 
 proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
-    fontChars: openArray[int32]): Font =
+    codepoints: openArray[int32]): Font =
   ## Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
   result = loadFontFromMemoryPriv(fileType.cstring,
       cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
-      if fontChars.len == 0: nil else: cast[ptr UncheckedArray[int32]](fontChars), fontChars.len.int32)
+      if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
 
 proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
