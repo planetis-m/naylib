@@ -1,5 +1,5 @@
 diff --git a/src/raylib.h b/src/raylib.h
-index abc8371..7771683 100644
+index 635b3df..89fed5b 100644
 --- a/src/raylib.h
 +++ b/src/raylib.h
 @@ -241,12 +241,12 @@ typedef struct Color {
@@ -44,7 +44,7 @@ index abc8371..7771683 100644
  RLAPI bool IsWindowReady(void);                                   // Check if window has been initialized successfully
  RLAPI bool IsWindowFullscreen(void);                              // Check if window is currently fullscreen
  RLAPI bool IsWindowHidden(void);                                  // Check if window is currently hidden (only PLATFORM_DESKTOP)
-@@ -994,7 +994,7 @@ RLAPI void PollInputEvents(void);                                 // Register al
+@@ -995,7 +995,7 @@ RLAPI void PollInputEvents(void);                                 // Register al
  RLAPI void WaitTime(double seconds);                              // Wait for some time (halt program execution)
  
  // Cursor-related functions
@@ -53,7 +53,7 @@ index abc8371..7771683 100644
  RLAPI void HideCursor(void);                                      // Hides cursor
  RLAPI bool IsCursorHidden(void);                                  // Check if cursor is not visible
  RLAPI void EnableCursor(void);                                    // Enables cursor (unlock cursor)
-@@ -1181,7 +1181,7 @@ RLAPI void UpdateCameraPro(Camera *camera, Vector3 movement, Vector3 rotation, f
+@@ -1183,7 +1183,7 @@ RLAPI void UpdateCameraPro(Camera *camera, Vector3 movement, Vector3 rotation, f
  // Set texture and rectangle to be used on shapes drawing
  // NOTE: It can be useful when using basic shapes and one single font,
  // defining a font char white rectangle would allow drawing everything in a single draw call
@@ -62,7 +62,7 @@ index abc8371..7771683 100644
  
  // Basic shapes drawing functions
  RLAPI void DrawPixel(int posX, int posY, Color color);                                                   // Draw a pixel
-@@ -1207,15 +1207,15 @@ RLAPI void DrawRing(Vector2 center, float innerRadius, float outerRadius, float
+@@ -1209,15 +1209,15 @@ RLAPI void DrawRing(Vector2 center, float innerRadius, float outerRadius, float
  RLAPI void DrawRingLines(Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color);    // Draw ring outline
  RLAPI void DrawRectangle(int posX, int posY, int width, int height, Color color);                        // Draw a color-filled rectangle
  RLAPI void DrawRectangleV(Vector2 position, Vector2 size, Color color);                                  // Draw a color-filled rectangle (Vector version)
@@ -84,7 +84,7 @@ index abc8371..7771683 100644
  RLAPI void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color);                                // Draw a color-filled triangle (vertex in counter-clockwise order!)
  RLAPI void DrawTriangleLines(Vector2 v1, Vector2 v2, Vector2 v3, Color color);                           // Draw triangle outline (vertex in counter-clockwise order!)
  RLAPI void DrawTriangleFan(Vector2 *points, int pointCount, Color color);                                // Draw a triangle fan defined by points (first vertex is the center)
-@@ -1225,16 +1225,16 @@ RLAPI void DrawPolyLines(Vector2 center, int sides, float radius, float rotation
+@@ -1227,16 +1227,16 @@ RLAPI void DrawPolyLines(Vector2 center, int sides, float radius, float rotation
  RLAPI void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, float lineThick, Color color); // Draw a polygon outline of n sides with extended parameters
  
  // Basic shapes collision detection functions
@@ -105,7 +105,7 @@ index abc8371..7771683 100644
  
  //------------------------------------------------------------------------------------
  // Texture Loading and Drawing Functions (Module: textures)
-@@ -1267,12 +1267,12 @@ RLAPI Image GenImageText(int width, int height, const char *text);
+@@ -1270,12 +1270,12 @@ RLAPI Image GenImageText(int width, int height, const char *text);
  
  // Image manipulation functions
  RLAPI Image ImageCopy(Image image);                                                                      // Create an image duplicate (useful for transformations)
@@ -120,7 +120,7 @@ index abc8371..7771683 100644
  RLAPI void ImageAlphaCrop(Image *image, float threshold);                                                // Crop image depending on alpha value
  RLAPI void ImageAlphaClear(Image *image, Color color, float threshold);                                  // Clear alpha channel to desired color
  RLAPI void ImageAlphaMask(Image *image, Image alphaMask);                                                // Apply alpha mask to image
-@@ -1298,7 +1298,7 @@ RLAPI Color *LoadImageColors(Image image);
+@@ -1301,7 +1301,7 @@ RLAPI Color *LoadImageColors(Image image);
  RLAPI Color *LoadImagePalette(Image image, int maxPaletteSize, int *colorCount);                         // Load colors palette from image as a Color array (RGBA - 32bit)
  RLAPI void UnloadImageColors(Color *colors);                                                             // Unload color data loaded with LoadImageColors()
  RLAPI void UnloadImagePalette(Color *colors);                                                            // Unload colors palette loaded with LoadImagePalette()
@@ -129,7 +129,7 @@ index abc8371..7771683 100644
  RLAPI Color GetImageColor(Image image, int x, int y);                                                    // Get image pixel color at (x, y) position
  
  // Image drawing functions
-@@ -1314,9 +1314,9 @@ RLAPI void ImageDrawCircleLines(Image *dst, int centerX, int centerY, int radius
+@@ -1317,9 +1317,9 @@ RLAPI void ImageDrawCircleLines(Image *dst, int centerX, int centerY, int radius
  RLAPI void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color);                   // Draw circle outline within an image (Vector version)
  RLAPI void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color);       // Draw rectangle within an image
  RLAPI void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color);                 // Draw rectangle within an image (Vector version)
@@ -142,7 +142,7 @@ index abc8371..7771683 100644
  RLAPI void ImageDrawText(Image *dst, const char *text, int posX, int posY, int fontSize, Color color);   // Draw text (using default font) within an image (destination)
  RLAPI void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text (custom sprite font) within an image (destination)
  
-@@ -1331,7 +1331,7 @@ RLAPI void UnloadTexture(Texture2D texture);
+@@ -1334,7 +1334,7 @@ RLAPI void UnloadTexture(Texture2D texture);
  RLAPI bool IsRenderTextureReady(RenderTexture2D target);                                                       // Check if a render texture is ready
  RLAPI void UnloadRenderTexture(RenderTexture2D target);                                                  // Unload render texture from GPU memory (VRAM)
  RLAPI void UpdateTexture(Texture2D texture, const void *pixels);                                         // Update GPU texture with new data
@@ -151,7 +151,7 @@ index abc8371..7771683 100644
  
  // Texture configuration functions
  RLAPI void GenTextureMipmaps(Texture2D *texture);                                                        // Generate GPU mipmaps for a texture
-@@ -1342,9 +1342,9 @@ RLAPI void SetTextureWrap(Texture2D texture, int wrap);
+@@ -1345,9 +1345,9 @@ RLAPI void SetTextureWrap(Texture2D texture, int wrap);
  RLAPI void DrawTexture(Texture2D texture, int posX, int posY, Color tint);                               // Draw a Texture2D
  RLAPI void DrawTextureV(Texture2D texture, Vector2 position, Color tint);                                // Draw a Texture2D with position defined as Vector2
  RLAPI void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint);  // Draw a Texture2D with extended parameters
@@ -164,16 +164,16 @@ index abc8371..7771683 100644
  
  // Color/pixel related functions
  RLAPI Color Fade(Color color, float alpha);                                 // Get color with alpha applied, alpha goes from 0.0f to 1.0f
-@@ -1375,7 +1375,7 @@ RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);
- RLAPI Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *fontChars, int glyphCount); // Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
+@@ -1378,7 +1378,7 @@ RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);
+ RLAPI Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount); // Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
  RLAPI bool IsFontReady(Font font);                                                          // Check if a font is ready
- RLAPI GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSize, int *fontChars, int glyphCount, int type); // Load font data for further use
--RLAPI Image GenImageFontAtlas(const GlyphInfo *chars, Rectangle **recs, int glyphCount, int fontSize, int padding, int packMethod); // Generate image font atlas using chars info
-+RLAPI Image GenImageFontAtlas(const GlyphInfo *chars, rlRectangle **recs, int glyphCount, int fontSize, int padding, int packMethod); // Generate image font atlas using chars info
- RLAPI void UnloadFontData(GlyphInfo *chars, int glyphCount);                                // Unload font chars info data (RAM)
+ RLAPI GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount, int type); // Load font data for further use
+-RLAPI Image GenImageFontAtlas(const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod); // Generate image font atlas using chars info
++RLAPI Image GenImageFontAtlas(const GlyphInfo *glyphs, rlRectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod); // Generate image font atlas using chars info
+ RLAPI void UnloadFontData(GlyphInfo *glyphs, int glyphCount);                                // Unload font chars info data (RAM)
  RLAPI void UnloadFont(Font font);                                                           // Unload font from GPU memory (VRAM)
  RLAPI bool ExportFontAsCode(Font font, const char *fileName);                               // Export font as code file, returns true on success
-@@ -1394,7 +1394,7 @@ RLAPI int MeasureText(const char *text, int fontSize);
+@@ -1397,7 +1397,7 @@ RLAPI int MeasureText(const char *text, int fontSize);
  RLAPI Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing);    // Measure string size for Font
  RLAPI int GetGlyphIndex(Font font, int codepoint);                                          // Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
  RLAPI GlyphInfo GetGlyphInfo(Font font, int codepoint);                                     // Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
@@ -182,7 +182,7 @@ index abc8371..7771683 100644
  
  // Text codepoints management functions (unicode characters)
  RLAPI char *LoadUTF8(const int *codepoints, int length);                // Load UTF-8 text encoded from codepoints array
-@@ -1470,8 +1470,8 @@ RLAPI void DrawModelWires(Model model, Vector3 position, float scale, Color tint
+@@ -1473,8 +1473,8 @@ RLAPI void DrawModelWires(Model model, Vector3 position, float scale, Color tint
  RLAPI void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model wires (with texture if set) with extended parameters
  RLAPI void DrawBoundingBox(BoundingBox box, Color color);                                   // Draw bounding box (wires)
  RLAPI void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float size, Color tint);   // Draw a billboard texture
@@ -194,10 +194,10 @@ index abc8371..7771683 100644
  // Mesh management functions
  RLAPI void UploadMesh(Mesh *mesh, bool dynamic);                                            // Upload mesh vertex data in GPU and provide VAO/VBO ids
 diff --git a/src/rcore.c b/src/rcore.c
-index 7d8811b..ed50080 100644
+index 26ff79d..44aa008 100644
 --- a/src/rcore.c
 +++ b/src/rcore.c
-@@ -359,7 +359,7 @@ typedef struct {
+@@ -344,7 +344,7 @@ typedef struct {
      pthread_t threadId;             // Event reading thread id
      int fd;                         // File descriptor to the device it is assigned to
      int eventNum;                   // Number of 'event<N>' device
@@ -206,18 +206,27 @@ index 7d8811b..ed50080 100644
      int touchSlot;                  // Hold the touch slot number of the currently being sent multitouch block
      bool isMouse;                   // True if device supports relative X Y movements
      bool isTouch;                   // True if device supports absolute X Y movements and has BTN_TOUCH
-@@ -885,16 +885,16 @@ void InitWindow(int width, int height, const char *title)
-     // WARNING: External function: Module required: rtext
-     LoadFontDefault();
+@@ -871,16 +871,16 @@ void InitWindow(int width, int height, const char *title)
      #if defined(SUPPORT_MODULE_RSHAPES)
+     // Set font white rectangle for shapes drawing, so shapes and text can be batched together
+     // WARNING: rshapes module is required, if not available, default internal white rectangle is used
 -    Rectangle rec = GetFontDefault().recs[95];
 +    rlRectangle rec = GetFontDefault().recs[95];
-     // NOTE: We set up a 1px padding on char rectangle to avoid pixel bleeding on MSAA filtering
--    SetShapesTexture(GetFontDefault().texture, (Rectangle){ rec.x + 1, rec.y + 1, rec.width - 2, rec.height - 2 }); // WARNING: Module required: rshapes
-+    SetShapesTexture(GetFontDefault().texture, (rlRectangle){ rec.x + 1, rec.y + 1, rec.width - 2, rec.height - 2 }); // WARNING: Module required: rshapes
+     if (CORE.Window.flags & FLAG_MSAA_4X_HINT)
+     {
+         // NOTE: We try to maxime rec padding to avoid pixel bleeding on MSAA filtering
+-        SetShapesTexture(GetFontDefault().texture, (Rectangle){ rec.x + 2, rec.y + 2, 1, 1 });
++        SetShapesTexture(GetFontDefault().texture, (rlRectangle){ rec.x + 2, rec.y + 2, 1, 1 });
+     }
+     else
+     {
+         // NOTE: We set up a 1px padding on char rectangle to avoid pixel bleeding
+-        SetShapesTexture(GetFontDefault().texture, (Rectangle){ rec.x + 1, rec.y + 1, rec.width - 2, rec.height - 2 });
++        SetShapesTexture(GetFontDefault().texture, (rlRectangle){ rec.x + 1, rec.y + 1, rec.width - 2, rec.height - 2 });
+     }
      #endif
  #else
-     #if defined(SUPPORT_MODULE_RSHAPES)
+@@ -888,7 +888,7 @@ void InitWindow(int width, int height, const char *title)
      // Set default texture and rectangle to be used for shapes drawing
      // NOTE: rlgl default texture is a 1x1 pixel UNCOMPRESSED_R8G8B8A8
      Texture2D texture = { rlGetTextureIdDefault(), 1, 1, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
@@ -226,7 +235,7 @@ index 7d8811b..ed50080 100644
      #endif
  #endif
  #if defined(SUPPORT_MODULE_RTEXT) && defined(SUPPORT_DEFAULT_FONT)
-@@ -953,7 +953,7 @@ void InitWindow(int width, int height, const char *title)
+@@ -947,7 +947,7 @@ void InitWindow(int width, int height, const char *title)
  }
  
  // Close window and unload OpenGL context
@@ -235,7 +244,7 @@ index 7d8811b..ed50080 100644
  {
  #if defined(SUPPORT_GIF_RECORDING)
      if (gifRecording)
-@@ -2193,7 +2193,7 @@ void DisableEventWaiting(void)
+@@ -2214,7 +2214,7 @@ void DisableEventWaiting(void)
  }
  
  // Show mouse cursor
@@ -244,7 +253,7 @@ index 7d8811b..ed50080 100644
  {
  #if defined(PLATFORM_DESKTOP)
      glfwSetInputMode(CORE.Window.handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-@@ -5853,10 +5853,10 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
+@@ -5892,10 +5892,10 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
                      // Load default font
                      // WARNING: External function: Module required: rtext
                      LoadFontDefault();
@@ -258,7 +267,7 @@ index 7d8811b..ed50080 100644
                  #endif
  
 diff --git a/src/rmodels.c b/src/rmodels.c
-index ebb454e..56a899b 100644
+index f9ceec1..84811a5 100644
 --- a/src/rmodels.c
 +++ b/src/rmodels.c
 @@ -3474,13 +3474,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
@@ -287,7 +296,7 @@ index ebb454e..56a899b 100644
      // NOTE: Billboard size will maintain source rectangle aspect ratio, size will represent billboard width
      Vector2 sizeRatio = { size.x*fabsf((float)source.width/source.height), size.y };
 diff --git a/src/rshapes.c b/src/rshapes.c
-index ea45aef..90e8f8b 100644
+index f3061f8..c6283fb 100644
 --- a/src/rshapes.c
 +++ b/src/rshapes.c
 @@ -81,7 +81,7 @@
@@ -317,7 +326,7 @@ index ea45aef..90e8f8b 100644
      }
      else
      {
-@@ -883,17 +883,17 @@ void DrawRectangle(int posX, int posY, int width, int height, Color color)
+@@ -885,17 +885,17 @@ void DrawRectangle(int posX, int posY, int width, int height, Color color)
  // NOTE: On OpenGL 3.3 and ES2 we use QUADS to avoid drawing order issues
  void DrawRectangleV(Vector2 position, Vector2 size, Color color)
  {
@@ -338,7 +347,7 @@ index ea45aef..90e8f8b 100644
  {
      Vector2 topLeft = { 0 };
      Vector2 topRight = { 0 };
-@@ -976,19 +976,19 @@ void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color
+@@ -978,19 +978,19 @@ void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color
  // NOTE: Gradient goes from bottom (color1) to top (color2)
  void DrawRectangleGradientV(int posX, int posY, int width, int height, Color color1, Color color2)
  {
@@ -361,7 +370,7 @@ index ea45aef..90e8f8b 100644
  {
      rlSetTexture(texShapes.id);
  
-@@ -1044,7 +1044,7 @@ void DrawRectangleLines(int posX, int posY, int width, int height, Color color)
+@@ -1046,7 +1046,7 @@ void DrawRectangleLines(int posX, int posY, int width, int height, Color color)
  }
  
  // Draw rectangle outline with extended parameters
@@ -370,7 +379,7 @@ index ea45aef..90e8f8b 100644
  {
      if ((lineThick > rec.width) || (lineThick > rec.height))
      {
-@@ -1063,10 +1063,10 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
+@@ -1065,10 +1065,10 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
      //   BBBBBBBB
      //
  
@@ -385,7 +394,7 @@ index ea45aef..90e8f8b 100644
  
      DrawRectangleRec(top, color);
      DrawRectangleRec(bottom, color);
-@@ -1075,7 +1075,7 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
+@@ -1077,7 +1077,7 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
  }
  
  // Draw rectangle with rounded edges
@@ -394,7 +403,7 @@ index ea45aef..90e8f8b 100644
  {
      // Not a rounded rectangle
      if ((roundness <= 0.0f) || (rec.width < 1) || (rec.height < 1 ))
-@@ -1300,14 +1300,14 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
+@@ -1302,14 +1302,14 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
  }
  
  // Draw rectangle with rounded edges outline
@@ -411,7 +420,7 @@ index ea45aef..90e8f8b 100644
          return;
      }
  
-@@ -1770,7 +1770,7 @@ void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, fl
+@@ -1772,7 +1772,7 @@ void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, fl
  //----------------------------------------------------------------------------------
  
  // Check if point is inside rectangle
@@ -420,7 +429,7 @@ index ea45aef..90e8f8b 100644
  {
      bool collision = false;
  
-@@ -1829,7 +1829,7 @@ bool CheckCollisionPointPoly(Vector2 point, Vector2 *points, int pointCount)
+@@ -1831,7 +1831,7 @@ bool CheckCollisionPointPoly(Vector2 point, Vector2 *points, int pointCount)
  }
  
  // Check collision between two rectangles
@@ -429,7 +438,7 @@ index ea45aef..90e8f8b 100644
  {
      bool collision = false;
  
-@@ -1856,7 +1856,7 @@ bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, floa
+@@ -1858,7 +1858,7 @@ bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, floa
  
  // Check collision between circle and rectangle
  // NOTE: Reviewed version to take into account corner limit case
@@ -438,7 +447,7 @@ index ea45aef..90e8f8b 100644
  {
      bool collision = false;
  
-@@ -1930,9 +1930,9 @@ bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshol
+@@ -1932,9 +1932,9 @@ bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshol
  }
  
  // Get collision rectangle for two rectangles collision
@@ -451,7 +460,7 @@ index ea45aef..90e8f8b 100644
      float left = (rec1.x > rec2.x)? rec1.x : rec2.x;
      float right1 = rec1.x + rec1.width;
 diff --git a/src/rtext.c b/src/rtext.c
-index a66c581..50b3bfe 100644
+index fb84401..38188f9 100644
 --- a/src/rtext.c
 +++ b/src/rtext.c
 @@ -243,7 +243,7 @@ extern void LoadFontDefault(void)
@@ -485,12 +494,12 @@ index a66c581..50b3bfe 100644
  // Generate image font atlas using chars info
  // NOTE: Packing method: 0-Default, 1-Skyline
  #if defined(SUPPORT_FILEFORMAT_TTF)
--Image GenImageFontAtlas(const GlyphInfo *chars, Rectangle **charRecs, int glyphCount, int fontSize, int padding, int packMethod)
-+Image GenImageFontAtlas(const GlyphInfo *chars, rlRectangle **charRecs, int glyphCount, int fontSize, int padding, int packMethod)
+-Image GenImageFontAtlas(const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod)
++Image GenImageFontAtlas(const GlyphInfo *glyphs, rlRectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod)
  {
      Image atlas = { 0 };
  
-@@ -704,7 +704,7 @@ Image GenImageFontAtlas(const GlyphInfo *chars, Rectangle **charRecs, int glyphC
+@@ -704,7 +704,7 @@ Image GenImageFontAtlas(const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyp
      glyphCount = (glyphCount > 0)? glyphCount : 95;
  
      // NOTE: Rectangles memory is loaded here!
@@ -548,7 +557,7 @@ index a66c581..50b3bfe 100644
  
      rec = font.recs[GetGlyphIndex(font, codepoint)];
  
-@@ -2102,7 +2102,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2103,7 +2103,7 @@ static Font LoadBMFont(const char *fileName)
      font.glyphCount = glyphCount;
      font.glyphPadding = 0;
      font.glyphs = (GlyphInfo *)RL_MALLOC(glyphCount*sizeof(GlyphInfo));
@@ -557,7 +566,7 @@ index a66c581..50b3bfe 100644
  
      int charId, charX, charY, charWidth, charHeight, charOffsetX, charOffsetY, charAdvanceX;
  
-@@ -2114,7 +2114,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2115,7 +2115,7 @@ static Font LoadBMFont(const char *fileName)
          fileTextPtr += (lineBytes + 1);
  
          // Get character rectangle in the font atlas texture
@@ -567,10 +576,10 @@ index a66c581..50b3bfe 100644
          // Save data properly in sprite font
          font.glyphs[i].value = charId;
 diff --git a/src/rtextures.c b/src/rtextures.c
-index 4b697f7..1f9bdce 100644
+index 8dc49fa..f0e19c4 100644
 --- a/src/rtextures.c
 +++ b/src/rtextures.c
-@@ -1079,7 +1079,7 @@ Image ImageCopy(Image image)
+@@ -1198,7 +1198,7 @@ Image ImageCopy(Image image)
  }
  
  // Create an image from another image piece
@@ -579,7 +588,7 @@ index 4b697f7..1f9bdce 100644
  {
      Image result = { 0 };
  
-@@ -1101,7 +1101,7 @@ Image ImageFromImage(Image image, Rectangle rec)
+@@ -1220,7 +1220,7 @@ Image ImageFromImage(Image image, Rectangle rec)
  
  // Crop an image to area defined by a rectangle
  // NOTE: Security checks are performed in case rectangle goes out of bounds
@@ -588,7 +597,7 @@ index 4b697f7..1f9bdce 100644
  {
      // Security check to avoid program crash
      if ((image->data == NULL) || (image->width == 0) || (image->height == 0)) return;
-@@ -1413,8 +1413,8 @@ Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Co
+@@ -1532,8 +1532,8 @@ Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Co
          {
              if ((codepoint != ' ') && (codepoint != '\t'))
              {
@@ -599,7 +608,7 @@ index 4b697f7..1f9bdce 100644
              }
  
              if (font.glyphs[index].advanceX == 0) textOffsetX += (int)(font.recs[index].width + spacing);
-@@ -1549,7 +1549,7 @@ void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, i
+@@ -1668,7 +1668,7 @@ void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, i
      if (image->format >= PIXELFORMAT_COMPRESSED_DXT1_RGB) TRACELOG(LOG_WARNING, "Image manipulation not supported for compressed formats");
      else if ((newWidth != image->width) || (newHeight != image->height))
      {
@@ -608,7 +617,7 @@ index 4b697f7..1f9bdce 100644
          Vector2 dstPos = { (float)offsetX, (float)offsetY };
  
          if (offsetX < 0)
-@@ -1615,7 +1615,7 @@ void ImageAlphaCrop(Image *image, float threshold)
+@@ -1734,7 +1734,7 @@ void ImageAlphaCrop(Image *image, float threshold)
      // Security check to avoid program crash
      if ((image->data == NULL) || (image->width == 0) || (image->height == 0)) return;
  
@@ -617,7 +626,7 @@ index 4b697f7..1f9bdce 100644
  
      // Crop if rectangle is valid
      if (((int)crop.width != 0) && ((int)crop.height != 0)) ImageCrop(image, crop);
-@@ -2764,9 +2764,9 @@ void UnloadImagePalette(Color *colors)
+@@ -2883,9 +2883,9 @@ void UnloadImagePalette(Color *colors)
  
  // Get image alpha border rectangle
  // NOTE: Threshold is defined as a percentage: 0.0f -> 1.0f
@@ -629,7 +638,7 @@ index 4b697f7..1f9bdce 100644
  
      Color *pixels = LoadImageColors(image);
  
-@@ -2794,7 +2794,7 @@ Rectangle GetImageAlphaBorder(Image image, float threshold)
+@@ -2913,7 +2913,7 @@ Rectangle GetImageAlphaBorder(Image image, float threshold)
          // Check for empty blank image
          if ((xMin != 65536) && (xMax != 65536))
          {
@@ -638,7 +647,7 @@ index 4b697f7..1f9bdce 100644
          }
  
          UnloadImageColors(pixels);
-@@ -3263,7 +3263,7 @@ void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color)
+@@ -3382,7 +3382,7 @@ void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color)
  // Draw rectangle within an image
  void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color)
  {
@@ -647,7 +656,7 @@ index 4b697f7..1f9bdce 100644
  }
  
  // Draw rectangle within an image (Vector version)
-@@ -3273,7 +3273,7 @@ void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color
+@@ -3392,7 +3392,7 @@ void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color
  }
  
  // Draw rectangle within an image
@@ -656,7 +665,7 @@ index 4b697f7..1f9bdce 100644
  {
      // Security check to avoid program crash
      if ((dst->data == NULL) || (dst->width == 0) || (dst->height == 0)) return;
-@@ -3310,7 +3310,7 @@ void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color)
+@@ -3437,7 +3437,7 @@ void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color)
  }
  
  // Draw rectangle lines within an image
@@ -665,7 +674,7 @@ index 4b697f7..1f9bdce 100644
  {
      ImageDrawRectangle(dst, (int)rec.x, (int)rec.y, (int)rec.width, thick, color);
      ImageDrawRectangle(dst, (int)rec.x, (int)(rec.y + thick), thick, (int)(rec.height - thick*2), color);
-@@ -3320,7 +3320,7 @@ void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color)
+@@ -3447,7 +3447,7 @@ void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color)
  
  // Draw an image (source) within an image (destination)
  // NOTE: Color tint is applied to source image
@@ -674,7 +683,7 @@ index 4b697f7..1f9bdce 100644
  {
      // Security check to avoid program crash
      if ((dst->data == NULL) || (dst->width == 0) || (dst->height == 0) ||
-@@ -3346,7 +3346,7 @@ void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color
+@@ -3473,7 +3473,7 @@ void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color
          {
              srcMod = ImageFromImage(src, srcRec);   // Create image from another image
              ImageResize(&srcMod, (int)dstRec.width, (int)dstRec.height);   // Resize to destination rectangle
@@ -683,7 +692,7 @@ index 4b697f7..1f9bdce 100644
  
              srcPtr = &srcMod;
              useSrcMod = true;
-@@ -3453,8 +3453,8 @@ void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position,
+@@ -3580,8 +3580,8 @@ void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position,
  {
      Image imText = ImageTextEx(font, text, fontSize, spacing, tint);
  
@@ -694,7 +703,7 @@ index 4b697f7..1f9bdce 100644
  
      ImageDraw(dst, imText, srcRec, dstRec, WHITE);
  
-@@ -3535,8 +3535,8 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
+@@ -3662,8 +3662,8 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
          int size = cubemap.width;
  
          Image faces = { 0 };                // Vertical column image
@@ -705,7 +714,7 @@ index 4b697f7..1f9bdce 100644
  
          if (layout == CUBEMAP_LAYOUT_LINE_VERTICAL)
          {
-@@ -3575,7 +3575,7 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
+@@ -3702,7 +3702,7 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
  
              // NOTE: Image formatting does not work with compressed textures
  
@@ -714,7 +723,7 @@ index 4b697f7..1f9bdce 100644
          }
  
          // NOTE: Cubemap data is expected to be provided as 6 images in a single data array,
-@@ -3684,7 +3684,7 @@ void UpdateTexture(Texture2D texture, const void *pixels)
+@@ -3814,7 +3814,7 @@ void UpdateTexture(Texture2D texture, const void *pixels)
  
  // Update GPU texture rectangle with new data
  // NOTE: pixels data must match texture.format
@@ -723,7 +732,7 @@ index 4b697f7..1f9bdce 100644
  {
      rlUpdateTexture(texture.id, (int)rec.x, (int)rec.y, (int)rec.width, (int)rec.height, texture.format, pixels);
  }
-@@ -3814,17 +3814,17 @@ void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
+@@ -3944,17 +3944,17 @@ void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
  // Draw a texture with extended parameters
  void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint)
  {
@@ -745,7 +754,7 @@ index 4b697f7..1f9bdce 100644
      Vector2 origin = { 0.0f, 0.0f };
  
      DrawTexturePro(texture, source, dest, origin, 0.0f, tint);
-@@ -3832,7 +3832,7 @@ void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color
+@@ -3962,7 +3962,7 @@ void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color
  
  // Draw a part of a texture (defined by a rectangle) with 'pro' parameters
  // NOTE: origin is relative to destination rectangle size
@@ -754,7 +763,7 @@ index 4b697f7..1f9bdce 100644
  {
      // Check if texture is valid
      if (texture.id > 0)
-@@ -3954,7 +3954,7 @@ void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2
+@@ -4084,7 +4084,7 @@ void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2
  }
  
  // Draws a texture (or part of it) that stretches or shrinks nicely using n-patch info
