@@ -1219,7 +1219,7 @@ func slerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   else:
     let halfTheta = arccos(cosHalfTheta)
     let sinHalfTheta = sqrt(1'f32 - cosHalfTheta * cosHalfTheta)
-    if abs(sinHalfTheta) < 0.001'f32:
+    if abs(sinHalfTheta) < 0.000001'f32:
       result.x = (q1.x * 0.5'f32 + q2.x * 0.5'f32)
       result.y = (q1.y * 0.5'f32 + q2.y * 0.5'f32)
       result.z = (q1.z * 0.5'f32 + q2.z * 0.5'f32)
@@ -1377,7 +1377,7 @@ func toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) {.
   var resAxis = Vector3(x: 0, y: 0, z: 0)
   let resAngle = 2'f32 * arccos(q.w)
   let den = sqrt(1'f32 - q.w * q.w)
-  if den > 0.0001'f32:
+  if den > 0.000001'f32:
     resAxis.x = q.x / den
     resAxis.y = q.y / den
     resAxis.z = q.z / den
