@@ -1162,8 +1162,7 @@ proc getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "G
   ## Get collision rectangle for two rectangles collision
 proc loadImagePriv(fileName: cstring): Image {.importc: when defined(windows): "rlLoadImage" else: "LoadImage".}
 proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw".}
-proc loadImageSvg*(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg".}
-  ## Load image from SVG file data or string with specified size
+proc loadImageSvgPriv(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg".}
 proc loadImageAnim*(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim".}
   ## Load image sequence from file (frames appended to image.data)
 proc loadImageFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Image {.importc: "LoadImageFromMemory".}
@@ -1526,7 +1525,6 @@ proc updateSoundPriv(sound: Sound, data: pointer, sampleCount: int32) {.importc:
 proc unloadWave(wave: Wave) {.importc: "UnloadWave".}
 proc unloadSound(sound: Sound) {.importc: "UnloadSound".}
 proc unloadSoundAlias(alias: Sound) {.importc: "UnloadSoundAlias".}
-  ## Unload a sound alias (does not deallocate sample data)
 proc exportWave*(wave: Wave, fileName: cstring): bool {.importc: "ExportWave".}
   ## Export wave data to file, returns true on success
 proc exportWaveAsCode*(wave: Wave, fileName: cstring): bool {.importc: "ExportWaveAsCode".}
@@ -1985,6 +1983,11 @@ proc loadImageRaw*(fileName: string, width, height: int32, format: PixelFormat, 
   ## Load image sequence from file (frames appended to image.data)
   result = loadImageRawPriv(fileName.cstring, width, height, format, headerSize)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
+
+proc loadImageSvg*(fileNameOrString: string, width, height: int32): Image =
+  ## Load image from SVG file data or string with specified size
+  result = loadImageSvgPriv(fileNameOrString.cstring, width, height)
+  if not isImageReady(result): raiseRaylibError("Failed to load Image from SVG")
 
 proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'

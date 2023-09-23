@@ -444,6 +444,7 @@ const
     "LoadImagePalette",
     "LoadImage",
     "LoadImageRaw",
+    "LoadImageSvg",
     "LoadImageFromMemory",
     "ExportImageToMemory",
     "LoadImageColors",

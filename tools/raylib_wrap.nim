@@ -189,6 +189,11 @@ proc loadImageRaw*(fileName: string, width, height: int32, format: PixelFormat, 
   result = loadImageRawPriv(fileName.cstring, width, height, format, headerSize)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
 
+proc loadImageSvg*(fileNameOrString: string, width, height: int32): Image =
+  ## Load image from SVG file data or string with specified size
+  result = loadImageSvgPriv(fileNameOrString.cstring, width, height)
+  if not isImageReady(result): raiseRaylibError("Failed to load Image from SVG")
+
 proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
   result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
