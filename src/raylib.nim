@@ -1160,7 +1160,7 @@ proc checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshol
   ## Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
 proc getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "GetCollisionRec".}
   ## Get collision rectangle for two rectangles collision
-proc loadImagePriv(fileName: cstring): Image {.importc: "LoadImage".}
+proc loadImagePriv(fileName: cstring): Image {.importc: when defined(windows): "rlLoadImage" else: "LoadImage".}
 proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw".}
 proc loadImageSvg*(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg".}
   ## Load image from SVG file data or string with specified size
@@ -1357,9 +1357,9 @@ proc exportFontAsCode*(font: Font, fileName: cstring): bool {.importc: "ExportFo
   ## Export font as code file, returns true on success
 proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS".}
   ## Draw current FPS
-proc drawText*(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "DrawText".}
+proc drawText*(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: when defined(windows): "rlDrawText" else: "DrawText".}
   ## Draw text (using default font)
-proc drawText*(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextEx".}
+proc drawText*(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: when defined(windows): "rlDrawTextEx" else: "DrawTextEx".}
   ## Draw text using font and additional parameters
 proc drawText*(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro".}
   ## Draw text using Font and pro parameters (rotation)

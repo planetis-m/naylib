@@ -1,5 +1,5 @@
 diff --git a/src/raylib.h b/src/raylib.h
-index 635b3df..89fed5b 100644
+index 635b3df..ec82e57 100644
 --- a/src/raylib.h
 +++ b/src/raylib.h
 @@ -241,12 +241,12 @@ typedef struct Color {
@@ -105,6 +105,15 @@ index 635b3df..89fed5b 100644
  
  //------------------------------------------------------------------------------------
  // Texture Loading and Drawing Functions (Module: textures)
+@@ -1244,7 +1244,7 @@ RLAPI Rectangle GetCollisionRec(Rectangle rec1, Rectangle rec2);
+ 
+ // Image loading functions
+ // NOTE: These functions do not require GPU access
+-RLAPI Image LoadImage(const char *fileName);                                                             // Load image from file into CPU memory (RAM)
++RLAPI Image rlLoadImage(const char *fileName);                                                             // Load image from file into CPU memory (RAM)
+ RLAPI Image LoadImageRaw(const char *fileName, int width, int height, int format, int headerSize);       // Load image from RAW file data
+ RLAPI Image LoadImageSvg(const char *fileNameOrString, int width, int height);                           // Load image from SVG file data or string with specified size
+ RLAPI Image LoadImageAnim(const char *fileName, int *frames);                                            // Load image sequence from file (frames appended to image.data)
 @@ -1270,12 +1270,12 @@ RLAPI Image GenImageText(int width, int height, const char *text);
  
  // Image manipulation functions
@@ -164,7 +173,7 @@ index 635b3df..89fed5b 100644
  
  // Color/pixel related functions
  RLAPI Color Fade(Color color, float alpha);                                 // Get color with alpha applied, alpha goes from 0.0f to 1.0f
-@@ -1378,7 +1378,7 @@ RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);
+@@ -1378,15 +1378,15 @@ RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);
  RLAPI Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount); // Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
  RLAPI bool IsFontReady(Font font);                                                          // Check if a font is ready
  RLAPI GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount, int type); // Load font data for further use
@@ -173,6 +182,16 @@ index 635b3df..89fed5b 100644
  RLAPI void UnloadFontData(GlyphInfo *glyphs, int glyphCount);                                // Unload font chars info data (RAM)
  RLAPI void UnloadFont(Font font);                                                           // Unload font from GPU memory (VRAM)
  RLAPI bool ExportFontAsCode(Font font, const char *fileName);                               // Export font as code file, returns true on success
+ 
+ // Text drawing functions
+ RLAPI void DrawFPS(int posX, int posY);                                                     // Draw current FPS
+-RLAPI void DrawText(const char *text, int posX, int posY, int fontSize, Color color);       // Draw text (using default font)
+-RLAPI void DrawTextEx(Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text using font and additional parameters
++RLAPI void rlDrawText(const char *text, int posX, int posY, int fontSize, Color color);       // Draw text (using default font)
++RLAPI void rlDrawTextEx(Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text using font and additional parameters
+ RLAPI void DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint); // Draw text using Font and pro parameters (rotation)
+ RLAPI void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSize, Color tint); // Draw one character (codepoint)
+ RLAPI void DrawTextCodepoints(Font font, const int *codepoints, int codepointCount, Vector2 position, float fontSize, float spacing, Color tint); // Draw multiple character (codepoint)
 @@ -1397,7 +1397,7 @@ RLAPI int MeasureText(const char *text, int fontSize);
  RLAPI Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing);    // Measure string size for Font
  RLAPI int GetGlyphIndex(Font font, int codepoint);                                          // Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
@@ -194,7 +213,7 @@ index 635b3df..89fed5b 100644
  // Mesh management functions
  RLAPI void UploadMesh(Mesh *mesh, bool dynamic);                                            // Upload mesh vertex data in GPU and provide VAO/VBO ids
 diff --git a/src/rcore.c b/src/rcore.c
-index 26ff79d..44aa008 100644
+index 26ff79d..2638a6f 100644
 --- a/src/rcore.c
 +++ b/src/rcore.c
 @@ -344,7 +344,7 @@ typedef struct {
@@ -253,6 +272,33 @@ index 26ff79d..44aa008 100644
  {
  #if defined(PLATFORM_DESKTOP)
      glfwSetInputMode(CORE.Window.handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+@@ -2327,7 +2327,7 @@ void EndDrawing(void)
+         if (((gifFrameCounter/15)%2) == 1)
+         {
+             DrawCircle(30, CORE.Window.screen.height - 20, 10, MAROON);                 // WARNING: Module required: rshapes
+-            DrawText("GIF RECORDING", 50, CORE.Window.screen.height - 25, 10, RED);     // WARNING: Module required: rtext
++            rlDrawText("GIF RECORDING", 50, CORE.Window.screen.height - 25, 10, RED);     // WARNING: Module required: rtext
+         }
+     #endif
+ 
+@@ -2344,7 +2344,7 @@ void EndDrawing(void)
+         if (((gifFrameCounter/15)%2) == 1)
+         {
+             DrawCircle(30, CORE.Window.screen.height - 20, 10, MAROON);
+-            DrawText("EVENTS RECORDING", 50, CORE.Window.screen.height - 25, 10, RED);
++            rlDrawText("EVENTS RECORDING", 50, CORE.Window.screen.height - 25, 10, RED);
+         }
+ 
+         rlDrawRenderBatchActive();  // Update and draw internal render batch
+@@ -2356,7 +2356,7 @@ void EndDrawing(void)
+         if (((gifFrameCounter/15)%2) == 1)
+         {
+             DrawCircle(30, CORE.Window.screen.height - 20, 10, LIME);
+-            DrawText("EVENTS PLAYING", 50, CORE.Window.screen.height - 25, 10, GREEN);
++            rlDrawText("EVENTS PLAYING", 50, CORE.Window.screen.height - 25, 10, GREEN);
+         }
+ 
+         rlDrawRenderBatchActive();  // Update and draw internal render batch
 @@ -5892,10 +5892,10 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
                      // Load default font
                      // WARNING: External function: Module required: rtext
@@ -267,7 +313,7 @@ index 26ff79d..44aa008 100644
                  #endif
  
 diff --git a/src/rmodels.c b/src/rmodels.c
-index f9ceec1..84811a5 100644
+index f9ceec1..f7e3c22 100644
 --- a/src/rmodels.c
 +++ b/src/rmodels.c
 @@ -3474,13 +3474,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
@@ -295,6 +341,15 @@ index f9ceec1..84811a5 100644
  {
      // NOTE: Billboard size will maintain source rectangle aspect ratio, size will represent billboard width
      Vector2 sizeRatio = { size.x*fabsf((float)source.width/source.height), size.y };
+@@ -4710,7 +4710,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
+         }
+         else     // Check if image is provided as image path
+         {
+-            image = LoadImage(TextFormat("%s/%s", texPath, cgltfImage->uri));
++            image = rlLoadImage(TextFormat("%s/%s", texPath, cgltfImage->uri));
+         }
+     }
+     else if (cgltfImage->buffer_view->buffer->data != NULL)    // Check if image is provided as data buffer
 diff --git a/src/rshapes.c b/src/rshapes.c
 index f3061f8..c6283fb 100644
 --- a/src/rshapes.c
@@ -460,7 +515,7 @@ index f3061f8..c6283fb 100644
      float left = (rec1.x > rec2.x)? rec1.x : rec2.x;
      float right1 = rec1.x + rec1.width;
 diff --git a/src/rtext.c b/src/rtext.c
-index fb84401..38188f9 100644
+index fb84401..b6ba78f 100644
 --- a/src/rtext.c
 +++ b/src/rtext.c
 @@ -243,7 +243,7 @@ extern void LoadFontDefault(void)
@@ -472,6 +527,15 @@ index fb84401..38188f9 100644
  
      int currentLine = 0;
      int currentPosX = charsDivisor;
+@@ -336,7 +336,7 @@ Font LoadFont(const char *fileName)
+     else
+ #endif
+     {
+-        Image image = LoadImage(fileName);
++        Image image = rlLoadImage(fileName);
+         if (image.data != NULL) font = LoadFontFromImage(image, MAGENTA, FONT_TTF_DEFAULT_FIRST_CHAR);
+         UnloadImage(image);
+     }
 @@ -398,7 +398,7 @@ Font LoadFontFromImage(Image image, Color key, int firstChar)
      // We allocate a temporal arrays for chars data measures,
      // once we get the actual number of chars, we copy data to a sized arrays
@@ -528,6 +592,47 @@ index fb84401..38188f9 100644
  
      byteCount += sprintf(txtData + byteCount, "    // Copy font glyph info data from global fontChars\n");
      byteCount += sprintf(txtData + byteCount, "    // NOTE: Required to avoid issues if trying to free font\n");
+@@ -1075,13 +1075,13 @@ void DrawFPS(int posX, int posY)
+     if ((fps < 30) && (fps >= 15)) color = ORANGE;  // Warning FPS
+     else if (fps < 15) color = RED;             // Low FPS
+ 
+-    DrawText(TextFormat("%2i FPS", fps), posX, posY, 20, color);
++    rlDrawText(TextFormat("%2i FPS", fps), posX, posY, 20, color);
+ }
+ 
+ // Draw text (using default font)
+ // NOTE: fontSize work like in any drawing program but if fontSize is lower than font-base-size, then font-base-size is used
+ // NOTE: chars spacing is proportional to fontSize
+-void DrawText(const char *text, int posX, int posY, int fontSize, Color color)
++void rlDrawText(const char *text, int posX, int posY, int fontSize, Color color)
+ {
+     // Check if default font has been loaded
+     if (GetFontDefault().texture.id != 0)
+@@ -1092,13 +1092,13 @@ void DrawText(const char *text, int posX, int posY, int fontSize, Color color)
+         if (fontSize < defaultFontSize) fontSize = defaultFontSize;
+         int spacing = fontSize/defaultFontSize;
+ 
+-        DrawTextEx(GetFontDefault(), text, position, (float)fontSize, (float)spacing, color);
++        rlDrawTextEx(GetFontDefault(), text, position, (float)fontSize, (float)spacing, color);
+     }
+ }
+ 
+ // Draw text using Font
+ // NOTE: chars spacing is NOT proportional to fontSize
+-void DrawTextEx(Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint)
++void rlDrawTextEx(Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint)
+ {
+     if (font.texture.id == 0) font = GetFontDefault();  // Security check in case of not valid font
+ 
+@@ -1146,7 +1146,7 @@ void DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin,
+         rlRotatef(rotation, 0.0f, 0.0f, 1.0f);
+         rlTranslatef(-origin.x, -origin.y, 0.0f);
+ 
+-        DrawTextEx(font, text, (Vector2){ 0.0f, 0.0f }, fontSize, spacing, tint);
++        rlDrawTextEx(font, text, (Vector2){ 0.0f, 0.0f }, fontSize, spacing, tint);
+ 
+     rlPopMatrix();
+ }
 @@ -1161,14 +1161,14 @@ void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSiz
  
      // Character destination rectangle on screen
@@ -557,6 +662,15 @@ index fb84401..38188f9 100644
  
      rec = font.recs[GetGlyphIndex(font, codepoint)];
  
+@@ -2071,7 +2071,7 @@ static Font LoadBMFont(const char *fileName)
+ 
+     TRACELOGD("    > Image loading path: %s", imPath);
+ 
+-    Image imFont = LoadImage(imPath);
++    Image imFont = rlLoadImage(imPath);
+ 
+     if (imFont.format == PIXELFORMAT_UNCOMPRESSED_GRAYSCALE)
+     {
 @@ -2103,7 +2103,7 @@ static Font LoadBMFont(const char *fileName)
      font.glyphCount = glyphCount;
      font.glyphPadding = 0;
@@ -576,9 +690,27 @@ index fb84401..38188f9 100644
          // Save data properly in sprite font
          font.glyphs[i].value = charId;
 diff --git a/src/rtextures.c b/src/rtextures.c
-index 8dc49fa..f0e19c4 100644
+index 8dc49fa..9fc8a2d 100644
 --- a/src/rtextures.c
 +++ b/src/rtextures.c
+@@ -261,7 +261,7 @@ static Vector4 *LoadImageDataNormalized(Image image);       // Load pixel data f
+ //----------------------------------------------------------------------------------
+ 
+ // Load image from file into CPU memory (RAM)
+-Image LoadImage(const char *fileName)
++Image rlLoadImage(const char *fileName)
+ {
+     Image image = { 0 };
+ 
+@@ -429,7 +429,7 @@ Image LoadImageAnim(const char *fileName, int *frames)
+ #endif
+     else
+     {
+-        image = LoadImage(fileName);
++        image = rlLoadImage(fileName);
+         frameCount = 1;
+     }
+ 
 @@ -1198,7 +1198,7 @@ Image ImageCopy(Image image)
  }
  
@@ -703,6 +835,15 @@ index 8dc49fa..f0e19c4 100644
  
      ImageDraw(dst, imText, srcRec, dstRec, WHITE);
  
+@@ -3596,7 +3596,7 @@ Texture2D LoadTexture(const char *fileName)
+ {
+     Texture2D texture = { 0 };
+ 
+-    Image image = LoadImage(fileName);
++    Image image = rlLoadImage(fileName);
+ 
+     if (image.data != NULL)
+     {
 @@ -3662,8 +3662,8 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
          int size = cubemap.width;
  
