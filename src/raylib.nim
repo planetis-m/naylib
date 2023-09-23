@@ -1519,14 +1519,13 @@ proc isWaveReady*(wave: Wave): bool {.importc: "IsWaveReady".}
   ## Checks if wave data is ready
 proc loadSoundPriv(fileName: cstring): Sound {.importc: "LoadSound".}
 proc loadSoundFromWavePriv(wave: Wave): Sound {.importc: "LoadSoundFromWave".}
-proc loadSoundAlias*(source: Sound): Sound {.importc: "LoadSoundAlias".}
-  ## Create a new sound that shares the same sample data as the source sound, does not own the sound data
+proc loadSoundAliasPriv(source: Sound): Sound {.importc: "LoadSoundAlias".}
 proc isSoundReady*(sound: Sound): bool {.importc: "IsSoundReady".}
   ## Checks if a sound is ready
 proc updateSoundPriv(sound: Sound, data: pointer, sampleCount: int32) {.importc: "UpdateSound".}
 proc unloadWave(wave: Wave) {.importc: "UnloadWave".}
 proc unloadSound(sound: Sound) {.importc: "UnloadSound".}
-proc unloadSoundAlias*(alias: Sound) {.importc: "UnloadSoundAlias".}
+proc unloadSoundAlias(alias: Sound) {.importc: "UnloadSoundAlias".}
   ## Unload a sound alias (does not deallocate sample data)
 proc exportWave*(wave: Wave, fileName: cstring): bool {.importc: "ExportWave".}
   ## Export wave data to file, returns true on success
@@ -1627,6 +1626,7 @@ type
   WeakFont* = distinct Font
 
   ShaderLocsPtr* = distinct typeof(Shader.locs)
+  SoundAlias* = distinct Sound
 
 proc `=destroy`*(x: WeakImage) = discard
 proc `=dup`*(source: WeakImage): WeakImage {.nodestroy.} = source
@@ -1718,6 +1718,9 @@ proc `=destroy`*(x: Sound) =
   unloadSound(x)
 proc `=dup`*(source: Sound): Sound {.error.}
 proc `=copy`*(dest: var Sound; source: Sound) {.error.}
+
+proc `=destroy`*(x: SoundAlias) =
+  unloadSoundAlias(Sound(x))
 
 proc `=destroy`*(x: Music) =
   unloadMusicStream(x)
@@ -2162,6 +2165,11 @@ proc loadSound*(fileName: string): Sound =
   ## Load sound from file
   result = loadSoundPriv(fileName.cstring)
   if not isSoundReady(result): raiseRaylibError("Failed to load Sound from " & fileName)
+
+proc loadSoundAlias*(source: Sound): SoundAlias =
+  ## Create a new sound that shares the same sample data as the source sound, does not own the sound data
+  result = SoundAlias(loadSoundAliasPriv(source))
+  if not isSoundReady(Sound(result)): raiseRaylibError("Failed to load SoundAlias from source")
 
 proc loadSoundFromWave*(wave: Wave): Sound =
   ## Load sound from wave data

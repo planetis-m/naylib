@@ -5,6 +5,7 @@ type
   WeakFont* = distinct Font
 
   ShaderLocsPtr* = distinct typeof(Shader.locs)
+  SoundAlias* = distinct Sound
 
 proc `=destroy`*(x: WeakImage) = discard
 proc `=dup`*(source: WeakImage): WeakImage {.nodestroy.} = source
@@ -96,6 +97,9 @@ proc `=destroy`*(x: Sound) =
   unloadSound(x)
 proc `=dup`*(source: Sound): Sound {.error.}
 proc `=copy`*(dest: var Sound; source: Sound) {.error.}
+
+proc `=destroy`*(x: SoundAlias) =
+  unloadSoundAlias(Sound(x))
 
 proc `=destroy`*(x: Music) =
   unloadMusicStream(x)

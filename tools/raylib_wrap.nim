@@ -369,6 +369,11 @@ proc loadSound*(fileName: string): Sound =
   result = loadSoundPriv(fileName.cstring)
   if not isSoundReady(result): raiseRaylibError("Failed to load Sound from " & fileName)
 
+proc loadSoundAlias*(source: Sound): SoundAlias =
+  ## Create a new sound that shares the same sample data as the source sound, does not own the sound data
+  result = SoundAlias(loadSoundAliasPriv(source))
+  if not isSoundReady(Sound(result)): raiseRaylibError("Failed to load SoundAlias from source")
+
 proc loadSoundFromWave*(wave: Wave): Sound =
   ## Load sound from wave data
   result = loadSoundFromWavePriv(wave)

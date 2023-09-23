@@ -421,6 +421,7 @@ const
     "UnloadModelAnimation",
     "UnloadWave",
     "UnloadSound",
+    "UnloadSoundAlias",
     "UnloadMusicStream",
     "UnloadAudioStream",
   ]
@@ -472,6 +473,7 @@ const
     "LoadModelFromMesh",
     "LoadWave",
     "LoadSound",
+    "LoadSoundAlias",
     "LoadSoundFromWave",
     "LoadWaveFromMemory",
     "LoadMusicStream",
