@@ -685,7 +685,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
           let kind = convertType(fnc.returnType, "", many, not isPrivate, baseKind)
           lit kind
       lit " {.importc: "
-      if fnc.name in ["ShowCursor", "rlShowCursor", "CloseWindow", "rlCloseWindow"]:
+      if fnc.name in ["ShowCursor", "rlShowCursor", "CloseWindow", "rlCloseWindow",
+          "LoadImage", "rlLoadImage", "DrawText", "rlDrawText", "DrawTextEx", "rlDrawTextEx"]:
         lit "when defined(windows): \""
         if not startsWith(fnc.name, "rl"): lit "rl"
         ident fnc.name
