@@ -315,7 +315,7 @@ into procs that employ them, such as ``setShaderValue`` and ``updateTexture``.
 Using IsReady() in Asset Loading
 --------------------------------
 
-To prevent unexpected behavior or crashes, Load() functions utilize IsReady() to confirm
+To prevent unexpected behavior or crashes, ``Load()`` functions utilize ``IsReady()`` to confirm
 asset loading success and raise ``RaylibError`` if an asset is not found. This approach
 ensures that the program not only logs an error but also immediately takes action to
 handle it appropriately.
@@ -333,12 +333,12 @@ While we believe that Naylib provides a great option for game development with N
 understand that it may not be the perfect fit for everyone. Here are some alternative
 libraries that you may want to check out:
 
-- `NimForUE <https://github.com/jmgomez/NimForUE>`_ - a Nim plugin for the Unreal Engine 5.
+- `NimForUE <https://github.com/jmgomez/NimForUE>`_ - A Nim plugin for the Unreal Engine 5.
 - `godot-nim <https://github.com/pragmagic/godot-nim>`_ - Nim bindings for the Godot game engine.
 - `sokol-nim <https://github.com/floooh/sokol-nim>`_ - Auto-generated Nim bindings for the sokol headers.
-- `nimrodot <https://github.com/chmod222/nimrodot>`_ - Nim Godot 4.x GDExtension wrapper (POC)
-- `nico <https://github.com/ftsf/nico>`_ - a Nim-based game framework inspired by Pico-8.
-- `p5nim <https://github.com/pietroppeter/p5nim>`_ - a processing library for Nim.
+- `godot-nim <https://github.com/panno8M/godot-nim>`_ - Godot 4.x bindings for nim-lang (early stage).
+- `nico <https://github.com/ftsf/nico>`_ - A Nim-based game framework inspired by Pico-8.
+- `p5nim <https://github.com/pietroppeter/p5nim>`_ - A processing library for Nim.
 
 For more game development options in Nim, you can check out
 `awesome-nim <https://github.com/ringabout/awesome-nim#game-development>`_.
