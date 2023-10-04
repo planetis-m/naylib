@@ -1,5 +1,5 @@
 diff --git a/src/raylib.h b/src/raylib.h
-index 635b3df..ec82e57 100644
+index f52f346..d118b9d 100644
 --- a/src/raylib.h
 +++ b/src/raylib.h
 @@ -241,12 +241,12 @@ typedef struct Color {
@@ -152,7 +152,7 @@ index 635b3df..ec82e57 100644
  RLAPI void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text (custom sprite font) within an image (destination)
  
 @@ -1334,7 +1334,7 @@ RLAPI void UnloadTexture(Texture2D texture);
- RLAPI bool IsRenderTextureReady(RenderTexture2D target);                                                       // Check if a render texture is ready
+ RLAPI bool IsRenderTextureReady(RenderTexture2D target);                                                 // Check if a render texture is ready
  RLAPI void UnloadRenderTexture(RenderTexture2D target);                                                  // Unload render texture from GPU memory (VRAM)
  RLAPI void UpdateTexture(Texture2D texture, const void *pixels);                                         // Update GPU texture with new data
 -RLAPI void UpdateTextureRec(Texture2D texture, Rectangle rec, const void *pixels);                       // Update GPU texture rectangle with new data
@@ -179,7 +179,7 @@ index 635b3df..ec82e57 100644
  RLAPI GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount, int type); // Load font data for further use
 -RLAPI Image GenImageFontAtlas(const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod); // Generate image font atlas using chars info
 +RLAPI Image GenImageFontAtlas(const GlyphInfo *glyphs, rlRectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod); // Generate image font atlas using chars info
- RLAPI void UnloadFontData(GlyphInfo *glyphs, int glyphCount);                                // Unload font chars info data (RAM)
+ RLAPI void UnloadFontData(GlyphInfo *glyphs, int glyphCount);                               // Unload font chars info data (RAM)
  RLAPI void UnloadFont(Font font);                                                           // Unload font from GPU memory (VRAM)
  RLAPI bool ExportFontAsCode(Font font, const char *fileName);                               // Export font as code file, returns true on success
  
@@ -213,7 +213,7 @@ index 635b3df..ec82e57 100644
  // Mesh management functions
  RLAPI void UploadMesh(Mesh *mesh, bool dynamic);                                            // Upload mesh vertex data in GPU and provide VAO/VBO ids
 diff --git a/src/rcore.c b/src/rcore.c
-index 26ff79d..2638a6f 100644
+index 3ba0404..a20240d 100644
 --- a/src/rcore.c
 +++ b/src/rcore.c
 @@ -344,7 +344,7 @@ typedef struct {
@@ -299,7 +299,7 @@ index 26ff79d..2638a6f 100644
          }
  
          rlDrawRenderBatchActive();  // Update and draw internal render batch
-@@ -5892,10 +5892,10 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
+@@ -5890,10 +5890,10 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
                      // Load default font
                      // WARNING: External function: Module required: rtext
                      LoadFontDefault();
@@ -690,7 +690,7 @@ index fb84401..b6ba78f 100644
          // Save data properly in sprite font
          font.glyphs[i].value = charId;
 diff --git a/src/rtextures.c b/src/rtextures.c
-index 8dc49fa..9fc8a2d 100644
+index fa8d91e..10698c1 100644
 --- a/src/rtextures.c
 +++ b/src/rtextures.c
 @@ -261,7 +261,7 @@ static Vector4 *LoadImageDataNormalized(Image image);       // Load pixel data f
