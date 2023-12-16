@@ -668,7 +668,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
                 lit enumInFuncs[j]
                 break outer
             let many = (fnc.name, param.name) != ("LoadImageAnim", "frames") and
-              isPlural(param.name) and (fnc.name, param.name) == ("ImageKernelConvolution", "kernel")
+              isPlural(param.name) or (fnc.name, param.name) == ("ImageKernelConvolution", "kernel")
             const
               replacements = [
                 ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[$1]"),

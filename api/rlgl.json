@@ -523,6 +523,18 @@
       "description": ""
     },
     {
+      "name": "GLAD_API_CALL_EXPORT",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "GLAD_API_CALL_EXPORT_BUILD",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
       "name": "APIENTRY",
       "type": "UNKNOWN",
       "value": "__stdcall",
@@ -553,13 +565,13 @@
       "description": ""
     },
     {
-      "name": "GLAD_GLES2_IMPLEMENTATION",
+      "name": "GL_GLEXT_PROTOTYPES",
       "type": "GUARD",
       "value": "",
       "description": ""
     },
     {
-      "name": "GL_GLEXT_PROTOTYPES",
+      "name": "GLAD_GLES2_IMPLEMENTATION",
       "type": "GUARD",
       "value": "",
       "description": ""
@@ -1269,7 +1281,7 @@
         {
           "name": "RL_OPENGL_ES_30",
           "value": 6,
-          "description": "OpenGL ES 3.0 (GLSL 300 es)    "
+          "description": "OpenGL ES 3.0 (GLSL 300 es)"
         }
       ]
     },
@@ -1374,58 +1386,73 @@
           "description": "32*4 bpp (4 channels - float)"
         },
         {
-          "name": "RL_PIXELFORMAT_COMPRESSED_DXT1_RGB",
+          "name": "RL_PIXELFORMAT_UNCOMPRESSED_R16",
           "value": 11,
+          "description": "16 bpp (1 channel - half float)"
+        },
+        {
+          "name": "RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16",
+          "value": 12,
+          "description": "16*3 bpp (3 channels - half float)"
+        },
+        {
+          "name": "RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16",
+          "value": 13,
+          "description": "16*4 bpp (4 channels - half float)"
+        },
+        {
+          "name": "RL_PIXELFORMAT_COMPRESSED_DXT1_RGB",
+          "value": 14,
           "description": "4 bpp (no alpha)"
         },
         {
           "name": "RL_PIXELFORMAT_COMPRESSED_DXT1_RGBA",
-          "value": 12,
+          "value": 15,
           "description": "4 bpp (1 bit alpha)"
         },
         {
           "name": "RL_PIXELFORMAT_COMPRESSED_DXT3_RGBA",
-          "value": 13,
+          "value": 16,
           "description": "8 bpp"
         },
         {
           "name": "RL_PIXELFORMAT_COMPRESSED_DXT5_RGBA",
-          "value": 14,
-          "description": "8 bpp"
-        },
-        {
-          "name": "RL_PIXELFORMAT_COMPRESSED_ETC1_RGB",
-          "value": 15,
-          "description": "4 bpp"
-        },
-        {
-          "name": "RL_PIXELFORMAT_COMPRESSED_ETC2_RGB",
-          "value": 16,
-          "description": "4 bpp"
-        },
-        {
-          "name": "RL_PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA",
           "value": 17,
           "description": "8 bpp"
         },
         {
-          "name": "RL_PIXELFORMAT_COMPRESSED_PVRT_RGB",
+          "name": "RL_PIXELFORMAT_COMPRESSED_ETC1_RGB",
           "value": 18,
           "description": "4 bpp"
         },
         {
-          "name": "RL_PIXELFORMAT_COMPRESSED_PVRT_RGBA",
+          "name": "RL_PIXELFORMAT_COMPRESSED_ETC2_RGB",
           "value": 19,
           "description": "4 bpp"
         },
         {
-          "name": "RL_PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA",
+          "name": "RL_PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA",
           "value": 20,
           "description": "8 bpp"
         },
         {
-          "name": "RL_PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA",
+          "name": "RL_PIXELFORMAT_COMPRESSED_PVRT_RGB",
           "value": 21,
+          "description": "4 bpp"
+        },
+        {
+          "name": "RL_PIXELFORMAT_COMPRESSED_PVRT_RGBA",
+          "value": 22,
+          "description": "4 bpp"
+        },
+        {
+          "name": "RL_PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA",
+          "value": 23,
+          "description": "8 bpp"
+        },
+        {
+          "name": "RL_PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA",
+          "value": 24,
           "description": "2 bpp"
         }
       ]
@@ -2426,6 +2453,49 @@
       ]
     },
     {
+      "name": "rlBlitFramebuffer",
+      "description": "Blit active framebuffer to main framebuffer",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "srcX"
+        },
+        {
+          "type": "int",
+          "name": "srcY"
+        },
+        {
+          "type": "int",
+          "name": "srcWidth"
+        },
+        {
+          "type": "int",
+          "name": "srcHeight"
+        },
+        {
+          "type": "int",
+          "name": "dstX"
+        },
+        {
+          "type": "int",
+          "name": "dstY"
+        },
+        {
+          "type": "int",
+          "name": "dstWidth"
+        },
+        {
+          "type": "int",
+          "name": "dstHeight"
+        },
+        {
+          "type": "int",
+          "name": "bufferMask"
+        }
+      ]
+    },
+    {
       "name": "rlEnableColorBlend",
       "description": "Enable color blending",
       "returnType": "void"
@@ -2515,8 +2585,13 @@
       "returnType": "void"
     },
     {
+      "name": "rlEnablePointMode",
+      "description": "Enable point mode",
+      "returnType": "void"
+    },
+    {
       "name": "rlDisableWireMode",
-      "description": "Disable wire mode",
+      "description": "Disable wire mode ( and point ) maybe rename",
       "returnType": "void"
     },
     {
@@ -2819,7 +2894,7 @@
     },
     {
       "name": "rlLoadVertexBuffer",
-      "description": "Load a vertex buffer attribute",
+      "description": "Load a vertex buffer object",
       "returnType": "unsigned int",
       "params": [
         {
@@ -2838,7 +2913,7 @@
     },
     {
       "name": "rlLoadVertexBufferElement",
-      "description": "Load a new attributes element buffer",
+      "description": "Load vertex buffer elements object",
       "returnType": "unsigned int",
       "params": [
         {
@@ -2857,7 +2932,7 @@
     },
     {
       "name": "rlUpdateVertexBuffer",
-      "description": "Update GPU buffer with new data",
+      "description": "Update vertex buffer object data on GPU buffer",
       "returnType": "void",
       "params": [
         {
@@ -2880,7 +2955,7 @@
     },
     {
       "name": "rlUpdateVertexBufferElements",
-      "description": "Update vertex buffer elements with new data",
+      "description": "Update vertex buffer elements data on GPU buffer",
       "returnType": "void",
       "params": [
         {
@@ -2903,7 +2978,7 @@
     },
     {
       "name": "rlUnloadVertexArray",
-      "description": "",
+      "description": "Unload vertex array (vao)",
       "returnType": "void",
       "params": [
         {
@@ -2914,7 +2989,7 @@
     },
     {
       "name": "rlUnloadVertexBuffer",
-      "description": "",
+      "description": "Unload vertex buffer object",
       "returnType": "void",
       "params": [
         {
@@ -2925,7 +3000,7 @@
     },
     {
       "name": "rlSetVertexAttribute",
-      "description": "",
+      "description": "Set vertex attribute data configuration",
       "returnType": "void",
       "params": [
         {
@@ -2956,7 +3031,7 @@
     },
     {
       "name": "rlSetVertexAttributeDivisor",
-      "description": "",
+      "description": "Set vertex attribute data divisor",
       "returnType": "void",
       "params": [
         {
@@ -2971,7 +3046,7 @@
     },
     {
       "name": "rlSetVertexAttributeDefault",
-      "description": "Set vertex attribute default value",
+      "description": "Set vertex attribute default value, when attribute to provided",
       "returnType": "void",
       "params": [
         {
@@ -2994,7 +3069,7 @@
     },
     {
       "name": "rlDrawVertexArray",
-      "description": "",
+      "description": "Draw vertex array (currently active vao)",
       "returnType": "void",
       "params": [
         {
@@ -3009,7 +3084,7 @@
     },
     {
       "name": "rlDrawVertexArrayElements",
-      "description": "",
+      "description": "Draw vertex array elements",
       "returnType": "void",
       "params": [
         {
@@ -3028,7 +3103,7 @@
     },
     {
       "name": "rlDrawVertexArrayInstanced",
-      "description": "",
+      "description": "Draw vertex array (currently active vao) with instancing",
       "returnType": "void",
       "params": [
         {
@@ -3047,7 +3122,7 @@
     },
     {
       "name": "rlDrawVertexArrayElementsInstanced",
-      "description": "",
+      "description": "Draw vertex array elements with instancing",
       "returnType": "void",
       "params": [
         {
@@ -3070,7 +3145,7 @@
     },
     {
       "name": "rlLoadTexture",
-      "description": "Load texture in GPU",
+      "description": "Load texture data",
       "returnType": "unsigned int",
       "params": [
         {
@@ -3116,7 +3191,7 @@
     },
     {
       "name": "rlLoadTextureCubemap",
-      "description": "Load texture cubemap",
+      "description": "Load texture cubemap data",
       "returnType": "unsigned int",
       "params": [
         {
@@ -3135,7 +3210,7 @@
     },
     {
       "name": "rlUpdateTexture",
-      "description": "Update GPU texture with new data",
+      "description": "Update texture with new data on GPU",
       "returnType": "void",
       "params": [
         {

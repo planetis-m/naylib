@@ -133,7 +133,7 @@ type
     Opengl33 ## OpenGL 3.3 (GLSL 330)
     Opengl43 ## OpenGL 4.3 (using GLSL 330)
     OpenglEs20 ## OpenGL ES 2.0 (GLSL 100)
-    OpenglEs30 ## OpenGL ES 3.0 (GLSL 300 es)    
+    OpenglEs30 ## OpenGL ES 3.0 (GLSL 300 es)
 
   FramebufferAttachType* {.size: sizeof(int32).} = enum ## Framebuffer attachment type
     ColorChannel0 ## Framebuffer attachment type: color 0
@@ -282,6 +282,8 @@ proc disableFramebuffer*() {.importc: "rlDisableFramebuffer".}
   ## Disable render texture (fbo), return to default framebuffer
 proc activeDrawBuffers*(count: int32) {.importc: "rlActiveDrawBuffers".}
   ## Activate multiple draw color buffers
+proc blitFramebuffer*(srcX: int32, srcY: int32, srcWidth: int32, srcHeight: int32, dstX: int32, dstY: int32, dstWidth: int32, dstHeight: int32, bufferMask: int32) {.importc: "rlBlitFramebuffer".}
+  ## Blit active framebuffer to main framebuffer
 proc enableColorBlend*() {.importc: "rlEnableColorBlend".}
   ## Enable color blending
 proc disableColorBlend*() {.importc: "rlDisableColorBlend".}
@@ -308,8 +310,10 @@ proc scissor*(x: int32, y: int32, width: int32, height: int32) {.importc: "rlSci
   ## Scissor test
 proc enableWireMode*() {.importc: "rlEnableWireMode".}
   ## Enable wire mode
+proc enablePointMode*() {.importc: "rlEnablePointMode".}
+  ## Enable point mode
 proc disableWireMode*() {.importc: "rlDisableWireMode".}
-  ## Disable wire mode
+  ## Disable wire mode ( and point ) maybe rename
 proc setLineWidth*(width: float32) {.importc: "rlSetLineWidth".}
   ## Set the line drawing width
 proc getLineWidth*(): float32 {.importc: "rlGetLineWidth".}
@@ -375,31 +379,39 @@ proc setTexture*(id: uint32) {.importc: "rlSetTexture".}
 proc loadVertexArray*(): uint32 {.importc: "rlLoadVertexArray".}
   ## Load vertex array (vao) if supported
 proc loadVertexBuffer*(buffer: pointer, size: int32, dynamic: bool): uint32 {.importc: "rlLoadVertexBuffer".}
-  ## Load a vertex buffer attribute
+  ## Load a vertex buffer object
 proc loadVertexBufferElement*(buffer: pointer, size: int32, dynamic: bool): uint32 {.importc: "rlLoadVertexBufferElement".}
-  ## Load a new attributes element buffer
+  ## Load vertex buffer elements object
 proc updateVertexBuffer*(bufferId: uint32, data: pointer, dataSize: int32, offset: int32) {.importc: "rlUpdateVertexBuffer".}
-  ## Update GPU buffer with new data
+  ## Update vertex buffer object data on GPU buffer
 proc updateVertexBufferElements*(id: uint32, data: pointer, dataSize: int32, offset: int32) {.importc: "rlUpdateVertexBufferElements".}
-  ## Update vertex buffer elements with new data
+  ## Update vertex buffer elements data on GPU buffer
 proc unloadVertexArray*(vaoId: uint32) {.importc: "rlUnloadVertexArray".}
+  ## Unload vertex array (vao)
 proc unloadVertexBuffer*(vboId: uint32) {.importc: "rlUnloadVertexBuffer".}
+  ## Unload vertex buffer object
 proc setVertexAttribute*(index: uint32, compSize: int32, `type`: GlType, normalized: bool, stride: int32, pointer: pointer) {.importc: "rlSetVertexAttribute".}
+  ## Set vertex attribute data configuration
 proc setVertexAttributeDivisor*(index: uint32, divisor: int32) {.importc: "rlSetVertexAttributeDivisor".}
+  ## Set vertex attribute data divisor
 proc setVertexAttributeDefault*(locIndex: ShaderLocation, value: pointer, attribType: ShaderAttributeDataType, count: int32) {.importc: "rlSetVertexAttributeDefault".}
-  ## Set vertex attribute default value
+  ## Set vertex attribute default value, when attribute to provided
 proc drawVertexArray*(offset: int32, count: int32) {.importc: "rlDrawVertexArray".}
+  ## Draw vertex array (currently active vao)
 proc drawVertexArrayElements*(offset: int32, count: int32, buffer: pointer) {.importc: "rlDrawVertexArrayElements".}
+  ## Draw vertex array elements
 proc drawVertexArrayInstanced*(offset: int32, count: int32, instances: int32) {.importc: "rlDrawVertexArrayInstanced".}
+  ## Draw vertex array (currently active vao) with instancing
 proc drawVertexArrayElementsInstanced*(offset: int32, count: int32, buffer: pointer, instances: int32) {.importc: "rlDrawVertexArrayElementsInstanced".}
+  ## Draw vertex array elements with instancing
 proc loadTexture*(data: pointer, width: int32, height: int32, format: int32, mipmapCount: int32): uint32 {.importc: "rlLoadTexture".}
-  ## Load texture in GPU
+  ## Load texture data
 proc loadTextureDepth*(width: int32, height: int32, useRenderBuffer: bool): uint32 {.importc: "rlLoadTextureDepth".}
   ## Load depth texture/renderbuffer (to be attached to fbo)
 proc loadTextureCubemap*(data: pointer, size: int32, format: PixelFormat): uint32 {.importc: "rlLoadTextureCubemap".}
-  ## Load texture cubemap
+  ## Load texture cubemap data
 proc updateTexture*(id: uint32, offsetX: int32, offsetY: int32, width: int32, height: int32, format: PixelFormat, data: pointer) {.importc: "rlUpdateTexture".}
-  ## Update GPU texture with new data
+  ## Update texture with new data on GPU
 proc getGlTextureFormats*(format: PixelFormat, glInternalFormat: out uint32, glFormat: out uint32, glType: out uint32) {.importc: "rlGetGlTextureFormats".}
   ## Get OpenGL internal formats
 proc unloadTexture*(id: uint32) {.importc: "rlUnloadTexture".}
@@ -603,6 +615,9 @@ proc getPixelFormatName*(format: PixelFormat): string =
   of UncompressedR16: "R16" ## 16 bpp (1 channel - half float)
   of UncompressedR16g16b16: "R16G16B16" ## 16*3 bpp (3 channels - half float)
   of UncompressedR16g16b16a16: "R16G16B16A16" ## 16*4 bpp (4 channels - half float)
+  of UncompressedR16: "UNCOMPRESSED_R16" ## 16 bpp (1 channel - half float)
+  of UncompressedR16g16b16: "UNCOMPRESSED_R16G16B16" ## 16*3 bpp (3 channels - half float)
+  of UncompressedR16g16b16a16: "UNCOMPRESSED_R16G16B16A16" ## 16*4 bpp (4 channels - half float)
   of CompressedDxt1Rgb: "DXT1_RGB" # 4 bpp (no alpha)
   of CompressedDxt1Rgba: "DXT1_RGBA" # 4 bpp (1 bit alpha)
   of CompressedDxt3Rgba: "DXT3_RGBA" # 8 bpp
