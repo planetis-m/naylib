@@ -107,7 +107,7 @@ else: {.compile: raylibDir / "rglfw.c".}
 when defined(android): {.compile: AndroidNdk / "sources/android/native_app_glue/android_native_app_glue.c".}
 
 const
-  RaylibVersion* = (4, 5, 0)
+  RaylibVersion* = (5, 1, 0)
 
   # Taken from raylib/src/config.h
   MaxShaderLocations* = 32 ## Maximum number of shader locations supported
@@ -665,7 +665,6 @@ type
     vResolution*: int32 ## Vertical resolution in pixels
     hScreenSize*: float32 ## Horizontal size in meters
     vScreenSize*: float32 ## Vertical size in meters
-    vScreenCenter*: float32 ## Screen center in meters
     eyeToScreenDistance*: float32 ## Distance between eye and display in meters
     lensSeparationDistance*: float32 ## Lens separation distance in meters
     interpupillaryDistance*: float32 ## IPD (distance between pupils) in meters
@@ -686,6 +685,16 @@ type
     capacity: uint32 ## Filepaths max entries
     count: uint32 ## Filepaths entries count
     paths: cstringArray ## Filepaths entries
+
+  AutomationEvent* {.importc, header: "raylib.h", bycopy.} = object ## Automation event
+    frame*: uint32 ## Event frame
+    `type`*: uint32 ## Event type (AutomationEventType)
+    params: array[4, int32] ## Event parameters (if required)
+
+  AutomationEventList* {.importc, header: "raylib.h", bycopy.} = object ## Automation event list
+    capacity*: uint32 ## Events max entries (MAX_AUTOMATION_EVENTS)
+    count*: uint32 ## Events entries count
+    events: ptr UncheckedArray[AutomationEvent] ## Events entries
 
   Quaternion* = Vector4 ## Quaternion, 4 components (Vector4 alias)
   Texture2D* = Texture ## Texture2D, same as Texture
@@ -719,6 +728,8 @@ type
   ModelBindPose* = distinct Model
   ModelAnimationBones* = distinct ModelAnimation
   ModelAnimationFramePoses* = distinct ModelAnimation
+  AutomationEventParams* = distinct AutomationEvent
+  AutomationEventListEvents* = distinct AutomationEventList
 
 type va_list {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
 proc vsprintf(s: cstring, format: cstring, args: va_list) {.cdecl, importc: "vsprintf", header: "<stdio.h>".}
@@ -766,10 +777,10 @@ const
 
 {.push callconv: cdecl, header: "raylib.h".}
 proc initWindowPriv(width: int32, height: int32, title: cstring) {.importc: "InitWindow".}
-proc windowShouldClose*(): bool {.importc: "WindowShouldClose".}
-  ## Check if KEY_ESCAPE pressed or Close icon pressed
 proc closeWindow*() {.importc: when defined(windows): "rlCloseWindow" else: "CloseWindow".}
   ## Close window and unload OpenGL context
+proc windowShouldClose*(): bool {.importc: "WindowShouldClose".}
+  ## Check if application should close (KEY_ESCAPE pressed or windows close icon clicked)
 proc isWindowReady*(): bool {.importc: "IsWindowReady".}
   ## Check if window has been initialized successfully
 proc isWindowFullscreen*(): bool {.importc: "IsWindowFullscreen".}
@@ -857,12 +868,6 @@ proc enableEventWaiting*() {.importc: "EnableEventWaiting".}
   ## Enable waiting for events on EndDrawing(), no automatic event polling
 proc disableEventWaiting*() {.importc: "DisableEventWaiting".}
   ## Disable waiting for events on EndDrawing(), automatic events polling
-proc swapScreenBuffer*() {.importc: "SwapScreenBuffer".}
-  ## Swap back buffer with front buffer (screen drawing)
-proc pollInputEvents*() {.importc: "PollInputEvents".}
-  ## Register all input events
-proc waitTime*(seconds: float) {.importc: "WaitTime".}
-  ## Wait for some time (halt program execution)
 proc showCursor*() {.importc: when defined(windows): "rlShowCursor" else: "ShowCursor".}
   ## Shows cursor
 proc hideCursor*() {.importc: "HideCursor".}
@@ -943,12 +948,22 @@ proc getWorldToScreen2D*(position: Vector2, camera: Camera2D): Vector2 {.importc
   ## Get the screen space position for a 2d camera world space position
 proc setTargetFPS*(fps: int32) {.importc: "SetTargetFPS".}
   ## Set target FPS (maximum)
-proc getFPS*(): int32 {.importc: "GetFPS".}
-  ## Get current FPS
 proc getFrameTime*(): float32 {.importc: "GetFrameTime".}
   ## Get time in seconds for last frame drawn (delta time)
 proc getTime*(): float {.importc: "GetTime".}
   ## Get elapsed time in seconds since InitWindow()
+proc getFPS*(): int32 {.importc: "GetFPS".}
+  ## Get current FPS
+proc swapScreenBuffer*() {.importc: "SwapScreenBuffer".}
+  ## Swap back buffer with front buffer (screen drawing)
+proc pollInputEvents*() {.importc: "PollInputEvents".}
+  ## Register all input events
+proc waitTime*(seconds: float) {.importc: "WaitTime".}
+  ## Wait for some time (halt program execution)
+proc loadRandomSequence*(count: uint32, min: int32, max: int32): var int32 {.importc: "LoadRandomSequence".}
+  ## Load random values sequence, no values repeated
+proc unloadRandomSequence*(sequence: var int32) {.importc: "UnloadRandomSequence".}
+  ## Unload random values sequence
 proc takeScreenshot*(fileName: cstring) {.importc: "TakeScreenshot".}
   ## Takes a screenshot of current screen (filename extension defines format)
 proc setConfigFlags*(flags: Flags[ConfigFlags]) {.importc: "SetConfigFlags".}
@@ -973,6 +988,22 @@ proc isFileDropped*(): bool {.importc: "IsFileDropped".}
   ## Check if a file has been dropped into window
 proc loadDroppedFilesPriv(): FilePathList {.importc: "LoadDroppedFiles".}
 proc unloadDroppedFilesPriv(files: FilePathList) {.importc: "UnloadDroppedFiles".}
+proc loadAutomationEventList*(fileName: cstring): AutomationEventList {.importc: "LoadAutomationEventList".}
+  ## Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
+proc unloadAutomationEventList*(list: var AutomationEventList) {.importc: "UnloadAutomationEventList".}
+  ## Unload automation events list from file
+proc exportAutomationEventList*(list: AutomationEventList, fileName: cstring): bool {.importc: "ExportAutomationEventList".}
+  ## Export automation events list as text file
+proc setAutomationEventList*(list: var AutomationEventList) {.importc: "SetAutomationEventList".}
+  ## Set automation event list to record to
+proc setAutomationEventBaseFrame*(frame: int32) {.importc: "SetAutomationEventBaseFrame".}
+  ## Set automation event internal base frame to start recording
+proc startAutomationEventRecording*() {.importc: "StartAutomationEventRecording".}
+  ## Start recording automation events (AutomationEventList must be set)
+proc stopAutomationEventRecording*() {.importc: "StopAutomationEventRecording".}
+  ## Stop recording automation events
+proc playAutomationEvent*(event: AutomationEvent) {.importc: "PlayAutomationEvent".}
+  ## Play a recorded automation event
 proc isKeyPressed*(key: KeyboardKey): bool {.importc: "IsKeyPressed".}
   ## Check if a key has been pressed once
 proc isKeyPressedRepeat*(key: KeyboardKey): bool {.importc: "IsKeyPressedRepeat".}
@@ -983,12 +1014,12 @@ proc isKeyReleased*(key: KeyboardKey): bool {.importc: "IsKeyReleased".}
   ## Check if a key has been released once
 proc isKeyUp*(key: KeyboardKey): bool {.importc: "IsKeyUp".}
   ## Check if a key is NOT being pressed
-proc setExitKey*(key: KeyboardKey) {.importc: "SetExitKey".}
-  ## Set a custom key to exit program (default is ESC)
 proc getKeyPressed*(): KeyboardKey {.importc: "GetKeyPressed".}
   ## Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty
 proc getCharPressed*(): int32 {.importc: "GetCharPressed".}
   ## Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty
+proc setExitKey*(key: KeyboardKey) {.importc: "SetExitKey".}
+  ## Set a custom key to exit program (default is ESC)
 proc isGamepadAvailable*(gamepad: int32): bool {.importc: "IsGamepadAvailable".}
   ## Check if a gamepad is available
 proc getGamepadNamePriv(gamepad: int32): cstring {.importc: "GetGamepadName".}
@@ -1075,18 +1106,12 @@ proc drawPixel*(position: Vector2, color: Color) {.importc: "DrawPixelV".}
 proc drawLine*(startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "DrawLine".}
   ## Draw a line
 proc drawLine*(startPos: Vector2, endPos: Vector2, color: Color) {.importc: "DrawLineV".}
-  ## Draw a line (Vector version)
+  ## Draw a line (using gl lines)
 proc drawLine*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineEx".}
-  ## Draw a line defining thickness
-proc drawLineBezier*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineBezier".}
-  ## Draw a line using cubic-bezier curves in-out
-proc drawLineBezierQuad*(startPos: Vector2, endPos: Vector2, controlPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineBezierQuad".}
-  ## Draw line using quadratic bezier curves with a control point
-proc drawLineBezierCubic*(startPos: Vector2, endPos: Vector2, startControlPos: Vector2, endControlPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineBezierCubic".}
-  ## Draw line using cubic bezier curves with 2 control points
-proc drawLineBSplinePriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawLineBSpline".}
-proc drawLineCatmullRomPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawLineCatmullRom".}
+  ## Draw a line (using triangles/quads)
 proc drawLineStripPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawLineStrip".}
+proc drawLineBezier*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineBezier".}
+  ## Draw line segment cubic-bezier in-out interpolation
 proc drawCircle*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircle".}
   ## Draw a color-filled circle
 proc drawCircleSector*(center: Vector2, radius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawCircleSector".}
@@ -1099,6 +1124,8 @@ proc drawCircle*(center: Vector2, radius: float32, color: Color) {.importc: "Dra
   ## Draw a color-filled circle (Vector version)
 proc drawCircleLines*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircleLines".}
   ## Draw circle outline
+proc drawCircleLines*(center: Vector2, radius: float32, color: Color) {.importc: "DrawCircleLinesV".}
+  ## Draw circle outline (Vector version)
 proc drawEllipse*(centerX: int32, centerY: int32, radiusH: float32, radiusV: float32, color: Color) {.importc: "DrawEllipse".}
   ## Draw ellipse
 proc drawEllipseLines*(centerX: int32, centerY: int32, radiusH: float32, radiusV: float32, color: Color) {.importc: "DrawEllipseLines".}
@@ -1141,6 +1168,31 @@ proc drawPolyLines*(center: Vector2, sides: int32, radius: float32, rotation: fl
   ## Draw a polygon outline of n sides
 proc drawPolyLines*(center: Vector2, sides: int32, radius: float32, rotation: float32, lineThick: float32, color: Color) {.importc: "DrawPolyLinesEx".}
   ## Draw a polygon outline of n sides with extended parameters
+proc drawSplineLinearPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineLinear".}
+proc drawSplineBasisPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBasis".}
+proc drawSplineCatmullRomPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineCatmullRom".}
+proc drawSplineBezierQuadraticPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBezierQuadratic".}
+proc drawSplineBezierCubicPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBezierCubic".}
+proc drawSplineSegmentLinear*(p1: Vector2, p2: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentLinear".}
+  ## Draw spline segment: Linear, 2 points
+proc drawSplineSegmentBasis*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBasis".}
+  ## Draw spline segment: B-Spline, 4 points
+proc drawSplineSegmentCatmullRom*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentCatmullRom".}
+  ## Draw spline segment: Catmull-Rom, 4 points
+proc drawSplineSegmentBezierQuadratic*(p1: Vector2, c2: Vector2, p3: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBezierQuadratic".}
+  ## Draw spline segment: Quadratic Bezier, 2 points, 1 control point
+proc drawSplineSegmentBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBezierCubic".}
+  ## Draw spline segment: Cubic Bezier, 2 points, 2 control points
+proc getSplinePointLinear*(startPos: Vector2, endPos: Vector2, t: float32): Vector2 {.importc: "GetSplinePointLinear".}
+  ## Get (evaluate) spline point: Linear
+proc getSplinePointBasis*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBasis".}
+  ## Get (evaluate) spline point: B-Spline
+proc getSplinePointCatmullRom*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointCatmullRom".}
+  ## Get (evaluate) spline point: Catmull-Rom
+proc getSplinePointBezierQuad*(p1: Vector2, c2: Vector2, p3: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBezierQuad".}
+  ## Get (evaluate) spline point: Quadratic Bezier
+proc getSplinePointBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBezierCubic".}
+  ## Get (evaluate) spline point: Cubic Bezier
 proc checkCollisionRecs*(rec1: Rectangle, rec2: Rectangle): bool {.importc: "CheckCollisionRecs".}
   ## Check collision between two rectangles
 proc checkCollisionCircles*(center1: Vector2, radius1: float32, center2: Vector2, radius2: float32): bool {.importc: "CheckCollisionCircles".}
@@ -1219,6 +1271,7 @@ proc imageAlphaPremultiply*(image: var Image) {.importc: "ImageAlphaPremultiply"
   ## Premultiply alpha channel
 proc imageBlurGaussian*(image: var Image, blurSize: int32) {.importc: "ImageBlurGaussian".}
   ## Apply Gaussian blur using a box blur approximation
+proc imageKernelConvolutionPriv(image: ptr Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
 proc imageResize*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize".}
   ## Resize image (Bicubic scaling algorithm)
 proc imageResizeNN*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN".}
@@ -1377,6 +1430,8 @@ proc getGlyphInfo*(font: Font, codepoint: Rune): GlyphInfo {.importc: "GetGlyphI
   ## Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
 proc getGlyphAtlasRec*(font: Font, codepoint: Rune): Rectangle {.importc: "GetGlyphAtlasRec".}
   ## Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
+proc textToFloat*(text: cstring): float32 {.importc: "TextToFloat".}
+  ## Get float value from text (negative values not supported)
 proc drawLine3D*(startPos: Vector3, endPos: Vector3, color: Color) {.importc: "DrawLine3D".}
   ## Draw a line in 3D world space
 proc drawPoint3D*(position: Vector3, color: Color) {.importc: "DrawPoint3D".}
@@ -1448,12 +1503,14 @@ proc unloadMesh(mesh: Mesh) {.importc: "UnloadMesh".}
 proc drawMesh*(mesh: Mesh, material: Material, transform: Matrix) {.importc: "DrawMesh".}
   ## Draw a 3d mesh with material and transform
 proc drawMeshInstancedPriv(mesh: Mesh, material: Material, transforms: ptr UncheckedArray[Matrix], instances: int32) {.importc: "DrawMeshInstanced".}
-proc exportMesh*(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMesh".}
-  ## Export mesh data to file, returns true on success
 proc getMeshBoundingBox*(mesh: Mesh): BoundingBox {.importc: "GetMeshBoundingBox".}
   ## Compute mesh bounding box limits
 proc genMeshTangents*(mesh: var Mesh) {.importc: "GenMeshTangents".}
   ## Compute mesh tangents
+proc exportMesh*(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMesh".}
+  ## Export mesh data to file, returns true on success
+proc exportMeshAsCode*(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMeshAsCode".}
+  ## Export mesh as code file (.h) defining multiple arrays of vertex attributes
 proc genMeshPoly*(sides: int32, radius: float32): Mesh {.importc: "GenMeshPoly".}
   ## Generate polygonal mesh
 proc genMeshPlane*(width: float32, length: float32, resX: int32, resZ: int32): Mesh {.importc: "GenMeshPlane".}
@@ -1512,6 +1569,8 @@ proc isAudioDeviceReady*(): bool {.importc: "IsAudioDeviceReady".}
   ## Check if audio device has been initialized successfully
 proc setMasterVolume*(volume: float32) {.importc: "SetMasterVolume".}
   ## Set master volume (listener)
+proc getMasterVolume*(): float32 {.importc: "GetMasterVolume".}
+  ## Get master volume (listener)
 proc loadWavePriv(fileName: cstring): Wave {.importc: "LoadWave".}
 proc loadWaveFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Wave {.importc: "LoadWaveFromMemory".}
 proc isWaveReady*(wave: Wave): bool {.importc: "IsWaveReady".}
@@ -1951,17 +2010,29 @@ proc loadMaterials*(fileName: string): RArray[Material] =
   if len <= 0: raiseRaylibError("Failed to load Materials from " & fileName)
   result = RArray[Material](len: len, data: data)
 
-proc drawLineBSpline*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw a B-Spline line, minimum 4 points
-  drawLineBSplinePriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawLineCatmullRom*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw a Catmull Rom spline line, minimum 4 points
-  drawLineCatmullRomPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
 proc drawLineStrip*(points: openArray[Vector2]; color: Color) {.inline.} =
   ## Draw lines sequence
   drawLineStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc drawSplineLinear*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+  ## Draw spline: Linear, minimum 2 points
+  drawSplineLinearPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawSplineBasis*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+  ## Draw spline: B-Spline, minimum 4 points
+  drawSplineBasisPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawSplineCatmullRom*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+  ## Draw spline: Catmull-Rom, minimum 4 points
+  drawSplineCatmullRomPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawSplineBezierQuadratic*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+  ## Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
+  drawSplineBezierQuadraticPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawSplineBezierCubic*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+  ## Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
+  drawSplineBezierCubicPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc drawTriangleFan*(points: openArray[Vector2]; color: Color) =
   ## Draw a triangle fan defined by points (first vertex is the center)
@@ -2005,6 +2076,10 @@ proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
   var len = 0'i32
   let data = exportImageToMemoryPriv(image, fileType.cstring, addr len)
   result = RArray[uint8](len: len, data: cast[ptr UncheckedArray[uint8]](data))
+
+proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
+  ## Apply Custom Square image convolution kernel
+  imageKernelConvolutionPriv(image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
 
 type
   Pixel* = concept

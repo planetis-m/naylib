@@ -117,7 +117,7 @@ else: {.compile: raylibDir / "rglfw.c".}
 when defined(android): {.compile: AndroidNdk / "sources/android/native_app_glue/android_native_app_glue.c".}
 
 const
-  RaylibVersion* = (4, 5, 0)
+  RaylibVersion* = (5, 1, 0)
 
   # Taken from raylib/src/config.h
   MaxShaderLocations* = 32 ## Maximum number of shader locations supported
@@ -447,6 +447,7 @@ const
     "LoadImageSvg",
     "LoadImageFromMemory",
     "ExportImageToMemory",
+    "ImageKernelConvolution",
     "LoadImageColors",
     "SetTraceLogCallback",
     "LoadFontData",
@@ -457,8 +458,11 @@ const
     "LoadTexture",
     "LoadRenderTexture",
     "DrawLineStrip",
-    "DrawLineBSpline",
-    "DrawLineCatmullRom",
+    "DrawSplineLinear",
+    "DrawSplineBasis",
+    "DrawSplineCatmullRom",
+    "DrawSplineBezierQuadratic",
+    "DrawSplineBezierCubic",
     "DrawTriangleFan",
     "DrawTriangleStrip",
     "CheckCollisionPointPoly",
@@ -663,13 +667,15 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
               if name == fnc.name and param1 == param.name:
                 lit enumInFuncs[j]
                 break outer
-            let many = (fnc.name, param.name) != ("LoadImageAnim", "frames") and isPlural(param.name)
+            let many = (fnc.name, param.name) != ("LoadImageAnim", "frames") and
+              isPlural(param.name) # and (fnc.name, param.name) == ("ImageKernelConvolution", "kernel")
             const
               replacements = [
                 ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[$1]"),
                 ("CheckCollisionLines", "collisionPoint", "out $1"),
                 ("LoadImageAnim", "frames", "out $1"),
                 ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),
+                ("ImageKernelConvolution", "kernel", "ptr UncheckedArray[float32]")
               ]
             let pat = getReplacement(fnc.name, param.name, replacements)
             var baseKind = ""

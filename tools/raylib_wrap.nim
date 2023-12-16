@@ -156,17 +156,29 @@ proc loadMaterials*(fileName: string): RArray[Material] =
   if len <= 0: raiseRaylibError("Failed to load Materials from " & fileName)
   result = RArray[Material](len: len, data: data)
 
-proc drawLineBSpline*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw a B-Spline line, minimum 4 points
-  drawLineBSplinePriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawLineCatmullRom*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw a Catmull Rom spline line, minimum 4 points
-  drawLineCatmullRomPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
 proc drawLineStrip*(points: openArray[Vector2]; color: Color) {.inline.} =
   ## Draw lines sequence
   drawLineStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc drawSplineLinear*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+  ## Draw spline: Linear, minimum 2 points
+  drawSplineLinearPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawSplineBasis*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+  ## Draw spline: B-Spline, minimum 4 points
+  drawSplineBasisPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawSplineCatmullRom*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+  ## Draw spline: Catmull-Rom, minimum 4 points
+  drawSplineCatmullRomPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawSplineBezierQuadratic*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+  ## Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
+  drawSplineBezierQuadraticPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawSplineBezierCubic*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+  ## Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
+  drawSplineBezierCubicPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc drawTriangleFan*(points: openArray[Vector2]; color: Color) =
   ## Draw a triangle fan defined by points (first vertex is the center)
@@ -210,6 +222,10 @@ proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
   var len = 0'i32
   let data = exportImageToMemoryPriv(image, fileType.cstring, addr len)
   result = RArray[uint8](len: len, data: cast[ptr UncheckedArray[uint8]](data))
+
+proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
+  ## Apply Custom Square image convolution kernel
+  imageKernelConvolutionPriv(image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
 
 type
   Pixel* = concept

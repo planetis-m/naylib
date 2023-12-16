@@ -16,7 +16,7 @@ const
   UseEmbeddedGraphicsApi = defined(GraphicsApiOpenGlEs2) or defined(GraphicsApiOpenGlEs3)
 
 const
-  RlglVersion* = (4, 5, 0)
+  RlglVersion* = (5, 1, 0)
 
   DefaultBatchBuffers* = 1 ## Default number of batch buffers (multi-buffering)
   DefaultBatchDrawCalls* = 256 ## Default number of batch draw calls (by state changes: mode, texture)
