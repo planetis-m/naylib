@@ -7221,7 +7221,7 @@
           "name": "image"
         },
         {
-          "type": "float*",
+          "type": "float *",
           "name": "kernel"
         },
         {

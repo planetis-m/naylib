@@ -1271,7 +1271,7 @@ proc imageAlphaPremultiply*(image: var Image) {.importc: "ImageAlphaPremultiply"
   ## Premultiply alpha channel
 proc imageBlurGaussian*(image: var Image, blurSize: int32) {.importc: "ImageBlurGaussian".}
   ## Apply Gaussian blur using a box blur approximation
-proc imageKernelConvolutionPriv(image: ptr Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
+proc imageKernelConvolutionPriv(image: var Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
 proc imageResize*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize".}
   ## Resize image (Bicubic scaling algorithm)
 proc imageResizeNN*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN".}
