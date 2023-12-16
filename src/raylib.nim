@@ -2014,23 +2014,23 @@ proc drawLineStrip*(points: openArray[Vector2]; color: Color) {.inline.} =
   ## Draw lines sequence
   drawLineStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
-proc drawSplineLinear*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+proc drawSplineLinear*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: Linear, minimum 2 points
   drawSplineLinearPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
-proc drawSplineBasis*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+proc drawSplineBasis*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: B-Spline, minimum 4 points
   drawSplineBasisPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
-proc drawSplineCatmullRom*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+proc drawSplineCatmullRom*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: Catmull-Rom, minimum 4 points
   drawSplineCatmullRomPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
-proc drawSplineBezierQuadratic*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+proc drawSplineBezierQuadratic*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
   drawSplineBezierQuadraticPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
-proc drawSplineBezierCubic*(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) =
+proc drawSplineBezierCubic*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
   drawSplineBezierCubicPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
