@@ -960,10 +960,6 @@ proc pollInputEvents*() {.importc: "PollInputEvents".}
   ## Register all input events
 proc waitTime*(seconds: float) {.importc: "WaitTime".}
   ## Wait for some time (halt program execution)
-proc loadRandomSequence*(count: uint32, min: int32, max: int32): var int32 {.importc: "LoadRandomSequence".}
-  ## Load random values sequence, no values repeated
-proc unloadRandomSequence*(sequence: var int32) {.importc: "UnloadRandomSequence".}
-  ## Unload random values sequence
 proc takeScreenshot*(fileName: cstring) {.importc: "TakeScreenshot".}
   ## Takes a screenshot of current screen (filename extension defines format)
 proc setConfigFlags*(flags: Flags[ConfigFlags]) {.importc: "SetConfigFlags".}

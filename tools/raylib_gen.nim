@@ -350,6 +350,8 @@ const
     # Misc
     "GetRandomValue",
     "SetRandomSeed",
+    "LoadRandomSequence",
+    "UnloadRandomSequence",
     "OpenURL",
     "Fade",
     "ColorToInt",
