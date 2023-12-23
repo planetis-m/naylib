@@ -16,7 +16,7 @@ const raylibDir = currentSourcePath().parentDir / "raylib/src"
 {.passC: "-I" & raylibDir.}
 {.passC: "-I" & raylibDir / "external/glfw/include".}
 {.passC: "-I" & raylibDir / "external/glfw/deps/mingw".}
-{.passC: "-Wall -D_GNU_SOURCE  -Wno-missing-braces -Werror=pointer-arith".}
+{.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
   {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY -s TOTAL_MEMORY=67108864".}
@@ -574,8 +574,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
               continue
             let isPrivate = (obj.name, name) notin
                 {"Wave": "frameCount", "Sound": "frameCount", "Music": "frameCount"} and
-                name.endsWith("Count") or (obj.name, name) in {"AudioStream": "buffer",
-                "AudioStream": "processor"}
+                name.endsWith("Count")
             const replacements = [
               ("Camera3D", "projection", "CameraProjection"),
               ("Image", "format", "PixelFormat"),
@@ -601,7 +600,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
               var isArray = many and not endsWith(name.normalize, "data") and
                   (obj.name, name) notin {"Material": "params", "VrDeviceInfo": "lensDistortionValues", "FilePathList": "paths", "AutomationEvent": "params"}
               if isPrivate or isArray or obj.name in ["FilePathList", "AutomationEventList"] or
-                  (obj.name, name) in {"MaterialMap": "texture", "Material": "shader"}:
+                  (obj.name, name) in {"MaterialMap": "texture", "Material": "shader", "AudioStream": "buffer",
+                  "AudioStream": "processor"}:
                 lit ": "
               else:
                 lit "*: "

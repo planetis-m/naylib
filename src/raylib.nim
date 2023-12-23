@@ -1864,8 +1864,6 @@ proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
 proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
 proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
 proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
-proc buffer*(x: AudioStream): ptr rAudioBuffer {.inline.} = x.buffer
-proc processor*(x: AudioStream): ptr rAudioProcessor {.inline.} = x.processor
 
 type
   RaylibError* = object of CatchableError
