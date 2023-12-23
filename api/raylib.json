@@ -4632,7 +4632,7 @@
       "returnType": "void",
       "params": [
         {
-          "type": "AutomationEventList *",
+          "type": "AutomationEventList",
           "name": "list"
         }
       ]

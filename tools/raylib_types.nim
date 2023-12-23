@@ -106,6 +106,11 @@ proc `=destroy`*(x: Music) =
 proc `=dup`*(source: Music): Music {.error.}
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 
+proc `=destroy`*(x: AutomationEventList) =
+  unloadAutomationEventList(x)
+proc `=dup`*(source: AutomationEventList): AutomationEventList {.error.}
+proc `=copy`*(dest: var AutomationEventList; source: AutomationEventList) {.error.}
+
 type
   RArray*[T] = object
     len: int
@@ -163,3 +168,18 @@ template toOpenArray*(x: RArray, first, last: int): untyped =
 
 template toOpenArray*(x: RArray): untyped =
   toOpenArray(x.data, 0, x.len-1)
+
+proc capacity*(x: AutomationEventList): int {.inline.} = int(x.capacity)
+proc len*(x: AutomationEventList): int {.inline.} = int(x.count)
+
+proc `[]`*(x: AutomationEventList, i: int): lent AutomationEvent =
+  checkArrayAccess(x.events, i, x.len)
+  result = x.events[i]
+
+proc `[]`*(x: var AutomationEventList, i: int): var AutomationEvent =
+  checkArrayAccess(x.events, i, x.len)
+  result = x.events[i]
+
+proc `[]=`*(x: var AutomationEventList, i: int, val: sink AutomationEvent) =
+  checkArrayAccess(x.events, i, x.len)
+  x.events[i] = val

@@ -6,7 +6,7 @@ const raylibDir = currentSourcePath().parentDir / "raylib/src"
 {.passC: "-I" & raylibDir.}
 {.passC: "-I" & raylibDir / "external/glfw/include".}
 {.passC: "-I" & raylibDir / "external/glfw/deps/mingw".}
-{.passC: "-Wall -D_DEFAULT_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
+{.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
   {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY -s TOTAL_MEMORY=67108864".}
@@ -689,11 +689,11 @@ type
   AutomationEvent* {.importc, header: "raylib.h", bycopy.} = object ## Automation event
     frame*: uint32 ## Event frame
     `type`*: uint32 ## Event type (AutomationEventType)
-    params: array[4, int32] ## Event parameters (if required)
+    params*: array[4, int32] ## Event parameters (if required)
 
   AutomationEventList* {.importc, header: "raylib.h", bycopy.} = object ## Automation event list
-    capacity*: uint32 ## Events max entries (MAX_AUTOMATION_EVENTS)
-    count*: uint32 ## Events entries count
+    capacity: uint32 ## Events max entries (MAX_AUTOMATION_EVENTS)
+    count: uint32 ## Events entries count
     events: ptr UncheckedArray[AutomationEvent] ## Events entries
 
   Quaternion* = Vector4 ## Quaternion, 4 components (Vector4 alias)
@@ -728,8 +728,6 @@ type
   ModelBindPose* = distinct Model
   ModelAnimationBones* = distinct ModelAnimation
   ModelAnimationFramePoses* = distinct ModelAnimation
-  AutomationEventParams* = distinct AutomationEvent
-  AutomationEventListEvents* = distinct AutomationEventList
 
 type va_list {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
 proc vsprintf(s: cstring, format: cstring, args: va_list) {.cdecl, importc: "vsprintf", header: "<stdio.h>".}
@@ -986,7 +984,7 @@ proc loadDroppedFilesPriv(): FilePathList {.importc: "LoadDroppedFiles".}
 proc unloadDroppedFilesPriv(files: FilePathList) {.importc: "UnloadDroppedFiles".}
 proc loadAutomationEventList*(fileName: cstring): AutomationEventList {.importc: "LoadAutomationEventList".}
   ## Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
-proc unloadAutomationEventList*(list: var AutomationEventList) {.importc: "UnloadAutomationEventList".}
+proc unloadAutomationEventList*(list: AutomationEventList) {.importc: "UnloadAutomationEventList".}
   ## Unload automation events list from file
 proc exportAutomationEventList*(list: AutomationEventList, fileName: cstring): bool {.importc: "ExportAutomationEventList".}
   ## Export automation events list as text file
@@ -1780,6 +1778,11 @@ proc `=destroy`*(x: Music) =
 proc `=dup`*(source: Music): Music {.error.}
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 
+proc `=destroy`*(x: AutomationEventList) =
+  unloadAutomationEventList(x)
+proc `=dup`*(source: AutomationEventList): AutomationEventList {.error.}
+proc `=copy`*(dest: var AutomationEventList; source: AutomationEventList) {.error.}
+
 type
   RArray*[T] = object
     len: int
@@ -1837,6 +1840,21 @@ template toOpenArray*(x: RArray, first, last: int): untyped =
 
 template toOpenArray*(x: RArray): untyped =
   toOpenArray(x.data, 0, x.len-1)
+
+proc capacity*(x: AutomationEventList): int {.inline.} = int(x.capacity)
+proc len*(x: AutomationEventList): int {.inline.} = int(x.count)
+
+proc `[]`*(x: AutomationEventList, i: int): lent AutomationEvent =
+  checkArrayAccess(x.events, i, x.len)
+  result = x.events[i]
+
+proc `[]`*(x: var AutomationEventList, i: int): var AutomationEvent =
+  checkArrayAccess(x.events, i, x.len)
+  result = x.events[i]
+
+proc `[]=`*(x: var AutomationEventList, i: int, val: sink AutomationEvent) =
+  checkArrayAccess(x.events, i, x.len)
+  x.events[i] = val
 
 proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
 proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount

@@ -16,7 +16,7 @@ const raylibDir = currentSourcePath().parentDir / "raylib/src"
 {.passC: "-I" & raylibDir.}
 {.passC: "-I" & raylibDir / "external/glfw/include".}
 {.passC: "-I" & raylibDir / "external/glfw/deps/mingw".}
-{.passC: "-Wall -D_DEFAULT_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
+{.passC: "-Wall -D_GNU_SOURCE  -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
   {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY -s TOTAL_MEMORY=67108864".}
@@ -599,8 +599,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
               var baseKind = ""
               let kind = convertType(fld.`type`, pat, many, false, baseKind)
               var isArray = many and not endsWith(name.normalize, "data") and
-                  (obj.name, name) notin {"Material": "params", "VrDeviceInfo": "lensDistortionValues", "FilePathList": "paths"}
-              if isPrivate or isArray or obj.name == "FilePathList" or
+                  (obj.name, name) notin {"Material": "params", "VrDeviceInfo": "lensDistortionValues", "FilePathList": "paths", "AutomationEvent": "params"}
+              if isPrivate or isArray or obj.name in ["FilePathList", "AutomationEventList"] or
                   (obj.name, name) in {"MaterialMap": "texture", "Material": "shader"}:
                 lit ": "
               else:
@@ -625,6 +625,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         lit extra
       lit "\n"
       for obj, name, _ in procArrays.items:
+        if (obj, name) == ("AutomationEventList", "events"): continue
         spaces
         lit obj
         lit capitalizeAscii(name)
@@ -670,7 +671,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
                 lit enumInFuncs[j]
                 break outer
             let many = (fnc.name, param.name) != ("LoadImageAnim", "frames") and
-              isPlural(param.name) or (fnc.name, param.name) == ("ImageKernelConvolution", "kernel")
+                isPlural(param.name) or (fnc.name, param.name) == ("ImageKernelConvolution", "kernel")
             const
               replacements = [
                 ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[$1]"),
@@ -681,7 +682,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
               ]
             let pat = getReplacement(fnc.name, param.name, replacements)
             var baseKind = ""
-            let kind = convertType(param.`type`, pat, many, not isPrivate, baseKind)
+            let kind = convertType(param.`type`, pat, many, not isPrivate or fnc.name == "ImageKernelConvolution", baseKind)
             lit kind
       lit ")"
       if fnc.returnType != "void":
