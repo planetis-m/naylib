@@ -218,6 +218,9 @@ proc `[]=`*(x: var ShaderLocs, i: ShaderLocationIndex, val: ShaderLocation) =
   checkArrayAccess(Shader(x).locs, i.int, MaxShaderLocations)
   Shader(x).locs[i.int] = val
 
+proc `maps=`*(x: var Material; maps: MaterialMapsPtr) {.inline.} =
+  x.maps = (typeof(x.maps))(maps)
+
 template maps*(x: Material): MaterialMaps = MaterialMaps(x)
 
 proc `[]`*(x: MaterialMaps, i: MaterialMapIndex): lent MaterialMap =

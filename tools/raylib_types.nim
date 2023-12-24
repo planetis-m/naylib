@@ -4,6 +4,7 @@ type
   WeakWave* = distinct Wave
   WeakFont* = distinct Font
 
+  MaterialMapsPtr* = distinct typeof(Material.maps)
   ShaderLocsPtr* = distinct typeof(Shader.locs)
   SoundAlias* = distinct Sound
 

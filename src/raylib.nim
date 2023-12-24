@@ -1676,6 +1676,7 @@ type
   WeakWave* = distinct Wave
   WeakFont* = distinct Font
 
+  MaterialMapsPtr* = distinct typeof(Material.maps)
   ShaderLocsPtr* = distinct typeof(Shader.locs)
   SoundAlias* = distinct Sound
 
@@ -2607,6 +2608,9 @@ proc `[]`*(x: var ShaderLocs, i: ShaderLocationIndex): var ShaderLocation =
 proc `[]=`*(x: var ShaderLocs, i: ShaderLocationIndex, val: ShaderLocation) =
   checkArrayAccess(Shader(x).locs, i.int, MaxShaderLocations)
   Shader(x).locs[i.int] = val
+
+proc `maps=`*(x: var Material; maps: MaterialMapsPtr) {.inline.} =
+  x.maps = (typeof(x.maps))(maps)
 
 template maps*(x: Material): MaterialMaps = MaterialMaps(x)
 
