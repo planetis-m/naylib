@@ -2636,6 +2636,12 @@ proc texture*(x: MaterialMap): lent Texture {.inline.} =
 proc shader*(x: Material): lent Shader {.inline.} =
   result = x.shader
 
+proc texture*(x: var MaterialMap): var Texture {.inline.} =
+  result = x.texture
+
+proc shader*(x: var Material): var Shader {.inline.} =
+  result = x.shader
+
 template meshes*(x: Model): ModelMeshes = ModelMeshes(x)
 
 proc `[]`*(x: ModelMeshes, i: int): lent Mesh =
