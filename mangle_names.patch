@@ -153,7 +153,7 @@ index 5d6f7d5..cf98e08 100644
                  #endif
  
 diff --git a/src/platforms/rcore_desktop.c b/src/platforms/rcore_desktop.c
-index 0dfcacd..442f0e1 100644
+index 2bbb3f2..c3a8f3c 100644
 --- a/src/platforms/rcore_desktop.c
 +++ b/src/platforms/rcore_desktop.c
 @@ -983,7 +983,7 @@ const char *GetClipboardText(void)
@@ -166,7 +166,7 @@ index 0dfcacd..442f0e1 100644
      glfwSetInputMode(platform.handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
      CORE.Input.Mouse.cursorHidden = false;
 diff --git a/src/platforms/rcore_desktop_sdl.c b/src/platforms/rcore_desktop_sdl.c
-index e1e6e4c..b37768e 100644
+index 1e55cba..53db497 100644
 --- a/src/platforms/rcore_desktop_sdl.c
 +++ b/src/platforms/rcore_desktop_sdl.c
 @@ -864,7 +864,7 @@ const char *GetClipboardText(void)
@@ -179,7 +179,7 @@ index e1e6e4c..b37768e 100644
      SDL_ShowCursor(SDL_ENABLE);
  
 diff --git a/src/platforms/rcore_drm.c b/src/platforms/rcore_drm.c
-index 2fec53f..671d2f4 100644
+index 3449e69..c266dcf 100644
 --- a/src/platforms/rcore_drm.c
 +++ b/src/platforms/rcore_drm.c
 @@ -83,7 +83,7 @@ typedef struct {
@@ -200,7 +200,7 @@ index 2fec53f..671d2f4 100644
      int touchSlot;                      // Hold the touch slot number of the currently being sent multitouch block
  
      // Gamepad data
-@@ -421,7 +421,7 @@ const char *GetClipboardText(void)
+@@ -420,7 +420,7 @@ const char *GetClipboardText(void)
  }
  
  // Show mouse cursor
@@ -223,20 +223,20 @@ index 01e52af..2006ed6 100644
      CORE.Input.Mouse.cursorHidden = false;
  }
 diff --git a/src/platforms/rcore_web.c b/src/platforms/rcore_web.c
-index 396ce30..9ccdb98 100644
+index fa60eaf..3a498ea 100644
 --- a/src/platforms/rcore_web.c
 +++ b/src/platforms/rcore_web.c
-@@ -699,7 +699,7 @@ const char *GetClipboardText(void)
+@@ -764,7 +764,7 @@ const char *GetClipboardText(void)
  }
  
  // Show mouse cursor
 -void ShowCursor(void)
 +void rlShowCursor(void)
  {
-     CORE.Input.Mouse.cursorHidden = false;
- }
+     if (CORE.Input.Mouse.cursorHidden)
+     {
 diff --git a/src/raylib.h b/src/raylib.h
-index 206b265..9ab3a4e 100644
+index 2ab3f30..030541c 100644
 --- a/src/raylib.h
 +++ b/src/raylib.h
 @@ -246,12 +246,12 @@ typedef struct Color {
@@ -450,7 +450,7 @@ index 206b265..9ab3a4e 100644
  // Mesh management functions
  RLAPI void UploadMesh(Mesh *mesh, bool dynamic);                                            // Upload mesh vertex data in GPU and provide VAO/VBO ids
 diff --git a/src/rcore.c b/src/rcore.c
-index 8691be3..da9cbb0 100644
+index 3ddf359..3dcd0c3 100644
 --- a/src/rcore.c
 +++ b/src/rcore.c
 @@ -627,16 +627,16 @@ void InitWindow(int width, int height, const char *title)
@@ -501,7 +501,7 @@ index 8691be3..da9cbb0 100644
      #endif
  
 diff --git a/src/rmodels.c b/src/rmodels.c
-index 84c7d9c..93b25d3 100644
+index 9773391..696db13 100644
 --- a/src/rmodels.c
 +++ b/src/rmodels.c
 @@ -3568,13 +3568,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
@@ -529,7 +529,7 @@ index 84c7d9c..93b25d3 100644
  {
      // NOTE: Billboard size will maintain source rectangle aspect ratio, size will represent billboard width
      Vector2 sizeRatio = { size.x*fabsf((float)source.width/source.height), size.y };
-@@ -4779,7 +4779,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
+@@ -4800,7 +4800,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
          }
          else     // Check if image is provided as image path
          {
@@ -889,7 +889,7 @@ index 2a6aa12..0aa300a 100644
              // Save data properly in sprite font
              font.glyphs[i].value = charId;
 diff --git a/src/rtextures.c b/src/rtextures.c
-index d42304c..d1091d0 100644
+index c53d30a..3aa4da7 100644
 --- a/src/rtextures.c
 +++ b/src/rtextures.c
 @@ -261,7 +261,7 @@ static Vector4 *LoadImageDataNormalized(Image image);       // Load pixel data f
@@ -1043,18 +1043,19 @@ index d42304c..d1091d0 100644
  
      if (image.data != NULL)
      {
-@@ -3794,8 +3794,8 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
+@@ -3796,9 +3796,9 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
          int size = cubemap.width;
  
          Image faces = { 0 };                // Vertical column image
 -        Rectangle faceRecs[6] = { 0 };      // Face source rectangles
--        for (int i = 0; i < 6; i++) faceRecs[i] = (Rectangle){ 0, 0, (float)size, (float)size };
 +        rlRectangle faceRecs[6] = { 0 };      // Face source rectangles
+         
+-        for (int i = 0; i < 6; i++) faceRecs[i] = (Rectangle){ 0, 0, (float)size, (float)size };
 +        for (int i = 0; i < 6; i++) faceRecs[i] = (rlRectangle){ 0, 0, (float)size, (float)size };
  
          if (layout == CUBEMAP_LAYOUT_LINE_VERTICAL)
          {
-@@ -3834,7 +3834,7 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
+@@ -3837,7 +3837,7 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
  
              // NOTE: Image formatting does not work with compressed textures
  
@@ -1063,7 +1064,7 @@ index d42304c..d1091d0 100644
          }
  
          // NOTE: Cubemap data is expected to be provided as 6 images in a single data array,
-@@ -3946,7 +3946,7 @@ void UpdateTexture(Texture2D texture, const void *pixels)
+@@ -3950,7 +3950,7 @@ void UpdateTexture(Texture2D texture, const void *pixels)
  
  // Update GPU texture rectangle with new data
  // NOTE: pixels data must match texture.format
@@ -1072,7 +1073,7 @@ index d42304c..d1091d0 100644
  {
      rlUpdateTexture(texture.id, (int)rec.x, (int)rec.y, (int)rec.width, (int)rec.height, texture.format, pixels);
  }
-@@ -4076,17 +4076,17 @@ void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
+@@ -4080,17 +4080,17 @@ void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
  // Draw a texture with extended parameters
  void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint)
  {
@@ -1094,7 +1095,7 @@ index d42304c..d1091d0 100644
      Vector2 origin = { 0.0f, 0.0f };
  
      DrawTexturePro(texture, source, dest, origin, 0.0f, tint);
-@@ -4094,7 +4094,7 @@ void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color
+@@ -4098,7 +4098,7 @@ void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color
  
  // Draw a part of a texture (defined by a rectangle) with 'pro' parameters
  // NOTE: origin is relative to destination rectangle size
@@ -1103,7 +1104,7 @@ index d42304c..d1091d0 100644
  {
      // Check if texture is valid
      if (texture.id > 0)
-@@ -4216,7 +4216,7 @@ void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2
+@@ -4220,7 +4220,7 @@ void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2
  }
  
  // Draws a texture (or part of it) that stretches or shrinks nicely using n-patch info
