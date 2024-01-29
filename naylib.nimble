@@ -22,5 +22,8 @@ const
 
 before install:
   let patchPath = PkgDir / "mangle_names.patch"
+  exec "git submodule deinit -f ."
+  exec "git submodule update --init"
   withDir(PkgDir / "src/raylib"):
+    # exec "git rev-parse HEAD"
     exec "git apply " & patchPath
