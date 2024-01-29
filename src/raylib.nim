@@ -146,6 +146,7 @@ type
   KeyboardKey* {.size: sizeof(int32).} = enum ## Keyboard keys (US keyboard layout)
     Null ## Key: NULL, used for no key pressed
     Back = 4 ## Key: Android back button
+    Menu ## Key: Android menu button
     VolumeUp = 24 ## Key: Android volume up button
     VolumeDown ## Key: Android volume down button
     Space = 32 ## Key: Space
@@ -470,8 +471,6 @@ template Specular*(_: typedesc[MaterialMapIndex]): untyped = Metalness
 
 template MapDiffuse*(_: typedesc[ShaderLocationIndex]): untyped = MapAlbedo
 template MapSpecular*(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
-
-template Menu*(_: typedesc[KeyboardKey]): untyped = R ## Key: Android menu button
 
 type
   Vector2* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Vector2, 2 components
@@ -1093,6 +1092,10 @@ proc updateCamera*(camera: var Camera, movement: Vector3, rotation: Vector3, zoo
   ## Update camera movement/rotation
 proc setShapesTexture*(texture: Texture2D, source: Rectangle) {.importc: "SetShapesTexture".}
   ## Set texture and rectangle to be used on shapes drawing
+proc getShapesTexture*(): Texture2D {.importc: "GetShapesTexture".}
+  ## Get texture that is used for shapes drawing
+proc getShapesTextureRectangle*(): Rectangle {.importc: "GetShapesTextureRectangle".}
+  ## Get texture source rectangle that is used for shapes drawing
 proc drawPixel*(posX: int32, posY: int32, color: Color) {.importc: "DrawPixel".}
   ## Draw a pixel
 proc drawPixel*(position: Vector2, color: Color) {.importc: "DrawPixelV".}
@@ -1211,6 +1214,7 @@ proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: Pi
 proc loadImageSvgPriv(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg".}
 proc loadImageAnim*(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim".}
   ## Load image sequence from file (frames appended to image.data)
+proc loadImageAnimFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, frames: ptr UncheckedArray[int32]): Image {.importc: "LoadImageAnimFromMemory".}
 proc loadImageFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Image {.importc: "LoadImageFromMemory".}
 proc loadImageFromTexturePriv(texture: Texture2D): Image {.importc: "LoadImageFromTexture".}
 proc loadImageFromScreen*(): Image {.importc: "LoadImageFromScreen".}
@@ -2072,6 +2076,12 @@ proc loadImageSvg*(fileNameOrString: string, width, height: int32): Image =
   ## Load image from SVG file data or string with specified size
   result = loadImageSvgPriv(fileNameOrString.cstring, width, height)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from SVG")
+
+proc loadImageAnimFromMemory*(fileType: string, fileData: openArray[uint8], frames: openArray[int32]): Image =
+  ## Load image sequence from memory buffer
+  result = loadImageAnimFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+      fileData.len.int32, cast[ptr UncheckedArray[int32]](frames))
+  if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from buffer")
 
 proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'

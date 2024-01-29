@@ -206,6 +206,12 @@ proc loadImageSvg*(fileNameOrString: string, width, height: int32): Image =
   result = loadImageSvgPriv(fileNameOrString.cstring, width, height)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from SVG")
 
+proc loadImageAnimFromMemory*(fileType: string, fileData: openArray[uint8], frames: openArray[int32]): Image =
+  ## Load image sequence from memory buffer
+  result = loadImageAnimFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+      fileData.len.int32, cast[ptr UncheckedArray[int32]](frames))
+  if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from buffer")
+
 proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
   result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),

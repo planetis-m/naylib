@@ -1,4 +1,5 @@
-import common, std/[streams, strutils]
+import common, std/streams
+import std/strutils except spaces
 when defined(nimPreviewSlimSystem):
   import std/syncio
 
@@ -142,7 +143,6 @@ template Specular*(_: typedesc[MaterialMapIndex]): untyped = Metalness
 template MapDiffuse*(_: typedesc[ShaderLocationIndex]): untyped = MapAlbedo
 template MapSpecular*(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
 
-template Menu*(_: typedesc[KeyboardKey]): untyped = R ## Key: Android menu button
 """
   helpers = """
 
@@ -447,6 +447,7 @@ const
     "LoadImage",
     "LoadImageRaw",
     "LoadImageSvg",
+    "LoadImageAnimFromMemory",
     "LoadImageFromMemory",
     "ExportImageToMemory",
     "ImageKernelConvolution",

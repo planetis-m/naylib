@@ -2069,7 +2069,7 @@
         },
         {
           "name": "KEY_MENU",
-          "value": 82,
+          "value": 5,
           "description": "Key: Android menu button"
         },
         {
@@ -5168,6 +5168,16 @@
       ]
     },
     {
+      "name": "GetShapesTexture",
+      "description": "Get texture that is used for shapes drawing",
+      "returnType": "Texture2D"
+    },
+    {
+      "name": "GetShapesTextureRectangle",
+      "description": "Get texture source rectangle that is used for shapes drawing",
+      "returnType": "Rectangle"
+    },
+    {
       "name": "DrawPixel",
       "description": "Draw a pixel",
       "returnType": "void",
@@ -6691,6 +6701,29 @@
         {
           "type": "const char *",
           "name": "fileName"
+        },
+        {
+          "type": "int *",
+          "name": "frames"
+        }
+      ]
+    },
+    {
+      "name": "LoadImageAnimFromMemory",
+      "description": "Load image sequence from memory buffer",
+      "returnType": "Image",
+      "params": [
+        {
+          "type": "const char *",
+          "name": "fileType"
+        },
+        {
+          "type": "const unsigned char *",
+          "name": "fileData"
+        },
+        {
+          "type": "int",
+          "name": "dataSize"
         },
         {
           "type": "int *",
@@ -9189,7 +9222,7 @@
       "returnType": "char *",
       "params": [
         {
-          "type": "char *",
+          "type": "const char *",
           "name": "text"
         },
         {
