@@ -1,6 +1,6 @@
 # Package
 
-version     = "5.0.2"
+version     = "5.1.0"
 author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
@@ -21,7 +21,6 @@ const
   PkgDir = thisDir().quoteShell
 
 before install:
-  when defined(windows):
-    let patchPath = PkgDir / "mangle_names.patch"
-    withDir(PkgDir / "src/raylib"):
-      exec "git apply " & patchPath
+  let patchPath = PkgDir / "mangle_names.patch"
+  withDir(PkgDir / "src/raylib"):
+    exec "git apply " & patchPath

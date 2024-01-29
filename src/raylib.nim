@@ -500,8 +500,7 @@ type
     b*: uint8 ## Color blue value
     a*: uint8 ## Color alpha value
 
-  Rectangle* {.importc: when defined(windows): "rlRectangle" else: "Rectangle",
-      header: "raylib.h", bycopy.} = object ## Rectangle, 4 components
+  Rectangle* {.importc: "rlRectangle", header: "raylib.h", bycopy.} = object ## Rectangle, 4 components
     x*: float32 ## Rectangle top-left corner position x
     y*: float32 ## Rectangle top-left corner position y
     width*: float32 ## Rectangle width
@@ -774,7 +773,7 @@ const
 
 {.push callconv: cdecl, header: "raylib.h".}
 proc initWindowPriv(width: int32, height: int32, title: cstring) {.importc: "InitWindow".}
-proc closeWindow*() {.importc: when defined(windows): "rlCloseWindow" else: "CloseWindow".}
+proc closeWindow*() {.importc: "rlCloseWindow".}
   ## Close window and unload OpenGL context
 proc windowShouldClose*(): bool {.importc: "WindowShouldClose".}
   ## Check if application should close (KEY_ESCAPE pressed or windows close icon clicked)
@@ -865,7 +864,7 @@ proc enableEventWaiting*() {.importc: "EnableEventWaiting".}
   ## Enable waiting for events on EndDrawing(), no automatic event polling
 proc disableEventWaiting*() {.importc: "DisableEventWaiting".}
   ## Disable waiting for events on EndDrawing(), automatic events polling
-proc showCursor*() {.importc: when defined(windows): "rlShowCursor" else: "ShowCursor".}
+proc showCursor*() {.importc: "rlShowCursor".}
   ## Shows cursor
 proc hideCursor*() {.importc: "HideCursor".}
   ## Hides cursor
@@ -1209,7 +1208,7 @@ proc checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshol
   ## Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
 proc getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "GetCollisionRec".}
   ## Get collision rectangle for two rectangles collision
-proc loadImagePriv(fileName: cstring): Image {.importc: when defined(windows): "rlLoadImage" else: "LoadImage".}
+proc loadImagePriv(fileName: cstring): Image {.importc: "rlLoadImage".}
 proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw".}
 proc loadImageSvgPriv(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg".}
 proc loadImageAnim*(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim".}
@@ -1407,9 +1406,9 @@ proc exportFontAsCode*(font: Font, fileName: cstring): bool {.importc: "ExportFo
   ## Export font as code file, returns true on success
 proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS".}
   ## Draw current FPS
-proc drawText*(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: when defined(windows): "rlDrawText" else: "DrawText".}
+proc drawText*(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "rlDrawText".}
   ## Draw text (using default font)
-proc drawText*(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: when defined(windows): "rlDrawTextEx" else: "DrawTextEx".}
+proc drawText*(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "rlDrawTextEx".}
   ## Draw text using font and additional parameters
 proc drawText*(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro".}
   ## Draw text using Font and pro parameters (rotation)
