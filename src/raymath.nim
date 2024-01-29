@@ -61,14 +61,13 @@ func clampValue*(v: Vector2; min, max: float32): Vector2 {.inline.} =
   var length = v.x * v.x + v.y * v.y
   if length > 0'f32:
     length = sqrt(length)
+    var scale: float32 = 1 # By default, 1 as the neutral element.
     if length < min:
-      let scale = min / length
-      result.x = v.x * scale
-      result.y = v.y * scale
+      scale = min / length
     elif length > max:
-      let scale = max / length
-      result.x = v.x * scale
-      result.y = v.y * scale
+      scale = max / length
+    result.x = v.x * scale
+    result.y = v.y * scale
 
 func add*(v1, v2: Vector2): Vector2 {.inline.} =
   ## Add two vectors (v1 + v2)
@@ -224,16 +223,14 @@ func clampValue*(v: Vector3; min, max: float32): Vector3 {.inline.} =
   var length = v.x * v.x + v.y * v.y + v.z * v.z
   if length > 0'f32:
     length = sqrt(length)
+    var scale: float32 = 1 # By default, 1 as the neutral element.
     if length < min:
-      let scale = min / length
-      result.x = v.x * scale
-      result.y = v.y * scale
-      result.z = v.z * scale
+      scale = min / length
     elif length > max:
-      let scale = max / length
-      result.x = v.x * scale
-      result.y = v.y * scale
-      result.z = v.z * scale
+      scale = max / length
+    result.x = v.x * scale
+    result.y = v.y * scale
+    result.z = v.z * scale
 
 func add*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Add two vectors
