@@ -21,9 +21,10 @@ const
   PkgDir = thisDir().quoteShell
 
 before install:
-  let patchPath = PkgDir / "mangle_names.patch"
+  # https://stackoverflow.com/a/27415757
   exec "git submodule deinit -f ."
   exec "git submodule update --init"
   withDir(PkgDir / "src/raylib"):
     # exec "git rev-parse HEAD"
+    let patchPath = PkgDir / "mangle_names.patch"
     exec "git apply " & patchPath
