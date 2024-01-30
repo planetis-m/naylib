@@ -447,7 +447,6 @@ const
     "LoadImage",
     "LoadImageRaw",
     "LoadImageSvg",
-    "LoadImageAnimFromMemory",
     "LoadImageFromMemory",
     "ExportImageToMemory",
     "ImageKernelConvolution",
@@ -551,12 +550,15 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
     scope:
       for obj in items(t.structs):
         spaces
-        ident obj.name
+        if obj.name == "rlRectangle":
+          ident "Rectangle"
+        else:
+          ident obj.name
         if obj.name == "FilePathList":
           lit " {.importc, header: \"raylib.h\", bycopy.} = object"
         elif obj.name in ["Color", "Vector2", "Vector3", "Vector4"]:
           lit "* {.importc, header: \"raylib.h\", completeStruct, bycopy.} = object"
-        elif obj.name in ["Rectangle", "rlRectangle"]:
+        elif obj.name == "rlRectangle":
           lit "* {.importc: \"rlRectangle\", header: \"raylib.h\", bycopy.} = object"
         else: lit "* {.importc, header: \"raylib.h\", bycopy.} = object"
         doc obj
@@ -645,6 +647,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         fncName.removeSuffix("Rec")
         fncName.removeSuffix("Ex")
         fncName.removeSuffix("Pro")
+      if fnc.name in ["rlShowCursor", "rlCloseWindow", "rlLoadImage", "rlDrawText", "rlDrawTextEx"]:
+        fncName.removePrefix("rl")
       ident fncName
       let isPrivate = fnc.name in privateFuncs
       let isAlloc = fnc.name in allocFuncs
@@ -695,9 +699,6 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
           lit kind
       lit " {.importc: "
       lit "\""
-      if fnc.name in ["ShowCursor", "rlShowCursor", "CloseWindow", "rlCloseWindow",
-          "LoadImage", "rlLoadImage", "DrawText", "rlDrawText", "DrawTextEx", "rlDrawTextEx"]:
-        if not startsWith(fnc.name, "rl"): lit "rl"
       ident fnc.name
       lit "\""
       if hasVarargs:
