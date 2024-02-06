@@ -20,11 +20,11 @@ const raylibDir = currentSourcePath().parentDir / "raylib/src"
 {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
+  {.passL: "-sUSE_GLFW=3 -sWASM=1 -sASYNCIFY -sTOTAL_MEMORY=67108864".}
   {.passL: "-sGL_ENABLE_GET_PROC_ADDRESS".}
-  {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY -s TOTAL_MEMORY=67108864".}
   when defined(NaylibWebResources):
     const NaylibWebResourcesPath {.strdefine.} = "resources"
-    {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
+    {.passL: "-sFORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
 
   type emCallbackFunc* = proc() {.cdecl.}
   proc emscriptenSetMainLoop*(f: emCallbackFunc, fps, simulateInfiniteLoop: int32) {.
@@ -468,6 +468,7 @@ const
     "DrawTriangleFan",
     "DrawTriangleStrip",
     "CheckCollisionPointPoly",
+    "LoadImageAnimFromMemory",
     "LoadFont",
     "LoadFontEx",
     "LoadFontFromImage",
@@ -550,15 +551,12 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
     scope:
       for obj in items(t.structs):
         spaces
-        if obj.name == "rlRectangle":
-          ident "Rectangle"
-        else:
-          ident obj.name
+        ident obj.name
         if obj.name == "FilePathList":
           lit " {.importc, header: \"raylib.h\", bycopy.} = object"
         elif obj.name in ["Color", "Vector2", "Vector3", "Vector4"]:
           lit "* {.importc, header: \"raylib.h\", completeStruct, bycopy.} = object"
-        elif obj.name == "rlRectangle":
+        elif obj.name == "Rectangle":
           lit "* {.importc: \"rlRectangle\", header: \"raylib.h\", bycopy.} = object"
         else: lit "* {.importc, header: \"raylib.h\", bycopy.} = object"
         doc obj
@@ -637,9 +635,9 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
     for fnc in items(t.functions):
       if fnc.name in excludedFuncs: continue
       lit "\nproc "
-      var fncName = uncapitalizeAscii(fnc.name) # Follow Nim's naming convention for proc names.
-      if fncName notin ["drawRectangleGradientV", "setShaderValueV", "colorToHSV", "colorFromHSV",
-          "checkCollisionCircleRec", "checkCollisionPointRec"] and
+      var fncName = fnc.name # Follow Nim's naming convention for proc names.
+      if fncName notin ["DrawRectangleGradientV", "SetShaderValueV", "ColorToHSV", "ColorFromHSV",
+          "CheckCollisionCircleRec", "CheckCollisionPointRec"] and
           (fncName.endsWith("V") and fnc.returnType != "Vector2" or
           fncName.endsWith("Rec") and fnc.returnType != "Rectangle") or
           fncName.endsWith("Ex") or fncName.endsWith("Pro"):
@@ -647,8 +645,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         fncName.removeSuffix("Rec")
         fncName.removeSuffix("Ex")
         fncName.removeSuffix("Pro")
-      if fnc.name in ["rlShowCursor", "rlCloseWindow", "rlLoadImage", "rlDrawText", "rlDrawTextEx"]:
-        fncName.removePrefix("rl")
+      fncName = uncapitalizeAscii(fncName)
       ident fncName
       let isPrivate = fnc.name in privateFuncs
       let isAlloc = fnc.name in allocFuncs
@@ -699,7 +696,9 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
           lit kind
       lit " {.importc: "
       lit "\""
-      ident fnc.name
+      if fnc.name in ["ShowCursor", "CloseWindow", "LoadImage", "DrawText", "DrawTextEx"]:
+        lit "rl" & fnc.name
+      else: ident fnc.name
       lit "\""
       if hasVarargs:
         lit ", varargs"

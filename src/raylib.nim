@@ -9,11 +9,11 @@ const raylibDir = currentSourcePath().parentDir / "raylib/src"
 {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
+  {.passL: "-sUSE_GLFW=3 -sWASM=1 -sASYNCIFY -sTOTAL_MEMORY=67108864".}
   {.passL: "-sGL_ENABLE_GET_PROC_ADDRESS".}
-  {.passL: "-s USE_GLFW=3 -s WASM=1 -s ASYNCIFY -s TOTAL_MEMORY=67108864".}
   when defined(NaylibWebResources):
     const NaylibWebResourcesPath {.strdefine.} = "resources"
-    {.passL: "-s FORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
+    {.passL: "-sFORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
 
   type emCallbackFunc* = proc() {.cdecl.}
   proc emscriptenSetMainLoop*(f: emCallbackFunc, fps, simulateInfiniteLoop: int32) {.
@@ -931,18 +931,20 @@ proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocation, texture: T
 proc unloadShader(shader: Shader) {.importc: "UnloadShader".}
 proc getMouseRay*(mousePosition: Vector2, camera: Camera): Ray {.importc: "GetMouseRay".}
   ## Get a ray trace from mouse position
-proc getCameraMatrix*(camera: Camera): Matrix {.importc: "GetCameraMatrix".}
-  ## Get camera transform matrix (view matrix)
-proc getCameraMatrix2D*(camera: Camera2D): Matrix {.importc: "GetCameraMatrix2D".}
-  ## Get camera 2d transform matrix
+proc getViewRay*(mousePosition: Vector2, camera: Camera, width: float32, height: float32): Ray {.importc: "GetViewRay".}
+  ## Get a ray trace from mouse position in a viewport
 proc getWorldToScreen*(position: Vector3, camera: Camera): Vector2 {.importc: "GetWorldToScreen".}
   ## Get the screen space position for a 3d world space position
-proc getScreenToWorld2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetScreenToWorld2D".}
-  ## Get the world space position for a 2d camera screen space position
 proc getWorldToScreen*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx".}
   ## Get size position for a 3d world space position
 proc getWorldToScreen2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetWorldToScreen2D".}
   ## Get the screen space position for a 2d camera world space position
+proc getScreenToWorld2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetScreenToWorld2D".}
+  ## Get the world space position for a 2d camera screen space position
+proc getCameraMatrix*(camera: Camera): Matrix {.importc: "GetCameraMatrix".}
+  ## Get camera transform matrix (view matrix)
+proc getCameraMatrix2D*(camera: Camera2D): Matrix {.importc: "GetCameraMatrix2D".}
+  ## Get camera 2d transform matrix
 proc setTargetFPS*(fps: int32) {.importc: "SetTargetFPS".}
   ## Set target FPS (maximum)
 proc getFrameTime*(): float32 {.importc: "GetFrameTime".}
