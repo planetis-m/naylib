@@ -37,7 +37,8 @@ proc wrapRaylib(lib, prefix: string) =
   genWrapper(lib)
 
 task wrap, "Produce all raylib nim wrappers":
-  wrapRaylib("raylib", "RLAPI")
+  # wrapRaylib("raylib", "RLAPI")
+  genWrapper("raylib")
   # wrapRaylib("raymath", "RMAPI")
   genWrapper("rlgl")
   # wrapRaylib("rlgl", "")

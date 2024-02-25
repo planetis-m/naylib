@@ -1034,6 +1034,8 @@ proc getGamepadAxisMovement*(gamepad: int32, axis: GamepadAxis): float32 {.impor
   ## Get axis movement value for a gamepad axis
 proc setGamepadMappings*(mappings: cstring): int32 {.importc: "SetGamepadMappings".}
   ## Set internal gamepad mappings (SDL_GameControllerDB)
+proc setGamepadVibration*(gamepad: int32, leftMotor: float32, rightMotor: float32) {.importc: "SetGamepadVibration".}
+  ## Set gamepad vibration for both motors
 proc isMouseButtonPressed*(button: MouseButton): bool {.importc: "IsMouseButtonPressed".}
   ## Check if a mouse button has been pressed once
 proc isMouseButtonDown*(button: MouseButton): bool {.importc: "IsMouseButtonDown".}
