@@ -137,9 +137,9 @@ func divide*(v1, v2: Vector2): Vector2 {.inline.} =
 func normalize*(v: Vector2): Vector2 {.inline.} =
   ## Normalize provided vector
   result = Vector2()
-  var length = (v.x * v.x) + (v.y * v.y)
-  if length == 0'f32: length = 1'f32
-  let ilength = 1'f32 / sqrt(length)
+  var lengthSq = (v.x * v.x) + (v.y * v.y)
+  if lengthSq == 0'f32: lengthSq = 1'f32
+  let ilength = 1'f32 / sqrt(lengthSq)
   result.x = v.x * ilength
   result.y = v.y * ilength
 
@@ -356,10 +356,10 @@ func divide*(v1, v2: Vector3): Vector3 {.inline.} =
 func normalize*(v: Vector3): Vector3 {.inline.} =
   ## Normalize provided vector
   result = Vector3()
-  var length = v.x * v.x + v.y * v.y + v.z * v.z
-  if length == 0'f32:
-    length = 1'f32
-  let ilength = 1'f32 / sqrt(length)
+  var lengthSq = v.x * v.x + v.y * v.y + v.z * v.z
+  if lengthSq == 0'f32:
+    lengthSq = 1'f32
+  let ilength = 1'f32 / sqrt(lengthSq)
   result.x = v.x * ilength
   result.y = v.y * ilength
   result.z = v.z * ilength
@@ -382,14 +382,12 @@ func orthoNormalize*(v1: var Vector3; v2: var Vector3) {.inline.} =
   ## Orthonormalize provided vectors
   ## Makes vectors normalized and orthogonal to each other
   ## Gram-Schmidt function implementation
-  var length = 0'f32
-  var ilength = 0'f32
   # Vector3Normalize(*v1);
   var v = v1
-  length = v.x * v.x + v.y * v.y + v.z * v.z
-  if length == 0'f32:
-    length = 1'f32
-  ilength = 1'f32 / sqrt(length)
+  var lengthSq = v.x * v.x + v.y * v.y + v.z * v.z
+  if lengthSq == 0'f32:
+    lengthSq = 1'f32
+  var ilength = 1'f32 / sqrt(lengthSq)
   v1.x = v1.x * ilength
   v1.y = v1.y * ilength
   v1.z = v1.z * ilength
@@ -398,10 +396,10 @@ func orthoNormalize*(v1: var Vector3; v2: var Vector3) {.inline.} =
                          z: v1.x * v2.y - v1.y * v2.x)
   # Vector3Normalize(vn1);
   v = vn1
-  length = v.x * v.x + v.y * v.y + v.z * v.z
-  if length == 0'f32:
-    length = 1'f32
-  ilength = 1'f32 / sqrt(length)
+  lengthSq = v.x * v.x + v.y * v.y + v.z * v.z
+  if lengthSq == 0'f32:
+    lengthSq = 1'f32
+  ilength = 1'f32 / sqrt(lengthSq)
   vn1.x = vn1.x * ilength
   vn1.y = vn1.y * ilength
   vn1.z = vn1.z * ilength
@@ -439,10 +437,10 @@ func rotateByAxisAngle*(v, axis: Vector3; angle: float32): Vector3 {.inline.} =
   var axis = axis
   var angle = angle
   # normalize(axis)
-  var length = axis.x * axis.x + axis.y * axis.y + axis.z * axis.z
-  if length == 0'f32:
-    length = 1'f32
-  let ilength = 1'f32 / sqrt(length)
+  var lengthSq = axis.x * axis.x + axis.y * axis.y + axis.z * axis.z
+  if lengthSq == 0'f32:
+    lengthSq = 1'f32
+  let ilength = 1'f32 / sqrt(lengthSq)
   axis.x = axis.x * ilength
   axis.y = axis.y * ilength
   axis.z = axis.z * ilength
@@ -732,10 +730,10 @@ func divide*(v1, v2: Vector4): Vector4 {.inline.} =
 func normalize*(v: Vector4): Vector4 {.inline.} =
   ## Normalize provided vector
   result = Vector4()
-  var length = v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w
-  if length == 0'f32:
-    length = 1'f32
-  let ilength = 1'f32 / sqrt(length)
+  var lengthSq = v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w
+  if lengthSq == 0'f32:
+    lengthSq = 1'f32
+  let ilength = 1'f32 / sqrt(lengthSq)
   result.x = v.x * ilength
   result.y = v.y * ilength
   result.z = v.z * ilength
@@ -1190,16 +1188,14 @@ func ortho*(left, right, bottom, top, near, far: float): Matrix {.inline.} =
 func lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
   ## Get camera look-at matrix (view matrix)
   result = Matrix()
-  var length = 0'f32
-  var ilength = 0'f32
   # Vector3Subtract(eye, target)
   var vz = Vector3(x: eye.x - target.x, y: eye.y - target.y, z: eye.z - target.z)
   # Vector3Normalize(vz)
   var v = vz
-  length = v.x * v.x + v.y * v.y + v.z * v.z
-  if length == 0'f32:
-    length = 1'f32
-  ilength = 1'f32 / sqrt(length)
+  var lengthSq = v.x * v.x + v.y * v.y + v.z * v.z
+  if lengthSq == 0'f32:
+    lengthSq = 1'f32
+  var ilength = 1'f32 / sqrt(lengthSq)
   vz.x = vz.x * ilength
   vz.y = vz.y * ilength
   vz.z = vz.z * ilength
@@ -1208,10 +1204,10 @@ func lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
                         z: up.x * vz.y - up.y * vz.x)
   # Vector3Normalize(x)
   v = vx
-  length = v.x * v.x + v.y * v.y + v.z * v.z
-  if length == 0'f32:
-    length = 1'f32
-  ilength = 1'f32 / sqrt(length)
+  lengthSq = v.x * v.x + v.y * v.y + v.z * v.z
+  if lengthSq == 0'f32:
+    lengthSq = 1'f32
+  ilength = 1'f32 / sqrt(lengthSq)
   vx.x = vx.x * ilength
   vx.y = vx.y * ilength
   vx.z = vx.z * ilength
@@ -1298,10 +1294,10 @@ func length*(q: Quaternion): float32 {.inline.} =
 func normalize*(q: Quaternion): Quaternion {.inline.} =
   ## Normalize provided quaternion
   result = Vector4().Quaternion
-  var length = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
-  if length == 0'f32:
-    length = 1'f32
-  let ilength = 1'f32 / sqrt(length)
+  var lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
+  if lengthSq == 0'f32:
+    lengthSq = 1'f32
+  let ilength = 1'f32 / sqrt(lengthSq)
   result.x = q.x * ilength
   result.y = q.y * ilength
   result.z = q.z * ilength
@@ -1372,10 +1368,10 @@ func nlerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   result.w = q1.w + amount * (q2.w - q1.w)
   # QuaternionNormalize(q);
   var q = result
-  var length = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
-  if length == 0'f32:
-    length = 1'f32
-  let ilength = 1'f32 / sqrt(length)
+  var lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
+  if lengthSq == 0'f32:
+    lengthSq = 1'f32
+  let ilength = 1'f32 / sqrt(lengthSq)
   result.x = q.x * ilength
   result.y = q.y * ilength
   result.z = q.z * ilength
@@ -1428,10 +1424,10 @@ func fromVector3ToVector3*(`from`, to: Vector3): Quaternion {.inline.} =
   # normalize(q)
   # NOTE: Normalize to essentially nlerp the original and identity to 0.5
   var q = result
-  var length = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
-  if length == 0'f32:
-    length = 1'f32
-  let ilength = 1'f32 / sqrt(length)
+  var lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
+  if lengthSq == 0'f32:
+    lengthSq = 1'f32
+  let ilength = 1'f32 / sqrt(lengthSq)
   result.x = q.x * ilength
   result.y = q.y * ilength
   result.z = q.z * ilength
@@ -1513,14 +1509,12 @@ func fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
   let axisLength = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z)
   if axisLength != 0'f32:
     angle = angle * 0.5'f32
-    var length = 0'f32
-    var ilength = 0'f32
     # Vector3Normalize(axis)
     var v = axis
-    length = v.x * v.x + v.y * v.y + v.z * v.z
-    if length == 0'f32:
-      length = 1'f32
-    ilength = 1'f32 / sqrt(length)
+    var lengthSq = v.x * v.x + v.y * v.y + v.z * v.z
+    if lengthSq == 0'f32:
+      lengthSq = 1'f32
+    var ilength = 1'f32 / sqrt(lengthSq)
     axis.x = axis.x * ilength
     axis.y = axis.y * ilength
     axis.z = axis.z * ilength
@@ -1532,10 +1526,10 @@ func fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
     result.w = cosres
     # QuaternionNormalize(q);
     var q = result
-    length = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
-    if length == 0'f32:
-      length = 1'f32
-    ilength = 1'f32 / sqrt(length)
+    lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
+    if lengthSq == 0'f32:
+      lengthSq = 1'f32
+    ilength = 1'f32 / sqrt(lengthSq)
     result.x = q.x * ilength
     result.y = q.y * ilength
     result.z = q.z * ilength
@@ -1546,10 +1540,10 @@ func toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) {.
   var q = q
   if abs(q.w) > 1'f32:
     # QuaternionNormalize(q);
-    var length = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
-    if length == 0'f32:
-      length = 1'f32
-    let ilength = 1'f32 / sqrt(length)
+    var lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
+    if lengthSq == 0'f32:
+      lengthSq = 1'f32
+    let ilength = 1'f32 / sqrt(lengthSq)
     q.x = q.x * ilength
     q.y = q.y * ilength
     q.z = q.z * ilength
