@@ -153,10 +153,10 @@ index 23b8f43..7369198 100644
                  #endif
  
 diff --git a/src/platforms/rcore_desktop.c b/src/platforms/rcore_desktop.c
-index dbfc29e..978b545 100644
+index d4c0244..1f2acac 100644
 --- a/src/platforms/rcore_desktop.c
 +++ b/src/platforms/rcore_desktop.c
-@@ -961,7 +961,7 @@ const char *GetClipboardText(void)
+@@ -960,7 +960,7 @@ const char *GetClipboardText(void)
  }
  
  // Show mouse cursor
@@ -166,7 +166,7 @@ index dbfc29e..978b545 100644
      glfwSetInputMode(platform.handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
      CORE.Input.Mouse.cursorHidden = false;
 diff --git a/src/platforms/rcore_desktop_sdl.c b/src/platforms/rcore_desktop_sdl.c
-index f567119..a6fc910 100644
+index 1b6304d..3b70400 100644
 --- a/src/platforms/rcore_desktop_sdl.c
 +++ b/src/platforms/rcore_desktop_sdl.c
 @@ -864,7 +864,7 @@ const char *GetClipboardText(void)
@@ -236,7 +236,7 @@ index 9328b8c..1ddcbcb 100644
      if (CORE.Input.Mouse.cursorHidden)
      {
 diff --git a/src/raylib.h b/src/raylib.h
-index d857f1c..6053839 100644
+index 03045ed..fab1555 100644
 --- a/src/raylib.h
 +++ b/src/raylib.h
 @@ -246,12 +246,12 @@ typedef struct Color {
@@ -412,8 +412,8 @@ index d857f1c..6053839 100644
 +RLAPI void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, rlRectangle dest, Vector2 origin, float rotation, Color tint); // Draws a texture (or part of it) that stretches or shrinks nicely
  
  // Color/pixel related functions
- RLAPI Color Fade(Color color, float alpha);                                 // Get color with alpha applied, alpha goes from 0.0f to 1.0f
-@@ -1436,15 +1436,15 @@ RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);
+ RLAPI bool ColorIsEqual(Color col1, Color col2);                            // Check if two colors are equal
+@@ -1437,15 +1437,15 @@ RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);
  RLAPI Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount); // Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
  RLAPI bool IsFontReady(Font font);                                                          // Check if a font is ready
  RLAPI GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount, int type); // Load font data for further use
@@ -432,7 +432,7 @@ index d857f1c..6053839 100644
  RLAPI void DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint); // Draw text using Font and pro parameters (rotation)
  RLAPI void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSize, Color tint); // Draw one character (codepoint)
  RLAPI void DrawTextCodepoints(Font font, const int *codepoints, int codepointCount, Vector2 position, float fontSize, float spacing, Color tint); // Draw multiple character (codepoint)
-@@ -1455,7 +1455,7 @@ RLAPI int MeasureText(const char *text, int fontSize);
+@@ -1456,7 +1456,7 @@ RLAPI int MeasureText(const char *text, int fontSize);
  RLAPI Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing);    // Measure string size for Font
  RLAPI int GetGlyphIndex(Font font, int codepoint);                                          // Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
  RLAPI GlyphInfo GetGlyphInfo(Font font, int codepoint);                                     // Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
@@ -441,7 +441,7 @@ index d857f1c..6053839 100644
  
  // Text codepoints management functions (unicode characters)
  RLAPI char *LoadUTF8(const int *codepoints, int length);                // Load UTF-8 text encoded from codepoints array
-@@ -1532,8 +1532,8 @@ RLAPI void DrawModelWires(Model model, Vector3 position, float scale, Color tint
+@@ -1533,8 +1533,8 @@ RLAPI void DrawModelWires(Model model, Vector3 position, float scale, Color tint
  RLAPI void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model wires (with texture if set) with extended parameters
  RLAPI void DrawBoundingBox(BoundingBox box, Color color);                                   // Draw bounding box (wires)
  RLAPI void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float size, Color tint);   // Draw a billboard texture
@@ -504,7 +504,7 @@ index 024f0d1..6caecdc 100644
      #endif
  
 diff --git a/src/rmodels.c b/src/rmodels.c
-index 4f63499..72501ca 100644
+index 316b91d..8392efa 100644
 --- a/src/rmodels.c
 +++ b/src/rmodels.c
 @@ -3568,13 +3568,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
@@ -995,7 +995,7 @@ index eb56b3e..8c3c938 100644
              // Save data properly in sprite font
              font.glyphs[i].value = charId;
 diff --git a/src/rtextures.c b/src/rtextures.c
-index bd3d54c..be17607 100644
+index 5c0e90e..92f8322 100644
 --- a/src/rtextures.c
 +++ b/src/rtextures.c
 @@ -271,7 +271,7 @@ static Vector4 *LoadImageDataNormalized(Image image);       // Load pixel data f
