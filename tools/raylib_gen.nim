@@ -613,7 +613,8 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
       for alias in items(t.aliases):
         spaces
         ident alias.name
-        lit "* = "
+        if alias.name == "Quaternion": lit "* {.borrow: `.`.} = distinct "
+        else: lit "* = "
         ident alias.`type`
         doc alias
       lit "\n"

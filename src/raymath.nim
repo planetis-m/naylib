@@ -175,6 +175,18 @@ func rotate*(v: Vector2; angle: float32): Vector2 {.inline.} =
   result.x = v.x * cosres - v.y * sinres
   result.y = v.x * sinres + v.y * cosres
 
+func min*(v1, v2: Vector2): Vector2 {.inline.} =
+  ## Get min value for each pair of components
+  result = Vector2()
+  result.x = min(v1.x, v2.x)
+  result.y = min(v1.y, v2.y)
+
+func max*(v1, v2: Vector2): Vector2 {.inline.} =
+  ## Get max value for each pair of components
+  result = Vector2()
+  result.x = max(v1.x, v2.x)
+  result.y = max(v1.y, v2.y)
+
 func moveTowards*(v, target: Vector2; maxDistance: float32): Vector2 {.inline.} =
   ## Move Vector towards target
   result = Vector2()
@@ -190,6 +202,22 @@ func moveTowards*(v, target: Vector2; maxDistance: float32): Vector2 {.inline.} 
 func invert*(v: Vector2): Vector2 {.inline.} =
   ## Invert the given vector
   result = Vector2(x: 1'f32 / v.x, y: 1'f32 / v.y)
+
+func refract*(v, n: Vector2, r: float32): Vector2 {.inline.} =
+  ## Compute the direction of a refracted ray
+  ## v: normalized direction of the incoming ray
+  ## n: normalized normal vector of the interface of two optical media
+  ## r: ratio of the refractive index of the medium from where the ray comes
+  ##    to the refractive index of the medium on the other side of the surface
+  result = Vector2()
+  var v = v
+  let dot = v.x * n.x + v.y * n.y
+  var d = 1'f32 - r * r * (1'f32 - dot * dot)
+  if d >= 0'f32:
+    d = sqrt(d)
+    v.x = r * v.x - (r * dot + d) * n.x
+    v.y = r * v.y - (r * dot + d) * n.y
+    result = v
 
 # ----------------------------------------------------------------------------------
 # Module Functions Definition - Vector3 math
@@ -325,14 +353,13 @@ func divide*(v1, v2: Vector3): Vector3 {.inline.} =
 
 func normalize*(v: Vector3): Vector3 {.inline.} =
   ## Normalize provided vector
-  result = v
-  var length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
-  if length == 0'f32:
-    length = 1'f32
-  let ilength = 1'f32 / length
-  result.x = result.x * ilength
-  result.y = result.y * ilength
-  result.z = result.z * ilength
+  result = Vector3()
+  let length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+  if length > 0'f32:
+    let ilength = 1'f32 / length
+    result.x = result.x * ilength
+    result.y = result.y * ilength
+    result.z = result.z * ilength
 
 func project*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Calculate the projection of the vector v1 on to v2
@@ -449,6 +476,20 @@ func lerp*(v1, v2: Vector3; amount: float32): Vector3 {.inline.} =
   result.x = v1.x + amount * (v2.x - v1.x)
   result.y = v1.y + amount * (v2.y - v1.y)
   result.z = v1.z + amount * (v2.z - v1.z)
+
+func moveTowards*(v, target: Vector3, maxDistance: float32): Vector3 {.inline.} =
+  ## Move Vector towards target
+  result = Vector3()
+  let dx = target.x - v.x
+  let dy = target.y - v.y
+  let dz = target.z - v.z
+  let value = dx * dx + dy * dy + dz * dz
+  if value == 0 or (maxDistance >= 0 and value <= maxDistance*maxDistance):
+    return target
+  let dist = sqrt(value)
+  result.x = v.x + dx / dist * maxDistance
+  result.y = v.y + dy / dist * maxDistance
+  result.z = v.z + dz / dist * maxDistance
 
 func reflect*(v, normal: Vector3): Vector3 {.inline.} =
   ## Calculate reflected vector to normal
@@ -575,9 +616,9 @@ func unproject*(source: Vector3; projection, view: Matrix): Vector3 {.inline.} =
       -(a10 * b09) + a11 * b07 - a12 * b06) * invDet, m7: (a00 * b09 - a01 * b07 + a02 * b06) * invDet, m11: (
       -(a30 * b03) + a31 * b01 - a32 * b00) * invDet, m15: (a20 * b03 - a21 * b01 + a22 * b00) * invDet)
   # Create quaternion from source point
-  let quat = Quaternion(x: source.x, y: source.y, z: source.z, w: 1'f32)
+  let quat = Vector4(x: source.x, y: source.y, z: source.z, w: 1'f32).Quaternion
   # Multiply quat point by unprojected matrix
-  let qtransformed = Quaternion(x: matViewProjInv.m0 * quat.x +
+  let qtransformed = Vector4(x: matViewProjInv.m0 * quat.x +
       matViewProjInv.m4 * quat.y + matViewProjInv.m8 * quat.z +
       matViewProjInv.m12 * quat.w, y: matViewProjInv.m1 * quat.x +
       matViewProjInv.m5 * quat.y + matViewProjInv.m9 * quat.z +
@@ -585,7 +626,7 @@ func unproject*(source: Vector3; projection, view: Matrix): Vector3 {.inline.} =
       matViewProjInv.m6 * quat.y + matViewProjInv.m10 * quat.z +
       matViewProjInv.m14 * quat.w, w: matViewProjInv.m3 * quat.x +
       matViewProjInv.m7 * quat.y + matViewProjInv.m11 * quat.z +
-      matViewProjInv.m15 * quat.w)
+      matViewProjInv.m15 * quat.w).Quaternion
   # Normalized world points in vectors
   result.x = qtransformed.x / qtransformed.w
   result.y = qtransformed.y / qtransformed.w
@@ -601,6 +642,144 @@ func toFloatV*(v: Vector3): Float3 {.inline, noinit.} =
 func invert*(v: Vector3): Vector3 {.inline.} =
   ## Invert the given vector
   result = Vector3(x: 1'f32 / v.x, y: 1'f32 / v.y, z: 1'f32 / v.z)
+
+# ----------------------------------------------------------------------------------
+# Module Functions Definition - Vector4 math
+# ----------------------------------------------------------------------------------
+
+func zero*(_: typedesc[Vector4]): Vector4 {.inline.} =
+  ## Vector with components value 0'f32
+  result = Vector4(x: 0, y: 0, z: 0, w: 0)
+
+func one*(_: typedesc[Vector4]): Vector4 {.inline.} =
+  ## Vector with components value 1'f32
+  result = Vector2(x: 1, y: 1, z: 1, w: 1)
+
+func equals*(p, q: Vector4, tol = 1.0e-6'f32): bool {.inline.} =
+  ## Check whether two given quaternions are almost equal
+  result = abs(p.x - q.x) <= tol * max(1'f32, max(abs(p.x), abs(q.x))) and
+      abs(p.y - q.y) <= tol * max(1'f32, max(abs(p.y), abs(q.y))) and
+      abs(p.z - q.z) <= tol * max(1'f32, max(abs(p.z), abs(q.z))) and
+      abs(p.w - q.w) <= tol * max(1'f32, max(abs(p.w), abs(q.w)))
+
+func add*(v1, v2: Vector4): Vector4 {.inline.} =
+  ## Add two Vector4s
+  result = Vector4(x: v1.x + v2.x, y: v1.y + v2.y, z: v1.z + v2.z,
+                                  w: v1.w + v2.w)
+
+func addValue*(v: Vector4; add: float32): Vector4 {.inline.} =
+  ## Add Vector4 and float value
+  result = Vector4(x: v.x + add, y: v.y + add, z: v.z + add, w: v.w + add)
+
+func subtract*(v1, v2: Vector4): Vector4 {.inline.} =
+  ## Subtract two Vector4s
+  result = Vector4(x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z,
+                                  w: v1.w - v2.w)
+
+func subtractValue*(v: Vector4; sub: float32): Vector4 {.inline.} =
+  ## Subtract Vector4 and float value
+  result = Vector4(x: v.x - sub, y: v.y - sub, z: v.z - sub, w: v.w - sub)
+
+func length*(v: Vector4): float32 {.inline.} =
+  ## Computes the length of a Vector4
+  result = sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w)
+
+func lengthSqr*(v: Vector4): float32 {.inline.} =
+  ## Computes the square length of a Vector4
+  result = v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w
+
+func dotProduct*(v1, v2: Vector4): float32 {.inline.} =
+  ## Calculate two vectors dot product
+  result = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w
+
+func distance*(v1, v2: Vector4): float32 {.inline.} =
+  ## Calculate distance between two vectors
+  result = 0'f32
+  let dx = v2.x - v1.x
+  let dy = v2.y - v1.y
+  let dz = v2.z - v1.z
+  let dw = v2.w - v1.w
+  result = sqrt(dx * dx + dy * dy + dz * dz + dw * dw)
+
+func distanceSqr*(v1, v2: Vector4): float32 {.inline.} =
+  ## Calculate square distance between two vectors
+  result = 0'f32
+  let dx = v2.x - v1.x
+  let dy = v2.y - v1.y
+  let dz = v2.z - v1.z
+  let dw = v2.w - v1.w
+  result = dx * dx + dy * dy + dz * dz + dw * dw
+
+func scale*(v: Vector4; scalar: float32): Vector4 {.inline.} =
+  ## Multiply vector by scalar
+  result = Vector4(x: v.x * scalar, y: v.y * scalar, z: v.z * scalar, w: v.w * scalar)
+
+func multiply*(v1, v2: Vector4): Vector4 {.inline.} =
+  ## Multiply vector by vector
+  result = Vector4(x: v1.x * v2.x, y: v1.y * v2.y, z: v1.z * v2.z, w: v1.w * v2.w)
+
+func negate*(v: Vector4): Vector4 {.inline.} =
+  ## Negate provided vector (invert direction)
+  result = Vector4(x: -v.x, y: -v.y, z: -v.z, w: -v.w)
+
+func divide*(v1, v2: Vector4): Vector4 {.inline.} =
+  ## Divide vector by vector
+  result = Vector4(x: v1.x / v2.x, y: v1.y / v2.y, z: v1.z / v2.z, w: v1.w / v2.x)
+
+func normalize*(v: Vector4): Vector4 {.inline.} =
+  ## Normalize provided vector
+  result = Vector4()
+  let length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w)
+  if length > 0'f32:
+    let ilength = 1'f32 / length
+    result.x = result.x * ilength
+    result.y = result.y * ilength
+    result.z = result.z * ilength
+    result.w = result.w * ilength
+
+func min*(v1, v2: Vector4): Vector4 {.inline.} =
+  ## Get min value for each pair of components
+  result = Vector4()
+  result.x = min(v1.x, v2.x)
+  result.y = min(v1.y, v2.y)
+  result.z = min(v1.z, v2.z)
+  result.w = min(v1.w, v2.w)
+
+func max*(v1, v2: Vector4): Vector4 {.inline.} =
+  ## Get max value for each pair of components
+  result = Vector4()
+  result.x = max(v1.x, v2.x)
+  result.y = max(v1.y, v2.y)
+  result.z = max(v1.z, v2.z)
+  result.w = max(v1.w, v2.w)
+
+func lerp*(v1, v2: Vector4; amount: float32): Vector4 {.inline.} =
+  ## Calculate linear interpolation between two vectors
+  result = Vector4()
+  result.x = v1.x + amount * (v2.x - v1.x)
+  result.y = v1.y + amount * (v2.y - v1.y)
+  result.z = v1.z + amount * (v2.z - v1.z)
+  result.w = v1.w + amount * (v2.w - v1.w)
+
+func moveTowards*(v, target: Vector4, maxDistance: float32): Vector4 {.inline.} =
+  ## Move Vector towards target
+  result = Vector4()
+  let dx = target.x - v.x
+  let dy = target.y - v.y
+  let dz = target.z - v.z
+  let dw = target.w - v.w
+  let value = dx * dx + dy * dy + dz * dz + dw * dw
+  if value == 0 or (maxDistance >= 0 and value <= maxDistance*maxDistance):
+    return target
+  let dist = sqrt(value)
+  result.x = v.x + dx / dist * maxDistance
+  result.y = v.y + dy / dist * maxDistance
+  result.z = v.z + dz / dist * maxDistance
+  result.w = v.w + dz / dist * maxDistance
+
+func invert*(v: Vector4): Vector4 {.inline.} =
+  ## Invert the given vector
+  result = Vector4(x: 1'f32 / v.x, y: 1'f32 / v.y, z: 1'f32 / v.z, w: 1'f32 / v.w)
 
 # ----------------------------------------------------------------------------------
 # Module Functions Definition - Matrix math
@@ -717,7 +896,7 @@ func invert*(mat: Matrix): Matrix {.inline.} =
   result.m14 = (-(a30 * b03) + a31 * b01 - a32 * b00) * invDet
   result.m15 = (a20 * b03 - a21 * b01 + a22 * b00) * invDet
 
-func matrixIdentity*(): Matrix {.inline.} =
+func identity*(_: typedesc[Matrix]): Matrix {.inline.} =
   ## Get identity matrix
   result = Matrix(m0: 1, m4: 0, m8: 0, m12: 0, m1: 0, m5: 1,
                           m9: 0, m13: 0, m2: 0, m6: 0, m10: 1, m14: 0,
@@ -1088,25 +1267,25 @@ func equals*(p, q: Quaternion, tol = 1.0e-6'f32): bool {.inline.} =
 
 func add*(q1, q2: Quaternion): Quaternion {.inline.} =
   ## Add two quaternions
-  result = Quaternion(x: q1.x + q2.x, y: q1.y + q2.y, z: q1.z + q2.z,
-                                  w: q1.w + q2.w)
+  result = Vector4(x: q1.x + q2.x, y: q1.y + q2.y, z: q1.z + q2.z,
+                                  w: q1.w + q2.w).Quaternion
 
 func addValue*(q: Quaternion; add: float32): Quaternion {.inline.} =
   ## Add quaternion and float value
-  result = Quaternion(x: q.x + add, y: q.y + add, z: q.z + add, w: q.w + add)
+  result = Vector4(x: q.x + add, y: q.y + add, z: q.z + add, w: q.w + add).Quaternion
 
 func subtract*(q1, q2: Quaternion): Quaternion {.inline.} =
   ## Subtract two quaternions
-  result = Quaternion(x: q1.x - q2.x, y: q1.y - q2.y, z: q1.z - q2.z,
-                                  w: q1.w - q2.w)
+  result = Vector4(x: q1.x - q2.x, y: q1.y - q2.y, z: q1.z - q2.z,
+                                  w: q1.w - q2.w).Quaternion
 
 func subtractValue*(q: Quaternion; sub: float32): Quaternion {.inline.} =
   ## Subtract quaternion and float value
-  result = Quaternion(x: q.x - sub, y: q.y - sub, z: q.z - sub, w: q.w - sub)
+  result = Vector4(x: q.x - sub, y: q.y - sub, z: q.z - sub, w: q.w - sub).Quaternion
 
-func quaternionIdentity*(): Quaternion {.inline.} =
+func identity*(_: typedesc[Quaternion]): Quaternion {.inline.} =
   ## Get identity quaternion
-  result = Quaternion(x: 0, y: 0, z: 0, w: 1)
+  result = Vector4(x: 0, y: 0, z: 0, w: 1).Quaternion
 
 func length*(q: Quaternion): float32 {.inline.} =
   ## Computes the length of a quaternion
@@ -1114,7 +1293,7 @@ func length*(q: Quaternion): float32 {.inline.} =
 
 func normalize*(q: Quaternion): Quaternion {.inline.} =
   ## Normalize provided quaternion
-  result = Quaternion()
+  result = Vector4().Quaternion
   var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
   if length == 0'f32:
     length = 1'f32
@@ -1137,7 +1316,7 @@ func invert*(q: Quaternion): Quaternion {.inline.} =
 
 func multiply*(q1, q2: Quaternion): Quaternion {.inline.} =
   ## Calculate two quaternion multiplication
-  result = Quaternion()
+  result = Vector4().Quaternion
   let
     qax = q1.x
     qay = q1.y
@@ -1155,7 +1334,7 @@ func multiply*(q1, q2: Quaternion): Quaternion {.inline.} =
 
 func scale*(q: Quaternion; mul: float32): Quaternion {.inline.} =
   ## Scale quaternion by float value
-  result = Quaternion()
+  result = Vector4().Quaternion
   let
     qax = q.x
     qay = q.y
@@ -1168,12 +1347,12 @@ func scale*(q: Quaternion; mul: float32): Quaternion {.inline.} =
 
 func divide*(q1, q2: Quaternion): Quaternion {.inline.} =
   ## Divide two quaternions
-  result = Quaternion(x: q1.x / q2.x, y: q1.y / q2.y, z: q1.z / q2.z,
-                                  w: q1.w / q2.w)
+  result = Vector4(x: q1.x / q2.x, y: q1.y / q2.y, z: q1.z / q2.z,
+                                  w: q1.w / q2.w).Quaternion
 
 func lerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   ## Calculate linear interpolation between two quaternions
-  result = Quaternion()
+  result = Vector4().Quaternion
   result.x = q1.x + amount * (q2.x - q1.x)
   result.y = q1.y + amount * (q2.y - q1.y)
   result.z = q1.z + amount * (q2.z - q1.z)
@@ -1181,7 +1360,7 @@ func lerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
 
 func nlerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   ## Calculate slerp-optimized interpolation between two quaternions
-  result = Quaternion()
+  result = Vector4().Quaternion
   # QuaternionLerp(q1, q2, amount)
   result.x = q1.x + amount * (q2.x - q1.x)
   result.y = q1.y + amount * (q2.y - q1.y)
@@ -1200,7 +1379,7 @@ func nlerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
 
 func slerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   ## Calculates spherical linear interpolation between two quaternions
-  result = Quaternion()
+  result = Vector4().Quaternion
   var q2 = q2
   var cosHalfTheta = q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w
   if cosHalfTheta < 0:
@@ -1231,7 +1410,7 @@ func slerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
 
 func fromVector3ToVector3*(`from`, to: Vector3): Quaternion {.inline.} =
   ## Calculate quaternion based on the rotation from one vector to another
-  result = Quaternion()
+  result = Vector4().Quaternion
   let cos2Theta = (`from`.x * to.x + `from`.y * to.y + `from`.z * to.z)
   # Vector3DotProduct(from, to)
   var cross = Vector3(x: `from`.y * to.z - `from`.z * to.y,
@@ -1256,7 +1435,7 @@ func fromVector3ToVector3*(`from`, to: Vector3): Quaternion {.inline.} =
 
 func fromMatrix*(mat: Matrix): Quaternion {.inline.} =
   ## Get a quaternion for a given rotation matrix
-  result = Quaternion()
+  result = Vector4().Quaternion
   let fourWSquaredMinus1 = mat.m0 + mat.m5 + mat.m10
   let fourXSquaredMinus1 = mat.m0 - mat.m5 - mat.m10
   let fourYSquaredMinus1 = mat.m5 - mat.m0 - mat.m10
@@ -1324,7 +1503,7 @@ func toMatrix*(q: Quaternion): Matrix {.inline.} =
 func fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
   ## Get rotation quaternion for an angle and axis
   ## NOTE: Angle must be provided in radians
-  result = Quaternion(x: 0, y: 0, z: 0, w: 1)
+  result = Vector4(x: 0, y: 0, z: 0, w: 1).Quaternion
   var angle = angle
   var axis = axis
   let axisLength = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z)
@@ -1388,7 +1567,7 @@ func toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) {.
 func fromEuler*(pitch, yaw, roll: float32): Quaternion {.inline.} =
   ## Get the quaternion equivalent to Euler angles
   ## NOTE: Rotation order is ZYX
-  result = Quaternion()
+  result = Vector4().Quaternion
   let x0 = cos(pitch * 0.5'f32)
   let x1 = sin(pitch * 0.5'f32)
   let y0 = cos(yaw * 0.5'f32)
@@ -1420,32 +1599,32 @@ func toEuler*(q: Quaternion): Vector3 {.inline.} =
 
 func transform*(q: Quaternion; mat: Matrix): Quaternion {.inline.} =
   ## Transform a quaternion given a transformation matrix
-  result = Quaternion()
+  result = Vector4().Quaternion
   result.x = mat.m0 * q.x + mat.m4 * q.y + mat.m8 * q.z + mat.m12 * q.w
   result.y = mat.m1 * q.x + mat.m5 * q.y + mat.m9 * q.z + mat.m13 * q.w
   result.z = mat.m2 * q.x + mat.m6 * q.y + mat.m10 * q.z + mat.m14 * q.w
   result.w = mat.m3 * q.x + mat.m7 * q.y + mat.m11 * q.z + mat.m15 * q.w
 
-# template `=~`*[T: float32|Vector2|Vector3|Quaternion](v1, v2: T): bool = equals(v1, v2)
+# template `=~`*[T: float32|Vector2|Vector3|Vector4|Quaternion](v1, v2: T): bool = equals(v1, v2)
 
-template `+`*[T: Vector2|Vector3|Quaternion|Matrix](v1, v2: T): T = add(v1, v2)
-template `+=`*[T: Vector2|Vector3|Quaternion|Matrix](v1: var T, v2: T) = v1 = add(v1, v2)
-template `+`*[T: Vector2|Vector3|Quaternion](v1: T, value: float32): T = addValue(v1, value)
-template `+=`*[T: Vector2|Vector3|Quaternion](v1: var T, value: float32) = v1 = addValue(v1, value)
+template `+`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1, v2: T): T = add(v1, v2)
+template `+=`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1: var T, v2: T) = v1 = add(v1, v2)
+template `+`*[T: Vector2|Vector3|Vector4|Quaternion](v1: T, value: float32): T = addValue(v1, value)
+template `+=`*[T: Vector2|Vector3|Vector4|Quaternion](v1: var T, value: float32) = v1 = addValue(v1, value)
 
-template `-`*[T: Vector2|Vector3|Quaternion|Matrix](v1, v2: T): T = subtract(v1, v2)
-template `-=`*[T: Vector2|Vector3|Quaternion|Matrix](v1: var T, v2: T) = v1 = subtract(v1, v2)
-template `-`*[T: Vector2|Vector3|Quaternion](v1: T, value: float32): T = subtractValue(v1, value)
-template `-=`*[T: Vector2|Vector3|Quaternion](v1: var T, value: float32) = v1 = subtractValue(v1, value)
+template `-`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1, v2: T): T = subtract(v1, v2)
+template `-=`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1: var T, v2: T) = v1 = subtract(v1, v2)
+template `-`*[T: Vector2|Vector3|Vector4|Quaternion](v1: T, value: float32): T = subtractValue(v1, value)
+template `-=`*[T: Vector2|Vector3|Vector4|Quaternion](v1: var T, value: float32) = v1 = subtractValue(v1, value)
 
-template `*`*[T: Vector2|Vector3|Quaternion|Matrix](v1, v2: T): T = multiply(v1, v2)
-template `*=`*[T: Vector2|Vector3|Quaternion|Matrix](v1: var T, v2: T) = v1 = multiply(v1, v2)
-template `*`*[T: Vector2|Vector3|Quaternion](v1: T, value: float32): T = scale(v1, value)
-template `*=`*[T: Vector2|Vector3|Quaternion](v1: var T, value: float32) = v1 = scale(v1, value)
+template `*`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1, v2: T): T = multiply(v1, v2)
+template `*=`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1: var T, v2: T) = v1 = multiply(v1, v2)
+template `*`*[T: Vector2|Vector3|Vector4|Quaternion](v1: T, value: float32): T = scale(v1, value)
+template `*=`*[T: Vector2|Vector3|Vector4|Quaternion](v1: var T, value: float32) = v1 = scale(v1, value)
 
-template `/`*[T: Vector2|Vector3|Quaternion|Matrix](v1, v2: T): T = divide(v1, v2)
-template `/=`*[T: Vector2|Vector3|Quaternion|Matrix](v1: var T, v2: T) = v1 = divide(v1, v2)
-template `/`*[T: Vector2|Vector3|Quaternion](v1: T, value: float32): T = scale(v1, 1'f32/value)
-template `/=`*[T: Vector2|Vector3|Quaternion](v1: var T, value: float32) = v1 = scale(v1, 1'f32/value)
+template `/`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1, v2: T): T = divide(v1, v2)
+template `/=`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1: var T, v2: T) = v1 = divide(v1, v2)
+template `/`*[T: Vector2|Vector3|Vector4|Quaternion](v1: T, value: float32): T = scale(v1, 1'f32/value)
+template `/=`*[T: Vector2|Vector3|Vector4|Quaternion](v1: var T, value: float32) = v1 = scale(v1, 1'f32/value)
 
-template `-`*[T: Vector2|Vector3](v1: T): T = negate(v1)
+template `-`*[T: Vector2|Vector3|Vector4](v1: T): T = negate(v1)

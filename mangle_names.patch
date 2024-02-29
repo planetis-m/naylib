@@ -504,7 +504,7 @@ index 024f0d1..6caecdc 100644
      #endif
  
 diff --git a/src/rmodels.c b/src/rmodels.c
-index 166f51a..65f059e 100644
+index 4f63499..72501ca 100644
 --- a/src/rmodels.c
 +++ b/src/rmodels.c
 @@ -3568,13 +3568,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
@@ -995,7 +995,7 @@ index eb56b3e..8c3c938 100644
              // Save data properly in sprite font
              font.glyphs[i].value = charId;
 diff --git a/src/rtextures.c b/src/rtextures.c
-index 97d9e38..7f50efa 100644
+index bd3d54c..be17607 100644
 --- a/src/rtextures.c
 +++ b/src/rtextures.c
 @@ -271,7 +271,7 @@ static Vector4 *LoadImageDataNormalized(Image image);       // Load pixel data f
@@ -1016,7 +1016,7 @@ index 97d9e38..7f50efa 100644
          frameCount = 1;
      }
  
-@@ -1248,7 +1248,7 @@ Image ImageCopy(Image image)
+@@ -1249,7 +1249,7 @@ Image ImageCopy(Image image)
  }
  
  // Create an image from another image piece
@@ -1025,7 +1025,7 @@ index 97d9e38..7f50efa 100644
  {
      Image result = { 0 };
  
-@@ -1270,7 +1270,7 @@ Image ImageFromImage(Image image, Rectangle rec)
+@@ -1271,7 +1271,7 @@ Image ImageFromImage(Image image, Rectangle rec)
  
  // Crop an image to area defined by a rectangle
  // NOTE: Security checks are performed in case rectangle goes out of bounds
@@ -1034,7 +1034,7 @@ index 97d9e38..7f50efa 100644
  {
      // Security check to avoid program crash
      if ((image->data == NULL) || (image->width == 0) || (image->height == 0)) return;
-@@ -1580,8 +1580,8 @@ Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Co
+@@ -1581,8 +1581,8 @@ Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Co
          {
              if ((codepoint != ' ') && (codepoint != '\t'))
              {
@@ -1045,7 +1045,7 @@ index 97d9e38..7f50efa 100644
              }
  
              if (font.glyphs[index].advanceX == 0) textOffsetX += (int)(font.recs[index].width + spacing);
-@@ -1715,7 +1715,7 @@ void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, i
+@@ -1716,7 +1716,7 @@ void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, i
      if (image->format >= PIXELFORMAT_COMPRESSED_DXT1_RGB) TRACELOG(LOG_WARNING, "Image manipulation not supported for compressed formats");
      else if ((newWidth != image->width) || (newHeight != image->height))
      {
@@ -1054,7 +1054,7 @@ index 97d9e38..7f50efa 100644
          Vector2 dstPos = { (float)offsetX, (float)offsetY };
  
          if (offsetX < 0)
-@@ -1795,7 +1795,7 @@ void ImageAlphaCrop(Image *image, float threshold)
+@@ -1796,7 +1796,7 @@ void ImageAlphaCrop(Image *image, float threshold)
      // Security check to avoid program crash
      if ((image->data == NULL) || (image->width == 0) || (image->height == 0)) return;
  
@@ -1063,7 +1063,7 @@ index 97d9e38..7f50efa 100644
  
      // Crop if rectangle is valid
      if (((int)crop.width != 0) && ((int)crop.height != 0)) ImageCrop(image, crop);
-@@ -3046,9 +3046,9 @@ void UnloadImagePalette(Color *colors)
+@@ -3047,9 +3047,9 @@ void UnloadImagePalette(Color *colors)
  
  // Get image alpha border rectangle
  // NOTE: Threshold is defined as a percentage: 0.0f -> 1.0f
@@ -1075,7 +1075,7 @@ index 97d9e38..7f50efa 100644
  
      Color *pixels = LoadImageColors(image);
  
-@@ -3076,7 +3076,7 @@ Rectangle GetImageAlphaBorder(Image image, float threshold)
+@@ -3077,7 +3077,7 @@ Rectangle GetImageAlphaBorder(Image image, float threshold)
          // Check for empty blank image
          if ((xMin != 65536) && (xMax != 65536))
          {
@@ -1084,7 +1084,7 @@ index 97d9e38..7f50efa 100644
          }
  
          UnloadImageColors(pixels);
-@@ -3545,7 +3545,7 @@ void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color)
+@@ -3546,7 +3546,7 @@ void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color)
  // Draw rectangle within an image
  void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color)
  {
@@ -1093,7 +1093,7 @@ index 97d9e38..7f50efa 100644
  }
  
  // Draw rectangle within an image (Vector version)
-@@ -3555,7 +3555,7 @@ void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color
+@@ -3556,7 +3556,7 @@ void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color
  }
  
  // Draw rectangle within an image
@@ -1102,7 +1102,7 @@ index 97d9e38..7f50efa 100644
  {
      // Security check to avoid program crash
      if ((dst->data == NULL) || (dst->width == 0) || (dst->height == 0)) return;
-@@ -3600,7 +3600,7 @@ void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color)
+@@ -3601,7 +3601,7 @@ void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color)
  }
  
  // Draw rectangle lines within an image
@@ -1111,7 +1111,7 @@ index 97d9e38..7f50efa 100644
  {
      ImageDrawRectangle(dst, (int)rec.x, (int)rec.y, (int)rec.width, thick, color);
      ImageDrawRectangle(dst, (int)rec.x, (int)(rec.y + thick), thick, (int)(rec.height - thick*2), color);
-@@ -3610,7 +3610,7 @@ void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color)
+@@ -3611,7 +3611,7 @@ void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color)
  
  // Draw an image (source) within an image (destination)
  // NOTE: Color tint is applied to source image
@@ -1120,7 +1120,7 @@ index 97d9e38..7f50efa 100644
  {
      // Security check to avoid program crash
      if ((dst->data == NULL) || (dst->width == 0) || (dst->height == 0) ||
-@@ -3636,7 +3636,7 @@ void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color
+@@ -3637,7 +3637,7 @@ void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color
          {
              srcMod = ImageFromImage(src, srcRec);   // Create image from another image
              ImageResize(&srcMod, (int)dstRec.width, (int)dstRec.height);   // Resize to destination rectangle
@@ -1129,7 +1129,7 @@ index 97d9e38..7f50efa 100644
  
              srcPtr = &srcMod;
              useSrcMod = true;
-@@ -3743,8 +3743,8 @@ void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position,
+@@ -3744,8 +3744,8 @@ void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position,
  {
      Image imText = ImageTextEx(font, text, fontSize, spacing, tint);
  
@@ -1140,7 +1140,7 @@ index 97d9e38..7f50efa 100644
  
      ImageDraw(dst, imText, srcRec, dstRec, WHITE);
  
-@@ -3759,7 +3759,7 @@ Texture2D LoadTexture(const char *fileName)
+@@ -3760,7 +3760,7 @@ Texture2D LoadTexture(const char *fileName)
  {
      Texture2D texture = { 0 };
  
@@ -1149,7 +1149,7 @@ index 97d9e38..7f50efa 100644
  
      if (image.data != NULL)
      {
-@@ -3827,9 +3827,9 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
+@@ -3828,9 +3828,9 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
          int size = cubemap.width;
  
          Image faces = { 0 };                // Vertical column image
@@ -1161,7 +1161,7 @@ index 97d9e38..7f50efa 100644
  
          if (layout == CUBEMAP_LAYOUT_LINE_VERTICAL)
          {
-@@ -3868,7 +3868,7 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
+@@ -3869,7 +3869,7 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
  
              // NOTE: Image formatting does not work with compressed textures
  
@@ -1170,7 +1170,7 @@ index 97d9e38..7f50efa 100644
          }
  
          // NOTE: Cubemap data is expected to be provided as 6 images in a single data array,
-@@ -3981,7 +3981,7 @@ void UpdateTexture(Texture2D texture, const void *pixels)
+@@ -3987,7 +3987,7 @@ void UpdateTexture(Texture2D texture, const void *pixels)
  
  // Update GPU texture rectangle with new data
  // NOTE: pixels data must match texture.format
@@ -1179,7 +1179,7 @@ index 97d9e38..7f50efa 100644
  {
      rlUpdateTexture(texture.id, (int)rec.x, (int)rec.y, (int)rec.width, (int)rec.height, texture.format, pixels);
  }
-@@ -4111,17 +4111,17 @@ void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
+@@ -4117,17 +4117,17 @@ void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
  // Draw a texture with extended parameters
  void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint)
  {
@@ -1201,7 +1201,7 @@ index 97d9e38..7f50efa 100644
      Vector2 origin = { 0.0f, 0.0f };
  
      DrawTexturePro(texture, source, dest, origin, 0.0f, tint);
-@@ -4129,7 +4129,7 @@ void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color
+@@ -4135,7 +4135,7 @@ void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color
  
  // Draw a part of a texture (defined by a rectangle) with 'pro' parameters
  // NOTE: origin is relative to destination rectangle size
@@ -1210,7 +1210,7 @@ index 97d9e38..7f50efa 100644
  {
      // Check if texture is valid
      if (texture.id > 0)
-@@ -4251,7 +4251,7 @@ void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2
+@@ -4257,7 +4257,7 @@ void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2
  }
  
  // Draws a texture (or part of it) that stretches or shrinks nicely using n-patch info
