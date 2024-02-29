@@ -73,8 +73,8 @@ proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
 #
 """)
   # Get the file name from the path
-  var (_, name, _) = splitFile(fileName)
-  txtData.addf("const $1Data: array[$2, byte] = [ ", name, data.len)
+  var (_, name, _) = splitFile(fileName.Path)
+  txtData.addf("const $1Data: array[$2, byte] = [ ", name.string, data.len)
   for i in 0..data.high - 1:
     txtData.addf(
         if i mod TextBytesPerLine == 0: "0x$1,\n" else: "0x$1, ", data[i].toHex)

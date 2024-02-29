@@ -83,23 +83,24 @@ else:
       {.passC: "-D_GLFW_WAYLAND".}
       # pkg-config wayland-client wayland-cursor wayland-egl xkbcommon --libs
       {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
-      const wlProtocolsDir = staticExec("pkg-config wayland-protocols --variable=pkgdatadir").Path
-      const wlClientDir = staticExec("pkg-config wayland-client --variable=pkgdatadir").Path
+      const wlProtocolsDir = Path"external/glfw/deps/wayland"
+
       proc wlGenerate(protocol, basename: string) =
         discard staticExec("wayland-scanner client-header " & protocol & " " & string(raylibDir / Path(basename & ".h")))
         discard staticExec("wayland-scanner private-code " & protocol & " " & string(raylibDir / Path(basename & "-code.h")))
 
       static:
-        wlGenerate(wlClientDir / "wayland.xml", "wayland-client-protocol")
-        wlGenerate(wlProtocolsDir / "stable/xdg-shell/xdg-shell.xml", "wayland-xdg-shell-client-protocol")
-        wlGenerate(wlProtocolsDir / "unstable/xdg-decoration/xdg-decoration-unstable-v1.xml",
-            "wayland-xdg-decoration-client-protocol")
-        wlGenerate(wlProtocolsDir / "stable/viewporter/viewporter.xml", "wayland-viewporter-client-protocol")
-        wlGenerate(wlProtocolsDir / "unstable/relative-pointer/relative-pointer-unstable-v1.xml",
+        wlGenerate(wlProtocolsDir / "wayland.xml", "wayland-client-protocol")
+        wlGenerate(wlProtocolsDir / "xdg-shell.xml", "wayland-xdg-shell-client-protocol")
+        wlGenerate(wlProtocolsDir / "xdg-decoration-unstable-v1.xml", "wayland-xdg-decoration-client-protocol")
+        wlGenerate(wlProtocolsDir / "viewporter.xml", "wayland-viewporter-client-protocol")
+        wlGenerate(wlProtocolsDir / "relative-pointer-unstable-v1.xml",
             "wayland-relative-pointer-unstable-v1-client-protocol")
-        wlGenerate(wlProtocolsDir / "unstable/pointer-constraints/pointer-constraints-unstable-v1.xml",
+        wlGenerate(wlProtocolsDir / "pointer-constraints-unstable-v1.xml",
             "wayland-pointer-constraints-unstable-v1-client-protocol")
-        wlGenerate(wlProtocolsDir / "unstable/idle-inhibit/idle-inhibit-unstable-v1.xml",
+        wlGenerate(wlProtocolsDir / "fractional-scale-v1.xml", "fractional-scale-v1-client-protocol")
+        wlGenerate(wlProtocolsDir / "xdg-activation-v1.xml", "xdg-activation-v1-client-protocol")
+        wlGenerate(wlProtocolsDir / "idle-inhibit-unstable-v1.xml",
             "wayland-idle-inhibit-unstable-v1-client-protocol")
 
     else:
