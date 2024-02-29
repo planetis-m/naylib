@@ -57,17 +57,18 @@ func clamp*(v, min, max: Vector2): Vector2 {.inline.} =
 
 func clampValue*(v: Vector2; min, max: float32): Vector2 {.inline.} =
   ## Clamp the magnitude of the vector between two min and max values
-  result = v
+  result = Vector2()
   var length = v.x * v.x + v.y * v.y
-  if length > 0'f32:
-    length = sqrt(length)
-    var scale: float32 = 1 # By default, 1 as the neutral element.
-    if length < min:
-      scale = min / length
-    elif length > max:
-      scale = max / length
-    result.x = v.x * scale
-    result.y = v.y * scale
+  if length == 0'f32:
+    length = 1'f32
+  length = sqrt(length)
+  var scale: float32 = 1 # By default, 1 as the neutral element.
+  if length < min:
+    scale = min / length
+  elif length > max:
+    scale = max / length
+  result.x = v.x * scale
+  result.y = v.y * scale
 
 func add*(v1, v2: Vector2): Vector2 {.inline.} =
   ## Add two vectors (v1 + v2)
@@ -136,11 +137,11 @@ func divide*(v1, v2: Vector2): Vector2 {.inline.} =
 func normalize*(v: Vector2): Vector2 {.inline.} =
   ## Normalize provided vector
   result = Vector2()
-  let length = sqrt((v.x * v.x) + (v.y * v.y))
-  if length > 0:
-    let ilength = 1'f32 / length
-    result.x = v.x * ilength
-    result.y = v.y * ilength
+  var length = (v.x * v.x) + (v.y * v.y)
+  if length == 0'f32: length = 1'f32
+  let ilength = 1'f32 / sqrt(length)
+  result.x = v.x * ilength
+  result.y = v.y * ilength
 
 func transform*(v: Vector2; mat: Matrix): Vector2 {.inline.} =
   ## Transforms a Vector2 by a given Matrix
@@ -247,18 +248,19 @@ func clamp*(v, min, max: Vector3): Vector3 {.inline.} =
 
 func clampValue*(v: Vector3; min, max: float32): Vector3 {.inline.} =
   ## Clamp the magnitude of the vector between two values
-  result = v
+  result = Vector3()
   var length = v.x * v.x + v.y * v.y + v.z * v.z
-  if length > 0'f32:
-    length = sqrt(length)
-    var scale: float32 = 1 # By default, 1 as the neutral element.
-    if length < min:
-      scale = min / length
-    elif length > max:
-      scale = max / length
-    result.x = v.x * scale
-    result.y = v.y * scale
-    result.z = v.z * scale
+  if length == 0'f32:
+    length = 1'f32
+  length = sqrt(length)
+  var scale: float32 = 1 # By default, 1 as the neutral element.
+  if length < min:
+    scale = min / length
+  elif length > max:
+    scale = max / length
+  result.x = v.x * scale
+  result.y = v.y * scale
+  result.z = v.z * scale
 
 func add*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Add two vectors
@@ -354,12 +356,13 @@ func divide*(v1, v2: Vector3): Vector3 {.inline.} =
 func normalize*(v: Vector3): Vector3 {.inline.} =
   ## Normalize provided vector
   result = Vector3()
-  let length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
-  if length > 0'f32:
-    let ilength = 1'f32 / length
-    result.x = result.x * ilength
-    result.y = result.y * ilength
-    result.z = result.z * ilength
+  var length = v.x * v.x + v.y * v.y + v.z * v.z
+  if length == 0'f32:
+    length = 1'f32
+  let ilength = 1'f32 / sqrt(length)
+  result.x = v.x * ilength
+  result.y = v.y * ilength
+  result.z = v.z * ilength
 
 func project*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Calculate the projection of the vector v1 on to v2
@@ -383,10 +386,10 @@ func orthoNormalize*(v1: var Vector3; v2: var Vector3) {.inline.} =
   var ilength = 0'f32
   # Vector3Normalize(*v1);
   var v = v1
-  length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+  length = v.x * v.x + v.y * v.y + v.z * v.z
   if length == 0'f32:
     length = 1'f32
-  ilength = 1'f32 / length
+  ilength = 1'f32 / sqrt(length)
   v1.x = v1.x * ilength
   v1.y = v1.y * ilength
   v1.z = v1.z * ilength
@@ -395,10 +398,10 @@ func orthoNormalize*(v1: var Vector3; v2: var Vector3) {.inline.} =
                          z: v1.x * v2.y - v1.y * v2.x)
   # Vector3Normalize(vn1);
   v = vn1
-  length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+  length = v.x * v.x + v.y * v.y + v.z * v.z
   if length == 0'f32:
     length = 1'f32
-  ilength = 1'f32 / length
+  ilength = 1'f32 / sqrt(length)
   vn1.x = vn1.x * ilength
   vn1.y = vn1.y * ilength
   vn1.z = vn1.z * ilength
@@ -436,10 +439,10 @@ func rotateByAxisAngle*(v, axis: Vector3; angle: float32): Vector3 {.inline.} =
   var axis = axis
   var angle = angle
   # normalize(axis)
-  var length = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z)
+  var length = axis.x * axis.x + axis.y * axis.y + axis.z * axis.z
   if length == 0'f32:
     length = 1'f32
-  let ilength = 1'f32 / length
+  let ilength = 1'f32 / sqrt(length)
   axis.x = axis.x * ilength
   axis.y = axis.y * ilength
   axis.z = axis.z * ilength
@@ -729,13 +732,14 @@ func divide*(v1, v2: Vector4): Vector4 {.inline.} =
 func normalize*(v: Vector4): Vector4 {.inline.} =
   ## Normalize provided vector
   result = Vector4()
-  let length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w)
-  if length > 0'f32:
-    let ilength = 1'f32 / length
-    result.x = result.x * ilength
-    result.y = result.y * ilength
-    result.z = result.z * ilength
-    result.w = result.w * ilength
+  var length = v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w
+  if length == 0'f32:
+    length = 1'f32
+  let ilength = 1'f32 / sqrt(length)
+  result.x = v.x * ilength
+  result.y = v.y * ilength
+  result.z = v.z * ilength
+  result.w = v.w * ilength
 
 func min*(v1, v2: Vector4): Vector4 {.inline.} =
   ## Get min value for each pair of components
@@ -1192,10 +1196,10 @@ func lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
   var vz = Vector3(x: eye.x - target.x, y: eye.y - target.y, z: eye.z - target.z)
   # Vector3Normalize(vz)
   var v = vz
-  length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+  length = v.x * v.x + v.y * v.y + v.z * v.z
   if length == 0'f32:
     length = 1'f32
-  ilength = 1'f32 / length
+  ilength = 1'f32 / sqrt(length)
   vz.x = vz.x * ilength
   vz.y = vz.y * ilength
   vz.z = vz.z * ilength
@@ -1204,10 +1208,10 @@ func lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
                         z: up.x * vz.y - up.y * vz.x)
   # Vector3Normalize(x)
   v = vx
-  length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+  length = v.x * v.x + v.y * v.y + v.z * v.z
   if length == 0'f32:
     length = 1'f32
-  ilength = 1'f32 / length
+  ilength = 1'f32 / sqrt(length)
   vx.x = vx.x * ilength
   vx.y = vx.y * ilength
   vx.z = vx.z * ilength
@@ -1294,10 +1298,10 @@ func length*(q: Quaternion): float32 {.inline.} =
 func normalize*(q: Quaternion): Quaternion {.inline.} =
   ## Normalize provided quaternion
   result = Vector4().Quaternion
-  var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
+  var length = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
   if length == 0'f32:
     length = 1'f32
-  let ilength = 1'f32 / length
+  let ilength = 1'f32 / sqrt(length)
   result.x = q.x * ilength
   result.y = q.y * ilength
   result.z = q.z * ilength
@@ -1368,10 +1372,10 @@ func nlerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   result.w = q1.w + amount * (q2.w - q1.w)
   # QuaternionNormalize(q);
   var q = result
-  var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
+  var length = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
   if length == 0'f32:
     length = 1'f32
-  let ilength = 1'f32 / length
+  let ilength = 1'f32 / sqrt(length)
   result.x = q.x * ilength
   result.y = q.y * ilength
   result.z = q.z * ilength
@@ -1424,10 +1428,10 @@ func fromVector3ToVector3*(`from`, to: Vector3): Quaternion {.inline.} =
   # normalize(q)
   # NOTE: Normalize to essentially nlerp the original and identity to 0.5
   var q = result
-  var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
+  var length = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
   if length == 0'f32:
     length = 1'f32
-  let ilength = 1'f32 / length
+  let ilength = 1'f32 / sqrt(length)
   result.x = q.x * ilength
   result.y = q.y * ilength
   result.z = q.z * ilength
@@ -1451,8 +1455,8 @@ func fromMatrix*(mat: Matrix): Quaternion {.inline.} =
   if fourZSquaredMinus1 > fourBiggestSquaredMinus1:
     fourBiggestSquaredMinus1 = fourZSquaredMinus1
     biggestIndex = 3
-  var biggestVal = sqrt(fourBiggestSquaredMinus1 + 1'f32) * 0.5'f32
-  var mult = 0.25'f32 / biggestVal
+  let biggestVal = sqrt(fourBiggestSquaredMinus1 + 1'f32) * 0.5'f32
+  let mult = 0.25'f32 / biggestVal
   case biggestIndex
   of 0:
     result.w = biggestVal
@@ -1513,10 +1517,10 @@ func fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
     var ilength = 0'f32
     # Vector3Normalize(axis)
     var v = axis
-    length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+    length = v.x * v.x + v.y * v.y + v.z * v.z
     if length == 0'f32:
       length = 1'f32
-    ilength = 1'f32 / length
+    ilength = 1'f32 / sqrt(length)
     axis.x = axis.x * ilength
     axis.y = axis.y * ilength
     axis.z = axis.z * ilength
@@ -1528,10 +1532,10 @@ func fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
     result.w = cosres
     # QuaternionNormalize(q);
     var q = result
-    length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
+    length = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
     if length == 0'f32:
       length = 1'f32
-    ilength = 1'f32 / length
+    ilength = 1'f32 / sqrt(length)
     result.x = q.x * ilength
     result.y = q.y * ilength
     result.z = q.z * ilength
@@ -1542,10 +1546,10 @@ func toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) {.
   var q = q
   if abs(q.w) > 1'f32:
     # QuaternionNormalize(q);
-    var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
+    var length = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
     if length == 0'f32:
       length = 1'f32
-    let ilength = 1'f32 / length
+    let ilength = 1'f32 / sqrt(length)
     q.x = q.x * ilength
     q.y = q.y * ilength
     q.z = q.z * ilength
