@@ -11,12 +11,13 @@ const
   raylibHeader = """
 from std/strutils import addf, toHex
 from std/unicode import Rune
-import std/os
-const raylibDir = currentSourcePath().parentDir / "raylib/src"
+from std/syncio import writeFile
+import std/[assertions, paths]
+const raylibDir = currentSourcePath().Path.parentDir / Path"raylib/src"
 
-{.passC: "-I" & raylibDir.}
-{.passC: "-I" & raylibDir / "external/glfw/include".}
-{.passC: "-I" & raylibDir / "external/glfw/deps/mingw".}
+{.passC: "-I" & raylibDir.string.}
+{.passC: "-I" & string(raylibDir / Path"external/glfw/include").}
+{.passC: "-I" & string(raylibDir / Path"external/glfw/deps/mingw").}
 {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
@@ -33,7 +34,7 @@ when defined(emscripten):
 elif defined(android):
   const AndroidNdk {.strdefine.} = "/opt/android-ndk"
   const ProjectLibraryName = "main"
-  {.passC: "-I" & AndroidNdk / "sources/android/native_app_glue".}
+  {.passC: "-I" & string(AndroidNdk.Path / Path"sources/android/native_app_glue").}
 
   {.passC: "-DPLATFORM_ANDROID -DMAL_NO_OSS".}
   when defined(GraphicsApiOpenGlEs3): {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
@@ -82,11 +83,11 @@ else:
       {.passC: "-D_GLFW_WAYLAND".}
       # pkg-config wayland-client wayland-cursor wayland-egl xkbcommon --libs
       {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
-      const wlProtocolsDir = staticExec "pkg-config wayland-protocols --variable=pkgdatadir"
-      const wlClientDir = staticExec "pkg-config wayland-client --variable=pkgdatadir"
+      const wlProtocolsDir = staticExec("pkg-config wayland-protocols --variable=pkgdatadir").Path
+      const wlClientDir = staticExec("pkg-config wayland-client --variable=pkgdatadir").Path
       proc wlGenerate(protocol, basename: string) =
-        discard staticExec("wayland-scanner client-header " & protocol & " " & raylibDir / basename & ".h")
-        discard staticExec("wayland-scanner private-code " & protocol & " " & raylibDir / basename & "-code.h")
+        discard staticExec("wayland-scanner client-header " & protocol & " " & string(raylibDir / Path(basename & ".h")))
+        discard staticExec("wayland-scanner private-code " & protocol & " " & string(raylibDir / Path(basename & "-code.h")))
 
       static:
         wlGenerate(wlClientDir / "wayland.xml", "wayland-client-protocol")
@@ -107,16 +108,16 @@ else:
 
 when defined(emscripten): discard
 elif defined(android): discard
-elif defined(macosx): {.compile(raylibDir / "rglfw.c", "-x objective-c").}
-else: {.compile: raylibDir / "rglfw.c".}
-{.compile: raylibDir / "rshapes.c".}
-{.compile: raylibDir / "rtextures.c".}
-{.compile: raylibDir / "rtext.c".}
-{.compile: raylibDir / "utils.c".}
-{.compile: raylibDir / "rmodels.c".}
-{.compile: raylibDir / "raudio.c".}
-{.compile: raylibDir / "rcore.c".}
-when defined(android): {.compile: AndroidNdk / "sources/android/native_app_glue/android_native_app_glue.c".}
+elif defined(macosx): {.compile(raylibDir / Path"rglfw.c", "-x objective-c").}
+else: {.compile: raylibDir / Path"rglfw.c".}
+{.compile: raylibDir / Path"rshapes.c".}
+{.compile: raylibDir / Path"rtextures.c".}
+{.compile: raylibDir / Path"rtext.c".}
+{.compile: raylibDir / Path"utils.c".}
+{.compile: raylibDir / Path"rmodels.c".}
+{.compile: raylibDir / Path"raudio.c".}
+{.compile: raylibDir / Path"rcore.c".}
+when defined(android): {.compile: AndroidNdk / Path"sources/android/native_app_glue/android_native_app_glue.c".}
 
 const
   RaylibVersion* = (5, 1, 0)

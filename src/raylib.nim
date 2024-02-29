@@ -1,11 +1,12 @@
 from std/strutils import addf, toHex
 from std/unicode import Rune
-import std/os
-const raylibDir = currentSourcePath().parentDir / "raylib/src"
+from std/syncio import writeFile
+import std/[assertions, paths]
+const raylibDir = currentSourcePath().Path.parentDir / Path"raylib/src"
 
-{.passC: "-I" & raylibDir.}
-{.passC: "-I" & raylibDir / "external/glfw/include".}
-{.passC: "-I" & raylibDir / "external/glfw/deps/mingw".}
+{.passC: "-I" & raylibDir.string.}
+{.passC: "-I" & string(raylibDir / Path"external/glfw/include").}
+{.passC: "-I" & string(raylibDir / Path"external/glfw/deps/mingw").}
 {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
@@ -22,7 +23,7 @@ when defined(emscripten):
 elif defined(android):
   const AndroidNdk {.strdefine.} = "/opt/android-ndk"
   const ProjectLibraryName = "main"
-  {.passC: "-I" & AndroidNdk / "sources/android/native_app_glue".}
+  {.passC: "-I" & string(AndroidNdk.Path / Path"sources/android/native_app_glue").}
 
   {.passC: "-DPLATFORM_ANDROID -DMAL_NO_OSS".}
   when defined(GraphicsApiOpenGlEs3): {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
@@ -71,11 +72,11 @@ else:
       {.passC: "-D_GLFW_WAYLAND".}
       # pkg-config wayland-client wayland-cursor wayland-egl xkbcommon --libs
       {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
-      const wlProtocolsDir = staticExec "pkg-config wayland-protocols --variable=pkgdatadir"
-      const wlClientDir = staticExec "pkg-config wayland-client --variable=pkgdatadir"
+      const wlProtocolsDir = staticExec("pkg-config wayland-protocols --variable=pkgdatadir").Path
+      const wlClientDir = staticExec("pkg-config wayland-client --variable=pkgdatadir").Path
       proc wlGenerate(protocol, basename: string) =
-        discard staticExec("wayland-scanner client-header " & protocol & " " & raylibDir / basename & ".h")
-        discard staticExec("wayland-scanner private-code " & protocol & " " & raylibDir / basename & "-code.h")
+        discard staticExec("wayland-scanner client-header " & protocol & " " & string(raylibDir / Path(basename & ".h")))
+        discard staticExec("wayland-scanner private-code " & protocol & " " & string(raylibDir / Path(basename & "-code.h")))
 
       static:
         wlGenerate(wlClientDir / "wayland.xml", "wayland-client-protocol")
@@ -96,16 +97,16 @@ else:
 
 when defined(emscripten): discard
 elif defined(android): discard
-elif defined(macosx): {.compile(raylibDir / "rglfw.c", "-x objective-c").}
-else: {.compile: raylibDir / "rglfw.c".}
-{.compile: raylibDir / "rshapes.c".}
-{.compile: raylibDir / "rtextures.c".}
-{.compile: raylibDir / "rtext.c".}
-{.compile: raylibDir / "utils.c".}
-{.compile: raylibDir / "rmodels.c".}
-{.compile: raylibDir / "raudio.c".}
-{.compile: raylibDir / "rcore.c".}
-when defined(android): {.compile: AndroidNdk / "sources/android/native_app_glue/android_native_app_glue.c".}
+elif defined(macosx): {.compile(raylibDir / Path"rglfw.c", "-x objective-c").}
+else: {.compile: raylibDir / Path"rglfw.c".}
+{.compile: raylibDir / Path"rshapes.c".}
+{.compile: raylibDir / Path"rtextures.c".}
+{.compile: raylibDir / Path"rtext.c".}
+{.compile: raylibDir / Path"utils.c".}
+{.compile: raylibDir / Path"rmodels.c".}
+{.compile: raylibDir / Path"raudio.c".}
+{.compile: raylibDir / Path"rcore.c".}
+when defined(android): {.compile: AndroidNdk / Path"sources/android/native_app_glue/android_native_app_glue.c".}
 
 const
   RaylibVersion* = (5, 1, 0)
@@ -1930,40 +1931,41 @@ proc getGamepadName*(gamepad: int32): string {.inline.} =
   ## Get gamepad internal name id
   result = $getGamepadNamePriv(gamepad)
 
-proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
-  ## Export data to code (.nim), returns true on success
-  result = false
-  const TextBytesPerLine = 20
-  # NOTE: Text data buffer size is estimated considering raw data size in bytes
-  # and requiring 6 char bytes for every byte: "0x00, "
-  var txtData = newStringOfCap(data.len*6 + 300)
-  txtData.add("""
-#
-# DataAsCode exporter v1.0 - Raw data exported as an array of bytes
-#
-# more info and bugs-report:  github.com/raysan5/raylib
-# feedback and support:       ray[at]raylib.com
-#
-# Copyright (c) 2022-2023 Ramon Santamaria (@raysan5)
-#
-""")
-  # Get the file name from the path
-  var (_, name, _) = splitFile(fileName)
-  txtData.addf("const $1Data: array[$2, byte] = [ ", name, data.len)
-  for i in 0..data.high - 1:
-    txtData.addf(
-        if i mod TextBytesPerLine == 0: "0x$1,\n" else: "0x$1, ", data[i].toHex)
-  txtData.addf("0x$1 ]\n", data[^1].toHex)
-  try:
-    writeFile(fileName, txtData)
-    result = true
-  except IOError:
-    discard
+when false:
+  proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
+    ## Export data to code (.nim), returns true on success
+    result = false
+    const TextBytesPerLine = 20
+    # NOTE: Text data buffer size is estimated considering raw data size in bytes
+    # and requiring 6 char bytes for every byte: "0x00, "
+    var txtData = newStringOfCap(data.len*6 + 300)
+    txtData.add("""
+  #
+  # DataAsCode exporter v1.0 - Raw data exported as an array of bytes
+  #
+  # more info and bugs-report:  github.com/raysan5/raylib
+  # feedback and support:       ray[at]raylib.com
+  #
+  # Copyright (c) 2022-2023 Ramon Santamaria (@raysan5)
+  #
+  """)
+    # Get the file name from the path
+    var (_, name, _) = splitFile(fileName)
+    txtData.addf("const $1Data: array[$2, byte] = [ ", name, data.len)
+    for i in 0..data.high - 1:
+      txtData.addf(
+          if i mod TextBytesPerLine == 0: "0x$1,\n" else: "0x$1, ", data[i].toHex)
+    txtData.addf("0x$1 ]\n", data[^1].toHex)
+    try:
+      writeFile(fileName, txtData)
+      result = true
+    except IOError:
+      discard
 
-  if result:
-    traceLog(Info, "FILEIO: [%s] Data as code exported successfully", fileName)
-  else:
-    traceLog(Warning, "FILEIO: [%s] Failed to export data as code", fileName)
+    if result:
+      traceLog(Info, "FILEIO: [%s] Data as code exported successfully", fileName)
+    else:
+      traceLog(Warning, "FILEIO: [%s] Failed to export data as code", fileName)
 
 proc loadShader*(vsFileName, fsFileName: string): Shader =
   ## Load shader from files and bind default locations
