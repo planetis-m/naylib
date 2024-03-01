@@ -75,8 +75,10 @@ else:
       const wlProtocolsDir = raylibDir / Path"external/glfw/deps/wayland"
 
       proc wlGenerate(protocol: Path, basename: string) =
-        discard staticExec("wayland-scanner client-header " & protocol.string & " " & string(raylibDir / Path(basename & ".h")))
-        discard staticExec("wayland-scanner private-code " & protocol.string & " " & string(raylibDir / Path(basename & "-code.h")))
+        discard staticExec("wayland-scanner client-header " & protocol.string & " " &
+            string(raylibDir / Path(basename & ".h")))
+        discard staticExec("wayland-scanner private-code " & protocol.string & " " &
+            string(raylibDir / Path(basename & "-code.h")))
 
       static:
         wlGenerate(wlProtocolsDir / Path"wayland.xml", "wayland-client-protocol")
@@ -108,7 +110,8 @@ else: {.compile: raylibDir / Path"rglfw.c".}
 {.compile: raylibDir / Path"rmodels.c".}
 {.compile: raylibDir / Path"raudio.c".}
 {.compile: raylibDir / Path"rcore.c".}
-when defined(android): {.compile: AndroidNdk / Path"sources/android/native_app_glue/android_native_app_glue.c".}
+when defined(android):
+  {.compile: AndroidNdk / Path"sources/android/native_app_glue/android_native_app_glue.c".}
 
 const
   RaylibVersion* = (5, 1, 0)
