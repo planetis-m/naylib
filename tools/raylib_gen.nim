@@ -122,7 +122,7 @@ else: {.compile: raylibDir / Path"rglfw.c".}
 {.compile: raylibDir / Path"raudio.c".}
 {.compile: raylibDir / Path"rcore.c".}
 when defined(android):
-  {.compile: AndroidNdk / Path"sources/android/native_app_glue/android_native_app_glue.c".}
+  {.compile: AndroidNdk.Path / Path"sources/android/native_app_glue/android_native_app_glue.c".}
 
 const
   RaylibVersion* = (5, 1, 0)
