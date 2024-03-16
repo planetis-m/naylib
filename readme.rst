@@ -34,6 +34,30 @@ accompanying `example repository <https://github.com/planetis-m/raylib-examples>
 compile and run an example, run the command ``nim c -r -d:release example.nim`` in your
 terminal.
 
+Here's the section you can add to your `readme.rst` file with an RST table detailing the compilation targets, host operating systems, and their support status:
+
+Compilation Targets and Host OS Support
+=======================================
+
++------------------+------------------+------------------+------------------+
+| Target           | Windows          | Linux            | macOS            |
++==================+==================+==================+==================+
+| Native           | Supported, Tested| Supported, Tested| Supported, Tested|
++------------------+------------------+------------------+------------------+
+| WebAssembly      | Needs WSL        | Supported, Tested| Untested         |
++------------------+------------------+------------------+------------------+
+| DRM              | Needs WSL        | Supported, Tested| Possibly Works   |
++------------------+------------------+------------------+------------------+
+| Android          | Needs WSL        | Supported, Tested| Possibly Works   |
++------------------+------------------+------------------+------------------+
+| Windows (Cross)  | N/A              | Known Issues     | Untested         |
++------------------+------------------+------------------+------------------+
+
+- Compiling natively on Windows, Linux, and macOS is fully supported and tested.
+- Compiling for the WebAssembly target with Emscripten works and is tested on Linux. On Windows, it requires using the Windows Subsystem for Linux (WSL). The status on macOS is untested.
+- Cross-compiling for DRM and Android targets is supported and tested on Linux. On Windows, it requires using WSL. These targets might work on macOS, but it is untested.
+- Cross-compiling for Windows under Linux is known to have issues and doesn't work out of the box. It requires additional fixes.
+
 Usage Tips
 ==========
 
