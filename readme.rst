@@ -39,24 +39,21 @@ Here's the section you can add to your `readme.rst` file with an RST table detai
 Compilation Targets and Host OS Support
 =======================================
 
-+------------------+------------------+------------------+------------------+
-| Target           | Windows          | Linux            | macOS            |
-+==================+==================+==================+==================+
-| Native           | Supported, Tested| Supported, Tested| Supported, Tested|
-+------------------+------------------+------------------+------------------+
-| WebAssembly      | Needs WSL        | Supported, Tested| Untested         |
-+------------------+------------------+------------------+------------------+
-| DRM              | Needs WSL        | Supported, Tested| Possibly Works   |
-+------------------+------------------+------------------+------------------+
-| Android          | Needs WSL        | Supported, Tested| Possibly Works   |
-+------------------+------------------+------------------+------------------+
-| Windows (Cross)  | N/A              | Known Issues     | Untested         |
-+------------------+------------------+------------------+------------------+
++------------------+-------------------+-------------------+-------------------+
+| Target           | Windows           | Linux             | macOS             |
++==================+===================+===================+===================+
+| Native           | Supported, Tested | Supported, Tested | Supported, Tested |
++------------------+-------------------+-------------------+-------------------+
+| WebAssembly      | Needs WSL [1]_    | Supported, Tested | Untested          |
++------------------+-------------------+-------------------+-------------------+
+| DRM              | Needs WSL         | Supported, Tested | Possibly Works    |
++------------------+-------------------+-------------------+-------------------+
+| Android          | Needs WSL         | Supported, Tested | Possibly Works    |
++------------------+-------------------+-------------------+-------------------+
+| Windows (Cross)  | N/A               | Known Issues [1]_ | Untested          |
++------------------+-------------------+-------------------+-------------------+
 
-- Compiling natively on Windows, Linux, and macOS is fully supported and tested.
-- Compiling for the WebAssembly target with Emscripten works and is tested on Linux. On Windows, it requires using the Windows Subsystem for Linux (WSL). The status on macOS is untested.
-- Cross-compiling for DRM and Android targets is supported and tested on Linux. On Windows, it requires using WSL. These targets might work on macOS, but it is untested.
-- Cross-compiling for Windows under Linux is known to have issues and doesn't work out of the box. It requires additional fixes.
+.. [1] Alternatively it may work by manually editing the ``raylibDir`` constant.
 
 Usage Tips
 ==========
