@@ -34,8 +34,6 @@ accompanying `example repository <https://github.com/planetis-m/raylib-examples>
 compile and run an example, run the command ``nim c -r -d:release example.nim`` in your
 terminal.
 
-Here's the section you can add to your `readme.rst` file with an RST table detailing the compilation targets, host operating systems, and their support status:
-
 Compilation Targets and Host OS Support
 =======================================
 
