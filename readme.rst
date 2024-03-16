@@ -39,21 +39,21 @@ Here's the section you can add to your `readme.rst` file with an RST table detai
 Compilation Targets and Host OS Support
 =======================================
 
-+------------------+-------------------+---------------------+-------------------+
-| Target           | Windows           | Linux               | macOS             |
-+==================+===================+=====================+===================+
-| Native           | Supported, Tested | Supported, Tested   | Supported, Tested |
-+------------------+-------------------+---------------------+-------------------+
-| WebAssembly      | Needs WSL [#n1]_  | Supported, Tested   | Untested          |
-+------------------+-------------------+---------------------+-------------------+
-| DRM              | Needs WSL         | Supported, Tested   | Possibly Works    |
-+------------------+-------------------+---------------------+-------------------+
-| Android          | Needs WSL         | Supported, Tested   | Possibly Works    |
-+------------------+-------------------+---------------------+-------------------+
-| Windows (Cross)  | N/A               | Known Issues [#n1]_ | Untested          |
-+------------------+-------------------+---------------------+-------------------+
++------------------+-------------------+-------------------+-------------------+
+| Target           | Windows           | Linux             | macOS             |
++==================+===================+===================+===================+
+| Native           | Supported, Tested | Supported, Tested | Supported, Tested |
++------------------+-------------------+-------------------+-------------------+
+| WebAssembly      | Needs WSL [1]_    | Supported, Tested | Untested          |
++------------------+-------------------+-------------------+-------------------+
+| DRM              | Needs WSL         | Supported, Tested | Possibly Works    |
++------------------+-------------------+-------------------+-------------------+
+| Android          | Needs WSL         | Supported, Tested | Possibly Works    |
++------------------+-------------------+-------------------+-------------------+
+| Windows (Cross)  | N/A               | Known Issues [1]_ | Untested          |
++------------------+-------------------+-------------------+-------------------+
 
-.. [#n1] Alternatively it may work by manually editing the ``raylibDir`` constant.
+.. [1] Alternatively it may work by manually editing the ``raylibDir`` constant.
 
 Usage Tips
 ==========
