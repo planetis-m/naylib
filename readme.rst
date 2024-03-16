@@ -42,9 +42,9 @@ Compilation Targets and Host OS Support
 +==================+===================+===================+===================+
 | Native           | Supported, Tested | Supported, Tested | Supported, Tested |
 +------------------+-------------------+-------------------+-------------------+
-| WebAssembly      | Needs WSL [1]_    | Supported, Tested | Untested          |
+| WebAssembly      | Needs WSL [1]_    | Supported, Tested | Possibly Works    |
 +------------------+-------------------+-------------------+-------------------+
-| DRM              | Needs WSL         | Supported, Tested | Possibly Works    |
+| DRM              | Needs WSL         | Supported, Tested | Untested          |
 +------------------+-------------------+-------------------+-------------------+
 | Android          | Needs WSL         | Supported, Tested | Possibly Works    |
 +------------------+-------------------+-------------------+-------------------+
