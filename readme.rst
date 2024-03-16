@@ -46,7 +46,7 @@ Compilation Targets and Host OS Support
 +------------------+-------------------+-------------------+-------------------+
 | DRM              | Needs WSL         | Supported, Tested | Untested          |
 +------------------+-------------------+-------------------+-------------------+
-| Android          | Needs WSL         | Supported, Tested | Possibly Works    |
+| Android          | Needs WSL [1]_    | Supported, Tested | Possibly Works    |
 +------------------+-------------------+-------------------+-------------------+
 | Windows (Cross)  | N/A               | Known Issues [1]_ | Untested          |
 +------------------+-------------------+-------------------+-------------------+
