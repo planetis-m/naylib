@@ -107,6 +107,7 @@ else:
             "idle-inhibit-unstable-v1-client-protocol")
 
     else:
+      {.passC: "-D_GLFW_X11".}
       # pkg-config x11 xrandr xinerama xi xxf86vm xcursor --libs
       {.passL: "-lX11 -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor".}
 
@@ -337,6 +338,7 @@ const
     "Rune",
   ]
   excludedFuncs = [
+    "ColorIsEqual",
     # Text strings management functions
     "TextCopy",
     "TextIsEqual",

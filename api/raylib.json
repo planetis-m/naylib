@@ -335,6 +335,12 @@
       "type": "UNKNOWN",
       "value": "SHADER_LOC_MAP_METALNESS",
       "description": ""
+    },
+    {
+      "name": "GetMouseRay",
+      "type": "UNKNOWN",
+      "value": "GetScreenToWorldRay",
+      "description": "Compatibility hack for previous raylib versions"
     }
   ],
   "structs": [
@@ -3872,13 +3878,13 @@
       ]
     },
     {
-      "name": "GetMouseRay",
-      "description": "Get a ray trace from mouse position",
+      "name": "GetScreenToWorldRay",
+      "description": "Get a ray trace from screen position (i.e mouse)",
       "returnType": "Ray",
       "params": [
         {
           "type": "Vector2",
-          "name": "mousePosition"
+          "name": "position"
         },
         {
           "type": "Camera",
@@ -3887,13 +3893,13 @@
       ]
     },
     {
-      "name": "GetViewRay",
-      "description": "Get a ray trace from mouse position in a viewport",
+      "name": "GetScreenToWorldRayEx",
+      "description": "Get a ray trace from screen position (i.e mouse) in a viewport",
       "returnType": "Ray",
       "params": [
         {
           "type": "Vector2",
-          "name": "mousePosition"
+          "name": "position"
         },
         {
           "type": "Camera",
@@ -8369,6 +8375,21 @@
       ]
     },
     {
+      "name": "ColorIsEqual",
+      "description": "Check if two colors are equal",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "Color",
+          "name": "col1"
+        },
+        {
+          "type": "Color",
+          "name": "col2"
+        }
+      ]
+    },
+    {
       "name": "Fade",
       "description": "Get color with alpha applied, alpha goes from 0.0f to 1.0f",
       "returnType": "Color",
@@ -8385,7 +8406,7 @@
     },
     {
       "name": "ColorToInt",
-      "description": "Get hexadecimal value for a Color",
+      "description": "Get hexadecimal value for a Color (0xRRGGBBAA)",
       "returnType": "int",
       "params": [
         {

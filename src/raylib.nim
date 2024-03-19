@@ -96,6 +96,7 @@ else:
             "idle-inhibit-unstable-v1-client-protocol")
 
     else:
+      {.passC: "-D_GLFW_X11".}
       # pkg-config x11 xrandr xinerama xi xxf86vm xcursor --libs
       {.passL: "-lX11 -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor".}
 
@@ -935,10 +936,10 @@ proc setShaderValueMatrix*(shader: Shader, locIndex: ShaderLocation, mat: Matrix
 proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocation, texture: Texture2D) {.importc: "SetShaderValueTexture".}
   ## Set shader uniform value for texture (sampler2d)
 proc unloadShader(shader: Shader) {.importc: "UnloadShader".}
-proc getMouseRay*(mousePosition: Vector2, camera: Camera): Ray {.importc: "GetMouseRay".}
-  ## Get a ray trace from mouse position
-proc getViewRay*(mousePosition: Vector2, camera: Camera, width: float32, height: float32): Ray {.importc: "GetViewRay".}
-  ## Get a ray trace from mouse position in a viewport
+proc getScreenToWorldRay*(position: Vector2, camera: Camera): Ray {.importc: "GetScreenToWorldRay".}
+  ## Get a ray trace from screen position (i.e mouse)
+proc getScreenToWorldRay*(position: Vector2, camera: Camera, width: float32, height: float32): Ray {.importc: "GetScreenToWorldRayEx".}
+  ## Get a ray trace from screen position (i.e mouse) in a viewport
 proc getWorldToScreen*(position: Vector3, camera: Camera): Vector2 {.importc: "GetWorldToScreen".}
   ## Get the screen space position for a 3d world space position
 proc getWorldToScreen*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx".}
