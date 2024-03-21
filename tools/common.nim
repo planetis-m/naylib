@@ -157,21 +157,26 @@ proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var s
     of "int":
       discard
     else:
-      var len = 0
-      var constant = ""
-      if scanf(token, "$w[$i]$.", result, len):
-        isArray = true
-        var kind = toNimType(result)
-        if isUnsigned: kind = "u" & kind
-        result = "array[" & $len & ", " & kind & "]"
-      elif scanf(token, "$w[$w]$.", result, constant):
-        isArray = true
-        removePrefix(constant, "RL_")
-        constant = camelCaseAscii(constant)
-        var kind = toNimType(result)
-        if isUnsigned: kind = "u" & kind
-        result = "array[" & constant & ", " & kind & "]"
-      else: result = toNimType(token)
+      for token, isSep in tokenize(token, {'*'}):
+        case token
+        of "*": isPointer = true
+        of "**": isDoublePointer = true
+        else:
+          var len = 0
+          var constant = ""
+          if scanf(token, "$w[$i]$.", result, len):
+            isArray = true
+            var kind = toNimType(result)
+            if isUnsigned: kind = "u" & kind
+            result = "array[" & $len & ", " & kind & "]"
+          elif scanf(token, "$w[$w]$.", result, constant):
+            isArray = true
+            removePrefix(constant, "RL_")
+            constant = camelCaseAscii(constant)
+            var kind = toNimType(result)
+            if isUnsigned: kind = "u" & kind
+            result = "array[" & constant & ", " & kind & "]"
+          else: result = toNimType(token)
   if result == "": result = "int32"
   if isSizeT:
     result = "csize_t"
