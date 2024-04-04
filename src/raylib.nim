@@ -292,9 +292,9 @@ type
     LeftFaceDown ## Gamepad left DPAD down button
     LeftFaceLeft ## Gamepad left DPAD left button
     RightFaceUp ## Gamepad right button up (i.e. PS3: Triangle, Xbox: Y)
-    RightFaceRight ## Gamepad right button right (i.e. PS3: Square, Xbox: X)
+    RightFaceRight ## Gamepad right button right (i.e. PS3: Circle, Xbox: B)
     RightFaceDown ## Gamepad right button down (i.e. PS3: Cross, Xbox: A)
-    RightFaceLeft ## Gamepad right button left (i.e. PS3: Circle, Xbox: B)
+    RightFaceLeft ## Gamepad right button left (i.e. PS3: Square, Xbox: X)
     LeftTrigger1 ## Gamepad top/back trigger left (first), it could be a trailing button
     LeftTrigger2 ## Gamepad top/back trigger left (second), it could be a trailing button
     RightTrigger1 ## Gamepad top/back trigger right (one), it could be a trailing button
@@ -938,7 +938,7 @@ proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocation, texture: T
 proc unloadShader(shader: Shader) {.importc: "UnloadShader".}
 proc getScreenToWorldRay*(position: Vector2, camera: Camera): Ray {.importc: "GetScreenToWorldRay".}
   ## Get a ray trace from screen position (i.e mouse)
-proc getScreenToWorldRay*(position: Vector2, camera: Camera, width: float32, height: float32): Ray {.importc: "GetScreenToWorldRayEx".}
+proc getScreenToWorldRay*(position: Vector2, camera: Camera, width: int32, height: int32): Ray {.importc: "GetScreenToWorldRayEx".}
   ## Get a ray trace from screen position (i.e mouse) in a viewport
 proc getWorldToScreen*(position: Vector3, camera: Camera): Vector2 {.importc: "GetWorldToScreen".}
   ## Get the screen space position for a 3d world space position
@@ -1677,11 +1677,11 @@ proc setAudioStreamBufferSizeDefault*(size: int32) {.importc: "SetAudioStreamBuf
 proc setAudioStreamCallback*(stream: AudioStream, callback: AudioCallback) {.importc: "SetAudioStreamCallback".}
   ## Audio thread callback to request new data
 proc attachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "AttachAudioStreamProcessor".}
-  ## Attach audio stream processor to stream, receives the samples as <float>s
+  ## Attach audio stream processor to stream, receives the samples as 'float'
 proc detachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "DetachAudioStreamProcessor".}
   ## Detach audio stream processor from stream
 proc attachAudioMixedProcessor*(processor: AudioCallback) {.importc: "AttachAudioMixedProcessor".}
-  ## Attach audio stream processor to the entire audio pipeline, receives the samples as <float>s
+  ## Attach audio stream processor to the entire audio pipeline, receives the samples as 'float'
 proc detachAudioMixedProcessor*(processor: AudioCallback) {.importc: "DetachAudioMixedProcessor".}
   ## Detach audio stream processor from the entire audio pipeline
 {.pop.}

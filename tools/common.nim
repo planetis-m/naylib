@@ -138,24 +138,15 @@ proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var s
   for token, isSep in tokenize(s):
     if isSep: continue
     case token
-    of "const":
-      discard
-    of "void":
-      isVoid = true
-    of "*":
-      isPointer = true
-    of "**":
-      isDoublePointer = true
-    of "char":
-      isChar = true
-    of "unsigned":
-      isUnsigned = true
-    of "size_t":
-      isSizeT = true
-    of "signed":
-      isSigned = true
-    of "int":
-      discard
+    of "const": discard
+    of "void": isVoid = true
+    of "*": isPointer = true
+    of "**": isDoublePointer = true
+    of "char": isChar = true
+    of "unsigned": isUnsigned = true
+    of "size_t": isSizeT = true
+    of "signed": isSigned = true
+    of "int": discard
     else:
       for token, isSep in tokenize(token, {'*'}):
         case token
