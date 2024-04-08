@@ -48,6 +48,7 @@ TextToUpper        strutils.toUpperAscii, unicode.toUpper
 TextToLower        strutils.toLowerAscii, unicode.toLower
 TextToPascal       None                                       Write a function
 TextToInteger      strutils.parseInt
+TextToFloat        strutils.parseFloat
 ================== ========================================== ================
 
 Text codepoints management functions (unicode characters)

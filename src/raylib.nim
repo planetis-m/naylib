@@ -938,11 +938,11 @@ proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocation, texture: T
 proc unloadShader(shader: Shader) {.importc: "UnloadShader".}
 func getScreenToWorldRay*(position: Vector2, camera: Camera): Ray {.importc: "GetScreenToWorldRay".}
   ## Get a ray trace from screen position (i.e mouse)
-proc getScreenToWorldRay*(position: Vector2, camera: Camera, width: int32, height: int32): Ray {.importc: "GetScreenToWorldRayEx".}
+func getScreenToWorldRay*(position: Vector2, camera: Camera, width: int32, height: int32): Ray {.importc: "GetScreenToWorldRayEx".}
   ## Get a ray trace from screen position (i.e mouse) in a viewport
 func getWorldToScreen*(position: Vector3, camera: Camera): Vector2 {.importc: "GetWorldToScreen".}
   ## Get the screen space position for a 3d world space position
-proc getWorldToScreen*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx".}
+func getWorldToScreen*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx".}
   ## Get size position for a 3d world space position
 func getWorldToScreen2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetWorldToScreen2D".}
   ## Get the screen space position for a 2d camera world space position
@@ -1213,8 +1213,8 @@ func checkCollisionPointCircle*(point: Vector2, center: Vector2, radius: float32
   ## Check if point is inside circle
 func checkCollisionPointTriangle*(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): bool {.importc: "CheckCollisionPointTriangle".}
   ## Check if point is inside a triangle
-proc checkCollisionPointPolyPriv(point: Vector2, points: ptr UncheckedArray[Vector2], pointCount: int32): bool {.importc: "CheckCollisionPointPoly".}
-proc checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: out Vector2): bool {.importc: "CheckCollisionLines".}
+func checkCollisionPointPolyPriv(point: Vector2, points: ptr UncheckedArray[Vector2], pointCount: int32): bool {.importc: "CheckCollisionPointPoly".}
+func checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: out Vector2): bool {.importc: "CheckCollisionLines".}
   ## Check the collision between two lines defined by two points each, returns collision point by reference
 func checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshold: int32): bool {.importc: "CheckCollisionPointLine".}
   ## Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
@@ -1262,7 +1262,7 @@ func imageFromImage*(image: Image, rec: Rectangle): Image {.importc: "ImageFromI
   ## Create an image from another image piece
 func imageText*(text: cstring, fontSize: int32, color: Color): Image {.importc: "ImageText".}
   ## Create an image from text (default font)
-proc imageText*(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
+func imageText*(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
   ## Create an image from text (custom sprite font)
 func imageFormat*(image: var Image, newFormat: PixelFormat) {.importc: "ImageFormat".}
   ## Convert image data to desired format
@@ -1323,25 +1323,25 @@ func imageClearBackground*(dst: var Image, color: Color) {.importc: "ImageClearB
   ## Clear image background with given color
 func imageDrawPixel*(dst: var Image, posX: int32, posY: int32, color: Color) {.importc: "ImageDrawPixel".}
   ## Draw pixel within an image
-proc imageDrawPixel*(dst: var Image, position: Vector2, color: Color) {.importc: "ImageDrawPixelV".}
+func imageDrawPixel*(dst: var Image, position: Vector2, color: Color) {.importc: "ImageDrawPixelV".}
   ## Draw pixel within an image (Vector version)
 func imageDrawLine*(dst: var Image, startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "ImageDrawLine".}
   ## Draw line within an image
-proc imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, color: Color) {.importc: "ImageDrawLineV".}
+func imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, color: Color) {.importc: "ImageDrawLineV".}
   ## Draw line within an image (Vector version)
 func imageDrawCircle*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircle".}
   ## Draw a filled circle within an image
-proc imageDrawCircle*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV".}
+func imageDrawCircle*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV".}
   ## Draw a filled circle within an image (Vector version)
 func imageDrawCircleLines*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircleLines".}
   ## Draw circle outline within an image
-proc imageDrawCircleLines*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleLinesV".}
+func imageDrawCircleLines*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleLinesV".}
   ## Draw circle outline within an image (Vector version)
 func imageDrawRectangle*(dst: var Image, posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "ImageDrawRectangle".}
   ## Draw rectangle within an image
-proc imageDrawRectangle*(dst: var Image, position: Vector2, size: Vector2, color: Color) {.importc: "ImageDrawRectangleV".}
+func imageDrawRectangle*(dst: var Image, position: Vector2, size: Vector2, color: Color) {.importc: "ImageDrawRectangleV".}
   ## Draw rectangle within an image (Vector version)
-proc imageDrawRectangle*(dst: var Image, rec: Rectangle, color: Color) {.importc: "ImageDrawRectangleRec".}
+func imageDrawRectangle*(dst: var Image, rec: Rectangle, color: Color) {.importc: "ImageDrawRectangleRec".}
   ## Draw rectangle within an image
 func imageDrawRectangleLines*(dst: var Image, rec: Rectangle, thick: int32, color: Color) {.importc: "ImageDrawRectangleLines".}
   ## Draw rectangle lines within an image
@@ -1349,7 +1349,7 @@ func imageDraw*(dst: var Image, src: Image, srcRec: Rectangle, dstRec: Rectangle
   ## Draw a source image within a destination image (tint applied to source)
 func imageDrawText*(dst: var Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
   ## Draw text (using default font) within an image (destination)
-proc imageDrawText*(dst: var Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
+func imageDrawText*(dst: var Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
   ## Draw text (custom sprite font) within an image (destination)
 proc loadTexturePriv(fileName: cstring): Texture2D {.importc: "LoadTexture".}
 proc loadTextureFromImagePriv(image: Image): Texture2D {.importc: "LoadTextureFromImage".}
@@ -1429,9 +1429,9 @@ proc drawTextCodepoint*(font: Font, codepoint: Rune, position: Vector2, fontSize
 proc drawTextCodepointsPriv(font: Font, codepoints: ptr UncheckedArray[int32], codepointCount: int32, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextCodepoints".}
 proc setTextLineSpacing*(spacing: int32) {.importc: "SetTextLineSpacing".}
   ## Set vertical line spacing when drawing with line-breaks
-func measureText*(text: cstring, fontSize: int32): int32 {.importc: "MeasureText".}
+proc measureText*(text: cstring, fontSize: int32): int32 {.importc: "MeasureText".}
   ## Measure string width for default font
-proc measureText*(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
+func measureText*(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
   ## Measure string size for Font
 func getGlyphIndex*(font: Font, codepoint: Rune): int32 {.importc: "GetGlyphIndex".}
   ## Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
@@ -1439,8 +1439,6 @@ func getGlyphInfo*(font: Font, codepoint: Rune): GlyphInfo {.importc: "GetGlyphI
   ## Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
 func getGlyphAtlasRec*(font: Font, codepoint: Rune): Rectangle {.importc: "GetGlyphAtlasRec".}
   ## Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
-func textToFloat*(text: cstring): float32 {.importc: "TextToFloat".}
-  ## Get float value from text (negative values not supported)
 proc drawLine3D*(startPos: Vector3, endPos: Vector3, color: Color) {.importc: "DrawLine3D".}
   ## Draw a line in 3D world space
 proc drawPoint3D*(position: Vector3, color: Color) {.importc: "DrawPoint3D".}
