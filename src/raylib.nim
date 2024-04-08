@@ -779,7 +779,7 @@ const
   Magenta* = Color(r: 255, g: 0, b: 255, a: 255)
   RayWhite* = Color(r: 245, g: 245, b: 245, a: 255)
 
-{.push callconv: cdecl, header: "raylib.h".}
+{.push callconv: cdecl, header: "raylib.h", sideEffect.}
 proc initWindowPriv(width: int32, height: int32, title: cstring) {.importc: "InitWindow".}
 proc closeWindow*() {.importc: "rlCloseWindow".}
   ## Close window and unload OpenGL context
@@ -923,8 +923,6 @@ proc loadVrStereoConfig*(device: VrDeviceInfo): VrStereoConfig {.importc: "LoadV
 proc unloadVrStereoConfig(config: VrStereoConfig) {.importc: "UnloadVrStereoConfig".}
 proc loadShaderPriv(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader".}
 proc loadShaderFromMemoryPriv(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory".}
-proc isShaderReady*(shader: Shader): bool {.importc: "IsShaderReady".}
-  ## Check if a shader is ready
 proc getShaderLocation*(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation".}
   ## Get shader uniform location
 proc getShaderLocationAttrib*(shader: Shader, attribName: cstring): ShaderLocation {.importc: "GetShaderLocationAttrib".}
@@ -936,22 +934,6 @@ proc setShaderValueMatrix*(shader: Shader, locIndex: ShaderLocation, mat: Matrix
 proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocation, texture: Texture2D) {.importc: "SetShaderValueTexture".}
   ## Set shader uniform value for texture (sampler2d)
 proc unloadShader(shader: Shader) {.importc: "UnloadShader".}
-proc getScreenToWorldRay*(position: Vector2, camera: Camera): Ray {.importc: "GetScreenToWorldRay".}
-  ## Get a ray trace from screen position (i.e mouse)
-proc getScreenToWorldRay*(position: Vector2, camera: Camera, width: int32, height: int32): Ray {.importc: "GetScreenToWorldRayEx".}
-  ## Get a ray trace from screen position (i.e mouse) in a viewport
-proc getWorldToScreen*(position: Vector3, camera: Camera): Vector2 {.importc: "GetWorldToScreen".}
-  ## Get the screen space position for a 3d world space position
-proc getWorldToScreen*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx".}
-  ## Get size position for a 3d world space position
-proc getWorldToScreen2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetWorldToScreen2D".}
-  ## Get the screen space position for a 2d camera world space position
-proc getScreenToWorld2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetScreenToWorld2D".}
-  ## Get the world space position for a 2d camera screen space position
-proc getCameraMatrix*(camera: Camera): Matrix {.importc: "GetCameraMatrix".}
-  ## Get camera transform matrix (view matrix)
-proc getCameraMatrix2D*(camera: Camera2D): Matrix {.importc: "GetCameraMatrix2D".}
-  ## Get camera 2d transform matrix
 proc setTargetFPS*(fps: int32) {.importc: "SetTargetFPS".}
   ## Set target FPS (maximum)
 proc getFrameTime*(): float32 {.importc: "GetFrameTime".}
@@ -1191,35 +1173,6 @@ proc drawSplineSegmentBezierQuadratic*(p1: Vector2, c2: Vector2, p3: Vector2, th
   ## Draw spline segment: Quadratic Bezier, 2 points, 1 control point
 proc drawSplineSegmentBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBezierCubic".}
   ## Draw spline segment: Cubic Bezier, 2 points, 2 control points
-proc getSplinePointLinear*(startPos: Vector2, endPos: Vector2, t: float32): Vector2 {.importc: "GetSplinePointLinear".}
-  ## Get (evaluate) spline point: Linear
-proc getSplinePointBasis*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBasis".}
-  ## Get (evaluate) spline point: B-Spline
-proc getSplinePointCatmullRom*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointCatmullRom".}
-  ## Get (evaluate) spline point: Catmull-Rom
-proc getSplinePointBezierQuad*(p1: Vector2, c2: Vector2, p3: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBezierQuad".}
-  ## Get (evaluate) spline point: Quadratic Bezier
-proc getSplinePointBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBezierCubic".}
-  ## Get (evaluate) spline point: Cubic Bezier
-proc checkCollisionRecs*(rec1: Rectangle, rec2: Rectangle): bool {.importc: "CheckCollisionRecs".}
-  ## Check collision between two rectangles
-proc checkCollisionCircles*(center1: Vector2, radius1: float32, center2: Vector2, radius2: float32): bool {.importc: "CheckCollisionCircles".}
-  ## Check collision between two circles
-proc checkCollisionCircleRec*(center: Vector2, radius: float32, rec: Rectangle): bool {.importc: "CheckCollisionCircleRec".}
-  ## Check collision between circle and rectangle
-proc checkCollisionPointRec*(point: Vector2, rec: Rectangle): bool {.importc: "CheckCollisionPointRec".}
-  ## Check if point is inside rectangle
-proc checkCollisionPointCircle*(point: Vector2, center: Vector2, radius: float32): bool {.importc: "CheckCollisionPointCircle".}
-  ## Check if point is inside circle
-proc checkCollisionPointTriangle*(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): bool {.importc: "CheckCollisionPointTriangle".}
-  ## Check if point is inside a triangle
-proc checkCollisionPointPolyPriv(point: Vector2, points: ptr UncheckedArray[Vector2], pointCount: int32): bool {.importc: "CheckCollisionPointPoly".}
-proc checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: out Vector2): bool {.importc: "CheckCollisionLines".}
-  ## Check the collision between two lines defined by two points each, returns collision point by reference
-proc checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshold: int32): bool {.importc: "CheckCollisionPointLine".}
-  ## Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
-proc getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "GetCollisionRec".}
-  ## Get collision rectangle for two rectangles collision
 proc loadImagePriv(fileName: cstring): Image {.importc: "rlLoadImage".}
 proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw".}
 proc loadImageSvgPriv(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg".}
@@ -1230,136 +1183,20 @@ proc loadImageFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uin
 proc loadImageFromTexturePriv(texture: Texture2D): Image {.importc: "LoadImageFromTexture".}
 proc loadImageFromScreen*(): Image {.importc: "LoadImageFromScreen".}
   ## Load image from screen buffer and (screenshot)
-proc isImageReady*(image: Image): bool {.importc: "IsImageReady".}
-  ## Check if an image is ready
 proc unloadImage(image: Image) {.importc: "UnloadImage".}
 proc exportImage*(image: Image, fileName: cstring): bool {.importc: "ExportImage".}
   ## Export image data to file, returns true on success
 proc exportImageToMemoryPriv(image: Image, fileType: cstring, fileSize: ptr int32): ptr uint8 {.importc: "ExportImageToMemory".}
 proc exportImageAsCode*(image: Image, fileName: cstring): bool {.importc: "ExportImageAsCode".}
   ## Export image as code file defining an array of bytes, returns true on success
-proc genImageColor*(width: int32, height: int32, color: Color): Image {.importc: "GenImageColor".}
-  ## Generate image: plain color
-proc genImageGradientLinear*(width: int32, height: int32, direction: int32, start: Color, `end`: Color): Image {.importc: "GenImageGradientLinear".}
-  ## Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
-proc genImageGradientRadial*(width: int32, height: int32, density: float32, inner: Color, outer: Color): Image {.importc: "GenImageGradientRadial".}
-  ## Generate image: radial gradient
-proc genImageGradientSquare*(width: int32, height: int32, density: float32, inner: Color, outer: Color): Image {.importc: "GenImageGradientSquare".}
-  ## Generate image: square gradient
-proc genImageChecked*(width: int32, height: int32, checksX: int32, checksY: int32, col1: Color, col2: Color): Image {.importc: "GenImageChecked".}
-  ## Generate image: checked
-proc genImageWhiteNoise*(width: int32, height: int32, factor: float32): Image {.importc: "GenImageWhiteNoise".}
-  ## Generate image: white noise
-proc genImagePerlinNoise*(width: int32, height: int32, offsetX: int32, offsetY: int32, scale: float32): Image {.importc: "GenImagePerlinNoise".}
-  ## Generate image: perlin noise
-proc genImageCellular*(width: int32, height: int32, tileSize: int32): Image {.importc: "GenImageCellular".}
-  ## Generate image: cellular algorithm, bigger tileSize means bigger cells
-proc genImageText*(width: int32, height: int32, text: cstring): Image {.importc: "GenImageText".}
-  ## Generate image: grayscale image from text data
-proc imageCopy*(image: Image): Image {.importc: "ImageCopy".}
-  ## Create an image duplicate (useful for transformations)
-proc imageFromImage*(image: Image, rec: Rectangle): Image {.importc: "ImageFromImage".}
-  ## Create an image from another image piece
-proc imageText*(text: cstring, fontSize: int32, color: Color): Image {.importc: "ImageText".}
-  ## Create an image from text (default font)
-proc imageText*(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
-  ## Create an image from text (custom sprite font)
-proc imageFormat*(image: var Image, newFormat: PixelFormat) {.importc: "ImageFormat".}
-  ## Convert image data to desired format
-proc imageToPOT*(image: var Image, fill: Color) {.importc: "ImageToPOT".}
-  ## Convert image to POT (power-of-two)
-proc imageCrop*(image: var Image, crop: Rectangle) {.importc: "ImageCrop".}
-  ## Crop an image to a defined rectangle
-proc imageAlphaCrop*(image: var Image, threshold: float32) {.importc: "ImageAlphaCrop".}
-  ## Crop image depending on alpha value
-proc imageAlphaClear*(image: var Image, color: Color, threshold: float32) {.importc: "ImageAlphaClear".}
-  ## Clear alpha channel to desired color
-proc imageAlphaMask*(image: var Image, alphaMask: Image) {.importc: "ImageAlphaMask".}
-  ## Apply alpha mask to image
-proc imageAlphaPremultiply*(image: var Image) {.importc: "ImageAlphaPremultiply".}
-  ## Premultiply alpha channel
-proc imageBlurGaussian*(image: var Image, blurSize: int32) {.importc: "ImageBlurGaussian".}
-  ## Apply Gaussian blur using a box blur approximation
 proc imageKernelConvolutionPriv(image: var Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
-proc imageResize*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize".}
-  ## Resize image (Bicubic scaling algorithm)
-proc imageResizeNN*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN".}
-  ## Resize image (Nearest-Neighbor scaling algorithm)
-proc imageResizeCanvas*(image: var Image, newWidth: int32, newHeight: int32, offsetX: int32, offsetY: int32, fill: Color) {.importc: "ImageResizeCanvas".}
-  ## Resize canvas and fill with color
-proc imageMipmaps*(image: var Image) {.importc: "ImageMipmaps".}
-  ## Compute all mipmap levels for a provided image
-proc imageDither*(image: var Image, rBpp: int32, gBpp: int32, bBpp: int32, aBpp: int32) {.importc: "ImageDither".}
-  ## Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
-proc imageFlipVertical*(image: var Image) {.importc: "ImageFlipVertical".}
-  ## Flip image vertically
-proc imageFlipHorizontal*(image: var Image) {.importc: "ImageFlipHorizontal".}
-  ## Flip image horizontally
-proc imageRotate*(image: var Image, degrees: int32) {.importc: "ImageRotate".}
-  ## Rotate image by input angle in degrees (-359 to 359)
-proc imageRotateCW*(image: var Image) {.importc: "ImageRotateCW".}
-  ## Rotate image clockwise 90deg
-proc imageRotateCCW*(image: var Image) {.importc: "ImageRotateCCW".}
-  ## Rotate image counter-clockwise 90deg
-proc imageColorTint*(image: var Image, color: Color) {.importc: "ImageColorTint".}
-  ## Modify image color: tint
-proc imageColorInvert*(image: var Image) {.importc: "ImageColorInvert".}
-  ## Modify image color: invert
-proc imageColorGrayscale*(image: var Image) {.importc: "ImageColorGrayscale".}
-  ## Modify image color: grayscale
-proc imageColorContrast*(image: var Image, contrast: float32) {.importc: "ImageColorContrast".}
-  ## Modify image color: contrast (-100 to 100)
-proc imageColorBrightness*(image: var Image, brightness: int32) {.importc: "ImageColorBrightness".}
-  ## Modify image color: brightness (-255 to 255)
-proc imageColorReplace*(image: var Image, color: Color, replace: Color) {.importc: "ImageColorReplace".}
-  ## Modify image color: replace color
 proc loadImageColorsPriv(image: Image): ptr UncheckedArray[Color] {.importc: "LoadImageColors".}
 proc loadImagePalettePriv(image: Image, maxPaletteSize: int32, colorCount: ptr int32): ptr UncheckedArray[Color] {.importc: "LoadImagePalette".}
-proc getImageAlphaBorder*(image: Image, threshold: float32): Rectangle {.importc: "GetImageAlphaBorder".}
-  ## Get image alpha border rectangle
-proc getImageColor*(image: Image, x: int32, y: int32): Color {.importc: "GetImageColor".}
-  ## Get image pixel color at (x, y) position
-proc imageClearBackground*(dst: var Image, color: Color) {.importc: "ImageClearBackground".}
-  ## Clear image background with given color
-proc imageDrawPixel*(dst: var Image, posX: int32, posY: int32, color: Color) {.importc: "ImageDrawPixel".}
-  ## Draw pixel within an image
-proc imageDrawPixel*(dst: var Image, position: Vector2, color: Color) {.importc: "ImageDrawPixelV".}
-  ## Draw pixel within an image (Vector version)
-proc imageDrawLine*(dst: var Image, startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "ImageDrawLine".}
-  ## Draw line within an image
-proc imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, color: Color) {.importc: "ImageDrawLineV".}
-  ## Draw line within an image (Vector version)
-proc imageDrawCircle*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircle".}
-  ## Draw a filled circle within an image
-proc imageDrawCircle*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV".}
-  ## Draw a filled circle within an image (Vector version)
-proc imageDrawCircleLines*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircleLines".}
-  ## Draw circle outline within an image
-proc imageDrawCircleLines*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleLinesV".}
-  ## Draw circle outline within an image (Vector version)
-proc imageDrawRectangle*(dst: var Image, posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "ImageDrawRectangle".}
-  ## Draw rectangle within an image
-proc imageDrawRectangle*(dst: var Image, position: Vector2, size: Vector2, color: Color) {.importc: "ImageDrawRectangleV".}
-  ## Draw rectangle within an image (Vector version)
-proc imageDrawRectangle*(dst: var Image, rec: Rectangle, color: Color) {.importc: "ImageDrawRectangleRec".}
-  ## Draw rectangle within an image
-proc imageDrawRectangleLines*(dst: var Image, rec: Rectangle, thick: int32, color: Color) {.importc: "ImageDrawRectangleLines".}
-  ## Draw rectangle lines within an image
-proc imageDraw*(dst: var Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) {.importc: "ImageDraw".}
-  ## Draw a source image within a destination image (tint applied to source)
-proc imageDrawText*(dst: var Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
-  ## Draw text (using default font) within an image (destination)
-proc imageDrawText*(dst: var Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
-  ## Draw text (custom sprite font) within an image (destination)
 proc loadTexturePriv(fileName: cstring): Texture2D {.importc: "LoadTexture".}
 proc loadTextureFromImagePriv(image: Image): Texture2D {.importc: "LoadTextureFromImage".}
 proc loadTextureCubemapPriv(image: Image, layout: CubemapLayout): TextureCubemap {.importc: "LoadTextureCubemap".}
 proc loadRenderTexturePriv(width: int32, height: int32): RenderTexture2D {.importc: "LoadRenderTexture".}
-proc isTextureReady*(texture: Texture2D): bool {.importc: "IsTextureReady".}
-  ## Check if a texture is ready
 proc unloadTexture(texture: Texture2D) {.importc: "UnloadTexture".}
-proc isRenderTextureReady*(target: RenderTexture2D): bool {.importc: "IsRenderTextureReady".}
-  ## Check if a render texture is ready
 proc unloadRenderTexture(target: RenderTexture2D) {.importc: "UnloadRenderTexture".}
 proc updateTexturePriv(texture: Texture2D, pixels: pointer) {.importc: "UpdateTexture".}
 proc updateTexturePriv(texture: Texture2D, rec: Rectangle, pixels: pointer) {.importc: "UpdateTextureRec".}
@@ -1381,36 +1218,14 @@ proc drawTexture*(texture: Texture2D, source: Rectangle, dest: Rectangle, origin
   ## Draw a part of a texture defined by a rectangle with 'pro' parameters
 proc drawTextureNPatch*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch".}
   ## Draws a texture (or part of it) that stretches or shrinks nicely
-proc colorNormalize*(color: Color): Vector4 {.importc: "ColorNormalize".}
-  ## Get Color normalized as float [0..1]
-proc colorFromNormalized*(normalized: Vector4): Color {.importc: "ColorFromNormalized".}
-  ## Get Color from normalized values [0..1]
-proc colorToHSV*(color: Color): Vector3 {.importc: "ColorToHSV".}
-  ## Get HSV values for a Color, hue [0..360], saturation/value [0..1]
-proc colorFromHSV*(hue: float32, saturation: float32, value: float32): Color {.importc: "ColorFromHSV".}
-  ## Get a Color from HSV values, hue [0..360], saturation/value [0..1]
-proc colorTint*(color: Color, tint: Color): Color {.importc: "ColorTint".}
-  ## Get color multiplied with another color
-proc colorBrightness*(color: Color, factor: float32): Color {.importc: "ColorBrightness".}
-  ## Get color with brightness correction, brightness factor goes from -1.0f to 1.0f
-proc colorContrast*(color: Color, contrast: float32): Color {.importc: "ColorContrast".}
-  ## Get color with contrast correction, contrast values between -1.0f and 1.0f
-proc colorAlpha*(color: Color, alpha: float32): Color {.importc: "ColorAlpha".}
-  ## Get color with alpha applied, alpha goes from 0.0f to 1.0f
-proc colorAlphaBlend*(dst: Color, src: Color, tint: Color): Color {.importc: "ColorAlphaBlend".}
-  ## Get src alpha-blended into dst color with tint
 proc getPixelColorPriv(srcPtr: pointer, format: PixelFormat): Color {.importc: "GetPixelColor".}
 proc setPixelColorPriv(dstPtr: pointer, color: Color, format: PixelFormat) {.importc: "SetPixelColor".}
-proc getPixelDataSize*(width: int32, height: int32, format: PixelFormat): int32 {.importc: "GetPixelDataSize".}
-  ## Get pixel data size in bytes for certain format
 proc getFontDefault*(): Font {.importc: "GetFontDefault".}
   ## Get the default Font
 proc loadFontPriv(fileName: cstring): Font {.importc: "LoadFont".}
 proc loadFontPriv(fileName: cstring, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontEx".}
 proc loadFontFromImagePriv(image: Image, key: Color, firstChar: int32): Font {.importc: "LoadFontFromImage".}
 proc loadFontFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontFromMemory".}
-proc isFontReady*(font: Font): bool {.importc: "IsFontReady".}
-  ## Check if a font is ready
 proc loadFontDataPriv(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData".}
 proc genImageFontAtlasPriv(glyphs: ptr UncheckedArray[GlyphInfo], glyphRecs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
 proc unloadFont(font: Font) {.importc: "UnloadFont".}
@@ -1431,16 +1246,6 @@ proc setTextLineSpacing*(spacing: int32) {.importc: "SetTextLineSpacing".}
   ## Set vertical line spacing when drawing with line-breaks
 proc measureText*(text: cstring, fontSize: int32): int32 {.importc: "MeasureText".}
   ## Measure string width for default font
-proc measureText*(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
-  ## Measure string size for Font
-proc getGlyphIndex*(font: Font, codepoint: Rune): int32 {.importc: "GetGlyphIndex".}
-  ## Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
-proc getGlyphInfo*(font: Font, codepoint: Rune): GlyphInfo {.importc: "GetGlyphInfo".}
-  ## Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
-proc getGlyphAtlasRec*(font: Font, codepoint: Rune): Rectangle {.importc: "GetGlyphAtlasRec".}
-  ## Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
-proc textToFloat*(text: cstring): float32 {.importc: "TextToFloat".}
-  ## Get float value from text (negative values not supported)
 proc drawLine3D*(startPos: Vector3, endPos: Vector3, color: Color) {.importc: "DrawLine3D".}
   ## Draw a line in 3D world space
 proc drawPoint3D*(position: Vector3, color: Color) {.importc: "DrawPoint3D".}
@@ -1484,8 +1289,6 @@ proc drawGrid*(slices: int32, spacing: float32) {.importc: "DrawGrid".}
   ## Draw a grid (centered at (0, 0, 0))
 proc loadModelPriv(fileName: cstring): Model {.importc: "LoadModel".}
 proc loadModelFromMeshPriv(mesh: Mesh): Model {.importc: "LoadModelFromMesh".}
-proc isModelReady*(model: Model): bool {.importc: "IsModelReady".}
-  ## Check if a model is ready
 proc unloadModel(model: Model) {.importc: "UnloadModel".}
 proc getModelBoundingBox*(model: Model): BoundingBox {.importc: "GetModelBoundingBox".}
   ## Compute model bounding box limits (considers all meshes)
@@ -1554,36 +1357,16 @@ proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.i
 proc unloadModelAnimation(anim: ModelAnimation) {.importc: "UnloadModelAnimation".}
 proc isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
   ## Check model animation skeleton match
-proc checkCollisionSpheres*(center1: Vector3, radius1: float32, center2: Vector3, radius2: float32): bool {.importc: "CheckCollisionSpheres".}
-  ## Check collision between two spheres
-proc checkCollisionBoxes*(box1: BoundingBox, box2: BoundingBox): bool {.importc: "CheckCollisionBoxes".}
-  ## Check collision between two bounding boxes
-proc checkCollisionBoxSphere*(box: BoundingBox, center: Vector3, radius: float32): bool {.importc: "CheckCollisionBoxSphere".}
-  ## Check collision between box and sphere
-proc getRayCollisionSphere*(ray: Ray, center: Vector3, radius: float32): RayCollision {.importc: "GetRayCollisionSphere".}
-  ## Get collision info between ray and sphere
-proc getRayCollisionBox*(ray: Ray, box: BoundingBox): RayCollision {.importc: "GetRayCollisionBox".}
-  ## Get collision info between ray and box
-proc getRayCollisionMesh*(ray: Ray, mesh: Mesh, transform: Matrix): RayCollision {.importc: "GetRayCollisionMesh".}
-  ## Get collision info between ray and mesh
-proc getRayCollisionTriangle*(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3): RayCollision {.importc: "GetRayCollisionTriangle".}
-  ## Get collision info between ray and triangle
-proc getRayCollisionQuad*(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): RayCollision {.importc: "GetRayCollisionQuad".}
-  ## Get collision info between ray and quad
 proc initAudioDevice*() {.importc: "InitAudioDevice".}
   ## Initialize audio device and context
 proc closeAudioDevice*() {.importc: "CloseAudioDevice".}
   ## Close the audio device and context
-proc isAudioDeviceReady*(): bool {.importc: "IsAudioDeviceReady".}
-  ## Check if audio device has been initialized successfully
 proc setMasterVolume*(volume: float32) {.importc: "SetMasterVolume".}
   ## Set master volume (listener)
 proc getMasterVolume*(): float32 {.importc: "GetMasterVolume".}
   ## Get master volume (listener)
 proc loadWavePriv(fileName: cstring): Wave {.importc: "LoadWave".}
 proc loadWaveFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Wave {.importc: "LoadWaveFromMemory".}
-proc isWaveReady*(wave: Wave): bool {.importc: "IsWaveReady".}
-  ## Checks if wave data is ready
 proc loadSoundPriv(fileName: cstring): Sound {.importc: "LoadSound".}
 proc loadSoundFromWavePriv(wave: Wave): Sound {.importc: "LoadSoundFromWave".}
 proc loadSoundAliasPriv(source: Sound): Sound {.importc: "LoadSoundAlias".}
@@ -1605,30 +1388,18 @@ proc pauseSound*(sound: Sound) {.importc: "PauseSound".}
   ## Pause a sound
 proc resumeSound*(sound: Sound) {.importc: "ResumeSound".}
   ## Resume a paused sound
-proc isSoundPlaying*(sound: Sound): bool {.importc: "IsSoundPlaying".}
-  ## Check if a sound is currently playing
 proc setSoundVolume*(sound: Sound, volume: float32) {.importc: "SetSoundVolume".}
   ## Set volume for a sound (1.0 is max level)
 proc setSoundPitch*(sound: Sound, pitch: float32) {.importc: "SetSoundPitch".}
   ## Set pitch for a sound (1.0 is base level)
 proc setSoundPan*(sound: Sound, pan: float32) {.importc: "SetSoundPan".}
   ## Set pan for a sound (0.5 is center)
-proc waveCopy*(wave: Wave): Wave {.importc: "WaveCopy".}
-  ## Copy a wave to a new wave
-proc waveCrop*(wave: var Wave, initSample: int32, finalSample: int32) {.importc: "WaveCrop".}
-  ## Crop a wave to defined samples range
-proc waveFormat*(wave: var Wave, sampleRate: int32, sampleSize: int32, channels: int32) {.importc: "WaveFormat".}
-  ## Convert wave data to desired format
 proc loadWaveSamplesPriv(wave: Wave): ptr UncheckedArray[float32] {.importc: "LoadWaveSamples".}
 proc loadMusicStreamPriv(fileName: cstring): Music {.importc: "LoadMusicStream".}
 proc loadMusicStreamFromMemoryPriv(fileType: cstring, data: ptr UncheckedArray[uint8], dataSize: int32): Music {.importc: "LoadMusicStreamFromMemory".}
-proc isMusicReady*(music: Music): bool {.importc: "IsMusicReady".}
-  ## Checks if a music stream is ready
 proc unloadMusicStream(music: Music) {.importc: "UnloadMusicStream".}
 proc playMusicStream*(music: Music) {.importc: "PlayMusicStream".}
   ## Start music playing
-proc isMusicStreamPlaying*(music: Music): bool {.importc: "IsMusicStreamPlaying".}
-  ## Check if music is playing
 proc updateMusicStream*(music: Music) {.importc: "UpdateMusicStream".}
   ## Updates buffers for music streaming
 proc stopMusicStream*(music: Music) {.importc: "StopMusicStream".}
@@ -1645,13 +1416,9 @@ proc setMusicPitch*(music: Music, pitch: float32) {.importc: "SetMusicPitch".}
   ## Set pitch for a music (1.0 is base level)
 proc setMusicPan*(music: Music, pan: float32) {.importc: "SetMusicPan".}
   ## Set pan for a music (0.5 is center)
-proc getMusicTimeLength*(music: Music): float32 {.importc: "GetMusicTimeLength".}
-  ## Get music time length (in seconds)
 proc getMusicTimePlayed*(music: Music): float32 {.importc: "GetMusicTimePlayed".}
   ## Get current music time played (in seconds)
 proc loadAudioStreamPriv(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream {.importc: "LoadAudioStream".}
-proc isAudioStreamReady*(stream: AudioStream): bool {.importc: "IsAudioStreamReady".}
-  ## Checks if an audio stream is ready
 proc unloadAudioStream(stream: AudioStream) {.importc: "UnloadAudioStream".}
 proc updateAudioStreamPriv(stream: AudioStream, data: pointer, frameCount: int32) {.importc: "UpdateAudioStream".}
 proc isAudioStreamProcessed*(stream: AudioStream): bool {.importc: "IsAudioStreamProcessed".}
@@ -1662,8 +1429,6 @@ proc pauseAudioStream*(stream: AudioStream) {.importc: "PauseAudioStream".}
   ## Pause audio stream
 proc resumeAudioStream*(stream: AudioStream) {.importc: "ResumeAudioStream".}
   ## Resume audio stream
-proc isAudioStreamPlaying*(stream: AudioStream): bool {.importc: "IsAudioStreamPlaying".}
-  ## Check if audio stream is playing
 proc stopAudioStream*(stream: AudioStream) {.importc: "StopAudioStream".}
   ## Stop audio stream
 proc setAudioStreamVolume*(stream: AudioStream, volume: float32) {.importc: "SetAudioStreamVolume".}
@@ -1685,6 +1450,245 @@ proc attachAudioMixedProcessor*(processor: AudioCallback) {.importc: "AttachAudi
 proc detachAudioMixedProcessor*(processor: AudioCallback) {.importc: "DetachAudioMixedProcessor".}
   ## Detach audio stream processor from the entire audio pipeline
 {.pop.}
+
+{.push callconv: cdecl, header: "raylib.h", noSideEffect.}
+proc isShaderReady*(shader: Shader): bool {.importc: "IsShaderReady".}
+  ## Check if a shader is ready
+proc getScreenToWorldRay*(position: Vector2, camera: Camera): Ray {.importc: "GetScreenToWorldRay".}
+  ## Get a ray trace from screen position (i.e mouse)
+proc getScreenToWorldRay*(position: Vector2, camera: Camera, width: int32, height: int32): Ray {.importc: "GetScreenToWorldRayEx".}
+  ## Get a ray trace from screen position (i.e mouse) in a viewport
+proc getWorldToScreen*(position: Vector3, camera: Camera): Vector2 {.importc: "GetWorldToScreen".}
+  ## Get the screen space position for a 3d world space position
+proc getWorldToScreen*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx".}
+  ## Get size position for a 3d world space position
+proc getWorldToScreen2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetWorldToScreen2D".}
+  ## Get the screen space position for a 2d camera world space position
+proc getScreenToWorld2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetScreenToWorld2D".}
+  ## Get the world space position for a 2d camera screen space position
+proc getCameraMatrix*(camera: Camera): Matrix {.importc: "GetCameraMatrix".}
+  ## Get camera transform matrix (view matrix)
+proc getCameraMatrix2D*(camera: Camera2D): Matrix {.importc: "GetCameraMatrix2D".}
+  ## Get camera 2d transform matrix
+proc getSplinePointLinear*(startPos: Vector2, endPos: Vector2, t: float32): Vector2 {.importc: "GetSplinePointLinear".}
+  ## Get (evaluate) spline point: Linear
+proc getSplinePointBasis*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBasis".}
+  ## Get (evaluate) spline point: B-Spline
+proc getSplinePointCatmullRom*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointCatmullRom".}
+  ## Get (evaluate) spline point: Catmull-Rom
+proc getSplinePointBezierQuad*(p1: Vector2, c2: Vector2, p3: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBezierQuad".}
+  ## Get (evaluate) spline point: Quadratic Bezier
+proc getSplinePointBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBezierCubic".}
+  ## Get (evaluate) spline point: Cubic Bezier
+proc checkCollisionRecs*(rec1: Rectangle, rec2: Rectangle): bool {.importc: "CheckCollisionRecs".}
+  ## Check collision between two rectangles
+proc checkCollisionCircles*(center1: Vector2, radius1: float32, center2: Vector2, radius2: float32): bool {.importc: "CheckCollisionCircles".}
+  ## Check collision between two circles
+proc checkCollisionCircleRec*(center: Vector2, radius: float32, rec: Rectangle): bool {.importc: "CheckCollisionCircleRec".}
+  ## Check collision between circle and rectangle
+proc checkCollisionPointRec*(point: Vector2, rec: Rectangle): bool {.importc: "CheckCollisionPointRec".}
+  ## Check if point is inside rectangle
+proc checkCollisionPointCircle*(point: Vector2, center: Vector2, radius: float32): bool {.importc: "CheckCollisionPointCircle".}
+  ## Check if point is inside circle
+proc checkCollisionPointTriangle*(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): bool {.importc: "CheckCollisionPointTriangle".}
+  ## Check if point is inside a triangle
+proc checkCollisionPointPolyPriv(point: Vector2, points: ptr UncheckedArray[Vector2], pointCount: int32): bool {.importc: "CheckCollisionPointPoly".}
+proc checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: out Vector2): bool {.importc: "CheckCollisionLines".}
+  ## Check the collision between two lines defined by two points each, returns collision point by reference
+proc checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshold: int32): bool {.importc: "CheckCollisionPointLine".}
+  ## Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
+proc getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "GetCollisionRec".}
+  ## Get collision rectangle for two rectangles collision
+proc isImageReady*(image: Image): bool {.importc: "IsImageReady".}
+  ## Check if an image is ready
+proc genImageColor*(width: int32, height: int32, color: Color): Image {.importc: "GenImageColor".}
+  ## Generate image: plain color
+proc genImageGradientLinear*(width: int32, height: int32, direction: int32, start: Color, `end`: Color): Image {.importc: "GenImageGradientLinear".}
+  ## Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
+proc genImageGradientRadial*(width: int32, height: int32, density: float32, inner: Color, outer: Color): Image {.importc: "GenImageGradientRadial".}
+  ## Generate image: radial gradient
+proc genImageGradientSquare*(width: int32, height: int32, density: float32, inner: Color, outer: Color): Image {.importc: "GenImageGradientSquare".}
+  ## Generate image: square gradient
+proc genImageChecked*(width: int32, height: int32, checksX: int32, checksY: int32, col1: Color, col2: Color): Image {.importc: "GenImageChecked".}
+  ## Generate image: checked
+proc genImageWhiteNoise*(width: int32, height: int32, factor: float32): Image {.importc: "GenImageWhiteNoise".}
+  ## Generate image: white noise
+proc genImagePerlinNoise*(width: int32, height: int32, offsetX: int32, offsetY: int32, scale: float32): Image {.importc: "GenImagePerlinNoise".}
+  ## Generate image: perlin noise
+proc genImageCellular*(width: int32, height: int32, tileSize: int32): Image {.importc: "GenImageCellular".}
+  ## Generate image: cellular algorithm, bigger tileSize means bigger cells
+proc genImageText*(width: int32, height: int32, text: cstring): Image {.importc: "GenImageText".}
+  ## Generate image: grayscale image from text data
+proc imageCopy*(image: Image): Image {.importc: "ImageCopy".}
+  ## Create an image duplicate (useful for transformations)
+proc imageFromImage*(image: Image, rec: Rectangle): Image {.importc: "ImageFromImage".}
+  ## Create an image from another image piece
+proc imageText*(text: cstring, fontSize: int32, color: Color): Image {.importc: "ImageText".}
+  ## Create an image from text (default font)
+proc imageText*(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
+  ## Create an image from text (custom sprite font)
+proc imageFormat*(image: var Image, newFormat: PixelFormat) {.importc: "ImageFormat".}
+  ## Convert image data to desired format
+proc imageToPOT*(image: var Image, fill: Color) {.importc: "ImageToPOT".}
+  ## Convert image to POT (power-of-two)
+proc imageCrop*(image: var Image, crop: Rectangle) {.importc: "ImageCrop".}
+  ## Crop an image to a defined rectangle
+proc imageAlphaCrop*(image: var Image, threshold: float32) {.importc: "ImageAlphaCrop".}
+  ## Crop image depending on alpha value
+proc imageAlphaClear*(image: var Image, color: Color, threshold: float32) {.importc: "ImageAlphaClear".}
+  ## Clear alpha channel to desired color
+proc imageAlphaMask*(image: var Image, alphaMask: Image) {.importc: "ImageAlphaMask".}
+  ## Apply alpha mask to image
+proc imageAlphaPremultiply*(image: var Image) {.importc: "ImageAlphaPremultiply".}
+  ## Premultiply alpha channel
+proc imageBlurGaussian*(image: var Image, blurSize: int32) {.importc: "ImageBlurGaussian".}
+  ## Apply Gaussian blur using a box blur approximation
+proc imageResize*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize".}
+  ## Resize image (Bicubic scaling algorithm)
+proc imageResizeNN*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN".}
+  ## Resize image (Nearest-Neighbor scaling algorithm)
+proc imageResizeCanvas*(image: var Image, newWidth: int32, newHeight: int32, offsetX: int32, offsetY: int32, fill: Color) {.importc: "ImageResizeCanvas".}
+  ## Resize canvas and fill with color
+proc imageMipmaps*(image: var Image) {.importc: "ImageMipmaps".}
+  ## Compute all mipmap levels for a provided image
+proc imageDither*(image: var Image, rBpp: int32, gBpp: int32, bBpp: int32, aBpp: int32) {.importc: "ImageDither".}
+  ## Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
+proc imageFlipVertical*(image: var Image) {.importc: "ImageFlipVertical".}
+  ## Flip image vertically
+proc imageFlipHorizontal*(image: var Image) {.importc: "ImageFlipHorizontal".}
+  ## Flip image horizontally
+proc imageRotate*(image: var Image, degrees: int32) {.importc: "ImageRotate".}
+  ## Rotate image by input angle in degrees (-359 to 359)
+proc imageRotateCW*(image: var Image) {.importc: "ImageRotateCW".}
+  ## Rotate image clockwise 90deg
+proc imageRotateCCW*(image: var Image) {.importc: "ImageRotateCCW".}
+  ## Rotate image counter-clockwise 90deg
+proc imageColorTint*(image: var Image, color: Color) {.importc: "ImageColorTint".}
+  ## Modify image color: tint
+proc imageColorInvert*(image: var Image) {.importc: "ImageColorInvert".}
+  ## Modify image color: invert
+proc imageColorGrayscale*(image: var Image) {.importc: "ImageColorGrayscale".}
+  ## Modify image color: grayscale
+proc imageColorContrast*(image: var Image, contrast: float32) {.importc: "ImageColorContrast".}
+  ## Modify image color: contrast (-100 to 100)
+proc imageColorBrightness*(image: var Image, brightness: int32) {.importc: "ImageColorBrightness".}
+  ## Modify image color: brightness (-255 to 255)
+proc imageColorReplace*(image: var Image, color: Color, replace: Color) {.importc: "ImageColorReplace".}
+  ## Modify image color: replace color
+proc getImageAlphaBorder*(image: Image, threshold: float32): Rectangle {.importc: "GetImageAlphaBorder".}
+  ## Get image alpha border rectangle
+proc getImageColor*(image: Image, x: int32, y: int32): Color {.importc: "GetImageColor".}
+  ## Get image pixel color at (x, y) position
+proc imageClearBackground*(dst: var Image, color: Color) {.importc: "ImageClearBackground".}
+  ## Clear image background with given color
+proc imageDrawPixel*(dst: var Image, posX: int32, posY: int32, color: Color) {.importc: "ImageDrawPixel".}
+  ## Draw pixel within an image
+proc imageDrawPixel*(dst: var Image, position: Vector2, color: Color) {.importc: "ImageDrawPixelV".}
+  ## Draw pixel within an image (Vector version)
+proc imageDrawLine*(dst: var Image, startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "ImageDrawLine".}
+  ## Draw line within an image
+proc imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, color: Color) {.importc: "ImageDrawLineV".}
+  ## Draw line within an image (Vector version)
+proc imageDrawCircle*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircle".}
+  ## Draw a filled circle within an image
+proc imageDrawCircle*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV".}
+  ## Draw a filled circle within an image (Vector version)
+proc imageDrawCircleLines*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircleLines".}
+  ## Draw circle outline within an image
+proc imageDrawCircleLines*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleLinesV".}
+  ## Draw circle outline within an image (Vector version)
+proc imageDrawRectangle*(dst: var Image, posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "ImageDrawRectangle".}
+  ## Draw rectangle within an image
+proc imageDrawRectangle*(dst: var Image, position: Vector2, size: Vector2, color: Color) {.importc: "ImageDrawRectangleV".}
+  ## Draw rectangle within an image (Vector version)
+proc imageDrawRectangle*(dst: var Image, rec: Rectangle, color: Color) {.importc: "ImageDrawRectangleRec".}
+  ## Draw rectangle within an image
+proc imageDrawRectangleLines*(dst: var Image, rec: Rectangle, thick: int32, color: Color) {.importc: "ImageDrawRectangleLines".}
+  ## Draw rectangle lines within an image
+proc imageDraw*(dst: var Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) {.importc: "ImageDraw".}
+  ## Draw a source image within a destination image (tint applied to source)
+proc imageDrawText*(dst: var Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
+  ## Draw text (using default font) within an image (destination)
+proc imageDrawText*(dst: var Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
+  ## Draw text (custom sprite font) within an image (destination)
+proc isTextureReady*(texture: Texture2D): bool {.importc: "IsTextureReady".}
+  ## Check if a texture is ready
+proc isRenderTextureReady*(target: RenderTexture2D): bool {.importc: "IsRenderTextureReady".}
+  ## Check if a render texture is ready
+proc colorNormalize*(color: Color): Vector4 {.importc: "ColorNormalize".}
+  ## Get Color normalized as float [0..1]
+proc colorFromNormalized*(normalized: Vector4): Color {.importc: "ColorFromNormalized".}
+  ## Get Color from normalized values [0..1]
+proc colorToHSV*(color: Color): Vector3 {.importc: "ColorToHSV".}
+  ## Get HSV values for a Color, hue [0..360], saturation/value [0..1]
+proc colorFromHSV*(hue: float32, saturation: float32, value: float32): Color {.importc: "ColorFromHSV".}
+  ## Get a Color from HSV values, hue [0..360], saturation/value [0..1]
+proc colorTint*(color: Color, tint: Color): Color {.importc: "ColorTint".}
+  ## Get color multiplied with another color
+proc colorBrightness*(color: Color, factor: float32): Color {.importc: "ColorBrightness".}
+  ## Get color with brightness correction, brightness factor goes from -1.0f to 1.0f
+proc colorContrast*(color: Color, contrast: float32): Color {.importc: "ColorContrast".}
+  ## Get color with contrast correction, contrast values between -1.0f and 1.0f
+proc colorAlpha*(color: Color, alpha: float32): Color {.importc: "ColorAlpha".}
+  ## Get color with alpha applied, alpha goes from 0.0f to 1.0f
+proc colorAlphaBlend*(dst: Color, src: Color, tint: Color): Color {.importc: "ColorAlphaBlend".}
+  ## Get src alpha-blended into dst color with tint
+proc getPixelDataSize*(width: int32, height: int32, format: PixelFormat): int32 {.importc: "GetPixelDataSize".}
+  ## Get pixel data size in bytes for certain format
+proc isFontReady*(font: Font): bool {.importc: "IsFontReady".}
+  ## Check if a font is ready
+proc measureText*(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
+  ## Measure string size for Font
+proc getGlyphIndex*(font: Font, codepoint: Rune): int32 {.importc: "GetGlyphIndex".}
+  ## Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
+proc getGlyphInfo*(font: Font, codepoint: Rune): GlyphInfo {.importc: "GetGlyphInfo".}
+  ## Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
+proc getGlyphAtlasRec*(font: Font, codepoint: Rune): Rectangle {.importc: "GetGlyphAtlasRec".}
+  ## Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
+proc textToFloat*(text: cstring): float32 {.importc: "TextToFloat".}
+  ## Get float value from text (negative values not supported)
+proc isModelReady*(model: Model): bool {.importc: "IsModelReady".}
+  ## Check if a model is ready
+proc checkCollisionSpheres*(center1: Vector3, radius1: float32, center2: Vector3, radius2: float32): bool {.importc: "CheckCollisionSpheres".}
+  ## Check collision between two spheres
+proc checkCollisionBoxes*(box1: BoundingBox, box2: BoundingBox): bool {.importc: "CheckCollisionBoxes".}
+  ## Check collision between two bounding boxes
+proc checkCollisionBoxSphere*(box: BoundingBox, center: Vector3, radius: float32): bool {.importc: "CheckCollisionBoxSphere".}
+  ## Check collision between box and sphere
+proc getRayCollisionSphere*(ray: Ray, center: Vector3, radius: float32): RayCollision {.importc: "GetRayCollisionSphere".}
+  ## Get collision info between ray and sphere
+proc getRayCollisionBox*(ray: Ray, box: BoundingBox): RayCollision {.importc: "GetRayCollisionBox".}
+  ## Get collision info between ray and box
+proc getRayCollisionMesh*(ray: Ray, mesh: Mesh, transform: Matrix): RayCollision {.importc: "GetRayCollisionMesh".}
+  ## Get collision info between ray and mesh
+proc getRayCollisionTriangle*(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3): RayCollision {.importc: "GetRayCollisionTriangle".}
+  ## Get collision info between ray and triangle
+proc getRayCollisionQuad*(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): RayCollision {.importc: "GetRayCollisionQuad".}
+  ## Get collision info between ray and quad
+proc isAudioDeviceReady*(): bool {.importc: "IsAudioDeviceReady".}
+  ## Check if audio device has been initialized successfully
+proc isWaveReady*(wave: Wave): bool {.importc: "IsWaveReady".}
+  ## Checks if wave data is ready
+proc isSoundPlaying*(sound: Sound): bool {.importc: "IsSoundPlaying".}
+  ## Check if a sound is currently playing
+proc waveCopy*(wave: Wave): Wave {.importc: "WaveCopy".}
+  ## Copy a wave to a new wave
+proc waveCrop*(wave: var Wave, initSample: int32, finalSample: int32) {.importc: "WaveCrop".}
+  ## Crop a wave to defined samples range
+proc waveFormat*(wave: var Wave, sampleRate: int32, sampleSize: int32, channels: int32) {.importc: "WaveFormat".}
+  ## Convert wave data to desired format
+proc isMusicReady*(music: Music): bool {.importc: "IsMusicReady".}
+  ## Checks if a music stream is ready
+proc isMusicStreamPlaying*(music: Music): bool {.importc: "IsMusicStreamPlaying".}
+  ## Check if music is playing
+proc getMusicTimeLength*(music: Music): float32 {.importc: "GetMusicTimeLength".}
+  ## Get music time length (in seconds)
+proc isAudioStreamReady*(stream: AudioStream): bool {.importc: "IsAudioStreamReady".}
+  ## Checks if an audio stream is ready
+proc isAudioStreamPlaying*(stream: AudioStream): bool {.importc: "IsAudioStreamPlaying".}
+  ## Check if audio stream is playing
+{.pop.}
+
 
 type
   WeakImage* = distinct Image
