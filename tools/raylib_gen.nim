@@ -759,88 +759,109 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         ident obj
       lit "\n"
     lit middle
-    # Generate functions
-    lit "\n{.push callconv: cdecl, header: \"raylib.h\".}"
-    for fnc in items(t.functions):
-      if fnc.name in excludedFuncs: continue
-      if fnc.name in nosideeffectsFuncs:
-        lit "\nfunc "
-      else:
-        lit "\nproc "
-      var fncName = fnc.name # Follow Nim's naming convention for proc names.
-      if fncName notin ["DrawRectangleGradientV", "SetShaderValueV", "ColorToHSV", "ColorFromHSV",
-          "CheckCollisionCircleRec", "CheckCollisionPointRec"] and
-          (fncName.endsWith("V") and fnc.returnType != "Vector2" or
-          fncName.endsWith("Rec") and fnc.returnType != "Rectangle") or
-          fncName.endsWith("Ex") or fncName.endsWith("Pro"):
-        fncName.removeSuffix("V")
-        fncName.removeSuffix("Rec")
-        fncName.removeSuffix("Ex")
-        fncName.removeSuffix("Pro")
-      fncName = uncapitalizeAscii(fncName)
-      ident fncName
-      let isPrivate = fnc.name in privateFuncs
-      let isAlloc = fnc.name in allocFuncs
-      if isPrivate:
-        lit "Priv("
-      elif isAlloc:
-        lit "("
-      else:
-        lit "*("
-      var hasVarargs = false
-      for i, param in fnc.params.pairs:
-        if param.name == "args" and param.`type` == "...": # , ...) {
-          hasVarargs = true
+
+    proc generateProcs(holder: seq[FunctionInfo]) =
+      for fnc in items(holder):
+        if fnc.name in excludedFuncs: continue
+        if fnc.name in nosideeffectsFuncs:
+          lit "\nfunc "
         else:
-          if i > 0: lit ", "
-          ident param.name
+          lit "\nproc "
+        var fncName = fnc.name # Follow Nim's naming convention for proc names.
+        if fncName notin ["DrawRectangleGradientV", "SetShaderValueV", "ColorToHSV", "ColorFromHSV",
+            "CheckCollisionCircleRec", "CheckCollisionPointRec"] and
+            (fncName.endsWith("V") and fnc.returnType != "Vector2" or
+            fncName.endsWith("Rec") and fnc.returnType != "Rectangle") or
+            fncName.endsWith("Ex") or fncName.endsWith("Pro"):
+          fncName.removeSuffix("V")
+          fncName.removeSuffix("Rec")
+          fncName.removeSuffix("Ex")
+          fncName.removeSuffix("Pro")
+        fncName = uncapitalizeAscii(fncName)
+        ident fncName
+        let isPrivate = fnc.name in privateFuncs
+        let isAlloc = fnc.name in allocFuncs
+        if isPrivate:
+          lit "Priv("
+        elif isAlloc:
+          lit "("
+        else:
+          lit "*("
+        var hasVarargs = false
+        for i, param in fnc.params.pairs:
+          if param.name == "args" and param.`type` == "...": # , ...) {
+            hasVarargs = true
+          else:
+            if i > 0: lit ", "
+            ident param.name
+            lit ": "
+            block outer:
+              for j, (name, param1) in enumInFuncParams.pairs:
+                if name == fnc.name and param1 == param.name:
+                  lit enumInFuncs[j]
+                  break outer
+              let many = (fnc.name, param.name) != ("LoadImageAnim", "frames") and
+                  isPlural(param.name) or (fnc.name, param.name) == ("ImageKernelConvolution", "kernel")
+              const
+                replacements = [
+                  ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[$1]"),
+                  ("CheckCollisionLines", "collisionPoint", "out $1"),
+                  ("LoadImageAnim", "frames", "out $1"),
+                  ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),
+                  # ("ImageKernelConvolution", "kernel", "ptr UncheckedArray[float32]")
+                ]
+              let pat = getReplacement(fnc.name, param.name, replacements)
+              var baseKind = ""
+              let kind = convertType(param.`type`, pat, many, not isPrivate or fnc.name == "ImageKernelConvolution", baseKind)
+              lit kind
+        lit ")"
+        if fnc.returnType != "void":
           lit ": "
           block outer:
-            for j, (name, param1) in enumInFuncParams.pairs:
-              if name == fnc.name and param1 == param.name:
-                lit enumInFuncs[j]
+            for (name, idx) in enumInFuncReturn.items:
+              if name == fnc.name:
+                lit enumInFuncs[idx]
                 break outer
-            let many = (fnc.name, param.name) != ("LoadImageAnim", "frames") and
-                isPlural(param.name) or (fnc.name, param.name) == ("ImageKernelConvolution", "kernel")
-            const
-              replacements = [
-                ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[$1]"),
-                ("CheckCollisionLines", "collisionPoint", "out $1"),
-                ("LoadImageAnim", "frames", "out $1"),
-                ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),
-                # ("ImageKernelConvolution", "kernel", "ptr UncheckedArray[float32]")
-              ]
-            let pat = getReplacement(fnc.name, param.name, replacements)
+            let many = isPlural(fnc.name) or fnc.name == "LoadImagePalette"
             var baseKind = ""
-            let kind = convertType(param.`type`, pat, many, not isPrivate or fnc.name == "ImageKernelConvolution", baseKind)
+            let kind = convertType(fnc.returnType, "", many, not isPrivate, baseKind)
             lit kind
-      lit ")"
-      if fnc.returnType != "void":
-        lit ": "
-        block outer:
-          for (name, idx) in enumInFuncReturn.items:
-            if name == fnc.name:
-              lit enumInFuncs[idx]
-              break outer
-          let many = isPlural(fnc.name) or fnc.name == "LoadImagePalette"
-          var baseKind = ""
-          let kind = convertType(fnc.returnType, "", many, not isPrivate, baseKind)
-          lit kind
-      lit " {.importc: "
-      lit "\""
-      if fnc.name in ["ShowCursor", "CloseWindow", "LoadImage", "DrawText", "DrawTextEx"]:
-        lit "rl" & fnc.name
-      else: ident fnc.name
-      lit "\""
-      if hasVarargs:
-        lit ", varargs"
-      lit ".}"
-      if not (isAlloc or isPrivate) and fnc.description != "":
-        scope:
-          spaces
-          lit "## "
-          lit fnc.description
+        lit " {.importc: "
+        lit "\""
+        if fnc.name in ["ShowCursor", "CloseWindow", "LoadImage", "DrawText", "DrawTextEx"]:
+          lit "rl" & fnc.name
+        else: ident fnc.name
+        lit "\""
+        if hasVarargs:
+          lit ", varargs"
+        lit ".}"
+        if not (isAlloc or isPrivate) and fnc.description != "":
+          scope:
+            spaces
+            lit "## "
+            lit fnc.description
+
+    # Seperate funcs and procs
+    var
+      withSideEffect: seq[FunctionInfo] = @[]
+      withoutSideEffect: seq[FunctionInfo] = @[]
+    for fnc in t.functions:
+      if fnc.name in excludedFuncs: continue
+      elif fnc.name in nosideeffectsFuncs: withoutSideEffect.add fnc
+      else: withSideEffect.add fnc
+
+    # Generate procs
+    lit "\n{.push callconv: cdecl, header: \"raylib.h\", sideEffect.}"
+    generateProcs withSideEffect
     lit "\n{.pop.}\n"
+
+    lit "\n{.push callconv: cdecl, header: \"raylib.h\", noSideEffect.}"
+    generateProcs withoutSideEffect
+    lit "\n{.pop.}\n"
+
+
+
+
     lit readFile("raylib_types.nim")
     lit "\n"
     for obj, field, kind in procProperties.items:
