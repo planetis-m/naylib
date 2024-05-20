@@ -2,7 +2,7 @@ from std/strutils import addf, toHex
 from std/unicode import Rune
 from std/syncio import writeFile
 import std/[assertions, paths]
-const raylibDir = currentSourcePath().Path.parentDir / Path"raylib/src"
+const raylibDir = Path"/home/antonisg/Code/raydev/naylib/src/raylib"
 
 {.passC: "-I" & raylibDir.string.}
 {.passC: "-I" & string(raylibDir / Path"external/glfw/include").}

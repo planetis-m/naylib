@@ -3,12 +3,22 @@ import std/os
 const
   ProjectUrl = "https://github.com/planetis-m/naylib"
   PkgDir = thisDir().quoteShell
-  RaylibDir = PkgDir / "src/raylib"
+  RaylibDir = PkgDir / "raylib"
+  RaylibGit = "https://github.com/raysan5/raylib.git"
+  RayLatestCommit = "3d70d6179c4809d8b7e92215358394e3584bca79"
   ApiDir = PkgDir / "api"
   DocsDir = PkgDir / "docs"
 
 template `/.`(x: string): string =
   (when defined(posix): "./" & x else: x)
+
+proc fetchLatestRaylib =
+  if not dirExists(RaylibDir):
+    exec "git clone --depth 1 " & RaylibGit & " " & RaylibDir
+  withDir(RaylibDir):
+    exec "git switch -"
+    exec "git fetch --depth 100 origin " & RayLatestCommit
+    exec "git checkout " & RayLatestCommit
 
 proc genWrapper(lib: string) =
   let src = lib & "_gen.nim"
@@ -42,6 +52,17 @@ task wrap, "Produce all raylib nim wrappers":
   # wrapRaylib("raymath", "RMAPI")
   genWrapper("rlgl")
   # wrapRaylib("rlgl", "")
+
+task update, "Update raylib":
+  cpDir(RaylibDir / "src", PkgDir / "src/raylib")
+  withDir(PkgDir / "src/raylib"):
+    # exec "git rev-parse HEAD"
+    let patchPath = PkgDir / "mangle_names.patch"
+    exec "git apply --directory=src/raylib " & patchPath
+
+task init, "Init the raylib git directory":
+  fetchLatestRaylib()
+  updateTask()
 
 task docs, "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html

@@ -1,7 +1,7 @@
-diff --git a/src/external/jar_xm.h b/src/external/jar_xm.h
+diff --git a/external/jar_xm.h b/external/jar_xm.h
 index 4a1bfbf..a9dcc5c 100644
---- a/src/external/jar_xm.h
-+++ b/src/external/jar_xm.h
+--- a/external/jar_xm.h
++++ b/external/jar_xm.h
 @@ -2373,23 +2373,23 @@ void jar_xm_debug(jar_xm_context_t *ctx) {
      int x = 0, y = 0;
  
@@ -110,10 +110,10 @@ index 4a1bfbf..a9dcc5c 100644
                  x += 9 * size;
              };
          };
-diff --git a/src/platforms/rcore_android.c b/src/platforms/rcore_android.c
+diff --git a/platforms/rcore_android.c b/platforms/rcore_android.c
 index d8568d9..5f38019 100644
---- a/src/platforms/rcore_android.c
-+++ b/src/platforms/rcore_android.c
+--- a/platforms/rcore_android.c
++++ b/platforms/rcore_android.c
 @@ -515,7 +515,7 @@ const char *GetClipboardText(void)
  }
  
@@ -152,10 +152,10 @@ index d8568d9..5f38019 100644
                      #endif
                  #endif
  
-diff --git a/src/platforms/rcore_desktop.c b/src/platforms/rcore_desktop.c
+diff --git a/platforms/rcore_desktop.c b/platforms/rcore_desktop.c
 index f087741..07dd073 100644
---- a/src/platforms/rcore_desktop.c
-+++ b/src/platforms/rcore_desktop.c
+--- a/platforms/rcore_desktop.c
++++ b/platforms/rcore_desktop.c
 @@ -951,7 +951,7 @@ const char *GetClipboardText(void)
  }
  
@@ -165,10 +165,10 @@ index f087741..07dd073 100644
  {
      glfwSetInputMode(platform.handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
      CORE.Input.Mouse.cursorHidden = false;
-diff --git a/src/platforms/rcore_desktop_sdl.c b/src/platforms/rcore_desktop_sdl.c
+diff --git a/platforms/rcore_desktop_sdl.c b/platforms/rcore_desktop_sdl.c
 index 9dfdd53..92ff00a 100644
---- a/src/platforms/rcore_desktop_sdl.c
-+++ b/src/platforms/rcore_desktop_sdl.c
+--- a/platforms/rcore_desktop_sdl.c
++++ b/platforms/rcore_desktop_sdl.c
 @@ -864,7 +864,7 @@ const char *GetClipboardText(void)
  }
  
@@ -178,10 +178,10 @@ index 9dfdd53..92ff00a 100644
  {
      SDL_ShowCursor(SDL_ENABLE);
  
-diff --git a/src/platforms/rcore_drm.c b/src/platforms/rcore_drm.c
+diff --git a/platforms/rcore_drm.c b/platforms/rcore_drm.c
 index a07ba27..4b08806 100644
---- a/src/platforms/rcore_drm.c
-+++ b/src/platforms/rcore_drm.c
+--- a/platforms/rcore_drm.c
++++ b/platforms/rcore_drm.c
 @@ -119,7 +119,7 @@ typedef struct {
      char currentButtonStateEvdev[MAX_MOUSE_BUTTONS]; // Holds the new mouse state for the next polling event to grab
      bool cursorRelative;                // Relative cursor mode
@@ -200,10 +200,10 @@ index a07ba27..4b08806 100644
  {
      CORE.Input.Mouse.cursorHidden = false;
  }
-diff --git a/src/platforms/rcore_template.c b/src/platforms/rcore_template.c
+diff --git a/platforms/rcore_template.c b/platforms/rcore_template.c
 index 7a48c46..65bf34d 100644
---- a/src/platforms/rcore_template.c
-+++ b/src/platforms/rcore_template.c
+--- a/platforms/rcore_template.c
++++ b/platforms/rcore_template.c
 @@ -293,7 +293,7 @@ const char *GetClipboardText(void)
  }
  
@@ -213,10 +213,10 @@ index 7a48c46..65bf34d 100644
  {
      CORE.Input.Mouse.cursorHidden = false;
  }
-diff --git a/src/platforms/rcore_web.c b/src/platforms/rcore_web.c
+diff --git a/platforms/rcore_web.c b/platforms/rcore_web.c
 index 9328b8c..1ddcbcb 100644
---- a/src/platforms/rcore_web.c
-+++ b/src/platforms/rcore_web.c
+--- a/platforms/rcore_web.c
++++ b/platforms/rcore_web.c
 @@ -765,7 +765,7 @@ const char *GetClipboardText(void)
  }
  
@@ -226,10 +226,10 @@ index 9328b8c..1ddcbcb 100644
  {
      if (CORE.Input.Mouse.cursorHidden)
      {
-diff --git a/src/raylib.h b/src/raylib.h
+diff --git a/raylib.h b/raylib.h
 index 035f6f2..edb7d85 100644
---- a/src/raylib.h
-+++ b/src/raylib.h
+--- a/raylib.h
++++ b/raylib.h
 @@ -246,12 +246,12 @@ typedef struct Color {
  } Color;
  
@@ -445,10 +445,10 @@ index 035f6f2..edb7d85 100644
  
  // Mesh management functions
  RLAPI void UploadMesh(Mesh *mesh, bool dynamic);                                            // Upload mesh vertex data in GPU and provide VAO/VBO ids
-diff --git a/src/rcore.c b/src/rcore.c
+diff --git a/rcore.c b/rcore.c
 index b229589..1f09fb4 100644
---- a/src/rcore.c
-+++ b/src/rcore.c
+--- a/rcore.c
++++ b/rcore.c
 @@ -638,16 +638,16 @@ void InitWindow(int width, int height, const char *title)
      #if defined(SUPPORT_MODULE_RSHAPES)
      // Set font white rectangle for shapes drawing, so shapes and text can be batched together
@@ -496,10 +496,10 @@ index b229589..1f09fb4 100644
          }
      #endif
  
-diff --git a/src/rmodels.c b/src/rmodels.c
+diff --git a/rmodels.c b/rmodels.c
 index 27c19a3..69178de 100644
---- a/src/rmodels.c
-+++ b/src/rmodels.c
+--- a/rmodels.c
++++ b/rmodels.c
 @@ -3580,13 +3580,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
  // Draw a billboard
  void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float size, Color tint)
@@ -534,10 +534,10 @@ index 27c19a3..69178de 100644
          }
      }
      else if (cgltfImage->buffer_view->buffer->data != NULL)    // Check if image is provided as data buffer
-diff --git a/src/rshapes.c b/src/rshapes.c
+diff --git a/rshapes.c b/rshapes.c
 index 80df64e..97e7904 100644
---- a/src/rshapes.c
-+++ b/src/rshapes.c
+--- a/rshapes.c
++++ b/rshapes.c
 @@ -80,7 +80,7 @@
  // Global Variables Definition
  //----------------------------------------------------------------------------------
@@ -808,10 +808,10 @@ index 80df64e..97e7904 100644
  
      float left = (rec1.x > rec2.x)? rec1.x : rec2.x;
      float right1 = rec1.x + rec1.width;
-diff --git a/src/rtext.c b/src/rtext.c
+diff --git a/rtext.c b/rtext.c
 index b5ba17e..0eb3746 100644
---- a/src/rtext.c
-+++ b/src/rtext.c
+--- a/rtext.c
++++ b/rtext.c
 @@ -260,7 +260,7 @@ extern void LoadFontDefault(void)
      // Allocate space for our characters info data
      // NOTE: This memory must be freed at end! --> Done by CloseWindow()
@@ -994,10 +994,10 @@ index b5ba17e..0eb3746 100644
  
              // Save data properly in sprite font
              font.glyphs[i].value = charId;
-diff --git a/src/rtextures.c b/src/rtextures.c
+diff --git a/rtextures.c b/rtextures.c
 index 47ff83f..4ef33b9 100644
---- a/src/rtextures.c
-+++ b/src/rtextures.c
+--- a/rtextures.c
++++ b/rtextures.c
 @@ -271,7 +271,7 @@ static Vector4 *LoadImageDataNormalized(Image image);       // Load pixel data f
  //----------------------------------------------------------------------------------
  

@@ -21,21 +21,13 @@ from std/parseutils import skipUntil
 
 const PkgDir = thisDir().quoteShell
 
-before install:
-  # https://stackoverflow.com/a/27415757
-  exec "git submodule deinit -f ."
-  exec "git submodule update --init"
-  withDir(PkgDir / "src/raylib"):
-    # exec "git rev-parse HEAD"
-    let patchPath = PkgDir / "mangle_names.patch"
-    exec "git apply " & patchPath
-
 after install:
   withDir(PkgDir / "src"):
-    var src = readFile("raylib.nim")
-    let first = find(src, "raylibDir")
-    let skipped = skipUntil(src, '\n', start = first)
-    let dir = when defined(windows): "(r\"" & (PkgDir / "src/raylib/src") & "\")"
-              else: "\"" & (PkgDir / "src/raylib/src") & "\""
-    src[first..first+skipped-1] = "raylibDir = Path" & dir
-    writeFile("raylib.nim", src)
+    var file = readFile("raylib.nim")
+    let first = find(file, "raylibDir")
+    let skipped = skipUntil(file, '\n', start = first)
+    let dir = PkgDir / "src/raylib"
+    let str = when defined(windows): "(r\"" & dir & "\")"
+              else: "\"" & dir & "\""
+    file[first..first+skipped-1] = "raylibDir = Path" & str
+    writeFile("raylib.nim", file)
