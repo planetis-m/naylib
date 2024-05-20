@@ -1,4 +1,4 @@
-import eminim, std/[algorithm, strscans, strformat, streams]
+import eminim, std/[algorithm, strscans, streams, json]
 import strutils except indent
 
 const
@@ -31,10 +31,23 @@ proc isKeyword*(s: string): bool {.inline.} =
 ## The raylib_parser produces JSON with the following structure.
 ## The type definitions are used by the deserializer to process the file.
 type
-  Topmost* = object
+  TopLevel* = object
+    # defines*: seq[DefineInfo]
     structs*: seq[StructInfo]
+    callbacks*: seq[FunctionInfo]
+    aliases*: seq[AliasInfo]
     enums*: seq[EnumInfo]
     functions*: seq[FunctionInfo]
+
+  DefineType* = enum
+    UNKNOWN, MACRO, GUARD, INT, LONG, FLOAT, FLOAT_MATH, DOUBLE, CHAR, STRING, COLOR
+
+  DefineInfo* = object
+    name*: string
+    `type`*: DefineType
+    value*: JsonNode
+    description*: string
+    isHex*: bool
 
   FunctionInfo* = object
     name*, description*, returnType*: string
@@ -59,11 +72,16 @@ type
     value*: int
     description*: string
 
-proc parseApi*(fname: string): Topmost =
+  AliasInfo* = object
+    `type`*, name*, description*: string
+
+proc parseApi*(fname: string): TopLevel =
   var inp: FileStream
   try:
     inp = openFileStream(fname)
-    result = inp.jsonTo(Topmost)
+    result = inp.jsonTo(TopLevel)
+    for enm in mitems(result.enums):
+      sort(enm.values, proc (x, y: ValueInfo): int = cmp(x.value, y.value))
   finally:
     if inp != nil: inp.close()
 
@@ -77,22 +95,33 @@ proc toNimType*(x: string): string =
   ## Also used to make replacements.
   case x
   of "float":
-    "float32"
+    result = "float32"
   of "double":
-    "float"
+    result = "float"
   of "short":
-    "int16"
+    result = "int16"
   of "long":
-    "int64"
-  of "rAudioBuffer":
-    "RAudioBuffer"
+    result = "int64"
+  of "int":
+    result = "int32"
   of "float3":
-    "Float3"
+    result = "Float3"
   of "float16":
-    "Float16"
-  else: x
+    result = "Float16"
+  else:
+    result = x
+    removePrefix(result, "rl")
 
-proc convertType*(s: string, pattern: string, many, isVar: bool): string =
+proc getReplacement*(x, y: string, replacements: openarray[(string, string, string)]): string =
+  # Manual replacements for some fields
+  result = ""
+  for a, b, pattern in replacements.items:
+    if x == a and y == b:
+      return pattern
+
+proc camelCaseAscii*(s: string): string
+
+proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var string): string =
   ## Converts a C type to the equivalent Nim type.
   ## Should work with function parameters, return, and struct fields types.
   ## If a `pattern` is provided, it substitutes the found base type and returns it.
@@ -105,29 +134,40 @@ proc convertType*(s: string, pattern: string, many, isVar: bool): string =
   var isUnsigned = false
   var isSizeT = false
   var isSigned = false
-  for (token, isSep) in tokenize(s):
+  var isArray = false
+  for token, isSep in tokenize(s):
     if isSep: continue
     case token
-    of "const":
-      discard
-    of "void":
-      isVoid = true
-    of "*":
-      isPointer = true
-    of "**":
-      isDoublePointer = true
-    of "char":
-      isChar = true
-    of "unsigned":
-      isUnsigned = true
-    of "size_t":
-      isSizeT = true
-    of "signed":
-      isSigned = true
-    of "int":
-      discard
+    of "const": discard
+    of "void": isVoid = true
+    of "*": isPointer = true
+    of "**": isDoublePointer = true
+    of "char": isChar = true
+    of "unsigned": isUnsigned = true
+    of "size_t": isSizeT = true
+    of "signed": isSigned = true
+    of "int": discard
     else:
-      result = toNimType(token)
+      for token, isSep in tokenize(token, {'*'}):
+        case token
+        of "*": isPointer = true
+        of "**": isDoublePointer = true
+        else:
+          var len = 0
+          var constant = ""
+          if scanf(token, "$w[$i]$.", result, len):
+            isArray = true
+            var kind = toNimType(result)
+            if isUnsigned: kind = "u" & kind
+            result = "array[" & $len & ", " & kind & "]"
+          elif scanf(token, "$w[$w]$.", result, constant):
+            isArray = true
+            removePrefix(constant, "RL_")
+            constant = camelCaseAscii(constant)
+            var kind = toNimType(result)
+            if isUnsigned: kind = "u" & kind
+            result = "array[" & constant & ", " & kind & "]"
+          else: result = toNimType(token)
   if result == "": result = "int32"
   if isSizeT:
     result = "csize_t"
@@ -137,7 +177,9 @@ proc convertType*(s: string, pattern: string, many, isVar: bool): string =
     else:
       result = "char"
   elif isUnsigned:
-    result = "u" & result
+    if not isArray:
+      result = "u" & result
+  baseKind = result
   if pattern != "":
     result = pattern % result
   elif isChar and not isUnsigned:
@@ -167,21 +209,6 @@ proc isPlural*(x: string): bool {.inline.} =
   let x = strip(x, false, chars = Digits)
   x.endsWith("es") or (not x.endsWith("ss") and x.endsWith('s')) or
       endsWith(x.normalize, "data")
-
-proc transFieldName*(x: string): (string, string) =
-  ## Returns the identifier name(s) and if an array is detected, separated.
-  var name: string
-  var len: int
-  # In C array definition follows the identifier, `name[4]`.
-  if scanf(x, "$w[$i]$.", name, len):
-    result = (name, &"array[{len}, $1]")
-  else:
-    if validIdentifier(x):
-      result = (x, "")
-    else:
-      # Multiple identifiers in the same line.
-      # Make sure all but the last one, are exported.
-      result = (replace(x, ",", "*,"), "")
 
 proc camelCaseAscii*(s: string): string =
   ## Converts snake_case to CamelCase

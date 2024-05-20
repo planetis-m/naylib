@@ -1,4 +1,84 @@
 {
+  "defines": [
+    {
+      "name": "RAYMATH_H",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "RMAPI",
+      "type": "UNKNOWN",
+      "value": "__declspec(dllexport) extern inline",
+      "description": "We are building raylib as a Win32 shared library (.dll)."
+    },
+    {
+      "name": "PI",
+      "type": "FLOAT",
+      "value": 3.14159265358979323846,
+      "description": ""
+    },
+    {
+      "name": "EPSILON",
+      "type": "FLOAT",
+      "value": 0.000001,
+      "description": ""
+    },
+    {
+      "name": "DEG2RAD",
+      "type": "FLOAT_MATH",
+      "value": "(PI/180.0f)",
+      "description": ""
+    },
+    {
+      "name": "RAD2DEG",
+      "type": "FLOAT_MATH",
+      "value": "(180.0f/PI)",
+      "description": ""
+    },
+    {
+      "name": "MatrixToFloat(mat)",
+      "type": "MACRO",
+      "value": "(MatrixToFloatV(mat).v)",
+      "description": ""
+    },
+    {
+      "name": "Vector3ToFloat(vec)",
+      "type": "MACRO",
+      "value": "(Vector3ToFloatV(vec).v)",
+      "description": ""
+    },
+    {
+      "name": "RL_VECTOR2_TYPE",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "RL_VECTOR3_TYPE",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "RL_VECTOR4_TYPE",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "RL_QUATERNION_TYPE",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "RL_MATRIX_TYPE",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    }
+  ],
   "structs": [
     {
       "name": "Vector2",
@@ -69,22 +149,82 @@
       "fields": [
         {
           "type": "float",
-          "name": "m0, m4, m8, m12",
+          "name": "m0",
           "description": "Matrix first row (4 components)"
         },
         {
           "type": "float",
-          "name": "m1, m5, m9, m13",
+          "name": "m4",
+          "description": "Matrix first row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m8",
+          "description": "Matrix first row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m12",
+          "description": "Matrix first row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m1",
           "description": "Matrix second row (4 components)"
         },
         {
           "type": "float",
-          "name": "m2, m6, m10, m14",
+          "name": "m5",
+          "description": "Matrix second row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m9",
+          "description": "Matrix second row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m13",
+          "description": "Matrix second row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m2",
           "description": "Matrix third row (4 components)"
         },
         {
           "type": "float",
-          "name": "m3, m7, m11, m15",
+          "name": "m6",
+          "description": "Matrix third row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m10",
+          "description": "Matrix third row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m14",
+          "description": "Matrix third row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m3",
+          "description": "Matrix fourth row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m7",
+          "description": "Matrix fourth row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m11",
+          "description": "Matrix fourth row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m15",
           "description": "Matrix fourth row (4 components)"
         }
       ]
@@ -94,8 +234,8 @@
       "description": "NOTE: Helper types to be used instead of array return types for *ToFloat functions",
       "fields": [
         {
-          "type": "float",
-          "name": "v[3]",
+          "type": "float[3]",
+          "name": "v",
           "description": ""
         }
       ]
@@ -105,14 +245,23 @@
       "description": "",
       "fields": [
         {
-          "type": "float",
-          "name": "v[16]",
+          "type": "float[16]",
+          "name": "v",
           "description": ""
         }
       ]
     }
   ],
+  "aliases": [
+    {
+      "type": "Vector4",
+      "name": "Quaternion",
+      "description": "Quaternion type"
+    }
+  ],
   "enums": [
+  ],
+  "callbacks": [
   ],
   "functions": [
     {
@@ -196,6 +345,40 @@
         {
           "type": "float",
           "name": "outputEnd"
+        }
+      ]
+    },
+    {
+      "name": "Wrap",
+      "description": "",
+      "returnType": "float",
+      "params": [
+        {
+          "type": "float",
+          "name": "value"
+        },
+        {
+          "type": "float",
+          "name": "min"
+        },
+        {
+          "type": "float",
+          "name": "max"
+        }
+      ]
+    },
+    {
+      "name": "FloatEquals",
+      "description": "",
+      "returnType": "int",
+      "params": [
+        {
+          "type": "float",
+          "name": "x"
+        },
+        {
+          "type": "float",
+          "name": "y"
         }
       ]
     },
@@ -322,6 +505,21 @@
       ]
     },
     {
+      "name": "Vector2DistanceSqr",
+      "description": "",
+      "returnType": "float",
+      "params": [
+        {
+          "type": "Vector2",
+          "name": "v1"
+        },
+        {
+          "type": "Vector2",
+          "name": "v2"
+        }
+      ]
+    },
+    {
       "name": "Vector2Angle",
       "description": "",
       "returnType": "float",
@@ -404,6 +602,21 @@
       ]
     },
     {
+      "name": "Vector2Transform",
+      "description": "",
+      "returnType": "Vector2",
+      "params": [
+        {
+          "type": "Vector2",
+          "name": "v"
+        },
+        {
+          "type": "Matrix",
+          "name": "mat"
+        }
+      ]
+    },
+    {
       "name": "Vector2Lerp",
       "description": "",
       "returnType": "Vector2",
@@ -468,6 +681,70 @@
         {
           "type": "float",
           "name": "maxDistance"
+        }
+      ]
+    },
+    {
+      "name": "Vector2Invert",
+      "description": "",
+      "returnType": "Vector2",
+      "params": [
+        {
+          "type": "Vector2",
+          "name": "v"
+        }
+      ]
+    },
+    {
+      "name": "Vector2Clamp",
+      "description": "",
+      "returnType": "Vector2",
+      "params": [
+        {
+          "type": "Vector2",
+          "name": "v"
+        },
+        {
+          "type": "Vector2",
+          "name": "min"
+        },
+        {
+          "type": "Vector2",
+          "name": "max"
+        }
+      ]
+    },
+    {
+      "name": "Vector2ClampValue",
+      "description": "",
+      "returnType": "Vector2",
+      "params": [
+        {
+          "type": "Vector2",
+          "name": "v"
+        },
+        {
+          "type": "float",
+          "name": "min"
+        },
+        {
+          "type": "float",
+          "name": "max"
+        }
+      ]
+    },
+    {
+      "name": "Vector2Equals",
+      "description": "",
+      "returnType": "int",
+      "params": [
+        {
+          "type": "Vector2",
+          "name": "p"
+        },
+        {
+          "type": "Vector2",
+          "name": "q"
         }
       ]
     },
@@ -650,6 +927,21 @@
       ]
     },
     {
+      "name": "Vector3DistanceSqr",
+      "description": "",
+      "returnType": "float",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "v1"
+        },
+        {
+          "type": "Vector3",
+          "name": "v2"
+        }
+      ]
+    },
+    {
       "name": "Vector3Angle",
       "description": "",
       "returnType": "float",
@@ -743,6 +1035,25 @@
         {
           "type": "Quaternion",
           "name": "q"
+        }
+      ]
+    },
+    {
+      "name": "Vector3RotateByAxisAngle",
+      "description": "",
+      "returnType": "Vector3",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "v"
+        },
+        {
+          "type": "Vector3",
+          "name": "axis"
+        },
+        {
+          "type": "float",
+          "name": "angle"
         }
       ]
     },
@@ -864,6 +1175,89 @@
       ]
     },
     {
+      "name": "Vector3Invert",
+      "description": "",
+      "returnType": "Vector3",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "v"
+        }
+      ]
+    },
+    {
+      "name": "Vector3Clamp",
+      "description": "",
+      "returnType": "Vector3",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "v"
+        },
+        {
+          "type": "Vector3",
+          "name": "min"
+        },
+        {
+          "type": "Vector3",
+          "name": "max"
+        }
+      ]
+    },
+    {
+      "name": "Vector3ClampValue",
+      "description": "",
+      "returnType": "Vector3",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "v"
+        },
+        {
+          "type": "float",
+          "name": "min"
+        },
+        {
+          "type": "float",
+          "name": "max"
+        }
+      ]
+    },
+    {
+      "name": "Vector3Equals",
+      "description": "",
+      "returnType": "int",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "p"
+        },
+        {
+          "type": "Vector3",
+          "name": "q"
+        }
+      ]
+    },
+    {
+      "name": "Vector3Refract",
+      "description": "",
+      "returnType": "Vector3",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "v"
+        },
+        {
+          "type": "Vector3",
+          "name": "n"
+        },
+        {
+          "type": "float",
+          "name": "r"
+        }
+      ]
+    },
+    {
       "name": "MatrixDeterminant",
       "description": "",
       "returnType": "float",
@@ -898,17 +1292,6 @@
     },
     {
       "name": "MatrixInvert",
-      "description": "",
-      "returnType": "Matrix",
-      "params": [
-        {
-          "type": "Matrix",
-          "name": "mat"
-        }
-      ]
-    },
-    {
-      "name": "MatrixNormalize",
       "description": "",
       "returnType": "Matrix",
       "params": [
@@ -1042,7 +1425,7 @@
       "params": [
         {
           "type": "Vector3",
-          "name": "ang"
+          "name": "angle"
         }
       ]
     },
@@ -1053,7 +1436,7 @@
       "params": [
         {
           "type": "Vector3",
-          "name": "ang"
+          "name": "angle"
         }
       ]
     },
@@ -1504,6 +1887,21 @@
         {
           "type": "Matrix",
           "name": "mat"
+        }
+      ]
+    },
+    {
+      "name": "QuaternionEquals",
+      "description": "",
+      "returnType": "int",
+      "params": [
+        {
+          "type": "Quaternion",
+          "name": "p"
+        },
+        {
+          "type": "Quaternion",
+          "name": "q"
         }
       ]
     }
