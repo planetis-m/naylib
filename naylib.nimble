@@ -1,6 +1,6 @@
 # Package
 
-version     = "5.1.1"
+version     = "5.1.2"
 author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
@@ -19,13 +19,19 @@ from std/os import `/`, quoteShell
 from std/strutils import find
 from std/parseutils import skipUntil
 
-after install:
-  # Fails with atlas
+proc replaceRaylibDirConstant(dir: string) =
   var file = readFile("raylib.nim")
   let first = find(file, "raylibDir")
   let skipped = skipUntil(file, '\n', start = first)
-  let dir = thisDir().quoteShell / "raylib"
   let str = when defined(windows): "(r\"" & dir & "\")"
             else: "\"" & dir & "\""
   file[first..first+skipped-1] = "raylibDir = Path" & str
   writeFile("raylib.nim", file)
+
+before install:
+  # Works with atlas
+  replaceRaylibDirConstant(thisDir().quoteShell / "src/raylib")
+
+after install:
+  # Fails with atlas
+  replaceRaylibDirConstant(thisDir().quoteShell / "raylib")
