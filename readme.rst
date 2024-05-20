@@ -321,7 +321,7 @@ first export the image or wave as code using the ``exportImageAsCode`` or
 ``exportWaveAsCode`` procs, and then translate the output to Nim using a tool such as
 ``c2nim`` or by manual conversion. An example of how to use this feature can be found in
 the example ``others/embedded_files_loading.nim`` which is available at
-https://github.com/planetis-m/raylib-examples/blob/master/embedded_files_loading.nim.
+https://github.com/planetis-m/raylib-examples/blob/main/others/embedded_files_loading.nim.
 
 Integration of External Data Types with ShaderV and Pixel
 ---------------------------------------------------------
