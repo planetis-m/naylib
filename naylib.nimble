@@ -20,18 +20,19 @@ from std/strutils import find
 from std/parseutils import skipUntil
 
 proc replaceRaylibDirConstant(dir: string) =
-  var file = readFile("raylib.nim")
-  let first = find(file, "raylibDir")
-  let skipped = skipUntil(file, '\n', start = first)
-  let str = when defined(windows): "(r\"" & dir & "\")"
-            else: "\"" & dir & "\""
-  file[first..first+skipped-1] = "raylibDir = Path" & str
-  writeFile("raylib.nim", file)
+  withDir(dir):
+    var file = readFile("raylib.nim")
+    let first = find(file, "raylibDir")
+    let skipped = skipUntil(file, '\n', start = first)
+    let str = when defined(windows): "(r\"" & (dir / "raylib") & "\")"
+              else: "\"" & (dir / "raylib") & "\""
+    file[first..first+skipped-1] = "raylibDir = Path" & str
+    writeFile("raylib.nim", file)
 
 before install:
   # Works with atlas
-  replaceRaylibDirConstant(thisDir().quoteShell / "src/raylib")
+  replaceRaylibDirConstant(thisDir().quoteShell / "src")
 
 after install:
   # Fails with atlas
-  replaceRaylibDirConstant(thisDir().quoteShell / "raylib")
+  replaceRaylibDirConstant(thisDir().quoteShell)
