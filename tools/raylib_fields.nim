@@ -235,7 +235,7 @@ proc `[]=`*(x: var MaterialMaps, i: MaterialMapIndex, val: MaterialMap) =
   checkArrayAccess(Material(x).maps, i.int, MaxMaterialMaps)
   Material(x).maps[i.int] = val
 
-proc `texture=`*(x: var MaterialMap, val: Texture{sym}) {.nodestroy, inline.} =
+proc `texture=`*(x: var MaterialMap, val: Texture{lvalue}) {.nodestroy, inline.} =
   ## Set texture for a material map type (Diffuse, Specular...)
   ## NOTE: Previous texture should be manually unloaded
   x.texture = val
@@ -243,7 +243,7 @@ proc `texture=`*(x: var MaterialMap, val: Texture{sym}) {.nodestroy, inline.} =
 template `texture=`*(x: var MaterialMap, val: Texture) =
   {.error: "Cannot pass a rvalue, as `x` does not take ownership of the texture.".}
 
-proc `shader=`*(x: var Material, val: Shader{sym}) {.nodestroy, inline.} =
+proc `shader=`*(x: var Material, val: Shader{lvalue}) {.nodestroy, inline.} =
   x.shader = val
 
 template `shader=`*(x: var Material, val: Shader) =
