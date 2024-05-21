@@ -19,7 +19,7 @@ from std/os import `/`, quoteShell
 from std/strutils import find
 from std/parseutils import skipUntil
 
-proc replaceRaylibDirConstant(dir: string) =
+proc editRaylibDirConst(dir: string) =
   withDir(dir):
     var file = readFile("raylib.nim")
     let first = find(file, "raylibDir")
@@ -31,8 +31,8 @@ proc replaceRaylibDirConstant(dir: string) =
 
 before install:
   # Works with atlas
-  replaceRaylibDirConstant(thisDir().quoteShell / "src")
+  editRaylibDirConst(thisDir().quoteShell / "src")
 
 after install:
   # Fails with atlas
-  replaceRaylibDirConstant(thisDir().quoteShell)
+  editRaylibDirConst(thisDir().quoteShell)
