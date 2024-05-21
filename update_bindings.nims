@@ -5,7 +5,7 @@ const
   PkgDir = thisDir().quoteShell
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
-  RayLatestCommit = "3d70d6179c4809d8b7e92215358394e3584bca79"
+  RayLatestCommit = "272a142ee5b830ff6742c2df6a7b3abe7399cfde"
   ApiDir = PkgDir / "api"
   DocsDir = PkgDir / "docs"
 

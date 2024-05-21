@@ -2,7 +2,7 @@ from std/strutils import addf, toHex
 from std/unicode import Rune
 from std/syncio import writeFile
 import std/[assertions, paths]
-const raylibDir = Path"/home/antonisg/Code/raydev/naylib/src/raylib"
+const raylibDir = currentSourcePath().Path.parentDir / Path"raylib/src"
 
 {.passC: "-I" & raylibDir.string.}
 {.passC: "-I" & string(raylibDir / Path"external/glfw/include").}
@@ -1673,8 +1673,8 @@ proc isSoundPlaying*(sound: Sound): bool {.importc: "IsSoundPlaying".}
   ## Check if a sound is currently playing
 proc waveCopy*(wave: Wave): Wave {.importc: "WaveCopy".}
   ## Copy a wave to a new wave
-proc waveCrop*(wave: var Wave, initSample: int32, finalSample: int32) {.importc: "WaveCrop".}
-  ## Crop a wave to defined samples range
+proc waveCrop*(wave: var Wave, initFrame: int32, finalFrame: int32) {.importc: "WaveCrop".}
+  ## Crop a wave to defined frames range
 proc waveFormat*(wave: var Wave, sampleRate: int32, sampleSize: int32, channels: int32) {.importc: "WaveFormat".}
   ## Convert wave data to desired format
 proc isMusicReady*(music: Music): bool {.importc: "IsMusicReady".}
