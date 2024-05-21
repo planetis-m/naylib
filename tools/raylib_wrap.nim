@@ -454,7 +454,7 @@ proc fade*(color: Color, alpha: float32): Color =
 
 proc colorToInt*(color: Color): int32 =
   ## Get hexadecimal value for a Color
-  (color.r.int32 shl 24) or (color.g.int32 shl 16) or (color.b.int32 shl 8) or color.a.int32
+  int32((color.r.uint32 shl 24) or (color.g.uint32 shl 16) or (color.b.uint32 shl 8) or color.a.uint32)
 
 proc getColor*(hexValue: uint32): Color =
   ## Get Color structure from hexadecimal value
