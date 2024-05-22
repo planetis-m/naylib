@@ -512,7 +512,7 @@ type
     b*: uint8 ## Color blue value
     a*: uint8 ## Color alpha value
 
-  Rectangle* {.importc: "rlRectangle", header: "raylib.h", bycopy.} = object ## Rectangle, 4 components
+  Rectangle* {.importc: "Rectangle", header: "raylib.h", bycopy.} = object ## Rectangle, 4 components
     x*: float32 ## Rectangle top-left corner position x
     y*: float32 ## Rectangle top-left corner position y
     width*: float32 ## Rectangle width
@@ -785,7 +785,7 @@ const
 
 {.push callconv: cdecl, header: "raylib.h", sideEffect.}
 proc initWindowPriv(width: int32, height: int32, title: cstring) {.importc: "InitWindow".}
-proc closeWindow*() {.importc: "rlCloseWindow".}
+proc closeWindow*() {.importc: "CloseWindow".}
   ## Close window and unload OpenGL context
 proc windowShouldClose*(): bool {.importc: "WindowShouldClose".}
   ## Check if application should close (KEY_ESCAPE pressed or windows close icon clicked)
@@ -876,7 +876,7 @@ proc enableEventWaiting*() {.importc: "EnableEventWaiting".}
   ## Enable waiting for events on EndDrawing(), no automatic event polling
 proc disableEventWaiting*() {.importc: "DisableEventWaiting".}
   ## Disable waiting for events on EndDrawing(), automatic events polling
-proc showCursor*() {.importc: "rlShowCursor".}
+proc showCursor*() {.importc: "ShowCursor".}
   ## Shows cursor
 proc hideCursor*() {.importc: "HideCursor".}
   ## Hides cursor
@@ -1179,7 +1179,7 @@ proc drawSplineSegmentBezierQuadratic*(p1: Vector2, c2: Vector2, p3: Vector2, th
   ## Draw spline segment: Quadratic Bezier, 2 points, 1 control point
 proc drawSplineSegmentBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBezierCubic".}
   ## Draw spline segment: Cubic Bezier, 2 points, 2 control points
-proc loadImagePriv(fileName: cstring): Image {.importc: "rlLoadImage".}
+proc loadImagePriv(fileName: cstring): Image {.importc: "LoadImage".}
 proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw".}
 proc loadImageSvgPriv(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg".}
 proc loadImageAnim*(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim".}
@@ -1239,9 +1239,9 @@ proc exportFontAsCode*(font: Font, fileName: cstring): bool {.importc: "ExportFo
   ## Export font as code file, returns true on success
 proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS".}
   ## Draw current FPS
-proc drawText*(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "rlDrawText".}
+proc drawText*(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "DrawText".}
   ## Draw text (using default font)
-proc drawText*(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "rlDrawTextEx".}
+proc drawText*(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextEx".}
   ## Draw text using font and additional parameters
 proc drawText*(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro".}
   ## Draw text using Font and pro parameters (rotation)
