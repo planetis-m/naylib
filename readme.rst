@@ -70,6 +70,8 @@ Note: By default, Naylib will use OpenGL 3.3 on desktop platforms.
 
 If you're compiling on Linux for Wayland, add the ``-d:wayland`` flag.
 
+To compile on Linux against a raylib library found by pkg-config, add the ``-d:usePkgConfig`` flag.
+
 Building for the Web
 --------------------
 
