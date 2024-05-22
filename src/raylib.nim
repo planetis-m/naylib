@@ -36,7 +36,7 @@ elif defined(android):
   {.passL: "-Wl,--fatal-warnings -u ANativeActivity_onCreate -Wl,-no-undefined".}
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm -ldl".}
 
-else:
+elif not defined(usePkgConfig):
   {.passC: "-DPLATFORM_DESKTOP".}
   when defined(GraphicsApiOpenGl11): {.passC: "-DGRAPHICS_API_OPENGL_11".}
   elif defined(GraphicsApiOpenGl21): {.passC: "-DGRAPHICS_API_OPENGL_21".}
@@ -103,14 +103,18 @@ else:
 when defined(emscripten): discard
 elif defined(android): discard
 elif defined(macosx): {.compile(raylibDir / Path"rglfw.c", "-x objective-c").}
-else: {.compile: raylibDir / Path"rglfw.c".}
-{.compile: raylibDir / Path"rshapes.c".}
-{.compile: raylibDir / Path"rtextures.c".}
-{.compile: raylibDir / Path"rtext.c".}
-{.compile: raylibDir / Path"utils.c".}
-{.compile: raylibDir / Path"rmodels.c".}
-{.compile: raylibDir / Path"raudio.c".}
-{.compile: raylibDir / Path"rcore.c".}
+elif defined(usePkgConfig):
+  {.passC: staticExec("pkg-config --cflags raylib").}
+  {.passL: staticExec("pkg-config --libs raylib").}
+else:
+  {.compile: raylibDir / Path"rglfw.c".}
+  {.compile: raylibDir / Path"rshapes.c".}
+  {.compile: raylibDir / Path"rtextures.c".}
+  {.compile: raylibDir / Path"rtext.c".}
+  {.compile: raylibDir / Path"utils.c".}
+  {.compile: raylibDir / Path"rmodels.c".}
+  {.compile: raylibDir / Path"raudio.c".}
+  {.compile: raylibDir / Path"rcore.c".}
 when defined(android):
   {.compile: AndroidNdk.Path / Path"sources/android/native_app_glue/android_native_app_glue.c".}
 
