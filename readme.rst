@@ -224,6 +224,9 @@ converters:
 
 .. code-block:: nim
 
+  static:
+    assert sizeof(raylib.Vector2) == sizeof(geometrymath.Vector2[float32])
+
   converter toVector2*(x: geometrymath.Vector2[float32]): raylib.Vector2 {.inline.} =
     cast[raylib.Vector2](x)
 
