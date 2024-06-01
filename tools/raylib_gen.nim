@@ -374,6 +374,7 @@ const
     "UnloadFileText",
     "SaveFileText",
     "FileExists",
+    "IsFileNameValid",
     "DirectoryExists",
     "IsFileExtension",
     "GetFileExtension",

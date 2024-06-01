@@ -2,7 +2,7 @@ from std/strutils import addf, toHex
 from std/unicode import Rune
 from std/syncio import writeFile
 import std/[assertions, paths]
-const raylibDir = Path"/home/antonisg/Code/raydev/naylib/src/raylib"
+const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
 
 {.passC: "-I" & raylibDir.string.}
 {.passC: "-I" & string(raylibDir / Path"external/glfw/include").}
@@ -1175,6 +1175,8 @@ proc drawSplineSegmentBezierQuadratic*(p1: Vector2, c2: Vector2, p3: Vector2, th
   ## Draw spline segment: Quadratic Bezier, 2 points, 1 control point
 proc drawSplineSegmentBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBezierCubic".}
   ## Draw spline segment: Cubic Bezier, 2 points, 2 control points
+proc checkCollisionCircleLine*(center: Vector2, radius: float32, p1: Vector2, p2: Vector2): bool {.importc: "CheckCollisionCircleLine".}
+  ## Check if circle collides with a line created betweeen two points [p1] and [p2]
 proc loadImagePriv(fileName: cstring): Image {.importc: "rlLoadImage".}
 proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw".}
 proc loadImageSvgPriv(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg".}
