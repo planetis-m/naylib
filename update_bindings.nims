@@ -57,7 +57,7 @@ task patch, "Patch raylib":
   withDir(PkgDir / "src/raylib"):
     # exec "git rev-parse HEAD"
     let patchPath = PkgDir / "mangle_names.patch"
-    exec "git apply --directory=src/raylib " & patchPath
+    exec "git apply --reject " & patchPath
 
 task update, "Update the raylib git directory":
   fetchLatestRaylib()
