@@ -5,7 +5,7 @@ const
   PkgDir = thisDir().quoteShell
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
-  RayLatestCommit = "9ef29aff9aa08e64ac2d25048829de7459ee7d25"
+  RayLatestCommit = "1344979c708bdf5000d8963d26d938ae4db5d771"
   ApiDir = PkgDir / "api"
   DocsDir = PkgDir / "docs"
 
@@ -53,16 +53,16 @@ task wrap, "Produce all raylib nim wrappers":
   genWrapper("rlgl")
   # wrapRaylib("rlgl", "")
 
-task update, "Update raylib":
-  cpDir(RaylibDir / "src", PkgDir / "src/raylib")
+task patch, "Patch raylib":
   withDir(PkgDir / "src/raylib"):
     # exec "git rev-parse HEAD"
     let patchPath = PkgDir / "mangle_names.patch"
     exec "git apply --directory=src/raylib " & patchPath
 
-task init, "Init the raylib git directory":
+task update, "Update the raylib git directory":
   fetchLatestRaylib()
-  updateTask()
+  cpDir(RaylibDir / "src", PkgDir / "src/raylib")
+  # patchTask()
 
 task docs, "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
