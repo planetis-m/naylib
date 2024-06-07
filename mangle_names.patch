@@ -1,6 +1,6 @@
-From a20f098f2b0b2e2e53fa638b06a7a264a17b6a05 Mon Sep 17 00:00:00 2001
+From 87ddc17f61a7dd30c6feb4107178a037ff06d33d Mon Sep 17 00:00:00 2001
 From: Antonis Geralis <b3lievem@yandex.com>
-Date: Sat, 1 Jun 2024 16:53:34 +0300
+Date: Fri, 7 Jun 2024 13:05:27 +0300
 Subject: [PATCH] mangle names
 
 ---
@@ -174,7 +174,7 @@ index d8568d9..5f38019 100644
                  #endif
  
 diff --git a/src/raylib/platforms/rcore_desktop.c b/src/raylib/platforms/rcore_desktop.c
-index f087741..07dd073 100644
+index 6fe054a..6d05f40 100644
 --- a/src/raylib/platforms/rcore_desktop.c
 +++ b/src/raylib/platforms/rcore_desktop.c
 @@ -951,7 +951,7 @@ const char *GetClipboardText(void)
@@ -248,7 +248,7 @@ index afe8adf..233feb7 100644
      if (CORE.Input.Mouse.cursorHidden)
      {
 diff --git a/src/raylib/raylib.h b/src/raylib/raylib.h
-index dfa98ef..b639156 100644
+index c612856..f3cc0f8 100644
 --- a/src/raylib/raylib.h
 +++ b/src/raylib/raylib.h
 @@ -246,12 +246,12 @@ typedef struct Color {
@@ -456,7 +456,7 @@ index dfa98ef..b639156 100644
  
  // Text codepoints management functions (unicode characters)
  RLAPI char *LoadUTF8(const int *codepoints, int length);                // Load UTF-8 text encoded from codepoints array
-@@ -1537,8 +1537,8 @@ RLAPI void DrawModelWires(Model model, Vector3 position, float scale, Color tint
+@@ -1540,8 +1540,8 @@ RLAPI void DrawModelWires(Model model, Vector3 position, float scale, Color tint
  RLAPI void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model wires (with texture if set) with extended parameters
  RLAPI void DrawBoundingBox(BoundingBox box, Color color);                                   // Draw bounding box (wires)
  RLAPI void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float size, Color tint);   // Draw a billboard texture
@@ -519,10 +519,10 @@ index 3aa5a7a..53fe4d3 100644
      #endif
  
 diff --git a/src/raylib/rmodels.c b/src/raylib/rmodels.c
-index 4bf042d..25122eb 100644
+index 57059a0..07dc5cb 100644
 --- a/src/raylib/rmodels.c
 +++ b/src/raylib/rmodels.c
-@@ -3580,13 +3580,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
+@@ -3585,13 +3585,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
  // Draw a billboard
  void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float size, Color tint)
  {
@@ -538,7 +538,7 @@ index 4bf042d..25122eb 100644
  {
      // NOTE: Billboard locked on axis-Y
      Vector3 up = { 0.0f, 1.0f, 0.0f };
-@@ -3596,7 +3596,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector
+@@ -3601,7 +3601,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector
  
  // Draw a billboard with additional parameters
  // NOTE: Size defines the destination rectangle size, stretching the source texture as required
@@ -547,7 +547,7 @@ index 4bf042d..25122eb 100644
  {
      // NOTE: Billboard size will maintain source rectangle aspect ratio, size will represent billboard width
      Vector2 sizeRatio = { size.x*fabsf((float)source.width/source.height), size.y };
-@@ -4815,7 +4815,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
+@@ -4825,7 +4825,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
          }
          else     // Check if image is provided as image path
          {
@@ -831,7 +831,7 @@ index cb85c1c..5f442c7 100644
      float left = (rec1.x > rec2.x)? rec1.x : rec2.x;
      float right1 = rec1.x + rec1.width;
 diff --git a/src/raylib/rtext.c b/src/raylib/rtext.c
-index 5ba4e8b..9237609 100644
+index 118a559..709a6b8 100644
 --- a/src/raylib/rtext.c
 +++ b/src/raylib/rtext.c
 @@ -7,8 +7,8 @@
@@ -989,7 +989,7 @@ index 5ba4e8b..9237609 100644
  
      rec = font.recs[GetGlyphIndex(font, codepoint)];
  
-@@ -2164,7 +2164,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2229,7 +2229,7 @@ static Font LoadBMFont(const char *fileName)
  
      for (int i = 0; i < pageCount; i++)
      {
@@ -998,7 +998,7 @@ index 5ba4e8b..9237609 100644
  
          if (imFonts[i].format == PIXELFORMAT_UNCOMPRESSED_GRAYSCALE)
          {
-@@ -2200,8 +2200,8 @@ static Font LoadBMFont(const char *fileName)
+@@ -2265,8 +2265,8 @@ static Font LoadBMFont(const char *fileName)
  
          for (int i = 1; i < pageCount; i++)
          {
@@ -1009,7 +1009,7 @@ index 5ba4e8b..9237609 100644
              ImageDraw(&fullFont, imFonts[i], srcRec, destRec, WHITE);
          }
      }
-@@ -2215,7 +2215,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2280,7 +2280,7 @@ static Font LoadBMFont(const char *fileName)
      font.glyphCount = glyphCount;
      font.glyphPadding = 0;
      font.glyphs = (GlyphInfo *)RL_MALLOC(glyphCount*sizeof(GlyphInfo));
@@ -1018,7 +1018,7 @@ index 5ba4e8b..9237609 100644
  
      int charId, charX, charY, charWidth, charHeight, charOffsetX, charOffsetY, charAdvanceX, pageID;
  
-@@ -2229,7 +2229,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2294,7 +2294,7 @@ static Font LoadBMFont(const char *fileName)
          if (readVars == 9)  // Make sure all char data has been properly read
          {
              // Get character rectangle in the font atlas texture
