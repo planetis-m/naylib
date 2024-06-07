@@ -517,6 +517,42 @@
       "description": "GL_DRAW_FRAMEBUFFER"
     },
     {
+      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_POSITION",
+      "type": "INT",
+      "value": 0,
+      "description": ""
+    },
+    {
+      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD",
+      "type": "INT",
+      "value": 1,
+      "description": ""
+    },
+    {
+      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_NORMAL",
+      "type": "INT",
+      "value": 2,
+      "description": ""
+    },
+    {
+      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_COLOR",
+      "type": "INT",
+      "value": 3,
+      "description": ""
+    },
+    {
+      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_TANGENT",
+      "type": "INT",
+      "value": 4,
+      "description": ""
+    },
+    {
+      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD2",
+      "type": "INT",
+      "value": 5,
+      "description": ""
+    },
+    {
       "name": "RL_MATRIX_TYPE",
       "type": "GUARD",
       "value": "",
@@ -751,42 +787,6 @@
       "description": ""
     },
     {
-      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_POSITION",
-      "type": "INT",
-      "value": 0,
-      "description": ""
-    },
-    {
-      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD",
-      "type": "INT",
-      "value": 1,
-      "description": ""
-    },
-    {
-      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_NORMAL",
-      "type": "INT",
-      "value": 2,
-      "description": ""
-    },
-    {
-      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_COLOR",
-      "type": "INT",
-      "value": 3,
-      "description": ""
-    },
-    {
-      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_TANGENT",
-      "type": "INT",
-      "value": 4,
-      "description": ""
-    },
-    {
-      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD2",
-      "type": "INT",
-      "value": 5,
-      "description": ""
-    },
-    {
       "name": "RL_DEFAULT_SHADER_ATTRIB_NAME_POSITION",
       "type": "STRING",
       "value": "vertexPosition",
@@ -1000,6 +1000,11 @@
           "type": "float *",
           "name": "texcoords",
           "description": "Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)"
+        },
+        {
+          "type": "float *",
+          "name": "normals",
+          "description": "Vertex normal (XYZ - 3 components per vertex) (shader-location = 2)"
         },
         {
           "type": "unsigned char *",
@@ -2141,11 +2146,11 @@
       "params": [
         {
           "type": "double",
-          "name": "near"
+          "name": "nearPlane"
         },
         {
           "type": "double",
-          "name": "far"
+          "name": "farPlane"
         }
       ]
     },

@@ -180,6 +180,7 @@ type
     elementCount: int32 ## Number of elements in the buffer (QUADS)
     vertices: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
     texcoords: ptr UncheckedArray[float32] ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+    normals: ptr UncheckedArray[float32] ## Vertex normal (XYZ - 3 components per vertex) (shader-location = 2)
     colors: ptr UncheckedArray[uint8] ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
     when not UseEmbeddedGraphicsApi:
       indices: ptr UncheckedArray[uint32] ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
@@ -204,6 +205,7 @@ type
 
   VertexBufferVertices* = distinct VertexBuffer
   VertexBufferTexcoords* = distinct VertexBuffer
+  VertexBufferNormals* = distinct VertexBuffer
   VertexBufferColors* = distinct VertexBuffer
   VertexBufferIndices* = distinct VertexBuffer
   RenderBatchVertexBuffer* = distinct RenderBatch
@@ -230,7 +232,7 @@ proc frustum*(left: float, right: float, bottom: float, top: float, znear: float
 proc ortho*(left: float, right: float, bottom: float, top: float, znear: float, zfar: float) {.importc: "rlOrtho".}
 proc viewport*(x: int32, y: int32, width: int32, height: int32) {.importc: "rlViewport".}
   ## Set the viewport area
-proc setClipPlanes*(near: float, far: float) {.importc: "rlSetClipPlanes".}
+proc setClipPlanes*(nearPlane: float, farPlane: float) {.importc: "rlSetClipPlanes".}
   ## Set clip planes distances
 proc getCullDistanceNear*(): float {.importc: "rlGetCullDistanceNear".}
   ## Get cull plane distance near
