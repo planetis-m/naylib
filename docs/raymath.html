@@ -5,7 +5,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>raymath</title>
+<title>src/raymath</title>
+
+<!-- Google fonts -->
+<link href='https://fonts.googleapis.com/css?family=Lato:400,600,900' rel='stylesheet' type='text/css'/>
+<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- Favicon -->
 <link rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAUAAAAF////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAIAAABbAAAAlQAAAKIAAACbAAAAmwAAAKIAAACVAAAAWwAAAAL///8A////AP///wD///8A////AAAAABQAAADAAAAAYwAAAA3///8A////AP///wD///8AAAAADQAAAGMAAADAAAAAFP///wD///8A////AP///wAAAACdAAAAOv///wD///8A////AP///wD///8A////AP///wD///8AAAAAOgAAAJ3///8A////AP///wAAAAAnAAAAcP///wAAAAAoAAAASv///wD///8A////AP///wAAAABKAAAAKP///wAAAABwAAAAJ////wD///8AAAAAgQAAABwAAACIAAAAkAAAAJMAAACtAAAAFQAAABUAAACtAAAAkwAAAJAAAACIAAAAHAAAAIH///8A////AAAAAKQAAACrAAAAaP///wD///8AAAAARQAAANIAAADSAAAARf///wD///8AAAAAaAAAAKsAAACk////AAAAADMAAACcAAAAnQAAABj///8A////AP///wAAAAAYAAAAGP///wD///8A////AAAAABgAAACdAAAAnAAAADMAAAB1AAAAwwAAAP8AAADpAAAAsQAAAE4AAAAb////AP///wAAAAAbAAAATgAAALEAAADpAAAA/wAAAMMAAAB1AAAAtwAAAOkAAAD/AAAA/wAAAP8AAADvAAAA3gAAAN4AAADeAAAA3gAAAO8AAAD/AAAA/wAAAP8AAADpAAAAtwAAAGUAAAA/AAAA3wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAADfAAAAPwAAAGX///8A////AAAAAEgAAADtAAAAvwAAAL0AAADGAAAA7wAAAO8AAADGAAAAvQAAAL8AAADtAAAASP///wD///8A////AP///wD///8AAAAAO////wD///8A////AAAAAIcAAACH////AP///wD///8AAAAAO////wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A//8AAP//AAD4HwAA7/cAAN/7AAD//wAAoYUAAJ55AACf+QAAh+EAAAAAAADAAwAA4AcAAP5/AAD//wAA//8AAA=="/>
@@ -20,7 +24,7 @@
 <body>
   <div class="document" id="documentId">
     <div class="container">
-      <h1 class="title">raymath</h1>
+      <h1 class="title">src/raymath</h1>
       <div class="row">
   <div class="three columns">
     <div class="theme-select-wrapper">
@@ -155,7 +159,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">frustum
-  <li><a class="reference" href="#frustum%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat" title="frustum(left, right, bottom, top, near, far: float): Matrix">frustum(left, right, bottom, top, near, far: float): Matrix</a></li>
+  <li><a class="reference" href="#frustum%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat" title="frustum(left, right, bottom, top, nearPlane, farPlane: float): Matrix">frustum(left, right, bottom, top, nearPlane, farPlane: float): Matrix</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">identity
@@ -251,7 +255,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">ortho
-  <li><a class="reference" href="#ortho%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat" title="ortho(left, right, bottom, top, near, far: float): Matrix">ortho(left, right, bottom, top, near, far: float): Matrix</a></li>
+  <li><a class="reference" href="#ortho%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat" title="ortho(left, right, bottom, top, nearPlane, farPlane: float): Matrix">ortho(left, right, bottom, top, nearPlane, farPlane: float): Matrix</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">orthoNormalize
@@ -263,7 +267,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">perspective
-  <li><a class="reference" href="#perspective%2Cfloat%2Cfloat%2Cfloat%2Cfloat" title="perspective(fovy, aspect, near, far: float): Matrix">perspective(fovy, aspect, near, far: float): Matrix</a></li>
+  <li><a class="reference" href="#perspective%2Cfloat%2Cfloat%2Cfloat%2Cfloat" title="perspective(fovy, aspect, nearPlane, farPlane: float): Matrix">perspective(fovy, aspect, nearPlane, farPlane: float): Matrix</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">project
@@ -973,8 +977,8 @@
 </div>
 <div id="frustum-procs-all">
   <div id="frustum,float,float,float,float,float,float">
-  <dt><pre><span class="Keyword">func</span> <a href="#frustum%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat"><span class="Identifier">frustum</span></a><span class="Other">(</span><span class="Identifier">left</span><span class="Other">,</span> <span class="Identifier">right</span><span class="Other">,</span> <span class="Identifier">bottom</span><span class="Other">,</span> <span class="Identifier">top</span><span class="Other">,</span> <span class="Identifier">near</span><span class="Other">,</span> <span class="Identifier">far</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.<span class="Identifier">inline</span><span class="Other">,</span>
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">func</span> <a href="#frustum%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat"><span class="Identifier">frustum</span></a><span class="Other">(</span><span class="Identifier">left</span><span class="Other">,</span> <span class="Identifier">right</span><span class="Other">,</span> <span class="Identifier">bottom</span><span class="Other">,</span> <span class="Identifier">top</span><span class="Other">,</span> <span class="Identifier">nearPlane</span><span class="Other">,</span> <span class="Identifier">farPlane</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.
+    <span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -1521,8 +1525,8 @@
 </div>
 <div id="ortho-procs-all">
   <div id="ortho,float,float,float,float,float,float">
-  <dt><pre><span class="Keyword">func</span> <a href="#ortho%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat"><span class="Identifier">ortho</span></a><span class="Other">(</span><span class="Identifier">left</span><span class="Other">,</span> <span class="Identifier">right</span><span class="Other">,</span> <span class="Identifier">bottom</span><span class="Other">,</span> <span class="Identifier">top</span><span class="Other">,</span> <span class="Identifier">near</span><span class="Other">,</span> <span class="Identifier">far</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.<span class="Identifier">inline</span><span class="Other">,</span>
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">func</span> <a href="#ortho%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat%2Cfloat"><span class="Identifier">ortho</span></a><span class="Other">(</span><span class="Identifier">left</span><span class="Other">,</span> <span class="Identifier">right</span><span class="Other">,</span> <span class="Identifier">bottom</span><span class="Other">,</span> <span class="Identifier">top</span><span class="Other">,</span> <span class="Identifier">nearPlane</span><span class="Other">,</span> <span class="Identifier">farPlane</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.
+    <span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -1563,8 +1567,8 @@
 </div>
 <div id="perspective-procs-all">
   <div id="perspective,float,float,float,float">
-  <dt><pre><span class="Keyword">func</span> <a href="#perspective%2Cfloat%2Cfloat%2Cfloat%2Cfloat"><span class="Identifier">perspective</span></a><span class="Other">(</span><span class="Identifier">fovy</span><span class="Other">,</span> <span class="Identifier">aspect</span><span class="Other">,</span> <span class="Identifier">near</span><span class="Other">,</span> <span class="Identifier">far</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.<span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">func</span> <a href="#perspective%2Cfloat%2Cfloat%2Cfloat%2Cfloat"><span class="Identifier">perspective</span></a><span class="Other">(</span><span class="Identifier">fovy</span><span class="Other">,</span> <span class="Identifier">aspect</span><span class="Other">,</span> <span class="Identifier">nearPlane</span><span class="Other">,</span> <span class="Identifier">farPlane</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.<span class="Identifier">inline</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     Get perspective projection matrix NOTE: Fovy angle must be provided in radians
@@ -2372,13 +2376,10 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-04-08 10:29:17 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-06-07 10:13:30 UTC</small>
       </div>
     </div>
   </div>
   
-  <!-- Google fonts -->
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,600,900' rel='stylesheet' type='text/css'/>
-  <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 </body>
 </html>
