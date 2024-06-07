@@ -1119,55 +1119,55 @@ func scale*(x, y, z: float32): Matrix {.inline.} =
                           m13: 0, m2: 0, m6: 0, m10: z, m14: 0, m3: 0,
                           m7: 0, m11: 0, m15: 1)
 
-func frustum*(left, right, bottom, top, near, far: float): Matrix {.inline.} =
+func frustum*(left, right, bottom, top, nearPlane, farPlane: float): Matrix {.inline.} =
   # Get perspective projection matrix
   result = Matrix()
   let rl = float32(right - left)
   let tb = float32(top - bottom)
-  let fn = float32(far - near)
-  result.m0 = (float32(near * 2'f32)) / rl
+  let fn = float32(farPlane - nearPlane)
+  result.m0 = (float32(nearPlane * 2'f32)) / rl
   result.m1 = 0'f32
   result.m2 = 0'f32
   result.m3 = 0'f32
   result.m4 = 0'f32
-  result.m5 = (float32(near * 2'f32)) / tb
+  result.m5 = (float32(nearPlane * 2'f32)) / tb
   result.m6 = 0'f32
   result.m7 = 0'f32
   result.m8 = (float32(right) + float32(left)) / rl
   result.m9 = (float32(top) + float32(bottom)) / tb
-  result.m10 = -((float32(far) + float32(near)) / fn)
+  result.m10 = -((float32(farPlane) + float32(nearPlane)) / fn)
   result.m11 = -1'f32
   result.m12 = 0'f32
   result.m13 = 0'f32
-  result.m14 = -((float32(far * float32(near * 2'f32))) / fn)
+  result.m14 = -((float32(farPlane * float32(nearPlane * 2'f32))) / fn)
   result.m15 = 0'f32
 
-func perspective*(fovy, aspect, near, far: float): Matrix {.inline.} =
+func perspective*(fovy, aspect, nearPlane, farPlane: float): Matrix {.inline.} =
   ## Get perspective projection matrix
   ## NOTE: Fovy angle must be provided in radians
   result = Matrix()
-  let top = near * tan(fovy * 0.5)
+  let top = nearPlane * tan(fovy * 0.5)
   let bottom = -top
   let right = top * aspect
   let left = -right
-  # MatrixFrustum(-right, right, -top, top, near, far);
+  # MatrixFrustum(-right, right, -top, top, nearPlane, farPlane);
   let rl = float32(right - left)
   let tb = float32(top - bottom)
-  let fn = float32(far - near)
-  result.m0 = (float32(near * 2'f32)) / rl
-  result.m5 = (float32(near * 2'f32)) / tb
+  let fn = float32(farPlane - nearPlane)
+  result.m0 = (float32(nearPlane * 2'f32)) / rl
+  result.m5 = (float32(nearPlane * 2'f32)) / tb
   result.m8 = (float32(right) + float32(left)) / rl
   result.m9 = (float32(top) + float32(bottom)) / tb
-  result.m10 = -((float32(far) + float32(near)) / fn)
+  result.m10 = -((float32(farPlane) + float32(nearPlane)) / fn)
   result.m11 = -1'f32
-  result.m14 = -((float32(far * float32(near * 2'f32))) / fn)
+  result.m14 = -((float32(farPlane * float32(nearPlane * 2'f32))) / fn)
 
-func ortho*(left, right, bottom, top, near, far: float): Matrix {.inline.} =
+func ortho*(left, right, bottom, top, nearPlane, farPlane: float): Matrix {.inline.} =
   # Get orthographic projection matrix
   result = Matrix()
   let rl = float32(right - left)
   let tb = float32(top - bottom)
-  let fn = float32(far - near)
+  let fn = float32(farPlane - nearPlane)
   result.m0 = 2'f32 / rl
   result.m1 = 0'f32
   result.m2 = 0'f32
@@ -1182,7 +1182,7 @@ func ortho*(left, right, bottom, top, near, far: float): Matrix {.inline.} =
   result.m11 = 0'f32
   result.m12 = -((float32(left) + float32(right)) / rl)
   result.m13 = -((float32(top) + float32(bottom)) / tb)
-  result.m14 = -((float32(far) + float32(near)) / fn)
+  result.m14 = -((float32(farPlane) + float32(nearPlane)) / fn)
   result.m15 = 1'f32
 
 func lookAt*(eye, target, up: Vector3): Matrix {.inline.} =

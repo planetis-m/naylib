@@ -356,6 +356,8 @@ const
     "TextToPascal",
     "TextToInteger",
     "TextToFloat",
+    "TextToSnake",
+    "TextToCamel",
     # Misc
     "GetRandomValue",
     "SetRandomSeed",
