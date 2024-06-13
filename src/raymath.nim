@@ -106,17 +106,18 @@ func distanceSqr*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate square distance between two vectors
   result = (v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y)
 
-func angle*(v1: Vector2; v2: Vector2): float32 {.inline.} =
+func angle*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate angle between two vectors
   ## NOTE: Angle is calculated from origin point (0, 0)
   let dot = v1.x*v2.x + v1.y*v2.y
   let det = v1.x*v2.y - v1.y*v2.x
-  result = -arctan2(det, dot)
+  result = arctan2(det, dot)
 
 func lineAngle*(start, `end`: Vector2): float32 {.inline.} =
   ## Calculate angle defined by a two vectors line
   ## NOTE: Parameters need to be normalized
-  result = arctan2(`end`.y - start.y, `end`.x - start.x)
+  # TODO: Currently angles move clockwise, determine if this is wanted behavior
+  result = -arctan2(`end`.y - start.y, `end`.x - start.x)
 
 func scale*(v: Vector2; scale: float32): Vector2 {.inline.} =
   ## Scale vector (multiply by value)
