@@ -226,7 +226,7 @@ void DrawTriangle3D(Vector3 v1, Vector3 v2, Vector3 v3, Color color)
 }
 
 // Draw a triangle strip defined by points
-void DrawTriangleStrip3D(Vector3 *points, int pointCount, Color color)
+void DrawTriangleStrip3D(const Vector3 *points, int pointCount, Color color)
 {
     if (pointCount < 3) return; // Security check
 
@@ -3436,7 +3436,12 @@ void GenMeshTangents(Mesh *mesh)
     Vector3 *tan1 = (Vector3 *)RL_MALLOC(mesh->vertexCount*sizeof(Vector3));
     Vector3 *tan2 = (Vector3 *)RL_MALLOC(mesh->vertexCount*sizeof(Vector3));
 
-    for (int i = 0; i < mesh->vertexCount - 3; i += 3)
+    if (mesh->vertexCount % 3 != 0)
+    {
+        TRACELOG(LOG_WARNING, "MESH: vertexCount expected to be a multiple of 3. Expect uninitialized values.");
+    }
+
+    for (int i = 0; i <= mesh->vertexCount - 3; i += 3)
     {
         // Get triangle vertices
         Vector3 v1 = { mesh->vertices[(i + 0)*3 + 0], mesh->vertices[(i + 0)*3 + 1], mesh->vertices[(i + 0)*3 + 2] };
@@ -3585,13 +3590,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
 // Draw a billboard
 void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float size, Color tint)
 {
-    rlRectangle source = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
+    Rectangle source = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
 
     DrawBillboardRec(camera, texture, source, position, (Vector2){ size, size }, tint);
 }
 
 // Draw a billboard (part of a texture defined by a rectangle)
-void DrawBillboardRec(Camera camera, Texture2D texture, rlRectangle source, Vector3 position, Vector2 size, Color tint)
+void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector2 size, Color tint)
 {
     // NOTE: Billboard locked on axis-Y
     Vector3 up = { 0.0f, 1.0f, 0.0f };
@@ -3601,7 +3606,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, rlRectangle source, Vect
 
 // Draw a billboard with additional parameters
 // NOTE: Size defines the destination rectangle size, stretching the source texture as required
-void DrawBillboardPro(Camera camera, Texture2D texture, rlRectangle source, Vector3 position, Vector3 up, Vector2 size, Vector2 origin, float rotation, Color tint)
+void DrawBillboardPro(Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector3 up, Vector2 size, Vector2 origin, float rotation, Color tint)
 {
     // NOTE: Billboard size will maintain source rectangle aspect ratio, size will represent billboard width
     Vector2 sizeRatio = { size.x*fabsf((float)source.width/source.height), size.y };
@@ -4825,7 +4830,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
         }
         else     // Check if image is provided as image path
         {
-            image = rlLoadImage(TextFormat("%s/%s", texPath, cgltfImage->uri));
+            image = LoadImage(TextFormat("%s/%s", texPath, cgltfImage->uri));
         }
     }
     else if (cgltfImage->buffer_view->buffer->data != NULL)    // Check if image is provided as data buffer
@@ -4864,7 +4869,7 @@ static BoneInfo *LoadBoneInfoGLTF(cgltf_skin skin, int *boneCount)
     for (unsigned int i = 0; i < skin.joints_count; i++)
     {
         cgltf_node node = *skin.joints[i];
-        strncpy(bones[i].name, node.name, sizeof(bones[i].name));
+        if (node.name != NULL) strncpy(bones[i].name, node.name, sizeof(bones[i].name));
 
         // Find parent bone index
         unsigned int parentIndex = -1;
@@ -5772,8 +5777,11 @@ static ModelAnimation *LoadModelAnimationsGLTF(const char *fileName, int *animCo
                     animDuration = (t > animDuration)? t : animDuration;
                 }
 
-                strncpy(animations[i].name, animData.name, sizeof(animations[i].name));
-                animations[i].name[sizeof(animations[i].name) - 1] = '\0';
+                if (animData.name != NULL)
+                {
+                    strncpy(animations[i].name, animData.name, sizeof(animations[i].name));
+                    animations[i].name[sizeof(animations[i].name) - 1] = '\0';
+                }
 
                 animations[i].frameCount = (int)(animDuration*1000.0f/GLTF_ANIMDELAY) + 1;
                 animations[i].framePoses = RL_MALLOC(animations[i].frameCount*sizeof(Transform *));
@@ -5823,7 +5831,7 @@ static ModelAnimation *LoadModelAnimationsGLTF(const char *fileName, int *animCo
                     BuildPoseFromParentJoints(animations[i].bones, animations[i].boneCount, animations[i].framePoses[j]);
                 }
 
-                TRACELOG(LOG_INFO, "MODEL: [%s] Loaded animation: %s (%d frames, %fs)", fileName, animData.name, animations[i].frameCount, animDuration);
+                TRACELOG(LOG_INFO, "MODEL: [%s] Loaded animation: %s (%d frames, %fs)", fileName, (animData.name != NULL)? animData.name : "NULL", animations[i].frameCount, animDuration);
                 RL_FREE(boneChannels);
             }
         }
