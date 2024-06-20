@@ -52,6 +52,56 @@
 #
 # ****************************************************************************************
 
+runnableExamples:
+  # Example 1: MemPool
+  var mp = createMemPool(size = 1024) # Create a memory pool with 1024 bytes
+  # Allocate memory
+  let ptr1 = mp.alloc(100)
+  let ptr2 = mp.alloc(200)
+  # Check free memory
+  echo "Free memory: ", mp.getFreeMemory()
+  # Reallocate
+  let ptr3 = mp.realloc(ptr1, 150)
+  # Free memory
+  mp.free(ptr2)
+  # Reset the pool
+  mp.reset()
+  echo "Free memory after reset: ", mp.getFreeMemory()
+
+  # Example 2: ObjPool
+  type
+    MyObject = object
+      x, y: int
+      data: array[20, char]
+
+  var op = createObjPool(sizeof(MyObject), len = 10) # Create an object pool with 10 MyObject slots
+  # Reset the pool
+  var objects: array[5, ptr MyObject]
+  for i in 0..4:
+    objects[i] = cast[ptr MyObject](op.alloc())
+    objects[i].x = i
+    objects[i].y = i * 2
+  # Free some objects
+  op.free(objects[1])
+  op.free(objects[3])
+  let newObj = cast[ptr MyObject](op.alloc()) # Reuses a slot
+  echo "Allocated a new object, x = ", newObj.x # Always zero
+
+  # Example 3: BiStack
+  var bs = createBiStack(len = 1000) # Create a BiStack with 1000 bytes
+  # Allocate from front and back
+  let front1 = cast[ptr int](bs.allocFront(sizeof(int)))
+  let back1 = cast[ptr int](bs.allocBack(sizeof(int)))
+  front1[] = 10
+  back1[] = 20
+  # Check margins
+  echo "Margins: ", bs.margins()
+  # Reset front
+  bs.resetFront()
+  echo "Margins after front reset: ", bs.margins()
+  # Reset all
+  bs.resetAll()
+
 import system/ansi_c
 
 # Global Variables Definition
@@ -121,7 +171,7 @@ proc `=copy`*(dest: var BiStack; source: BiStack) {.error.}
 # Module specific Functions Declaration
 
 proc alignSize*(size, align: int): int {.inline.} =
-  result = (size + align - 1) and not (align - 1)
+  result = (size + (align - 1)) and not (align - 1)
 
 proc splitMemNode(node: MemNode, bytes: int): MemNode =
   let n = cast[uint](node)
