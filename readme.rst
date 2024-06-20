@@ -17,6 +17,7 @@ To learn more about how to use this wrapper, you can check out the documentation
 - `raymath <https://planetis-m.github.io/naylib/raymath.html>`_ - Mathematical functions for vectors, matrices, and quaternions
 - `rlgl <https://planetis-m.github.io/naylib/rlgl.html>`_ - Abstraction layer for OpenGL with immediate-mode API
 - `reasings <https://planetis-m.github.io/naylib/reasings.html>`_ - Smooth animation transitions (based on Robert Penner's library)
+- `rmem <https://planetis-m.github.io/naylib/rmem.html>`_ - Memory pool and objects pool
 
 If you're familiar with the C version of raylib, you may find the
 `cheatsheet <https://www.raylib.com/cheatsheet/cheatsheet.html>`_ useful.

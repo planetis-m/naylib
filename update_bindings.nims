@@ -67,7 +67,7 @@ task update, "Update the raylib git directory":
 task docs, "Generate documentation":
   # https://nim-lang.github.io/Nim/docgen.html
   withDir(PkgDir):
-    for tmp in items(["raymath", "raylib", "rlgl", "reasings"]):
+    for tmp in items(["raymath", "raylib", "rlgl", "reasings", "rmem"]):
       let doc = DocsDir / (tmp & ".html")
       let src = "src" / tmp
       # Generate the docs for {src}
