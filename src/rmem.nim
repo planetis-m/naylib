@@ -112,16 +112,15 @@ proc `=copy`*(dest: var ObjPool; source: ObjPool) {.error.}
 proc `=destroy`*(destack: BiStack) =
   if destack.mem == 0:
     return
-  else:
-    let buf {.noalias.} = cast[pointer](destack.mem)
-    c_free(buf)
+  let buf {.noalias.} = cast[pointer](destack.mem)
+  c_free(buf)
 
 proc `=dup`*(source: BiStack): BiStack {.error.}
 proc `=copy`*(dest: var BiStack; source: BiStack) {.error.}
 
 # Module specific Functions Declaration
 
-proc alignSize(size, align: int): int {.inline.} =
+proc alignSize*(size, align: int): int {.inline.} =
   result = (size + (align - 1)) and -align
 
 proc splitMemNode(node: MemNode, bytes: int): MemNode =
@@ -154,7 +153,6 @@ proc removeMemNode(list: var AllocList, node: MemNode): MemNode =
       list.head.prev = nil
     else:
       list.tail = nil
-
   if node.next != nil:
     node.next.prev = node.prev
   else:
@@ -163,7 +161,6 @@ proc removeMemNode(list: var AllocList, node: MemNode): MemNode =
       list.tail.next = nil
     else:
       list.head = nil
-
   dec list.len
   result = node
 
@@ -329,7 +326,7 @@ proc free*(mempool: var MemPool, `ptr`: pointer) =
     else:
       insertMemNode(mempool, mempool.large, memNode, bucketSlot < MEMPOOL_BUCKET_SIZE)
 
-proc realloc*(mempool: var MemPool, `ptr`: pointer, size: int): pointer =
+proc realloc*(mempool: var MemPool, `ptr`: pointer, size: Natural): pointer =
   if size > mempool.arena.size:
     return nil
   # NULL ptr should make this work like regular Allocation
@@ -481,7 +478,7 @@ proc allocFront*(destack: var BiStack, len: Natural): pointer =
       return nil
     else:
       let `ptr` {.noalias.} = cast[pointer](destack.front)
-      destack.front = destack.front + uint(alignedLen)
+      destack.front += uint(alignedLen)
       return `ptr`
 
 proc allocBack*(destack: var BiStack, len: Natural): pointer =
@@ -493,7 +490,7 @@ proc allocBack*(destack: var BiStack, len: Natural): pointer =
     if destack.back - uint(alignedLen) <= destack.front:
       return nil
     else:
-      destack.back = destack.back - uint(alignedLen)
+      destack.back -= uint(alignedLen)
       let `ptr` {.noalias.} = cast[pointer](destack.back)
       return `ptr`
 
