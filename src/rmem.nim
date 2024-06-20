@@ -121,7 +121,7 @@ proc `=copy`*(dest: var BiStack; source: BiStack) {.error.}
 # Module specific Functions Declaration
 
 proc alignSize*(size, align: int): int {.inline.} =
-  result = (size + (align - 1)) and -align
+  result = (size + align - 1) and not (align - 1)
 
 proc splitMemNode(node: MemNode, bytes: int): MemNode =
   let n = cast[uint](node)
