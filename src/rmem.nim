@@ -175,7 +175,7 @@ proc findMemNode(list: var AllocList, bytes: int): MemNode =
       return removeMemNode(list, node)
     else:
       return splitMemNode(node, bytes)
-  return MemNode(nil)
+  return nil
 
 proc insertMemNode(mempool: var MemPool, list: var AllocList, node: MemNode, isBucket: bool) =
   if list.head == nil:
@@ -347,11 +347,11 @@ proc realloc*(mempool: var MemPool, `ptr`: pointer, size: Natural): pointer =
       free(mempool, `ptr`)
       return resizedBlock
 
-proc cleanup*(mempool: var MemPool, ptrref: ptr pointer) =
-  if ptrref == nil or ptrref[] == nil:
+proc cleanup*(mempool: var MemPool, ptrref: var pointer) =
+  if ptrref == nil or ptrref == nil:
     return
-  free(mempool, ptrref[])
-  ptrref[] = nil
+  free(mempool, ptrref)
+  ptrref = nil
 
 proc getFreeMemory*(mempool: MemPool): int =
   result = int(mempool.arena.offs - mempool.arena.mem)
@@ -437,12 +437,12 @@ proc free*(objpool: var ObjPool, `ptr`: pointer) =
     objpool.offs = `block`
     inc(objpool.freeBlocks)
 
-proc cleanup*(objpool: var ObjPool, ptrref {.noalias.}: ptr pointer) =
+proc cleanup*(objpool: var ObjPool, ptrref: var pointer) =
   if ptrref == nil:
     return
   else:
-    free(objpool, ptrref[])
-    ptrref[] = nil
+    free(objpool, ptrref)
+    ptrref = nil
 
 # Module Functions Definition - Double-Ended Stack
 
