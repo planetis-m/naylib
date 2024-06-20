@@ -347,12 +347,6 @@ proc realloc*(mempool: var MemPool, `ptr`: pointer, size: Natural): pointer =
       free(mempool, `ptr`)
       return resizedBlock
 
-proc cleanup*(mempool: var MemPool, ptrref: var pointer) =
-  if ptrref == nil or ptrref == nil:
-    return
-  free(mempool, ptrref)
-  ptrref = nil
-
 proc getFreeMemory*(mempool: MemPool): int =
   result = int(mempool.arena.offs - mempool.arena.mem)
   var n = mempool.large.head
@@ -436,13 +430,6 @@ proc free*(objpool: var ObjPool, `ptr`: pointer) =
     index[] = if objpool.offs != 0: int((objpool.offs - objpool.mem) div uint(objpool.objSize)) else: objpool.memSize
     objpool.offs = `block`
     inc(objpool.freeBlocks)
-
-proc cleanup*(objpool: var ObjPool, ptrref: var pointer) =
-  if ptrref == nil:
-    return
-  else:
-    free(objpool, ptrref)
-    ptrref = nil
 
 # Module Functions Definition - Double-Ended Stack
 
