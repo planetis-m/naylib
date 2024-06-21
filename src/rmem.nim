@@ -370,17 +370,17 @@ proc free*(mempool: var MemPool, p: pointer) =
   if p - uint(sizeof(MemNode)) < mempool.arena.mem:
     return
   # Behind the actual pointer data is the allocation info.
-  let `block` = p - uint(sizeof(MemNode))
-  let memNode = cast[ptr MemNode](`block`)
+  let region = p - uint(sizeof(MemNode))
+  let memNode = cast[ptr MemNode](region)
   let bucketSlot = (memNode.size shr MEMPOOL_BUCKET_BITS) - 1
   # Make sure the pointer data is valid.
-  if `block` < mempool.arena.offs or
-     (`block` - mempool.arena.mem) > uint(mempool.arena.size) or
+  if region < mempool.arena.offs or
+     (region - mempool.arena.mem) > uint(mempool.arena.size) or
      memNode.size == 0 or
      memNode.size > mempool.arena.size:
     return
   # If the memNode is right at the arena offs, then merge it back to the arena.
-  elif `block` == mempool.arena.offs:
+  elif region == mempool.arena.offs:
     mempool.arena.offs += uint(memNode.size)
   else:
     # try to place it into bucket or large freelist.
@@ -476,28 +476,28 @@ proc alloc*[T, O](objpool: var ObjPool[T, O]): ptr T =
     # For first allocation, head points to the very first index.
     # Head = &pool[0];
     # ret = Head == ret = &pool[0];
-    let `block` {.noalias.} = cast[ptr int](objpool.offs)
+    let region {.noalias.} = cast[ptr int](objpool.offs)
     dec(objpool.freeBlocks)
     # After allocating, we set head to the address of the index that *Head holds.
     # Head = &pool[*Head * pool.objsize];
-    objpool.offs = if objpool.freeBlocks != 0: objpool.mem + uint(`block`[] * objpool.objSize) else: 0
-    result = cast[ptr T](`block`)
+    objpool.offs = if objpool.freeBlocks != 0: objpool.mem + uint(region[] * objpool.objSize) else: 0
+    result = cast[ptr T](region)
     zeroMem(result, objpool.objSize)
   else:
     result = nil
 
 proc free*[T, O](objpool: var ObjPool[T, O], p: ptr T) =
-  let `block` = cast[uint](p)
-  if p == nil or `block` < objpool.mem or `block` > objpool.mem + uint(objpool.memSize * objpool.objSize):
+  let region = cast[uint](p)
+  if p == nil or region < objpool.mem or region > objpool.mem + uint(objpool.memSize * objpool.objSize):
     return
   else:
     # When we free our pointer, we recycle the pointer space to store the previous index and then we push it as our new head.
     # *p = index of Head in relation to the buffer;
     # Head = p;
-    let index {.noalias.} = cast[ptr int](`block`)
+    let index {.noalias.} = cast[ptr int](region)
     index[] = if objpool.offs != 0: int((objpool.offs - objpool.mem) div uint(objpool.objSize))
               else: objpool.memSize
-    objpool.offs = `block`
+    objpool.offs = region
     inc(objpool.freeBlocks)
 
 # Module Functions Definition - Double-Ended Stack
