@@ -54,7 +54,9 @@
 
 runnableExamples:
   # Example 1: MemPool
-  var mp = createMemPool(size = 1024) # Create a memory pool with 1024 bytes
+
+  # Create a memory pool with 1024 bytes
+  var mp = createMemPool(size = 1024)
   # Allocate memory
   let ptr1 = mp.alloc(100)
   let ptr2 = mp.alloc(200)
@@ -74,7 +76,9 @@ runnableExamples:
       x, y: int
       data: array[20, char]
 
-  var op = createObjPool[MyObject](len = 10) # Create an object pool with 10 MyObject slots
+  var buffer: array[alignSize(sizeof(MyObject), sizeof(int))*10, byte]
+  # Create an object pool with 10 MyObject slots
+  var op = createObjPoolFromBuffer[MyObject](addr buffer, buffer.len)
   # Reset the pool
   var objects: array[5, ptr MyObject]
   for i in 0..4:
@@ -88,7 +92,9 @@ runnableExamples:
   echo "Allocated a new object, x = ", newObj.x # Memory is cleared
 
   # Example 3: BiStack
-  var bs = createBiStack(size = 1000) # Create a BiStack with 1000 bytes
+
+  # Create a BiStack with 1000 bytes
+  var bs = createBiStack(size = 1000)
   # Choose between front and back allocations based on the lifetimes and
   # usage patterns of your data.
   let front1 = cast[ptr int](bs.allocFront(sizeof(int))) # Memory is not cleared!
@@ -307,7 +313,7 @@ proc createMemPool*(size: Natural): MemPool =
   result.arena.mem = cast[uint](buf)
   result.arena.offs = result.arena.mem + uint(result.arena.size)
 
-proc createMemPool*(buf {.noalias.}: pointer, size: Natural): MemPool =
+proc createMemPoolFromBuffer*(buf {.noalias.}: pointer, size: Natural): MemPool =
   result = MemPool()
   if size == 0 or buf == nil or size <= sizeof(MemNode):
     return
@@ -439,11 +445,14 @@ proc createObjPool*[T](len: Natural): ObjPool[T] =
     index[] = i + 1
   result.offs = result.mem
 
-proc createObjPool*[T](buf {.noalias.}: pointer, len: Natural): ObjPool[T] =
+proc createObjPoolFromBuffer*[T](buf {.noalias.}: pointer, size: Natural): ObjPool[T] =
   result = ObjPool[T]()
   # If the object size isn't large enough to align to a size_t, then we can't use it
+  if sizeof(T) < sizeof(int):
+    return
   let alignedSize = alignSize(sizeof(T), sizeof(int))
-  if buf == nil or len == 0 or sizeof(T) < sizeof(int):
+  let len = size div alignedSize
+  if buf == nil or len == 0 or size != len * alignedSize:
     return
   result.objSize = alignedSize
   result.memSize = len
@@ -497,7 +506,7 @@ proc createBiStack*(size: Natural): BiStack =
   result.front = result.mem
   result.back = result.mem + uint(size)
 
-proc createBiStack*(buf {.noalias.}: pointer, size: Natural): BiStack =
+proc createBiStackFromBuffer*(buf {.noalias.}: pointer, size: Natural): BiStack =
   result = BiStack()
   if size == 0 or buf == nil:
     return
