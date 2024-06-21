@@ -17,7 +17,7 @@
 #          or source files without problems. But only ONE file should hold the implementation.
 #
 #  DOCUMENTATION:
-#      raylib Wiki: https://github.com/raysan5/raylib/wiki/raylib-memory-pool/1d7f47a6806258eaab5b10aa4876a52efc671071
+#      Repo Readme: https://github.com/raylib-extras/rmem
 #      Usage example with raylib: https://github.com/raysan5/raylib/issues/1329
 #
 #  VERSIONS HISTORY:
@@ -84,19 +84,20 @@ runnableExamples:
   # Free some objects
   op.free(objects[1])
   op.free(objects[3])
-  let newObj = cast[ptr MyObject](op.alloc()) # Reuses a slot
+  let newObj = cast[ptr MyObject](op.alloc()) # Reuses a slot, no fragmentation
   echo "Allocated a new object, x = ", newObj.x # Memory is cleared
 
   # Example 3: BiStack
   var bs = createBiStack(len = 1000) # Create a BiStack with 1000 bytes
   # Allocate from front and back
-  let front1 = cast[ptr int](bs.allocFront(sizeof(int)))
+  let front1 = cast[ptr int](bs.allocFront(sizeof(int))) # Memory is not cleared!
   let back1 = cast[ptr int](bs.allocBack(sizeof(int)))
   front1[] = 10
   back1[] = 20
-  # Check margins
+  # Check that the back portion doesn't collide with the front
   echo "Margins: ", bs.margins()
-  # Reset front
+  # A number of 0 or less means that one of the portions has reached the other
+  # and a reset is necessary.
   bs.resetFront()
   echo "Margins after front reset: ", bs.margins()
   # Reset all
@@ -372,9 +373,9 @@ proc free*(mempool: var MemPool, `ptr`: pointer) =
   else:
     # try to place it into bucket or large freelist.
     if bucketSlot < MEMPOOL_BUCKET_SIZE:
-      insertMemNode(mempool, mempool.buckets[bucketSlot], memNode, true)
+      insertMemNode(mempool, mempool.buckets[bucketSlot], memNode, isBucket = true)
     else:
-      insertMemNode(mempool, mempool.large, memNode, false)
+      insertMemNode(mempool, mempool.large, memNode, isBucket = false)
 
 proc realloc*(mempool: var MemPool, `ptr`: pointer, size: Natural): pointer =
   if size > mempool.arena.size:
