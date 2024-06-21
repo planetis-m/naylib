@@ -76,7 +76,8 @@ runnableExamples:
       x, y: int
       data: array[20, char]
 
-  var buffer: array[alignSize(sizeof(MyObject), sizeof(int))*10, byte]
+  const Size = alignSize(sizeof(MyObject), sizeof(int)) * 10 # each element should be aligned
+  var buffer {.align(sizeof(int)).}: array[Size, byte] # variable is also aligned
   # Create an object pool with 10 MyObject slots
   var op = createObjPoolFromBuffer[MyObject](addr buffer, buffer.len)
   # Reset the pool
@@ -119,6 +120,32 @@ const
   MEMPOOL_BUCKET_BITS = (sizeof(uint) div 2) + 1
   MEM_SPLIT_THRESHOLD = sizeof(uint) * 4
 
+when cpuEndian == littleEndian:
+  const MEM_IS_OWNED_FLAG = 1
+else:
+  const MEM_IS_OWNED_FLAG = low(int)
+
+template isOwned(s): bool =
+  (s and MEM_IS_OWNED_FLAG) == MEM_IS_OWNED_FLAG
+
+template getVal(s): int =
+  when cpuEndian == littleEndian:
+    int(uint(s) shr 1)
+  else:
+    s and not MEM_IS_OWNED_FLAG
+
+template setNotOwned(s, n) =
+  when cpuEndian == littleEndian:
+    s = n shl 1
+  else:
+    s = n or MEM_IS_OWNED_FLAG
+
+template setOwned(s, n) =
+  when cpuEndian == littleEndian:
+    s = n shl 1 or MEM_IS_OWNED_FLAG
+  else:
+    s = n or MEM_IS_OWNED_FLAG
+
 # Types and Structures Definition
 
 type
@@ -150,28 +177,25 @@ type
 # Destructors
 
 proc `=destroy`*(mempool: MemPool) =
-  if mempool.arena.mem == 0:
-    return
-  let `ptr` {.noalias.} = cast[pointer](mempool.arena.mem)
-  c_free(`ptr`)
+  if isOwned(mempool.arena.size) and mempool.arena.mem != 0:
+    let `ptr` {.noalias.} = cast[pointer](mempool.arena.mem)
+    c_free(`ptr`)
 
 proc `=dup`*(source: MemPool): MemPool {.error.}
 proc `=copy`*(dest: var MemPool; source: MemPool) {.error.}
 
 proc `=destroy`*[T](objpool: ObjPool[T]) =
-  if objpool.mem == 0:
-    return
-  let `ptr` {.noalias.} = cast[pointer](objpool.mem)
-  c_free(`ptr`)
+  if isOwned(objpool.memSize) and objpool.mem != 0:
+    let `ptr` {.noalias.} = cast[pointer](objpool.mem)
+    c_free(`ptr`)
 
 proc `=dup`*[T](source: ObjPool[T]): ObjPool[T] {.error.}
 proc `=copy`*[T](dest: var ObjPool[T]; source: ObjPool[T]) {.error.}
 
 proc `=destroy`*(destack: BiStack) =
-  if destack.mem == 0:
-    return
-  let buf {.noalias.} = cast[pointer](destack.mem)
-  c_free(buf)
+  if isOwned(destack.size) and destack.mem != 0:
+    let `ptr` {.noalias.} = cast[pointer](destack.mem)
+    c_free(`ptr`)
 
 proc `=dup`*(source: BiStack): BiStack {.error.}
 proc `=copy`*(dest: var BiStack; source: BiStack) {.error.}
@@ -309,7 +333,7 @@ proc createMemPool*(size: Natural): MemPool =
   let buf {.noalias.} = c_malloc(size.csize_t)
   if buf == nil:
     return
-  result.arena.size = size
+  result.arena.size.setOwned size
   result.arena.mem = cast[uint](buf)
   result.arena.offs = result.arena.mem + uint(result.arena.size)
 
@@ -317,12 +341,12 @@ proc createMemPoolFromBuffer*(buf {.noalias.}: pointer, size: Natural): MemPool 
   result = MemPool()
   if size == 0 or buf == nil or size <= sizeof(MemNode):
     return
-  result.arena.size = size
+  result.arena.size.setNotOwned size
   result.arena.mem = cast[uint](buf)
-  result.arena.offs = result.arena.mem + uint(result.arena.size)
+  result.arena.offs = result.arena.mem + uint(result.arena.size.getVal)
 
 proc alloc*(mempool: var MemPool, size: Natural): pointer =
-  if size == 0 or size > mempool.arena.size:
+  if size == 0 or size > mempool.arena.size.getVal:
     return nil
   var newMem: ptr MemNode = nil
   let allocSize = alignSize(size + sizeof(MemNode), sizeof(int))
@@ -370,9 +394,9 @@ proc free*(mempool: var MemPool, `ptr`: pointer) =
   let bucketSlot = (memNode.size shr MEMPOOL_BUCKET_BITS) - 1
   # Make sure the pointer data is valid.
   if `block` < mempool.arena.offs or
-     (`block` - mempool.arena.mem) > uint(mempool.arena.size) or
+     (`block` - mempool.arena.mem) > uint(mempool.arena.size.getVal) or
      memNode.size == 0 or
-     memNode.size > mempool.arena.size:
+     memNode.size > mempool.arena.size.getVal:
     return
   # If the memNode is right at the arena offs, then merge it back to the arena.
   elif `block` == mempool.arena.offs:
@@ -385,7 +409,7 @@ proc free*(mempool: var MemPool, `ptr`: pointer) =
       insertMemNode(mempool, mempool.large, memNode, isBucket = false)
 
 proc realloc*(mempool: var MemPool, `ptr`: pointer, size: Natural): pointer =
-  if size > mempool.arena.size:
+  if size > mempool.arena.size.getVal:
     return nil
   # NULL ptr should make this work like regular Allocation
   elif `ptr` == nil:
@@ -424,7 +448,7 @@ proc reset*(mempool: var MemPool) =
     mempool.buckets[i].head = nil
     mempool.buckets[i].tail = nil
     mempool.buckets[i].len = 0
-  mempool.arena.offs = mempool.arena.mem + uint(mempool.arena.size)
+  mempool.arena.offs = mempool.arena.mem + uint(mempool.arena.size.getVal)
 
 # Module Functions Definition - Object Pool
 
@@ -437,7 +461,7 @@ proc createObjPool*[T](len: Natural): ObjPool[T] =
   if buf == nil:
     return
   result.objSize = alignedSize
-  result.memSize = len
+  result.memSize.setOwned len
   result.freeBlocks = len
   result.mem = cast[uint](buf)
   for i in 0..<result.freeBlocks:
@@ -455,7 +479,7 @@ proc createObjPoolFromBuffer*[T](buf {.noalias.}: pointer, size: Natural): ObjPo
   if buf == nil or len == 0 or size != len * alignedSize:
     return
   result.objSize = alignedSize
-  result.memSize = len
+  result.memSize.setNotOwned len
   result.freeBlocks = len
   result.mem = cast[uint](buf)
   for i in 0..<result.freeBlocks:
@@ -480,7 +504,7 @@ proc alloc*[T](objpool: var ObjPool[T]): ptr T =
 
 proc free*[T](objpool: var ObjPool[T], `ptr`: ptr T) =
   let `block` = cast[uint](`ptr`)
-  if `ptr` == nil or `block` < objpool.mem or `block` > objpool.mem + uint(objpool.memSize * objpool.objSize):
+  if `ptr` == nil or `block` < objpool.mem or `block` > objpool.mem + uint(objpool.memSize.getVal * objpool.objSize):
     return
   else:
     # When we free our pointer, we recycle the pointer space to store the previous index and then we push it as our new head.
@@ -488,7 +512,7 @@ proc free*[T](objpool: var ObjPool[T], `ptr`: ptr T) =
     # Head = p;
     let index {.noalias.} = cast[ptr int](`block`)
     index[] = if objpool.offs != 0: int((objpool.offs - objpool.mem) div uint(objpool.objSize))
-              else: objpool.memSize
+              else: objpool.memSize.getVal
     objpool.offs = `block`
     inc(objpool.freeBlocks)
 
@@ -501,7 +525,7 @@ proc createBiStack*(size: Natural): BiStack =
   let buf = c_malloc(csize_t(size))
   if buf == nil:
     return
-  result.size = size
+  result.size.setOwned size
   result.mem = cast[uint](buf)
   result.front = result.mem
   result.back = result.mem + uint(size)
@@ -511,7 +535,7 @@ proc createBiStackFromBuffer*(buf {.noalias.}: pointer, size: Natural): BiStack 
   if size == 0 or buf == nil:
     return
   else:
-    result.size = size
+    result.size.setNotOwned size
     result.mem = cast[uint](buf)
     result.front = result.mem
     result.back = result.mem + uint(size)
@@ -552,7 +576,7 @@ proc resetBack*(destack: var BiStack) =
   if destack.mem == 0:
     return
   else:
-    destack.back = destack.mem + uint(destack.size)
+    destack.back = destack.mem + uint(destack.size.getVal)
 
 proc resetAll*(destack: var BiStack) =
   resetBack(destack)
