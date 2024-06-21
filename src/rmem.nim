@@ -85,7 +85,7 @@ runnableExamples:
   op.free(objects[1])
   op.free(objects[3])
   let newObj = cast[ptr MyObject](op.alloc()) # Reuses a slot
-  echo "Allocated a new object, x = ", newObj.x # Always zero
+  echo "Allocated a new object, x = ", newObj.x # Memory is cleared
 
   # Example 3: BiStack
   var bs = createBiStack(len = 1000) # Create a BiStack with 1000 bytes
@@ -114,12 +114,12 @@ const
 # Types and Structures Definition
 
 type
-  MemNode = ptr object # Memory pool node
+  MemNode = object # Memory pool node
     size: int
-    next, prev: MemNode
+    next, prev: ptr MemNode
 
   AllocList = object # Freelist implementation
-    head, tail: MemNode
+    head, tail: ptr MemNode
     len: int
 
   Arena = object # Arena allocator
@@ -173,13 +173,13 @@ proc `=copy`*(dest: var BiStack; source: BiStack) {.error.}
 proc alignSize*(size, align: int): int {.inline.} =
   result = (size + (align - 1)) and not (align - 1)
 
-proc splitMemNode(node: MemNode, bytes: int): MemNode =
+proc splitMemNode(node: ptr MemNode, bytes: int): ptr MemNode =
   let n = cast[uint](node)
-  result = cast[MemNode](n + uint(node.size - bytes))
+  result = cast[ptr MemNode](n + uint(node.size - bytes))
   node.size -= bytes
   result.size = bytes
 
-proc insertMemNodeBefore(list: var AllocList, insert, curr: MemNode) =
+proc insertMemNodeBefore(list: var AllocList, insert, curr: ptr MemNode) =
   insert.next = curr
   if curr.prev == nil:
     list.head = insert
@@ -188,13 +188,13 @@ proc insertMemNodeBefore(list: var AllocList, insert, curr: MemNode) =
     curr.prev.next = insert
   curr.prev = insert
 
-proc replaceMemNode(old, replace: MemNode) =
+proc replaceMemNode(old, replace: ptr MemNode) =
   replace.prev = old.prev
   replace.next = old.next
   if old.prev != nil: old.prev.next = replace
   if old.next != nil: old.next.prev = replace
 
-proc removeMemNode(list: var AllocList, node: MemNode): MemNode =
+proc removeMemNode(list: var AllocList, node: ptr MemNode): ptr MemNode =
   if node.prev != nil:
     node.prev.next = node.next
   else:
@@ -214,7 +214,7 @@ proc removeMemNode(list: var AllocList, node: MemNode): MemNode =
   dec list.len
   result = node
 
-proc findMemNode(list: var AllocList, bytes: int): MemNode =
+proc findMemNode(list: var AllocList, bytes: int): ptr MemNode =
   var node = list.head
   while node != nil:
     if node.size < bytes:
@@ -227,7 +227,7 @@ proc findMemNode(list: var AllocList, bytes: int): MemNode =
       return splitMemNode(node, bytes)
   return nil
 
-proc insertMemNode(mempool: var MemPool, list: var AllocList, node: MemNode, isBucket: bool) =
+proc insertMemNode(mempool: var MemPool, list: var AllocList, node: ptr MemNode, isBucket: bool) =
   if list.head == nil:
     list.head = node
     inc(list.len)
@@ -298,7 +298,7 @@ proc createMemPool*(size: Natural): MemPool =
   if size == 0:
     return
   # Align the mempool size to at least the size of an alloc node.
-  let buf {.noalias.} = cast[ptr UncheckedArray[uint8]](c_malloc(size.csize_t))
+  let buf {.noalias.} = c_malloc(size.csize_t)
   if buf == nil:
     return
   result.arena.size = size
@@ -316,7 +316,7 @@ proc createMemPool*(buf {.noalias.}: pointer, size: Natural): MemPool =
 proc alloc*(mempool: var MemPool, size: Natural): pointer =
   if size == 0 or size > mempool.arena.size:
     return nil
-  var newMem: MemNode = nil
+  var newMem: ptr MemNode = nil
   let allocSize = alignSize(size + sizeof(MemNode), sizeof(int))
   let bucketSlot = (allocSize shr MEMPOOL_BUCKET_BITS) - 1
   # If the size is small enough, let's check if our buckets has a fitting memory block.
@@ -332,7 +332,7 @@ proc alloc*(mempool: var MemPool, size: Natural): pointer =
     # Subtract allocation size from the mempool.
     mempool.arena.offs -= uint(allocSize)
     # Use the available mempool space as the new node.
-    newMem = cast[MemNode](mempool.arena.offs)
+    newMem = cast[ptr MemNode](mempool.arena.offs)
     newMem.size = allocSize
   # Visual of the allocation block.
   # --------------
@@ -346,7 +346,7 @@ proc alloc*(mempool: var MemPool, size: Natural): pointer =
   # --------------
   newMem.next = nil
   newMem.prev = nil
-  let finalMem {.noalias.} = cast[ptr UncheckedArray[uint8]](cast[uint](newMem) + uint(sizeof(MemNode)))
+  let finalMem {.noalias.} = cast[pointer](cast[uint](newMem) + uint(sizeof(MemNode)))
   result = finalMem
   zeroMem(result, newMem.size - sizeof(MemNode))
 
@@ -358,7 +358,7 @@ proc free*(mempool: var MemPool, `ptr`: pointer) =
     return
   # Behind the actual pointer data is the allocation info.
   let `block` = p - uint(sizeof(MemNode))
-  let memNode = cast[MemNode](`block`)
+  let memNode = cast[ptr MemNode](`block`)
   let bucketSlot = (memNode.size shr MEMPOOL_BUCKET_BITS) - 1
   # Make sure the pointer data is valid.
   if `block` < mempool.arena.offs or
@@ -385,14 +385,13 @@ proc realloc*(mempool: var MemPool, `ptr`: pointer, size: Natural): pointer =
   elif cast[uint](`ptr`) - uint(sizeof(MemNode)) < mempool.arena.mem:
     return nil
   else:
-    let node = cast[MemNode](cast[uint](`ptr`) - uint(sizeof(MemNode)))
-    const NODE_SIZE = sizeof(MemNode)
-    let resizedBlock = cast[ptr UncheckedArray[uint8]](alloc(mempool, size))
+    let node = cast[ptr MemNode](cast[uint](`ptr`) - uint(sizeof(MemNode)))
+    let resizedBlock = alloc(mempool, size)
     if resizedBlock == nil:
       return nil
     else:
-      let resized = cast[MemNode](cast[uint](resizedBlock) - uint(sizeof(MemNode)))
-      let copySize = min(node.size, resized.size) - NODE_SIZE
+      let resized = cast[ptr MemNode](cast[uint](resizedBlock) - uint(sizeof(MemNode)))
+      let copySize = min(node.size, resized.size) - sizeof(MemNode)
       copyMem(resizedBlock, `ptr`, copySize)
       free(mempool, `ptr`)
       return resizedBlock
@@ -426,7 +425,7 @@ proc createObjPool*(objsize, len: Natural): ObjPool =
   if len == 0 or objsize == 0:
     return
   let alignedSize = alignSize(objsize, sizeof(int))
-  let buf {.noalias.} = cast[ptr UncheckedArray[uint8]](c_calloc(csize_t(len), csize_t(alignedSize)))
+  let buf {.noalias.} = c_calloc(csize_t(len), csize_t(alignedSize))
   if buf == nil:
     return
   result.objSize = alignedSize
@@ -487,7 +486,7 @@ proc createBiStack*(len: Natural): BiStack =
   result = BiStack()
   if len == 0:
     return
-  let buf = cast[ptr UncheckedArray[uint8]](c_malloc(csize_t(len)))
+  let buf = c_malloc(csize_t(len))
   if buf == nil:
     return
   result.size = len
