@@ -372,9 +372,9 @@ proc free*(mempool: var MemPool, `ptr`: pointer) =
   else:
     # try to place it into bucket or large freelist.
     if bucketSlot < MEMPOOL_BUCKET_SIZE:
-      insertMemNode(mempool, mempool.buckets[bucketSlot], memNode, bucketSlot < MEMPOOL_BUCKET_SIZE)
+      insertMemNode(mempool, mempool.buckets[bucketSlot], memNode, true)
     else:
-      insertMemNode(mempool, mempool.large, memNode, bucketSlot < MEMPOOL_BUCKET_SIZE)
+      insertMemNode(mempool, mempool.large, memNode, false)
 
 proc realloc*(mempool: var MemPool, `ptr`: pointer, size: Natural): pointer =
   if size > mempool.arena.size:
