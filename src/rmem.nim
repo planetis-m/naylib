@@ -233,7 +233,7 @@ proc findMemNode(list: var AllocList, bytes: int): ptr MemNode =
       return splitMemNode(node, bytes)
   return nil
 
-proc insertMemNode[O](mempool: var MemPool[O], list: var AllocList, node: ptr MemNode, isBucket: bool) =
+proc insertMemNode(mempool: var MemPool, list: var AllocList, node: ptr MemNode, isBucket: bool) =
   if list.head == nil:
     list.head = node
     inc(list.len)
@@ -319,7 +319,7 @@ proc createMemPoolFromBuffer*(buf {.noalias.}: pointer, size: Natural): MemPool[
   result.arena.mem = cast[uint](buf)
   result.arena.offs = result.arena.mem + uint(result.arena.size)
 
-proc alloc*[O](mempool: var MemPool[O], size: Natural): pointer =
+proc alloc*(mempool: var MemPool, size: Natural): pointer =
   if size == 0 or size > mempool.arena.size:
     return nil
   var newMem: ptr MemNode = nil
@@ -356,7 +356,7 @@ proc alloc*[O](mempool: var MemPool[O], size: Natural): pointer =
   result = finalMem
   zeroMem(result, newMem.size - sizeof(MemNode))
 
-proc free*[O](mempool: var MemPool[O], `ptr`: pointer) =
+proc free*(mempool: var MemPool, `ptr`: pointer) =
   if `ptr` == nil:
     return
   let p = cast[uint](`ptr`)
@@ -382,7 +382,7 @@ proc free*[O](mempool: var MemPool[O], `ptr`: pointer) =
     else:
       insertMemNode(mempool, mempool.large, memNode, isBucket = false)
 
-proc realloc*[O](mempool: var MemPool[O], `ptr`: pointer, size: Natural): pointer =
+proc realloc*(mempool: var MemPool, `ptr`: pointer, size: Natural): pointer =
   if size > mempool.arena.size:
     return nil
   # NULL ptr should make this work like regular Allocation
@@ -402,7 +402,7 @@ proc realloc*[O](mempool: var MemPool[O], `ptr`: pointer, size: Natural): pointe
       free(mempool, `ptr`)
       return resizedBlock
 
-proc getFreeMemory*[O](mempool: MemPool[O]): int =
+proc getFreeMemory*(mempool: MemPool): int =
   result = int(mempool.arena.offs - mempool.arena.mem)
   var n = mempool.large.head
   while n != nil:
@@ -414,7 +414,7 @@ proc getFreeMemory*[O](mempool: MemPool[O]): int =
       result += n.size
       n = n.next
 
-proc reset*[O](mempool: var MemPool[O]) =
+proc reset*(mempool: var MemPool) =
   mempool.large.head = nil
   mempool.large.tail = nil
   mempool.large.len = 0
@@ -514,7 +514,7 @@ proc createBiStackFromBuffer*(buf {.noalias.}: pointer, size: Natural): BiStack[
     result.front = result.mem
     result.back = result.mem + uint(size)
 
-proc allocFront*[O](destack: var BiStack[O], size: Natural): pointer =
+proc allocFront*(destack: var BiStack, size: Natural): pointer =
   if destack.mem == 0:
     return nil
   else:
@@ -527,7 +527,7 @@ proc allocFront*[O](destack: var BiStack[O], size: Natural): pointer =
       destack.front += uint(alignedLen)
       return `ptr`
 
-proc allocBack*[O](destack: var BiStack[O], size: Natural): pointer =
+proc allocBack*(destack: var BiStack, size: Natural): pointer =
   if destack.mem == 0:
     return nil
   else:
@@ -540,21 +540,21 @@ proc allocBack*[O](destack: var BiStack[O], size: Natural): pointer =
       let `ptr` {.noalias.} = cast[pointer](destack.back)
       return `ptr`
 
-proc resetFront*[O](destack: var BiStack[O]) =
+proc resetFront*(destack: var BiStack) =
   if destack.mem == 0:
     return
   else:
     destack.front = destack.mem
 
-proc resetBack*[O](destack: var BiStack[O]) =
+proc resetBack*(destack: var BiStack) =
   if destack.mem == 0:
     return
   else:
     destack.back = destack.mem + uint(destack.size)
 
-proc resetAll*[O](destack: var BiStack[O]) =
+proc resetAll*(destack: var BiStack) =
   resetBack(destack)
   resetFront(destack)
 
-proc margins*[O](destack: BiStack[O]): int {.inline.} =
+proc margins*(destack: BiStack): int {.inline.} =
   result = int(destack.back - destack.front)

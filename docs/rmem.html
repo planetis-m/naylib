@@ -89,16 +89,16 @@
 
 </ul>
 <ul class="simple nested-toc-section">alloc
-  <li><a class="reference" href="#alloc%2CMemPool%5BO%5D%2CNatural" title="alloc[O](mempool: var MemPool[O]; size: Natural): pointer">alloc[O](mempool: var MemPool[O]; size: Natural): pointer</a></li>
+  <li><a class="reference" href="#alloc%2CMemPool%2CNatural" title="alloc(mempool: var MemPool; size: Natural): pointer">alloc(mempool: var MemPool; size: Natural): pointer</a></li>
 <li><a class="reference" href="#alloc%2CObjPool%5BT%2CO%5D" title="alloc[T, O](objpool: var ObjPool[T, O]): ptr T">alloc[T, O](objpool: var ObjPool[T, O]): ptr T</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">allocBack
-  <li><a class="reference" href="#allocBack%2CBiStack%5BO%5D%2CNatural" title="allocBack[O](destack: var BiStack[O]; size: Natural): pointer">allocBack[O](destack: var BiStack[O]; size: Natural): pointer</a></li>
+  <li><a class="reference" href="#allocBack%2CBiStack%2CNatural" title="allocBack(destack: var BiStack; size: Natural): pointer">allocBack(destack: var BiStack; size: Natural): pointer</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">allocFront
-  <li><a class="reference" href="#allocFront%2CBiStack%5BO%5D%2CNatural" title="allocFront[O](destack: var BiStack[O]; size: Natural): pointer">allocFront[O](destack: var BiStack[O]; size: Natural): pointer</a></li>
+  <li><a class="reference" href="#allocFront%2CBiStack%2CNatural" title="allocFront(destack: var BiStack; size: Natural): pointer">allocFront(destack: var BiStack; size: Natural): pointer</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">createBiStack
@@ -126,36 +126,36 @@
 
 </ul>
 <ul class="simple nested-toc-section">free
-  <li><a class="reference" href="#free%2CMemPool%5BO%5D%2Cpointer" title="free[O](mempool: var MemPool[O]; ptr: pointer)">free[O](mempool: var MemPool[O]; ptr: pointer)</a></li>
+  <li><a class="reference" href="#free%2CMemPool%2Cpointer" title="free(mempool: var MemPool; ptr: pointer)">free(mempool: var MemPool; ptr: pointer)</a></li>
 <li><a class="reference" href="#free%2CObjPool%5BT%2CO%5D%2Cptr.T" title="free[T, O](objpool: var ObjPool[T, O]; ptr: ptr T)">free[T, O](objpool: var ObjPool[T, O]; ptr: ptr T)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">getFreeMemory
-  <li><a class="reference" href="#getFreeMemory%2CMemPool%5BO%5D" title="getFreeMemory[O](mempool: MemPool[O]): int">getFreeMemory[O](mempool: MemPool[O]): int</a></li>
+  <li><a class="reference" href="#getFreeMemory%2CMemPool" title="getFreeMemory(mempool: MemPool): int">getFreeMemory(mempool: MemPool): int</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">margins
-  <li><a class="reference" href="#margins%2CBiStack%5BO%5D" title="margins[O](destack: BiStack[O]): int">margins[O](destack: BiStack[O]): int</a></li>
+  <li><a class="reference" href="#margins%2CBiStack" title="margins(destack: BiStack): int">margins(destack: BiStack): int</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">realloc
-  <li><a class="reference" href="#realloc%2CMemPool%5BO%5D%2Cpointer%2CNatural" title="realloc[O](mempool: var MemPool[O]; ptr: pointer; size: Natural): pointer">realloc[O](mempool: var MemPool[O]; ptr: pointer; size: Natural): pointer</a></li>
+  <li><a class="reference" href="#realloc%2CMemPool%2Cpointer%2CNatural" title="realloc(mempool: var MemPool; ptr: pointer; size: Natural): pointer">realloc(mempool: var MemPool; ptr: pointer; size: Natural): pointer</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">reset
-  <li><a class="reference" href="#reset%2CMemPool%5BO%5D" title="reset[O](mempool: var MemPool[O])">reset[O](mempool: var MemPool[O])</a></li>
+  <li><a class="reference" href="#reset%2CMemPool" title="reset(mempool: var MemPool)">reset(mempool: var MemPool)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">resetAll
-  <li><a class="reference" href="#resetAll%2CBiStack%5BO%5D" title="resetAll[O](destack: var BiStack[O])">resetAll[O](destack: var BiStack[O])</a></li>
+  <li><a class="reference" href="#resetAll%2CBiStack" title="resetAll(destack: var BiStack)">resetAll(destack: var BiStack)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">resetBack
-  <li><a class="reference" href="#resetBack%2CBiStack%5BO%5D" title="resetBack[O](destack: var BiStack[O])">resetBack[O](destack: var BiStack[O])</a></li>
+  <li><a class="reference" href="#resetBack%2CBiStack" title="resetBack(destack: var BiStack)">resetBack(destack: var BiStack)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">resetFront
-  <li><a class="reference" href="#resetFront%2CBiStack%5BO%5D" title="resetFront[O](destack: var BiStack[O])">resetFront[O](destack: var BiStack[O])</a></li>
+  <li><a class="reference" href="#resetFront%2CBiStack" title="resetFront(destack: var BiStack)">resetFront(destack: var BiStack)</a></li>
 
 </ul>
 
@@ -385,8 +385,8 @@
 
 </div>
 <div id="alloc-procs-all">
-  <div id="alloc,MemPool[O],Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#alloc%2CMemPool%5BO%5D%2CNatural"><span class="Identifier">alloc</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+  <div id="alloc,MemPool,Natural">
+  <dt><pre><span class="Keyword">proc</span> <a href="#alloc%2CMemPool%2CNatural"><span class="Identifier">alloc</span></a><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
   <dd>
     
     
@@ -408,8 +408,8 @@
 
 </div>
 <div id="allocBack-procs-all">
-  <div id="allocBack,BiStack[O],Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#allocBack%2CBiStack%5BO%5D%2CNatural"><span class="Identifier">allocBack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+  <div id="allocBack,BiStack,Natural">
+  <dt><pre><span class="Keyword">proc</span> <a href="#allocBack%2CBiStack%2CNatural"><span class="Identifier">allocBack</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
   <dd>
     
     
@@ -421,8 +421,8 @@
 
 </div>
 <div id="allocFront-procs-all">
-  <div id="allocFront,BiStack[O],Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#allocFront%2CBiStack%5BO%5D%2CNatural"><span class="Identifier">allocFront</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+  <div id="allocFront,BiStack,Natural">
+  <dt><pre><span class="Keyword">proc</span> <a href="#allocFront%2CBiStack%2CNatural"><span class="Identifier">allocFront</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
   <dd>
     
     
@@ -516,8 +516,8 @@
 
 </div>
 <div id="free-procs-all">
-  <div id="free,MemPool[O],pointer">
-  <dt><pre><span class="Keyword">proc</span> <a href="#free%2CMemPool%5BO%5D%2Cpointer"><span class="Identifier">free</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">ptr</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">)</span></pre></dt>
+  <div id="free,MemPool,pointer">
+  <dt><pre><span class="Keyword">proc</span> <a href="#free%2CMemPool%2Cpointer"><span class="Identifier">free</span></a><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">;</span> <span class="Identifier">ptr</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -539,8 +539,8 @@
 
 </div>
 <div id="getFreeMemory-procs-all">
-  <div id="getFreeMemory,MemPool[O]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#getFreeMemory%2CMemPool%5BO%5D"><span class="Identifier">getFreeMemory</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span></pre></dt>
+  <div id="getFreeMemory,MemPool">
+  <dt><pre><span class="Keyword">proc</span> <a href="#getFreeMemory%2CMemPool"><span class="Identifier">getFreeMemory</span></a><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span></pre></dt>
   <dd>
     
     
@@ -552,8 +552,8 @@
 
 </div>
 <div id="margins-procs-all">
-  <div id="margins,BiStack[O]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#margins%2CBiStack%5BO%5D"><span class="Identifier">margins</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.<span class="Identifier">inline</span>.}</pre></dt>
+  <div id="margins,BiStack">
+  <dt><pre><span class="Keyword">proc</span> <a href="#margins%2CBiStack"><span class="Identifier">margins</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.<span class="Identifier">inline</span>.}</pre></dt>
   <dd>
     
     
@@ -565,8 +565,8 @@
 
 </div>
 <div id="realloc-procs-all">
-  <div id="realloc,MemPool[O],pointer,Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#realloc%2CMemPool%5BO%5D%2Cpointer%2CNatural"><span class="Identifier">realloc</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">ptr</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+  <div id="realloc,MemPool,pointer,Natural">
+  <dt><pre><span class="Keyword">proc</span> <a href="#realloc%2CMemPool%2Cpointer%2CNatural"><span class="Identifier">realloc</span></a><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">;</span> <span class="Identifier">ptr</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
   <dd>
     
     
@@ -578,8 +578,8 @@
 
 </div>
 <div id="reset-procs-all">
-  <div id="reset,MemPool[O]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#reset%2CMemPool%5BO%5D"><span class="Identifier">reset</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+  <div id="reset,MemPool">
+  <dt><pre><span class="Keyword">proc</span> <a href="#reset%2CMemPool"><span class="Identifier">reset</span></a><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -591,8 +591,8 @@
 
 </div>
 <div id="resetAll-procs-all">
-  <div id="resetAll,BiStack[O]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#resetAll%2CBiStack%5BO%5D"><span class="Identifier">resetAll</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+  <div id="resetAll,BiStack">
+  <dt><pre><span class="Keyword">proc</span> <a href="#resetAll%2CBiStack"><span class="Identifier">resetAll</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -604,8 +604,8 @@
 
 </div>
 <div id="resetBack-procs-all">
-  <div id="resetBack,BiStack[O]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#resetBack%2CBiStack%5BO%5D"><span class="Identifier">resetBack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+  <div id="resetBack,BiStack">
+  <dt><pre><span class="Keyword">proc</span> <a href="#resetBack%2CBiStack"><span class="Identifier">resetBack</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -617,8 +617,8 @@
 
 </div>
 <div id="resetFront-procs-all">
-  <div id="resetFront,BiStack[O]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#resetFront%2CBiStack%5BO%5D"><span class="Identifier">resetFront</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+  <div id="resetFront,BiStack">
+  <dt><pre><span class="Keyword">proc</span> <a href="#resetFront%2CBiStack"><span class="Identifier">resetFront</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -639,7 +639,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-06-21 15:45:55 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-06-21 15:49:47 UTC</small>
       </div>
     </div>
   </div>
