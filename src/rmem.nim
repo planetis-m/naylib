@@ -17,7 +17,7 @@
 #          or source files without problems. But only ONE file should hold the implementation.
 #
 #  DOCUMENTATION:
-#      raylib Wiki: https://github.com/raysan5/raylib/wiki/raylib-memory-pool
+#      raylib Wiki: https://github.com/raysan5/raylib/wiki/raylib-memory-pool/1d7f47a6806258eaab5b10aa4876a52efc671071
 #      Usage example with raylib: https://github.com/raysan5/raylib/issues/1329
 #
 #  VERSIONS HISTORY:
