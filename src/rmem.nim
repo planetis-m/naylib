@@ -111,8 +111,6 @@ runnableExamples:
   # Reset all
   bs.resetAll()
 
-import system/ansi_c
-
 # Global Variables Definition
 
 const
@@ -150,26 +148,32 @@ type
 
 # Destructors
 
+template free(p) =
+  when compileOption("threads"):
+    deallocShared(p)
+  else:
+    dealloc(p)
+
 proc `=destroy`*[Owned](mempool: MemPool[Owned]) =
   if Owned and mempool.arena.mem != 0:
-    let `ptr` {.noalias.} = cast[pointer](mempool.arena.mem)
-    c_free(`ptr`)
+    let p {.noalias.} = cast[pointer](mempool.arena.mem)
+    free(p)
 
 proc `=dup`*[O](source: MemPool[O]): MemPool[O] {.error.}
 proc `=copy`*[O](dest: var MemPool[O]; source: MemPool[O]) {.error.}
 
 proc `=destroy`*[T, Owned](objpool: ObjPool[T, Owned]) =
   if Owned and objpool.mem != 0:
-    let `ptr` {.noalias.} = cast[pointer](objpool.mem)
-    c_free(`ptr`)
+    let p {.noalias.} = cast[pointer](objpool.mem)
+    free(p)
 
 proc `=dup`*[T, O](source: ObjPool[T, O]): ObjPool[T, O] {.error.}
 proc `=copy`*[T, O](dest: var ObjPool[T, O]; source: ObjPool[T, O]) {.error.}
 
 proc `=destroy`*[Owned](destack: BiStack[Owned]) =
   if Owned and destack.mem != 0:
-    let `ptr` {.noalias.} = cast[pointer](destack.mem)
-    c_free(`ptr`)
+    let p {.noalias.} = cast[pointer](destack.mem)
+    free(p)
 
 proc `=dup`*[O](source: BiStack[O]): BiStack[O] {.error.}
 proc `=copy`*[O](dest: var BiStack[O]; source: BiStack[O]) {.error.}
@@ -301,10 +305,13 @@ proc insertMemNode(mempool: var MemPool, list: var AllocList, node: ptr MemNode,
 
 proc createMemPool*(size: Natural): MemPool[true] =
   result = MemPool[true]()
-  if size == 0:
+  if size == 0 or size <= sizeof(MemNode):
     return
   # Align the mempool size to at least the size of an alloc node.
-  let buf {.noalias.} = c_malloc(size.csize_t)
+  when compileOption("threads"):
+    let buf {.noalias.} = allocShared(size)
+  else:
+    let buf {.noalias.} = alloc(size)
   if buf == nil:
     return
   result.arena.size = size
@@ -356,10 +363,10 @@ proc alloc*(mempool: var MemPool, size: Natural): pointer =
   result = finalMem
   zeroMem(result, newMem.size - sizeof(MemNode))
 
-proc free*(mempool: var MemPool, `ptr`: pointer) =
-  if `ptr` == nil:
+proc free*(mempool: var MemPool, p: pointer) =
+  if p == nil:
     return
-  let p = cast[uint](`ptr`)
+  let p = cast[uint](p)
   if p - uint(sizeof(MemNode)) < mempool.arena.mem:
     return
   # Behind the actual pointer data is the allocation info.
@@ -382,24 +389,24 @@ proc free*(mempool: var MemPool, `ptr`: pointer) =
     else:
       insertMemNode(mempool, mempool.large, memNode, isBucket = false)
 
-proc realloc*(mempool: var MemPool, `ptr`: pointer, size: Natural): pointer =
+proc realloc*(mempool: var MemPool, p: pointer, size: Natural): pointer =
   if size > mempool.arena.size:
     return nil
   # NULL ptr should make this work like regular Allocation
-  elif `ptr` == nil:
+  elif p == nil:
     return alloc(mempool, size)
-  elif cast[uint](`ptr`) - uint(sizeof(MemNode)) < mempool.arena.mem:
+  elif cast[uint](p) - uint(sizeof(MemNode)) < mempool.arena.mem:
     return nil
   else:
-    let node = cast[ptr MemNode](cast[uint](`ptr`) - uint(sizeof(MemNode)))
+    let node = cast[ptr MemNode](cast[uint](p) - uint(sizeof(MemNode)))
     let resizedBlock = alloc(mempool, size)
     if resizedBlock == nil:
       return nil
     else:
       let resized = cast[ptr MemNode](cast[uint](resizedBlock) - uint(sizeof(MemNode)))
       let copySize = min(node.size, resized.size) - sizeof(MemNode)
-      copyMem(resizedBlock, `ptr`, copySize)
-      free(mempool, `ptr`)
+      copyMem(resizedBlock, p, copySize)
+      free(mempool, p)
       return resizedBlock
 
 proc getFreeMemory*(mempool: MemPool): int =
@@ -428,10 +435,13 @@ proc reset*(mempool: var MemPool) =
 
 proc createObjPool*[T](len: Natural): ObjPool[T, true] =
   result = ObjPool[T, true]()
-  if len == 0 or sizeof(T) == 0:
+  if len == 0 or sizeof(T) < sizeof(int):
     return
   let alignedSize = alignSize(sizeof(T), sizeof(int))
-  let buf {.noalias.} = c_calloc(csize_t(len), csize_t(alignedSize))
+  when compileOption("threads"):
+    let buf {.noalias.} = allocShared(len * alignedSize)
+  else:
+    let buf {.noalias.} = alloc(len * alignedSize)
   if buf == nil:
     return
   result.objSize = alignedSize
@@ -476,9 +486,9 @@ proc alloc*[T, O](objpool: var ObjPool[T, O]): ptr T =
   else:
     result = nil
 
-proc free*[T, O](objpool: var ObjPool[T, O], `ptr`: ptr T) =
-  let `block` = cast[uint](`ptr`)
-  if `ptr` == nil or `block` < objpool.mem or `block` > objpool.mem + uint(objpool.memSize * objpool.objSize):
+proc free*[T, O](objpool: var ObjPool[T, O], p: ptr T) =
+  let `block` = cast[uint](p)
+  if p == nil or `block` < objpool.mem or `block` > objpool.mem + uint(objpool.memSize * objpool.objSize):
     return
   else:
     # When we free our pointer, we recycle the pointer space to store the previous index and then we push it as our new head.
@@ -496,7 +506,10 @@ proc createBiStack*(size: Natural): BiStack[true] =
   result = BiStack[true]()
   if size == 0:
     return
-  let buf = c_malloc(csize_t(size))
+  when compileOption("threads"):
+    let buf {.noalias.} = allocShared(size)
+  else:
+    let buf {.noalias.} = alloc(size)
   if buf == nil:
     return
   result.size = size
@@ -523,9 +536,9 @@ proc allocFront*(destack: var BiStack, size: Natural): pointer =
     if destack.front + uint(alignedLen) >= destack.back:
       return nil
     else:
-      let `ptr` {.noalias.} = cast[pointer](destack.front)
+      let p {.noalias.} = cast[pointer](destack.front)
       destack.front += uint(alignedLen)
-      return `ptr`
+      return p
 
 proc allocBack*(destack: var BiStack, size: Natural): pointer =
   if destack.mem == 0:
@@ -537,8 +550,8 @@ proc allocBack*(destack: var BiStack, size: Natural): pointer =
       return nil
     else:
       destack.back -= uint(alignedLen)
-      let `ptr` {.noalias.} = cast[pointer](destack.back)
-      return `ptr`
+      let p {.noalias.} = cast[pointer](destack.back)
+      return p
 
 proc resetFront*(destack: var BiStack) =
   if destack.mem == 0:
