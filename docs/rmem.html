@@ -55,9 +55,9 @@
   <details open>
     <summary><a class="reference reference-toplevel" href="#7" id="57">Types</a></summary>
     <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#BiStack" title="BiStack = object">BiStack</a></li>
-<li><a class="reference" href="#MemPool" title="MemPool = object">MemPool</a></li>
-<li><a class="reference" href="#ObjPool" title="ObjPool[T] = object">ObjPool</a></li>
+      <li><a class="reference" href="#BiStack" title="BiStack[Owned] = object">BiStack</a></li>
+<li><a class="reference" href="#MemPool" title="MemPool[Owned] = object">MemPool</a></li>
+<li><a class="reference" href="#ObjPool" title="ObjPool[T; Owned] = object">ObjPool</a></li>
 
     </ul>
   </details>
@@ -67,21 +67,21 @@
     <summary><a class="reference reference-toplevel" href="#12" id="62">Procs</a></summary>
     <ul class="simple simple-toc-section">
       <ul class="simple nested-toc-section">=copy
-  <li><a class="reference" href="#%3Dcopy%2CBiStack%2CBiStack" title="`=copy`(dest: var BiStack; source: BiStack)">`=copy`(dest: var BiStack; source: BiStack)</a></li>
-<li><a class="reference" href="#%3Dcopy%2CMemPool%2CMemPool" title="`=copy`(dest: var MemPool; source: MemPool)">`=copy`(dest: var MemPool; source: MemPool)</a></li>
-<li><a class="reference" href="#%3Dcopy%2CObjPool%5BT%5D%2CObjPool%5BT%5D" title="`=copy`[T](dest: var ObjPool[T]; source: ObjPool[T])">`=copy`[T](dest: var ObjPool[T]; source: ObjPool[T])</a></li>
+  <li><a class="reference" href="#%3Dcopy%2CBiStack%5BO%5D%2CBiStack%5BO%5D" title="`=copy`[O](dest: var BiStack[O]; source: BiStack[O])">`=copy`[O](dest: var BiStack[O]; source: BiStack[O])</a></li>
+<li><a class="reference" href="#%3Dcopy%2CMemPool%5BO%5D%2CMemPool%5BO%5D" title="`=copy`[O](dest: var MemPool[O]; source: MemPool[O])">`=copy`[O](dest: var MemPool[O]; source: MemPool[O])</a></li>
+<li><a class="reference" href="#%3Dcopy%2CObjPool%5BT%2CO%5D%2CObjPool%5BT%2CO%5D" title="`=copy`[T, O](dest: var ObjPool[T, O]; source: ObjPool[T, O])">`=copy`[T, O](dest: var ObjPool[T, O]; source: ObjPool[T, O])</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">=destroy
-  <li><a class="reference" href="#%3Ddestroy%2CBiStack" title="`=destroy`(destack: BiStack)">`=destroy`(destack: BiStack)</a></li>
-<li><a class="reference" href="#%3Ddestroy%2CMemPool" title="`=destroy`(mempool: MemPool)">`=destroy`(mempool: MemPool)</a></li>
-<li><a class="reference" href="#%3Ddestroy%2CObjPool%5BT%5D" title="`=destroy`[T](objpool: ObjPool[T])">`=destroy`[T](objpool: ObjPool[T])</a></li>
+  <li><a class="reference" href="#%3Ddestroy%2CBiStack%5BOwned%5D" title="`=destroy`[Owned](destack: BiStack[Owned])">`=destroy`[Owned](destack: BiStack[Owned])</a></li>
+<li><a class="reference" href="#%3Ddestroy%2CMemPool%5BOwned%5D" title="`=destroy`[Owned](mempool: MemPool[Owned])">`=destroy`[Owned](mempool: MemPool[Owned])</a></li>
+<li><a class="reference" href="#%3Ddestroy%2CObjPool%5BT%2COwned%5D" title="`=destroy`[T, Owned](objpool: ObjPool[T, Owned])">`=destroy`[T, Owned](objpool: ObjPool[T, Owned])</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">=dup
-  <li><a class="reference" href="#%3Ddup%2CBiStack" title="`=dup`(source: BiStack): BiStack">`=dup`(source: BiStack): BiStack</a></li>
-<li><a class="reference" href="#%3Ddup%2CMemPool" title="`=dup`(source: MemPool): MemPool">`=dup`(source: MemPool): MemPool</a></li>
-<li><a class="reference" href="#%3Ddup%2CObjPool%5BT%5D" title="`=dup`[T](source: ObjPool[T]): ObjPool[T]">`=dup`[T](source: ObjPool[T]): ObjPool[T]</a></li>
+  <li><a class="reference" href="#%3Ddup%2CBiStack%5BO%5D" title="`=dup`[O](source: BiStack[O]): BiStack[O]">`=dup`[O](source: BiStack[O]): BiStack[O]</a></li>
+<li><a class="reference" href="#%3Ddup%2CMemPool%5BO%5D" title="`=dup`[O](source: MemPool[O]): MemPool[O]">`=dup`[O](source: MemPool[O]): MemPool[O]</a></li>
+<li><a class="reference" href="#%3Ddup%2CObjPool%5BT%2CO%5D" title="`=dup`[T, O](source: ObjPool[T, O]): ObjPool[T, O]">`=dup`[T, O](source: ObjPool[T, O]): ObjPool[T, O]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">alignSize
@@ -89,73 +89,73 @@
 
 </ul>
 <ul class="simple nested-toc-section">alloc
-  <li><a class="reference" href="#alloc%2CMemPool%2CNatural" title="alloc(mempool: var MemPool; size: Natural): pointer">alloc(mempool: var MemPool; size: Natural): pointer</a></li>
-<li><a class="reference" href="#alloc%2CObjPool%5BT%5D" title="alloc[T](objpool: var ObjPool[T]): ptr T">alloc[T](objpool: var ObjPool[T]): ptr T</a></li>
+  <li><a class="reference" href="#alloc%2CMemPool%5BO%5D%2CNatural" title="alloc[O](mempool: var MemPool[O]; size: Natural): pointer">alloc[O](mempool: var MemPool[O]; size: Natural): pointer</a></li>
+<li><a class="reference" href="#alloc%2CObjPool%5BT%2CO%5D" title="alloc[T, O](objpool: var ObjPool[T, O]): ptr T">alloc[T, O](objpool: var ObjPool[T, O]): ptr T</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">allocBack
-  <li><a class="reference" href="#allocBack%2CBiStack%2CNatural" title="allocBack(destack: var BiStack; size: Natural): pointer">allocBack(destack: var BiStack; size: Natural): pointer</a></li>
+  <li><a class="reference" href="#allocBack%2CBiStack%5BO%5D%2CNatural" title="allocBack[O](destack: var BiStack[O]; size: Natural): pointer">allocBack[O](destack: var BiStack[O]; size: Natural): pointer</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">allocFront
-  <li><a class="reference" href="#allocFront%2CBiStack%2CNatural" title="allocFront(destack: var BiStack; size: Natural): pointer">allocFront(destack: var BiStack; size: Natural): pointer</a></li>
+  <li><a class="reference" href="#allocFront%2CBiStack%5BO%5D%2CNatural" title="allocFront[O](destack: var BiStack[O]; size: Natural): pointer">allocFront[O](destack: var BiStack[O]; size: Natural): pointer</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">createBiStack
-  <li><a class="reference" href="#createBiStack%2CNatural" title="createBiStack(size: Natural): BiStack">createBiStack(size: Natural): BiStack</a></li>
+  <li><a class="reference" href="#createBiStack%2CNatural" title="createBiStack(size: Natural): BiStack[true]">createBiStack(size: Natural): BiStack[true]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">createBiStackFromBuffer
-  <li><a class="reference" href="#createBiStackFromBuffer%2Cpointer%2CNatural" title="createBiStackFromBuffer(buf: pointer; size: Natural): BiStack">createBiStackFromBuffer(buf: pointer; size: Natural): BiStack</a></li>
+  <li><a class="reference" href="#createBiStackFromBuffer%2Cpointer%2CNatural" title="createBiStackFromBuffer(buf: pointer; size: Natural): BiStack[false]">createBiStackFromBuffer(buf: pointer; size: Natural): BiStack[false]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">createMemPool
-  <li><a class="reference" href="#createMemPool%2CNatural" title="createMemPool(size: Natural): MemPool">createMemPool(size: Natural): MemPool</a></li>
+  <li><a class="reference" href="#createMemPool%2CNatural" title="createMemPool(size: Natural): MemPool[true]">createMemPool(size: Natural): MemPool[true]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">createMemPoolFromBuffer
-  <li><a class="reference" href="#createMemPoolFromBuffer%2Cpointer%2CNatural" title="createMemPoolFromBuffer(buf: pointer; size: Natural): MemPool">createMemPoolFromBuffer(buf: pointer; size: Natural): MemPool</a></li>
+  <li><a class="reference" href="#createMemPoolFromBuffer%2Cpointer%2CNatural" title="createMemPoolFromBuffer(buf: pointer; size: Natural): MemPool[false]">createMemPoolFromBuffer(buf: pointer; size: Natural): MemPool[false]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">createObjPool
-  <li><a class="reference" href="#createObjPool%2CNatural" title="createObjPool[T](len: Natural): ObjPool[T]">createObjPool[T](len: Natural): ObjPool[T]</a></li>
+  <li><a class="reference" href="#createObjPool%2CNatural" title="createObjPool[T](len: Natural): ObjPool[T, true]">createObjPool[T](len: Natural): ObjPool[T, true]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">createObjPoolFromBuffer
-  <li><a class="reference" href="#createObjPoolFromBuffer%2Cpointer%2CNatural" title="createObjPoolFromBuffer[T](buf: pointer; size: Natural): ObjPool[T]">createObjPoolFromBuffer[T](buf: pointer; size: Natural): ObjPool[T]</a></li>
+  <li><a class="reference" href="#createObjPoolFromBuffer%2Cpointer%2CNatural" title="createObjPoolFromBuffer[T](buf: pointer; size: Natural): ObjPool[T, false]">createObjPoolFromBuffer[T](buf: pointer; size: Natural): ObjPool[T, false]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">free
-  <li><a class="reference" href="#free%2CMemPool%2Cpointer" title="free(mempool: var MemPool; ptr: pointer)">free(mempool: var MemPool; ptr: pointer)</a></li>
-<li><a class="reference" href="#free%2CObjPool%5BT%5D%2Cptr.T" title="free[T](objpool: var ObjPool[T]; ptr: ptr T)">free[T](objpool: var ObjPool[T]; ptr: ptr T)</a></li>
+  <li><a class="reference" href="#free%2CMemPool%5BO%5D%2Cpointer" title="free[O](mempool: var MemPool[O]; ptr: pointer)">free[O](mempool: var MemPool[O]; ptr: pointer)</a></li>
+<li><a class="reference" href="#free%2CObjPool%5BT%2CO%5D%2Cptr.T" title="free[T, O](objpool: var ObjPool[T, O]; ptr: ptr T)">free[T, O](objpool: var ObjPool[T, O]; ptr: ptr T)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">getFreeMemory
-  <li><a class="reference" href="#getFreeMemory%2CMemPool" title="getFreeMemory(mempool: MemPool): int">getFreeMemory(mempool: MemPool): int</a></li>
+  <li><a class="reference" href="#getFreeMemory%2CMemPool%5BO%5D" title="getFreeMemory[O](mempool: MemPool[O]): int">getFreeMemory[O](mempool: MemPool[O]): int</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">margins
-  <li><a class="reference" href="#margins%2CBiStack" title="margins(destack: BiStack): int">margins(destack: BiStack): int</a></li>
+  <li><a class="reference" href="#margins%2CBiStack%5BO%5D" title="margins[O](destack: BiStack[O]): int">margins[O](destack: BiStack[O]): int</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">realloc
-  <li><a class="reference" href="#realloc%2CMemPool%2Cpointer%2CNatural" title="realloc(mempool: var MemPool; ptr: pointer; size: Natural): pointer">realloc(mempool: var MemPool; ptr: pointer; size: Natural): pointer</a></li>
+  <li><a class="reference" href="#realloc%2CMemPool%5BO%5D%2Cpointer%2CNatural" title="realloc[O](mempool: var MemPool[O]; ptr: pointer; size: Natural): pointer">realloc[O](mempool: var MemPool[O]; ptr: pointer; size: Natural): pointer</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">reset
-  <li><a class="reference" href="#reset%2CMemPool" title="reset(mempool: var MemPool)">reset(mempool: var MemPool)</a></li>
+  <li><a class="reference" href="#reset%2CMemPool%5BO%5D" title="reset[O](mempool: var MemPool[O])">reset[O](mempool: var MemPool[O])</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">resetAll
-  <li><a class="reference" href="#resetAll%2CBiStack" title="resetAll(destack: var BiStack)">resetAll(destack: var BiStack)</a></li>
+  <li><a class="reference" href="#resetAll%2CBiStack%5BO%5D" title="resetAll[O](destack: var BiStack[O])">resetAll[O](destack: var BiStack[O])</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">resetBack
-  <li><a class="reference" href="#resetBack%2CBiStack" title="resetBack(destack: var BiStack)">resetBack(destack: var BiStack)</a></li>
+  <li><a class="reference" href="#resetBack%2CBiStack%5BO%5D" title="resetBack[O](destack: var BiStack[O])">resetBack[O](destack: var BiStack[O])</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">resetFront
-  <li><a class="reference" href="#resetFront%2CBiStack" title="resetFront(destack: var BiStack)">resetFront(destack: var BiStack)</a></li>
+  <li><a class="reference" href="#resetFront%2CBiStack%5BO%5D" title="resetFront[O](destack: var BiStack[O])">resetFront[O](destack: var BiStack[O])</a></li>
 
 </ul>
 
@@ -198,10 +198,10 @@
     <span class="Identifier">x</span><span class="Punctuation">,</span> <span class="Identifier">y</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
     <span class="Identifier">data</span><span class="Punctuation">:</span> <span class="Identifier">array</span><span class="Punctuation">[</span><span class="DecNumber">20</span><span class="Punctuation">,</span> <span class="Identifier">char</span><span class="Punctuation">]</span>
 
+<span class="Comment"># Create an object pool with 10 MyObject slots</span>
 <span class="Keyword">const</span> <span class="Identifier">Size</span> <span class="Operator">=</span> <span class="Identifier">alignSize</span><span class="Punctuation">(</span><span class="Identifier">sizeof</span><span class="Punctuation">(</span><span class="Identifier">MyObject</span><span class="Punctuation">)</span><span class="Punctuation">,</span> <span class="Identifier">sizeof</span><span class="Punctuation">(</span><span class="Identifier">int</span><span class="Punctuation">)</span><span class="Punctuation">)</span> <span class="Operator">*</span> <span class="DecNumber">10</span> <span class="Comment"># each element should be aligned</span>
 <span class="Keyword">var</span> <span class="Identifier">buffer</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">align</span><span class="Punctuation">(</span><span class="Identifier">sizeof</span><span class="Punctuation">(</span><span class="Identifier">int</span><span class="Punctuation">)</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">array</span><span class="Punctuation">[</span><span class="Identifier">Size</span><span class="Punctuation">,</span> <span class="Identifier">byte</span><span class="Punctuation">]</span> <span class="Comment"># variable is also aligned</span>
-<span class="Comment"># Create an object pool with 10 MyObject slots</span>
-<span class="Keyword">var</span> <span class="Identifier">op</span> <span class="Operator">=</span> <span class="Identifier">createObjPoolFromBuffer</span><span class="Punctuation">[</span><span class="Identifier">MyObject</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Keyword">addr</span> <span class="Identifier">buffer</span><span class="Punctuation">,</span> <span class="Identifier">buffer</span><span class="Operator">.</span><span class="Identifier">len</span><span class="Punctuation">)</span>
+<span class="Keyword">var</span> <span class="Identifier">op</span> <span class="Operator">=</span> <span class="Identifier">createObjPoolFromBuffer</span><span class="Punctuation">[</span><span class="Identifier">MyObject</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Keyword">addr</span> <span class="Identifier">buffer</span><span class="Punctuation">,</span> <span class="Identifier">size</span> <span class="Operator">=</span> <span class="Identifier">buffer</span><span class="Operator">.</span><span class="Identifier">len</span><span class="Punctuation">)</span>
 <span class="Comment"># Reset the pool</span>
 <span class="Keyword">var</span> <span class="Identifier">objects</span><span class="Punctuation">:</span> <span class="Identifier">array</span><span class="Punctuation">[</span><span class="DecNumber">5</span><span class="Punctuation">,</span> <span class="Keyword">ptr</span> <span class="Identifier">MyObject</span><span class="Punctuation">]</span>
 <span class="Keyword">for</span> <span class="Identifier">i</span> <span class="Keyword">in</span> <span class="FloatNumber">0.</span><span class="Operator">.</span><span class="DecNumber">4</span><span class="Punctuation">:</span>
@@ -236,32 +236,32 @@
   <h1><a class="toc-backref" href="#7">Types</a></h1>
   <dl class="item">
     <div id="BiStack">
-  <dt><pre><a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a> <span class="Other">=</span> <span class="Keyword">object</span></pre></dt>
+  <dt><pre><a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">Owned</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">object</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L173" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L173" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L147" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L147" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="MemPool">
-  <dt><pre><a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a> <span class="Other">=</span> <span class="Keyword">object</span></pre></dt>
+  <dt><pre><a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">Owned</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">object</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L164" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L164" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L138" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L138" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="ObjPool">
-  <dt><pre><a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">object</span></pre></dt>
+  <dt><pre><a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">;</span> <span class="Identifier">Owned</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">object</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L169" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L169" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L143" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L143" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -272,99 +272,99 @@
   <h1><a class="toc-backref" href="#12">Procs</a></h1>
   <dl class="item">
     <div id="=copy-procs-all">
-  <div id="=copy,BiStack,BiStack">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dcopy%2CBiStack%2CBiStack"><span class="Identifier">`=copy`</span></a><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">)</span> {.<span class="Identifier">error</span>.}</pre></dt>
+  <div id="=copy,BiStack[O],BiStack[O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dcopy%2CBiStack%5BO%5D%2CBiStack%5BO%5D"><span class="Identifier">`=copy`</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span> {.<span class="Identifier">error</span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L201" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L201" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L175" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L175" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="=copy,MemPool,MemPool">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dcopy%2CMemPool%2CMemPool"><span class="Identifier">`=copy`</span></a><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">)</span> {.<span class="Identifier">error</span>.}</pre></dt>
+<div id="=copy,MemPool[O],MemPool[O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dcopy%2CMemPool%5BO%5D%2CMemPool%5BO%5D"><span class="Identifier">`=copy`</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span> {.<span class="Identifier">error</span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L185" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L185" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L159" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L159" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="=copy,ObjPool[T],ObjPool[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dcopy%2CObjPool%5BT%5D%2CObjPool%5BT%5D"><span class="Identifier">`=copy`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span> {.<span class="Identifier">error</span>.}</pre></dt>
+<div id="=copy,ObjPool[T,O],ObjPool[T,O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dcopy%2CObjPool%5BT%2CO%5D%2CObjPool%5BT%2CO%5D"><span class="Identifier">`=copy`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span> {.<span class="Identifier">error</span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L193" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L193" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L167" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L167" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="=destroy-procs-all">
-  <div id="=destroy,BiStack">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CBiStack"><span class="Identifier">`=destroy`</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <div id="=destroy,BiStack[Owned]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CBiStack%5BOwned%5D"><span class="Identifier">`=destroy`</span></a><span class="Other">[</span><span class="Identifier">Owned</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">Owned</span><span class="Other">]</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L195" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L195" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L169" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L169" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="=destroy,MemPool">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CMemPool"><span class="Identifier">`=destroy`</span></a><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<div id="=destroy,MemPool[Owned]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CMemPool%5BOwned%5D"><span class="Identifier">`=destroy`</span></a><span class="Other">[</span><span class="Identifier">Owned</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">Owned</span><span class="Other">]</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L179" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L179" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L153" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L153" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="=destroy,ObjPool[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CObjPool%5BT%5D"><span class="Identifier">`=destroy`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">objpool</span><span class="Other">:</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<div id="=destroy,ObjPool[T,Owned]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CObjPool%5BT%2COwned%5D"><span class="Identifier">`=destroy`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">Owned</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">objpool</span><span class="Other">:</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">Owned</span><span class="Other">]</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L187" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L187" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L161" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L161" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="=dup-procs-all">
-  <div id="=dup,BiStack">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddup%2CBiStack"><span class="Identifier">`=dup`</span></a><span class="Other">(</span><span class="Identifier">source</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a> {.<span class="Identifier">error</span>.}</pre></dt>
+  <div id="=dup,BiStack[O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddup%2CBiStack%5BO%5D"><span class="Identifier">`=dup`</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">source</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span> {.<span class="Identifier">error</span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L200" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L200" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L174" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L174" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="=dup,MemPool">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddup%2CMemPool"><span class="Identifier">`=dup`</span></a><span class="Other">(</span><span class="Identifier">source</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a> {.<span class="Identifier">error</span>.}</pre></dt>
+<div id="=dup,MemPool[O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddup%2CMemPool%5BO%5D"><span class="Identifier">`=dup`</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">source</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span> {.<span class="Identifier">error</span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L184" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L184" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L158" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L158" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="=dup,ObjPool[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddup%2CObjPool%5BT%5D"><span class="Identifier">`=dup`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">source</span><span class="Other">:</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> {.<span class="Identifier">error</span>.}</pre></dt>
+<div id="=dup,ObjPool[T,O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddup%2CObjPool%5BT%2CO%5D"><span class="Identifier">`=dup`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">source</span><span class="Other">:</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">O</span><span class="Other">]</span> {.<span class="Identifier">error</span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L192" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L192" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L166" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L166" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -377,60 +377,57 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L205" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L205" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L179" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L179" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="alloc-procs-all">
-  <div id="alloc,MemPool,Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#alloc%2CMemPool%2CNatural"><span class="Identifier">alloc</span></a><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <div id="alloc,MemPool[O],Natural">
+  <dt><pre><span class="Keyword">proc</span> <a href="#alloc%2CMemPool%5BO%5D%2CNatural"><span class="Identifier">alloc</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L348" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L348" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L322" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L322" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="alloc,ObjPool[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#alloc%2CObjPool%5BT%5D"><span class="Identifier">alloc</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">objpool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">T</span></pre></dt>
+<div id="alloc,ObjPool[T,O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#alloc%2CObjPool%5BT%2CO%5D"><span class="Identifier">alloc</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">objpool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">T</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L490" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L490" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L464" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L464" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="allocBack-procs-all">
-  <div id="allocBack,BiStack,Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#allocBack%2CBiStack%2CNatural"><span class="Identifier">allocBack</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <div id="allocBack,BiStack[O],Natural">
+  <dt><pre><span class="Keyword">proc</span> <a href="#allocBack%2CBiStack%5BO%5D%2CNatural"><span class="Identifier">allocBack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L556" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L556" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L530" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L530" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="allocFront-procs-all">
-  <div id="allocFront,BiStack,Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#allocFront%2CBiStack%2CNatural"><span class="Identifier">allocFront</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <div id="allocFront,BiStack[O],Natural">
+  <dt><pre><span class="Keyword">proc</span> <a href="#allocFront%2CBiStack%5BO%5D%2CNatural"><span class="Identifier">allocFront</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L543" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L543" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L517" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L517" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -438,12 +435,13 @@
 </div>
 <div id="createBiStack-procs-all">
   <div id="createBiStack,Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#createBiStack%2CNatural"><span class="Identifier">createBiStack</span></a><span class="Other">(</span><span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#createBiStack%2CNatural"><span class="Identifier">createBiStack</span></a><span class="Other">(</span><span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">true</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L521" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L521" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L495" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L495" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -451,13 +449,13 @@
 </div>
 <div id="createBiStackFromBuffer-procs-all">
   <div id="createBiStackFromBuffer,pointer,Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#createBiStackFromBuffer%2Cpointer%2CNatural"><span class="Identifier">createBiStackFromBuffer</span></a><span class="Other">(</span><span class="Identifier">buf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#createBiStackFromBuffer%2Cpointer%2CNatural"><span class="Identifier">createBiStackFromBuffer</span></a><span class="Other">(</span><span class="Identifier">buf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">false</span><span class="Other">]</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L533" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L533" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L507" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L507" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -465,12 +463,13 @@
 </div>
 <div id="createMemPool-procs-all">
   <div id="createMemPool,Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#createMemPool%2CNatural"><span class="Identifier">createMemPool</span></a><span class="Other">(</span><span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#createMemPool%2CNatural"><span class="Identifier">createMemPool</span></a><span class="Other">(</span><span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">true</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L328" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L328" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L302" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L302" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -478,13 +477,13 @@
 </div>
 <div id="createMemPoolFromBuffer-procs-all">
   <div id="createMemPoolFromBuffer,pointer,Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#createMemPoolFromBuffer%2Cpointer%2CNatural"><span class="Identifier">createMemPoolFromBuffer</span></a><span class="Other">(</span><span class="Identifier">buf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#createMemPoolFromBuffer%2Cpointer%2CNatural"><span class="Identifier">createMemPoolFromBuffer</span></a><span class="Other">(</span><span class="Identifier">buf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">false</span><span class="Other">]</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L340" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L340" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L314" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L314" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -492,12 +491,12 @@
 </div>
 <div id="createObjPool-procs-all">
   <div id="createObjPool,Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#createObjPool%2CNatural"><span class="Identifier">createObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">len</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#createObjPool%2CNatural"><span class="Identifier">createObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">len</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">true</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L455" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L455" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L429" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L429" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -505,21 +504,69 @@
 </div>
 <div id="createObjPoolFromBuffer-procs-all">
   <div id="createObjPoolFromBuffer,pointer,Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#createObjPoolFromBuffer%2Cpointer%2CNatural"><span class="Identifier">createObjPoolFromBuffer</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">buf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#createObjPoolFromBuffer%2Cpointer%2CNatural"><span class="Identifier">createObjPoolFromBuffer</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">buf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">false</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L472" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L472" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L446" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L446" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="free-procs-all">
-  <div id="free,MemPool,pointer">
-  <dt><pre><span class="Keyword">proc</span> <a href="#free%2CMemPool%2Cpointer"><span class="Identifier">free</span></a><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">;</span> <span class="Identifier">ptr</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <div id="free,MemPool[O],pointer">
+  <dt><pre><span class="Keyword">proc</span> <a href="#free%2CMemPool%5BO%5D%2Cpointer"><span class="Identifier">free</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">ptr</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L359" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L359" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="free,ObjPool[T,O],ptr.T">
+  <dt><pre><span class="Keyword">proc</span> <a href="#free%2CObjPool%5BT%2CO%5D%2Cptr.T"><span class="Identifier">free</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">objpool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">ptr</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L479" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L479" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="getFreeMemory-procs-all">
+  <div id="getFreeMemory,MemPool[O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#getFreeMemory%2CMemPool%5BO%5D"><span class="Identifier">getFreeMemory</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L405" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L405" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="margins-procs-all">
+  <div id="margins,BiStack[O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#margins%2CBiStack%5BO%5D"><span class="Identifier">margins</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.<span class="Identifier">inline</span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L559" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L559" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="realloc-procs-all">
+  <div id="realloc,MemPool[O],pointer,Natural">
+  <dt><pre><span class="Keyword">proc</span> <a href="#realloc%2CMemPool%5BO%5D%2Cpointer%2CNatural"><span class="Identifier">realloc</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">ptr</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
   <dd>
     
     
@@ -528,105 +575,55 @@
 
   </dd>
 </div>
-<div id="free,ObjPool[T],ptr.T">
-  <dt><pre><span class="Keyword">proc</span> <a href="#free%2CObjPool%5BT%5D%2Cptr.T"><span class="Identifier">free</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">objpool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#ObjPool"><span class="Identifier">ObjPool</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">ptr</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L505" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L505" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
-<div id="getFreeMemory-procs-all">
-  <div id="getFreeMemory,MemPool">
-  <dt><pre><span class="Keyword">proc</span> <a href="#getFreeMemory%2CMemPool"><span class="Identifier">getFreeMemory</span></a><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L431" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L431" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
-<div id="margins-procs-all">
-  <div id="margins,BiStack">
-  <dt><pre><span class="Keyword">proc</span> <a href="#margins%2CBiStack"><span class="Identifier">margins</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.<span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L585" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L585" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
-<div id="realloc-procs-all">
-  <div id="realloc,MemPool,pointer,Natural">
-  <dt><pre><span class="Keyword">proc</span> <a href="#realloc%2CMemPool%2Cpointer%2CNatural"><span class="Identifier">realloc</span></a><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">;</span> <span class="Identifier">ptr</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L411" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L411" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
 
 </div>
 <div id="reset-procs-all">
-  <div id="reset,MemPool">
-  <dt><pre><span class="Keyword">proc</span> <a href="#reset%2CMemPool"><span class="Identifier">reset</span></a><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <div id="reset,MemPool[O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#reset%2CMemPool%5BO%5D"><span class="Identifier">reset</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">mempool</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L443" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L443" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L417" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L417" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="resetAll-procs-all">
-  <div id="resetAll,BiStack">
-  <dt><pre><span class="Keyword">proc</span> <a href="#resetAll%2CBiStack"><span class="Identifier">resetAll</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <div id="resetAll,BiStack[O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#resetAll%2CBiStack%5BO%5D"><span class="Identifier">resetAll</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L581" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L581" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L555" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L555" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="resetBack-procs-all">
-  <div id="resetBack,BiStack">
-  <dt><pre><span class="Keyword">proc</span> <a href="#resetBack%2CBiStack"><span class="Identifier">resetBack</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <div id="resetBack,BiStack[O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#resetBack%2CBiStack%5BO%5D"><span class="Identifier">resetBack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L575" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L575" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L549" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L549" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="resetFront-procs-all">
-  <div id="resetFront,BiStack">
-  <dt><pre><span class="Keyword">proc</span> <a href="#resetFront%2CBiStack"><span class="Identifier">resetFront</span></a><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <div id="resetFront,BiStack[O]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#resetFront%2CBiStack%5BO%5D"><span class="Identifier">resetFront</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">destack</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#BiStack"><span class="Identifier">BiStack</span></a><span class="Other">[</span><span class="Identifier">O</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L569" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L569" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L543" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L543" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -642,7 +639,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-06-21 14:55:48 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-06-21 15:45:55 UTC</small>
       </div>
     </div>
   </div>
