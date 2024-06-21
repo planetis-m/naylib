@@ -74,22 +74,23 @@ runnableExamples:
       x, y: int
       data: array[20, char]
 
-  var op = createObjPool(sizeof(MyObject), len = 10) # Create an object pool with 10 MyObject slots
+  var op = createObjPool[MyObject](len = 10) # Create an object pool with 10 MyObject slots
   # Reset the pool
   var objects: array[5, ptr MyObject]
   for i in 0..4:
-    objects[i] = cast[ptr MyObject](op.alloc())
+    objects[i] = op.alloc()
     objects[i].x = i
     objects[i].y = i * 2
   # Free some objects
   op.free(objects[1])
   op.free(objects[3])
-  let newObj = cast[ptr MyObject](op.alloc()) # Reuses a slot, no fragmentation
+  let newObj = op.alloc() # Reuses a slot, preventing fragmentation
   echo "Allocated a new object, x = ", newObj.x # Memory is cleared
 
   # Example 3: BiStack
-  var bs = createBiStack(len = 1000) # Create a BiStack with 1000 bytes
-  # Allocate from front and back
+  var bs = createBiStack(size = 1000) # Create a BiStack with 1000 bytes
+  # Choose between front and back allocations based on the lifetimes and
+  # usage patterns of your data.
   let front1 = cast[ptr int](bs.allocFront(sizeof(int))) # Memory is not cleared!
   let back1 = cast[ptr int](bs.allocBack(sizeof(int)))
   front1[] = 10
@@ -132,7 +133,7 @@ type
     buckets: array[MEMPOOL_BUCKET_SIZE, AllocList]
     arena: Arena
 
-  ObjPool* = object # Object pool
+  ObjPool*[T] = object # Object pool
     mem, offs: uint
     objSize, freeBlocks, memSize: int
 
@@ -151,14 +152,14 @@ proc `=destroy`*(mempool: MemPool) =
 proc `=dup`*(source: MemPool): MemPool {.error.}
 proc `=copy`*(dest: var MemPool; source: MemPool) {.error.}
 
-proc `=destroy`*(objpool: ObjPool) =
+proc `=destroy`*[T](objpool: ObjPool[T]) =
   if objpool.mem == 0:
     return
   let `ptr` {.noalias.} = cast[pointer](objpool.mem)
   c_free(`ptr`)
 
-proc `=dup`*(source: ObjPool): ObjPool {.error.}
-proc `=copy`*(dest: var ObjPool; source: ObjPool) {.error.}
+proc `=dup`*[T](source: ObjPool[T]): ObjPool[T] {.error.}
+proc `=copy`*[T](dest: var ObjPool[T]; source: ObjPool[T]) {.error.}
 
 proc `=destroy`*(destack: BiStack) =
   if destack.mem == 0:
@@ -421,11 +422,11 @@ proc reset*(mempool: var MemPool) =
 
 # Module Functions Definition - Object Pool
 
-proc createObjPool*(objsize, len: Natural): ObjPool =
-  result = ObjPool()
-  if len == 0 or objsize == 0:
+proc createObjPool*[T](len: Natural): ObjPool[T] =
+  result = ObjPool[T]()
+  if len == 0 or sizeof(T) == 0:
     return
-  let alignedSize = alignSize(objsize, sizeof(int))
+  let alignedSize = alignSize(sizeof(T), sizeof(int))
   let buf {.noalias.} = c_calloc(csize_t(len), csize_t(alignedSize))
   if buf == nil:
     return
@@ -438,11 +439,11 @@ proc createObjPool*(objsize, len: Natural): ObjPool =
     index[] = i + 1
   result.offs = result.mem
 
-proc createObjPool*(buf {.noalias.}: pointer, objsize, len: Natural): ObjPool =
-  result = ObjPool()
+proc createObjPool*[T](buf {.noalias.}: pointer, len: Natural): ObjPool[T] =
+  result = ObjPool[T]()
   # If the object size isn't large enough to align to a size_t, then we can't use it
-  let alignedSize = alignSize(objsize, sizeof(int))
-  if buf == nil or len == 0 or objsize < sizeof(int) or objsize*len != alignedSize*len:
+  let alignedSize = alignSize(sizeof(T), sizeof(int))
+  if buf == nil or len == 0 or sizeof(T) < sizeof(int):
     return
   result.objSize = alignedSize
   result.memSize = len
@@ -453,7 +454,7 @@ proc createObjPool*(buf {.noalias.}: pointer, objsize, len: Natural): ObjPool =
     index[] = i + 1
   result.offs = result.mem
 
-proc alloc*(objpool: var ObjPool): pointer =
+proc alloc*[T](objpool: var ObjPool[T]): ptr T =
   if objpool.freeBlocks > 0:
     # For first allocation, head points to the very first index.
     # Head = &pool[0];
@@ -463,12 +464,12 @@ proc alloc*(objpool: var ObjPool): pointer =
     # After allocating, we set head to the address of the index that *Head holds.
     # Head = &pool[*Head * pool.objsize];
     objpool.offs = if objpool.freeBlocks != 0: objpool.mem + uint(`block`[] * objpool.objSize) else: 0
-    result = `block`
+    result = cast[ptr T](`block`)
     zeroMem(result, objpool.objSize)
   else:
     result = nil
 
-proc free*(objpool: var ObjPool, `ptr`: pointer) =
+proc free*[T](objpool: var ObjPool[T], `ptr`: ptr T) =
   let `block` = cast[uint](`ptr`)
   if `ptr` == nil or `block` < objpool.mem or `block` > objpool.mem + uint(objpool.memSize * objpool.objSize):
     return
@@ -477,39 +478,40 @@ proc free*(objpool: var ObjPool, `ptr`: pointer) =
     # *p = index of Head in relation to the buffer;
     # Head = p;
     let index {.noalias.} = cast[ptr int](`block`)
-    index[] = if objpool.offs != 0: int((objpool.offs - objpool.mem) div uint(objpool.objSize)) else: objpool.memSize
+    index[] = if objpool.offs != 0: int((objpool.offs - objpool.mem) div uint(objpool.objSize))
+              else: objpool.memSize
     objpool.offs = `block`
     inc(objpool.freeBlocks)
 
 # Module Functions Definition - Double-Ended Stack
 
-proc createBiStack*(len: Natural): BiStack =
+proc createBiStack*(size: Natural): BiStack =
   result = BiStack()
-  if len == 0:
+  if size == 0:
     return
-  let buf = c_malloc(csize_t(len))
+  let buf = c_malloc(csize_t(size))
   if buf == nil:
     return
-  result.size = len
+  result.size = size
   result.mem = cast[uint](buf)
   result.front = result.mem
-  result.back = result.mem + uint(len)
+  result.back = result.mem + uint(size)
 
-proc createBiStack*(buf {.noalias.}: pointer, len: Natural): BiStack =
+proc createBiStack*(buf {.noalias.}: pointer, size: Natural): BiStack =
   result = BiStack()
-  if len == 0 or buf == nil:
+  if size == 0 or buf == nil:
     return
   else:
-    result.size = len
+    result.size = size
     result.mem = cast[uint](buf)
     result.front = result.mem
-    result.back = result.mem + uint(len)
+    result.back = result.mem + uint(size)
 
-proc allocFront*(destack: var BiStack, len: Natural): pointer =
+proc allocFront*(destack: var BiStack, size: Natural): pointer =
   if destack.mem == 0:
     return nil
   else:
-    let alignedLen = alignSize(len, sizeof(uint))
+    let alignedLen = alignSize(size, sizeof(uint))
     # front end arena is too high!
     if destack.front + uint(alignedLen) >= destack.back:
       return nil
@@ -518,11 +520,11 @@ proc allocFront*(destack: var BiStack, len: Natural): pointer =
       destack.front += uint(alignedLen)
       return `ptr`
 
-proc allocBack*(destack: var BiStack, len: Natural): pointer =
+proc allocBack*(destack: var BiStack, size: Natural): pointer =
   if destack.mem == 0:
     return nil
   else:
-    let alignedLen = alignSize(len, sizeof(uint))
+    let alignedLen = alignSize(size, sizeof(uint))
     # back end arena is too low
     if destack.back - uint(alignedLen) <= destack.front:
       return nil
