@@ -335,7 +335,7 @@ proc createMemPool*(size: Natural): MemPool =
     return
   result.arena.size.setOwned size
   result.arena.mem = cast[uint](buf)
-  result.arena.offs = result.arena.mem + uint(result.arena.size)
+  result.arena.offs = result.arena.mem + uint(result.arena.size.getVal)
 
 proc createMemPoolFromBuffer*(buf {.noalias.}: pointer, size: Natural): MemPool =
   result = MemPool()
