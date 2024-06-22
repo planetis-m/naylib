@@ -58,10 +58,9 @@ func clamp*(v, min, max: Vector2): Vector2 {.inline.} =
 func clampValue*(v: Vector2; min, max: float32): Vector2 {.inline.} =
   ## Clamp the magnitude of the vector between two min and max values
   result = Vector2()
-  var length = v.x * v.x + v.y * v.y
+  var length = sqrt(v.x * v.x + v.y * v.y)
   if length == 0'f32:
     length = 1'f32
-  length = sqrt(length)
   var scale: float32 = 1 # By default, 1 as the neutral element.
   if length < min:
     scale = min / length
@@ -138,11 +137,12 @@ func divide*(v1, v2: Vector2): Vector2 {.inline.} =
 func normalize*(v: Vector2): Vector2 {.inline.} =
   ## Normalize provided vector
   result = Vector2()
-  var lengthSq = (v.x * v.x) + (v.y * v.y)
-  if lengthSq == 0'f32: lengthSq = 1'f32
-  let ilength = 1'f32 / sqrt(lengthSq)
-  result.x = v.x * ilength
-  result.y = v.y * ilength
+  var length = sqrt(v.x * v.x + v.y * v.y)
+  if length == 0'f32:
+    length = 1'f32
+  let invLength = 1'f32 / length
+  result.x = v.x * invLength
+  result.y = v.y * invLength
 
 func transform*(v: Vector2; mat: Matrix): Vector2 {.inline.} =
   ## Transforms a Vector2 by a given Matrix
@@ -250,10 +250,9 @@ func clamp*(v, min, max: Vector3): Vector3 {.inline.} =
 func clampValue*(v: Vector3; min, max: float32): Vector3 {.inline.} =
   ## Clamp the magnitude of the vector between two values
   result = Vector3()
-  var length = v.x * v.x + v.y * v.y + v.z * v.z
+  var length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
   if length == 0'f32:
     length = 1'f32
-  length = sqrt(length)
   var scale: float32 = 1 # By default, 1 as the neutral element.
   if length < min:
     scale = min / length
@@ -340,7 +339,7 @@ func distanceSqr(v1, v2: Vector3): float32 {.inline.} =
 func angle*(v1, v2: Vector3): float32 {.inline.} =
   ## Calculate angle between two vectors
   result = 0'f32
-  var cross = Vector3(x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z,
+  let cross = Vector3(x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z,
                            z: v1.x * v2.y - v1.y * v2.x)
   let len = sqrt(cross.x * cross.x + cross.y * cross.y + cross.z * cross.z)
   let dot = (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z)
@@ -357,13 +356,13 @@ func divide*(v1, v2: Vector3): Vector3 {.inline.} =
 func normalize*(v: Vector3): Vector3 {.inline.} =
   ## Normalize provided vector
   result = Vector3()
-  var lengthSq = v.x * v.x + v.y * v.y + v.z * v.z
-  if lengthSq == 0'f32:
-    lengthSq = 1'f32
-  let ilength = 1'f32 / sqrt(lengthSq)
-  result.x = v.x * ilength
-  result.y = v.y * ilength
-  result.z = v.z * ilength
+  var length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+  if length == 0'f32:
+    length = 1'f32
+  let invLength = 1'f32 / length
+  result.x = v.x * invLength
+  result.y = v.y * invLength
+  result.z = v.z * invLength
 
 func project*(v1, v2: Vector3): Vector3 {.inline.} =
   ## Calculate the projection of the vector v1 on to v2
@@ -385,25 +384,25 @@ func orthoNormalize*(v1: var Vector3; v2: var Vector3) {.inline.} =
   ## Gram-Schmidt function implementation
   # Vector3Normalize(*v1);
   var v = v1
-  var lengthSq = v.x * v.x + v.y * v.y + v.z * v.z
-  if lengthSq == 0'f32:
-    lengthSq = 1'f32
-  var ilength = 1'f32 / sqrt(lengthSq)
-  v1.x = v1.x * ilength
-  v1.y = v1.y * ilength
-  v1.z = v1.z * ilength
+  var length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+  if length == 0'f32:
+    length = 1'f32
+  var invLength = 1'f32 / length
+  v1.x = v1.x * invLength
+  v1.y = v1.y * invLength
+  v1.z = v1.z * invLength
   # Vector3CrossProduct(*v1, *v2)
   var vn1 = Vector3(x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z,
                          z: v1.x * v2.y - v1.y * v2.x)
   # Vector3Normalize(vn1);
   v = vn1
-  lengthSq = v.x * v.x + v.y * v.y + v.z * v.z
-  if lengthSq == 0'f32:
-    lengthSq = 1'f32
-  ilength = 1'f32 / sqrt(lengthSq)
-  vn1.x = vn1.x * ilength
-  vn1.y = vn1.y * ilength
-  vn1.z = vn1.z * ilength
+  length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+  if length == 0'f32:
+    length = 1'f32
+  invLength = 1'f32 / length
+  vn1.x = vn1.x * invLength
+  vn1.y = vn1.y * invLength
+  vn1.z = vn1.z * invLength
   # Vector3CrossProduct(vn1, *v1)
   let vn2 = Vector3(x: vn1.y * v1.z - vn1.z * v1.y, y: vn1.z * v1.x - vn1.x * v1.z,
                          z: vn1.x * v1.y - vn1.y * v1.x)
@@ -438,13 +437,13 @@ func rotateByAxisAngle*(v, axis: Vector3; angle: float32): Vector3 {.inline.} =
   var axis = axis
   var angle = angle
   # normalize(axis)
-  var lengthSq = axis.x * axis.x + axis.y * axis.y + axis.z * axis.z
-  if lengthSq == 0'f32:
-    lengthSq = 1'f32
-  let ilength = 1'f32 / sqrt(lengthSq)
-  axis.x = axis.x * ilength
-  axis.y = axis.y * ilength
-  axis.z = axis.z * ilength
+  var length = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z)
+  if length == 0'f32:
+    length = 1'f32
+  let invLength = 1'f32 / length
+  axis.x = axis.x * invLength
+  axis.y = axis.y * invLength
+  axis.z = axis.z * invLength
   angle = angle / 2'f32
   var a = sin(angle)
   var b = axis.x * a
@@ -731,14 +730,14 @@ func divide*(v1, v2: Vector4): Vector4 {.inline.} =
 func normalize*(v: Vector4): Vector4 {.inline.} =
   ## Normalize provided vector
   result = Vector4()
-  var lengthSq = v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w
-  if lengthSq == 0'f32:
-    lengthSq = 1'f32
-  let ilength = 1'f32 / sqrt(lengthSq)
-  result.x = v.x * ilength
-  result.y = v.y * ilength
-  result.z = v.z * ilength
-  result.w = v.w * ilength
+  var length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w)
+  if length == 0'f32:
+    length = 1'f32
+  let invLength = 1'f32 / length
+  result.x = v.x * invLength
+  result.y = v.y * invLength
+  result.z = v.z * invLength
+  result.w = v.w * invLength
 
 func min*(v1, v2: Vector4): Vector4 {.inline.} =
   ## Get min value for each pair of components
@@ -996,12 +995,12 @@ func rotate*(axis: Vector3; angle: float32): Matrix {.inline.} =
     x = axis.x
     y = axis.y
     z = axis.z
-  let lengthSquared = x * x + y * y + z * z
-  if (lengthSquared != 1'f32) and (lengthSquared != 0'f32):
-    let ilength = 1'f32 / sqrt(lengthSquared)
-    x = x * ilength
-    y = y * ilength
-    z = z * ilength
+  let length = sqrt(x * x + y * y + z * z)
+  if length > 0'f32:
+    let invLength = 1'f32 / length
+    x = x * invLength
+    y = y * invLength
+    z = z * invLength
   let sinres = sin(angle)
   let cosres = cos(angle)
   let t = 1'f32 - cosres
@@ -1193,25 +1192,25 @@ func lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
   var vz = Vector3(x: eye.x - target.x, y: eye.y - target.y, z: eye.z - target.z)
   # Vector3Normalize(vz)
   var v = vz
-  var lengthSq = v.x * v.x + v.y * v.y + v.z * v.z
-  if lengthSq == 0'f32:
-    lengthSq = 1'f32
-  var ilength = 1'f32 / sqrt(lengthSq)
-  vz.x = vz.x * ilength
-  vz.y = vz.y * ilength
-  vz.z = vz.z * ilength
+  var length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+  if length == 0'f32:
+    length = 1'f32
+  var invLength = 1'f32 / length
+  vz.x = vz.x * invLength
+  vz.y = vz.y * invLength
+  vz.z = vz.z * invLength
   # Vector3CrossProduct(up, vz)
   var vx = Vector3(x: up.y * vz.z - up.z * vz.y, y: up.z * vz.x - up.x * vz.z,
                         z: up.x * vz.y - up.y * vz.x)
   # Vector3Normalize(x)
   v = vx
-  lengthSq = v.x * v.x + v.y * v.y + v.z * v.z
-  if lengthSq == 0'f32:
-    lengthSq = 1'f32
-  ilength = 1'f32 / sqrt(lengthSq)
-  vx.x = vx.x * ilength
-  vx.y = vx.y * ilength
-  vx.z = vx.z * ilength
+  length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+  if length == 0'f32:
+    length = 1'f32
+  invLength = 1'f32 / length
+  vx.x = vx.x * invLength
+  vx.y = vx.y * invLength
+  vx.z = vx.z * invLength
   # Vector3CrossProduct(vz, vx)
   var vy = Vector3(x: vz.y * vx.z - vz.z * vx.y, y: vz.z * vx.x - vz.x * vx.z,
                         z: vz.x * vx.y - vz.y * vx.x)
@@ -1295,21 +1294,21 @@ func length*(q: Quaternion): float32 {.inline.} =
 func normalize*(q: Quaternion): Quaternion {.inline.} =
   ## Normalize provided quaternion
   result = Vector4().Quaternion
-  var lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
-  if lengthSq == 0'f32:
-    lengthSq = 1'f32
-  let ilength = 1'f32 / sqrt(lengthSq)
-  result.x = q.x * ilength
-  result.y = q.y * ilength
-  result.z = q.z * ilength
-  result.w = q.w * ilength
+  var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
+  if length == 0'f32:
+    length = 1'f32
+  let invLength = 1'f32 / length
+  result.x = q.x * invLength
+  result.y = q.y * invLength
+  result.z = q.z * invLength
+  result.w = q.w * invLength
 
 func invert*(q: Quaternion): Quaternion {.inline.} =
   ## Invert provided quaternion
   result = q
-  let lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
-  if lengthSq != 0'f32:
-    let invLength = 1'f32 / lengthSq
+  let length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
+  if length > 0'f32:
+    let invLength = 1'f32 / length
     result.x = result.x * -invLength
     result.y = result.y * -invLength
     result.z = result.z * -invLength
@@ -1369,14 +1368,14 @@ func nlerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   result.w = q1.w + amount * (q2.w - q1.w)
   # QuaternionNormalize(q);
   var q = result
-  var lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
-  if lengthSq == 0'f32:
-    lengthSq = 1'f32
-  let ilength = 1'f32 / sqrt(lengthSq)
-  result.x = q.x * ilength
-  result.y = q.y * ilength
-  result.z = q.z * ilength
-  result.w = q.w * ilength
+  var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
+  if length == 0'f32:
+    length = 1'f32
+  let invLength = 1'f32 / length
+  result.x = q.x * invLength
+  result.y = q.y * invLength
+  result.z = q.z * invLength
+  result.w = q.w * invLength
 
 func slerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
   ## Calculates spherical linear interpolation between two quaternions
@@ -1425,14 +1424,14 @@ func fromVector3ToVector3*(`from`, to: Vector3): Quaternion {.inline.} =
   # normalize(q)
   # NOTE: Normalize to essentially nlerp the original and identity to 0.5
   var q = result
-  var lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
-  if lengthSq == 0'f32:
-    lengthSq = 1'f32
-  let ilength = 1'f32 / sqrt(lengthSq)
-  result.x = q.x * ilength
-  result.y = q.y * ilength
-  result.z = q.z * ilength
-  result.w = q.w * ilength
+  var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
+  if length == 0'f32:
+    length = 1'f32
+  let invLength = 1'f32 / length
+  result.x = q.x * invLength
+  result.y = q.y * invLength
+  result.z = q.z * invLength
+  result.w = q.w * invLength
 
 func fromMatrix*(mat: Matrix): Quaternion {.inline.} =
   ## Get a quaternion for a given rotation matrix
@@ -1508,17 +1507,17 @@ func fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
   var angle = angle
   var axis = axis
   let axisLength = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z)
-  if axisLength != 0'f32:
+  if axisLength > 0'f32:
     angle = angle * 0.5'f32
     # Vector3Normalize(axis)
     var v = axis
-    var lengthSq = v.x * v.x + v.y * v.y + v.z * v.z
-    if lengthSq == 0'f32:
-      lengthSq = 1'f32
-    var ilength = 1'f32 / sqrt(lengthSq)
-    axis.x = axis.x * ilength
-    axis.y = axis.y * ilength
-    axis.z = axis.z * ilength
+    var length = axisLength
+    if length == 0'f32:
+      length = 1'f32
+    var invLength = 1'f32 / length
+    axis.x = axis.x * invLength
+    axis.y = axis.y * invLength
+    axis.z = axis.z * invLength
     let sinres = sin(angle)
     let cosres = cos(angle)
     result.x = axis.x * sinres
@@ -1527,35 +1526,36 @@ func fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
     result.w = cosres
     # QuaternionNormalize(q);
     var q = result
-    lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
-    if lengthSq == 0'f32:
-      lengthSq = 1'f32
-    ilength = 1'f32 / sqrt(lengthSq)
-    result.x = q.x * ilength
-    result.y = q.y * ilength
-    result.z = q.z * ilength
-    result.w = q.w * ilength
+    length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
+    if length == 0'f32:
+      length = 1'f32
+    invLength = 1'f32 / length
+    result.x = q.x * invLength
+    result.y = q.y * invLength
+    result.z = q.z * invLength
+    result.w = q.w * invLength
 
 func toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) {.inline.} =
   ## Get the rotation angle and axis for a given quaternion
   var q = q
   if abs(q.w) > 1'f32:
     # QuaternionNormalize(q);
-    var lengthSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
-    if lengthSq == 0'f32:
-      lengthSq = 1'f32
-    let ilength = 1'f32 / sqrt(lengthSq)
-    q.x = q.x * ilength
-    q.y = q.y * ilength
-    q.z = q.z * ilength
-    q.w = q.w * ilength
+    var length = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
+    if length == 0'f32:
+      length = 1'f32
+    let invLength = 1'f32 / length
+    q.x = q.x * invLength
+    q.y = q.y * invLength
+    q.z = q.z * invLength
+    q.w = q.w * invLength
   var resAxis = Vector3(x: 0, y: 0, z: 0)
   let resAngle = 2'f32 * arccos(q.w)
   let den = sqrt(1'f32 - q.w * q.w)
   if den > 0.000001'f32:
-    resAxis.x = q.x / den
-    resAxis.y = q.y / den
-    resAxis.z = q.z / den
+    let invDen = 1'f32 / den
+    resAxis.x = q.x * invDen
+    resAxis.y = q.y * invDen
+    resAxis.z = q.z * invDen
   else:
     # This occurs when the angle is zero.
     # Not a problem: just set an arbitrary normalized axis.
