@@ -305,7 +305,7 @@ proc insertMemNode(mempool: var MemPool, list: var AllocList, node: ptr MemNode,
 
 proc createMemPool*(size: Natural): MemPool[true] =
   result = MemPool[true]()
-  if size == 0 or size <= sizeof(MemNode):
+  if size == 0 or size < sizeof(MemNode):
     return
   # Align the mempool size to at least the size of an alloc node.
   when compileOption("threads"):
@@ -320,7 +320,7 @@ proc createMemPool*(size: Natural): MemPool[true] =
 
 proc createMemPoolFromBuffer*(buf {.noalias.}: pointer, size: Natural): MemPool[false] =
   result = MemPool[false]()
-  if size == 0 or buf == nil or size <= sizeof(MemNode):
+  if size == 0 or buf == nil or size < sizeof(MemNode):
     return
   result.arena.size = size
   result.arena.mem = cast[uint](buf)
@@ -480,7 +480,9 @@ proc alloc*[T, O](objpool: var ObjPool[T, O]): ptr T =
     dec(objpool.freeBlocks)
     # After allocating, we set head to the address of the index that *Head holds.
     # Head = &pool[*Head * pool.objsize];
-    objpool.offs = if objpool.freeBlocks != 0: objpool.mem + uint(region[] * objpool.objSize) else: 0
+    objpool.offs = if objpool.freeBlocks != 0:
+                     objpool.mem + uint(region[] * objpool.objSize)
+                   else: 0
     result = cast[ptr T](region)
     zeroMem(result, objpool.objSize)
   else:
@@ -495,7 +497,8 @@ proc free*[T, O](objpool: var ObjPool[T, O], p: ptr T) =
     # *p = index of Head in relation to the buffer;
     # Head = p;
     let index {.noalias.} = cast[ptr int](region)
-    index[] = if objpool.offs != 0: int((objpool.offs - objpool.mem) div uint(objpool.objSize))
+    index[] = if objpool.offs != 0:
+                int((objpool.offs - objpool.mem) div uint(objpool.objSize))
               else: objpool.memSize
     objpool.offs = region
     inc(objpool.freeBlocks)
