@@ -328,7 +328,7 @@ func distance*(v1, v2: Vector3): float32 {.inline.} =
   let dz = v2.z - v1.z
   result = sqrt(dx * dx + dy * dy + dz * dz)
 
-func distanceSqr(v1, v2: Vector3): float32 {.inline.} =
+func distanceSqr*(v1, v2: Vector3): float32 {.inline.} =
   ## Calculate square distance between two vectors
   result = 0'f32
   let dx = v2.x - v1.x
