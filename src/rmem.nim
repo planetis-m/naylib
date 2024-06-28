@@ -91,12 +91,12 @@ proc nextPowerOfTwo(x: int): int {.inline.} =
   # This is equivalent to pow2(log2Ceil(x)). Undefined for x<2.
   result = 1 shl (sizeof(int)*8 - countLeadingZeroBits(x - 1))
 
-proc pow2(power: uint): uint {.inline.} =
+proc pow2(power: int): int {.inline.} =
   # Raise 2 into the specified power.
-  result = 1'u shl power
+  result = 1 shl power
 
-proc alignUp(n: uint, align: int): int {.inline.} =
-  int((n + align.uint - 1) and (not (align.uint - 1)))
+proc alignUp(n: uint, align: int): uint {.inline.} =
+  (n + align.uint - 1) and (not (align.uint - 1))
 
 proc alignUp(p: pointer, align: int): pointer {.inline.} =
   cast[pointer](alignUp(cast[uint](p), align))
@@ -140,7 +140,7 @@ proc rebin(x: var MemPool, b: ptr Chunk) =
   if x.bins[idx] != nil:
     x.bins[idx].prevFree = b
   x.bins[idx] = b
-  x.nonEmptyBinMask = x.nonEmptyBinMask or pow2(idx.uint)
+  x.nonEmptyBinMask = x.nonEmptyBinMask or pow2(idx).uint
 
 proc unbin(x: var MemPool, b: ptr Chunk) =
   ## Removes the specified block from its bin.
@@ -154,7 +154,7 @@ proc unbin(x: var MemPool, b: ptr Chunk) =
   if x.bins[idx] == b:
     x.bins[idx] = b.nextFree
     if x.bins[idx] == nil:
-      x.nonEmptyBinMask = x.nonEmptyBinMask and not pow2(idx.uint)
+      x.nonEmptyBinMask = x.nonEmptyBinMask and not pow2(idx).uint
 
 proc createMemPool*(buffer: openarray[byte]): MemPool =
   result = MemPool()
@@ -185,8 +185,8 @@ proc alloc*(x: var MemPool, size: Natural): pointer =
   if size > 0 and size <= x.capacity - MemAlign:
     let chunkSize = nextPowerOfTwo(size + MemAlign)
     let optimalBinIndex = log2Ceil(chunkSize div MinChunkSize) # Use ceil when fetching
-    let candidateBinMask = not (pow2(optimalBinIndex.uint) - 1)
-    let suitableBins = x.nonEmptyBinMask and candidateBinMask
+    let candidateBinMask = not (pow2(optimalBinIndex) - 1)
+    let suitableBins = x.nonEmptyBinMask and candidateBinMask.uint
     let smallestBinMask = suitableBins and not (suitableBins - 1) # Clear all bits but the lowest
     if smallestBinMask != 0:
       let binIndex = log2Floor(smallestBinMask.int)
@@ -249,7 +249,7 @@ proc getFreeMemory*(x: MemPool): int {.inline.} =
   result = x.capacity - x.occ
 
 const
-  DefaultAlignment = if sizeof(int) <= 4: 8 else: 16
+  DefaultAlignment = when sizeof(int) <= 4: 8 else: 16
 
 type
   FreeNode = object
@@ -267,10 +267,10 @@ proc createObjPool*[T](buffer: openarray[byte]): ObjPool[T] =
   result = ObjPool[T]()
   if buffer.len > 0:
     let start = cast[uint](buffer)
-    let alignedStart = alignup(start, alignof(T))
-    let alignedLen = buffer.len - (alignedStart - start.int)
+    let alignedStart = alignUp(start, alignof(T))
+    let alignedLen = buffer.len - int(alignedStart - start)
     # Align chunk size up to the required chunkAlignment
-    let alignedSize = alignup(sizeof(T).uint, alignof(T))
+    let alignedSize = alignUp(sizeof(T).uint, alignof(T)).int
     # Assert that the parameters passed are valid
     assert alignedSize >= sizeof(FreeNode), "Chunk size is too small"
     assert alignedLen >= alignedSize, "Backing buffer length is smaller than the chunk size"
@@ -329,9 +329,9 @@ proc createBiStack*(buffer: openarray[byte]): BiStack =
 
 proc alignedAllocFront*(s: var BiStack, size, align: Natural): pointer =
   let
-    currAddr = cast[int](s.buf) + s.front
-    alignedAddr = alignUp(currAddr.uint, align)
-    padding = alignedAddr - currAddr
+    currAddr = cast[uint](s.buf) + s.front.uint
+    alignedAddr = alignUp(currAddr, align)
+    padding = int(alignedAddr - currAddr)
   result = nil
   if s.front + padding + size <= s.back:
     # Stack allocator is out of memory
@@ -344,9 +344,9 @@ proc allocFront*(s: var BiStack; size: Natural): pointer {.inline.} =
 
 proc alignedAllocBack*(s: var BiStack, size, align: Natural): pointer =
   let
-    currAddr = cast[int](s.buf) + s.front
-    alignedAddr = alignUp(currAddr.uint, align)
-    padding = alignedAddr - currAddr
+    currAddr = cast[uint](s.buf) + s.front.uint
+    alignedAddr = alignUp(currAddr, align)
+    padding = int(alignedAddr - currAddr)
   result = nil
   if s.back - padding - size >= s.front:
     # Stack allocator is out of memory
