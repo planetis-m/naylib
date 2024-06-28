@@ -159,7 +159,7 @@
 <span class="Comment"># let ptr3 = mp.realloc(ptr1, 150)</span>
 <span class="Comment"># Free memory</span>
 <span class="Identifier">mp</span><span class="Operator">.</span><span class="Identifier">free</span><span class="Punctuation">(</span><span class="Identifier">ptr2</span><span class="Punctuation">)</span>
-<span class="Identifier">echo</span> <span class="StringLit">&quot;Free memory after reset: &quot;</span><span class="Punctuation">,</span> <span class="Identifier">mp</span><span class="Operator">.</span><span class="Identifier">getFreeMemory</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
+<span class="Identifier">echo</span> <span class="StringLit">&quot;Free memory after free: &quot;</span><span class="Punctuation">,</span> <span class="Identifier">mp</span><span class="Operator">.</span><span class="Identifier">getFreeMemory</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
 
 <span class="Comment"># Example 2: ObjPool</span>
 <span class="Keyword">type</span>
@@ -187,7 +187,7 @@
 <span class="Keyword">var</span> <span class="Identifier">bs</span> <span class="Operator">=</span> <span class="Identifier">createBiStack</span><span class="Punctuation">(</span><span class="Identifier">buffer</span><span class="Punctuation">)</span>
 <span class="Comment"># Choose between front and back allocations based on the lifetimes and</span>
 <span class="Comment"># usage patterns of your data.</span>
-<span class="Keyword">let</span> <span class="Identifier">front1</span> <span class="Operator">=</span> <span class="Keyword">cast</span><span class="Punctuation">[</span><span class="Keyword">ptr</span> <span class="Identifier">int</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Identifier">bs</span><span class="Operator">.</span><span class="Identifier">allocFront</span><span class="Punctuation">(</span><span class="Identifier">sizeof</span><span class="Punctuation">(</span><span class="Identifier">int</span><span class="Punctuation">)</span><span class="Punctuation">)</span><span class="Punctuation">)</span> <span class="Comment"># Memory is not cleared!</span>
+<span class="Keyword">let</span> <span class="Identifier">front1</span> <span class="Operator">=</span> <span class="Keyword">cast</span><span class="Punctuation">[</span><span class="Keyword">ptr</span> <span class="Identifier">int</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Identifier">bs</span><span class="Operator">.</span><span class="Identifier">allocFront</span><span class="Punctuation">(</span><span class="Identifier">sizeof</span><span class="Punctuation">(</span><span class="Identifier">int</span><span class="Punctuation">)</span><span class="Punctuation">)</span><span class="Punctuation">)</span>
 <span class="Keyword">let</span> <span class="Identifier">back1</span> <span class="Operator">=</span> <span class="Keyword">cast</span><span class="Punctuation">[</span><span class="Keyword">ptr</span> <span class="Identifier">int</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Identifier">bs</span><span class="Operator">.</span><span class="Identifier">allocBack</span><span class="Punctuation">(</span><span class="Identifier">sizeof</span><span class="Punctuation">(</span><span class="Identifier">int</span><span class="Punctuation">)</span><span class="Punctuation">)</span><span class="Punctuation">)</span>
 <span class="Identifier">front1</span><span class="Punctuation">[</span><span class="Punctuation">]</span> <span class="Operator">=</span> <span class="DecNumber">10</span>
 <span class="Identifier">back1</span><span class="Punctuation">[</span><span class="Punctuation">]</span> <span class="Operator">=</span> <span class="DecNumber">20</span>
@@ -470,7 +470,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-06-28 22:22:56 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-06-28 22:27:41 UTC</small>
       </div>
     </div>
   </div>

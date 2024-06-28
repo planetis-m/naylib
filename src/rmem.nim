@@ -1,6 +1,6 @@
 # ****************************************************************************************
 #
-#  rmem v1.0 - memory pool and objects pool
+#  rmem v1.0 - memory pool and objects pool - nim version
 #
 #  DESCRIPTION:
 #      A quick, efficient, and minimal free list and arena-based allocator
@@ -61,7 +61,7 @@ runnableExamples:
   var bs = createBiStack(buffer)
   # Choose between front and back allocations based on the lifetimes and
   # usage patterns of your data.
-  let front1 = cast[ptr int](bs.allocFront(sizeof(int))) # Memory is not cleared!
+  let front1 = cast[ptr int](bs.allocFront(sizeof(int)))
   let back1 = cast[ptr int](bs.allocBack(sizeof(int)))
   front1[] = 10
   back1[] = 20
