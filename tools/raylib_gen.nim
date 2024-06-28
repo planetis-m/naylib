@@ -486,6 +486,8 @@ const
     "LoadFontFromImage",
     "LoadFontFromMemory",
     "GenImageFontAtlas",
+    "ImageDrawTriangleFan",
+    "ImageDrawTriangleStrip",
     "DrawTriangleStrip3D",
     "DrawMeshInstanced",
     "DrawTextCodepoints",

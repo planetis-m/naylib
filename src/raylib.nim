@@ -1196,6 +1196,16 @@ proc exportImageAsCode*(image: Image, fileName: cstring): bool {.importc: "Expor
 proc imageKernelConvolutionPriv(image: var Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
 proc loadImageColorsPriv(image: Image): ptr UncheckedArray[Color] {.importc: "LoadImageColors".}
 proc loadImagePalettePriv(image: Image, maxPaletteSize: int32, colorCount: ptr int32): ptr UncheckedArray[Color] {.importc: "LoadImagePalette".}
+proc imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, thick: int32, color: Color) {.importc: "ImageDrawLineEx".}
+  ## Draw a line defining thickness within an image
+proc imageDrawTriangle*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "ImageDrawTriangle".}
+  ## Draw triangle within an image
+proc imageDrawTriangle*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, c1: Color, c2: Color, c3: Color) {.importc: "ImageDrawTriangleEx".}
+  ## Draw triangle with interpolated colors within an image
+proc imageDrawTriangleLines*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "ImageDrawTriangleLines".}
+  ## Draw triangle outline within an image
+proc imageDrawTriangleFanPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleFan".}
+proc imageDrawTriangleStripPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleStrip".}
 proc loadTexturePriv(fileName: cstring): Texture2D {.importc: "LoadTexture".}
 proc loadTextureFromImagePriv(image: Image): Texture2D {.importc: "LoadTextureFromImage".}
 proc loadTextureCubemapPriv(image: Image, layout: CubemapLayout): TextureCubemap {.importc: "LoadTextureCubemap".}
@@ -2077,6 +2087,14 @@ proc drawTriangleStrip*(points: openArray[Vector2]; color: Color) =
 
 proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool =
   checkCollisionPointPolyPriv(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
+
+proc imageDrawTriangleFan*(dst: var Image, points: openArray[Vector2], color: Color) =
+  ## Draw a triangle fan defined by points within an image (first vertex is the center)
+  imageDrawTriangleFanPriv(dst.addr, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc imageDrawTriangleStrip*(dst: var Image, points: openArray[Vector2], color: Color) =
+  ## Draw a triangle strip defined by points within an image
+  imageDrawTriangleStripPriv(dst.addr, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc loadImage*(fileName: string): Image =
   ## Load image from file into CPU memory (RAM)

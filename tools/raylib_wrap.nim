@@ -191,6 +191,14 @@ proc drawTriangleStrip*(points: openArray[Vector2]; color: Color) =
 proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool =
   checkCollisionPointPolyPriv(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
 
+proc imageDrawTriangleFan*(dst: var Image, points: openArray[Vector2], color: Color) =
+  ## Draw a triangle fan defined by points within an image (first vertex is the center)
+  imageDrawTriangleFanPriv(dst.addr, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc imageDrawTriangleStrip*(dst: var Image, points: openArray[Vector2], color: Color) =
+  ## Draw a triangle strip defined by points within an image
+  imageDrawTriangleStripPriv(dst.addr, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
 proc loadImage*(fileName: string): Image =
   ## Load image from file into CPU memory (RAM)
   result = loadImagePriv(fileName.cstring)
