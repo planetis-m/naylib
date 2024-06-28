@@ -21,7 +21,7 @@
 runnableExamples:
   # Example 1: MemPool
 
-  var buffer {.align(sizeof(int)).}: array[1024, byte] # variable is also aligned
+  var buffer {.align(sizeof(int)).}: array[1024, byte] # variable buffer is aligned
   # Create a memory pool with 1024 bytes
   var mp = createMemPool(buffer)
   # Allocate memory
@@ -44,7 +44,7 @@ runnableExamples:
       data: array[20, char]
 
   reset(buffer)
-  # Create an object pool with 10 MyObject slots
+  # Create an object pool
   var op = createObjPool[MyObject](buffer)
   # Reset the pool
   var objects: array[5, ptr MyObject]
