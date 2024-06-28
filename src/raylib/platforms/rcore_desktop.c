@@ -666,6 +666,9 @@ void SetWindowMaxSize(int width, int height)
 // Set window dimensions
 void SetWindowSize(int width, int height)
 {
+    CORE.Window.screen.width = width;
+    CORE.Window.screen.height = height;
+
     glfwSetWindowSize(platform.handle, width, height);
 }
 
@@ -951,7 +954,7 @@ const char *GetClipboardText(void)
 }
 
 // Show mouse cursor
-void rlShowCursor(void)
+void ShowCursor(void)
 {
     glfwSetInputMode(platform.handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     CORE.Input.Mouse.cursorHidden = false;

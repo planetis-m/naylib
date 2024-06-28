@@ -262,7 +262,7 @@ proc insertMemNode(mempool: var MemPool, list: var AllocList, node: ptr MemNode,
         # node was coalesced prior.
         if iterEnd > inode:
           return
-        elif (iterEnd == inode) and not isBucket:
+        elif iterEnd == inode and not isBucket:
           # if we can coalesce, do so.
           iter.size += node.size
           return
@@ -276,7 +276,7 @@ proc insertMemNode(mempool: var MemPool, list: var AllocList, node: ptr MemNode,
         # Address sort, lowest to highest aka ascending order.
         if iiter < nodeEnd:
           return
-        elif (iter == list.head) and not isBucket:
+        elif iter == list.head and not isBucket:
           if iterEnd == inode:
             iter.size += node.size
           elif nodeEnd == iiter:
@@ -291,7 +291,7 @@ proc insertMemNode(mempool: var MemPool, list: var AllocList, node: ptr MemNode,
             list.head = node
             inc(list.len)
           return
-        elif (iterEnd == inode) and not isBucket:
+        elif iterEnd == inode and not isBucket:
           # if we can coalesce, do so.
           iter.size += node.size
           return

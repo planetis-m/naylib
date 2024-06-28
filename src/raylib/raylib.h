@@ -246,12 +246,12 @@ typedef struct Color {
 } Color;
 
 // Rectangle, 4 components
-typedef struct rlRectangle {
+typedef struct Rectangle {
     float x;                // Rectangle top-left corner position x
     float y;                // Rectangle top-left corner position y
     float width;            // Rectangle width
     float height;           // Rectangle height
-} rlRectangle;
+} Rectangle;
 
 // Image, pixel data stored in CPU memory (RAM)
 typedef struct Image {
@@ -289,7 +289,7 @@ typedef RenderTexture RenderTexture2D;
 
 // NPatchInfo, n-patch layout info
 typedef struct NPatchInfo {
-    rlRectangle source;       // Texture source rectangle
+    Rectangle source;       // Texture source rectangle
     int left;               // Left border offset
     int top;                // Top border offset
     int right;              // Right border offset
@@ -312,7 +312,7 @@ typedef struct Font {
     int glyphCount;         // Number of glyph characters
     int glyphPadding;       // Padding around the glyph characters
     Texture2D texture;      // Texture atlas containing the glyphs
-    rlRectangle *recs;        // Rectangles in texture for the glyphs
+    Rectangle *recs;        // Rectangles in texture for the glyphs
     GlyphInfo *glyphs;      // Glyphs info data
 } Font;
 
@@ -956,7 +956,7 @@ extern "C" {            // Prevents name mangling of functions
 
 // Window-related functions
 RLAPI void InitWindow(int width, int height, const char *title);  // Initialize window and OpenGL context
-RLAPI void rlCloseWindow(void);                                     // Close window and unload OpenGL context
+RLAPI void CloseWindow(void);                                     // Close window and unload OpenGL context
 RLAPI bool WindowShouldClose(void);                               // Check if application should close (KEY_ESCAPE pressed or windows close icon clicked)
 RLAPI bool IsWindowReady(void);                                   // Check if window has been initialized successfully
 RLAPI bool IsWindowFullscreen(void);                              // Check if window is currently fullscreen
@@ -1005,7 +1005,7 @@ RLAPI void EnableEventWaiting(void);                              // Enable wait
 RLAPI void DisableEventWaiting(void);                             // Disable waiting for events on EndDrawing(), automatic events polling
 
 // Cursor-related functions
-RLAPI void rlShowCursor(void);                                      // Shows cursor
+RLAPI void ShowCursor(void);                                      // Shows cursor
 RLAPI void HideCursor(void);                                      // Hides cursor
 RLAPI bool IsCursorHidden(void);                                  // Check if cursor is not visible
 RLAPI void EnableCursor(void);                                    // Enables cursor (unlock cursor)
@@ -1223,9 +1223,9 @@ RLAPI void UpdateCameraPro(Camera *camera, Vector3 movement, Vector3 rotation, f
 // Set texture and rectangle to be used on shapes drawing
 // NOTE: It can be useful when using basic shapes and one single font,
 // defining a font char white rectangle would allow drawing everything in a single draw call
-RLAPI void SetShapesTexture(Texture2D texture, rlRectangle source);       // Set texture and rectangle to be used on shapes drawing
+RLAPI void SetShapesTexture(Texture2D texture, Rectangle source);       // Set texture and rectangle to be used on shapes drawing
 RLAPI Texture2D GetShapesTexture(void);                                 // Get texture that is used for shapes drawing
-RLAPI rlRectangle GetShapesTextureRectangle(void);                        // Get texture source rectangle that is used for shapes drawing
+RLAPI Rectangle GetShapesTextureRectangle(void);                        // Get texture source rectangle that is used for shapes drawing
 
 // Basic shapes drawing functions
 RLAPI void DrawPixel(int posX, int posY, Color color);                                                   // Draw a pixel
@@ -1248,16 +1248,16 @@ RLAPI void DrawRing(Vector2 center, float innerRadius, float outerRadius, float 
 RLAPI void DrawRingLines(Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color);    // Draw ring outline
 RLAPI void DrawRectangle(int posX, int posY, int width, int height, Color color);                        // Draw a color-filled rectangle
 RLAPI void DrawRectangleV(Vector2 position, Vector2 size, Color color);                                  // Draw a color-filled rectangle (Vector version)
-RLAPI void DrawRectangleRec(rlRectangle rec, Color color);                                                 // Draw a color-filled rectangle
-RLAPI void DrawRectanglePro(rlRectangle rec, Vector2 origin, float rotation, Color color);                 // Draw a color-filled rectangle with pro parameters
+RLAPI void DrawRectangleRec(Rectangle rec, Color color);                                                 // Draw a color-filled rectangle
+RLAPI void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color);                 // Draw a color-filled rectangle with pro parameters
 RLAPI void DrawRectangleGradientV(int posX, int posY, int width, int height, Color color1, Color color2);// Draw a vertical-gradient-filled rectangle
 RLAPI void DrawRectangleGradientH(int posX, int posY, int width, int height, Color color1, Color color2);// Draw a horizontal-gradient-filled rectangle
-RLAPI void DrawRectangleGradientEx(rlRectangle rec, Color col1, Color col2, Color col3, Color col4);       // Draw a gradient-filled rectangle with custom vertex colors
+RLAPI void DrawRectangleGradientEx(Rectangle rec, Color col1, Color col2, Color col3, Color col4);       // Draw a gradient-filled rectangle with custom vertex colors
 RLAPI void DrawRectangleLines(int posX, int posY, int width, int height, Color color);                   // Draw rectangle outline
-RLAPI void DrawRectangleLinesEx(rlRectangle rec, float lineThick, Color color);                            // Draw rectangle outline with extended parameters
-RLAPI void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color color);              // Draw rectangle with rounded edges
-RLAPI void DrawRectangleRoundedLines(rlRectangle rec, float roundness, int segments, Color color);         // Draw rectangle lines with rounded edges
-RLAPI void DrawRectangleRoundedLinesEx(rlRectangle rec, float roundness, int segments, float lineThick, Color color); // Draw rectangle with rounded edges outline
+RLAPI void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color);                            // Draw rectangle outline with extended parameters
+RLAPI void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color color);              // Draw rectangle with rounded edges
+RLAPI void DrawRectangleRoundedLines(Rectangle rec, float roundness, int segments, Color color);         // Draw rectangle lines with rounded edges
+RLAPI void DrawRectangleRoundedLinesEx(Rectangle rec, float roundness, int segments, float lineThick, Color color); // Draw rectangle with rounded edges outline
 RLAPI void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color);                                // Draw a color-filled triangle (vertex in counter-clockwise order!)
 RLAPI void DrawTriangleLines(Vector2 v1, Vector2 v2, Vector2 v3, Color color);                           // Draw triangle outline (vertex in counter-clockwise order!)
 RLAPI void DrawTriangleFan(const Vector2 *points, int pointCount, Color color);                          // Draw a triangle fan defined by points (first vertex is the center)
@@ -1286,17 +1286,17 @@ RLAPI Vector2 GetSplinePointBezierQuad(Vector2 p1, Vector2 c2, Vector2 p3, float
 RLAPI Vector2 GetSplinePointBezierCubic(Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float t);        // Get (evaluate) spline point: Cubic Bezier
 
 // Basic shapes collision detection functions
-RLAPI bool CheckCollisionRecs(rlRectangle rec1, rlRectangle rec2);                                           // Check collision between two rectangles
+RLAPI bool CheckCollisionRecs(Rectangle rec1, Rectangle rec2);                                           // Check collision between two rectangles
 RLAPI bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, float radius2);        // Check collision between two circles
-RLAPI bool CheckCollisionCircleRec(Vector2 center, float radius, rlRectangle rec);                         // Check collision between circle and rectangle
-RLAPI bool CheckCollisionPointRec(Vector2 point, rlRectangle rec);                                         // Check if point is inside rectangle
+RLAPI bool CheckCollisionCircleRec(Vector2 center, float radius, Rectangle rec);                         // Check collision between circle and rectangle
+RLAPI bool CheckCollisionPointRec(Vector2 point, Rectangle rec);                                         // Check if point is inside rectangle
 RLAPI bool CheckCollisionPointCircle(Vector2 point, Vector2 center, float radius);                       // Check if point is inside circle
 RLAPI bool CheckCollisionPointTriangle(Vector2 point, Vector2 p1, Vector2 p2, Vector2 p3);               // Check if point is inside a triangle
 RLAPI bool CheckCollisionPointPoly(Vector2 point, const Vector2 *points, int pointCount);                // Check if point is within a polygon described by array of vertices
 RLAPI bool CheckCollisionLines(Vector2 startPos1, Vector2 endPos1, Vector2 startPos2, Vector2 endPos2, Vector2 *collisionPoint); // Check the collision between two lines defined by two points each, returns collision point by reference
 RLAPI bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshold);                // Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
 RLAPI bool CheckCollisionCircleLine(Vector2 center, float radius, Vector2 p1, Vector2 p2);               // Check if circle collides with a line created betweeen two points [p1] and [p2]
-RLAPI rlRectangle GetCollisionRec(rlRectangle rec1, rlRectangle rec2);                                         // Get collision rectangle for two rectangles collision
+RLAPI Rectangle GetCollisionRec(Rectangle rec1, Rectangle rec2);                                         // Get collision rectangle for two rectangles collision
 
 //------------------------------------------------------------------------------------
 // Texture Loading and Drawing Functions (Module: textures)
@@ -1304,7 +1304,7 @@ RLAPI rlRectangle GetCollisionRec(rlRectangle rec1, rlRectangle rec2);          
 
 // Image loading functions
 // NOTE: These functions do not require GPU access
-RLAPI Image rlLoadImage(const char *fileName);                                                             // Load image from file into CPU memory (RAM)
+RLAPI Image LoadImage(const char *fileName);                                                             // Load image from file into CPU memory (RAM)
 RLAPI Image LoadImageRaw(const char *fileName, int width, int height, int format, int headerSize);       // Load image from RAW file data
 RLAPI Image LoadImageSvg(const char *fileNameOrString, int width, int height);                           // Load image from SVG file data or string with specified size
 RLAPI Image LoadImageAnim(const char *fileName, int *frames);                                            // Load image sequence from file (frames appended to image.data)
@@ -1331,18 +1331,18 @@ RLAPI Image GenImageText(int width, int height, const char *text);              
 
 // Image manipulation functions
 RLAPI Image ImageCopy(Image image);                                                                      // Create an image duplicate (useful for transformations)
-RLAPI Image ImageFromImage(Image image, rlRectangle rec);                                                  // Create an image from another image piece
+RLAPI Image ImageFromImage(Image image, Rectangle rec);                                                  // Create an image from another image piece
 RLAPI Image ImageText(const char *text, int fontSize, Color color);                                      // Create an image from text (default font)
 RLAPI Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Color tint);         // Create an image from text (custom sprite font)
 RLAPI void ImageFormat(Image *image, int newFormat);                                                     // Convert image data to desired format
 RLAPI void ImageToPOT(Image *image, Color fill);                                                         // Convert image to POT (power-of-two)
-RLAPI void ImageCrop(Image *image, rlRectangle crop);                                                      // Crop an image to a defined rectangle
+RLAPI void ImageCrop(Image *image, Rectangle crop);                                                      // Crop an image to a defined rectangle
 RLAPI void ImageAlphaCrop(Image *image, float threshold);                                                // Crop image depending on alpha value
 RLAPI void ImageAlphaClear(Image *image, Color color, float threshold);                                  // Clear alpha channel to desired color
 RLAPI void ImageAlphaMask(Image *image, Image alphaMask);                                                // Apply alpha mask to image
 RLAPI void ImageAlphaPremultiply(Image *image);                                                          // Premultiply alpha channel
 RLAPI void ImageBlurGaussian(Image *image, int blurSize);                                                // Apply Gaussian blur using a box blur approximation
-RLAPI void ImageKernelConvolution(Image *image, float *kernel, int kernelSize);                          // Apply Custom Square image convolution kernel
+RLAPI void ImageKernelConvolution(Image *image, const float *kernel, int kernelSize);                    // Apply custom square convolution kernel to image
 RLAPI void ImageResize(Image *image, int newWidth, int newHeight);                                       // Resize image (Bicubic scaling algorithm)
 RLAPI void ImageResizeNN(Image *image, int newWidth,int newHeight);                                      // Resize image (Nearest-Neighbor scaling algorithm)
 RLAPI void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, int offsetY, Color fill); // Resize canvas and fill with color
@@ -1363,7 +1363,7 @@ RLAPI Color *LoadImageColors(Image image);                                      
 RLAPI Color *LoadImagePalette(Image image, int maxPaletteSize, int *colorCount);                         // Load colors palette from image as a Color array (RGBA - 32bit)
 RLAPI void UnloadImageColors(Color *colors);                                                             // Unload color data loaded with LoadImageColors()
 RLAPI void UnloadImagePalette(Color *colors);                                                            // Unload colors palette loaded with LoadImagePalette()
-RLAPI rlRectangle GetImageAlphaBorder(Image image, float threshold);                                       // Get image alpha border rectangle
+RLAPI Rectangle GetImageAlphaBorder(Image image, float threshold);                                       // Get image alpha border rectangle
 RLAPI Color GetImageColor(Image image, int x, int y);                                                    // Get image pixel color at (x, y) position
 
 // Image drawing functions
@@ -1373,15 +1373,21 @@ RLAPI void ImageDrawPixel(Image *dst, int posX, int posY, Color color);         
 RLAPI void ImageDrawPixelV(Image *dst, Vector2 position, Color color);                                   // Draw pixel within an image (Vector version)
 RLAPI void ImageDrawLine(Image *dst, int startPosX, int startPosY, int endPosX, int endPosY, Color color); // Draw line within an image
 RLAPI void ImageDrawLineV(Image *dst, Vector2 start, Vector2 end, Color color);                          // Draw line within an image (Vector version)
+RLAPI void ImageDrawLineEx(Image *dst, Vector2 start, Vector2 end, int thick, Color color);              // Draw a line defining thickness within an image
 RLAPI void ImageDrawCircle(Image *dst, int centerX, int centerY, int radius, Color color);               // Draw a filled circle within an image
 RLAPI void ImageDrawCircleV(Image *dst, Vector2 center, int radius, Color color);                        // Draw a filled circle within an image (Vector version)
 RLAPI void ImageDrawCircleLines(Image *dst, int centerX, int centerY, int radius, Color color);          // Draw circle outline within an image
 RLAPI void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color);                   // Draw circle outline within an image (Vector version)
 RLAPI void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color);       // Draw rectangle within an image
 RLAPI void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color);                 // Draw rectangle within an image (Vector version)
-RLAPI void ImageDrawRectangleRec(Image *dst, rlRectangle rec, Color color);                                // Draw rectangle within an image
-RLAPI void ImageDrawRectangleLines(Image *dst, rlRectangle rec, int thick, Color color);                   // Draw rectangle lines within an image
-RLAPI void ImageDraw(Image *dst, Image src, rlRectangle srcRec, rlRectangle dstRec, Color tint);             // Draw a source image within a destination image (tint applied to source)
+RLAPI void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color);                                // Draw rectangle within an image
+RLAPI void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color);                   // Draw rectangle lines within an image
+RLAPI void ImageDrawTriangle(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color);               // Draw triangle within an image
+RLAPI void ImageDrawTriangleEx(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color c1, Color c2, Color c3); // Draw triangle with interpolated colors within an image
+RLAPI void ImageDrawTriangleLines(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color);          // Draw triangle outline within an image
+RLAPI void ImageDrawTriangleFan(Image *dst, Vector2 *points, int pointCount, Color color);               // Draw a triangle fan defined by points within an image (first vertex is the center)
+RLAPI void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color color);             // Draw a triangle strip defined by points within an image
+RLAPI void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color tint);             // Draw a source image within a destination image (tint applied to source)
 RLAPI void ImageDrawText(Image *dst, const char *text, int posX, int posY, int fontSize, Color color);   // Draw text (using default font) within an image (destination)
 RLAPI void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text (custom sprite font) within an image (destination)
 
@@ -1396,7 +1402,7 @@ RLAPI void UnloadTexture(Texture2D texture);                                    
 RLAPI bool IsRenderTextureReady(RenderTexture2D target);                                                 // Check if a render texture is ready
 RLAPI void UnloadRenderTexture(RenderTexture2D target);                                                  // Unload render texture from GPU memory (VRAM)
 RLAPI void UpdateTexture(Texture2D texture, const void *pixels);                                         // Update GPU texture with new data
-RLAPI void UpdateTextureRec(Texture2D texture, rlRectangle rec, const void *pixels);                       // Update GPU texture rectangle with new data
+RLAPI void UpdateTextureRec(Texture2D texture, Rectangle rec, const void *pixels);                       // Update GPU texture rectangle with new data
 
 // Texture configuration functions
 RLAPI void GenTextureMipmaps(Texture2D *texture);                                                        // Generate GPU mipmaps for a texture
@@ -1407,9 +1413,9 @@ RLAPI void SetTextureWrap(Texture2D texture, int wrap);                         
 RLAPI void DrawTexture(Texture2D texture, int posX, int posY, Color tint);                               // Draw a Texture2D
 RLAPI void DrawTextureV(Texture2D texture, Vector2 position, Color tint);                                // Draw a Texture2D with position defined as Vector2
 RLAPI void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint);  // Draw a Texture2D with extended parameters
-RLAPI void DrawTextureRec(Texture2D texture, rlRectangle source, Vector2 position, Color tint);            // Draw a part of a texture defined by a rectangle
-RLAPI void DrawTexturePro(Texture2D texture, rlRectangle source, rlRectangle dest, Vector2 origin, float rotation, Color tint); // Draw a part of a texture defined by a rectangle with 'pro' parameters
-RLAPI void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, rlRectangle dest, Vector2 origin, float rotation, Color tint); // Draws a texture (or part of it) that stretches or shrinks nicely
+RLAPI void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color tint);            // Draw a part of a texture defined by a rectangle
+RLAPI void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2 origin, float rotation, Color tint); // Draw a part of a texture defined by a rectangle with 'pro' parameters
+RLAPI void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint); // Draws a texture (or part of it) that stretches or shrinks nicely
 
 // Color/pixel related functions
 RLAPI bool ColorIsEqual(Color col1, Color col2);                            // Check if two colors are equal
@@ -1441,15 +1447,15 @@ RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);            
 RLAPI Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount); // Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
 RLAPI bool IsFontReady(Font font);                                                          // Check if a font is ready
 RLAPI GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount, int type); // Load font data for further use
-RLAPI Image GenImageFontAtlas(const GlyphInfo *glyphs, rlRectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod); // Generate image font atlas using chars info
+RLAPI Image GenImageFontAtlas(const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod); // Generate image font atlas using chars info
 RLAPI void UnloadFontData(GlyphInfo *glyphs, int glyphCount);                               // Unload font chars info data (RAM)
 RLAPI void UnloadFont(Font font);                                                           // Unload font from GPU memory (VRAM)
 RLAPI bool ExportFontAsCode(Font font, const char *fileName);                               // Export font as code file, returns true on success
 
 // Text drawing functions
 RLAPI void DrawFPS(int posX, int posY);                                                     // Draw current FPS
-RLAPI void rlDrawText(const char *text, int posX, int posY, int fontSize, Color color);       // Draw text (using default font)
-RLAPI void rlDrawTextEx(Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text using font and additional parameters
+RLAPI void DrawText(const char *text, int posX, int posY, int fontSize, Color color);       // Draw text (using default font)
+RLAPI void DrawTextEx(Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text using font and additional parameters
 RLAPI void DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint); // Draw text using Font and pro parameters (rotation)
 RLAPI void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSize, Color tint); // Draw one character (codepoint)
 RLAPI void DrawTextCodepoints(Font font, const int *codepoints, int codepointCount, Vector2 position, float fontSize, float spacing, Color tint); // Draw multiple character (codepoint)
@@ -1460,7 +1466,7 @@ RLAPI int MeasureText(const char *text, int fontSize);                          
 RLAPI Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing);    // Measure string size for Font
 RLAPI int GetGlyphIndex(Font font, int codepoint);                                          // Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
 RLAPI GlyphInfo GetGlyphInfo(Font font, int codepoint);                                     // Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
-RLAPI rlRectangle GetGlyphAtlasRec(Font font, int codepoint);                                 // Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
+RLAPI Rectangle GetGlyphAtlasRec(Font font, int codepoint);                                 // Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
 
 // Text codepoints management functions (unicode characters)
 RLAPI char *LoadUTF8(const int *codepoints, int length);                // Load UTF-8 text encoded from codepoints array
@@ -1540,8 +1546,8 @@ RLAPI void DrawModelWires(Model model, Vector3 position, float scale, Color tint
 RLAPI void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model wires (with texture if set) with extended parameters
 RLAPI void DrawBoundingBox(BoundingBox box, Color color);                                   // Draw bounding box (wires)
 RLAPI void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float size, Color tint);   // Draw a billboard texture
-RLAPI void DrawBillboardRec(Camera camera, Texture2D texture, rlRectangle source, Vector3 position, Vector2 size, Color tint); // Draw a billboard texture defined by source
-RLAPI void DrawBillboardPro(Camera camera, Texture2D texture, rlRectangle source, Vector3 position, Vector3 up, Vector2 size, Vector2 origin, float rotation, Color tint); // Draw a billboard texture defined by source and rotation
+RLAPI void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector2 size, Color tint); // Draw a billboard texture defined by source
+RLAPI void DrawBillboardPro(Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector3 up, Vector2 size, Vector2 origin, float rotation, Color tint); // Draw a billboard texture defined by source and rotation
 
 // Mesh management functions
 RLAPI void UploadMesh(Mesh *mesh, bool dynamic);                                            // Upload mesh vertex data in GPU and provide VAO/VBO ids

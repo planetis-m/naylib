@@ -271,7 +271,7 @@ static Vector4 *LoadImageDataNormalized(Image image);       // Load pixel data f
 //----------------------------------------------------------------------------------
 
 // Load image from file into CPU memory (RAM)
-Image rlLoadImage(const char *fileName)
+Image LoadImage(const char *fileName)
 {
     Image image = { 0 };
 
@@ -447,7 +447,7 @@ Image LoadImageAnim(const char *fileName, int *frames)
 #endif
     else
     {
-        image = rlLoadImage(fileName);
+        image = LoadImage(fileName);
         frameCount = 1;
     }
 
@@ -1269,7 +1269,7 @@ Image ImageCopy(Image image)
 }
 
 // Create an image from another image piece
-Image ImageFromImage(Image image, rlRectangle rec)
+Image ImageFromImage(Image image, Rectangle rec)
 {
     Image result = { 0 };
 
@@ -1291,7 +1291,7 @@ Image ImageFromImage(Image image, rlRectangle rec)
 
 // Crop an image to area defined by a rectangle
 // NOTE: Security checks are performed in case rectangle goes out of bounds
-void ImageCrop(Image *image, rlRectangle crop)
+void ImageCrop(Image *image, Rectangle crop)
 {
     // Security check to avoid program crash
     if ((image->data == NULL) || (image->width == 0) || (image->height == 0)) return;
@@ -1601,8 +1601,8 @@ Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Co
         {
             if ((codepoint != ' ') && (codepoint != '\t'))
             {
-                rlRectangle rec = { (float)(textOffsetX + font.glyphs[index].offsetX), (float)(textOffsetY + font.glyphs[index].offsetY), (float)font.recs[index].width, (float)font.recs[index].height };
-                ImageDraw(&imText, font.glyphs[index].image, (rlRectangle){ 0, 0, (float)font.glyphs[index].image.width, (float)font.glyphs[index].image.height }, rec, tint);
+                Rectangle rec = { (float)(textOffsetX + font.glyphs[index].offsetX), (float)(textOffsetY + font.glyphs[index].offsetY), (float)font.recs[index].width, (float)font.recs[index].height };
+                ImageDraw(&imText, font.glyphs[index].image, (Rectangle){ 0, 0, (float)font.glyphs[index].image.width, (float)font.glyphs[index].image.height }, rec, tint);
             }
 
             if (font.glyphs[index].advanceX == 0) textOffsetX += (int)(font.recs[index].width + spacing);
@@ -1736,7 +1736,7 @@ void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, i
     if (image->format >= PIXELFORMAT_COMPRESSED_DXT1_RGB) TRACELOG(LOG_WARNING, "Image manipulation not supported for compressed formats");
     else if ((newWidth != image->width) || (newHeight != image->height))
     {
-        rlRectangle srcRec = { 0, 0, (float)image->width, (float)image->height };
+        Rectangle srcRec = { 0, 0, (float)image->width, (float)image->height };
         Vector2 dstPos = { (float)offsetX, (float)offsetY };
 
         if (offsetX < 0)
@@ -1816,7 +1816,7 @@ void ImageAlphaCrop(Image *image, float threshold)
     // Security check to avoid program crash
     if ((image->data == NULL) || (image->width == 0) || (image->height == 0)) return;
 
-    rlRectangle crop = GetImageAlphaBorder(*image, threshold);
+    Rectangle crop = GetImageAlphaBorder(*image, threshold);
 
     // Crop if rectangle is valid
     if (((int)crop.width != 0) && ((int)crop.height != 0)) ImageCrop(image, crop);
@@ -2156,8 +2156,9 @@ void ImageBlurGaussian(Image *image, int blurSize)
     ImageFormat(image, format);
 }
 
-// The kernel matrix is assumed to be square. Only supply the width of the kernel
-void ImageKernelConvolution(Image *image, float* kernel, int kernelSize)
+// Apply custom square convolution kernel to image
+// NOTE: The convolution kernel matrix is expected to be square
+void ImageKernelConvolution(Image *image, const float *kernel, int kernelSize)
 {
     if ((image->data == NULL) || (image->width == 0) || (image->height == 0) || kernel == NULL) return;
 
@@ -3065,9 +3066,9 @@ void UnloadImagePalette(Color *colors)
 
 // Get image alpha border rectangle
 // NOTE: Threshold is defined as a percentage: 0.0f -> 1.0f
-rlRectangle GetImageAlphaBorder(Image image, float threshold)
+Rectangle GetImageAlphaBorder(Image image, float threshold)
 {
-    rlRectangle crop = { 0 };
+    Rectangle crop = { 0 };
 
     Color *pixels = LoadImageColors(image);
 
@@ -3095,7 +3096,7 @@ rlRectangle GetImageAlphaBorder(Image image, float threshold)
         // Check for empty blank image
         if ((xMin != 65536) && (xMax != 65536))
         {
-            crop = (rlRectangle){ (float)xMin, (float)yMin, (float)((xMax + 1) - xMin), (float)((yMax + 1) - yMin) };
+            crop = (Rectangle){ (float)xMin, (float)yMin, (float)((xMax + 1) - xMin), (float)((yMax + 1) - yMin) };
         }
 
         UnloadImageColors(pixels);
@@ -3403,98 +3404,112 @@ void ImageDrawPixelV(Image *dst, Vector2 position, Color color)
 // Draw line within an image
 void ImageDrawLine(Image *dst, int startPosX, int startPosY, int endPosX, int endPosY, Color color)
 {
-    // Using Bresenham's algorithm as described in
-    // Drawing Lines with Pixels - Joshua Scott - March 2012
-    // https://classic.csunplugged.org/wp-content/uploads/2014/12/Lines.pdf
+    // Calculate differences in coordinates
+    int shortLen = endPosY - startPosY;
+    int longLen = endPosX - startPosX;
+    bool yLonger = false;
 
-    int changeInX = (endPosX - startPosX);
-    int absChangeInX = (changeInX < 0)? -changeInX : changeInX;
-    int changeInY = (endPosY - startPosY);
-    int absChangeInY = (changeInY < 0)? -changeInY : changeInY;
-
-    int startU, startV, endU, stepV; // Substitutions, either U = X, V = Y or vice versa. See loop at end of function
-    //int endV;     // Not needed but left for better understanding, check code below
-    int A, B, P;    // See linked paper above, explained down in the main loop
-    int reversedXY = (absChangeInY < absChangeInX);
-
-    if (reversedXY)
+    // Determine if the line is more vertical than horizontal
+    if (abs(shortLen) > abs(longLen))
     {
-        A = 2*absChangeInY;
-        B = A - 2*absChangeInX;
-        P = A - absChangeInX;
+        // Swap the lengths if the line is more vertical
+        int temp = shortLen;
+        shortLen = longLen;
+        longLen = temp;
+        yLonger = true;
+    }
 
-        if (changeInX > 0)
+    // Initialize variables for drawing loop
+    int endVal = longLen;
+    int sgnInc = 1;
+
+    // Adjust direction increment based on longLen sign
+    if (longLen < 0)
+    {
+        longLen = -longLen;
+        sgnInc = -1;
+    }
+
+    // Calculate fixed-point increment for shorter length
+    int decInc = (longLen == 0)? 0 : (shortLen<<16) / longLen;
+
+    // Draw the line pixel by pixel
+    if (yLonger)
+    {
+        // If line is more vertical, iterate over y-axis
+        for (int i = 0, j = 0; i != endVal; i += sgnInc, j += decInc)
         {
-            startU = startPosX;
-            startV = startPosY;
-            endU = endPosX;
-            //endV = endPosY;
+            // Calculate pixel position and draw it
+            ImageDrawPixel(dst, startPosX + (j>>16), startPosY + i, color);
         }
-        else
-        {
-            startU = endPosX;
-            startV = endPosY;
-            endU = startPosX;
-            //endV = startPosY;
-
-            // Since start and end are reversed
-            changeInX = -changeInX;
-            changeInY = -changeInY;
-        }
-
-        stepV = (changeInY < 0)? -1 : 1;
-
-        ImageDrawPixel(dst, startU, startV, color);     // At this point they are correctly ordered...
     }
     else
     {
-        A = 2*absChangeInX;
-        B = A - 2*absChangeInY;
-        P = A - absChangeInY;
-
-        if (changeInY > 0)
+        // If line is more horizontal, iterate over x-axis
+        for (int i = 0, j = 0; i != endVal; i += sgnInc, j += decInc)
         {
-            startU = startPosY;
-            startV = startPosX;
-            endU = endPosY;
-            //endV = endPosX;
+            // Calculate pixel position and draw it
+            ImageDrawPixel(dst, startPosX + i, startPosY + (j>>16), color);
         }
-        else
-        {
-            startU = endPosY;
-            startV = endPosX;
-            endU = startPosY;
-            //endV = startPosX;
-
-            // Since start and end are reversed
-            changeInX = -changeInX;
-            changeInY = -changeInY;
-        }
-
-        stepV = (changeInX < 0)? -1 : 1;
-
-        ImageDrawPixel(dst, startV, startU, color);     // ... but need to be reversed here. Repeated in the main loop below
-    }
-
-    // We already drew the start point. If we started at startU + 0, the line would be crooked and too short
-    for (int u = startU + 1, v = startV; u <= endU; u++)
-    {
-        if (P >= 0)
-        {
-            v += stepV;     // Adjusts whenever we stray too far from the direct line. Details in the linked paper above
-            P += B;         // Remembers that we corrected our path
-        }
-        else P += A;        // Remembers how far we are from the direct line
-
-        if (reversedXY) ImageDrawPixel(dst, u, v, color);
-        else ImageDrawPixel(dst, v, u, color);
     }
 }
 
 // Draw line within an image (Vector version)
 void ImageDrawLineV(Image *dst, Vector2 start, Vector2 end, Color color)
 {
-    ImageDrawLine(dst, (int)start.x, (int)start.y, (int)end.x, (int)end.y, color);
+    // Round start and end positions to nearest integer coordinates
+    int x1 = (int)(start.x + 0.5f);
+    int y1 = (int)(start.y + 0.5f);
+    int x2 = (int)(end.x + 0.5f);
+    int y2 = (int)(end.y + 0.5f);
+
+    // Draw a vertical line using ImageDrawLine function
+    ImageDrawLine(dst, x1, y1, x2, y2, color);
+}
+
+// Draw a line defining thickness within an image
+void ImageDrawLineEx(Image *dst, Vector2 start, Vector2 end, int thick, Color color)
+{
+    // Round start and end positions to nearest integer coordinates
+    int x1 = (int)(start.x + 0.5f);
+    int y1 = (int)(start.y + 0.5f);
+    int x2 = (int)(end.x + 0.5f);
+    int y2 = (int)(end.y + 0.5f);
+
+    // Calculate differences in x and y coordinates
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+
+    // Draw the main line between (x1, y1) and (x2, y2)
+    ImageDrawLine(dst, x1, y1, x2, y2, color);
+
+    // Determine if the line is more horizontal or vertical
+    if (dx != 0 && abs(dy/dx) < 1)
+    {
+        // Line is more horizontal
+        // Calculate half the width of the line
+        int wy = (thick - 1)*sqrtf(dx*dx + dy*dy)/(2*abs(dx));
+
+        // Draw additional lines above and below the main line
+        for (int i = 1; i <= wy; i++)
+        {
+            ImageDrawLine(dst, x1, y1 - i, x2, y2 - i, color); // Draw above the main line
+            ImageDrawLine(dst, x1, y1 + i, x2, y2 + i, color); // Draw below the main line
+        }
+    }
+    else if (dy != 0)
+    {
+        // Line is more vertical or perfectly horizontal
+        // Calculate half the width of the line
+        int wx = (thick - 1)*sqrtf(dx*dx + dy*dy)/(2*abs(dy));
+
+        // Draw additional lines to the left and right of the main line
+        for (int i = 1; i <= wx; i++)
+        {
+            ImageDrawLine(dst, x1 - i, y1, x2 - i, y2, color); // Draw left of the main line
+            ImageDrawLine(dst, x1 + i, y1, x2 + i, y2, color); // Draw right of the main line
+        }
+    }
 }
 
 // Draw circle within an image
@@ -3564,7 +3579,7 @@ void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color)
 // Draw rectangle within an image
 void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color)
 {
-    ImageDrawRectangleRec(dst, (rlRectangle){ (float)posX, (float)posY, (float)width, (float)height }, color);
+    ImageDrawRectangleRec(dst, (Rectangle){ (float)posX, (float)posY, (float)width, (float)height }, color);
 }
 
 // Draw rectangle within an image (Vector version)
@@ -3574,7 +3589,7 @@ void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color
 }
 
 // Draw rectangle within an image
-void ImageDrawRectangleRec(Image *dst, rlRectangle rec, Color color)
+void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color)
 {
     // Security check to avoid program crash
     if ((dst->data == NULL) || (dst->width == 0) || (dst->height == 0)) return;
@@ -3619,7 +3634,7 @@ void ImageDrawRectangleRec(Image *dst, rlRectangle rec, Color color)
 }
 
 // Draw rectangle lines within an image
-void ImageDrawRectangleLines(Image *dst, rlRectangle rec, int thick, Color color)
+void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color)
 {
     ImageDrawRectangle(dst, (int)rec.x, (int)rec.y, (int)rec.width, thick, color);
     ImageDrawRectangle(dst, (int)rec.x, (int)(rec.y + thick), thick, (int)(rec.height - thick*2), color);
@@ -3627,9 +3642,197 @@ void ImageDrawRectangleLines(Image *dst, rlRectangle rec, int thick, Color color
     ImageDrawRectangle(dst, (int)rec.x, (int)(rec.y + rec.height - thick), (int)rec.width, thick, color);
 }
 
+// Draw triangle within an image
+void ImageDrawTriangle(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color)
+{
+    // Calculate the 2D bounding box of the triangle
+    // Determine the minimum and maximum x and y coordinates of the triangle vertices
+    int xMin = (int)((v1.x < v2.x)? ((v1.x < v3.x) ? v1.x : v3.x) : ((v2.x < v3.x) ? v2.x : v3.x));
+    int yMin = (int)((v1.y < v2.y)? ((v1.y < v3.y) ? v1.y : v3.y) : ((v2.y < v3.y) ? v2.y : v3.y));
+    int xMax = (int)((v1.x > v2.x)? ((v1.x > v3.x) ? v1.x : v3.x) : ((v2.x > v3.x) ? v2.x : v3.x));
+    int yMax = (int)((v1.y > v2.y)? ((v1.y > v3.y) ? v1.y : v3.y) : ((v2.y > v3.y) ? v2.y : v3.y));
+
+    // Clamp the bounding box to the image dimensions
+    if (xMin < 0) xMin = 0;
+    if (yMin < 0) yMin = 0;
+    if (xMax > dst->width) xMax = dst->width;
+    if (yMax > dst->height) yMax = dst->height;
+
+    // Check the order of the vertices to determine if it's a front or back face
+    // NOTE: if signedArea is equal to 0, the face is degenerate
+    float signedArea = (v2.x - v1.x)*(v3.y - v1.y) - (v3.x - v1.x)*(v2.y - v1.y);
+    bool isBackFace = (signedArea > 0);
+
+    // Barycentric interpolation setup
+    // Calculate the step increments for the barycentric coordinates
+    int w1XStep = (int)(v3.y - v2.y), w1YStep = (int)(v2.x - v3.x);
+    int w2XStep = (int)(v1.y - v3.y), w2YStep = (int)(v3.x - v1.x);
+    int w3XStep = (int)(v2.y - v1.y), w3YStep = (int)(v1.x - v2.x);
+
+    // If the triangle is a back face, invert the steps
+    if (isBackFace)
+    {
+        w1XStep = -w1XStep, w1YStep = -w1YStep;
+        w2XStep = -w2XStep, w2YStep = -w2YStep;
+        w3XStep = -w3XStep, w3YStep = -w3YStep;
+    }
+
+    // Calculate the initial barycentric coordinates for the top-left point of the bounding box
+    int w1Row = (int)((xMin - v2.x)*w1XStep + w1YStep*(yMin - v2.y));
+    int w2Row = (int)((xMin - v3.x)*w2XStep + w2YStep*(yMin - v3.y));
+    int w3Row = (int)((xMin - v1.x)*w3XStep + w3YStep*(yMin - v1.y));
+
+    // Rasterization loop
+    // Iterate through each pixel in the bounding box
+    for (int y = yMin; y <= yMax; y++)
+    {
+        int w1 = w1Row;
+        int w2 = w2Row;
+        int w3 = w3Row;
+
+        for (int x = xMin; x <= xMax; x++)
+        {
+            // Check if the pixel is inside the triangle using barycentric coordinates
+            // If it is then we can draw the pixel with the given color
+            if ((w1 | w2 | w3) >= 0) ImageDrawPixel(dst, x, y, color);
+
+            // Increment the barycentric coordinates for the next pixel
+            w1 += w1XStep;
+            w2 += w2XStep;
+            w3 += w3XStep;
+        }
+
+        // Move to the next row in the bounding box
+        w1Row += w1YStep;
+        w2Row += w2YStep;
+        w3Row += w3YStep;
+    }
+}
+
+// Draw triangle with interpolated colors within an image
+void ImageDrawTriangleEx(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color c1, Color c2, Color c3)
+{
+    // Calculate the 2D bounding box of the triangle
+    // Determine the minimum and maximum x and y coordinates of the triangle vertices
+    int xMin = (int)((v1.x < v2.x)? ((v1.x < v3.x)? v1.x : v3.x) : ((v2.x < v3.x)? v2.x : v3.x));
+    int yMin = (int)((v1.y < v2.y)? ((v1.y < v3.y)? v1.y : v3.y) : ((v2.y < v3.y)? v2.y : v3.y));
+    int xMax = (int)((v1.x > v2.x)? ((v1.x > v3.x)? v1.x : v3.x) : ((v2.x > v3.x)? v2.x : v3.x));
+    int yMax = (int)((v1.y > v2.y)? ((v1.y > v3.y)? v1.y : v3.y) : ((v2.y > v3.y)? v2.y : v3.y));
+
+    // Clamp the bounding box to the image dimensions
+    if (xMin < 0) xMin = 0;
+    if (yMin < 0) yMin = 0;
+    if (xMax > dst->width) xMax = dst->width;
+    if (yMax > dst->height) yMax = dst->height;
+
+    // Check the order of the vertices to determine if it's a front or back face
+    // NOTE: if signedArea is equal to 0, the face is degenerate
+    float signedArea = (v2.x - v1.x)*(v3.y - v1.y) - (v3.x - v1.x)*(v2.y - v1.y);
+    bool isBackFace = (signedArea > 0);
+
+    // Barycentric interpolation setup
+    // Calculate the step increments for the barycentric coordinates
+    int w1XStep = (int)(v3.y - v2.y), w1YStep = (int)(v2.x - v3.x);
+    int w2XStep = (int)(v1.y - v3.y), w2YStep = (int)(v3.x - v1.x);
+    int w3XStep = (int)(v2.y - v1.y), w3YStep = (int)(v1.x - v2.x);
+
+    // If the triangle is a back face, invert the steps
+    if (isBackFace)
+    {
+        w1XStep = -w1XStep, w1YStep = -w1YStep;
+        w2XStep = -w2XStep, w2YStep = -w2YStep;
+        w3XStep = -w3XStep, w3YStep = -w3YStep;
+    }
+
+    // Calculate the initial barycentric coordinates for the top-left point of the bounding box
+    int w1Row = (int)((xMin - v2.x)*w1XStep + w1YStep*(yMin - v2.y));
+    int w2Row = (int)((xMin - v3.x)*w2XStep + w2YStep*(yMin - v3.y));
+    int w3Row = (int)((xMin - v1.x)*w3XStep + w3YStep*(yMin - v1.y));
+
+    // Calculate the inverse of the sum of the barycentric coordinates for normalization
+    // NOTE 1: Here, we act as if we multiply by 255 the reciprocal, which avoids additional
+    //         calculations in the loop. This is acceptable because we are only interpolating colors.
+    // NOTE 2: This sum remains constant throughout the triangle
+    float wInvSum = 255.0f/(w1Row + w2Row + w3Row);
+
+    // Rasterization loop
+    // Iterate through each pixel in the bounding box
+    for (int y = yMin; y <= yMax; y++)
+    {
+        int w1 = w1Row;
+        int w2 = w2Row;
+        int w3 = w3Row;
+
+        for (int x = xMin; x <= xMax; x++)
+        {
+            // Check if the pixel is inside the triangle using barycentric coordinates
+            if ((w1 | w2 | w3) >= 0)
+            {
+                // Compute the normalized barycentric coordinates
+                unsigned char aW1 = (unsigned char)((float)w1*wInvSum);
+                unsigned char aW2 = (unsigned char)((float)w2*wInvSum);
+                unsigned char aW3 = (unsigned char)((float)w3*wInvSum);
+
+                // Interpolate the color using the barycentric coordinates
+                Color finalColor = { 0 };
+                finalColor.r = (c1.r*aW1 + c2.r*aW2 + c3.r*aW3)/255;
+                finalColor.g = (c1.g*aW1 + c2.g*aW2 + c3.g*aW3)/255;
+                finalColor.b = (c1.b*aW1 + c2.b*aW2 + c3.b*aW3)/255;
+                finalColor.a = (c1.a*aW1 + c2.a*aW2 + c3.a*aW3)/255;
+
+                // Draw the pixel with the interpolated color
+                ImageDrawPixel(dst, x, y, finalColor);
+            }
+
+            // Increment the barycentric coordinates for the next pixel
+            w1 += w1XStep;
+            w2 += w2XStep;
+            w3 += w3XStep;
+        }
+
+        // Move to the next row in the bounding box
+        w1Row += w1YStep;
+        w2Row += w2YStep;
+        w3Row += w3YStep;
+    }
+}
+
+// Draw triangle outline within an image
+void ImageDrawTriangleLines(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color)
+{
+    ImageDrawLine(dst, (int)v1.x, (int)v1.y, (int)v2.x, (int)v2.y, color);
+    ImageDrawLine(dst, (int)v2.x, (int)v2.y, (int)v3.x, (int)v3.y, color);
+    ImageDrawLine(dst, (int)v3.x, (int)v3.y, (int)v1.x, (int)v1.y, color);
+}
+
+// Draw a triangle fan defined by points within an image (first vertex is the center)
+void ImageDrawTriangleFan(Image *dst, Vector2 *points, int pointCount, Color color)
+{
+    if (pointCount >= 3)
+    {
+        for (int i = 1; i < pointCount - 1; i++)
+        {
+            ImageDrawTriangle(dst, points[0], points[i], points[i + 1], color);
+        }
+    }
+}
+
+// Draw a triangle strip defined by points within an image
+void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color color)
+{
+    if (pointCount >= 3)
+    {
+        for (int i = 2; i < pointCount; i++)
+        {
+            if ((i%2) == 0) ImageDrawTriangle(dst, points[i], points[i - 2], points[i - 1], color);
+            else ImageDrawTriangle(dst, points[i], points[i - 1], points[i - 2], color);
+        }
+    }
+}
+
 // Draw an image (source) within an image (destination)
 // NOTE: Color tint is applied to source image
-void ImageDraw(Image *dst, Image src, rlRectangle srcRec, rlRectangle dstRec, Color tint)
+void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color tint)
 {
     // Security check to avoid program crash
     if ((dst->data == NULL) || (dst->width == 0) || (dst->height == 0) ||
@@ -3655,7 +3858,7 @@ void ImageDraw(Image *dst, Image src, rlRectangle srcRec, rlRectangle dstRec, Co
         {
             srcMod = ImageFromImage(src, srcRec);   // Create image from another image
             ImageResize(&srcMod, (int)dstRec.width, (int)dstRec.height);   // Resize to destination rectangle
-            srcRec = (rlRectangle){ 0, 0, (float)srcMod.width, (float)srcMod.height };
+            srcRec = (Rectangle){ 0, 0, (float)srcMod.width, (float)srcMod.height };
 
             srcPtr = &srcMod;
             useSrcMod = true;
@@ -3762,8 +3965,8 @@ void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position, 
 {
     Image imText = ImageTextEx(font, text, fontSize, spacing, tint);
 
-    rlRectangle srcRec = { 0.0f, 0.0f, (float)imText.width, (float)imText.height };
-    rlRectangle dstRec = { position.x, position.y, (float)imText.width, (float)imText.height };
+    Rectangle srcRec = { 0.0f, 0.0f, (float)imText.width, (float)imText.height };
+    Rectangle dstRec = { position.x, position.y, (float)imText.width, (float)imText.height };
 
     ImageDraw(dst, imText, srcRec, dstRec, WHITE);
 
@@ -3778,7 +3981,7 @@ Texture2D LoadTexture(const char *fileName)
 {
     Texture2D texture = { 0 };
 
-    Image image = rlLoadImage(fileName);
+    Image image = LoadImage(fileName);
 
     if (image.data != NULL)
     {
@@ -3846,9 +4049,9 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
         int size = cubemap.width;
 
         Image faces = { 0 };                // Vertical column image
-        rlRectangle faceRecs[6] = { 0 };      // Face source rectangles
+        Rectangle faceRecs[6] = { 0 };      // Face source rectangles
 
-        for (int i = 0; i < 6; i++) faceRecs[i] = (rlRectangle){ 0, 0, (float)size, (float)size };
+        for (int i = 0; i < 6; i++) faceRecs[i] = (Rectangle){ 0, 0, (float)size, (float)size };
 
         if (layout == CUBEMAP_LAYOUT_LINE_VERTICAL)
         {
@@ -3887,7 +4090,7 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
 
             // NOTE: Image formatting does not work with compressed textures
 
-            for (int i = 0; i < 6; i++) ImageDraw(&faces, image, faceRecs[i], (rlRectangle){ 0, (float)size*i, (float)size, (float)size }, WHITE);
+            for (int i = 0; i < 6; i++) ImageDraw(&faces, image, faceRecs[i], (Rectangle){ 0, (float)size*i, (float)size, (float)size }, WHITE);
         }
 
         // NOTE: Cubemap data is expected to be provided as 6 images in a single data array,
@@ -4013,7 +4216,7 @@ void UpdateTexture(Texture2D texture, const void *pixels)
 
 // Update GPU texture rectangle with new data
 // NOTE: pixels data must match texture.format
-void UpdateTextureRec(Texture2D texture, rlRectangle rec, const void *pixels)
+void UpdateTextureRec(Texture2D texture, Rectangle rec, const void *pixels)
 {
     rlUpdateTexture(texture.id, (int)rec.x, (int)rec.y, (int)rec.width, (int)rec.height, texture.format, pixels);
 }
@@ -4143,17 +4346,17 @@ void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
 // Draw a texture with extended parameters
 void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint)
 {
-    rlRectangle source = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
-    rlRectangle dest = { position.x, position.y, (float)texture.width*scale, (float)texture.height*scale };
+    Rectangle source = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
+    Rectangle dest = { position.x, position.y, (float)texture.width*scale, (float)texture.height*scale };
     Vector2 origin = { 0.0f, 0.0f };
 
     DrawTexturePro(texture, source, dest, origin, rotation, tint);
 }
 
 // Draw a part of a texture (defined by a rectangle)
-void DrawTextureRec(Texture2D texture, rlRectangle source, Vector2 position, Color tint)
+void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color tint)
 {
-    rlRectangle dest = { position.x, position.y, fabsf(source.width), fabsf(source.height) };
+    Rectangle dest = { position.x, position.y, fabsf(source.width), fabsf(source.height) };
     Vector2 origin = { 0.0f, 0.0f };
 
     DrawTexturePro(texture, source, dest, origin, 0.0f, tint);
@@ -4161,7 +4364,7 @@ void DrawTextureRec(Texture2D texture, rlRectangle source, Vector2 position, Col
 
 // Draw a part of a texture (defined by a rectangle) with 'pro' parameters
 // NOTE: origin is relative to destination rectangle size
-void DrawTexturePro(Texture2D texture, rlRectangle source, rlRectangle dest, Vector2 origin, float rotation, Color tint)
+void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2 origin, float rotation, Color tint)
 {
     // Check if texture is valid
     if (texture.id > 0)
@@ -4283,7 +4486,7 @@ void DrawTexturePro(Texture2D texture, rlRectangle source, rlRectangle dest, Vec
 }
 
 // Draws a texture (or part of it) that stretches or shrinks nicely using n-patch info
-void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, rlRectangle dest, Vector2 origin, float rotation, Color tint)
+void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint)
 {
     if (texture.id > 0)
     {
