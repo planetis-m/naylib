@@ -33,9 +33,7 @@ runnableExamples:
   # let ptr3 = mp.realloc(ptr1, 150)
   # Free memory
   mp.free(ptr2)
-  # Reset the pool
-  mp.reset()
-  echo "Free memory after reset: ", mp.getFreeMemory()
+  echo "Free memory after free: ", mp.getFreeMemory()
 
   # Example 2: ObjPool
   type
@@ -43,7 +41,6 @@ runnableExamples:
       x, y: int
       data: array[20, char]
 
-  reset(buffer)
   # Create an object pool
   var op = createObjPool[MyObject](buffer)
   # Reset the pool
@@ -60,7 +57,6 @@ runnableExamples:
 
   # Example 3: BiStack
 
-  reset(buffer)
   # Create a BiStack with 1024 bytes
   var bs = createBiStack(buffer)
   # Choose between front and back allocations based on the lifetimes and
