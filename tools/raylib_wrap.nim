@@ -238,7 +238,8 @@ proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
   result = RArray[uint8](len: len, data: cast[ptr UncheckedArray[uint8]](data))
 
 proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
-  ## Apply Custom Square image convolution kernel
+  ## Apply custom square convolution kernel to image
+  ## NOTE: The convolution kernel matrix is expected to be square
   imageKernelConvolutionPriv(image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
 
 type
