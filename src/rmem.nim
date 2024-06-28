@@ -10,6 +10,12 @@
 #      - Reduce the possibilities of memory leaks for beginner developers using raylib.
 #      - Being able to flexibly range check memory if necessary.
 #
+# The MemPool implementation is built upon the O(1) heap, inspired by Pavel Kirienko's work
+# available on GitHub (https://github.com/pavel-kirienko/o1heap). This dependency is licensed
+# under the permissive MIT license, Copyright (c) 2020 Pavel Kirienko.
+#
+# Copyright (c) 2024 Antonis (planetis-m) Geralis
+#
 # ****************************************************************************************
 
 runnableExamples:
@@ -247,7 +253,7 @@ proc getFreeMemory*(x: MemPool): int {.inline.} =
   result = x.capacity - x.occ
 
 const
-  DefaultAlignment = 8
+  DefaultAlignment = if sizeof(int) <= 4: 8 else: 16
 
 type
   FreeNode = object
