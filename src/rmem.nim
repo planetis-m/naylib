@@ -102,10 +102,10 @@ proc alignUp(p: pointer, align: int): pointer {.inline.} =
   cast[pointer](alignUp(cast[uint](p), align))
 
 const
-  MaxBins = when sizeof(int) > 2: 32 else: 16
+  MaxBins = when sizeof(int) > 2: 32 else: 20 # should've been 36 for i386
   MemAlign = sizeof(pointer) * 4 # isPowerOfTwo
   MinChunkSize = MemAlign * 2 # isPowerOfTwo
-  MaxChunkSize = (high(int) shr 1) + 1 # isPowerOfTwo
+  MaxChunkSize = high(int) shr 1 + 1 # isPowerOfTwo
 
 type
   Chunk = object
@@ -122,7 +122,7 @@ type
   MemPool* = object
     bins: array[MaxBins, ptr Chunk]
     nonEmptyBinMask: uint
-    capacity, occ: int
+    capacity, occupied: int
 
 proc interlink(left, right: ptr Chunk) =
   ## Links two blocks so that their next/prev pointers point to each other; left goes before right.
@@ -203,7 +203,7 @@ proc alloc*(x: var MemPool, size: Natural): pointer =
         interlink(newBlock, b.header.next)
         interlink(b, newBlock)
         rebin(x, newBlock)
-        inc x.occ, chunkSize
+        inc x.occupied, chunkSize
         assert b.header.size >= size + MemAlign
         b.header.used = true
       result = cast[pointer](cast[uint](b) + MemAlign)
@@ -215,8 +215,8 @@ proc free*(x: var MemPool, p: pointer) =
     # Even if we're going to drop the block later, mark it free anyway to prevent double-free
     b.header.used = false
     # Update the diagnostics. It must be done before merging because it invalidates the block size information.
-    assert x.occ >= b.header.size # Heap corruption check
-    dec x.occ, b.header.size
+    assert x.occupied >= b.header.size # Heap corruption check
+    dec x.occupied, b.header.size
     # Merge with siblings and insert the returned block into the appropriate bin and update metadata.
     let prev = b.header.prev
     let next = b.header.next
@@ -246,7 +246,7 @@ proc free*(x: var MemPool, p: pointer) =
       rebin(x, b)
 
 proc getFreeMemory*(x: MemPool): int {.inline.} =
-  result = x.capacity - x.occ
+  result = x.capacity - x.occupied
 
 const
   DefaultAlignment = when sizeof(int) <= 4: 8 else: 16
@@ -357,7 +357,7 @@ proc alignedAllocBack*(s: var BiStack, size, align: Natural): pointer =
 proc allocBack*(s: var BiStack; size: Natural): pointer {.inline.} =
   alignedAllocBack(s, size, DefaultAlignment)
 
-proc resetFront*(s: var BiStack)  {.inline.} =
+proc resetFront*(s: var BiStack) {.inline.} =
   s.front = 0
 
 proc resetBack*(s: var BiStack) {.inline.} =
