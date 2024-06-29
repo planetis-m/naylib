@@ -159,7 +159,7 @@ proc unbin(x: var MemPool, b: ptr Chunk) =
 proc createMemPool*(buffer: openarray[byte]): MemPool =
   result = MemPool()
   let base = alignUp(cast[pointer](buffer), MemAlign)
-  let padding = cast[uint](base) - cast[uint](base)
+  let padding = cast[uint](base) - cast[uint](buffer)
   let size = buffer.len - padding.int
   if base != nil and size >= MinChunkSize:
     # Limit and align the capacity
@@ -328,11 +328,11 @@ proc createBiStack*(buffer: openarray[byte]): BiStack =
   )
 
 proc alignedAllocFront*(s: var BiStack, size, align: Natural): pointer =
+  result = nil
   let
     currAddr = cast[uint](s.buf) + s.front.uint
     alignedAddr = alignUp(currAddr, align)
     padding = int(alignedAddr - currAddr)
-  result = nil
   if s.front + padding + size <= s.back:
     # Stack allocator is out of memory
     s.front = s.front + size + padding
@@ -343,11 +343,11 @@ proc allocFront*(s: var BiStack; size: Natural): pointer {.inline.} =
   alignedAllocFront(s, size, DefaultAlignment)
 
 proc alignedAllocBack*(s: var BiStack, size, align: Natural): pointer =
+  result = nil
   let
     currAddr = cast[uint](s.buf) + s.front.uint
     alignedAddr = alignUp(currAddr, align)
     padding = int(alignedAddr - currAddr)
-  result = nil
   if s.back - padding - size >= s.front:
     # Stack allocator is out of memory
     s.back = s.back - size - padding
