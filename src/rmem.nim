@@ -29,8 +29,8 @@ runnableExamples:
   let ptr2 = mp.alloc(200)
   # Check free memory
   echo "Free memory: ", mp.getFreeMemory()
-  # # Reallocate
-  # let ptr3 = mp.realloc(ptr1, 150)
+  # Reallocate
+  let ptr3 = mp.realloc(ptr1, 150)
   # Free memory
   mp.free(ptr2)
   echo "Free memory after free: ", mp.getFreeMemory()
@@ -244,6 +244,21 @@ proc free*(x: var MemPool, p: pointer) =
       rebin(x, b)
     else:
       rebin(x, b)
+
+proc ptrSize(p: pointer): int {.inline.} =
+  let b = cast[ptr Chunk](cast[uint](p) - MemAlign)
+  assert b.header.used
+  result = b.header.size
+
+proc realloc*(x: var MemPool, p: pointer, newSize: Natural): pointer =
+  result = nil
+  if newSize > 0:
+    result = alloc(x, newSize)
+    if p != nil:
+      copyMem(result, p, min(ptrSize(p), newSize))
+      free(x, p)
+  elif p != nil:
+    free(x, p)
 
 proc getFreeMemory*(x: MemPool): int {.inline.} =
   result = x.capacity - x.occupied

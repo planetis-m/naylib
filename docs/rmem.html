@@ -116,6 +116,10 @@
   <li><a class="reference" href="#margins%2CBiStack" title="margins(s: BiStack): int">margins(s: BiStack): int</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">realloc
+  <li><a class="reference" href="#realloc%2CMemPool%2Cpointer%2CNatural" title="realloc(x: var MemPool; p: pointer; newSize: Natural): pointer">realloc(x: var MemPool; p: pointer; newSize: Natural): pointer</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">resetAll
   <li><a class="reference" href="#resetAll%2CBiStack" title="resetAll(s: var BiStack)">resetAll(s: var BiStack)</a></li>
 
@@ -155,8 +159,8 @@
 <span class="Keyword">let</span> <span class="Identifier">ptr2</span> <span class="Operator">=</span> <span class="Identifier">mp</span><span class="Operator">.</span><span class="Identifier">alloc</span><span class="Punctuation">(</span><span class="DecNumber">200</span><span class="Punctuation">)</span>
 <span class="Comment"># Check free memory</span>
 <span class="Identifier">echo</span> <span class="StringLit">&quot;Free memory: &quot;</span><span class="Punctuation">,</span> <span class="Identifier">mp</span><span class="Operator">.</span><span class="Identifier">getFreeMemory</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
-<span class="Comment"># # Reallocate</span>
-<span class="Comment"># let ptr3 = mp.realloc(ptr1, 150)</span>
+<span class="Comment"># Reallocate</span>
+<span class="Keyword">let</span> <span class="Identifier">ptr3</span> <span class="Operator">=</span> <span class="Identifier">mp</span><span class="Operator">.</span><span class="Identifier">realloc</span><span class="Punctuation">(</span><span class="Identifier">ptr1</span><span class="Punctuation">,</span> <span class="DecNumber">150</span><span class="Punctuation">)</span>
 <span class="Comment"># Free memory</span>
 <span class="Identifier">mp</span><span class="Operator">.</span><span class="Identifier">free</span><span class="Punctuation">(</span><span class="Identifier">ptr2</span><span class="Punctuation">)</span>
 <span class="Identifier">echo</span> <span class="StringLit">&quot;Free memory after free: &quot;</span><span class="Punctuation">,</span> <span class="Identifier">mp</span><span class="Operator">.</span><span class="Identifier">getFreeMemory</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
@@ -207,8 +211,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L317" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L317" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L332" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L332" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -227,8 +231,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L258" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L258" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L273" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L273" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -245,8 +249,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L345" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L345" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L360" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L360" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -259,8 +263,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L330" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L330" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L345" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L345" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -283,8 +287,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L285" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L285" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L300" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L300" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -297,8 +301,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L357" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L357" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L372" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L372" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -311,8 +315,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L342" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L342" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L357" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L357" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -325,8 +329,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L322" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L322" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L337" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L337" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -352,8 +356,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L266" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L266" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L281" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L281" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -375,8 +379,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L295" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L295" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L310" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L310" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -388,8 +392,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L264" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L264" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L279" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L279" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -401,8 +405,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L248" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L248" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L263" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L263" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -414,8 +418,22 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L370" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L370" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L385" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L385" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="realloc-procs-all">
+  <div id="realloc,MemPool,pointer,Natural">
+  <dt><pre><span class="Keyword">proc</span> <a href="#realloc%2CMemPool%2Cpointer%2CNatural"><span class="Identifier">realloc</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rmem.html#MemPool"><span class="Identifier">MemPool</span></a><span class="Other">;</span> <span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">newSize</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L253" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L253" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -427,8 +445,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L366" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L366" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L381" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L381" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -440,8 +458,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L363" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L363" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L378" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L378" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -453,8 +471,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L360" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L360" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rmem.nim#L375" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rmem.nim#L375" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -470,7 +488,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-06-28 22:27:41 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-06-30 01:13:50 UTC</small>
       </div>
     </div>
   </div>
