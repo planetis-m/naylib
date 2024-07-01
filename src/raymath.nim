@@ -1604,6 +1604,58 @@ func transform*(q: Quaternion; mat: Matrix): Quaternion {.inline.} =
   result.z = mat.m2 * q.x + mat.m6 * q.y + mat.m10 * q.z + mat.m14 * q.w
   result.w = mat.m3 * q.x + mat.m7 * q.y + mat.m11 * q.z + mat.m15 * q.w
 
+func decompose*(mat: Matrix, translation: var Vector3, rotation: var Quaternion, scale: var Vector3) {.inline.} =
+  # Extract translation
+  translation.x = mat.m12
+  translation.y = mat.m13
+  translation.z = mat.m14
+
+  # Extract upper-left for determinant computation
+  let
+    a = mat.m0
+    b = mat.m4
+    c = mat.m8
+    d = mat.m1
+    e = mat.m5
+    f = mat.m9
+    g = mat.m2
+    h = mat.m6
+    i = mat.m10
+    A = e*i - f*h
+    B = f*g - d*i
+    C = d*h - e*g
+
+  # Extract scale
+  let det = a*A + b*B + c*C
+  let
+    abc = Vector3(x: a, y: b, z: c)
+    def = Vector3(x: d, y: e, z: f)
+    ghi = Vector3(x: g, y: h, z: i)
+
+  let
+    scalex = length(abc)
+    scaley = length(def)
+    scalez = length(ghi)
+  var s = Vector3(x: scalex, y: scaley, z: scalez)
+
+  if det < 0:
+    s = negate(s)
+
+  scale = s
+
+  # Remove scale from the matrix if it is not close to zero
+  var clone = mat
+  if not equals(det, 0):
+    clone.m0 /= s.x
+    clone.m5 /= s.y
+    clone.m10 /= s.z
+
+    # Extract rotation
+    rotation = fromMatrix(clone)
+  else:
+    # Set to identity if close to zero
+    rotation = identity(Quaternion)
+
 # template `=~`*[T: float32|Vector2|Vector3|Vector4|Quaternion](v1, v2: T): bool = equals(v1, v2)
 
 template `+`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1, v2: T): T = add(v1, v2)
