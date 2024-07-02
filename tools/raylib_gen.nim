@@ -20,9 +20,11 @@ const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
 {.passC: "-I" & string(raylibDir / Path"external/glfw/deps/mingw").}
 {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
-  {.passC: "-DPLATFORM_WEB -DGRAPHICS_API_OPENGL_ES2".}
+  {.passC: "-DPLATFORM_WEB -std=gnu99".}
+  when defined(GraphicsApiOpenGlEs3): {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
+  else: {.passC: "-DGRAPHICS_API_OPENGL_ES2".}
   {.passL: "-sUSE_GLFW=3 -sWASM=1 -sASYNCIFY -sTOTAL_MEMORY=67108864".}
-  {.passL: "-sGL_ENABLE_GET_PROC_ADDRESS".}
+  {.passL: "-sGL_ENABLE_GET_PROC_ADDRESS -sEXPORTED_RUNTIME_METHODS=ccall".}
   when defined(NaylibWebResources):
     const NaylibWebResourcesPath {.strdefine.} = "resources"
     {.passL: "-sFORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}

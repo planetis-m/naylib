@@ -1609,7 +1609,6 @@ func decompose*(mat: Matrix, translation: var Vector3, rotation: var Quaternion,
   translation.x = mat.m12
   translation.y = mat.m13
   translation.z = mat.m14
-
   # Extract upper-left for determinant computation
   let
     a = mat.m0
@@ -1624,32 +1623,26 @@ func decompose*(mat: Matrix, translation: var Vector3, rotation: var Quaternion,
     A = e*i - f*h
     B = f*g - d*i
     C = d*h - e*g
-
   # Extract scale
   let det = a*A + b*B + c*C
   let
     abc = Vector3(x: a, y: b, z: c)
     def = Vector3(x: d, y: e, z: f)
     ghi = Vector3(x: g, y: h, z: i)
-
   let
     scalex = length(abc)
     scaley = length(def)
     scalez = length(ghi)
   var s = Vector3(x: scalex, y: scaley, z: scalez)
-
   if det < 0:
     s = negate(s)
-
   scale = s
-
   # Remove scale from the matrix if it is not close to zero
   var clone = mat
   if not equals(det, 0):
     clone.m0 /= s.x
     clone.m5 /= s.y
     clone.m10 /= s.z
-
     # Extract rotation
     rotation = fromMatrix(clone)
   else:
