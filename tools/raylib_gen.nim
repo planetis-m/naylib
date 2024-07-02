@@ -24,7 +24,7 @@ when defined(emscripten):
   when defined(GraphicsApiOpenGlEs3): {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
   else: {.passC: "-DGRAPHICS_API_OPENGL_ES2".}
   {.passL: "-sUSE_GLFW=3 -sWASM=1 -sASYNCIFY -sTOTAL_MEMORY=67108864".}
-  {.passL: "-sGL_ENABLE_GET_PROC_ADDRESS -sEXPORTED_RUNTIME_METHODS=ccall".}
+  {.passL: "-sEXPORTED_RUNTIME_METHODS=ccall".}
   when compileOption("threads"):
     const NaylibWebPthreadPoolSize {.intdefine.} = 2
     {.passL: "-sPTHREAD_POOL_SIZE=" & $NaylibWebPthreadPoolSize.}
