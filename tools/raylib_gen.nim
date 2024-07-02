@@ -25,6 +25,9 @@ when defined(emscripten):
   else: {.passC: "-DGRAPHICS_API_OPENGL_ES2".}
   {.passL: "-sUSE_GLFW=3 -sWASM=1 -sASYNCIFY -sTOTAL_MEMORY=67108864".}
   {.passL: "-sGL_ENABLE_GET_PROC_ADDRESS -sEXPORTED_RUNTIME_METHODS=ccall".}
+  when compileOption("threads"):
+    const NaylibWebPthreadPoolSize {.intdefine.} = 2
+    {.passL: "-sPTHREAD_POOL_SIZE=" & $NaylibWebPthreadPoolSize.}
   when defined(NaylibWebResources):
     const NaylibWebResourcesPath {.strdefine.} = "resources"
     {.passL: "-sFORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
