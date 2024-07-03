@@ -101,6 +101,9 @@ proc alignUp(n: uint, align: int): uint {.inline.} =
 proc alignUp(p: pointer, align: int): pointer {.inline.} =
   cast[pointer](alignUp(cast[uint](p), align))
 
+proc alignDown(n: uint, align: int): uint {.inline.} =
+  result = n and not (align.uint - 1)
+
 const
   MaxBins = when sizeof(int) > 2: 32 else: 20 # should've been 36 for i386
   MemAlign = sizeof(pointer) * 4 # isPowerOfTwo
@@ -163,11 +166,8 @@ proc createMemPool*(buffer: openarray[byte]): MemPool =
   let size = buffer.len - padding.int
   if base != nil and size >= MinChunkSize:
     # Limit and align the capacity
-    var capacity = size
-    if capacity > MaxChunkSize:
-      capacity = MaxChunkSize
-    while capacity mod MinChunkSize != 0:
-      dec(capacity)
+    var capacity = min(size, MaxChunkSize)
+    capacity = alignDown(capacity.uint, MinChunkSize).int
     # Initialize the root block
     let b = cast[ptr Chunk](base)
     b.header.next = nil
