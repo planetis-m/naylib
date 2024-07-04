@@ -29,9 +29,9 @@ proc editRaylibDirConst(dir: string) =
     file[first..first+skipped-1] = "raylibDir = Path" & str
     writeFile("raylib.nim", file)
 
-before install:
-  # Works with atlas
-  editRaylibDirConst(thisDir().quoteShell / "src")
+# before install:
+#   # Works with atlas
+#   editRaylibDirConst(thisDir().quoteShell / "src")
 
 after install:
   # Fails with atlas
