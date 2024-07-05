@@ -23,7 +23,7 @@ when defined(emscripten):
   {.passC: "-DPLATFORM_WEB -std=gnu99".}
   when defined(GraphicsApiOpenGlEs3): {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
   else: {.passC: "-DGRAPHICS_API_OPENGL_ES2".}
-  {.passL: "-sUSE_GLFW=3 -sWASM=1 -sTOTAL_MEMORY=67108864".}
+  {.passL: "-sUSE_GLFW=3 -sWASM=1 -sTOTAL_MEMORY=67108864".} # 64MiB
   {.passL: "-sEXPORTED_RUNTIME_METHODS=ccall".}
   when compileOption("threads"):
     const NaylibWebPthreadPoolSize {.intdefine.} = 2
