@@ -54,7 +54,7 @@ elif defined(android):
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm -ldl".}
 
 else:
-  {.passC: "-DPLATFORM_DESKTOP".}
+  {.passC: "-DPLATFORM_DESKTOP_GLFW".}
   when defined(GraphicsApiOpenGl11): {.passC: "-DGRAPHICS_API_OPENGL_11".}
   elif defined(GraphicsApiOpenGl21): {.passC: "-DGRAPHICS_API_OPENGL_21".}
   elif defined(GraphicsApiOpenGl43): {.passC: "-DGRAPHICS_API_OPENGL_43".}
