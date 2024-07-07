@@ -271,7 +271,7 @@ static Vector4 *LoadImageDataNormalized(Image image);       // Load pixel data f
 //----------------------------------------------------------------------------------
 
 // Load image from file into CPU memory (RAM)
-Image rlLoadImage(const char *fileName)
+Image LoadImage(const char *fileName)
 {
     Image image = { 0 };
 
@@ -447,7 +447,7 @@ Image LoadImageAnim(const char *fileName, int *frames)
 #endif
     else
     {
-        image = rlLoadImage(fileName);
+        image = LoadImage(fileName);
         frameCount = 1;
     }
 
@@ -1269,7 +1269,7 @@ Image ImageCopy(Image image)
 }
 
 // Create an image from another image piece
-Image ImageFromImage(Image image, rlRectangle rec)
+Image ImageFromImage(Image image, Rectangle rec)
 {
     Image result = { 0 };
 
@@ -1291,7 +1291,7 @@ Image ImageFromImage(Image image, rlRectangle rec)
 
 // Crop an image to area defined by a rectangle
 // NOTE: Security checks are performed in case rectangle goes out of bounds
-void ImageCrop(Image *image, rlRectangle crop)
+void ImageCrop(Image *image, Rectangle crop)
 {
     // Security check to avoid program crash
     if ((image->data == NULL) || (image->width == 0) || (image->height == 0)) return;
@@ -1601,8 +1601,8 @@ Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Co
         {
             if ((codepoint != ' ') && (codepoint != '\t'))
             {
-                rlRectangle rec = { (float)(textOffsetX + font.glyphs[index].offsetX), (float)(textOffsetY + font.glyphs[index].offsetY), (float)font.recs[index].width, (float)font.recs[index].height };
-                ImageDraw(&imText, font.glyphs[index].image, (rlRectangle){ 0, 0, (float)font.glyphs[index].image.width, (float)font.glyphs[index].image.height }, rec, tint);
+                Rectangle rec = { (float)(textOffsetX + font.glyphs[index].offsetX), (float)(textOffsetY + font.glyphs[index].offsetY), (float)font.recs[index].width, (float)font.recs[index].height };
+                ImageDraw(&imText, font.glyphs[index].image, (Rectangle){ 0, 0, (float)font.glyphs[index].image.width, (float)font.glyphs[index].image.height }, rec, tint);
             }
 
             if (font.glyphs[index].advanceX == 0) textOffsetX += (int)(font.recs[index].width + spacing);
@@ -1628,6 +1628,174 @@ Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Co
     TRACELOG(LOG_WARNING, "IMAGE: ImageTextEx() requires module: rtext");
 #endif
     return imText;
+}
+
+// Create an image from a selected channel of another image
+Image ImageFromChannel(Image image, int selectedChannel)
+{
+    Image result = { 0 };
+
+    // Security check to avoid program crash
+    if ((image.data == NULL) || (image.width == 0) || (image.height == 0)) return result;
+
+    // Check selected channel is valid
+    if (selectedChannel < 0)
+    {
+        TRACELOG(LOG_WARNING, "Channel cannot be negative. Setting channel to 0.");
+        selectedChannel = 0;
+    }
+
+    if (image.format == PIXELFORMAT_UNCOMPRESSED_GRAYSCALE ||
+        image.format == PIXELFORMAT_UNCOMPRESSED_R32 ||
+        image.format == PIXELFORMAT_UNCOMPRESSED_R16)
+    {
+        if (selectedChannel > 0)
+        {
+            TRACELOG(LOG_WARNING, "This image has only 1 channel. Setting channel to it.");
+            selectedChannel = 0;
+        }
+    }
+    else if (image.format == PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA)
+    {
+        if (selectedChannel > 1)
+        {
+            TRACELOG(LOG_WARNING, "This image has only 2 channels. Setting channel to alpha.");
+            selectedChannel = 1;
+        }
+    }
+    else if (image.format == PIXELFORMAT_UNCOMPRESSED_R5G6B5 ||
+             image.format == PIXELFORMAT_UNCOMPRESSED_R8G8B8 ||
+             image.format == PIXELFORMAT_UNCOMPRESSED_R32G32B32 ||
+             image.format == PIXELFORMAT_UNCOMPRESSED_R16G16B16)
+    {
+        if (selectedChannel > 2)
+        {
+            TRACELOG(LOG_WARNING, "This image has only 3 channels. Setting channel to red.");
+            selectedChannel = 0;
+        }
+    }
+
+    // Check for RGBA formats
+    if (selectedChannel > 3)
+    {
+        TRACELOG(LOG_WARNING, "ImageFromChannel supports channels 0 to 3 (rgba). Setting channel to alpha.");
+        selectedChannel = 3;
+    }
+
+    // TODO: Consider other one-channel formats: R16, R32
+    result.format = PIXELFORMAT_UNCOMPRESSED_GRAYSCALE;
+    result.height = image.height;
+    result.width = image.width;
+    result.mipmaps = 1;
+
+    unsigned char *pixels = (unsigned char *)RL_CALLOC(image.width*image.height, sizeof(unsigned char)); // Values from 0 to 255
+
+    if (image.format >= PIXELFORMAT_COMPRESSED_DXT1_RGB) TRACELOG(LOG_WARNING, "IMAGE: Pixel data retrieval not supported for compressed image formats");
+    else
+    {
+        for (int i = 0, k = 0; i < image.width*image.height; i++)
+        {
+            float pixelValue = -1;
+            switch (image.format)
+            {
+                case PIXELFORMAT_UNCOMPRESSED_GRAYSCALE:
+                {
+                    pixelValue = (float)((unsigned char *)image.data)[i + selectedChannel]/255.0f;
+
+                } break;
+                case PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA:
+                {
+                    pixelValue = (float)((unsigned char *)image.data)[k + selectedChannel]/255.0f;
+                    k += 2;
+
+                } break;
+                case PIXELFORMAT_UNCOMPRESSED_R5G5B5A1:
+                {
+                    unsigned short pixel = ((unsigned short *)image.data)[i];
+
+                    if (selectedChannel == 0) pixelValue = (float)((pixel & 0b1111100000000000) >> 11)*(1.0f/31);
+                    else if (selectedChannel == 1) pixelValue = (float)((pixel & 0b0000011111000000) >> 6)*(1.0f/31);
+                    else if (selectedChannel == 2) pixelValue = (float)((pixel & 0b0000000000111110) >> 1)*(1.0f/31);
+                    else if (selectedChannel == 3) pixelValue = ((pixel & 0b0000000000000001) == 0)? 0.0f : 1.0f;
+
+                } break;
+                case PIXELFORMAT_UNCOMPRESSED_R5G6B5:
+                {
+                    unsigned short pixel = ((unsigned short *)image.data)[i];
+
+                    if (selectedChannel == 0) pixelValue = (float)((pixel & 0b1111100000000000) >> 11)*(1.0f/31);
+                    else if (selectedChannel == 1) pixelValue = (float)((pixel & 0b0000011111100000) >> 5)*(1.0f/63);
+                    else if (selectedChannel == 2) pixelValue = (float)(pixel & 0b0000000000011111)*(1.0f/31);
+
+                } break;
+                case PIXELFORMAT_UNCOMPRESSED_R4G4B4A4:
+                {
+                    unsigned short pixel = ((unsigned short *)image.data)[i];
+
+                    if (selectedChannel == 0) pixelValue = (float)((pixel & 0b1111000000000000) >> 12)*(1.0f/15);
+                    else if (selectedChannel == 1) pixelValue = (float)((pixel & 0b0000111100000000) >> 8)*(1.0f/15);
+                    else if (selectedChannel == 2) pixelValue = (float)((pixel & 0b0000000011110000) >> 4)*(1.0f/15);
+                    else if (selectedChannel == 3) pixelValue = (float)(pixel & 0b0000000000001111)*(1.0f/15);
+
+                } break;
+                case PIXELFORMAT_UNCOMPRESSED_R8G8B8A8:
+                {
+                    pixelValue = (float)((unsigned char *)image.data)[k + selectedChannel]/255.0f;
+                    k += 4;
+
+                } break;
+                case PIXELFORMAT_UNCOMPRESSED_R8G8B8:
+                {
+                    pixelValue = (float)((unsigned char *)image.data)[k + selectedChannel]/255.0f;
+                    k += 3;
+
+                } break;
+                case PIXELFORMAT_UNCOMPRESSED_R32:
+                {
+                    pixelValue = ((float *)image.data)[k];
+                    k += 1;
+
+                } break;
+                case PIXELFORMAT_UNCOMPRESSED_R32G32B32:
+                {
+                    pixelValue = ((float *)image.data)[k + selectedChannel];
+                    k += 3;
+
+                } break;
+                case PIXELFORMAT_UNCOMPRESSED_R32G32B32A32:
+                {
+                    pixelValue = ((float *)image.data)[k + selectedChannel];
+                    k += 4;
+
+                } break;
+                case PIXELFORMAT_UNCOMPRESSED_R16:
+                {
+                    pixelValue = HalfToFloat(((unsigned short *)image.data)[k]);
+                    k += 1;
+
+                } break;
+                case PIXELFORMAT_UNCOMPRESSED_R16G16B16:
+                {
+                    pixelValue = HalfToFloat(((unsigned short *)image.data)[k+selectedChannel]);
+                    k += 3;
+
+                } break;
+                case PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
+                {
+                    pixelValue = HalfToFloat(((unsigned short *)image.data)[k + selectedChannel]);
+                    k += 4;
+
+                } break;
+                default: break;
+            }
+
+            pixels[i] = (unsigned char)(pixelValue*255);
+        }
+    }
+
+    result.data = pixels;
+
+    return result;
 }
 
 // Resize and image to new size using Nearest-Neighbor scaling algorithm
@@ -1736,7 +1904,7 @@ void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, i
     if (image->format >= PIXELFORMAT_COMPRESSED_DXT1_RGB) TRACELOG(LOG_WARNING, "Image manipulation not supported for compressed formats");
     else if ((newWidth != image->width) || (newHeight != image->height))
     {
-        rlRectangle srcRec = { 0, 0, (float)image->width, (float)image->height };
+        Rectangle srcRec = { 0, 0, (float)image->width, (float)image->height };
         Vector2 dstPos = { (float)offsetX, (float)offsetY };
 
         if (offsetX < 0)
@@ -1816,7 +1984,7 @@ void ImageAlphaCrop(Image *image, float threshold)
     // Security check to avoid program crash
     if ((image->data == NULL) || (image->width == 0) || (image->height == 0)) return;
 
-    rlRectangle crop = GetImageAlphaBorder(*image, threshold);
+    Rectangle crop = GetImageAlphaBorder(*image, threshold);
 
     // Crop if rectangle is valid
     if (((int)crop.width != 0) && ((int)crop.height != 0)) ImageCrop(image, crop);
@@ -2943,6 +3111,7 @@ Color *LoadImageColors(Image image)
                     pixels[i].b = 0;
                     pixels[i].a = 255;
 
+                    k += 1;
                 } break;
                 case PIXELFORMAT_UNCOMPRESSED_R32G32B32:
                 {
@@ -2956,9 +3125,9 @@ Color *LoadImageColors(Image image)
                 case PIXELFORMAT_UNCOMPRESSED_R32G32B32A32:
                 {
                     pixels[i].r = (unsigned char)(((float *)image.data)[k]*255.0f);
-                    pixels[i].g = (unsigned char)(((float *)image.data)[k]*255.0f);
-                    pixels[i].b = (unsigned char)(((float *)image.data)[k]*255.0f);
-                    pixels[i].a = (unsigned char)(((float *)image.data)[k]*255.0f);
+                    pixels[i].g = (unsigned char)(((float *)image.data)[k + 1]*255.0f);
+                    pixels[i].b = (unsigned char)(((float *)image.data)[k + 2]*255.0f);
+                    pixels[i].a = (unsigned char)(((float *)image.data)[k + 3]*255.0f);
 
                     k += 4;
                 } break;
@@ -2969,6 +3138,7 @@ Color *LoadImageColors(Image image)
                     pixels[i].b = 0;
                     pixels[i].a = 255;
 
+                    k += 1;
                 } break;
                 case PIXELFORMAT_UNCOMPRESSED_R16G16B16:
                 {
@@ -2982,9 +3152,9 @@ Color *LoadImageColors(Image image)
                 case PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
                 {
                     pixels[i].r = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k])*255.0f);
-                    pixels[i].g = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k])*255.0f);
-                    pixels[i].b = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k])*255.0f);
-                    pixels[i].a = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k])*255.0f);
+                    pixels[i].g = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k + 1])*255.0f);
+                    pixels[i].b = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k + 2])*255.0f);
+                    pixels[i].a = (unsigned char)(HalfToFloat(((unsigned short *)image.data)[k + 3])*255.0f);
 
                     k += 4;
                 } break;
@@ -3066,9 +3236,9 @@ void UnloadImagePalette(Color *colors)
 
 // Get image alpha border rectangle
 // NOTE: Threshold is defined as a percentage: 0.0f -> 1.0f
-rlRectangle GetImageAlphaBorder(Image image, float threshold)
+Rectangle GetImageAlphaBorder(Image image, float threshold)
 {
-    rlRectangle crop = { 0 };
+    Rectangle crop = { 0 };
 
     Color *pixels = LoadImageColors(image);
 
@@ -3096,7 +3266,7 @@ rlRectangle GetImageAlphaBorder(Image image, float threshold)
         // Check for empty blank image
         if ((xMin != 65536) && (xMax != 65536))
         {
-            crop = (rlRectangle){ (float)xMin, (float)yMin, (float)((xMax + 1) - xMin), (float)((yMax + 1) - yMin) };
+            crop = (Rectangle){ (float)xMin, (float)yMin, (float)((xMax + 1) - xMin), (float)((yMax + 1) - yMin) };
         }
 
         UnloadImageColors(pixels);
@@ -3431,7 +3601,7 @@ void ImageDrawLine(Image *dst, int startPosX, int startPosY, int endPosX, int en
     }
 
     // Calculate fixed-point increment for shorter length
-    int decInc = (longLen == 0)? 0 : (shortLen<<16) / longLen;
+    int decInc = (longLen == 0)? 0 : (shortLen << 16)/longLen;
 
     // Draw the line pixel by pixel
     if (yLonger)
@@ -3440,7 +3610,7 @@ void ImageDrawLine(Image *dst, int startPosX, int startPosY, int endPosX, int en
         for (int i = 0, j = 0; i != endVal; i += sgnInc, j += decInc)
         {
             // Calculate pixel position and draw it
-            ImageDrawPixel(dst, startPosX + (j>>16), startPosY + i, color);
+            ImageDrawPixel(dst, startPosX + (j >> 16), startPosY + i, color);
         }
     }
     else
@@ -3449,7 +3619,7 @@ void ImageDrawLine(Image *dst, int startPosX, int startPosY, int endPosX, int en
         for (int i = 0, j = 0; i != endVal; i += sgnInc, j += decInc)
         {
             // Calculate pixel position and draw it
-            ImageDrawPixel(dst, startPosX + i, startPosY + (j>>16), color);
+            ImageDrawPixel(dst, startPosX + i, startPosY + (j >> 16), color);
         }
     }
 }
@@ -3488,7 +3658,7 @@ void ImageDrawLineEx(Image *dst, Vector2 start, Vector2 end, int thick, Color co
     {
         // Line is more horizontal
         // Calculate half the width of the line
-        int wy = (thick - 1)*sqrtf(dx*dx + dy*dy)/(2*abs(dx));
+        int wy = (thick - 1)*(int)sqrtf((float)(dx*dx + dy*dy))/(2*abs(dx));
 
         // Draw additional lines above and below the main line
         for (int i = 1; i <= wy; i++)
@@ -3501,7 +3671,7 @@ void ImageDrawLineEx(Image *dst, Vector2 start, Vector2 end, int thick, Color co
     {
         // Line is more vertical or perfectly horizontal
         // Calculate half the width of the line
-        int wx = (thick - 1)*sqrtf(dx*dx + dy*dy)/(2*abs(dy));
+        int wx = (thick - 1)*(int)sqrtf((float)(dx*dx + dy*dy))/(2*abs(dy));
 
         // Draw additional lines to the left and right of the main line
         for (int i = 1; i <= wx; i++)
@@ -3579,7 +3749,7 @@ void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color)
 // Draw rectangle within an image
 void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color)
 {
-    ImageDrawRectangleRec(dst, (rlRectangle){ (float)posX, (float)posY, (float)width, (float)height }, color);
+    ImageDrawRectangleRec(dst, (Rectangle){ (float)posX, (float)posY, (float)width, (float)height }, color);
 }
 
 // Draw rectangle within an image (Vector version)
@@ -3589,7 +3759,7 @@ void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color
 }
 
 // Draw rectangle within an image
-void ImageDrawRectangleRec(Image *dst, rlRectangle rec, Color color)
+void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color)
 {
     // Security check to avoid program crash
     if ((dst->data == NULL) || (dst->width == 0) || (dst->height == 0)) return;
@@ -3634,7 +3804,7 @@ void ImageDrawRectangleRec(Image *dst, rlRectangle rec, Color color)
 }
 
 // Draw rectangle lines within an image
-void ImageDrawRectangleLines(Image *dst, rlRectangle rec, int thick, Color color)
+void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color)
 {
     ImageDrawRectangle(dst, (int)rec.x, (int)rec.y, (int)rec.width, thick, color);
     ImageDrawRectangle(dst, (int)rec.x, (int)(rec.y + thick), thick, (int)(rec.height - thick*2), color);
@@ -3647,10 +3817,10 @@ void ImageDrawTriangle(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color col
 {
     // Calculate the 2D bounding box of the triangle
     // Determine the minimum and maximum x and y coordinates of the triangle vertices
-    int xMin = (int)((v1.x < v2.x)? ((v1.x < v3.x) ? v1.x : v3.x) : ((v2.x < v3.x) ? v2.x : v3.x));
-    int yMin = (int)((v1.y < v2.y)? ((v1.y < v3.y) ? v1.y : v3.y) : ((v2.y < v3.y) ? v2.y : v3.y));
-    int xMax = (int)((v1.x > v2.x)? ((v1.x > v3.x) ? v1.x : v3.x) : ((v2.x > v3.x) ? v2.x : v3.x));
-    int yMax = (int)((v1.y > v2.y)? ((v1.y > v3.y) ? v1.y : v3.y) : ((v2.y > v3.y) ? v2.y : v3.y));
+    int xMin = (int)((v1.x < v2.x)? ((v1.x < v3.x)? v1.x : v3.x) : ((v2.x < v3.x)? v2.x : v3.x));
+    int yMin = (int)((v1.y < v2.y)? ((v1.y < v3.y)? v1.y : v3.y) : ((v2.y < v3.y)? v2.y : v3.y));
+    int xMax = (int)((v1.x > v2.x)? ((v1.x > v3.x)? v1.x : v3.x) : ((v2.x > v3.x)? v2.x : v3.x));
+    int yMax = (int)((v1.y > v2.y)? ((v1.y > v3.y)? v1.y : v3.y) : ((v2.y > v3.y)? v2.y : v3.y));
 
     // Clamp the bounding box to the image dimensions
     if (xMin < 0) xMin = 0;
@@ -3832,7 +4002,7 @@ void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color c
 
 // Draw an image (source) within an image (destination)
 // NOTE: Color tint is applied to source image
-void ImageDraw(Image *dst, Image src, rlRectangle srcRec, rlRectangle dstRec, Color tint)
+void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color tint)
 {
     // Security check to avoid program crash
     if ((dst->data == NULL) || (dst->width == 0) || (dst->height == 0) ||
@@ -3858,7 +4028,7 @@ void ImageDraw(Image *dst, Image src, rlRectangle srcRec, rlRectangle dstRec, Co
         {
             srcMod = ImageFromImage(src, srcRec);   // Create image from another image
             ImageResize(&srcMod, (int)dstRec.width, (int)dstRec.height);   // Resize to destination rectangle
-            srcRec = (rlRectangle){ 0, 0, (float)srcMod.width, (float)srcMod.height };
+            srcRec = (Rectangle){ 0, 0, (float)srcMod.width, (float)srcMod.height };
 
             srcPtr = &srcMod;
             useSrcMod = true;
@@ -3965,8 +4135,8 @@ void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position, 
 {
     Image imText = ImageTextEx(font, text, fontSize, spacing, tint);
 
-    rlRectangle srcRec = { 0.0f, 0.0f, (float)imText.width, (float)imText.height };
-    rlRectangle dstRec = { position.x, position.y, (float)imText.width, (float)imText.height };
+    Rectangle srcRec = { 0.0f, 0.0f, (float)imText.width, (float)imText.height };
+    Rectangle dstRec = { position.x, position.y, (float)imText.width, (float)imText.height };
 
     ImageDraw(dst, imText, srcRec, dstRec, WHITE);
 
@@ -3981,7 +4151,7 @@ Texture2D LoadTexture(const char *fileName)
 {
     Texture2D texture = { 0 };
 
-    Image image = rlLoadImage(fileName);
+    Image image = LoadImage(fileName);
 
     if (image.data != NULL)
     {
@@ -4049,9 +4219,9 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
         int size = cubemap.width;
 
         Image faces = { 0 };                // Vertical column image
-        rlRectangle faceRecs[6] = { 0 };      // Face source rectangles
+        Rectangle faceRecs[6] = { 0 };      // Face source rectangles
 
-        for (int i = 0; i < 6; i++) faceRecs[i] = (rlRectangle){ 0, 0, (float)size, (float)size };
+        for (int i = 0; i < 6; i++) faceRecs[i] = (Rectangle){ 0, 0, (float)size, (float)size };
 
         if (layout == CUBEMAP_LAYOUT_LINE_VERTICAL)
         {
@@ -4090,7 +4260,7 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
 
             // NOTE: Image formatting does not work with compressed textures
 
-            for (int i = 0; i < 6; i++) ImageDraw(&faces, image, faceRecs[i], (rlRectangle){ 0, (float)size*i, (float)size, (float)size }, WHITE);
+            for (int i = 0; i < 6; i++) ImageDraw(&faces, image, faceRecs[i], (Rectangle){ 0, (float)size*i, (float)size, (float)size }, WHITE);
         }
 
         // NOTE: Cubemap data is expected to be provided as 6 images in a single data array,
@@ -4216,7 +4386,7 @@ void UpdateTexture(Texture2D texture, const void *pixels)
 
 // Update GPU texture rectangle with new data
 // NOTE: pixels data must match texture.format
-void UpdateTextureRec(Texture2D texture, rlRectangle rec, const void *pixels)
+void UpdateTextureRec(Texture2D texture, Rectangle rec, const void *pixels)
 {
     rlUpdateTexture(texture.id, (int)rec.x, (int)rec.y, (int)rec.width, (int)rec.height, texture.format, pixels);
 }
@@ -4346,17 +4516,17 @@ void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
 // Draw a texture with extended parameters
 void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint)
 {
-    rlRectangle source = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
-    rlRectangle dest = { position.x, position.y, (float)texture.width*scale, (float)texture.height*scale };
+    Rectangle source = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
+    Rectangle dest = { position.x, position.y, (float)texture.width*scale, (float)texture.height*scale };
     Vector2 origin = { 0.0f, 0.0f };
 
     DrawTexturePro(texture, source, dest, origin, rotation, tint);
 }
 
 // Draw a part of a texture (defined by a rectangle)
-void DrawTextureRec(Texture2D texture, rlRectangle source, Vector2 position, Color tint)
+void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color tint)
 {
-    rlRectangle dest = { position.x, position.y, fabsf(source.width), fabsf(source.height) };
+    Rectangle dest = { position.x, position.y, fabsf(source.width), fabsf(source.height) };
     Vector2 origin = { 0.0f, 0.0f };
 
     DrawTexturePro(texture, source, dest, origin, 0.0f, tint);
@@ -4364,7 +4534,7 @@ void DrawTextureRec(Texture2D texture, rlRectangle source, Vector2 position, Col
 
 // Draw a part of a texture (defined by a rectangle) with 'pro' parameters
 // NOTE: origin is relative to destination rectangle size
-void DrawTexturePro(Texture2D texture, rlRectangle source, rlRectangle dest, Vector2 origin, float rotation, Color tint)
+void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2 origin, float rotation, Color tint)
 {
     // Check if texture is valid
     if (texture.id > 0)
@@ -4486,7 +4656,7 @@ void DrawTexturePro(Texture2D texture, rlRectangle source, rlRectangle dest, Vec
 }
 
 // Draws a texture (or part of it) that stretches or shrinks nicely using n-patch info
-void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, rlRectangle dest, Vector2 origin, float rotation, Color tint)
+void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint)
 {
     if (texture.id > 0)
     {
@@ -4709,12 +4879,12 @@ Color Fade(Color color, float alpha)
 int ColorToInt(Color color)
 {
     int result = 0;
-    
-    result = (int)(((unsigned int)color.r << 24) | 
-                   ((unsigned int)color.g << 16) | 
-                   ((unsigned int)color.b << 8) | 
+
+    result = (int)(((unsigned int)color.r << 24) |
+                   ((unsigned int)color.g << 16) |
+                   ((unsigned int)color.b << 8) |
                     (unsigned int)color.a);
-    
+
     return result;
 }
 

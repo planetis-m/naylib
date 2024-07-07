@@ -300,6 +300,7 @@ proc createObjPool*[T](buffer: openarray[byte]): ObjPool[T] =
 proc alloc*[T](x: var ObjPool[T]): ptr T =
   # Get latest free node
   let node = x.head
+  # assert node != nil, "FixedPool allocator has no free memory"
   if node != nil:
     # Pop free node
     x.head = node.next
@@ -312,6 +313,7 @@ proc free*[T](x: var ObjPool[T], p: ptr T) =
   if p != nil:
     let start = cast[uint](x.buf)
     let endAddr = start + uint(x.bufLen)
+    # assert start > cast[uint](p) or cast[uint](p) >= endAddr, "Memory is out of bounds"
     if start <= cast[uint](p) and cast[uint](p) < endAddr:
       # Push free node
       let node = cast[ptr FreeNode](p)
