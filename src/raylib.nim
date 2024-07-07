@@ -121,7 +121,7 @@ when defined(android):
   {.compile: AndroidNdk.Path / Path"sources/android/native_app_glue/android_native_app_glue.c".}
 
 const
-  RaylibVersion* = (5, 1, 0)
+  RaylibVersion* = (5, 5, 0)
 
   # Taken from raylib/src/config.h
   MaxShaderLocations* = 32 ## Maximum number of shader locations supported

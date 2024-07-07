@@ -770,7 +770,7 @@ const char *GetClipboardText(void)
 }
 
 // Show mouse cursor
-void ShowCursor(void)
+void rlShowCursor(void)
 {
     if (CORE.Input.Mouse.cursorHidden)
     {
