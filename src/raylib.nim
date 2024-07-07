@@ -1199,6 +1199,8 @@ proc exportImage*(image: Image, fileName: cstring): bool {.importc: "ExportImage
 proc exportImageToMemoryPriv(image: Image, fileType: cstring, fileSize: ptr int32): ptr uint8 {.importc: "ExportImageToMemory".}
 proc exportImageAsCode*(image: Image, fileName: cstring): bool {.importc: "ExportImageAsCode".}
   ## Export image as code file defining an array of bytes, returns true on success
+proc imageFromChannel*(image: Image, selectedChannel: int32): Image {.importc: "ImageFromChannel".}
+  ## Create an image from a selected channel of another image (GRAYSCALE)
 proc imageKernelConvolutionPriv(image: var Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
 proc loadImageColorsPriv(image: Image): ptr UncheckedArray[Color] {.importc: "LoadImageColors".}
 proc loadImagePalettePriv(image: Image, maxPaletteSize: int32, colorCount: ptr int32): ptr UncheckedArray[Color] {.importc: "LoadImagePalette".}
@@ -1322,7 +1324,7 @@ proc drawModelWires*(model: Model, position: Vector3, rotationAxis: Vector3, rot
   ## Draw a model wires (with texture if set) with extended parameters
 proc drawBoundingBox*(box: BoundingBox, color: Color) {.importc: "DrawBoundingBox".}
   ## Draw bounding box (wires)
-proc drawBillboard*(camera: Camera, texture: Texture2D, position: Vector3, size: float32, tint: Color) {.importc: "DrawBillboard".}
+proc drawBillboard*(camera: Camera, texture: Texture2D, position: Vector3, scale: float32, tint: Color) {.importc: "DrawBillboard".}
   ## Draw a billboard texture
 proc drawBillboard*(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, size: Vector2, tint: Color) {.importc: "DrawBillboardRec".}
   ## Draw a billboard texture defined by source
@@ -2141,7 +2143,8 @@ proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
   result = RArray[uint8](len: len, data: cast[ptr UncheckedArray[uint8]](data))
 
 proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
-  ## Apply Custom Square image convolution kernel
+  ## Apply custom square convolution kernel to image
+  ## NOTE: The convolution kernel matrix is expected to be square
   imageKernelConvolutionPriv(image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
 
 type
