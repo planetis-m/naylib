@@ -18,6 +18,6 @@ when defined(emscripten):
   --threads:on
   --panics:on
   --define:noSignalHandler
-  --passL:"-o public/index.html"
+  --passL:"-o build/index.html"
   # Use raylib/src/shell.html or raylib/src/minshell.html
   --passL:"--shell-file tests/minshell.html"

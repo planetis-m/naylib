@@ -32,6 +32,5 @@ jobs:
     - name: Install dependencies
       run: |
         choco install emscripten
-        refreshenv
     - name: Run tests
       run: nimble test -Y
