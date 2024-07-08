@@ -17,7 +17,6 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
       run: |
-        sudo apt-get update
         sudo apt-get install -y emscripten libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
     - name: Run tests
       run: nimble test -Y
