@@ -92,8 +92,8 @@ proc pow2(power: int): int {.inline.} =
   result = 1 shl power
 
 proc nextPowerOfTwo(x: int): int {.inline.} =
-  # This is equivalent to pow2(log2Ceil(x)). Undefined for x<2.
-  result = 1 shl (sizeof(int)*8 - countLeadingZeroBits(x - 1))
+  # This is equivalent to pow2(log2Ceil(x)).
+  result = pow2(log2Ceil(x))
 
 proc alignUp(n: uint, align: int): uint {.inline.} =
   (n + align.uint - 1) and not (align.uint - 1)
