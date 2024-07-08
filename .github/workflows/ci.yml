@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  test-ubuntu:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -19,5 +19,20 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y emscripten libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+    - name: Run tests
+      run: nimble test -Y
+
+  test-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: jiro4989/setup-nim-action@v2
+      with:
+        nim-version: 'stable'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install dependencies
+      run: |
+        choco install emscripten
+        refreshenv
     - name: Run tests
       run: nimble test -Y
