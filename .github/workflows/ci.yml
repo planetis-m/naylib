@@ -15,5 +15,9 @@ jobs:
       with:
         nim-version: 'stable'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install Emscripten
+      run: sudo apt-get install -y emscripten
+    - name: Set up Emscripten environment
+      run: source /etc/emscripten.sh
     - name: Run tests
       run: nimble test -Y

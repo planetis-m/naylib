@@ -36,3 +36,7 @@ after install:
 task localInstall, "Install on your local workspace":
   # Works with atlas
   editRaylibDirConst(thisDir().quoteShell / "src")
+
+task test, "Runs the test suite":
+  exec "nim c -d:release tests/basic_window.nim"
+  exec "nim c -d:release -d:emscripten tests/basic_window_web.nim"
