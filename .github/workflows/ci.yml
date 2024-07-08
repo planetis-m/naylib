@@ -32,7 +32,10 @@ jobs:
     - name: Install dependencies
       run: |
         choco install emscripten
-        Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+    - name: Setup Emscripten environment
+      run: |
+        $emsdkPath = "$env:LocalAppData\emsdk"
+        cmd /c "call $emsdkPath\emsdk_env.bat
     - name: Run tests
       run: nimble test -Y
 
@@ -47,6 +50,5 @@ jobs:
     - name: Install dependencies
       run: |
         brew install emscripten
-        echo "source $(brew --prefix)/opt/emscripten/libexec/emscripten/em-config" >> $GITHUB_ENV
     - name: Run tests
       run: nimble test -Y
