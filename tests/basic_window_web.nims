@@ -1,6 +1,6 @@
 when defined(emscripten):
   --define:GraphicsApiOpenGlEs2
-  --define:NaylibWebResources
+  # --define:NaylibWebResources
   --os:linux
   --cpu:wasm32
   --cc:clang
