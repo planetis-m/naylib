@@ -39,4 +39,6 @@ task localInstall, "Install on your local workspace":
 task test, "Runs the test suite":
   localInstallTask()
   exec "nim c -d:release tests/basic_window.nim"
+  when defined(linux):
+    exec "nim c -d:release -d:wayland tests/basic_window.nim"
   exec "nim c -d:release -d:emscripten tests/basic_window_web.nim"
