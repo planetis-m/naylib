@@ -8,7 +8,7 @@ on:
 
 jobs:
   test-ubuntu:
-    runs-on: ubuntu-latest
+    runs-on: fedora-latest
     steps:
     - uses: actions/checkout@v3
     - uses: jiro4989/setup-nim-action@v2
@@ -17,7 +17,7 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
       run: |
-        sudo apt-get install -y emscripten libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+        sudo dnf install -y emscripten alsa-lib-devel mesa-libGL-devel libX11-devel libXrandr-devel libXi-devel libXcursor-devel libXinerama-devel libatomic
     - name: Run tests
       run: nimble test -Y
 
