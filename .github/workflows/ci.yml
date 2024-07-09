@@ -10,7 +10,7 @@ jobs:
   test-linux:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: jiro4989/setup-nim-action@v2
       with:
         nim-version: 'stable'
@@ -31,7 +31,7 @@ jobs:
   test-windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: jiro4989/setup-nim-action@v2
       with:
         nim-version: 'stable'
@@ -54,7 +54,7 @@ jobs:
   test-macos:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: jiro4989/setup-nim-action@v2
       with:
         nim-version: 'stable'
