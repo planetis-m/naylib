@@ -12,8 +12,10 @@ requires "nim >= 2.0.0"
 #requires "eminim == 2.8.2"
 
 #import std/distros
-#foreignDep "wayland-protocols"
-#foreignDep "wayland"
+#if detectOs(Ubuntu):
+#  foreignDep "libwayland-bin"
+#elif detectOs(ArchLinux):
+#  foreignDep "wayland"
 
 from std/os import `/`, quoteShell
 from std/strutils import find

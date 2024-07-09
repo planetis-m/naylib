@@ -17,16 +17,29 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
       run: |
-        sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev wayland wayland-protocols
+        sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev libwayland-bin
     - name: Set up Emscripten
       run: |
         git clone https://github.com/emscripten-core/emsdk.git
         cd emsdk
         ./emsdk install latest
         ./emsdk activate latest
-        ./emsdk construct_env
+        $GITHUB_WORKSPACE/emsdk/emsdk construct_env
+        # Convert environment variables
+        echo "EMSDK=$EMSDK" >> $GITHUB_ENV
+        echo "EMSDK_NODE=$EMSDK_NODE" >> $GITHUB_ENV
+        echo "PATH=$PATH" >> $GITHUB_ENV
+        # Update PATH
+        echo "$EMSDK" >> $GITHUB_PATH
+        echo "$EMSDK/upstream/emscripten" >> $GITHUB_PATH
     - name: Run tests
-      run: nimble test -Y
+      run: |
+        echo $EMSDK
+        echo $PATH
+        source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh
+        echo $EMSDK
+        echo $PATH
+        nimble test -Y
 
   test-windows:
     runs-on: windows-latest
@@ -46,8 +59,17 @@ jobs:
         .\emsdk.ps1 install latest
         .\emsdk.ps1 activate latest
         .\emsdk.ps1 construct_env
+        # Convert environment variables
+        "EMSDK=$env:EMSDK" | Add-Content -Path $env:GITHUB_ENV
+        "EMSDK_NODE=$env:EMSDK_NODE" | Add-Content -Path $env:GITHUB_ENV
+        "EMSDK_PYTHON=$env:EMSDK_PYTHON" | Add-Content -Path $env:GITHUB_ENV
+        "JAVA_HOME=$env:JAVA_HOME" | Add-Content -Path $env:GITHUB_ENV
+        # Update PATH
+        $env:EMSDK | Add-Content -Path $env:GITHUB_PATH
+        "$env:EMSDK\upstream\emscripten" | Add-Content -Path $env:GITHUB_PATH
     - name: Run tests
-      run: nimble test -Y
+      run: |
+        nimble test -Y
 
   test-macos:
     runs-on: macos-latest
