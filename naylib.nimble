@@ -24,8 +24,7 @@ proc editRaylibDirConst(dir: string) =
     var file = readFile("raylib.nim")
     let first = find(file, "raylibDir")
     let skipped = skipUntil(file, '\n', start = first)
-    let str = when defined(windows): "(r\"" & (dir / "raylib") & "\")"
-              else: "\"" & (dir / "raylib") & "\""
+    let str = "\"" & (dir / "raylib") & "\""
     file[first..first+skipped-1] = "raylibDir = Path" & str
     writeFile("raylib.nim", file)
 
@@ -38,5 +37,6 @@ task localInstall, "Install on your local workspace":
   editRaylibDirConst(thisDir().quoteShell / "src")
 
 task test, "Runs the test suite":
+  localInstallTask()
   exec "nim c -d:release tests/basic_window.nim"
   exec "nim c -d:release -d:emscripten tests/basic_window_web.nim"
