@@ -24,21 +24,9 @@ jobs:
         cd emsdk
         ./emsdk install latest
         ./emsdk activate latest
-        $GITHUB_WORKSPACE/emsdk/emsdk construct_env
-        # Convert environment variables
-        echo "EMSDK=$EMSDK" >> $GITHUB_ENV
-        echo "EMSDK_NODE=$EMSDK_NODE" >> $GITHUB_ENV
-        echo "PATH=$PATH" >> $GITHUB_ENV
-        # Update PATH
-        echo "$EMSDK" >> $GITHUB_PATH
-        echo "$EMSDK/upstream/emscripten" >> $GITHUB_PATH
     - name: Run tests
       run: |
-        echo $EMSDK
-        echo $PATH
         source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh
-        echo $EMSDK
-        echo $PATH
         nimble test -Y
 
   test-windows:
@@ -58,17 +46,9 @@ jobs:
         cd emsdk
         .\emsdk.ps1 install latest
         .\emsdk.ps1 activate latest
-        .\emsdk.ps1 construct_env
-        # Convert environment variables
-        "EMSDK=$env:EMSDK" | Add-Content -Path $env:GITHUB_ENV
-        "EMSDK_NODE=$env:EMSDK_NODE" | Add-Content -Path $env:GITHUB_ENV
-        "EMSDK_PYTHON=$env:EMSDK_PYTHON" | Add-Content -Path $env:GITHUB_ENV
-        "JAVA_HOME=$env:JAVA_HOME" | Add-Content -Path $env:GITHUB_ENV
-        # Update PATH
-        $env:EMSDK | Add-Content -Path $env:GITHUB_PATH
-        "$env:EMSDK\upstream\emscripten" | Add-Content -Path $env:GITHUB_PATH
     - name: Run tests
       run: |
+        .\emsdk\emsdk.ps1 construct_env
         nimble test -Y
 
   test-macos:
