@@ -8,7 +8,7 @@ on:
 
 jobs:
   test-linux:
-    runs-on: fedora-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: jiro4989/setup-nim-action@v2
@@ -17,7 +17,14 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
       run: |
-        sudo dnf install -y emscripten alsa-lib-devel mesa-libGL-devel libX11-devel libXrandr-devel libXi-devel libXcursor-devel libXinerama-devel libatomic
+        sudo apt-get install -y python3 python3-pip alsa-lib-devel mesa-libGL-devel libX11-devel libXrandr-devel libXi-devel libXcursor-devel libXinerama-devel libatomic
+    - name: Set up Emscripten
+      run: |
+        git clone https://github.com/emscripten-core/emsdk.git
+        cd emsdk
+        ./emsdk install latest
+        ./emsdk activate latest
+        source ./emsdk_env.sh
     - name: Run tests
       run: nimble test -Y
 
