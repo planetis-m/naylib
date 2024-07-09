@@ -4,7 +4,7 @@ when defined(emscripten):
   --os:linux
   --cpu:wasm32
   --cc:clang
-  when defined(windows):
+  when buildOS == "windows":
     --clang.exe:emcc.bat
     --clang.linkerexe:emcc.bat
     --clang.cpp.exe:emcc.bat

@@ -37,9 +37,6 @@ jobs:
       with:
         nim-version: 'stable'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Install dependencies
-      run: |
-        choco install python
     - name: Set up Emscripten
       run: |
         git clone https://github.com/emscripten-core/emsdk.git
