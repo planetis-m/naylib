@@ -43,14 +43,31 @@ Compilation Targets and Host OS Support
 +==================+===================+===================+===================+
 | Native           | Supported, Tested | Supported, Tested | Supported, Tested |
 +------------------+-------------------+-------------------+-------------------+
-| WebAssembly      | Needs WSL         | Supported, Tested | Possibly Works    |
+| WebAssembly      | Supported, Tested | Supported, Tested | Supported, Tested |
 +------------------+-------------------+-------------------+-------------------+
-| DRM              | Needs WSL         | Supported, Tested | Untested          |
+| DRM              | Untested          | Supported, Tested | Untested          |
 +------------------+-------------------+-------------------+-------------------+
-| Android          | Needs WSL         | Supported, Tested | Possibly Works    |
+| Android          | Supported, Tested | Supported, Tested | Possibly Works    |
 +------------------+-------------------+-------------------+-------------------+
 | Windows (Cross)  | N/A               | Known Issues      | Untested          |
 +------------------+-------------------+-------------------+-------------------+
+
+Notes:
+------
+
+- CI is now in place, testing Windows, Linux, and macOS for native and WebAssembly (Emscripten) builds.
+- A separate CI tests Windows and Linux hosts crosscompiling for Android.
+
+CI Status Badges:
+-----------------
+
+.. image:: https://img.shields.io/github/actions/workflow/status/planetis-m/naylib/ci.yml?branch=main&label=Native%20%26%20WebAssembly%20CI
+   :target: https://github.com/planetis-m/naylib/actions/workflows/ci.yml
+   :alt: Native & WebAssembly CI
+
+.. image:: https://img.shields.io/github/actions/workflow/status/planetis-m/raylib-game-template/ci.yml?branch=master&label=Android%20CI
+   :target: https://github.com/planetis-m/raylib-game-template/actions/workflows/ci.yml
+   :alt: Android CI
 
 Usage Tips
 ==========
