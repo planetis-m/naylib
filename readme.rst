@@ -43,7 +43,7 @@ Compilation Targets and Host OS Support
 +==================+===================+===================+===================+
 | Native           | Supported, Tested | Supported, Tested | Supported, Tested |
 +------------------+-------------------+-------------------+-------------------+
-| WebAssembly      | Supported, Tested | Supported, Tested | Supported, Tested |
+| WebAssembly      | Supported, Tested | Supported         | Supported, Tested |
 +------------------+-------------------+-------------------+-------------------+
 | DRM              | Untested          | Supported, Tested | Untested          |
 +------------------+-------------------+-------------------+-------------------+
