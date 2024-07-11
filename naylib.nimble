@@ -37,10 +37,14 @@ proc editRaylibDirConst(dir: string) =
     writeFile("raylib.nim", file)
 
 after install:
+  echo "To complete the installation, run:\n\n"
+  echoForeignDeps()
   # Fails with atlas
   editRaylibDirConst(thisDir())
 
 task localInstall, "Install on your local workspace":
+  echo "To complete the installation, run:\n\n"
+  echoForeignDeps()
   # Works with atlas
   editRaylibDirConst(thisDir() / "src")
 

@@ -4,7 +4,7 @@
 
 To compile your project for web browsers using WebAssembly:
 
-1. Install the Emscripten SDK (emsdk). Follow the [official Emscripten installation guide](https://emscripten.org/docs/getting_started/downloads.html).
+1. Install the Emscripten SDK. Follow the [official Emscripten installation guide](https://emscripten.org/docs/getting_started/downloads.html).
 
 2. Add the `-d:emscripten` flag when compiling.
 
@@ -18,10 +18,9 @@ Building for Android is streamlined using the [raylib-game-template](https://git
 
 2. Clone your forked repository and navigate to its directory.
 
-3. Run the following Nimble tasks in order:
+3. Make sure to install Java JDK and wget then, run the following Nimble tasks in order:
 
    ```bash
-   # Make sure you have a Java JDK and wget installed
    nimble setupBuildEnv    # Set up Android SDK/NDK
    nimble setupAndroid     # Set up raylib project for Android
    nimble buildAndroid     # Compile raylib project for Android
