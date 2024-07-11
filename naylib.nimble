@@ -17,9 +17,7 @@ requires "nim >= 2.0.0"
 #elif detectOs(ArchLinux):
 #  foreignDep "wayland"
 
-from std/os import `/`, quoteShell
-from std/strutils import find
-from std/parseutils import skipUntil
+import std/[os, strutils, parseutils]
 
 proc editRaylibDirConst(dir: string) =
   withDir(dir):
@@ -32,11 +30,11 @@ proc editRaylibDirConst(dir: string) =
 
 after install:
   # Fails with atlas
-  editRaylibDirConst(thisDir().quoteShell)
+  editRaylibDirConst(thisDir())
 
 task localInstall, "Install on your local workspace":
   # Works with atlas
-  editRaylibDirConst(thisDir().quoteShell / "src")
+  editRaylibDirConst(thisDir() / "src")
 
 task test, "Runs the test suite":
   localInstallTask()

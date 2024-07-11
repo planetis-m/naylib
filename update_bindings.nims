@@ -2,7 +2,7 @@ import std/os
 
 const
   ProjectUrl = "https://github.com/planetis-m/naylib"
-  PkgDir = thisDir().quoteShell
+  PkgDir = thisDir()
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
   RayLatestCommit = "6dd2a0e64554a37c9ab8c0a6204cb5bb1badc970"
@@ -14,7 +14,7 @@ template `/.`(x: string): string =
 
 proc fetchLatestRaylib =
   if not dirExists(RaylibDir):
-    exec "git clone --depth 1 " & RaylibGit & " " & RaylibDir
+    exec "git clone --depth 1 " & RaylibGit & " " & quoteShell(RaylibDir)
   withDir(RaylibDir):
     exec "git switch -"
     exec "git fetch --depth 100 origin " & RayLatestCommit
@@ -40,7 +40,7 @@ proc genApiJson(lib, prefix: string) =
     let apiJson = ApiDir / (lib & ".json")
     # Generate {lib} API JSON file
     exec(/.exe & " -f JSON " & (if prefix != "": "-d " & prefix else: "") &
-        " -i " & header & " -o " & apiJson)
+        " -i " & header.quoteShell & " -o " & apiJson.quoteShell)
 
 proc wrapRaylib(lib, prefix: string) =
   genApiJson(lib, prefix)
@@ -57,7 +57,7 @@ task patch, "Patch raylib":
   withDir(PkgDir / "src/raylib"):
     # exec "git rev-parse HEAD"
     let patchPath = PkgDir / "mangle_names.patch"
-    exec "git apply --reject " & patchPath
+    exec "git apply --reject " & patchPath.quoteShell
 
 task update, "Update the raylib git directory":
   fetchLatestRaylib()
@@ -72,4 +72,4 @@ task docs, "Generate documentation":
       let src = "src" / tmp
       # Generate the docs for {src}
       exec("nim doc --verbosity:0 --git.url:" & ProjectUrl &
-          " --git.devel:main --git.commit:main --out:" & doc & " " & src)
+          " --git.devel:main --git.commit:main --out:" & doc.quoteShell & " " & src)
