@@ -6,10 +6,10 @@ raylib function            Native alternative               Notes
 ========================== ================================ =================
 LoadFileData               readFile                         Cast to seq[byte]
 UnloadFileData             None                             Not needed
-SaveFileData               writeFile
+SaveFileData               writeFile                        seq[byte] overload
 LoadFileText               readFile
 UnloadFileText             None                             Not needed
-SaveFileText               writeFile
+SaveFileText               writeFile                        string overload
 FileExists                 os.fileExists
 DirectoryExists            os.dirExists
 IsFileExtension            strutils.endsWith
@@ -25,6 +25,7 @@ GetDirectoryFiles          os.walkDir, os.walkFiles
 ChangeDirectory            os.setCurrentDir
 GetFileModTime             os.getLastModificationTime
 IsPathFile                 os.getFileInfo
+IsFileNameValid            os.invalidFilenames costant      Use strutils.find
 ========================== ================================ =================
 
 Text strings management functions
@@ -49,6 +50,8 @@ TextToLower        strutils.toLowerAscii, unicode.toLower
 TextToPascal       None                                       Write a function
 TextToInteger      strutils.parseInt
 TextToFloat        strutils.parseFloat
+TextToSnake        None                                       Write a function
+TextToCamel        None                                       Write a function
 ================== ========================================== ================
 
 Text codepoints management functions (unicode characters)
@@ -89,8 +92,10 @@ Misc
 ================== ============================== =========================
 raylib function    Native alternative             Notes
 ================== ============================== =========================
+ColorIsEqual       `==`
 GetRandomValue     random.rand
 SetRandomSeed      random.randomize
+LoadRandomSequence None                           Easy to translate
 OpenURL            browsers.openDefaultBrowser
 PI (C macros)      math.PI
 DEG2RAD            math.degToRad                  A function not a constant
