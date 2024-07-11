@@ -8,7 +8,7 @@ creating 2D and 3D games. The Nim API is designed to be user-friendly and easy t
 ## Features
 
 - **Easy-to-use API**: Simplified Nim interface for raylib functions
-- **Cross-platform support**: Develop for multiple platforms including Windows, Linux, macOS, and more
+- **Cross-platform support**: Develop for multiple platforms including Windows, Linux, macOS, Web and Android
 - **Comprehensive documentation**: Detailed guides and API references
 - **Active community**: Get support and share your creations
 
@@ -20,7 +20,7 @@ To learn more about how to use this wrapper, you can check out the documentation
 - [raymath](https://planetis-m.github.io/naylib/raymath.html) - Mathematical functions for game development
 - [rlgl](https://planetis-m.github.io/naylib/rlgl.html) - Abstraction layer for OpenGL with immediate-mode API
 - [reasings](https://planetis-m.github.io/naylib/reasings.html) - Smooth animation transitions
-- [rmem](https://planetis-m.github.io/naylib/rmem.html) - Memory pool and objects pool
+- [rmem](https://planetis-m.github.io/naylib/rmem.html) - Memory pool and objects pool allocators
 
 If you're familiar with the C version of raylib, you may find the
 [cheatsheet](https://www.raylib.com/cheatsheet/cheatsheet.html) useful.
@@ -80,12 +80,12 @@ Here are quick links to some important sections:
 
 While we believe that Naylib provides a great option for game development with Nim, we understand that it may not be the perfect fit for everyone. Here are some noteworthy alternatives:
 
-- [NimForUE](https://github.com/jmgomez/NimForUE): Nim plugin for Unreal Engine 5
-- [sokol-nim](https://github.com/floooh/sokol-nim): Auto-generated Nim bindings for sokol headers
-- [godot-nim (4.x)](https://github.com/panno8M/godot-nim): Godot 4.x bindings for Nim (early stage)
-- [godot-nim](https://github.com/pragmagic/godot-nim): Nim bindings for Godot 3 engine
-- [nico](https://github.com/ftsf/nico): Pico-8 inspired game framework in Nim
-- [p5nim](https://github.com/pietroppeter/p5nim): Processing library for Nim
+- [NimForUE](https://github.com/jmgomez/NimForUE): Plugin for Unreal Engine 5
+- [sokol-nim](https://github.com/floooh/sokol-nim): Auto-generated bindings for sokol headers
+- [godot-nim (4.x)](https://github.com/panno8M/godot-nim): Godot 4.x bindings
+- [godot-nim](https://github.com/pragmagic/godot-nim): Godot 3 bindings
+- [nico](https://github.com/ftsf/nico): Pico-8 inspired game framework
+- [p5nim](https://github.com/pietroppeter/p5nim): Processing library
 
 For a comprehensive list of game development resources in Nim,
 visit [awesome-nim](https://github.com/ringabout/awesome-nim#game-development).

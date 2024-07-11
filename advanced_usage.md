@@ -21,6 +21,7 @@ Building for Android is streamlined using the [raylib-game-template](https://git
 3. Run the following Nimble tasks in order:
 
    ```bash
+   # Make sure you have a Java JDK and wget installed
    nimble setupBuildEnv    # Set up Android SDK/NDK
    nimble setupAndroid     # Set up raylib project for Android
    nimble buildAndroid     # Compile raylib project for Android
