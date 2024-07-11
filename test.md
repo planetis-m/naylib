@@ -36,6 +36,15 @@ accompanying [example repository](https://github.com/planetis-m/raylib-examples)
 
 To compile and run an example: `nim c -r -d:release example.nim`
 
+## Advanced Usage
+
+For detailed instructions on advanced usage, including:
+- Building for different platforms (Web, Android)
+- Choosing OpenGL backend versions
+- Platform-specific considerations
+
+Please refer to our [Advanced Usage Guide](advanced_usage.md).
+
 ## Platform Support
 
 | Target           | Windows           | Linux             | macOS             |
@@ -51,7 +60,7 @@ To compile and run an example: `nim c -r -d:release example.nim`
 - Our CI pipeline ensures quality across Windows, Linux, and macOS for both native and WebAssembly builds.
 - We also maintain a separate CI for Android cross-compilation from Windows and Linux hosts.
 
-### CI Status Badges:
+### CI Status
 
 [![Native & WebAssembly CI](https://img.shields.io/github/actions/workflow/status/planetis-m/naylib/ci.yml?branch=main&label=Native%20%26%20WebAssembly%20CI)](https://github.com/planetis-m/naylib/actions/workflows/ci.yml)
 
@@ -68,5 +77,5 @@ Naylib is open-source software. [LICENSE-MIT](LICENSE)
 
 ## Contact
 
-For support and discussions, join the [Nim Discord server](https://discord.gg/nim-lang)
+For support and discussions, join the [Nim Discord server](https://discord.gg/ByYHrPUY)
 and visit the #gamedev channel.

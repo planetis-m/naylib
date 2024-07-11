@@ -251,8 +251,8 @@ converters:
   converter fromVector2*(x: raylib.Vector2): geometrymath.Vector2[float32] {.inline.} =
     cast[geometrymath.Vector2[float32]](x)
 
-Overview of Changes and Features
-================================
+Overview of Changes
+===================
 
 Memory Management of Raylib Types using Destructors
 ---------------------------------------------------
