@@ -11,11 +11,19 @@ srcDir      = "src"
 requires "nim >= 2.0.0"
 #requires "eminim == 2.8.2"
 
-#import std/distros
-#if detectOs(Ubuntu):
-#  foreignDep "libwayland-bin"
-#elif detectOs(ArchLinux):
-#  foreignDep "wayland"
+# https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux
+import std/distros
+if detectOs(Ubuntu):
+  foreignDep "libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev"
+  foreignDep "libxkbcommon-dev libwayland-bin"
+elif detectOs(Fedora):
+  foreignDep "alsa-lib-devel mesa-libGL-devel libX11-devel libXrandr-devel libXi-devel libXcursor-devel libXinerama-devel libatomic"
+  foreignDep "libxkbcommon-devel wayland-devel"
+elif detectOs(ArchLinux) or detectOs(Manjaro):
+  foreignDep "alsa-lib mesa libx11 libxrandr libxi libxcursor libxinerama"
+  foreignDep "wayland"
+
+# Tasks
 
 import std/[os, strutils, parseutils]
 

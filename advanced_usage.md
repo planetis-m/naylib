@@ -35,7 +35,7 @@ Building for Android is streamlined using the [raylib-game-template](https://git
 The [build_android.nims](https://github.com/planetis-m/raylib-game-template/blob/master/build_android.nims#L31-L65) file in the raylib-game-template repository offers extensive customization options for your Android build:
 
 - Define target Android architectures (armeabi-v7a, arm64-v8a, x86, x86-64)
-- Set GLES and API versions
+- Set GLES and Android API versions
 - Specify locations of OpenJDK, Android SDK, and NDK on your system
 - Configure application properties such as name and icon
 - Adjust other build settings to match your project requirements

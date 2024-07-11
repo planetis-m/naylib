@@ -60,20 +60,17 @@
 ## b = starting value to interpolate
 ## c = the total change in value of b that needs to occur
 ## d = total time it should take to complete (duration)
-##
-## Example:
-##
-## ```nim
-##   let currentTime = 0
-##   let duration = 100
-##   let startPositionX: float32 = 0.0
-##   let finalPositionX: float32 = 30.0
-##   let currentPositionX: float32 = startPositionX
-##
-##   while currentPositionX < finalPositionX:
-##     currentPositionX = linearIn(currentTime, startPositionX, finalPositionX - startPositionX, duration)
-##     inc currentTime
-## ```
+
+runnableExamples:
+  let currentTime = 0
+  let duration = 100
+  let startPositionX: float32 = 0.0
+  let finalPositionX: float32 = 30.0
+  let currentPositionX: float32 = startPositionX
+
+  while currentPositionX < finalPositionX:
+    currentPositionX = linearIn(currentTime, startPositionX, finalPositionX - startPositionX, duration)
+    inc currentTime
 
 import std/math
 

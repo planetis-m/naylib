@@ -33,7 +33,6 @@ Install naylib easily with `nimble install naylib`.
 
 We've also provided some example code to help you get started. You can find it in the
 accompanying [example repository](https://github.com/planetis-m/raylib-examples).
-
 To compile and run an example: `nim c -r -d:release example.nim`
 
 ## Changes from Raylib to Naylib
