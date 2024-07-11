@@ -8,7 +8,7 @@ creating 2D and 3D games. The Nim API is designed to be user-friendly and easy t
 ## Features
 
 - **Easy-to-use API**: Simplified Nim interface for raylib functions
-- **Cross-platform support**: Develop for multiple platforms including Windows, Linux, macOS, Web, and Android
+- **Cross-platform support**: Develop for multiple platforms including Windows, Linux, macOS, and more
 - **Comprehensive documentation**: Detailed guides and API references
 - **Active community**: Get support and share your creations
 
@@ -68,6 +68,19 @@ Here are quick links to some important sections:
 [![Native & WebAssembly CI](https://img.shields.io/github/actions/workflow/status/planetis-m/naylib/ci.yml?branch=main&label=Native%20%26%20WebAssembly%20CI)](https://github.com/planetis-m/naylib/actions/workflows/ci.yml)
 
 [![Android CI](https://img.shields.io/github/actions/workflow/status/planetis-m/raylib-game-template/ci.yml?branch=master&label=Android%20CI)](https://github.com/planetis-m/raylib-game-template/actions/workflows/ci.yml)
+
+## Alternatives
+
+While we believe that Naylib provides a great option for game development with Nim, we understand that it may not be the perfect fit for everyone. Here are some alternative libraries that you may want to check out:
+
+- [NimForUE](https://github.com/jmgomez/NimForUE) - A Nim plugin for the Unreal Engine 5.
+- [godot-nim](https://github.com/pragmagic/godot-nim) - Nim bindings for the Godot game engine.
+- [sokol-nim](https://github.com/floooh/sokol-nim) - Auto-generated Nim bindings for the sokol headers.
+- [godot-nim](https://github.com/panno8M/godot-nim) - Godot 4.x bindings for nim-lang (early stage).
+- [nico](https://github.com/ftsf/nico) - A Nim-based game framework inspired by Pico-8.
+- [p5nim](https://github.com/pietroppeter/p5nim) - A processing library for Nim.
+
+For more game development options in Nim, you can check out [awesome-nim](https://github.com/ringabout/awesome-nim#game-development).
 
 ## Contributing
 

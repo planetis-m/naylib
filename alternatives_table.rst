@@ -25,7 +25,7 @@ GetDirectoryFiles          os.walkDir, os.walkFiles
 ChangeDirectory            os.setCurrentDir
 GetFileModTime             os.getLastModificationTime
 IsPathFile                 os.getFileInfo
-IsFileNameValid            os.invalidFilenames, os.invalidFilenameChars constants Use strutils.find
+IsFileNameValid            os.invalidFilenames costant      Use strutils.find
 ========================== ================================ =================
 
 Text strings management functions
