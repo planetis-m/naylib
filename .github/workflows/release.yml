@@ -13,7 +13,7 @@ jobs:
     - name: Setup Nim
       uses: jiro4989/setup-nim-action@v2
       with:
-        nim-version: 'stable'
+        nim-version: 'devel'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Update bindings
       run: nim docs update_bindings.nims
