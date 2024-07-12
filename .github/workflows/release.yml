@@ -10,20 +10,20 @@ jobs:
       contents: write
     steps:
     - uses: actions/checkout@v4
-    - name: Setup Nim
-      uses: jiro4989/setup-nim-action@v2
-      with:
-        nim-version: 'devel'
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Update bindings
-      run: nim docs update_bindings.nims
-    - name: Commit updated docs
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        git commit -m "Update bindings for release ${{ github.ref_name }}"
-        git push
+    # - name: Setup Nim
+    #   uses: jiro4989/setup-nim-action@v2
+    #   with:
+    #     nim-version: 'stable'
+    #     repo-token: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Update bindings
+    #   run: nim docs update_bindings.nims
+    # - name: Commit updated docs
+    #   run: |
+    #     git config --local user.email "action@github.com"
+    #     git config --local user.name "GitHub Action"
+    #     git add .
+    #     git commit -m "Update bindings for release ${{ github.ref_name }}"
+    #     git push
     - name: Create a Release
       uses: elgohr/Github-Release-Action@v5
       env:

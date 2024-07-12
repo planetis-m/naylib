@@ -62,14 +62,15 @@
 ## d = total time it should take to complete (duration)
 
 runnableExamples:
-  let currentTime = 0
+  var currentTime = 0
   let duration = 100
   let startPositionX: float32 = 0.0
   let finalPositionX: float32 = 30.0
   var currentPositionX = startPositionX
 
   while currentPositionX < finalPositionX:
-    currentPositionX = linearIn(currentTime, startPositionX, finalPositionX - startPositionX, duration)
+    currentPositionX = linearIn(currentTime.float32, startPositionX,
+        finalPositionX - startPositionX, duration.float32)
     inc currentTime
 
 import std/math
