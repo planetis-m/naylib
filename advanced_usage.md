@@ -126,11 +126,11 @@ template kind*(x: typedesc[RGBAPixel]): PixelFormat = UncompressedR8g8b8a8
 
 ```nim
 static:
-   assert sizeof(raylib.Vector2) == sizeof(geometrymath.Vector2[float32])
+  assert sizeof(raylib.Vector2) == sizeof(geometrymath.Vector2[float32])
 
 converter toVector2*(x: geometrymath.Vector2[float32]): raylib.Vector2 {.inline.} =
-   cast[raylib.Vector2](x)
+  cast[raylib.Vector2](x)
 
 converter fromVector2*(x: raylib.Vector2): geometrymath.Vector2[float32] {.inline.} =
-   cast[geometrymath.Vector2[float32]](x)
+  cast[geometrymath.Vector2[float32]](x)
 ```

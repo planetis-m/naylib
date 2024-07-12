@@ -21,7 +21,7 @@ elif detectOs(Fedora):
   foreignDep "libxkbcommon-devel wayland-devel"
 elif detectOs(ArchLinux) or detectOs(Manjaro):
   foreignDep "alsa-lib mesa libx11 libxrandr libxi libxcursor libxinerama"
-  foreignDep "wayland"
+  foreignDep "libxkbcommon wayland"
 
 # Tasks
 
@@ -37,13 +37,13 @@ proc editRaylibDirConst(dir: string) =
     writeFile("raylib.nim", file)
 
 after install:
-  echo "To complete the installation, run:\n\n"
+  echo "To complete the installation, run:\n"
   echoForeignDeps()
   # Fails with atlas
   editRaylibDirConst(thisDir())
 
 task localInstall, "Install on your local workspace":
-  echo "To complete the installation, run:\n\n"
+  echo "To complete the installation, run:\n"
   echoForeignDeps()
   # Works with atlas
   editRaylibDirConst(thisDir() / "src")
