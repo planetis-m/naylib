@@ -125,12 +125,9 @@ template kind*(x: typedesc[RGBAPixel]): PixelFormat = UncompressedR8g8b8a8
 - **Swapping Raymath**: Raylib is designed to be independent of `raymath`. You can use alternative vector math libraries like `vmath`, `geometrymath`, or `glm`. Remember to implement converters for `Vector2`, `Vector3`, `Vector4`, and `Matrix` if you switch libraries.
 
 ```nim
-static:
-  assert sizeof(raylib.Vector2) == sizeof(geometrymath.Vector2[float32])
+converter toVector2*(v: geometrymath.Vector2[float32]): raylib.Vector2 {.inline.} =
+  raylib.Vector2(x: v.x, y: v.y)
 
-converter toVector2*(x: geometrymath.Vector2[float32]): raylib.Vector2 {.inline.} =
-  cast[raylib.Vector2](x)
-
-converter fromVector2*(x: raylib.Vector2): geometrymath.Vector2[float32] {.inline.} =
-  cast[geometrymath.Vector2[float32]](x)
+converter fromVector2*(v: raylib.Vector2): geometrymath.Vector2[float32] {.inline.} =
+  geometrymath.Vector2[float32](x: v.x, y: v.y)
 ```

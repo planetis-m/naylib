@@ -41,6 +41,10 @@ runnableExamples:
       x, y: int
       data: array[20, char]
 
+  # Supports destructors
+  proc `=destroy`(x: MyObject) =
+    echo "destroying object"
+
   # Create an object pool
   var op = createObjPool[MyObject](buffer)
   # Reset the pool
@@ -74,6 +78,7 @@ runnableExamples:
   # Reset all
   bs.resetAll()
 
+from std/typetraits import supportsCopyMem
 from std/bitops import countLeadingZeroBits
 
 proc log2Floor(x: int): int {.inline.} =
@@ -267,6 +272,10 @@ const
   DefaultAlignment = when sizeof(int) <= 4: 8 else: 16
 
 type
+  PoolNode[T] = object
+    data: T
+    used: bool
+
   FreeNode = object
     next: ptr FreeNode
 
@@ -276,18 +285,22 @@ type
     bufLen: int
     buf: ptr UncheckedArray[byte]
 
-proc freeAll*(x: var ObjPool)
+proc freeAll*[T](x: var ObjPool[T])
 
 proc createObjPool*[T](buffer: openarray[byte]): ObjPool[T] =
   result = ObjPool[T]()
   if buffer.len > 0:
     let start = cast[uint](buffer)
-    let alignedStart = alignUp(start, alignof(T))
+    let maxAlign = max(alignof(T), alignof(FreeNode))
+    let alignedStart = alignUp(start, maxAlign)
     let alignedLen = buffer.len - int(alignedStart - start)
     # Align chunk size up to the required chunkAlignment
-    let alignedSize = alignUp(sizeof(T).uint, alignof(T)).int
+    when not supportsCopyMem(T):
+      let alignedSize = alignup(sizeof(PoolNode[T]).uint, maxAlign).int
+    else:
+      let alignedSize = alignup(sizeof(T).uint, maxAlign).int
     # Assert that the parameters passed are valid
-    assert alignedSize >= sizeof(FreeNode), "Chunk size is too small"
+    assert sizeof(T) >= sizeof(FreeNode), "Chunk size is too small"
     assert alignedLen >= alignedSize, "Backing buffer length is smaller than the chunk size"
     # Store the adjusted parameters
     result.buf = cast[ptr UncheckedArray[byte]](alignedStart)
@@ -305,7 +318,11 @@ proc alloc*[T](x: var ObjPool[T]): ptr T =
     # Pop free node
     x.head = node.next
     # Zero memory by default
-    zeroMem(node, x.chunkSize)
+    when not supportsCopyMem(T):
+      let e = cast[ptr PoolNode[T]](node)
+      assert not e.used # Forgot to free
+      e.used = true
+    zeroMem(node, sizeof(T))
     result = cast[ptr T](node)
 
 proc free*[T](x: var ObjPool[T], p: ptr T) =
@@ -315,16 +332,25 @@ proc free*[T](x: var ObjPool[T], p: ptr T) =
     let endAddr = start + uint(x.bufLen)
     # assert start > cast[uint](p) or cast[uint](p) >= endAddr, "Memory is out of bounds"
     if start <= cast[uint](p) and cast[uint](p) < endAddr:
+      when not supportsCopyMem(T):
+        let e = cast[ptr PoolNode[T]](p)
+        assert e.used # Catch double-free
+        `=destroy`(e.data)
+        e.used = false
       # Push free node
       let node = cast[ptr FreeNode](p)
       node.next = x.head
       x.head = node
 
-proc freeAll*(x: var ObjPool) =
+proc freeAll*[T](x: var ObjPool[T]) =
   let chunkCount = x.bufLen div x.chunkSize
   # Set all chunks to be free
   for i in 0 ..< chunkCount:
     let p = cast[pointer](cast[uint](x.buf) + uint(i * x.chunkSize))
+    when not supportsCopyMem(T):
+      let e = cast[ptr PoolNode[T]](p)
+      if e.used: `=destroy`(e.data)
+      e.used = false
     let node = cast[ptr FreeNode](p)
     # Push free node onto the free list
     node.next = x.head
