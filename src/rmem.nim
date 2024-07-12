@@ -273,8 +273,8 @@ const
 
 type
   PoolNode[T] = object
-    data: T
-    used: bool
+    data: T # T needs to be large enough to fit FreeNode!
+    used: bool # order is important
 
   FreeNode = object
     next: ptr FreeNode
