@@ -295,10 +295,7 @@ proc createObjPool*[T](buffer: openarray[byte]): ObjPool[T] =
     let alignedStart = alignUp(start, maxAlign)
     let alignedLen = buffer.len - int(alignedStart - start)
     # Align chunk size up to the required chunkAlignment
-    when not supportsCopyMem(T):
-      let alignedSize = alignup(sizeof(PoolNode[T]).uint, maxAlign).int
-    else:
-      let alignedSize = alignup(sizeof(T).uint, maxAlign).int
+    let alignedSize = alignup(sizeof(PoolNode[T]).uint, maxAlign).int
     # Assert that the parameters passed are valid
     assert sizeof(T) >= sizeof(FreeNode), "Chunk size is too small"
     assert alignedLen >= alignedSize, "Backing buffer length is smaller than the chunk size"
@@ -317,11 +314,10 @@ proc alloc*[T](x: var ObjPool[T]): ptr T =
   if node != nil:
     # Pop free node
     x.head = node.next
+    let e = cast[ptr PoolNode[T]](node)
+    assert not e.used
+    e.used = true
     # Zero memory by default
-    when not supportsCopyMem(T):
-      let e = cast[ptr PoolNode[T]](node)
-      assert not e.used # Forgot to free
-      e.used = true
     zeroMem(node, sizeof(T))
     result = cast[ptr T](node)
 
@@ -332,11 +328,11 @@ proc free*[T](x: var ObjPool[T], p: ptr T) =
     let endAddr = start + uint(x.bufLen)
     # assert start > cast[uint](p) or cast[uint](p) >= endAddr, "Memory is out of bounds"
     if start <= cast[uint](p) and cast[uint](p) < endAddr:
+      let e = cast[ptr PoolNode[T]](p)
+      assert e.used # Catch double-free
       when not supportsCopyMem(T):
-        let e = cast[ptr PoolNode[T]](p)
-        assert e.used # Catch double-free
         `=destroy`(e.data)
-        e.used = false
+      e.used = false
       # Push free node
       let node = cast[ptr FreeNode](p)
       node.next = x.head
@@ -347,10 +343,10 @@ proc freeAll*[T](x: var ObjPool[T]) =
   # Set all chunks to be free
   for i in 0 ..< chunkCount:
     let p = cast[pointer](cast[uint](x.buf) + uint(i * x.chunkSize))
+    let e = cast[ptr PoolNode[T]](p)
     when not supportsCopyMem(T):
-      let e = cast[ptr PoolNode[T]](p)
       if e.used: `=destroy`(e.data)
-      e.used = false
+    e.used = false
     let node = cast[ptr FreeNode](p)
     # Push free node onto the free list
     node.next = x.head
