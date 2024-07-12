@@ -66,7 +66,7 @@ runnableExamples:
   let duration = 100
   let startPositionX: float32 = 0.0
   let finalPositionX: float32 = 30.0
-  let currentPositionX: float32 = startPositionX
+  var currentPositionX = startPositionX
 
   while currentPositionX < finalPositionX:
     currentPositionX = linearIn(currentTime, startPositionX, finalPositionX - startPositionX, duration)
