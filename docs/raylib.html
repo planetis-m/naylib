@@ -16,10 +16,10 @@
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH4QQQEwksSS9ZWwAAAk1JREFUWMPtll2ITVEUx39nn/O7Y5qR8f05wtCUUr6ZIS++8pEnkZInPImneaCQ5METNdOkeFBKUhMPRIkHKfEuUZSUlGlKPN2TrgfncpvmnntnmlEyq1Z7t89/rf9a6+y99oZxGZf/XeIq61EdtgKXgdXA0xrYAvBjOIF1AI9zvjcC74BSpndrJPkBWDScTF8Aa4E3wDlgHbASaANmVqlcCnwHvgDvgVfAJ+AikAAvgfVZwLnSVZHZaOuKoQi3ZOMi4NkYkpe1p4J7A8BpYAD49hfIy/oqG0+hLomiKP2L5L+1ubn5115S+3OAn4EnwBlgMzCjyt6ZAnQCJ4A7wOs88iRJHvw50HoujuPBoCKwHWiosy8MdfZnAdcHk8dxXFJ3VQbQlCTJvRBCGdRbD4M6uc5glpY3eAihpN5S5w12diSEcCCEcKUO4ljdr15T76ur1FDDLIQQ3qv71EdDOe3Kxj3leRXyk+pxdWnFWod6Wt2bY3de3aSuUHcPBVimHs7mK9WrmeOF6lR1o9qnzskh2ar2qm1qizpfXaPeVGdlmGN5pb09qMxz1Xb1kLqgzn1RyH7JUXW52lr5e/Kqi9qpto7V1atuUzfnARrV7jEib1T76gG2qxdGmXyiekkt1GswPTtek0aBfJp6YySGBfWg2tPQ0FAYgf1stUfdmdcjarbYJEniKIq6gY/Aw+zWHAC+p2labGpqiorFYgGYCEzN7oQdQClN07O1/EfDyGgC0ALMBdYAi4FyK+4H3gLPsxfR1zRNi+NP7nH5J+QntnXe5B5mpfQAAAAASUVORK5CYII=">
 
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.1.1">
+<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.1.9">
 
 <!-- JS -->
-<script type="text/javascript" src="dochack.js?v=2.1.1"></script>
+<script type="text/javascript" src="dochack.js?v=2.1.9"></script>
 </head>
 <body>
   <div class="document" id="documentId">
@@ -3111,8 +3111,8 @@
 </div>
 <div id="AudioStream">
   <dt><pre><a href="raylib.html#AudioStream"><span class="Identifier">AudioStream</span></a> {.<span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Comment">## Pointer to internal data used by the audio system</span>
-  <span class="Comment">## Pointer to internal data processor, useful for audio effects</span>
+  <span class="Identifier">buffer</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">rAudioBuffer</span>   <span class="Comment">## Pointer to internal data used by the audio system</span>
+  <span class="Identifier">processor</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">rAudioProcessor</span> <span class="Comment">## Pointer to internal data processor, useful for audio effects</span>
   <span class="Identifier">sampleRate</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">uint32</span>        <span class="Comment">## Frequency (samples per second)</span>
   <span class="Identifier">sampleSize</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">uint32</span>        <span class="Comment">## Bit depth (bits per sample): 8, 16, 32 (24 not supported)</span>
   <span class="Identifier">channels</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">uint32</span>          <span class="Comment">## Number of channels (1-mono, 2-stereo, ...)</span></pre></dt>
@@ -3127,7 +3127,7 @@
 <div id="AutomationEvent">
   <dt><pre><a href="raylib.html#AutomationEvent"><span class="Identifier">AutomationEvent</span></a> {.<span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">frame</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">uint32</span>             <span class="Comment">## Event frame</span>
-  <span class="Comment">## Event type (AutomationEventType)</span>
+  <span class="Other">`</span><span class="Keyword">type</span><span class="Other">`</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">uint32</span>            <span class="Comment">## Event type (AutomationEventType)</span>
   <span class="Identifier">params</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span>   <span class="Comment">## Event parameters (if required)</span></pre></dt>
   <dd>
     
@@ -3139,9 +3139,9 @@
 </div>
 <div id="AutomationEventList">
   <dt><pre><a href="raylib.html#AutomationEventList"><span class="Identifier">AutomationEventList</span></a> {.<span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Comment">## Events max entries (MAX_AUTOMATION_EVENTS)</span>
-  <span class="Comment">## Events entries count</span>
-  <span class="Comment">## Events entries</span></pre></dt>
+  <span class="Identifier">capacity</span><span class="Other">:</span> <span class="Identifier">uint32</span>           <span class="Comment">## Events max entries (MAX_AUTOMATION_EVENTS)</span>
+  <span class="Identifier">count</span><span class="Other">:</span> <span class="Identifier">uint32</span>              <span class="Comment">## Events entries count</span>
+  <span class="Identifier">events</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="raylib.html#AutomationEvent"><span class="Identifier">AutomationEvent</span></a><span class="Other">]</span> <span class="Comment">## Events entries</span></pre></dt>
   <dd>
     
     Automation event list
@@ -3327,11 +3327,11 @@
 <div id="Font">
   <dt><pre><a href="raylib.html#Font"><span class="Identifier">Font</span></a> {.<span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">baseSize</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>           <span class="Comment">## Base size (default chars height)</span>
-  <span class="Comment">## Number of glyph characters</span>
+  <span class="Identifier">glyphCount</span><span class="Other">:</span> <span class="Identifier">int32</span>          <span class="Comment">## Number of glyph characters</span>
   <span class="Identifier">glyphPadding</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>       <span class="Comment">## Padding around the glyph characters</span>
   <span class="Identifier">texture</span><span class="Operator">*</span><span class="Other">:</span> <a href="raylib.html#Texture2D"><span class="Identifier">Texture2D</span></a>        <span class="Comment">## Texture atlas containing the glyphs</span>
-  <span class="Comment">## Rectangles in texture for the glyphs</span>
-  <span class="Comment">## Glyphs info data</span></pre></dt>
+  <span class="Identifier">recs</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="raylib.html#Rectangle"><span class="Identifier">Rectangle</span></a><span class="Other">]</span> <span class="Comment">## Rectangles in texture for the glyphs</span>
+  <span class="Identifier">glyphs</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="raylib.html#GlyphInfo"><span class="Identifier">GlyphInfo</span></a><span class="Other">]</span> <span class="Comment">## Glyphs info data</span></pre></dt>
   <dd>
     
     Font, font texture and GlyphInfo array data
@@ -3611,8 +3611,8 @@
 </div>
 <div id="Material">
   <dt><pre><a href="raylib.html#Material"><span class="Identifier">Material</span></a> {.<span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Comment">## Material shader</span>
-  <span class="Comment">## Material maps array (MAX_MATERIAL_MAPS)</span>
+  <span class="Identifier">shader</span><span class="Other">:</span> <a href="raylib.html#Shader"><span class="Identifier">Shader</span></a>             <span class="Comment">## Material shader</span>
+  <span class="Identifier">maps</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">array</span><span class="Other">[</span><span class="Identifier">MaxMaterialMaps</span><span class="Other">,</span> <a href="raylib.html#MaterialMap"><span class="Identifier">MaterialMap</span></a><span class="Other">]</span> <span class="Comment">## Material maps array (MAX_MATERIAL_MAPS)</span>
   <span class="Identifier">params</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Material generic parameters (if required)</span></pre></dt>
   <dd>
     
@@ -3624,7 +3624,7 @@
 </div>
 <div id="MaterialMap">
   <dt><pre><a href="raylib.html#MaterialMap"><span class="Identifier">MaterialMap</span></a> {.<span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Comment">## Material map texture</span>
+  <span class="Identifier">texture</span><span class="Other">:</span> <a href="raylib.html#Texture2D"><span class="Identifier">Texture2D</span></a>         <span class="Comment">## Material map texture</span>
   <span class="Identifier">color</span><span class="Operator">*</span><span class="Other">:</span> <a href="raylib.html#Color"><span class="Identifier">Color</span></a>              <span class="Comment">## Material map color</span>
   <span class="Identifier">value</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">float32</span>            <span class="Comment">## Material map value</span></pre></dt>
   <dd>
@@ -3692,21 +3692,21 @@
 </div>
 <div id="Mesh">
   <dt><pre><a href="raylib.html#Mesh"><span class="Identifier">Mesh</span></a> {.<span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Comment">## Number of vertices stored in arrays</span>
-  <span class="Comment">## Number of triangles stored (indexed or not)</span>
-  <span class="Comment">## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)</span>
-  <span class="Comment">## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)</span>
-  <span class="Comment">## Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)</span>
-  <span class="Comment">## Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)</span>
-  <span class="Comment">## Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)</span>
-  <span class="Comment">## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)</span>
-  <span class="Comment">## Vertex indices (in case vertex data comes indexed)</span>
-  <span class="Comment">## Animated vertex positions (after bones transformations)</span>
-  <span class="Comment">## Animated normals (after bones transformations)</span>
-  <span class="Comment">## Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)</span>
-  <span class="Comment">## Vertex bone weight, up to 4 bones influence by vertex (skinning)</span>
+  <span class="Identifier">vertexCount</span><span class="Other">:</span> <span class="Identifier">int32</span>         <span class="Comment">## Number of vertices stored in arrays</span>
+  <span class="Identifier">triangleCount</span><span class="Other">:</span> <span class="Identifier">int32</span>       <span class="Comment">## Number of triangles stored (indexed or not)</span>
+  <span class="Identifier">vertices</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)</span>
+  <span class="Identifier">texcoords</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)</span>
+  <span class="Identifier">texcoords2</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)</span>
+  <span class="Identifier">normals</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)</span>
+  <span class="Identifier">tangents</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)</span>
+  <span class="Identifier">colors</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span> <span class="Comment">## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)</span>
+  <span class="Identifier">indices</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">uint16</span><span class="Other">]</span> <span class="Comment">## Vertex indices (in case vertex data comes indexed)</span>
+  <span class="Identifier">animVertices</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Animated vertex positions (after bones transformations)</span>
+  <span class="Identifier">animNormals</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Animated normals (after bones transformations)</span>
+  <span class="Identifier">boneIds</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span> <span class="Comment">## Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)</span>
+  <span class="Identifier">boneWeights</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Vertex bone weight, up to 4 bones influence by vertex (skinning)</span>
   <span class="Identifier">vaoId</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">uint32</span>             <span class="Comment">## OpenGL Vertex Array Object id</span>
-  <span class="Comment">## OpenGL Vertex Buffer Objects id (default vertex data)</span></pre></dt>
+  <span class="Identifier">vboId</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">array</span><span class="Other">[</span><span class="Identifier">MaxMeshVertexBuffers</span><span class="Other">,</span> <span class="Identifier">uint32</span><span class="Other">]</span> <span class="Comment">## OpenGL Vertex Buffer Objects id (default vertex data)</span></pre></dt>
   <dd>
     
     Mesh, vertex data and vao/vbo
@@ -3838,14 +3838,14 @@
 <div id="Model">
   <dt><pre><a href="raylib.html#Model"><span class="Identifier">Model</span></a> {.<span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">transform</span><span class="Operator">*</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a>         <span class="Comment">## Local transform matrix</span>
-  <span class="Comment">## Number of meshes</span>
-  <span class="Comment">## Number of materials</span>
-  <span class="Comment">## Meshes array</span>
-  <span class="Comment">## Materials array</span>
-  <span class="Comment">## Mesh material number</span>
-  <span class="Comment">## Number of bones</span>
-  <span class="Comment">## Bones information (skeleton)</span>
-  <span class="Comment">## Bones base transformation (pose)</span></pre></dt>
+  <span class="Identifier">meshCount</span><span class="Other">:</span> <span class="Identifier">int32</span>           <span class="Comment">## Number of meshes</span>
+  <span class="Identifier">materialCount</span><span class="Other">:</span> <span class="Identifier">int32</span>       <span class="Comment">## Number of materials</span>
+  <span class="Identifier">meshes</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="raylib.html#Mesh"><span class="Identifier">Mesh</span></a><span class="Other">]</span> <span class="Comment">## Meshes array</span>
+  <span class="Identifier">materials</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="raylib.html#Material"><span class="Identifier">Material</span></a><span class="Other">]</span> <span class="Comment">## Materials array</span>
+  <span class="Identifier">meshMaterial</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span> <span class="Comment">## Mesh material number</span>
+  <span class="Identifier">boneCount</span><span class="Other">:</span> <span class="Identifier">int32</span>           <span class="Comment">## Number of bones</span>
+  <span class="Identifier">bones</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="raylib.html#BoneInfo"><span class="Identifier">BoneInfo</span></a><span class="Other">]</span> <span class="Comment">## Bones information (skeleton)</span>
+  <span class="Identifier">bindPose</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="raylib.html#Transform"><span class="Identifier">Transform</span></a><span class="Other">]</span> <span class="Comment">## Bones base transformation (pose)</span></pre></dt>
   <dd>
     
     Model, meshes, materials and animation data
@@ -3856,10 +3856,10 @@
 </div>
 <div id="ModelAnimation">
   <dt><pre><a href="raylib.html#ModelAnimation"><span class="Identifier">ModelAnimation</span></a> {.<span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Comment">## Number of bones</span>
-  <span class="Comment">## Number of animation frames</span>
-  <span class="Comment">## Bones information (skeleton)</span>
-  <span class="Comment">## Poses array by frame</span>
+  <span class="Identifier">boneCount</span><span class="Other">:</span> <span class="Identifier">int32</span>           <span class="Comment">## Number of bones</span>
+  <span class="Identifier">frameCount</span><span class="Other">:</span> <span class="Identifier">int32</span>          <span class="Comment">## Number of animation frames</span>
+  <span class="Identifier">bones</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="raylib.html#BoneInfo"><span class="Identifier">BoneInfo</span></a><span class="Other">]</span> <span class="Comment">## Bones information (skeleton)</span>
+  <span class="Identifier">framePoses</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="raylib.html#Transform"><span class="Identifier">Transform</span></a><span class="Other">]</span><span class="Other">]</span> <span class="Comment">## Poses array by frame</span>
   <span class="Identifier">name</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">char</span><span class="Other">]</span>     <span class="Comment">## Animation name</span></pre></dt>
   <dd>
     
@@ -4077,7 +4077,9 @@
   </dd>
 </div>
 <div id="RArray">
-  <dt><pre><a href="raylib.html#RArray"><span class="Identifier">RArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">object</span></pre></dt>
+  <dt><pre><a href="raylib.html#RArray"><span class="Identifier">RArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">len</span><span class="Other">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -4183,7 +4185,7 @@
 <div id="Shader">
   <dt><pre><a href="raylib.html#Shader"><span class="Identifier">Shader</span></a> {.<span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">id</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">uint32</span>                <span class="Comment">## Shader program id</span>
-  <span class="Comment">## Shader locations array (RL_MAX_SHADER_LOCATIONS)</span></pre></dt>
+  <span class="Identifier">locs</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="raylib.html#ShaderLocation"><span class="Identifier">ShaderLocation</span></a><span class="Other">]</span> <span class="Comment">## Shader locations array (RL_MAX_SHADER_LOCATIONS)</span></pre></dt>
   <dd>
     
     Shader
@@ -14339,7 +14341,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-07-12 04:28:36 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-07-13 01:43:34 UTC</small>
       </div>
     </div>
   </div>

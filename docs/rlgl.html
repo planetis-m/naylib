@@ -16,10 +16,10 @@
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH4QQQEwksSS9ZWwAAAk1JREFUWMPtll2ITVEUx39nn/O7Y5qR8f05wtCUUr6ZIS++8pEnkZInPImneaCQ5METNdOkeFBKUhMPRIkHKfEuUZSUlGlKPN2TrgfncpvmnntnmlEyq1Z7t89/rf9a6+y99oZxGZf/XeIq61EdtgKXgdXA0xrYAvBjOIF1AI9zvjcC74BSpndrJPkBWDScTF8Aa4E3wDlgHbASaANmVqlcCnwHvgDvgVfAJ+AikAAvgfVZwLnSVZHZaOuKoQi3ZOMi4NkYkpe1p4J7A8BpYAD49hfIy/oqG0+hLomiKP2L5L+1ubn5115S+3OAn4EnwBlgMzCjyt6ZAnQCJ4A7wOs88iRJHvw50HoujuPBoCKwHWiosy8MdfZnAdcHk8dxXFJ3VQbQlCTJvRBCGdRbD4M6uc5glpY3eAihpN5S5w12diSEcCCEcKUO4ljdr15T76ur1FDDLIQQ3qv71EdDOe3Kxj3leRXyk+pxdWnFWod6Wt2bY3de3aSuUHcPBVimHs7mK9WrmeOF6lR1o9qnzskh2ar2qm1qizpfXaPeVGdlmGN5pb09qMxz1Xb1kLqgzn1RyH7JUXW52lr5e/Kqi9qpto7V1atuUzfnARrV7jEib1T76gG2qxdGmXyiekkt1GswPTtek0aBfJp6YySGBfWg2tPQ0FAYgf1stUfdmdcjarbYJEniKIq6gY/Aw+zWHAC+p2labGpqiorFYgGYCEzN7oQdQClN07O1/EfDyGgC0ALMBdYAi4FyK+4H3gLPsxfR1zRNi+NP7nH5J+QntnXe5B5mpfQAAAAASUVORK5CYII=">
 
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.1.1">
+<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.1.9">
 
 <!-- JS -->
-<script type="text/javascript" src="dochack.js?v=2.1.1"></script>
+<script type="text/javascript" src="dochack.js?v=2.1.9"></script>
 </head>
 <body>
   <div class="document" id="documentId">
@@ -1252,10 +1252,10 @@
 </div>
 <div id="RenderBatch">
   <dt><pre><a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlRenderBatch&quot;</span><span class="Other">,</span> <span class="Identifier">nodecl</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Comment">## Number of vertex buffers (multi-buffering support)</span>
+  <span class="Identifier">bufferCount</span><span class="Other">:</span> <span class="Identifier">int32</span>         <span class="Comment">## Number of vertex buffers (multi-buffering support)</span>
   <span class="Identifier">currentBuffer</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>      <span class="Comment">## Current buffer tracking in case of multi-buffering</span>
-  <span class="Comment">## Dynamic buffer(s) for vertex data</span>
-  <span class="Comment">## Draw calls array, depends on textureId</span>
+  <span class="Identifier">vertexBuffer</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">]</span> <span class="Comment">## Dynamic buffer(s) for vertex data</span>
+  <span class="Identifier">draws</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="rlgl.html#DrawCall"><span class="Identifier">DrawCall</span></a><span class="Other">]</span> <span class="Comment">## Draw calls array, depends on textureId</span>
   <span class="Identifier">drawCounter</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>        <span class="Comment">## Draw calls counter</span>
   <span class="Identifier">currentDepth</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">float32</span>     <span class="Comment">## Current depth value for next draw</span></pre></dt>
   <dd>
@@ -1337,14 +1337,15 @@
 </div>
 <div id="VertexBuffer">
   <dt><pre><a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlVertexBuffer&quot;</span><span class="Other">,</span> <span class="Identifier">nodecl</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Comment">## Number of elements in the buffer (QUADS)</span>
-  <span class="Comment">## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)</span>
-  <span class="Comment">## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)</span>
-  <span class="Comment">## Vertex normal (XYZ - 3 components per vertex) (shader-location = 2)</span>
-  <span class="Comment">## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)</span>
+  <span class="Identifier">elementCount</span><span class="Other">:</span> <span class="Identifier">int32</span>        <span class="Comment">## Number of elements in the buffer (QUADS)</span>
+  <span class="Identifier">vertices</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)</span>
+  <span class="Identifier">texcoords</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)</span>
+  <span class="Identifier">normals</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Vertex normal (XYZ - 3 components per vertex) (shader-location = 2)</span>
+  <span class="Identifier">colors</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span> <span class="Comment">## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)</span>
   <span class="Keyword">when</span> <span class="Keyword">not</span> <span class="Identifier">UseEmbeddedGraphicsApi</span><span class="Other">:</span>
-    <span class="Comment">## Vertex indices (in case vertex data comes indexed) (6 indices per quad)</span>
+    <span class="Identifier">indices</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">uint32</span><span class="Other">]</span> <span class="Comment">## Vertex indices (in case vertex data comes indexed) (6 indices per quad)</span>
   <span class="Keyword">else</span><span class="Other">:</span>
+    <span class="Identifier">indices</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">uint16</span><span class="Other">]</span>
   <span class="Identifier">vaoId</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">uint32</span>             <span class="Comment">## OpenGL Vertex Array Object id</span>
   <span class="Identifier">vboId</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">5</span><span class="Other">,</span> <span class="Identifier">uint32</span><span class="Other">]</span>   <span class="Comment">## OpenGL Vertex Buffer Objects id (5 types of vertex data)</span></pre></dt>
   <dd>
@@ -4167,7 +4168,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-07-12 04:28:36 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-07-13 01:43:35 UTC</small>
       </div>
     </div>
   </div>

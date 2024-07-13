@@ -71,5 +71,5 @@ task docs, "Generate documentation":
       let doc = DocsDir / (tmp & ".html")
       let src = "src" / tmp
       # Generate the docs for {src}
-      exec("nim doc --verbosity:0 --git.url:" & ProjectUrl &
+      exec("nim doc --verbosity:0 --git.url:" & ProjectUrl & (if tmp != "rmem": " --shownonexports" else: "") &
           " --git.devel:main --git.commit:main --out:" & doc.quoteShell & " " & src)
