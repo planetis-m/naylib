@@ -274,7 +274,7 @@ const
 type
   PoolNode[T] = object
     data: T # T needs to be large enough to fit FreeNode!
-    used: bool # order is important
+    used: bool # member order is important
 
   FreeNode = object
     next: ptr FreeNode
@@ -295,7 +295,7 @@ proc createObjPool*[T](buffer: openarray[byte]): ObjPool[T] =
     let alignedStart = alignUp(start, maxAlign)
     let alignedLen = buffer.len - int(alignedStart - start)
     # Align chunk size up to the required chunkAlignment
-    let alignedSize = alignup(sizeof(PoolNode[T]).uint, maxAlign).int
+    let alignedSize = alignUp(sizeof(PoolNode[T]).uint, maxAlign).int
     # Assert that the parameters passed are valid
     assert sizeof(T) >= sizeof(FreeNode), "Chunk size is too small"
     assert alignedLen >= alignedSize, "Backing buffer length is smaller than the chunk size"
@@ -304,6 +304,8 @@ proc createObjPool*[T](buffer: openarray[byte]): ObjPool[T] =
     result.bufLen = alignedLen
     result.chunkSize = alignedSize
     result.head = nil # Free List Head
+    when not supportsCopyMem(T):
+      zeroMem(result.buf, alignedLen) # Prevent any destructors from being triggered
     # Set up the free list for free chunks
     freeAll(result)
 
