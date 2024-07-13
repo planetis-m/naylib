@@ -99,7 +99,10 @@ please feel free to engage with our project.
 
 ## License
 
-Naylib is open-source software. [LICENSE-MIT](LICENSE)
+Naylib is open-source software licensed under the [MIT](LICENSE) License.
+
+Please note that the raylib source code included in this distribution is licensed under
+the [zlib](LICENSE-RAYLIB) license.
 
 ## Contact
 
