@@ -25,7 +25,7 @@ runnableExamples:
   # Create a memory pool with 1024 bytes
   var mp = createMemPool(buffer)
   # Allocate memory
-  # Every address is at minimum 32 byte aligned.
+  # Every address is 4*sizeof(int) byte aligned.
   let ptr1 = mp.alloc(100)
   let ptr2 = mp.alloc(200)
   # Check free memory
@@ -48,7 +48,7 @@ runnableExamples:
 
   # Create an object pool
   var op = createObjPool[MyObject](buffer)
-  # Reset the pool
+  # Allocate MyObject objects
   var objects: array[5, ptr MyObject]
   for i in 0..4:
     objects[i] = op.alloc()
