@@ -25,6 +25,7 @@ runnableExamples:
   # Create a memory pool with 1024 bytes
   var mp = createMemPool(buffer)
   # Allocate memory
+  # Every address is at minimum 32 byte aligned.
   let ptr1 = mp.alloc(100)
   let ptr2 = mp.alloc(200)
   # Check free memory

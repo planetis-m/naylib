@@ -80,7 +80,8 @@ Here are quick links to some important sections:
 
 ## Alternative Game Development Libraries
 
-While we believe that Naylib provides a great option for game development with Nim, we understand that it may not be the perfect fit for everyone. Here are some noteworthy alternatives:
+While we believe that Naylib provides a great option for game development with Nim, we understand
+that it may not be the perfect fit for everyone. Here are some noteworthy alternatives:
 
 - [NimForUE](https://github.com/jmgomez/NimForUE): Plugin for Unreal Engine 5
 - [sokol-nim](https://github.com/floooh/sokol-nim): Auto-generated bindings for sokol headers
@@ -101,10 +102,11 @@ please feel free to engage with our project.
 
 Naylib is open-source software licensed under the [MIT](LICENSE) License.
 
-Please note that the raylib source code included in this distribution is licensed under
+Please note that the raylib [source](src/raylib) code included in this distribution is licensed under
 the [zlib](LICENSE-RAYLIB) license.
 
 ## Contact
 
-For support and discussions, join the [Nim Discord server](https://discord.gg/ByYHrPUY)
-and visit the #gamedev channel.
+For support and discussions, join us on Discord:
+- Nim server (#gamedev): [discord.gg/ByYHrPUY](https://discord.gg/ByYHrPUY)
+- Raylib server (#raylib-nim): [discord.gg/raylib](https://discord.gg/raylib)
