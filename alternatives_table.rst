@@ -5,10 +5,8 @@ Files management functions
 raylib function            Native alternative               Notes
 ========================== ================================ =================
 LoadFileData               readFile                         Cast to seq[byte]
-UnloadFileData             None                             Not needed
 SaveFileData               writeFile                        seq[byte] overload
 LoadFileText               readFile
-UnloadFileText             None                             Not needed
 SaveFileText               writeFile                        string overload
 FileExists                 os.fileExists
 DirectoryExists            os.dirExists
@@ -61,14 +59,12 @@ Text codepoints management functions (unicode characters)
 raylib function         Native alternative    Notes
 ======================= ===================== ==============================
 LoadCodepoints          toRunes
-UnloadCodepoints        None                  Not needed
 GetCodepoint            runeAt, size          Returns 0xFFFD on error
 GetCodepointCount       runeLen
 GetCodepointPrevious    None                  toRunes and iterate in reverse
 GetCodepointNext        None                  Use runes iterator
 CodepointToUTF8         toUTF8
 LoadUTF8                toUTF8
-UnloadUTF8              None                  Not needed
 ======================= ===================== ==============================
 
 See also procs like ``graphemeLen``, ``runeSubStr``, and other functions provided by the standard

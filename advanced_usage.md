@@ -21,13 +21,21 @@ Building for Android is streamlined using the [raylib-game-template](https://git
 3. Make sure to install Java JDK and wget then, run the following Nimble tasks in order:
 
    ```bash
-   nimble setupBuildEnv    # Set up Android SDK/NDK
-   nimble setupAndroid     # Set up raylib project for Android
-   nimble buildAndroid     # Compile raylib project for Android
-   nimble deploy           # Install and monitor raylib project on default emulator/device
+   nimble setupBuildEnv    # Set up Android SDK and NDK for development
+   nimble setupAndroid     # Prepare raylib project for Android development
+   nimble buildAndroid     # Compile and package raylib project for Android
    ```
 
-   These tasks go through the entire process, from setting up the environment to deploying your app on an Android device or emulator.
+4. Install and run the APK on your Android device.
+
+   Enable USB Debugging on your Android device, plug it into your computer, select File Transfer,
+   accept the RSA key and install the package with the following command:
+
+   ```bash
+   nimble deploy           # Install and monitor raylib project on Android device/emulator
+   ```
+
+   Now you should be able to run your raylib game on your Android device!
 
 ### Customizing the Android Build
 
