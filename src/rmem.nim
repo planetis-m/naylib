@@ -165,11 +165,11 @@ proc unbin(x: var MemPool, b: ptr Chunk) =
     if x.bins[idx] == nil:
       x.nonEmptyBinMask = x.nonEmptyBinMask and not pow2(idx).uint
 
-proc createMemPool*(buffer: openarray[byte]): MemPool =
+proc createMemPool*(buffer: pointer, bufferLen: int): MemPool =
   result = MemPool()
-  let base = alignUp(cast[pointer](buffer), MemAlign)
+  let base = alignUp(buffer, MemAlign)
   let padding = cast[uint](base) - cast[uint](buffer)
-  let size = buffer.len - padding.int
+  let size = bufferLen - padding.int
   if base != nil and size >= MinChunkSize:
     # Limit and align the capacity
     var capacity = min(size, MaxChunkSize)
@@ -185,6 +185,9 @@ proc createMemPool*(buffer: openarray[byte]): MemPool =
     rebin(result, b)
     assert result.nonEmptyBinMask != 0
     result.capacity = capacity
+
+proc createMemPool*(buffer: openarray[byte]): MemPool =
+  createMemPool(if buffer.len == 0: nil else: cast[pointer](buffer), buffer.len)
 
 proc alloc*(x: var MemPool, size: Natural): pointer =
   result = nil
@@ -288,13 +291,13 @@ type
 
 proc freeAll*[T](x: var ObjPool[T])
 
-proc createObjPool*[T](buffer: openarray[byte]): ObjPool[T] =
+proc createObjPool*[T](buffer: pointer, bufferLen: int): ObjPool[T] =
   result = ObjPool[T]()
-  if buffer.len > 0:
+  if bufferLen > 0:
     let start = cast[uint](buffer)
     let maxAlign = max(alignof(T), alignof(FreeNode))
     let alignedStart = alignUp(start, maxAlign)
-    let alignedLen = buffer.len - int(alignedStart - start)
+    let alignedLen = bufferLen - int(alignedStart - start)
     # Align chunk size up to the required chunkAlignment
     let alignedSize = alignUp(sizeof(PoolNode[T]).uint, maxAlign).int
     # Assert that the parameters passed are valid
@@ -310,7 +313,11 @@ proc createObjPool*[T](buffer: openarray[byte]): ObjPool[T] =
     # Set up the free list for free chunks
     freeAll(result)
 
+proc createObjPool*[T](buffer: openarray[byte]): ObjPool[T] =
+  createObjPool[T](if buffer.len == 0: nil else: cast[pointer](buffer), buffer.len)
+
 proc alloc*[T](x: var ObjPool[T]): ptr T =
+  result = nil
   # Get latest free node
   let node = x.head
   # assert node != nil, "FixedPool allocator has no free memory"
@@ -361,13 +368,16 @@ type
     bufLen: int
     buf: ptr UncheckedArray[byte]
 
-proc createBiStack*(buffer: openarray[byte]): BiStack =
-  result = BiStack(
-    buf: if buffer.len == 0: nil else: cast[ptr UncheckedArray[byte]](buffer),
-    bufLen: buffer.len,
+proc createBiStack*(buffer: pointer, bufferLen: int): BiStack =
+  BiStack(
+    buf: cast[ptr UncheckedArray[byte]](buffer),
+    bufLen: bufferLen,
     front: 0,
-    back: buffer.len
+    back: bufferLen
   )
+
+proc createBiStack*(buffer: openarray[byte]): BiStack =
+  createBiStack(if buffer.len == 0: nil else: cast[pointer](buffer), buffer.len)
 
 proc alignedAllocFront*(s: var BiStack, size, align: Natural): pointer =
   result = nil
