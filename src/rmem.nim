@@ -293,7 +293,7 @@ proc freeAll*[T](x: var ObjPool[T])
 
 proc createObjPool*[T](buffer: pointer, bufferLen: int): ObjPool[T] =
   result = ObjPool[T]()
-  if bufferLen > 0:
+  if buffer != nil and bufferLen > 0:
     let start = cast[uint](buffer)
     let maxAlign = max(alignof(T), alignof(FreeNode))
     let alignedStart = alignUp(start, maxAlign)

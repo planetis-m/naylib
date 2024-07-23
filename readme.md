@@ -29,8 +29,8 @@ If you're familiar with the C version of raylib, you may find the
 
 Install naylib easily with `nimble install naylib`.
 
-Then, make sure to install the required dependencies using your OS's native
-package manager.
+For Linux users only: Ensure you have the [required](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux)
+dependencies installed using your distribution's native package manager.
 
 ## Examples
 
