@@ -6,9 +6,25 @@ To compile your project for web browsers using WebAssembly:
 
 1. Install the Emscripten SDK. Follow the [official Emscripten installation guide](https://emscripten.org/docs/getting_started/downloads.html).
 
-2. Add the `-d:emscripten` flag when compiling.
+2. Create a configuration file for your project. You can use [this example](tests/basic_window_web.nims)
+   as a starting point.
 
-3. Create a configuration file for your project. You can use [this example](tests/basic_window_web.nims) as a starting point.
+3. Add the `-d:emscripten` flag when compiling, e.g., `nim c -d:emscripten your_project.nim`
+
+   This will generate the necessary files for web deployment in the `public` directory.
+
+4. Run a local web server: To serve your compiled WebAssembly files, you can use nimhttpd
+   (`nimble install nimhttpd`). Navigate to the directory containing your compiled files and run `nimhttpd`
+
+   For multithreading support (`--threads:on`), you need to pass the following extra arguments to nimhttpd:
+
+   ```bash
+   nimhttpd -H:"Cross-Origin-Opener-Policy: same-origin" -H:"Cross-Origin-Embedder-Policy: require-corp"
+   ```
+
+5. Open your web browser and navigate to the address printed by nimhttpd (usually `localhost:1337`).
+
+   You should now be able to see your game running in the browser window!
 
 ## Building for Android
 

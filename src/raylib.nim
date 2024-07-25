@@ -10,7 +10,9 @@ const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
 {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB".}
-  when defined(GraphicsApiOpenGlEs3): {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
+  when defined(GraphicsApiOpenGlEs3):
+    {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
+    {.passL: "-sFULL_ES3 -sMAX_WEBGL_VERSION=2".}
   else: {.passC: "-DGRAPHICS_API_OPENGL_ES2".}
   {.passL: "-sUSE_GLFW=3 -sWASM=1 -sTOTAL_MEMORY=67108864".} # 64MiB
   {.passL: "-sEXPORTED_RUNTIME_METHODS=ccall".}
