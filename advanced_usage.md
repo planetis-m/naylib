@@ -9,12 +9,12 @@ To compile your project for web browsers using WebAssembly:
 2. Create a configuration file for your project. You can use [this example](tests/basic_window_web.nims)
    as a starting point.
 
-3. Add the `-d:emscripten` flag when compiling, e.g., `nim c -d:emscripten your_project.nim`
+3. Add the `-d:emscripten` flag when compiling, e.g., `nim c -d:emscripten your_project.nim`.
 
    This will generate the necessary files for web deployment in the `public` directory.
 
-4. Run a local web server: To serve your compiled WebAssembly files, you can use nimhttpd
-   (`nimble install nimhttpd`). Navigate to the directory containing your compiled files and run `nimhttpd`
+4. To run a local web server, you can use nimhttpd (`nimble install nimhttpd`). Navigate to the
+   directory containing your compiled files and run `nimhttpd`.
 
    For multithreading support (`--threads:on`), you need to pass the following extra arguments to nimhttpd:
 
@@ -128,6 +128,39 @@ block:
   let texture = loadTexture("resources/example.png")
   # Your game logic here
 closeWindow()
+```
+
+4. Using templates:
+
+```nim
+const
+  screenWidth = 800
+  screenHeight = 450
+  windowName = "example"
+  targetFramerate = 60
+  flags = flags(Msaa4xHint)
+
+template game(gameCode: untyped) =
+  proc main =
+    setConfigFlags(flags)
+    initWindow(screenWidth, screenHeight, windowName)
+    try:
+      gameCode
+    finally:
+      closeWindow()
+  main()
+
+template gameLoop(loopCode: untyped) =
+  setTargetFPS(targetFramerate)
+  while not windowShouldClose():
+    loopCode
+
+game:
+  # Setup code goes here.
+  gameLoop:
+    drawing:
+      clearBackground(RayWhite)
+      drawText("Congrats! You created your first window!", 190, 200, 20, LightGray)
 ```
 
 ### Raylib Functions to Nim Alternatives
