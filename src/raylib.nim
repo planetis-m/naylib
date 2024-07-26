@@ -1736,17 +1736,21 @@ proc `=copy`*(dest: var WeakFont; source: WeakFont) {.nodestroy.} =
   dest = source
 
 proc `=destroy`*(x: MaterialMap) = discard
+proc `=wasMoved`*(x: var MaterialMap) {.error.}
 proc `=dup`*(source: MaterialMap): MaterialMap {.error.}
 proc `=copy`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 proc `=sink`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 
 # proc `=destroy`*(x: ShaderLocsPtr) = discard
+# proc `=wasMoved`*(x: var ShaderLocsPtr) {.error.}
 # proc `=dup`*(source: ShaderLocsPtr): ShaderLocsPtr {.error.}
 # proc `=copy`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 # proc `=sink`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 
 proc `=destroy`*(x: Image) =
   unloadImage(x)
+proc `=wasMoved`*(x: var Image) =
+  x.data = nil
 proc `=dup`*(source: Image): Image {.nodestroy.} =
   result = imageCopy(source)
 proc `=copy`*(dest: var Image; source: Image) =
@@ -1755,16 +1759,24 @@ proc `=copy`*(dest: var Image; source: Image) =
 
 proc `=destroy`*(x: Texture) =
   unloadTexture(x)
+proc `=wasMoved`*(x: var Texture) =
+  x.id = 0
 proc `=dup`*(source: Texture): Texture {.error.}
 proc `=copy`*(dest: var Texture; source: Texture) {.error.}
 
 proc `=destroy`*(x: RenderTexture) =
   unloadRenderTexture(x)
+proc `=wasMoved`*(x: var RenderTexture) =
+  x.id = 0
 proc `=dup`*(source: RenderTexture): RenderTexture {.error.}
 proc `=copy`*(dest: var RenderTexture; source: RenderTexture) {.error.}
 
 proc `=destroy`*(x: Font) =
   unloadFont(x)
+proc `=wasMoved`*(x: var Font) =
+  x.texture.id = 0
+  x.glyphs = nil
+  x.recs = nil
 proc `=dup`*(source: Font): Font {.error.}
 proc `=copy`*(dest: var Font; source: Font) {.error.}
 
@@ -1795,6 +1807,8 @@ proc `=copy`*(dest: var ModelAnimation; source: ModelAnimation) {.error.}
 
 proc `=destroy`*(x: Wave) =
   unloadWave(x)
+proc `=wasMoved`*(x: var Wave) =
+  x.data = nil
 proc `=dup`*(source: Wave): Wave {.nodestroy.} =
   result = waveCopy(source)
 proc `=copy`*(dest: var Wave; source: Wave) =
@@ -1803,11 +1817,15 @@ proc `=copy`*(dest: var Wave; source: Wave) =
 
 proc `=destroy`*(x: AudioStream) =
   unloadAudioStream(x)
+proc `=wasMoved`*(x: var AudioStream) =
+  x.buffer = nil
 proc `=dup`*(source: AudioStream): AudioStream {.error.}
 proc `=copy`*(dest: var AudioStream; source: AudioStream) {.error.}
 
 proc `=destroy`*(x: Sound) =
   unloadSound(x)
+proc `=wasMoved`*(x: var Sound) =
+  x.stream.buffer = nil
 proc `=dup`*(source: Sound): Sound {.error.}
 proc `=copy`*(dest: var Sound; source: Sound) {.error.}
 
@@ -1816,11 +1834,16 @@ proc `=destroy`*(x: SoundAlias) =
 
 proc `=destroy`*(x: Music) =
   unloadMusicStream(x)
+proc `=wasMoved`*(x: var Music) =
+  x.stream.buffer = nil
+  x.ctxData = nil
 proc `=dup`*(source: Music): Music {.error.}
 proc `=copy`*(dest: var Music; source: Music) {.error.}
 
 proc `=destroy`*(x: AutomationEventList) =
   unloadAutomationEventList(x)
+proc `=wasMoved`*(x: var AutomationEventList) =
+  x.events = nil
 proc `=dup`*(source: AutomationEventList): AutomationEventList {.error.}
 proc `=copy`*(dest: var AutomationEventList; source: AutomationEventList) {.error.}
 
