@@ -41,10 +41,14 @@ runnableExamples:
     MyObject = object
       x, y: int
       data: array[20, char]
+      used: bool
 
   # Supports destructors
   proc `=destroy`(x: MyObject) =
-    echo "destroying object"
+    if x.used:
+      echo "destroying object"
+  proc `=wasMoved`(x: var MyObject) =
+    x.used = false
 
   # Create an object pool
   var op = createObjPool[MyObject](buffer)
@@ -54,6 +58,7 @@ runnableExamples:
     objects[i] = op.alloc()
     objects[i].x = i
     objects[i].y = i * 2
+    objects[i].used = true
   # Free some objects
   op.free(objects[1])
   op.free(objects[3])
