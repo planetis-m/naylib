@@ -63,7 +63,7 @@ The [build_android.nims](https://github.com/planetis-m/raylib-game-template/blob
 - Configure application properties such as name and icon
 - Adjust other build settings to match your project requirements
 
-Review and modify this file to tailor the Android build process to your specific needs.
+Review and modify this file to tailor the build process to your specific needs.
 
 ## Choosing the OpenGL Graphics Backend Version
 
@@ -90,7 +90,7 @@ Since Naylib wraps most types with Nim's destructors, `closeWindow` needs specia
 initWindow(800, 450, "example")
 defer: closeWindow()
 let texture = loadTexture("resources/example.png")
-# Your game logic here
+# Game logic goes here
 ```
 
 2. Wrapping everything inside a game object:
@@ -117,7 +117,7 @@ proc initGame(width, height, fps: int32, flags: Flags[ConfigFlags], title: strin
 
 let game = initGame(800, 450, 60, flags(Msaa4xHint, WindowHighdpi), "example")
 let texture = loadTexture("resources/example.png")
-# Your game logic here
+# Game logic goes here
 ```
 
 3. Opening a new scope:
@@ -126,7 +126,7 @@ let texture = loadTexture("resources/example.png")
 initWindow(800, 450, "example")
 block:
   let texture = loadTexture("resources/example.png")
-  # Your game logic here
+  # Game logic goes here
 closeWindow()
 ```
 
@@ -157,10 +157,10 @@ template gameLoop(loopCode: untyped) =
 
 game:
   # Setup code goes here.
+  let texture = loadTexture("resources/example.png")
   gameLoop:
     drawing:
       clearBackground(RayWhite)
-      drawText("Congrats! You created your first window!", 190, 200, 20, LightGray)
 ```
 
 ### Raylib Functions to Nim Alternatives

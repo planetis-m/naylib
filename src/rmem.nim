@@ -276,10 +276,6 @@ const
   DefaultAlignment = when sizeof(int) <= 4: 8 else: 16
 
 type
-  PoolNode[T] = object
-    data: T # T needs to be large enough to fit FreeNode!
-    used: bool # member order is important
-
   FreeNode = object
     next: ptr FreeNode
 
@@ -299,9 +295,9 @@ proc createObjPool*[T](buffer: pointer, bufferLen: int): ObjPool[T] =
     let alignedStart = alignUp(start, maxAlign)
     let alignedLen = bufferLen - int(alignedStart - start)
     # Align chunk size up to the required chunkAlignment
-    let alignedSize = alignUp(sizeof(PoolNode[T]).uint, maxAlign).int
+    let alignedSize = alignUp(sizeof(T).uint, maxAlign).int
     # Assert that the parameters passed are valid
-    assert sizeof(T) >= sizeof(FreeNode), "Chunk size is too small"
+    assert alignedSize >= sizeof(FreeNode), "Chunk size is too small"
     assert alignedLen >= alignedSize, "Backing buffer length is smaller than the chunk size"
     # Store the adjusted parameters
     result.buf = cast[ptr UncheckedArray[byte]](alignedStart)
@@ -324,9 +320,6 @@ proc alloc*[T](x: var ObjPool[T]): ptr T =
   if node != nil:
     # Pop free node
     x.head = node.next
-    let e = cast[ptr PoolNode[T]](node)
-    assert not e.used
-    e.used = true
     # Zero memory by default
     zeroMem(node, sizeof(T))
     result = cast[ptr T](node)
@@ -338,11 +331,9 @@ proc free*[T](x: var ObjPool[T], p: ptr T) =
     let endAddr = start + uint(x.bufLen)
     # assert start > cast[uint](p) or cast[uint](p) >= endAddr, "Memory is out of bounds"
     if start <= cast[uint](p) and cast[uint](p) < endAddr:
-      let e = cast[ptr PoolNode[T]](p)
-      assert e.used # Catch double-free
       when not supportsCopyMem(T):
-        `=destroy`(e.data)
-      e.used = false
+        `=destroy`(p[])
+        `=wasMoved`(p[])
       # Push free node
       let node = cast[ptr FreeNode](p)
       node.next = x.head
@@ -352,11 +343,10 @@ proc freeAll*[T](x: var ObjPool[T]) =
   let chunkCount = x.bufLen div x.chunkSize
   # Set all chunks to be free
   for i in 0 ..< chunkCount:
-    let p = cast[pointer](cast[uint](x.buf) + uint(i * x.chunkSize))
-    let e = cast[ptr PoolNode[T]](p)
+    let p = cast[ptr T](cast[uint](x.buf) + uint(i * x.chunkSize))
     when not supportsCopyMem(T):
-      if e.used: `=destroy`(e.data)
-    e.used = false
+      `=destroy`(p[])
+      `=wasMoved`(p[])
     let node = cast[ptr FreeNode](p)
     # Push free node onto the free list
     node.next = x.head
