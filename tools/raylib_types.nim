@@ -24,11 +24,13 @@ proc `=copy`*(dest: var WeakFont; source: WeakFont) {.nodestroy.} =
   dest = source
 
 proc `=destroy`*(x: MaterialMap) = discard
+proc `=wasMoved`*(x: var MaterialMap) {.error.}
 proc `=dup`*(source: MaterialMap): MaterialMap {.error.}
 proc `=copy`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 proc `=sink`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 
 # proc `=destroy`*(x: ShaderLocsPtr) = discard
+# proc `=wasMoved`*(x: var ShaderLocsPtr) {.error.}
 # proc `=dup`*(source: ShaderLocsPtr): ShaderLocsPtr {.error.}
 # proc `=copy`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
 # proc `=sink`*(dest: var ShaderLocsPtr; source: ShaderLocsPtr) {.error.}
