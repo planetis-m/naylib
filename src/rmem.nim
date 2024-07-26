@@ -290,8 +290,6 @@ type
     bufLen: int
     buf: ptr UncheckedArray[byte]
 
-proc freeAll*[T](x: var ObjPool[T])
-
 proc createObjPool*[T](buffer: pointer, bufferLen: int): ObjPool[T] =
   result = ObjPool[T]()
   if buffer != nil and bufferLen > 0:
@@ -309,10 +307,17 @@ proc createObjPool*[T](buffer: pointer, bufferLen: int): ObjPool[T] =
     result.bufLen = alignedLen
     result.chunkSize = alignedSize
     result.head = nil # Free List Head
-    when not supportsCopyMem(T):
-      zeroMem(result.buf, alignedLen) # Prevent any destructors from being triggered
     # Set up the free list for free chunks
-    freeAll(result)
+    let chunkCount = alignedLen div alignedSize
+    # Set all chunks to be free
+    for i in 0 ..< chunkCount:
+      let p = cast[ptr T](alignedStart + uint(i * alignedSize))
+      when not supportsCopyMem(T):
+        `=wasMoved`(p[])
+      let node = cast[ptr FreeNode](p)
+      # Push free node onto the free list
+      node.next = result.head
+      result.head = node
 
 proc createObjPool*[T](buffer: openarray[byte]): ObjPool[T] =
   createObjPool[T](if buffer.len == 0: nil else: cast[pointer](buffer), buffer.len)
