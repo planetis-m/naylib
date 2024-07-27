@@ -311,10 +311,7 @@ proc createObjPool*[T](buffer: pointer, bufferLen: int): ObjPool[T] =
     let chunkCount = alignedLen div alignedSize
     # Set all chunks to be free
     for i in 0 ..< chunkCount:
-      let p = cast[ptr T](alignedStart + uint(i * alignedSize))
-      when not supportsCopyMem(T):
-        `=wasMoved`(p[])
-      let node = cast[ptr FreeNode](p)
+      let node = cast[ptr FreeNode](alignedStart + uint(i * alignedSize))
       # Push free node onto the free list
       node.next = result.head
       result.head = node
@@ -348,19 +345,6 @@ proc free*[T](x: var ObjPool[T], p: ptr T) =
       let node = cast[ptr FreeNode](p)
       node.next = x.head
       x.head = node
-
-proc freeAll*[T](x: var ObjPool[T]) =
-  let chunkCount = x.bufLen div x.chunkSize
-  # Set all chunks to be free
-  for i in 0 ..< chunkCount:
-    let p = cast[ptr T](cast[uint](x.buf) + uint(i * x.chunkSize))
-    when not supportsCopyMem(T):
-      `=destroy`(p[])
-      `=wasMoved`(p[])
-    let node = cast[ptr FreeNode](p)
-    # Push free node onto the free list
-    node.next = x.head
-    x.head = node
 
 type
   BiStack* = object # Double-ended stack (aka Deque)

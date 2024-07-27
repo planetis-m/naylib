@@ -44,7 +44,7 @@ elif defined(android):
   const ProjectLibraryName = "main"
   {.passC: "-I" & string(AndroidNdk.Path / Path"sources/android/native_app_glue").}
 
-  {.passC: "-DPLATFORM_ANDROID -DMAL_NO_OSS".}
+  {.passC: "-DPLATFORM_ANDROID".}
   when defined(GraphicsApiOpenGlEs3): {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
   else: {.passC: "-DGRAPHICS_API_OPENGL_ES2".}
   {.passC: "-ffunction-sections -funwind-tables -fstack-protector-strong -fPIE -fPIC".}

@@ -637,7 +637,7 @@ type
 
   Ray* {.importc, header: "raylib.h", bycopy.} = object ## Ray, ray for raycasting
     position*: Vector3 ## Ray position (origin)
-    direction*: Vector3 ## Ray direction
+    direction*: Vector3 ## Ray direction (normalized)
 
   RayCollision* {.importc, header: "raylib.h", bycopy.} = object ## RayCollision, ray hit information
     hit*: bool ## Did the ray hit something?

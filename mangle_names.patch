@@ -1,10 +1,9 @@
-From 5ed1858d26b88d140e69cb9edbbdd233c6e569f0 Mon Sep 17 00:00:00 2001
+From ae7c63cc7efbaa2da643eb9ab176f6fb4804c5c4 Mon Sep 17 00:00:00 2001
 From: Antonis Geralis <b3lievem@yandex.com>
-Date: Sun, 7 Jul 2024 21:49:31 +0300
+Date: Sun, 28 Jul 2024 01:49:50 +0300
 Subject: [PATCH] mangle names
 
 ---
- src/raylib.nim                           |  2 +-
  src/raylib/external/jar_xm.h             | 60 ++++++++++----------
  src/raylib/platforms/rcore_android.c     | 10 ++--
  src/raylib/platforms/rcore_desktop_sdl.c |  2 +-
@@ -17,22 +16,8 @@ Subject: [PATCH] mangle names
  src/raylib/rshapes.c                     | 70 +++++++++++------------
  src/raylib/rtext.c                       | 50 ++++++++--------
  src/raylib/rtextures.c                   | 58 +++++++++----------
- tools/raylib_gen.nim                     |  2 +-
- 14 files changed, 177 insertions(+), 177 deletions(-)
+ 12 files changed, 175 insertions(+), 175 deletions(-)
 
-diff --git a/src/raylib.nim b/src/raylib.nim
-index b660941..4c667c9 100644
---- a/src/raylib.nim
-+++ b/src/raylib.nim
-@@ -121,7 +121,7 @@ when defined(android):
-   {.compile: AndroidNdk.Path / Path"sources/android/native_app_glue/android_native_app_glue.c".}
- 
- const
--  RaylibVersion* = (5, 1, 0)
-+  RaylibVersion* = (5, 5, 0)
- 
-   # Taken from raylib/src/config.h
-   MaxShaderLocations* = 32 ## Maximum number of shader locations supported
 diff --git a/src/raylib/external/jar_xm.h b/src/raylib/external/jar_xm.h
 index 4a1bfbf..a9dcc5c 100644
 --- a/src/raylib/external/jar_xm.h
@@ -146,7 +131,7 @@ index 4a1bfbf..a9dcc5c 100644
              };
          };
 diff --git a/src/raylib/platforms/rcore_android.c b/src/raylib/platforms/rcore_android.c
-index 8fc51d0..02d351e 100644
+index 68ae979..b59cbba 100644
 --- a/src/raylib/platforms/rcore_android.c
 +++ b/src/raylib/platforms/rcore_android.c
 @@ -515,7 +515,7 @@ const char *GetClipboardText(void)
@@ -158,7 +143,7 @@ index 8fc51d0..02d351e 100644
  {
      CORE.Input.Mouse.cursorHidden = false;
  }
-@@ -989,16 +989,16 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
+@@ -996,16 +996,16 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
                      #if defined(SUPPORT_MODULE_RSHAPES)
                      // Set font white rectangle for shapes drawing, so shapes and text can be batched together
                      // WARNING: rshapes module is required, if not available, default internal white rectangle is used
@@ -178,7 +163,7 @@ index 8fc51d0..02d351e 100644
                      }
                      #endif
                  #else
-@@ -1006,7 +1006,7 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
+@@ -1013,7 +1013,7 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
                      // Set default texture and rectangle to be used for shapes drawing
                      // NOTE: rlgl default texture is a 1x1 pixel UNCOMPRESSED_R8G8B8A8
                      Texture2D texture = { rlGetTextureIdDefault(), 1, 1, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
@@ -188,7 +173,7 @@ index 8fc51d0..02d351e 100644
                  #endif
  
 diff --git a/src/raylib/platforms/rcore_desktop_sdl.c b/src/raylib/platforms/rcore_desktop_sdl.c
-index 3d62935..5614519 100644
+index 794f9e6..d12d3dc 100644
 --- a/src/raylib/platforms/rcore_desktop_sdl.c
 +++ b/src/raylib/platforms/rcore_desktop_sdl.c
 @@ -859,7 +859,7 @@ const char *GetClipboardText(void)
@@ -201,7 +186,7 @@ index 3d62935..5614519 100644
      SDL_ShowCursor(SDL_ENABLE);
  
 diff --git a/src/raylib/platforms/rcore_drm.c b/src/raylib/platforms/rcore_drm.c
-index f888d0e..6fd81d7 100644
+index 291fd93..84b5e56 100644
 --- a/src/raylib/platforms/rcore_drm.c
 +++ b/src/raylib/platforms/rcore_drm.c
 @@ -119,7 +119,7 @@ typedef struct {
@@ -223,7 +208,7 @@ index f888d0e..6fd81d7 100644
      CORE.Input.Mouse.cursorHidden = false;
  }
 diff --git a/src/raylib/platforms/rcore_template.c b/src/raylib/platforms/rcore_template.c
-index 7a48c46..65bf34d 100644
+index 938f4ed..dbe6f3d 100644
 --- a/src/raylib/platforms/rcore_template.c
 +++ b/src/raylib/platforms/rcore_template.c
 @@ -293,7 +293,7 @@ const char *GetClipboardText(void)
@@ -236,7 +221,7 @@ index 7a48c46..65bf34d 100644
      CORE.Input.Mouse.cursorHidden = false;
  }
 diff --git a/src/raylib/platforms/rcore_web.c b/src/raylib/platforms/rcore_web.c
-index 47b8d42..91e9c58 100644
+index 937e15a..38cfd42 100644
 --- a/src/raylib/platforms/rcore_web.c
 +++ b/src/raylib/platforms/rcore_web.c
 @@ -770,7 +770,7 @@ const char *GetClipboardText(void)
@@ -249,7 +234,7 @@ index 47b8d42..91e9c58 100644
      if (CORE.Input.Mouse.cursorHidden)
      {
 diff --git a/src/raylib/raylib.h b/src/raylib/raylib.h
-index 3bc44f0..40e7ae0 100644
+index 1cf34f0..cb536e9 100644
 --- a/src/raylib/raylib.h
 +++ b/src/raylib/raylib.h
 @@ -246,12 +246,12 @@ typedef struct Color {
@@ -475,7 +460,7 @@ index 3bc44f0..40e7ae0 100644
  // Mesh management functions
  RLAPI void UploadMesh(Mesh *mesh, bool dynamic);                                            // Upload mesh vertex data in GPU and provide VAO/VBO ids
 diff --git a/src/raylib/rcore.c b/src/raylib/rcore.c
-index e68a9a7..fddca14 100644
+index af310cf..c7305e4 100644
 --- a/src/raylib/rcore.c
 +++ b/src/raylib/rcore.c
 @@ -648,16 +648,16 @@ void InitWindow(int width, int height, const char *title)
@@ -506,8 +491,8 @@ index e68a9a7..fddca14 100644
 +    SetShapesTexture(texture, (rlRectangle){ 0.0f, 0.0f, 1.0f, 1.0f });    // WARNING: Module required: rshapes
      #endif
  #endif
- #if defined(SUPPORT_MODULE_RTEXT) && defined(SUPPORT_DEFAULT_FONT)
-@@ -686,7 +686,7 @@ void InitWindow(int width, int height, const char *title)
+ 
+@@ -680,7 +680,7 @@ void InitWindow(int width, int height, const char *title)
  }
  
  // Close window and unload OpenGL context
@@ -516,7 +501,7 @@ index e68a9a7..fddca14 100644
  {
  #if defined(SUPPORT_GIF_RECORDING)
      if (gifRecording)
-@@ -888,7 +888,7 @@ void EndDrawing(void)
+@@ -882,7 +882,7 @@ void EndDrawing(void)
          if ((int)(GetTime()/0.5)%2 == 1)
          {
              DrawCircle(30, CORE.Window.screen.height - 20, 10, MAROON);                 // WARNING: Module required: rshapes
@@ -526,10 +511,10 @@ index e68a9a7..fddca14 100644
      #endif
  
 diff --git a/src/raylib/rmodels.c b/src/raylib/rmodels.c
-index 31b4c57..53438ef 100644
+index c1d5676..0e4d121 100644
 --- a/src/raylib/rmodels.c
 +++ b/src/raylib/rmodels.c
-@@ -3640,13 +3640,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
+@@ -3634,13 +3634,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
  // Draw a billboard
  void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float scale, Color tint)
  {
@@ -545,7 +530,7 @@ index 31b4c57..53438ef 100644
  {
      // NOTE: Billboard locked on axis-Y
      Vector3 up = { 0.0f, 1.0f, 0.0f };
-@@ -3655,7 +3655,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector
+@@ -3649,7 +3649,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector
  }
  
  // Draw a billboard with additional parameters
@@ -554,7 +539,7 @@ index 31b4c57..53438ef 100644
  {
      // Compute the up vector and the right vector
      Matrix matView = MatrixLookAt(camera.position, camera.target, camera.up);
-@@ -4850,7 +4850,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
+@@ -4844,7 +4844,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
          }
          else     // Check if image is provided as image path
          {
@@ -838,7 +823,7 @@ index 8933970..f8c1b22 100644
      float left = (rec1.x > rec2.x)? rec1.x : rec2.x;
      float right1 = rec1.x + rec1.width;
 diff --git a/src/raylib/rtext.c b/src/raylib/rtext.c
-index 8daf3a7..ab79594 100644
+index 755b15e..7c08d28 100644
 --- a/src/raylib/rtext.c
 +++ b/src/raylib/rtext.c
 @@ -7,8 +7,8 @@
@@ -1035,7 +1020,7 @@ index 8daf3a7..ab79594 100644
              // Save data properly in sprite font
              font.glyphs[i].value = charId;
 diff --git a/src/raylib/rtextures.c b/src/raylib/rtextures.c
-index 1e88b64..a38ab43 100644
+index 60ce58f..1a421ff 100644
 --- a/src/raylib/rtextures.c
 +++ b/src/raylib/rtextures.c
 @@ -271,7 +271,7 @@ static Vector4 *LoadImageDataNormalized(Image image);       // Load pixel data f
@@ -1056,7 +1041,7 @@ index 1e88b64..a38ab43 100644
          frameCount = 1;
      }
  
-@@ -1269,7 +1269,7 @@ Image ImageCopy(Image image)
+@@ -1283,7 +1283,7 @@ Image ImageCopy(Image image)
  }
  
  // Create an image from another image piece
@@ -1065,7 +1050,7 @@ index 1e88b64..a38ab43 100644
  {
      Image result = { 0 };
  
-@@ -1291,7 +1291,7 @@ Image ImageFromImage(Image image, Rectangle rec)
+@@ -1305,7 +1305,7 @@ Image ImageFromImage(Image image, Rectangle rec)
  
  // Crop an image to area defined by a rectangle
  // NOTE: Security checks are performed in case rectangle goes out of bounds
@@ -1074,7 +1059,7 @@ index 1e88b64..a38ab43 100644
  {
      // Security check to avoid program crash
      if ((image->data == NULL) || (image->width == 0) || (image->height == 0)) return;
-@@ -1601,8 +1601,8 @@ Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Co
+@@ -1615,8 +1615,8 @@ Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Co
          {
              if ((codepoint != ' ') && (codepoint != '\t'))
              {
@@ -1085,7 +1070,7 @@ index 1e88b64..a38ab43 100644
              }
  
              if (font.glyphs[index].advanceX == 0) textOffsetX += (int)(font.recs[index].width + spacing);
-@@ -1904,7 +1904,7 @@ void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, i
+@@ -1918,7 +1918,7 @@ void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, i
      if (image->format >= PIXELFORMAT_COMPRESSED_DXT1_RGB) TRACELOG(LOG_WARNING, "Image manipulation not supported for compressed formats");
      else if ((newWidth != image->width) || (newHeight != image->height))
      {
@@ -1094,7 +1079,7 @@ index 1e88b64..a38ab43 100644
          Vector2 dstPos = { (float)offsetX, (float)offsetY };
  
          if (offsetX < 0)
-@@ -1984,7 +1984,7 @@ void ImageAlphaCrop(Image *image, float threshold)
+@@ -1998,7 +1998,7 @@ void ImageAlphaCrop(Image *image, float threshold)
      // Security check to avoid program crash
      if ((image->data == NULL) || (image->width == 0) || (image->height == 0)) return;
  
@@ -1103,7 +1088,7 @@ index 1e88b64..a38ab43 100644
  
      // Crop if rectangle is valid
      if (((int)crop.width != 0) && ((int)crop.height != 0)) ImageCrop(image, crop);
-@@ -3236,9 +3236,9 @@ void UnloadImagePalette(Color *colors)
+@@ -3250,9 +3250,9 @@ void UnloadImagePalette(Color *colors)
  
  // Get image alpha border rectangle
  // NOTE: Threshold is defined as a percentage: 0.0f -> 1.0f
@@ -1115,7 +1100,7 @@ index 1e88b64..a38ab43 100644
  
      Color *pixels = LoadImageColors(image);
  
-@@ -3266,7 +3266,7 @@ Rectangle GetImageAlphaBorder(Image image, float threshold)
+@@ -3280,7 +3280,7 @@ Rectangle GetImageAlphaBorder(Image image, float threshold)
          // Check for empty blank image
          if ((xMin != 65536) && (xMax != 65536))
          {
@@ -1124,7 +1109,7 @@ index 1e88b64..a38ab43 100644
          }
  
          UnloadImageColors(pixels);
-@@ -3749,7 +3749,7 @@ void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color)
+@@ -3763,7 +3763,7 @@ void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color)
  // Draw rectangle within an image
  void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color)
  {
@@ -1133,7 +1118,7 @@ index 1e88b64..a38ab43 100644
  }
  
  // Draw rectangle within an image (Vector version)
-@@ -3759,7 +3759,7 @@ void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color
+@@ -3773,7 +3773,7 @@ void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color
  }
  
  // Draw rectangle within an image
@@ -1142,7 +1127,7 @@ index 1e88b64..a38ab43 100644
  {
      // Security check to avoid program crash
      if ((dst->data == NULL) || (dst->width == 0) || (dst->height == 0)) return;
-@@ -3804,7 +3804,7 @@ void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color)
+@@ -3818,7 +3818,7 @@ void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color)
  }
  
  // Draw rectangle lines within an image
@@ -1151,7 +1136,7 @@ index 1e88b64..a38ab43 100644
  {
      ImageDrawRectangle(dst, (int)rec.x, (int)rec.y, (int)rec.width, thick, color);
      ImageDrawRectangle(dst, (int)rec.x, (int)(rec.y + thick), thick, (int)(rec.height - thick*2), color);
-@@ -4002,7 +4002,7 @@ void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color c
+@@ -4016,7 +4016,7 @@ void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color c
  
  // Draw an image (source) within an image (destination)
  // NOTE: Color tint is applied to source image
@@ -1160,7 +1145,7 @@ index 1e88b64..a38ab43 100644
  {
      // Security check to avoid program crash
      if ((dst->data == NULL) || (dst->width == 0) || (dst->height == 0) ||
-@@ -4028,7 +4028,7 @@ void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color
+@@ -4042,7 +4042,7 @@ void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color
          {
              srcMod = ImageFromImage(src, srcRec);   // Create image from another image
              ImageResize(&srcMod, (int)dstRec.width, (int)dstRec.height);   // Resize to destination rectangle
@@ -1169,7 +1154,7 @@ index 1e88b64..a38ab43 100644
  
              srcPtr = &srcMod;
              useSrcMod = true;
-@@ -4135,8 +4135,8 @@ void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position,
+@@ -4149,8 +4149,8 @@ void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position,
  {
      Image imText = ImageTextEx(font, text, fontSize, spacing, tint);
  
@@ -1180,7 +1165,7 @@ index 1e88b64..a38ab43 100644
  
      ImageDraw(dst, imText, srcRec, dstRec, WHITE);
  
-@@ -4151,7 +4151,7 @@ Texture2D LoadTexture(const char *fileName)
+@@ -4165,7 +4165,7 @@ Texture2D LoadTexture(const char *fileName)
  {
      Texture2D texture = { 0 };
  
@@ -1189,7 +1174,7 @@ index 1e88b64..a38ab43 100644
  
      if (image.data != NULL)
      {
-@@ -4219,9 +4219,9 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
+@@ -4233,9 +4233,9 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
          int size = cubemap.width;
  
          Image faces = { 0 };                // Vertical column image
@@ -1201,7 +1186,7 @@ index 1e88b64..a38ab43 100644
  
          if (layout == CUBEMAP_LAYOUT_LINE_VERTICAL)
          {
-@@ -4260,7 +4260,7 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
+@@ -4274,7 +4274,7 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
  
              // NOTE: Image formatting does not work with compressed textures
  
@@ -1210,7 +1195,7 @@ index 1e88b64..a38ab43 100644
          }
  
          // NOTE: Cubemap data is expected to be provided as 6 images in a single data array,
-@@ -4386,7 +4386,7 @@ void UpdateTexture(Texture2D texture, const void *pixels)
+@@ -4400,7 +4400,7 @@ void UpdateTexture(Texture2D texture, const void *pixels)
  
  // Update GPU texture rectangle with new data
  // NOTE: pixels data must match texture.format
@@ -1219,7 +1204,7 @@ index 1e88b64..a38ab43 100644
  {
      rlUpdateTexture(texture.id, (int)rec.x, (int)rec.y, (int)rec.width, (int)rec.height, texture.format, pixels);
  }
-@@ -4516,17 +4516,17 @@ void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
+@@ -4530,17 +4530,17 @@ void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
  // Draw a texture with extended parameters
  void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint)
  {
@@ -1241,7 +1226,7 @@ index 1e88b64..a38ab43 100644
      Vector2 origin = { 0.0f, 0.0f };
  
      DrawTexturePro(texture, source, dest, origin, 0.0f, tint);
-@@ -4534,7 +4534,7 @@ void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color
+@@ -4548,7 +4548,7 @@ void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color
  
  // Draw a part of a texture (defined by a rectangle) with 'pro' parameters
  // NOTE: origin is relative to destination rectangle size
@@ -1250,7 +1235,7 @@ index 1e88b64..a38ab43 100644
  {
      // Check if texture is valid
      if (texture.id > 0)
-@@ -4656,7 +4656,7 @@ void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2
+@@ -4670,7 +4670,7 @@ void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2
  }
  
  // Draws a texture (or part of it) that stretches or shrinks nicely using n-patch info
@@ -1259,19 +1244,6 @@ index 1e88b64..a38ab43 100644
  {
      if (texture.id > 0)
      {
-diff --git a/tools/raylib_gen.nim b/tools/raylib_gen.nim
-index b57f9c7..6ac7e38 100644
---- a/tools/raylib_gen.nim
-+++ b/tools/raylib_gen.nim
-@@ -132,7 +132,7 @@ when defined(android):
-   {.compile: AndroidNdk.Path / Path"sources/android/native_app_glue/android_native_app_glue.c".}
- 
- const
--  RaylibVersion* = (5, 1, 0)
-+  RaylibVersion* = (5, 5, 0)
- 
-   # Taken from raylib/src/config.h
-   MaxShaderLocations* = 32 ## Maximum number of shader locations supported
 -- 
 2.45.2
 
