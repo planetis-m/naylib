@@ -85,7 +85,7 @@ that it may not be the perfect fit for everyone. Here are some noteworthy altern
 
 - [NimForUE](https://github.com/jmgomez/NimForUE): Plugin for Unreal Engine 5
 - [sokol-nim](https://github.com/floooh/sokol-nim): Auto-generated bindings for sokol headers
-- [godot-nim (4.x)](https://github.com/panno8M/godot-nim): Godot 4.x bindings
+- [gdextcore](https://github.com/godot-nim/gdextcore): Godot 4.x bindings
 - [godot-nim](https://github.com/pragmagic/godot-nim): Godot 3 bindings
 - [nico](https://github.com/ftsf/nico): Pico-8 inspired game framework
 - [p5nim](https://github.com/pietroppeter/p5nim): Processing library
