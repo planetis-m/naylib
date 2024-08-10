@@ -859,7 +859,7 @@ const char *GetClipboardText(void)
 }
 
 // Show mouse cursor
-void rlShowCursor(void)
+void ShowCursor(void)
 {
     SDL_ShowCursor(SDL_ENABLE);
 
