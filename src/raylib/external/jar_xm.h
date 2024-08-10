@@ -2373,23 +2373,23 @@ void jar_xm_debug(jar_xm_context_t *ctx) {
     int x = 0, y = 0;
 
     // DEBUG VARIABLES
-    y += size; DrawText(TextFormat("CUR TBL = %i", ctx->current_table_index),       x, y, size, WHITE);
-    y += size; DrawText(TextFormat("CUR PAT = %i", ctx->module.pattern_table[ctx->current_table_index]),   x, y, size, WHITE);
-    y += size; DrawText(TextFormat("POS JMP = %d", ctx->position_jump),             x, y, size, WHITE);
-    y += size; DrawText(TextFormat("JMP DST = %i", ctx->jump_dest),                 x, y, size, WHITE);
-    y += size; DrawText(TextFormat("PTN BRK = %d", ctx->pattern_break),             x, y, size, WHITE);
-    y += size; DrawText(TextFormat("CUR ROW = %i", ctx->current_row),               x, y, size, WHITE);
-    y += size; DrawText(TextFormat("JMP ROW = %i", ctx->jump_row),                  x, y, size, WHITE);
-    y += size; DrawText(TextFormat("ROW LCT = %i", ctx->row_loop_count),            x, y, size, WHITE);
-    y += size; DrawText(TextFormat("LCT     = %i", ctx->loop_count),                x, y, size, WHITE);
-    y += size; DrawText(TextFormat("MAX LCT = %i", ctx->max_loop_count),            x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("CUR TBL = %i", ctx->current_table_index),       x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("CUR PAT = %i", ctx->module.pattern_table[ctx->current_table_index]),   x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("POS JMP = %d", ctx->position_jump),             x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("JMP DST = %i", ctx->jump_dest),                 x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("PTN BRK = %d", ctx->pattern_break),             x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("CUR ROW = %i", ctx->current_row),               x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("JMP ROW = %i", ctx->jump_row),                  x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("ROW LCT = %i", ctx->row_loop_count),            x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("LCT     = %i", ctx->loop_count),                x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("MAX LCT = %i", ctx->max_loop_count),            x, y, size, WHITE);
     x = size * 12; y = 0;
 
-    y += size; DrawText(TextFormat("CUR TCK = %i", ctx->current_tick),              x, y, size, WHITE);
-    y += size; DrawText(TextFormat("XTR TCK = %i", ctx->extra_ticks),               x, y, size, WHITE);
-    y += size; DrawText(TextFormat("TCK/ROW = %i", ctx->tempo),                     x, y, size, ORANGE);
-    y += size; DrawText(TextFormat("SPL TCK = %f", ctx->remaining_samples_in_tick), x, y, size, WHITE);
-    y += size; DrawText(TextFormat("GEN SPL = %i", ctx->generated_samples),         x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("CUR TCK = %i", ctx->current_tick),              x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("XTR TCK = %i", ctx->extra_ticks),               x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("TCK/ROW = %i", ctx->tempo),                     x, y, size, ORANGE);
+    y += size; rlDrawText(TextFormat("SPL TCK = %f", ctx->remaining_samples_in_tick), x, y, size, WHITE);
+    y += size; rlDrawText(TextFormat("GEN SPL = %i", ctx->generated_samples),         x, y, size, WHITE);
     y += size * 7;
 
     x = 0;
@@ -2404,13 +2404,13 @@ void jar_xm_debug(jar_xm_context_t *ctx) {
             };
         };
         if (i == ctx->current_table_index) {
-//            DrawText(TextFormat("%02X", ctx->current_tick), i * size * 2, y - size, size, WHITE);
+//            rlDrawText(TextFormat("%02X", ctx->current_tick), i * size * 2, y - size, size, WHITE);
             DrawRectangle(i * size * 2, y, size * 2, size, RED);
-            DrawText(TextFormat("%02X", ctx->current_row), i * size * 2, y - size, size, YELLOW);
+            rlDrawText(TextFormat("%02X", ctx->current_row), i * size * 2, y - size, size, YELLOW);
         } else {
             DrawRectangle(i * size * 2, y, size * 2, size, ORANGE);
         };
-        DrawText(TextFormat("%02X", ctx->module.pattern_table[i]), i * size * 2, y, size, WHITE);
+        rlDrawText(TextFormat("%02X", ctx->module.pattern_table[i]), i * size * 2, y, size, WHITE);
     };
     y += size;
 
@@ -2421,10 +2421,10 @@ void jar_xm_debug(jar_xm_context_t *ctx) {
     x += 2 * size;
     for(uint8_t i = 0; i < ctx->module.num_channels; i++) {
         DrawRectangle(x, y, 8 * size, size, PURPLE);
-        DrawText("N", x, y, size, YELLOW);
-        DrawText("I", x + size * 2, y, size, YELLOW);
-        DrawText("V", x + size * 4, y, size, YELLOW);
-        DrawText("FX", x + size * 6, y, size, YELLOW);
+        rlDrawText("N", x, y, size, YELLOW);
+        rlDrawText("I", x + size * 2, y, size, YELLOW);
+        rlDrawText("V", x + size * 4, y, size, YELLOW);
+        rlDrawText("FX", x + size * 6, y, size, YELLOW);
         x += 9 * size;
     };
     x += size;
@@ -2433,7 +2433,7 @@ void jar_xm_debug(jar_xm_context_t *ctx) {
         x = 0;
         if (j >=0 && j < (cur->num_rows)) {
             DrawRectangle(x, y, size * 2, size, BROWN);
-            DrawText(TextFormat("%02X",j), x, y, size, WHITE);
+            rlDrawText(TextFormat("%02X",j), x, y, size, WHITE);
             x += 2 * size;
             for(uint8_t i = 0; i < ctx->module.num_channels; i++) {
                 if (j==(ctx->current_row)) {
@@ -2443,20 +2443,20 @@ void jar_xm_debug(jar_xm_context_t *ctx) {
                 };
                 jar_xm_pattern_slot_t *s = cur->slots + j * ctx->module.num_channels + i;
            //     jar_xm_channel_context_t *ch = ctx->channels + i;
-                if (s->note > 0) {DrawText(TextFormat("%s%s", xm_note_chr(s->note), xm_octave_chr(s->note) ), x, y, size, WHITE);} else {DrawText("...", x, y, size, GRAY);};
+                if (s->note > 0) {rlDrawText(TextFormat("%s%s", xm_note_chr(s->note), xm_octave_chr(s->note) ), x, y, size, WHITE);} else {rlDrawText("...", x, y, size, GRAY);};
                 if (s->instrument > 0) {
-                    DrawText(TextFormat("%02X", s->instrument), x + size * 2, y, size, WHITE);
+                    rlDrawText(TextFormat("%02X", s->instrument), x + size * 2, y, size, WHITE);
                     if (s->volume_column == 0) {
-                        DrawText(TextFormat("%02X", 64), x + size * 4, y, size, YELLOW);
+                        rlDrawText(TextFormat("%02X", 64), x + size * 4, y, size, YELLOW);
                     };
                 } else {
-                    DrawText("..", x + size * 2, y, size, GRAY);
+                    rlDrawText("..", x + size * 2, y, size, GRAY);
                     if (s->volume_column == 0) {
-                        DrawText("..", x + size * 4, y, size, GRAY);
+                        rlDrawText("..", x + size * 4, y, size, GRAY);
                     };
                 };
-                if (s->volume_column > 0) {DrawText(TextFormat("%02X", (s->volume_column - 16)), x + size * 4, y, size, WHITE);};
-                if (s->effect_type > 0 || s->effect_param > 0) {DrawText(TextFormat("%s%02X", xm_effect_chr(s->effect_type), s->effect_param), x + size * 6, y, size, WHITE);};
+                if (s->volume_column > 0) {rlDrawText(TextFormat("%02X", (s->volume_column - 16)), x + size * 4, y, size, WHITE);};
+                if (s->effect_type > 0 || s->effect_param > 0) {rlDrawText(TextFormat("%s%02X", xm_effect_chr(s->effect_type), s->effect_param), x + size * 6, y, size, WHITE);};
                 x += 9 * size;
             };
         };
