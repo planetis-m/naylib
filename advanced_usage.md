@@ -163,6 +163,26 @@ game:
       clearBackground(RayWhite)
 ```
 
+### Handling types without =copy hooks
+
+Some types in naylib, like `Texture`, don't have `=copy` hooks. This prevents direct copying:
+
+```nim
+let texture = loadTexture("resources/example.png")
+let copy = texture  # Error: '=copy' is not available for type <Texture>
+```
+
+To work around this, use references:
+
+```nim
+var texture: ref Texture
+new(texture)
+texture[] = loadTexture("resources/example.png")
+let copy = texture  # This works, copying the reference
+```
+
+Remember that `texture` and `copy` will point to the same object.
+
 ### Raylib Functions to Nim Alternatives
 
 Some raylib functions are not directly wrapped in Naylib because they closely reflect the C API. For these cases, we provide Nim alternatives. Refer to our [Alternatives Table](alternatives_table.rst) for a comprehensive list of equivalent Nim functions.
