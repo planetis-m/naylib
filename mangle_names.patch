@@ -1,6 +1,6 @@
-From 376ff20d46ae4e6c9a2596692f9bb6be46294cb6 Mon Sep 17 00:00:00 2001
+From b4362935d907f16b93eeaa8e27a85f347d9b4bc3 Mon Sep 17 00:00:00 2001
 From: Antonis Geralis <b3lievem@yandex.com>
-Date: Fri, 9 Aug 2024 13:05:31 +0300
+Date: Wed, 21 Aug 2024 20:43:08 +0300
 Subject: [PATCH] mangle names
 
 ---
@@ -221,7 +221,7 @@ index 938f4ed..dbe6f3d 100644
      CORE.Input.Mouse.cursorHidden = false;
  }
 diff --git a/src/raylib/platforms/rcore_web.c b/src/raylib/platforms/rcore_web.c
-index 937e15a..38cfd42 100644
+index ff7a92d..0c68d69 100644
 --- a/src/raylib/platforms/rcore_web.c
 +++ b/src/raylib/platforms/rcore_web.c
 @@ -770,7 +770,7 @@ const char *GetClipboardText(void)
@@ -234,7 +234,7 @@ index 937e15a..38cfd42 100644
      if (CORE.Input.Mouse.cursorHidden)
      {
 diff --git a/src/raylib/raylib.h b/src/raylib/raylib.h
-index 1cf34f0..cb536e9 100644
+index 0759c25..9348bf4 100644
 --- a/src/raylib/raylib.h
 +++ b/src/raylib/raylib.h
 @@ -246,12 +246,12 @@ typedef struct Color {
@@ -308,10 +308,10 @@ index 1cf34f0..cb536e9 100644
 -RLAPI void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color);                 // Draw a color-filled rectangle with pro parameters
 +RLAPI void DrawRectangleRec(rlRectangle rec, Color color);                                                 // Draw a color-filled rectangle
 +RLAPI void DrawRectanglePro(rlRectangle rec, Vector2 origin, float rotation, Color color);                 // Draw a color-filled rectangle with pro parameters
- RLAPI void DrawRectangleGradientV(int posX, int posY, int width, int height, Color color1, Color color2);// Draw a vertical-gradient-filled rectangle
- RLAPI void DrawRectangleGradientH(int posX, int posY, int width, int height, Color color1, Color color2);// Draw a horizontal-gradient-filled rectangle
--RLAPI void DrawRectangleGradientEx(Rectangle rec, Color col1, Color col2, Color col3, Color col4);       // Draw a gradient-filled rectangle with custom vertex colors
-+RLAPI void DrawRectangleGradientEx(rlRectangle rec, Color col1, Color col2, Color col3, Color col4);       // Draw a gradient-filled rectangle with custom vertex colors
+ RLAPI void DrawRectangleGradientV(int posX, int posY, int width, int height, Color top, Color bottom);   // Draw a vertical-gradient-filled rectangle
+ RLAPI void DrawRectangleGradientH(int posX, int posY, int width, int height, Color left, Color right);   // Draw a horizontal-gradient-filled rectangle
+-RLAPI void DrawRectangleGradientEx(Rectangle rec, Color topLeft, Color bottomLeft, Color topRight, Color bottomRight); // Draw a gradient-filled rectangle with custom vertex colors
++RLAPI void DrawRectangleGradientEx(rlRectangle rec, Color topLeft, Color bottomLeft, Color topRight, Color bottomRight); // Draw a gradient-filled rectangle with custom vertex colors
  RLAPI void DrawRectangleLines(int posX, int posY, int width, int height, Color color);                   // Draw rectangle outline
 -RLAPI void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color);                            // Draw rectangle outline with extended parameters
 -RLAPI void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color color);              // Draw rectangle with rounded edges
@@ -460,7 +460,7 @@ index 1cf34f0..cb536e9 100644
  // Mesh management functions
  RLAPI void UploadMesh(Mesh *mesh, bool dynamic);                                            // Upload mesh vertex data in GPU and provide VAO/VBO ids
 diff --git a/src/raylib/rcore.c b/src/raylib/rcore.c
-index 93ae4f3..96355c7 100644
+index e8041ea..b09a9a9 100644
 --- a/src/raylib/rcore.c
 +++ b/src/raylib/rcore.c
 @@ -648,16 +648,16 @@ void InitWindow(int width, int height, const char *title)
@@ -492,7 +492,7 @@ index 93ae4f3..96355c7 100644
      #endif
  #endif
  
-@@ -680,7 +680,7 @@ void InitWindow(int width, int height, const char *title)
+@@ -679,7 +679,7 @@ void InitWindow(int width, int height, const char *title)
  }
  
  // Close window and unload OpenGL context
@@ -501,7 +501,7 @@ index 93ae4f3..96355c7 100644
  {
  #if defined(SUPPORT_GIF_RECORDING)
      if (gifRecording)
-@@ -882,7 +882,7 @@ void EndDrawing(void)
+@@ -881,7 +881,7 @@ void EndDrawing(void)
          if ((int)(GetTime()/0.5)%2 == 1)
          {
              DrawCircle(30, CORE.Window.screen.height - 20, 10, MAROON);                 // WARNING: Module required: rshapes
@@ -511,7 +511,7 @@ index 93ae4f3..96355c7 100644
      #endif
  
 diff --git a/src/raylib/rmodels.c b/src/raylib/rmodels.c
-index c1d5676..0e4d121 100644
+index 8afa3df..43ec1d6 100644
 --- a/src/raylib/rmodels.c
 +++ b/src/raylib/rmodels.c
 @@ -3634,13 +3634,13 @@ void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float
@@ -539,7 +539,7 @@ index c1d5676..0e4d121 100644
  {
      // Compute the up vector and the right vector
      Matrix matView = MatrixLookAt(camera.position, camera.target, camera.up);
-@@ -4844,7 +4844,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
+@@ -4850,7 +4850,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
          }
          else     // Check if image is provided as image path
          {
@@ -549,15 +549,15 @@ index c1d5676..0e4d121 100644
      }
      else if (cgltfImage->buffer_view->buffer->data != NULL)    // Check if image is provided as data buffer
 diff --git a/src/raylib/rshapes.c b/src/raylib/rshapes.c
-index 8933970..f8c1b22 100644
+index 66dfbf3..08ac58e 100644
 --- a/src/raylib/rshapes.c
 +++ b/src/raylib/rshapes.c
 @@ -80,7 +80,7 @@
  // Global Variables Definition
  //----------------------------------------------------------------------------------
- Texture2D texShapes = { 1, 1, 1, 1, 7 };                // Texture used on shapes drawing (white pixel loaded by rlgl)
--Rectangle texShapesRec = { 0.0f, 0.0f, 1.0f, 1.0f };    // Texture source rectangle used on shapes drawing
-+rlRectangle texShapesRec = { 0.0f, 0.0f, 1.0f, 1.0f };    // Texture source rectangle used on shapes drawing
+ static Texture2D texShapes = { 1, 1, 1, 1, 7 };                // Texture used on shapes drawing (white pixel loaded by rlgl)
+-static Rectangle texShapesRec = { 0.0f, 0.0f, 1.0f, 1.0f };    // Texture source rectangle used on shapes drawing
++static rlRectangle texShapesRec = { 0.0f, 0.0f, 1.0f, 1.0f };    // Texture source rectangle used on shapes drawing
  
  //----------------------------------------------------------------------------------
  // Module specific Functions Declaration
@@ -606,7 +606,7 @@ index 8933970..f8c1b22 100644
  
      rlBegin(RL_QUADS);
  
-@@ -541,7 +541,7 @@ void DrawRing(Vector2 center, float innerRadius, float outerRadius, float startA
+@@ -540,7 +540,7 @@ void DrawRing(Vector2 center, float innerRadius, float outerRadius, float startA
  
  #if defined(SUPPORT_QUADS_DRAW_MODE)
      rlSetTexture(GetShapesTexture().id);
@@ -615,7 +615,7 @@ index 8933970..f8c1b22 100644
  
      rlBegin(RL_QUADS);
          for (int i = 0; i < segments; i++)
-@@ -670,17 +670,17 @@ void DrawRectangle(int posX, int posY, int width, int height, Color color)
+@@ -669,17 +669,17 @@ void DrawRectangle(int posX, int posY, int width, int height, Color color)
  // NOTE: On OpenGL 3.3 and ES2 we use QUADS to avoid drawing order issues
  void DrawRectangleV(Vector2 position, Vector2 size, Color color)
  {
@@ -636,7 +636,7 @@ index 8933970..f8c1b22 100644
  {
      Vector2 topLeft = { 0 };
      Vector2 topRight = { 0 };
-@@ -721,7 +721,7 @@ void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color
+@@ -720,7 +720,7 @@ void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color
  
  #if defined(SUPPORT_QUADS_DRAW_MODE)
      rlSetTexture(GetShapesTexture().id);
@@ -645,26 +645,24 @@ index 8933970..f8c1b22 100644
  
      rlBegin(RL_QUADS);
  
-@@ -764,22 +764,22 @@ void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color
- // NOTE: Gradient goes from bottom (color1) to top (color2)
- void DrawRectangleGradientV(int posX, int posY, int width, int height, Color color1, Color color2)
+@@ -762,20 +762,20 @@ void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color
+ // Draw a vertical-gradient-filled rectangle
+ void DrawRectangleGradientV(int posX, int posY, int width, int height, Color top, Color bottom)
  {
--    DrawRectangleGradientEx((Rectangle){ (float)posX, (float)posY, (float)width, (float)height }, color1, color2, color2, color1);
-+    DrawRectangleGradientEx((rlRectangle){ (float)posX, (float)posY, (float)width, (float)height }, color1, color2, color2, color1);
+-    DrawRectangleGradientEx((Rectangle){ (float)posX, (float)posY, (float)width, (float)height }, top, bottom, bottom, top);
++    DrawRectangleGradientEx((rlRectangle){ (float)posX, (float)posY, (float)width, (float)height }, top, bottom, bottom, top);
  }
  
  // Draw a horizontal-gradient-filled rectangle
- // NOTE: Gradient goes from bottom (color1) to top (color2)
- void DrawRectangleGradientH(int posX, int posY, int width, int height, Color color1, Color color2)
+ void DrawRectangleGradientH(int posX, int posY, int width, int height, Color left, Color right)
  {
--    DrawRectangleGradientEx((Rectangle){ (float)posX, (float)posY, (float)width, (float)height }, color1, color1, color2, color2);
-+    DrawRectangleGradientEx((rlRectangle){ (float)posX, (float)posY, (float)width, (float)height }, color1, color1, color2, color2);
+-    DrawRectangleGradientEx((Rectangle){ (float)posX, (float)posY, (float)width, (float)height }, left, left, right, right);
++    DrawRectangleGradientEx((rlRectangle){ (float)posX, (float)posY, (float)width, (float)height }, left, left, right, right);
  }
  
  // Draw a gradient-filled rectangle
- // NOTE: Colors refer to corners, starting at top-lef corner and counter-clockwise
--void DrawRectangleGradientEx(Rectangle rec, Color col1, Color col2, Color col3, Color col4)
-+void DrawRectangleGradientEx(rlRectangle rec, Color col1, Color col2, Color col3, Color col4)
+-void DrawRectangleGradientEx(Rectangle rec, Color topLeft, Color bottomLeft, Color topRight, Color bottomRight)
++void DrawRectangleGradientEx(rlRectangle rec, Color topLeft, Color bottomLeft, Color topRight, Color bottomRight)
  {
      rlSetTexture(GetShapesTexture().id);
 -    Rectangle shapeRect = GetShapesTextureRectangle();
@@ -672,7 +670,7 @@ index 8933970..f8c1b22 100644
  
      rlBegin(RL_QUADS);
          rlNormal3f(0.0f, 0.0f, 1.0f);
-@@ -828,7 +828,7 @@ void DrawRectangleLines(int posX, int posY, int width, int height, Color color)
+@@ -824,7 +824,7 @@ void DrawRectangleLines(int posX, int posY, int width, int height, Color color)
  }
  
  // Draw rectangle outline with extended parameters
@@ -681,7 +679,7 @@ index 8933970..f8c1b22 100644
  {
      if ((lineThick > rec.width) || (lineThick > rec.height))
      {
-@@ -847,10 +847,10 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
+@@ -843,10 +843,10 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
      //   BBBBBBBB
      //
  
@@ -696,7 +694,7 @@ index 8933970..f8c1b22 100644
  
      DrawRectangleRec(top, color);
      DrawRectangleRec(bottom, color);
-@@ -859,7 +859,7 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
+@@ -855,7 +855,7 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
  }
  
  // Draw rectangle with rounded edges
@@ -705,7 +703,7 @@ index 8933970..f8c1b22 100644
  {
      // Not a rounded rectangle
      if ((roundness <= 0.0f) || (rec.width < 1) || (rec.height < 1 ))
-@@ -915,7 +915,7 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
+@@ -911,7 +911,7 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
  
  #if defined(SUPPORT_QUADS_DRAW_MODE)
      rlSetTexture(GetShapesTexture().id);
@@ -714,7 +712,7 @@ index 8933970..f8c1b22 100644
  
      rlBegin(RL_QUADS);
          // Draw all the 4 corners: [1] Upper Left Corner, [3] Upper Right Corner, [5] Lower Right Corner, [7] Lower Left Corner
-@@ -1086,20 +1086,20 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
+@@ -1082,20 +1082,20 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
  
  // Draw rectangle with rounded edges
  // TODO: This function should be refactored to use RL_LINES, for consistency with other Draw*Lines()
@@ -738,7 +736,7 @@ index 8933970..f8c1b22 100644
          return;
      }
  
-@@ -1158,7 +1158,7 @@ void DrawRectangleRoundedLinesEx(Rectangle rec, float roundness, int segments, f
+@@ -1154,7 +1154,7 @@ void DrawRectangleRoundedLinesEx(Rectangle rec, float roundness, int segments, f
      {
  #if defined(SUPPORT_QUADS_DRAW_MODE)
          rlSetTexture(GetShapesTexture().id);
@@ -747,7 +745,7 @@ index 8933970..f8c1b22 100644
  
          rlBegin(RL_QUADS);
  
-@@ -1334,7 +1334,7 @@ void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color)
+@@ -1330,7 +1330,7 @@ void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color)
  {
  #if defined(SUPPORT_QUADS_DRAW_MODE)
      rlSetTexture(GetShapesTexture().id);
@@ -756,7 +754,7 @@ index 8933970..f8c1b22 100644
  
      rlBegin(RL_QUADS);
          rlColor4ub(color.r, color.g, color.b, color.a);
-@@ -1388,7 +1388,7 @@ void DrawTriangleFan(const Vector2 *points, int pointCount, Color color)
+@@ -1384,7 +1384,7 @@ void DrawTriangleFan(const Vector2 *points, int pointCount, Color color)
      if (pointCount >= 3)
      {
          rlSetTexture(GetShapesTexture().id);
@@ -765,7 +763,7 @@ index 8933970..f8c1b22 100644
  
          rlBegin(RL_QUADS);
              rlColor4ub(color.r, color.g, color.b, color.a);
-@@ -1449,7 +1449,7 @@ void DrawPoly(Vector2 center, int sides, float radius, float rotation, Color col
+@@ -1445,7 +1445,7 @@ void DrawPoly(Vector2 center, int sides, float radius, float rotation, Color col
  
  #if defined(SUPPORT_QUADS_DRAW_MODE)
      rlSetTexture(GetShapesTexture().id);
@@ -774,7 +772,7 @@ index 8933970..f8c1b22 100644
  
      rlBegin(RL_QUADS);
          for (int i = 0; i < sides; i++)
-@@ -1518,7 +1518,7 @@ void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, fl
+@@ -1514,7 +1514,7 @@ void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, fl
  
  #if defined(SUPPORT_QUADS_DRAW_MODE)
      rlSetTexture(GetShapesTexture().id);
@@ -783,7 +781,7 @@ index 8933970..f8c1b22 100644
  
      rlBegin(RL_QUADS);
          for (int i = 0; i < sides; i++)
-@@ -2158,7 +2158,7 @@ Vector2 GetSplinePointBezierCubic(Vector2 startPos, Vector2 startControlPos, Vec
+@@ -2154,7 +2154,7 @@ Vector2 GetSplinePointBezierCubic(Vector2 startPos, Vector2 startControlPos, Vec
  //----------------------------------------------------------------------------------
  
  // Check if point is inside rectangle
@@ -792,7 +790,7 @@ index 8933970..f8c1b22 100644
  {
      bool collision = false;
  
-@@ -2219,7 +2219,7 @@ bool CheckCollisionPointPoly(Vector2 point, const Vector2 *points, int pointCoun
+@@ -2215,7 +2215,7 @@ bool CheckCollisionPointPoly(Vector2 point, const Vector2 *points, int pointCoun
  }
  
  // Check collision between two rectangles
@@ -801,7 +799,7 @@ index 8933970..f8c1b22 100644
  {
      bool collision = false;
  
-@@ -2247,7 +2247,7 @@ bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, floa
+@@ -2243,7 +2243,7 @@ bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, floa
  
  // Check collision between circle and rectangle
  // NOTE: Reviewed version to take into account corner limit case
@@ -810,7 +808,7 @@ index 8933970..f8c1b22 100644
  {
      bool collision = false;
  
-@@ -2345,9 +2345,9 @@ RLAPI bool CheckCollisionCircleLine(Vector2 center, float radius, Vector2 p1, Ve
+@@ -2341,9 +2341,9 @@ RLAPI bool CheckCollisionCircleLine(Vector2 center, float radius, Vector2 p1, Ve
  }
  
  // Get collision rectangle for two rectangles collision
@@ -823,7 +821,7 @@ index 8933970..f8c1b22 100644
      float left = (rec1.x > rec2.x)? rec1.x : rec2.x;
      float right1 = rec1.x + rec1.width;
 diff --git a/src/raylib/rtext.c b/src/raylib/rtext.c
-index 755b15e..7c08d28 100644
+index 8c1dc3c..49e34ab 100644
 --- a/src/raylib/rtext.c
 +++ b/src/raylib/rtext.c
 @@ -7,8 +7,8 @@
@@ -981,7 +979,7 @@ index 755b15e..7c08d28 100644
  
      rec = font.recs[GetGlyphIndex(font, codepoint)];
  
-@@ -2214,7 +2214,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2213,7 +2213,7 @@ static Font LoadBMFont(const char *fileName)
  
      for (int i = 0; i < pageCount; i++)
      {
@@ -990,7 +988,7 @@ index 755b15e..7c08d28 100644
  
          if (imFonts[i].format == PIXELFORMAT_UNCOMPRESSED_GRAYSCALE)
          {
-@@ -2250,8 +2250,8 @@ static Font LoadBMFont(const char *fileName)
+@@ -2249,8 +2249,8 @@ static Font LoadBMFont(const char *fileName)
  
          for (int i = 1; i < pageCount; i++)
          {
@@ -1001,7 +999,7 @@ index 755b15e..7c08d28 100644
              ImageDraw(&fullFont, imFonts[i], srcRec, destRec, WHITE);
          }
      }
-@@ -2265,7 +2265,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2264,7 +2264,7 @@ static Font LoadBMFont(const char *fileName)
      font.glyphCount = glyphCount;
      font.glyphPadding = 0;
      font.glyphs = (GlyphInfo *)RL_MALLOC(glyphCount*sizeof(GlyphInfo));
@@ -1010,7 +1008,7 @@ index 755b15e..7c08d28 100644
  
      int charId, charX, charY, charWidth, charHeight, charOffsetX, charOffsetY, charAdvanceX, pageID;
  
-@@ -2279,7 +2279,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2278,7 +2278,7 @@ static Font LoadBMFont(const char *fileName)
          if (readVars == 9)  // Make sure all char data has been properly read
          {
              // Get character rectangle in the font atlas texture
@@ -1020,7 +1018,7 @@ index 755b15e..7c08d28 100644
              // Save data properly in sprite font
              font.glyphs[i].value = charId;
 diff --git a/src/raylib/rtextures.c b/src/raylib/rtextures.c
-index 5fa01c9..c426534 100644
+index f2faa18..ea4f217 100644
 --- a/src/raylib/rtextures.c
 +++ b/src/raylib/rtextures.c
 @@ -271,7 +271,7 @@ static Vector4 *LoadImageDataNormalized(Image image);       // Load pixel data f

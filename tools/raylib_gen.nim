@@ -861,12 +861,14 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
       else: withSideEffect.add fnc
 
     # Generate procs
-    lit "\n{.push callconv: cdecl, header: \"raylib.h\", sideEffect.}"
+    lit "\n{.push callconv: cdecl, header: \"raylib.h\".}"
+    lit "\n{.push sideEffect.}"
     generateProcs withSideEffect
     lit "\n{.pop.}\n"
 
-    lit "\n{.push callconv: cdecl, header: \"raylib.h\", noSideEffect.}"
+    lit "\n{.push noSideEffect.}"
     generateProcs withoutSideEffect
+    lit "\n{.pop.}\n"
     lit "\n{.pop.}\n"
 
     lit readFile("raylib_types.nim")

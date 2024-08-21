@@ -787,7 +787,8 @@ const
   Magenta* = Color(r: 255, g: 0, b: 255, a: 255)
   RayWhite* = Color(r: 245, g: 245, b: 245, a: 255)
 
-{.push callconv: cdecl, header: "raylib.h", sideEffect.}
+{.push callconv: cdecl, header: "raylib.h".}
+{.push sideEffect.}
 proc initWindowPriv(width: int32, height: int32, title: cstring) {.importc: "InitWindow".}
 proc closeWindow*() {.importc: "rlCloseWindow".}
   ## Close window and unload OpenGL context
@@ -1116,7 +1117,7 @@ proc drawCircleSector*(center: Vector2, radius: float32, startAngle: float32, en
   ## Draw a piece of a circle
 proc drawCircleSectorLines*(center: Vector2, radius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawCircleSectorLines".}
   ## Draw circle sector outline
-proc drawCircleGradient*(centerX: int32, centerY: int32, radius: float32, color1: Color, color2: Color) {.importc: "DrawCircleGradient".}
+proc drawCircleGradient*(centerX: int32, centerY: int32, radius: float32, inner: Color, outer: Color) {.importc: "DrawCircleGradient".}
   ## Draw a gradient-filled circle
 proc drawCircle*(center: Vector2, radius: float32, color: Color) {.importc: "DrawCircleV".}
   ## Draw a color-filled circle (Vector version)
@@ -1140,11 +1141,11 @@ proc drawRectangle*(rec: Rectangle, color: Color) {.importc: "DrawRectangleRec".
   ## Draw a color-filled rectangle
 proc drawRectangle*(rec: Rectangle, origin: Vector2, rotation: float32, color: Color) {.importc: "DrawRectanglePro".}
   ## Draw a color-filled rectangle with pro parameters
-proc drawRectangleGradientV*(posX: int32, posY: int32, width: int32, height: int32, color1: Color, color2: Color) {.importc: "DrawRectangleGradientV".}
+proc drawRectangleGradientV*(posX: int32, posY: int32, width: int32, height: int32, top: Color, bottom: Color) {.importc: "DrawRectangleGradientV".}
   ## Draw a vertical-gradient-filled rectangle
-proc drawRectangleGradientH*(posX: int32, posY: int32, width: int32, height: int32, color1: Color, color2: Color) {.importc: "DrawRectangleGradientH".}
+proc drawRectangleGradientH*(posX: int32, posY: int32, width: int32, height: int32, left: Color, right: Color) {.importc: "DrawRectangleGradientH".}
   ## Draw a horizontal-gradient-filled rectangle
-proc drawRectangleGradient*(rec: Rectangle, col1: Color, col2: Color, col3: Color, col4: Color) {.importc: "DrawRectangleGradientEx".}
+proc drawRectangleGradient*(rec: Rectangle, topLeft: Color, bottomLeft: Color, topRight: Color, bottomRight: Color) {.importc: "DrawRectangleGradientEx".}
   ## Draw a gradient-filled rectangle with custom vertex colors
 proc drawRectangleLines*(posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "DrawRectangleLines".}
   ## Draw rectangle outline
@@ -1475,7 +1476,7 @@ proc detachAudioMixedProcessor*(processor: AudioCallback) {.importc: "DetachAudi
   ## Detach audio stream processor from the entire audio pipeline
 {.pop.}
 
-{.push callconv: cdecl, header: "raylib.h", noSideEffect.}
+{.push noSideEffect.}
 proc isShaderReady*(shader: Shader): bool {.importc: "IsShaderReady".}
   ## Check if a shader is ready
 proc getScreenToWorldRay*(position: Vector2, camera: Camera): Ray {.importc: "GetScreenToWorldRay".}
@@ -1709,6 +1710,8 @@ proc isAudioStreamReady*(stream: AudioStream): bool {.importc: "IsAudioStreamRea
   ## Checks if an audio stream is ready
 proc isAudioStreamPlaying*(stream: AudioStream): bool {.importc: "IsAudioStreamPlaying".}
   ## Check if audio stream is playing
+{.pop.}
+
 {.pop.}
 
 type
