@@ -868,7 +868,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
 
     lit "\n{.push noSideEffect.}"
     generateProcs withoutSideEffect
-    lit "\n{.pop.}\n"
+    lit "\n{.pop.}"
     lit "\n{.pop.}\n"
 
     lit readFile("raylib_types.nim")

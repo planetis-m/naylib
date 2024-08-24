@@ -2730,7 +2730,7 @@
     },
     {
       "name": "rlDisableWireMode",
-      "description": "Disable wire mode ( and point ) maybe rename",
+      "description": "Disable wire (and point) mode",
       "returnType": "void"
     },
     {

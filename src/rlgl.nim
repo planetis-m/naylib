@@ -339,7 +339,7 @@ proc enableWireMode*() {.importc: "rlEnableWireMode".}
 proc enablePointMode*() {.importc: "rlEnablePointMode".}
   ## Enable point mode
 proc disableWireMode*() {.importc: "rlDisableWireMode".}
-  ## Disable wire mode ( and point ) maybe rename
+  ## Disable wire (and point) mode
 proc setLineWidth*(width: float32) {.importc: "rlSetLineWidth".}
   ## Set the line drawing width
 proc getLineWidth*(): float32 {.importc: "rlGetLineWidth".}

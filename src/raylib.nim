@@ -1325,6 +1325,10 @@ proc drawModelWires*(model: Model, position: Vector3, scale: float32, tint: Colo
   ## Draw a model wires (with texture if set)
 proc drawModelWires*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelWiresEx".}
   ## Draw a model wires (with texture if set) with extended parameters
+proc drawModelPoints*(model: Model, position: Vector3, scale: float32, tint: Color) {.importc: "DrawModelPoints".}
+  ## Draw a model as points
+proc drawModelPoints*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelPointsEx".}
+  ## Draw a model as points with extended parameters
 proc drawBoundingBox*(box: BoundingBox, color: Color) {.importc: "DrawBoundingBox".}
   ## Draw bounding box (wires)
 proc drawBillboard*(camera: Camera, texture: Texture2D, position: Vector3, scale: float32, tint: Color) {.importc: "DrawBillboard".}
@@ -1711,7 +1715,6 @@ proc isAudioStreamReady*(stream: AudioStream): bool {.importc: "IsAudioStreamRea
 proc isAudioStreamPlaying*(stream: AudioStream): bool {.importc: "IsAudioStreamPlaying".}
   ## Check if audio stream is playing
 {.pop.}
-
 {.pop.}
 
 type
