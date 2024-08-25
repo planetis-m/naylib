@@ -1,6 +1,6 @@
-From 47d254ed634bf12c26ae16a4454726dfb297d58a Mon Sep 17 00:00:00 2001
+From 767963da3ddc70d4cb52b45c2603054e765c43d9 Mon Sep 17 00:00:00 2001
 From: Antonis Geralis <b3lievem@yandex.com>
-Date: Sat, 24 Aug 2024 21:25:51 +0300
+Date: Sun, 25 Aug 2024 23:25:51 +0300
 Subject: [PATCH] mangle names
 
 ---
@@ -131,7 +131,7 @@ index b5e80e4..5459410 100644
              };
          };
 diff --git a/src/raylib/platforms/rcore_android.c b/src/raylib/platforms/rcore_android.c
-index 7a21620..4db8f77 100644
+index 55706c5..4eb10b2 100644
 --- a/src/raylib/platforms/rcore_android.c
 +++ b/src/raylib/platforms/rcore_android.c
 @@ -516,7 +516,7 @@ const char *GetClipboardText(void)
@@ -143,7 +143,7 @@ index 7a21620..4db8f77 100644
  {
      CORE.Input.Mouse.cursorHidden = false;
  }
-@@ -997,16 +997,16 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
+@@ -1004,16 +1004,16 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
                      #if defined(SUPPORT_MODULE_RSHAPES)
                      // Set font white rectangle for shapes drawing, so shapes and text can be batched together
                      // WARNING: rshapes module is required, if not available, default internal white rectangle is used
@@ -163,7 +163,7 @@ index 7a21620..4db8f77 100644
                      }
                      #endif
                  #else
-@@ -1014,7 +1014,7 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
+@@ -1021,7 +1021,7 @@ static void AndroidCommandCallback(struct android_app *app, int32_t cmd)
                      // Set default texture and rectangle to be used for shapes drawing
                      // NOTE: rlgl default texture is a 1x1 pixel UNCOMPRESSED_R8G8B8A8
                      Texture2D texture = { rlGetTextureIdDefault(), 1, 1, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
@@ -234,7 +234,7 @@ index ff7a92d..0c68d69 100644
      if (CORE.Input.Mouse.cursorHidden)
      {
 diff --git a/src/raylib/raylib.h b/src/raylib/raylib.h
-index f51a444..b77cb53 100644
+index 30ba8bd..0c9e62d 100644
 --- a/src/raylib/raylib.h
 +++ b/src/raylib/raylib.h
 @@ -246,12 +246,12 @@ typedef struct Color {
@@ -500,10 +500,10 @@ index 972d586..a38318a 100644
      #endif
  
 diff --git a/src/raylib/rmodels.c b/src/raylib/rmodels.c
-index 966a866..66464ac 100644
+index 5fb5124..d255ce9 100644
 --- a/src/raylib/rmodels.c
 +++ b/src/raylib/rmodels.c
-@@ -3658,13 +3658,13 @@ void DrawModelPointsEx(Model model, Vector3 position, Vector3 rotationAxis, floa
+@@ -3660,13 +3660,13 @@ void DrawModelPointsEx(Model model, Vector3 position, Vector3 rotationAxis, floa
  // Draw a billboard
  void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float scale, Color tint)
  {
@@ -519,7 +519,7 @@ index 966a866..66464ac 100644
  {
      // NOTE: Billboard locked on axis-Y
      Vector3 up = { 0.0f, 1.0f, 0.0f };
-@@ -3673,7 +3673,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector
+@@ -3675,7 +3675,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector
  }
  
  // Draw a billboard with additional parameters
@@ -528,7 +528,7 @@ index 966a866..66464ac 100644
  {
      // Compute the up vector and the right vector
      Matrix matView = MatrixLookAt(camera.position, camera.target, camera.up);
-@@ -4874,7 +4874,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
+@@ -4982,7 +4982,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
          }
          else     // Check if image is provided as image path
          {
@@ -810,7 +810,7 @@ index 66dfbf3..08ac58e 100644
      float left = (rec1.x > rec2.x)? rec1.x : rec2.x;
      float right1 = rec1.x + rec1.width;
 diff --git a/src/raylib/rtext.c b/src/raylib/rtext.c
-index 4f1be2c..a5e6383 100644
+index 34b6fce..83d3f95 100644
 --- a/src/raylib/rtext.c
 +++ b/src/raylib/rtext.c
 @@ -7,8 +7,8 @@
@@ -860,7 +860,7 @@ index 4f1be2c..a5e6383 100644
  
      for (int i = 0; i < font.glyphCount; i++)
      {
-@@ -734,7 +734,7 @@ GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSiz
+@@ -736,7 +736,7 @@ GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSiz
  // Generate image font atlas using chars info
  // NOTE: Packing method: 0-Default, 1-Skyline
  #if defined(SUPPORT_FILEFORMAT_TTF) || defined(SUPPORT_FILEFORMAT_BDF)
@@ -869,7 +869,7 @@ index 4f1be2c..a5e6383 100644
  {
      Image atlas = { 0 };
  
-@@ -750,7 +750,7 @@ Image GenImageFontAtlas(const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyp
+@@ -752,7 +752,7 @@ Image GenImageFontAtlas(const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyp
      glyphCount = (glyphCount > 0)? glyphCount : 95;
  
      // NOTE: Rectangles memory is loaded here!
@@ -878,7 +878,7 @@ index 4f1be2c..a5e6383 100644
  
      // Calculate image size based on total glyph width and glyph row count
      int totalWidth = 0;
-@@ -1034,7 +1034,7 @@ bool ExportFontAsCode(Font font, const char *fileName)
+@@ -1036,7 +1036,7 @@ bool ExportFontAsCode(Font font, const char *fileName)
  
      // Save font recs data
      byteCount += sprintf(txtData + byteCount, "// Font characters rectangles data\n");
@@ -887,7 +887,7 @@ index 4f1be2c..a5e6383 100644
      for (int i = 0; i < font.glyphCount; i++)
      {
          byteCount += sprintf(txtData + byteCount, "    { %1.0f, %1.0f, %1.0f , %1.0f },\n", font.recs[i].x, font.recs[i].y, font.recs[i].width, font.recs[i].height);
-@@ -1082,8 +1082,8 @@ bool ExportFontAsCode(Font font, const char *fileName)
+@@ -1084,8 +1084,8 @@ bool ExportFontAsCode(Font font, const char *fileName)
  #if defined(SUPPORT_FONT_DATA_COPY)
      byteCount += sprintf(txtData + byteCount, "    // Copy glyph recs data from global fontRecs\n");
      byteCount += sprintf(txtData + byteCount, "    // NOTE: Required to avoid issues if trying to free font\n");
@@ -898,7 +898,7 @@ index 4f1be2c..a5e6383 100644
  
      byteCount += sprintf(txtData + byteCount, "    // Copy font glyph info data from global fontChars\n");
      byteCount += sprintf(txtData + byteCount, "    // NOTE: Required to avoid issues if trying to free font\n");
-@@ -1121,13 +1121,13 @@ void DrawFPS(int posX, int posY)
+@@ -1123,13 +1123,13 @@ void DrawFPS(int posX, int posY)
      if ((fps < 30) && (fps >= 15)) color = ORANGE;  // Warning FPS
      else if (fps < 15) color = RED;             // Low FPS
  
@@ -914,7 +914,7 @@ index 4f1be2c..a5e6383 100644
  {
      // Check if default font has been loaded
      if (GetFontDefault().texture.id != 0)
-@@ -1138,13 +1138,13 @@ void DrawText(const char *text, int posX, int posY, int fontSize, Color color)
+@@ -1140,13 +1140,13 @@ void DrawText(const char *text, int posX, int posY, int fontSize, Color color)
          if (fontSize < defaultFontSize) fontSize = defaultFontSize;
          int spacing = fontSize/defaultFontSize;
  
@@ -930,7 +930,7 @@ index 4f1be2c..a5e6383 100644
  {
      if (font.texture.id == 0) font = GetFontDefault();  // Security check in case of not valid font
  
-@@ -1192,7 +1192,7 @@ void DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin,
+@@ -1194,7 +1194,7 @@ void DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin,
          rlRotatef(rotation, 0.0f, 0.0f, 1.0f);
          rlTranslatef(-origin.x, -origin.y, 0.0f);
  
@@ -939,7 +939,7 @@ index 4f1be2c..a5e6383 100644
  
      rlPopMatrix();
  }
-@@ -1207,14 +1207,14 @@ void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSiz
+@@ -1209,14 +1209,14 @@ void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSiz
  
      // Character destination rectangle on screen
      // NOTE: We consider glyphPadding on drawing
@@ -956,7 +956,7 @@ index 4f1be2c..a5e6383 100644
                           font.recs[index].width + 2.0f*font.glyphPadding, font.recs[index].height + 2.0f*font.glyphPadding };
  
      // Draw the character texture on the screen
-@@ -1375,9 +1375,9 @@ GlyphInfo GetGlyphInfo(Font font, int codepoint)
+@@ -1377,9 +1377,9 @@ GlyphInfo GetGlyphInfo(Font font, int codepoint)
  
  // Get glyph rectangle in font atlas for a codepoint (unicode character)
  // NOTE: If codepoint is not found in the font it fallbacks to '?'
@@ -968,7 +968,7 @@ index 4f1be2c..a5e6383 100644
  
      rec = font.recs[GetGlyphIndex(font, codepoint)];
  
-@@ -2217,7 +2217,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2219,7 +2219,7 @@ static Font LoadBMFont(const char *fileName)
  
      for (int i = 0; i < pageCount; i++)
      {
@@ -977,7 +977,7 @@ index 4f1be2c..a5e6383 100644
  
          if (imFonts[i].format == PIXELFORMAT_UNCOMPRESSED_GRAYSCALE)
          {
-@@ -2253,8 +2253,8 @@ static Font LoadBMFont(const char *fileName)
+@@ -2255,8 +2255,8 @@ static Font LoadBMFont(const char *fileName)
  
          for (int i = 1; i < pageCount; i++)
          {
@@ -988,7 +988,7 @@ index 4f1be2c..a5e6383 100644
              ImageDraw(&fullFont, imFonts[i], srcRec, destRec, WHITE);
          }
      }
-@@ -2268,7 +2268,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2270,7 +2270,7 @@ static Font LoadBMFont(const char *fileName)
      font.glyphCount = glyphCount;
      font.glyphPadding = 0;
      font.glyphs = (GlyphInfo *)RL_MALLOC(glyphCount*sizeof(GlyphInfo));
@@ -997,7 +997,7 @@ index 4f1be2c..a5e6383 100644
  
      int charId, charX, charY, charWidth, charHeight, charOffsetX, charOffsetY, charAdvanceX, pageID;
  
-@@ -2282,7 +2282,7 @@ static Font LoadBMFont(const char *fileName)
+@@ -2284,7 +2284,7 @@ static Font LoadBMFont(const char *fileName)
          if (readVars == 9)  // Make sure all char data has been properly read
          {
              // Get character rectangle in the font atlas texture
