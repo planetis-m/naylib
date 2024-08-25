@@ -80,7 +80,7 @@
 // Global Variables Definition
 //----------------------------------------------------------------------------------
 static Texture2D texShapes = { 1, 1, 1, 1, 7 };                // Texture used on shapes drawing (white pixel loaded by rlgl)
-static rlRectangle texShapesRec = { 0.0f, 0.0f, 1.0f, 1.0f };    // Texture source rectangle used on shapes drawing
+static Rectangle texShapesRec = { 0.0f, 0.0f, 1.0f, 1.0f };    // Texture source rectangle used on shapes drawing
 
 //----------------------------------------------------------------------------------
 // Module specific Functions Declaration
@@ -94,7 +94,7 @@ static float EaseCubicInOut(float t, float b, float c, float d);    // Cubic eas
 // Set texture and rectangle to be used on shapes drawing
 // NOTE: It can be useful when using basic shapes and one single font,
 // defining a font char white rectangle would allow drawing everything in a single draw call
-void SetShapesTexture(Texture2D texture, rlRectangle source)
+void SetShapesTexture(Texture2D texture, Rectangle source)
 {
     // Reset texture to default pixel if required
     // WARNING: Shapes texture should be probably better validated,
@@ -102,7 +102,7 @@ void SetShapesTexture(Texture2D texture, rlRectangle source)
     if ((texture.id == 0) || (source.width == 0) || (source.height == 0))
     {
         texShapes = (Texture2D){ 1, 1, 1, 1, 7 };
-        texShapesRec = (rlRectangle){ 0.0f, 0.0f, 1.0f, 1.0f };
+        texShapesRec = (Rectangle){ 0.0f, 0.0f, 1.0f, 1.0f };
     }
     else
     {
@@ -118,7 +118,7 @@ Texture2D GetShapesTexture(void)
 }
 
 // Get texture source rectangle that is used for shapes drawing
-rlRectangle GetShapesTextureRectangle(void)
+Rectangle GetShapesTextureRectangle(void)
 {
     return texShapesRec;
 }
@@ -134,7 +134,7 @@ void DrawPixelV(Vector2 position, Color color)
 {
 #if defined(SUPPORT_QUADS_DRAW_MODE)
     rlSetTexture(GetShapesTexture().id);
-    rlRectangle shapeRect = GetShapesTextureRectangle();
+    Rectangle shapeRect = GetShapesTextureRectangle();
 
     rlBegin(RL_QUADS);
 
@@ -312,7 +312,7 @@ void DrawCircleSector(Vector2 center, float radius, float startAngle, float endA
 
 #if defined(SUPPORT_QUADS_DRAW_MODE)
     rlSetTexture(GetShapesTexture().id);
-    rlRectangle shapeRect = GetShapesTextureRectangle();
+    Rectangle shapeRect = GetShapesTextureRectangle();
 
     rlBegin(RL_QUADS);
 
@@ -540,7 +540,7 @@ void DrawRing(Vector2 center, float innerRadius, float outerRadius, float startA
 
 #if defined(SUPPORT_QUADS_DRAW_MODE)
     rlSetTexture(GetShapesTexture().id);
-    rlRectangle shapeRect = GetShapesTextureRectangle();
+    Rectangle shapeRect = GetShapesTextureRectangle();
 
     rlBegin(RL_QUADS);
         for (int i = 0; i < segments; i++)
@@ -669,17 +669,17 @@ void DrawRectangle(int posX, int posY, int width, int height, Color color)
 // NOTE: On OpenGL 3.3 and ES2 we use QUADS to avoid drawing order issues
 void DrawRectangleV(Vector2 position, Vector2 size, Color color)
 {
-    DrawRectanglePro((rlRectangle){ position.x, position.y, size.x, size.y }, (Vector2){ 0.0f, 0.0f }, 0.0f, color);
+    DrawRectanglePro((Rectangle){ position.x, position.y, size.x, size.y }, (Vector2){ 0.0f, 0.0f }, 0.0f, color);
 }
 
 // Draw a color-filled rectangle
-void DrawRectangleRec(rlRectangle rec, Color color)
+void DrawRectangleRec(Rectangle rec, Color color)
 {
     DrawRectanglePro(rec, (Vector2){ 0.0f, 0.0f }, 0.0f, color);
 }
 
 // Draw a color-filled rectangle with pro parameters
-void DrawRectanglePro(rlRectangle rec, Vector2 origin, float rotation, Color color)
+void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color)
 {
     Vector2 topLeft = { 0 };
     Vector2 topRight = { 0 };
@@ -720,7 +720,7 @@ void DrawRectanglePro(rlRectangle rec, Vector2 origin, float rotation, Color col
 
 #if defined(SUPPORT_QUADS_DRAW_MODE)
     rlSetTexture(GetShapesTexture().id);
-    rlRectangle shapeRect = GetShapesTextureRectangle();
+    Rectangle shapeRect = GetShapesTextureRectangle();
 
     rlBegin(RL_QUADS);
 
@@ -762,20 +762,20 @@ void DrawRectanglePro(rlRectangle rec, Vector2 origin, float rotation, Color col
 // Draw a vertical-gradient-filled rectangle
 void DrawRectangleGradientV(int posX, int posY, int width, int height, Color top, Color bottom)
 {
-    DrawRectangleGradientEx((rlRectangle){ (float)posX, (float)posY, (float)width, (float)height }, top, bottom, bottom, top);
+    DrawRectangleGradientEx((Rectangle){ (float)posX, (float)posY, (float)width, (float)height }, top, bottom, bottom, top);
 }
 
 // Draw a horizontal-gradient-filled rectangle
 void DrawRectangleGradientH(int posX, int posY, int width, int height, Color left, Color right)
 {
-    DrawRectangleGradientEx((rlRectangle){ (float)posX, (float)posY, (float)width, (float)height }, left, left, right, right);
+    DrawRectangleGradientEx((Rectangle){ (float)posX, (float)posY, (float)width, (float)height }, left, left, right, right);
 }
 
 // Draw a gradient-filled rectangle
-void DrawRectangleGradientEx(rlRectangle rec, Color topLeft, Color bottomLeft, Color topRight, Color bottomRight)
+void DrawRectangleGradientEx(Rectangle rec, Color topLeft, Color bottomLeft, Color topRight, Color bottomRight)
 {
     rlSetTexture(GetShapesTexture().id);
-    rlRectangle shapeRect = GetShapesTextureRectangle();
+    Rectangle shapeRect = GetShapesTextureRectangle();
 
     rlBegin(RL_QUADS);
         rlNormal3f(0.0f, 0.0f, 1.0f);
@@ -824,7 +824,7 @@ void DrawRectangleLines(int posX, int posY, int width, int height, Color color)
 }
 
 // Draw rectangle outline with extended parameters
-void DrawRectangleLinesEx(rlRectangle rec, float lineThick, Color color)
+void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
 {
     if ((lineThick > rec.width) || (lineThick > rec.height))
     {
@@ -843,10 +843,10 @@ void DrawRectangleLinesEx(rlRectangle rec, float lineThick, Color color)
     //   BBBBBBBB
     //
 
-    rlRectangle top = { rec.x, rec.y, rec.width, lineThick };
-    rlRectangle bottom = { rec.x, rec.y - lineThick + rec.height, rec.width, lineThick };
-    rlRectangle left = { rec.x, rec.y + lineThick, lineThick, rec.height - lineThick*2.0f };
-    rlRectangle right = { rec.x - lineThick + rec.width, rec.y + lineThick, lineThick, rec.height - lineThick*2.0f };
+    Rectangle top = { rec.x, rec.y, rec.width, lineThick };
+    Rectangle bottom = { rec.x, rec.y - lineThick + rec.height, rec.width, lineThick };
+    Rectangle left = { rec.x, rec.y + lineThick, lineThick, rec.height - lineThick*2.0f };
+    Rectangle right = { rec.x - lineThick + rec.width, rec.y + lineThick, lineThick, rec.height - lineThick*2.0f };
 
     DrawRectangleRec(top, color);
     DrawRectangleRec(bottom, color);
@@ -855,7 +855,7 @@ void DrawRectangleLinesEx(rlRectangle rec, float lineThick, Color color)
 }
 
 // Draw rectangle with rounded edges
-void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color color)
+void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color color)
 {
     // Not a rounded rectangle
     if ((roundness <= 0.0f) || (rec.width < 1) || (rec.height < 1 ))
@@ -911,7 +911,7 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
 
 #if defined(SUPPORT_QUADS_DRAW_MODE)
     rlSetTexture(GetShapesTexture().id);
-    rlRectangle shapeRect = GetShapesTextureRectangle();
+    Rectangle shapeRect = GetShapesTextureRectangle();
 
     rlBegin(RL_QUADS);
         // Draw all the 4 corners: [1] Upper Left Corner, [3] Upper Right Corner, [5] Lower Right Corner, [7] Lower Left Corner
@@ -1082,20 +1082,20 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
 
 // Draw rectangle with rounded edges
 // TODO: This function should be refactored to use RL_LINES, for consistency with other Draw*Lines()
-void DrawRectangleRoundedLines(rlRectangle rec, float roundness, int segments, Color color)
+void DrawRectangleRoundedLines(Rectangle rec, float roundness, int segments, Color color)
 {
     DrawRectangleRoundedLinesEx(rec, roundness, segments, 1.0f, color);
 }
 
 // Draw rectangle with rounded edges outline
-void DrawRectangleRoundedLinesEx(rlRectangle rec, float roundness, int segments, float lineThick, Color color)
+void DrawRectangleRoundedLinesEx(Rectangle rec, float roundness, int segments, float lineThick, Color color)
 {
     if (lineThick < 0) lineThick = 0;
 
     // Not a rounded rectangle
     if (roundness <= 0.0f)
     {
-        DrawRectangleLinesEx((rlRectangle){rec.x-lineThick, rec.y-lineThick, rec.width+2*lineThick, rec.height+2*lineThick}, lineThick, color);
+        DrawRectangleLinesEx((Rectangle){rec.x-lineThick, rec.y-lineThick, rec.width+2*lineThick, rec.height+2*lineThick}, lineThick, color);
         return;
     }
 
@@ -1154,7 +1154,7 @@ void DrawRectangleRoundedLinesEx(rlRectangle rec, float roundness, int segments,
     {
 #if defined(SUPPORT_QUADS_DRAW_MODE)
         rlSetTexture(GetShapesTexture().id);
-        rlRectangle shapeRect = GetShapesTextureRectangle();
+        Rectangle shapeRect = GetShapesTextureRectangle();
 
         rlBegin(RL_QUADS);
 
@@ -1330,7 +1330,7 @@ void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color)
 {
 #if defined(SUPPORT_QUADS_DRAW_MODE)
     rlSetTexture(GetShapesTexture().id);
-    rlRectangle shapeRect = GetShapesTextureRectangle();
+    Rectangle shapeRect = GetShapesTextureRectangle();
 
     rlBegin(RL_QUADS);
         rlColor4ub(color.r, color.g, color.b, color.a);
@@ -1384,7 +1384,7 @@ void DrawTriangleFan(const Vector2 *points, int pointCount, Color color)
     if (pointCount >= 3)
     {
         rlSetTexture(GetShapesTexture().id);
-        rlRectangle shapeRect = GetShapesTextureRectangle();
+        Rectangle shapeRect = GetShapesTextureRectangle();
 
         rlBegin(RL_QUADS);
             rlColor4ub(color.r, color.g, color.b, color.a);
@@ -1445,7 +1445,7 @@ void DrawPoly(Vector2 center, int sides, float radius, float rotation, Color col
 
 #if defined(SUPPORT_QUADS_DRAW_MODE)
     rlSetTexture(GetShapesTexture().id);
-    rlRectangle shapeRect = GetShapesTextureRectangle();
+    Rectangle shapeRect = GetShapesTextureRectangle();
 
     rlBegin(RL_QUADS);
         for (int i = 0; i < sides; i++)
@@ -1514,7 +1514,7 @@ void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, fl
 
 #if defined(SUPPORT_QUADS_DRAW_MODE)
     rlSetTexture(GetShapesTexture().id);
-    rlRectangle shapeRect = GetShapesTextureRectangle();
+    Rectangle shapeRect = GetShapesTextureRectangle();
 
     rlBegin(RL_QUADS);
         for (int i = 0; i < sides; i++)
@@ -2154,7 +2154,7 @@ Vector2 GetSplinePointBezierCubic(Vector2 startPos, Vector2 startControlPos, Vec
 //----------------------------------------------------------------------------------
 
 // Check if point is inside rectangle
-bool CheckCollisionPointRec(Vector2 point, rlRectangle rec)
+bool CheckCollisionPointRec(Vector2 point, Rectangle rec)
 {
     bool collision = false;
 
@@ -2215,7 +2215,7 @@ bool CheckCollisionPointPoly(Vector2 point, const Vector2 *points, int pointCoun
 }
 
 // Check collision between two rectangles
-bool CheckCollisionRecs(rlRectangle rec1, rlRectangle rec2)
+bool CheckCollisionRecs(Rectangle rec1, Rectangle rec2)
 {
     bool collision = false;
 
@@ -2243,7 +2243,7 @@ bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, floa
 
 // Check collision between circle and rectangle
 // NOTE: Reviewed version to take into account corner limit case
-bool CheckCollisionCircleRec(Vector2 center, float radius, rlRectangle rec)
+bool CheckCollisionCircleRec(Vector2 center, float radius, Rectangle rec)
 {
     bool collision = false;
 
@@ -2341,9 +2341,9 @@ RLAPI bool CheckCollisionCircleLine(Vector2 center, float radius, Vector2 p1, Ve
 }
 
 // Get collision rectangle for two rectangles collision
-rlRectangle GetCollisionRec(rlRectangle rec1, rlRectangle rec2)
+Rectangle GetCollisionRec(Rectangle rec1, Rectangle rec2)
 {
-    rlRectangle overlap = { 0 };
+    Rectangle overlap = { 0 };
 
     float left = (rec1.x > rec2.x)? rec1.x : rec2.x;
     float right1 = rec1.x + rec1.width;

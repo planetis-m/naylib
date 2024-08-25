@@ -28,9 +28,9 @@ To compile your project for web browsers using WebAssembly:
 
 ## Building for Android
 
-Building for Android is streamlined using the [raylib-game-template](https://github.com/planetis-m/raylib-game-template) repository. Follow these steps:
+Building for Android is streamlined using the [naylib-game-template](https://github.com/planetis-m/naylib-game-template) repository. Follow these steps:
 
-1. Fork the [raylib-game-template](https://github.com/planetis-m/raylib-game-template) repository.
+1. Fork the [naylib-game-template](https://github.com/planetis-m/naylib-game-template) repository.
 
 2. Clone your forked repository and navigate to its directory.
 
@@ -55,7 +55,7 @@ Building for Android is streamlined using the [raylib-game-template](https://git
 
 ### Customizing the Android Build
 
-The [build_android.nims](https://github.com/planetis-m/raylib-game-template/blob/master/build_android.nims#L31-L65) file in the raylib-game-template repository offers extensive customization options for your Android build:
+The [build_android.nims](https://github.com/planetis-m/naylib-game-template/blob/master/build_android.nims#L31-L65) file in the naylib-game-template repository offers extensive customization options for your Android build:
 
 - Define target Android architectures (armeabi-v7a, arm64-v8a, x86, x86-64)
 - Set GLES and Android API versions
