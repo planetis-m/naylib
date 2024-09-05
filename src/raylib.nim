@@ -746,17 +746,20 @@ type
 type va_list {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
 proc vsprintf(s: cstring, format: cstring, args: va_list) {.cdecl, importc: "vsprintf", header: "<stdio.h>".}
 
+type
+  ConstCstring {.importc: "const char *".} = cstring
+
 ## Callbacks to hook some internal functions
 ## WARNING: This callbacks are intended for advance users
 type
-  TraceLogCallbackImpl = proc (logLevel: int32; text: cstring; args: va_list) {.
+  TraceLogCallbackImpl = proc (logLevel: int32; text: ConstCstring; args: va_list) {.
       cdecl.}
-  LoadFileDataCallback* = proc (fileName: cstring; bytesRead: ptr uint32): ptr UncheckedArray[uint8] {.
+  LoadFileDataCallback* = proc (fileName: ConstCstring; bytesRead: ptr uint32): ptr UncheckedArray[uint8] {.
       cdecl.} ## FileIO: Load binary data
-  SaveFileDataCallback* = proc (fileName: cstring; data: pointer; bytesToWrite: uint32): bool {.
+  SaveFileDataCallback* = proc (fileName: ConstCstring; data: pointer; bytesToWrite: uint32): bool {.
       cdecl.} ## FileIO: Save binary data
-  LoadFileTextCallback* = proc (fileName: cstring): cstring {.cdecl.} ## FileIO: Load text data
-  SaveFileTextCallback* = proc (fileName: cstring; text: cstring): bool {.cdecl.} ## FileIO: Save text data
+  LoadFileTextCallback* = proc (fileName: ConstCstring): cstring {.cdecl.} ## FileIO: Load text data
+  SaveFileTextCallback* = proc (fileName: ConstCstring; text: cstring): bool {.cdecl.} ## FileIO: Save text data
   AudioCallback* = proc (bufferData: pointer, frames: uint32) {.cdecl.} ## Audio thread callback to request new data
 
 const
@@ -1935,7 +1938,7 @@ proc wrapperTraceLogCallback(logLevel: int32; text: cstring; args: va_list) {.cd
 proc setTraceLogCallback*(callback: TraceLogCallback) =
   ## Set custom trace log
   traceLogCallback = callback
-  setTraceLogCallbackPriv(wrapperTraceLogCallback)
+  setTraceLogCallbackPriv(cast[TraceLogCallbackImpl](wrapperTraceLogCallback))
 
 proc toWeakImage*(data: openArray[byte], width, height: int32, format: PixelFormat): WeakImage {.inline.} =
   Image(data: addr data, width: width, height: height, mipmaps: 1, format: format).WeakImage

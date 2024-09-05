@@ -6,8 +6,8 @@ proc raiseRaylibError(msg: string) {.noinline, noreturn.} =
   raise newException(RaylibError, msg)
 
 type
-  TraceLogCallback* = proc (logLevel: TraceLogLevel;
-    text: string) {.nimcall.} ## Logging: Redirect trace log messages
+  TraceLogCallback* = proc (logLevel: TraceLogLevel; text: string) {.
+      nimcall.} ## Logging: Redirect trace log messages
 
 var
   traceLogCallback: TraceLogCallback # TraceLog callback function pointer
@@ -20,7 +20,7 @@ proc wrapperTraceLogCallback(logLevel: int32; text: cstring; args: va_list) {.cd
 proc setTraceLogCallback*(callback: TraceLogCallback) =
   ## Set custom trace log
   traceLogCallback = callback
-  setTraceLogCallbackPriv(wrapperTraceLogCallback)
+  setTraceLogCallbackPriv(cast[TraceLogCallbackImpl](wrapperTraceLogCallback))
 
 proc toWeakImage*(data: openArray[byte], width, height: int32, format: PixelFormat): WeakImage {.inline.} =
   Image(data: addr data, width: width, height: height, mipmaps: 1, format: format).WeakImage
