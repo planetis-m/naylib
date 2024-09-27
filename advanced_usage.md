@@ -183,10 +183,6 @@ let copy = texture  # This works, copying the reference
 
 Remember that `texture` and `copy` will point to the same object.
 
-### Raylib Functions to Nim Alternatives
-
-Some raylib functions are not directly wrapped in Naylib because they closely reflect the C API. For these cases, we provide Nim alternatives. Refer to our [Alternatives Table](alternatives_table.rst) for a comprehensive list of equivalent Nim functions.
-
 ### Additional Tips
 
 - **Custom Pixel Formats**: To make your external type compatible with the `Pixel` concept, define a `kind` template that returns the corresponding pixel format.

@@ -55,7 +55,7 @@ Here are quick links to some important sections:
 - [Important Usage Tips](advanced_usage.md#important-usage-tips) - Learn how to properly call `closeWindow` and other crucial tips
 - [Building for the Web (WebAssembly)](advanced_usage.md#building-for-the-web-webassembly) - Instructions for compiling your project for web browsers
 - [Building for Android](advanced_usage.md#building-for-android) - Step-by-step guide for Android development
-- [Raylib Functions to Nim Alternatives](advanced_usage.md#raylib-functions-to-nim-alternatives) - Find Nim equivalents for raylib functions
+- [Raylib Functions to Nim Alternatives](alternatives_table.rst) - Find Nim equivalents for raylib functions
 
 ## Platform Support
 

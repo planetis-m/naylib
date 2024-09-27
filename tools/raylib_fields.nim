@@ -187,6 +187,20 @@ proc `[]=`*(x: var MeshBoneWeights, i: int, val: Vector4) =
   checkArrayAccess(Mesh(x).boneWeights, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector4]](Mesh(x).boneWeights)[i] = val
 
+template boneMatrices*(x: Mesh): MeshBoneMatrices = MeshBoneMatrices(x)
+
+proc `[]`*(x: MeshBoneMatrices, i: int): Matrix =
+  checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
+  result = Mesh(x).boneMatrices[i]
+
+proc `[]`*(x: var MeshBoneMatrices, i: int): var Matrix =
+  checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
+  result = Mesh(x).boneMatrices[i]
+
+proc `[]=`*(x: var MeshBoneMatrices, i: int, val: Matrix) =
+  checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
+  Mesh(x).boneMatrices[i] = val
+
 template vboId*(x: Mesh): MeshVboId = MeshVboId(x)
 
 proc `[]`*(x: MeshVboId, i: int): uint32 =

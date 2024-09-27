@@ -986,8 +986,6 @@ proc setLoadFileTextCallback*(callback: LoadFileTextCallback) {.importc: "SetLoa
   ## Set custom file text data loader
 proc setSaveFileTextCallback*(callback: SaveFileTextCallback) {.importc: "SetSaveFileTextCallback".}
   ## Set custom file text data saver
-proc makeDirectory*(dirPath: cstring): int32 {.importc: "MakeDirectory".}
-  ## Create directories (including full path requested), returns 0 on success
 proc isFileDropped*(): bool {.importc: "IsFileDropped".}
   ## Check if a file has been dropped into window
 proc loadDroppedFilesPriv(): FilePathList {.importc: "LoadDroppedFiles".}
@@ -1954,10 +1952,10 @@ proc setTraceLogCallback*(callback: TraceLogCallback) =
   setTraceLogCallbackPriv(cast[TraceLogCallbackImpl](wrapperTraceLogCallback))
 
 proc toWeakImage*(data: openArray[byte], width, height: int32, format: PixelFormat): WeakImage {.inline.} =
-  Image(data: addr data, width: width, height: height, mipmaps: 1, format: format).WeakImage
+  Image(data: cast[pointer](data), width: width, height: height, mipmaps: 1, format: format).WeakImage
 
 proc toWeakWave*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): WeakWave {.inline.} =
-  Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).WeakWave
+  Wave(data: cast[pointer](data), frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).WeakWave
 
 proc initWindow*(width: int32, height: int32, title: string) =
   ## Initialize window and OpenGL context
@@ -2656,6 +2654,20 @@ proc `[]`*(x: var MeshBoneWeights, i: int): var Vector4 =
 proc `[]=`*(x: var MeshBoneWeights, i: int, val: Vector4) =
   checkArrayAccess(Mesh(x).boneWeights, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector4]](Mesh(x).boneWeights)[i] = val
+
+template boneMatrices*(x: Mesh): MeshBoneMatrices = MeshBoneMatrices(x)
+
+proc `[]`*(x: MeshBoneMatrices, i: int): Matrix =
+  checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
+  result = Mesh(x).boneMatrices[i]
+
+proc `[]`*(x: var MeshBoneMatrices, i: int): var Matrix =
+  checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
+  result = Mesh(x).boneMatrices[i]
+
+proc `[]=`*(x: var MeshBoneMatrices, i: int, val: Matrix) =
+  checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
+  Mesh(x).boneMatrices[i] = val
 
 template vboId*(x: Mesh): MeshVboId = MeshVboId(x)
 

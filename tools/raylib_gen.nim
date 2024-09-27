@@ -399,6 +399,7 @@ const
     "GetWorkingDirectory",
     "GetApplicationDirectory",
     "GetDirectoryFiles",
+    "MakeDirectory",
     "ChangeDirectory",
     "GetFileModTime",
     "IsPathFile",

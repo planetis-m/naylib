@@ -1,3 +1,8 @@
+Raylib Functions to Nim Alternatives
+************************************
+
+Some raylib functions are not directly wrapped in Naylib because they closely reflect the C API. For these cases, we provide Nim alternatives. Bellow is a comprehensive list of equivalent Nim functions.
+
 Files management functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -21,6 +26,7 @@ GetWorkingDirectory        os.getCurrentDir
 GetApplicationDirectory    os.getAppDir
 GetDirectoryFiles          os.walkDir, os.walkFiles
 ChangeDirectory            os.setCurrentDir
+MakeDirectory              os.createDir
 GetFileModTime             os.getLastModificationTime
 IsPathFile                 os.getFileInfo
 IsFileNameValid            os.invalidFilenames costant      Use strutils.find
