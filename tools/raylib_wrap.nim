@@ -23,10 +23,10 @@ proc setTraceLogCallback*(callback: TraceLogCallback) =
   setTraceLogCallbackPriv(cast[TraceLogCallbackImpl](wrapperTraceLogCallback))
 
 proc toWeakImage*(data: openArray[byte], width, height: int32, format: PixelFormat): WeakImage {.inline.} =
-  Image(data: cast[pointer](data), width: width, height: height, mipmaps: 1, format: format).WeakImage
+  Image(data: addr data, width: width, height: height, mipmaps: 1, format: format).WeakImage
 
 proc toWeakWave*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): WeakWave {.inline.} =
-  Wave(data: cast[pointer](data), frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).WeakWave
+  Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).WeakWave
 
 proc initWindow*(width: int32, height: int32, title: string) =
   ## Initialize window and OpenGL context

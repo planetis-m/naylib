@@ -361,6 +361,9 @@ type
     MapIrradiance ## Shader location: samplerCube texture: irradiance
     MapPrefilter ## Shader location: samplerCube texture: prefilter
     MapBrdf ## Shader location: sampler2d texture: brdf
+    VertexBoneids ## Shader location: vertex attribute: boneIds
+    VertexBoneweights ## Shader location: vertex attribute: boneWeights
+    BoneMatrices ## Shader location: array of matrices uniform: boneMatrices
 
   ShaderUniformDataType* {.size: sizeof(int32).} = enum ## Shader uniform data type
     Float ## Shader uniform type: float
@@ -589,8 +592,10 @@ type
     indices: ptr UncheckedArray[uint16] ## Vertex indices (in case vertex data comes indexed)
     animVertices: ptr UncheckedArray[float32] ## Animated vertex positions (after bones transformations)
     animNormals: ptr UncheckedArray[float32] ## Animated normals (after bones transformations)
-    boneIds: ptr UncheckedArray[uint8] ## Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)
-    boneWeights: ptr UncheckedArray[float32] ## Vertex bone weight, up to 4 bones influence by vertex (skinning)
+    boneIds: ptr UncheckedArray[uint8] ## Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning) (shader-location = 6)
+    boneWeights: ptr UncheckedArray[float32] ## Vertex bone weight, up to 4 bones influence by vertex (skinning) (shader-location = 7)
+    boneMatrices: ptr UncheckedArray[Matrix] ## Bones animated transformation matrices
+    boneCount: int32 ## Number of bones
     vaoId*: uint32 ## OpenGL Vertex Array Object id
     vboId: ptr array[MaxMeshVertexBuffers, uint32] ## OpenGL Vertex Buffer Objects id (default vertex data)
 
@@ -732,6 +737,7 @@ type
   MeshAnimNormals* = distinct Mesh
   MeshBoneIds* = distinct Mesh
   MeshBoneWeights* = distinct Mesh
+  MeshBoneMatrices* = distinct Mesh
   MeshVboId* = distinct Mesh
   ShaderLocs* = distinct Shader
   MaterialMaps* = distinct Material
@@ -818,9 +824,9 @@ proc setWindowState*(flags: Flags[ConfigFlags]) {.importc: "SetWindowState".}
 proc clearWindowState*(flags: Flags[ConfigFlags]) {.importc: "ClearWindowState".}
   ## Clear window configuration state flags
 proc toggleFullscreen*() {.importc: "ToggleFullscreen".}
-  ## Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
+  ## Toggle window state: fullscreen/windowed [resizes monitor to match window resolution] (only PLATFORM_DESKTOP)
 proc toggleBorderlessWindowed*() {.importc: "ToggleBorderlessWindowed".}
-  ## Toggle window state: borderless windowed (only PLATFORM_DESKTOP)
+  ## Toggle window state: borderless windowed [resizes window to match monitor resolution] (only PLATFORM_DESKTOP)
 proc maximizeWindow*() {.importc: "MaximizeWindow".}
   ## Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
 proc minimizeWindow*() {.importc: "MinimizeWindow".}
@@ -980,6 +986,8 @@ proc setLoadFileTextCallback*(callback: LoadFileTextCallback) {.importc: "SetLoa
   ## Set custom file text data loader
 proc setSaveFileTextCallback*(callback: SaveFileTextCallback) {.importc: "SetSaveFileTextCallback".}
   ## Set custom file text data saver
+proc makeDirectory*(dirPath: cstring): int32 {.importc: "MakeDirectory".}
+  ## Create directories (including full path requested), returns 0 on success
 proc isFileDropped*(): bool {.importc: "IsFileDropped".}
   ## Check if a file has been dropped into window
 proc loadDroppedFilesPriv(): FilePathList {.importc: "LoadDroppedFiles".}
@@ -1246,6 +1254,8 @@ proc drawTexture*(texture: Texture2D, source: Rectangle, dest: Rectangle, origin
   ## Draw a part of a texture defined by a rectangle with 'pro' parameters
 proc drawTextureNPatch*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch".}
   ## Draws a texture (or part of it) that stretches or shrinks nicely
+proc colorLerp*(color1: Color, color2: Color, factor: float32): Color {.importc: "ColorLerp".}
+  ## Get color lerp interpolation between two colors, factor [0.0f..1.0f]
 proc getPixelColorPriv(srcPtr: pointer, format: PixelFormat): Color {.importc: "GetPixelColor".}
 proc setPixelColorPriv(dstPtr: pointer, color: Color, format: PixelFormat) {.importc: "SetPixelColor".}
 proc getFontDefault*(): Font {.importc: "GetFontDefault".}
@@ -1389,6 +1399,8 @@ proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.i
 proc unloadModelAnimation(anim: ModelAnimation) {.importc: "UnloadModelAnimation".}
 proc isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
   ## Check model animation skeleton match
+proc updateModelAnimationBoneMatrices*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimationBoneMatrices".}
+  ## Update model animation mesh bone matrices
 proc initAudioDevice*() {.importc: "InitAudioDevice".}
   ## Initialize audio device and context
 proc closeAudioDevice*() {.importc: "CloseAudioDevice".}
@@ -1911,6 +1923,7 @@ proc `[]=`*(x: var AutomationEventList, i: int, val: sink AutomationEvent) =
 proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
 proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
 proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
+proc boneCount*(x: Mesh): int32 {.inline.} = x.boneCount
 proc meshCount*(x: Model): int32 {.inline.} = x.meshCount
 proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
 proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
@@ -1924,8 +1937,8 @@ proc raiseRaylibError(msg: string) {.noinline, noreturn.} =
   raise newException(RaylibError, msg)
 
 type
-  TraceLogCallback* = proc (logLevel: TraceLogLevel;
-    text: string) {.nimcall.} ## Logging: Redirect trace log messages
+  TraceLogCallback* = proc (logLevel: TraceLogLevel; text: string) {.
+      nimcall.} ## Logging: Redirect trace log messages
 
 var
   traceLogCallback: TraceLogCallback # TraceLog callback function pointer
@@ -1941,10 +1954,10 @@ proc setTraceLogCallback*(callback: TraceLogCallback) =
   setTraceLogCallbackPriv(cast[TraceLogCallbackImpl](wrapperTraceLogCallback))
 
 proc toWeakImage*(data: openArray[byte], width, height: int32, format: PixelFormat): WeakImage {.inline.} =
-  Image(data: cast[pointer](data), width: width, height: height, mipmaps: 1, format: format).WeakImage
+  Image(data: addr data, width: width, height: height, mipmaps: 1, format: format).WeakImage
 
 proc toWeakWave*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): WeakWave {.inline.} =
-  Wave(data: cast[pointer](data), frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).WeakWave
+  Wave(data: addr data, frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).WeakWave
 
 proc initWindow*(width: int32, height: int32, title: string) =
   ## Initialize window and OpenGL context
