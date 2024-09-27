@@ -553,6 +553,24 @@
       "description": ""
     },
     {
+      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEIDS",
+      "type": "INT",
+      "value": 6,
+      "description": ""
+    },
+    {
+      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEWEIGHTS",
+      "type": "INT",
+      "value": 7,
+      "description": ""
+    },
+    {
+      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_INDICES",
+      "type": "INT",
+      "value": 8,
+      "description": ""
+    },
+    {
       "name": "RL_MATRIX_TYPE",
       "type": "GUARD",
       "value": "",
@@ -823,6 +841,18 @@
       "description": "Bound by default to shader location: RL_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD2"
     },
     {
+      "name": "RL_DEFAULT_SHADER_ATTRIB_NAME_BONEIDS",
+      "type": "STRING",
+      "value": "vertexBoneIds",
+      "description": "Bound by default to shader location: RL_DEFAULT_SHADER_ATTRIB_NAME_BONEIDS"
+    },
+    {
+      "name": "RL_DEFAULT_SHADER_ATTRIB_NAME_BONEWEIGHTS",
+      "type": "STRING",
+      "value": "vertexBoneWeights",
+      "description": "Bound by default to shader location: RL_DEFAULT_SHADER_ATTRIB_NAME_BONEWEIGHTS"
+    },
+    {
       "name": "RL_DEFAULT_SHADER_UNIFORM_NAME_MVP",
       "type": "STRING",
       "value": "mvp",
@@ -857,6 +887,12 @@
       "type": "STRING",
       "value": "colDiffuse",
       "description": "color diffuse (base tint color, multiplied by texture color)"
+    },
+    {
+      "name": "RL_DEFAULT_SHADER_UNIFORM_NAME_BONE_MATRICES",
+      "type": "STRING",
+      "value": "boneMatrices",
+      "description": "bone matrices"
     },
     {
       "name": "RL_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE0",
@@ -1791,8 +1827,28 @@
           "description": "Shader uniform type: ivec4 (4 int)"
         },
         {
-          "name": "RL_SHADER_UNIFORM_SAMPLER2D",
+          "name": "RL_SHADER_UNIFORM_UINT",
           "value": 8,
+          "description": "Shader uniform type: unsigned int"
+        },
+        {
+          "name": "RL_SHADER_UNIFORM_UIVEC2",
+          "value": 9,
+          "description": "Shader uniform type: uivec2 (2 unsigned int)"
+        },
+        {
+          "name": "RL_SHADER_UNIFORM_UIVEC3",
+          "value": 10,
+          "description": "Shader uniform type: uivec3 (3 unsigned int)"
+        },
+        {
+          "name": "RL_SHADER_UNIFORM_UIVEC4",
+          "value": 11,
+          "description": "Shader uniform type: uivec4 (4 unsigned int)"
+        },
+        {
+          "name": "RL_SHADER_UNIFORM_SAMPLER2D",
+          "value": 12,
           "description": "Shader uniform type: sampler2d"
         }
       ]
@@ -3667,6 +3723,25 @@
         {
           "type": "Matrix",
           "name": "mat"
+        }
+      ]
+    },
+    {
+      "name": "rlSetUniformMatrices",
+      "description": "Set shader value matrices",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "locIndex"
+        },
+        {
+          "type": "const Matrix *",
+          "name": "mat"
+        },
+        {
+          "type": "int",
+          "name": "count"
         }
       ]
     },

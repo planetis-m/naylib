@@ -121,20 +121,26 @@ type
     AttribColor
     AttribTangent
     AttribTexcoord2
+    AttribLocationBoneIds
+    AttribLocationBoneWeights
+    AttribLocationIndices
 
   DefaultShaderVariableName* = enum ## Default shader vertex attribute names to set location points
-    AttribPosition = "vertexPosition" ## Binded by default to shader location: 0
-    AttribTexcoord = "vertexTexCoord" ## Binded by default to shader location: 1
-    AttribNormal = "vertexNormal" ## Binded by default to shader location: 2
-    AttribColor = "vertexColor" ## Binded by default to shader location: 3
-    AttribTangent = "vertexTangent" ## Binded by default to shader location: 4
-    AttribTexcoord2 = "vertexTexCoord2" ## Binded by default to shader location: 5
+    AttribPosition = "vertexPosition" ## Bound by default to shader location: 0
+    AttribTexcoord = "vertexTexCoord" ## Bound by default to shader location: 1
+    AttribNormal = "vertexNormal" ## Bound by default to shader location: 2
+    AttribColor = "vertexColor" ## Bound by default to shader location: 3
+    AttribTangent = "vertexTangent" ## Bound by default to shader location: 4
+    AttribTexcoord2 = "vertexTexCoord2" ## Bound by default to shader location: 5
+    AttribLocationBoneIds = "vertexBoneIds" ## Bound by default to shader location: 6
+    AttribLocationBoneWeights = "vertexBoneWeights" ## Bound by default to shader location: 7
     UniformMvp = "mvp" ## model-view-projection matrix
     UniformView = "matView" ## view matrix
     UniformProjection = "matProjection" ## projection matrix
     UniformModel = "matModel" ## model matrix
     UniformNormal = "matNormal" ## normal matrix (transpose(inverse(matModelView))
     UniformColor = "colDiffuse" ## color diffuse (base tint color, multiplied by texture color)
+    UniformBoneMatrices = "boneMatrices" ## bone matrices
     Sampler2dTexture0 = "texture0" ## texture0 (texture slot active 0)
     Sampler2dTexture1 = "texture1" ## texture1 (texture slot active 1)
     Sampler2dTexture2 = "texture2" ## texture2 (texture slot active 2)
@@ -472,6 +478,8 @@ proc setUniform*(locIndex: ShaderLocation, value: pointer, uniformType: ShaderUn
   ## Set shader value uniform
 proc setUniformMatrix*(locIndex: ShaderLocation, mat: Matrix) {.importc: "rlSetUniformMatrix".}
   ## Set shader value matrix
+proc setUniformMatrices*(locIndex: int32, mat: var Matrix, count: int32) {.importc: "rlSetUniformMatrices".}
+  ## Set shader value matrices
 proc setUniformSampler*(locIndex: ShaderLocation, textureId: uint32) {.importc: "rlSetUniformSampler".}
   ## Set shader value sampler
 proc setShader*(id: uint32, locs: ShaderLocsPtr) {.importc: "rlSetShader".}
