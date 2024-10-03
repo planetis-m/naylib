@@ -1,4 +1,4 @@
-import eminim, std/[algorithm, strscans, streams, json]
+import eminim, std/[algorithm, strformat, streams, json]
 import strutils except indent
 
 const
@@ -90,28 +90,6 @@ proc addIndent*(result: var string, indent: int) =
   for i in 1..indent:
     result.add(' ')
 
-proc toNimType*(x: string): string =
-  ## Translates a single C identifier to the equivalent Nim type.
-  ## Also used to make replacements.
-  case x
-  of "float":
-    result = "float32"
-  of "double":
-    result = "float"
-  of "short":
-    result = "int16"
-  of "long":
-    result = "int64"
-  of "int":
-    result = "int32"
-  of "float3":
-    result = "Float3"
-  of "float16":
-    result = "Float16"
-  else:
-    result = x
-    removePrefix(result, "rl")
-
 proc getReplacement*(x, y: string, replacements: openarray[(string, string, string)]): string =
   # Manual replacements for some fields
   result = ""
@@ -121,88 +99,100 @@ proc getReplacement*(x, y: string, replacements: openarray[(string, string, stri
 
 proc camelCaseAscii*(s: string): string
 
-proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var string): string =
-  ## Converts a C type to the equivalent Nim type.
-  ## Should work with function parameters, return, and struct fields types.
-  ## If a `pattern` is provided, it substitutes the found base type and returns it.
-  ## `many` hints the generation of `ptr UncheckedArray` instead of `ptr`.
-  ## NOTE: expects `s` to be formatted with spaces, `MyType*` needs to be `MyType *`
-  var isVoid = false
-  var isPointer = false
-  var isDoublePointer = false
-  var isChar = false
-  var isUnsigned = false
-  var isSizeT = false
-  var isSigned = false
-  var isArray = false
-  for token, isSep in tokenize(s):
-    if isSep: continue
+type
+  TypeInfo = object
+    baseType: string
+    isPointer: bool
+    isDoublePointer: bool
+    isUnsigned: bool
+    isArray: bool
+    arraySize: string
+
+proc parseType(s: string): TypeInfo =
+  var result: TypeInfo
+  var tokens = s.splitWhitespace()
+
+  for token in tokens.mitems:
     case token
-    of "const": discard
-    of "void": isVoid = true
-    of "*": isPointer = true
-    of "**": isDoublePointer = true
-    of "char": isChar = true
-    of "unsigned": isUnsigned = true
-    of "size_t": isSizeT = true
-    of "signed": isSigned = true
-    of "int": discard
+    of "unsigned": result.isUnsigned = true
+    of "const", "signed": discard
     else:
-      for token, isSep in tokenize(token, {'*'}):
-        case token
-        of "*": isPointer = true
-        of "**": isDoublePointer = true
-        else:
-          var len = 0
-          var constant = ""
-          if scanf(token, "$w[$i]$.", result, len):
-            isArray = true
-            var kind = toNimType(result)
-            if isUnsigned: kind = "u" & kind
-            result = "array[" & $len & ", " & kind & "]"
-          elif scanf(token, "$w[$w]$.", result, constant):
-            isArray = true
-            removePrefix(constant, "RL_")
-            constant = camelCaseAscii(constant)
-            var kind = toNimType(result)
-            if isUnsigned: kind = "u" & kind
-            result = "array[" & constant & ", " & kind & "]"
-          else: result = toNimType(token)
-  if result == "": result = "int32"
-  if isSizeT:
-    result = "csize_t"
-  elif isChar:
-    if isUnsigned:
-      result = "uint8"
+      if "*" in token:
+        result.isPointer = true
+        if "**" in token: result.isDoublePointer = true
+        token.removeSuffix("*")
+
+      let openBracket = token.find('[')
+      let closeBracket = token.find(']')
+      if openBracket != -1 and closeBracket != -1 and openBracket < closeBracket:
+        result.isArray = true
+        result.baseType = token[0 ..< openBracket]
+        result.arraySize = token[openBracket + 1 ..< closeBracket]
+        result.arraySize = result.arraySize.replace("RL_", "").camelCaseAscii()
+      elif result.baseType.len == 0:
+        result.baseType = token
+
+  if result.baseType.len == 0: result.baseType = "int32"
+  result
+
+proc toNimType(cType: string): string =
+  case cType
+  of "float": "float32"
+  of "double": "float"
+  of "short": "int16"
+  of "long": "int64"
+  of "int": "int32"
+  of "float3": "Float3"
+  of "float16": "Float16"
+  of "size_t": "csize_t"
+  of "char": "char"
+  else:
+    var result = cType
+    result.removePrefix("rl")
+    result
+
+proc convertType*(s: string, pattern: string, many, isVar: bool, baseKind: var string): string =
+  let typeInfo = parseType(s)
+  var nimType = toNimType(typeInfo.baseType)
+
+  if typeInfo.isUnsigned:
+    if nimType == "char":
+      nimType = "uint8"
     else:
-      result = "char"
-  elif isUnsigned:
-    if not isArray:
-      result = "u" & result
-  baseKind = result
-  if pattern != "":
-    result = pattern % result
-  elif isChar and not isUnsigned:
-    if isDoublePointer:
-      result = "cstringArray"
-    elif isPointer:
-      result = "cstring"
-  elif isPointer:
-    if isVoid:
-      result = "pointer"
+      nimType = "u" & nimType
+
+  baseKind = nimType
+
+  if pattern.len > 0:
+    return pattern % nimType
+
+  if typeInfo.isArray:
+    return &"array[{typeInfo.arraySize}, {nimType}]"
+
+  if typeInfo.isDoublePointer:
+    if nimType == "void":
+      return "ptr pointer"
+    elif nimType == "char" and not typeInfo.isUnsigned:
+      return "cstringArray"
     elif many:
-      result = "ptr UncheckedArray[" & result & "]"
+      return &"ptr UncheckedArray[ptr {nimType}]"
+    else:
+      return &"ptr ptr {nimType}"
+
+  if typeInfo.isPointer:
+    if nimType == "void":
+      return "pointer"
+    elif nimType == "char" and not typeInfo.isUnsigned:
+      return "cstring"
+    elif many:
+      return &"ptr UncheckedArray[{nimType}]"
     else:
       if isVar:
-        result = "var " & result
-      else: result = "ptr " & result
-  elif isDoublePointer:
-    if isVoid:
-      result = "ptr pointer"
-    elif many:
-      result = "ptr UncheckedArray[ptr " & result & "]"
-    else:
-      result = "ptr ptr " & result
+        return &"var {nimType}"
+      else:
+        return &"ptr {nimType}"
+
+  nimType
 
 proc isPlural*(x: string): bool {.inline.} =
   ## Tries to determine if an identifier is plural
