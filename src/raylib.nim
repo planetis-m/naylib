@@ -1352,10 +1352,34 @@ proc unloadMesh(mesh: Mesh) {.importc: "UnloadMesh".}
 proc drawMesh*(mesh: Mesh, material: Material, transform: Matrix) {.importc: "DrawMesh".}
   ## Draw a 3d mesh with material and transform
 proc drawMeshInstancedPriv(mesh: Mesh, material: Material, transforms: ptr UncheckedArray[Matrix], instances: int32) {.importc: "DrawMeshInstanced".}
+proc genMeshTangents*(mesh: var Mesh) {.importc: "GenMeshTangents".}
+  ## Compute mesh tangents
 proc exportMesh*(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMesh".}
   ## Export mesh data to file, returns true on success
 proc exportMeshAsCode*(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMeshAsCode".}
   ## Export mesh as code file (.h) defining multiple arrays of vertex attributes
+proc genMeshPoly*(sides: int32, radius: float32): Mesh {.importc: "GenMeshPoly".}
+  ## Generate polygonal mesh
+proc genMeshPlane*(width: float32, length: float32, resX: int32, resZ: int32): Mesh {.importc: "GenMeshPlane".}
+  ## Generate plane mesh (with subdivisions)
+proc genMeshCube*(width: float32, height: float32, length: float32): Mesh {.importc: "GenMeshCube".}
+  ## Generate cuboid mesh
+proc genMeshSphere*(radius: float32, rings: int32, slices: int32): Mesh {.importc: "GenMeshSphere".}
+  ## Generate sphere mesh (standard sphere)
+proc genMeshHemiSphere*(radius: float32, rings: int32, slices: int32): Mesh {.importc: "GenMeshHemiSphere".}
+  ## Generate half-sphere mesh (no bottom cap)
+proc genMeshCylinder*(radius: float32, height: float32, slices: int32): Mesh {.importc: "GenMeshCylinder".}
+  ## Generate cylinder mesh
+proc genMeshCone*(radius: float32, height: float32, slices: int32): Mesh {.importc: "GenMeshCone".}
+  ## Generate cone/pyramid mesh
+proc genMeshTorus*(radius: float32, size: float32, radSeg: int32, sides: int32): Mesh {.importc: "GenMeshTorus".}
+  ## Generate torus mesh
+proc genMeshKnot*(radius: float32, size: float32, radSeg: int32, sides: int32): Mesh {.importc: "GenMeshKnot".}
+  ## Generate trefoil knot mesh
+proc genMeshHeightmap*(heightmap: Image, size: Vector3): Mesh {.importc: "GenMeshHeightmap".}
+  ## Generate heightmap mesh from image data
+proc genMeshCubicmap*(cubicmap: Image, cubeSize: Vector3): Mesh {.importc: "GenMeshCubicmap".}
+  ## Generate cubes-based map mesh from image data
 proc loadMaterialsPriv(fileName: cstring, materialCount: ptr int32): ptr UncheckedArray[Material] {.importc: "LoadMaterials".}
 proc loadMaterialDefault*(): Material {.importc: "LoadMaterialDefault".}
   ## Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
@@ -1665,30 +1689,6 @@ proc isModelReady*(model: Model): bool {.importc: "IsModelReady".}
   ## Check if a model is ready
 proc getMeshBoundingBox*(mesh: Mesh): BoundingBox {.importc: "GetMeshBoundingBox".}
   ## Compute mesh bounding box limits
-proc genMeshTangents*(mesh: var Mesh) {.importc: "GenMeshTangents".}
-  ## Compute mesh tangents
-proc genMeshPoly*(sides: int32, radius: float32): Mesh {.importc: "GenMeshPoly".}
-  ## Generate polygonal mesh
-proc genMeshPlane*(width: float32, length: float32, resX: int32, resZ: int32): Mesh {.importc: "GenMeshPlane".}
-  ## Generate plane mesh (with subdivisions)
-proc genMeshCube*(width: float32, height: float32, length: float32): Mesh {.importc: "GenMeshCube".}
-  ## Generate cuboid mesh
-proc genMeshSphere*(radius: float32, rings: int32, slices: int32): Mesh {.importc: "GenMeshSphere".}
-  ## Generate sphere mesh (standard sphere)
-proc genMeshHemiSphere*(radius: float32, rings: int32, slices: int32): Mesh {.importc: "GenMeshHemiSphere".}
-  ## Generate half-sphere mesh (no bottom cap)
-proc genMeshCylinder*(radius: float32, height: float32, slices: int32): Mesh {.importc: "GenMeshCylinder".}
-  ## Generate cylinder mesh
-proc genMeshCone*(radius: float32, height: float32, slices: int32): Mesh {.importc: "GenMeshCone".}
-  ## Generate cone/pyramid mesh
-proc genMeshTorus*(radius: float32, size: float32, radSeg: int32, sides: int32): Mesh {.importc: "GenMeshTorus".}
-  ## Generate torus mesh
-proc genMeshKnot*(radius: float32, size: float32, radSeg: int32, sides: int32): Mesh {.importc: "GenMeshKnot".}
-  ## Generate trefoil knot mesh
-proc genMeshHeightmap*(heightmap: Image, size: Vector3): Mesh {.importc: "GenMeshHeightmap".}
-  ## Generate heightmap mesh from image data
-proc genMeshCubicmap*(cubicmap: Image, cubeSize: Vector3): Mesh {.importc: "GenMeshCubicmap".}
-  ## Generate cubes-based map mesh from image data
 proc isMaterialReady*(material: Material): bool {.importc: "IsMaterialReady".}
   ## Check if a material is ready
 proc isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
