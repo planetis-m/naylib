@@ -1,4 +1,4 @@
-import eminim, std/[algorithm, strformat, streams, json]
+import eminim, std/[algorithm, strformat, streams, json, parsejson]
 import strutils except indent
 
 const
@@ -31,8 +31,10 @@ proc isKeyword*(s: string): bool {.inline.} =
 ## The raylib_parser produces JSON with the following structure.
 ## The type definitions are used by the deserializer to process the file.
 type
+  DefineValue* = distinct string
+
   TopLevel* = object
-    # defines*: seq[DefineInfo]
+    defines*: seq[DefineInfo]
     structs*: seq[StructInfo]
     callbacks*: seq[FunctionInfo]
     aliases*: seq[AliasInfo]
@@ -45,9 +47,8 @@ type
   DefineInfo* = object
     name*: string
     `type`*: DefineType
-    value*: JsonNode
+    value*: DefineValue
     description*: string
-    isHex*: bool
 
   FunctionInfo* = object
     name*, description*, returnType*: string
@@ -74,6 +75,16 @@ type
 
   AliasInfo* = object
     `type`*, name*, description*: string
+
+proc initFromJson*(dst: var DefineValue; p: var JsonParser) =
+  if p.tok == tkNull:
+    dst = DefineValue""
+    discard getTok(p)
+  elif p.tok in {tkString, tkFloat, tkInt}:
+    dst = DefineValue(p.a)
+    discard getTok(p)
+  else:
+    raiseParseErr(p, "unkown define value")
 
 proc parseApi*(fname: string): TopLevel =
   var inp: FileStream
@@ -109,9 +120,8 @@ type
     arraySize: string
 
 proc parseType(s: string): TypeInfo =
-  var tokens = s.splitWhitespace()
-
-  for token in tokens:
+  for token, isSep in tokenize(s):
+    if isSep: continue
     case token
     of "unsigned": result.isUnsigned = true
     of "const", "signed": discard
@@ -127,7 +137,8 @@ proc parseType(s: string): TypeInfo =
         if result.baseType == "":
           result.baseType = token[0 ..< openBracket]
         result.arraySize = token[openBracket + 1 ..< closeBracket]
-        result.arraySize = result.arraySize.replace("RL_", "").camelCaseAscii()
+        removePrefix(result.arraySize, "RL_")
+        result.arraySize = camelCaseAscii(result.arraySize)
       elif result.baseType == "":
         result.baseType = token
   if result.baseType == "":
