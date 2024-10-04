@@ -1108,9 +1108,9 @@ proc getShapesTexture*(): Texture2D {.importc: "GetShapesTexture".}
 proc getShapesTextureRectangle*(): Rectangle {.importc: "GetShapesTextureRectangle".}
   ## Get texture source rectangle that is used for shapes drawing
 proc drawPixel*(posX: int32, posY: int32, color: Color) {.importc: "DrawPixel".}
-  ## Draw a pixel
+  ## Draw a pixel using geometry [Can be slow, use with care]
 proc drawPixel*(position: Vector2, color: Color) {.importc: "DrawPixelV".}
-  ## Draw a pixel (Vector version)
+  ## Draw a pixel using geometry (Vector version) [Can be slow, use with care]
 proc drawLine*(startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "DrawLine".}
   ## Draw a line
 proc drawLine*(startPos: Vector2, endPos: Vector2, color: Color) {.importc: "DrawLineV".}
@@ -1692,7 +1692,7 @@ proc isMaterialReady*(material: Material): bool {.importc: "IsMaterialReady".}
 proc isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
   ## Check model animation skeleton match
 proc updateModelAnimationBoneMatrices*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimationBoneMatrices".}
-  ## Update model animation mesh bone matrices
+  ## Update model animation mesh bone matrices (Note GPU skinning does not work on Mac)
 proc checkCollisionSpheres*(center1: Vector3, radius1: float32, center2: Vector3, radius2: float32): bool {.importc: "CheckCollisionSpheres".}
   ## Check collision between two spheres
 proc checkCollisionBoxes*(box1: BoundingBox, box2: BoundingBox): bool {.importc: "CheckCollisionBoxes".}

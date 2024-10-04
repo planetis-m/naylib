@@ -1,6 +1,6 @@
-From 83d2ddbfb2151a806f0218703a87178565b81b75 Mon Sep 17 00:00:00 2001
+From 2592a6c4ccef8f4ba9c7a37812f670e4be977915 Mon Sep 17 00:00:00 2001
 From: Antonis Geralis <b3lievem@yandex.com>
-Date: Fri, 27 Sep 2024 19:30:26 +0300
+Date: Fri, 4 Oct 2024 17:34:01 +0300
 Subject: [PATCH] mangle names
 
 ---
@@ -10,13 +10,13 @@ Subject: [PATCH] mangle names
  src/raylib/platforms/rcore_drm.c         |  4 +-
  src/raylib/platforms/rcore_template.c    |  2 +-
  src/raylib/platforms/rcore_web.c         |  2 +-
- src/raylib/raylib.h                      | 68 +++++++++++------------
+ src/raylib/raylib.h                      | 72 ++++++++++++------------
  src/raylib/rcore.c                       | 12 ++--
  src/raylib/rmodels.c                     |  8 +--
- src/raylib/rshapes.c                     | 70 ++++++++++++------------
- src/raylib/rtext.c                       | 50 ++++++++---------
- src/raylib/rtextures.c                   | 58 ++++++++++----------
- 12 files changed, 173 insertions(+), 173 deletions(-)
+ src/raylib/rshapes.c                     | 70 +++++++++++------------
+ src/raylib/rtext.c                       | 50 ++++++++--------
+ src/raylib/rtextures.c                   | 58 +++++++++----------
+ 12 files changed, 175 insertions(+), 175 deletions(-)
 
 diff --git a/src/raylib/external/jar_xm.h b/src/raylib/external/jar_xm.h
 index b5e80e4..5459410 100644
@@ -173,10 +173,10 @@ index 6318931..a49a18d 100644
                  #endif
  
 diff --git a/src/raylib/platforms/rcore_desktop_sdl.c b/src/raylib/platforms/rcore_desktop_sdl.c
-index 794f9e6..d12d3dc 100644
+index 90372c2..d385920 100644
 --- a/src/raylib/platforms/rcore_desktop_sdl.c
 +++ b/src/raylib/platforms/rcore_desktop_sdl.c
-@@ -859,7 +859,7 @@ const char *GetClipboardText(void)
+@@ -878,7 +878,7 @@ const char *GetClipboardText(void)
  }
  
  // Show mouse cursor
@@ -234,7 +234,7 @@ index ff7a92d..0c68d69 100644
      if (CORE.Input.Mouse.cursorHidden)
      {
 diff --git a/src/raylib/raylib.h b/src/raylib/raylib.h
-index f298fd7..82caa06 100644
+index 08121c5..ec70fc4 100644
 --- a/src/raylib/raylib.h
 +++ b/src/raylib/raylib.h
 @@ -246,12 +246,12 @@ typedef struct Color {
@@ -299,7 +299,7 @@ index f298fd7..82caa06 100644
 +RLAPI rlRectangle GetShapesTextureRectangle(void);                        // Get texture source rectangle that is used for shapes drawing
  
  // Basic shapes drawing functions
- RLAPI void DrawPixel(int posX, int posY, Color color);                                                   // Draw a pixel
+ RLAPI void DrawPixel(int posX, int posY, Color color);                                                   // Draw a pixel using geometry [Can be slow, use with care]
 @@ -1254,16 +1254,16 @@ RLAPI void DrawRing(Vector2 center, float innerRadius, float outerRadius, float
  RLAPI void DrawRingLines(Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color);    // Draw ring outline
  RLAPI void DrawRectangle(int posX, int posY, int width, int height, Color color);                        // Draw a color-filled rectangle
@@ -448,6 +448,17 @@ index f298fd7..82caa06 100644
  
  // Text codepoints management functions (unicode characters)
  RLAPI char *LoadUTF8(const int *codepoints, int length);                // Load UTF-8 text encoded from codepoints array
+@@ -1556,8 +1556,8 @@ RLAPI void DrawModelPoints(Model model, Vector3 position, float scale, Color tin
+ RLAPI void DrawModelPointsEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model as points with extended parameters
+ RLAPI void DrawBoundingBox(BoundingBox box, Color color);                                   // Draw bounding box (wires)
+ RLAPI void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float scale, Color tint);   // Draw a billboard texture
+-RLAPI void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector2 size, Color tint); // Draw a billboard texture defined by source
+-RLAPI void DrawBillboardPro(Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector3 up, Vector2 size, Vector2 origin, float rotation, Color tint); // Draw a billboard texture defined by source and rotation
++RLAPI void DrawBillboardRec(Camera camera, Texture2D texture, rlRectangle source, Vector3 position, Vector2 size, Color tint); // Draw a billboard texture defined by source
++RLAPI void DrawBillboardPro(Camera camera, Texture2D texture, rlRectangle source, Vector3 position, Vector3 up, Vector2 size, Vector2 origin, float rotation, Color tint); // Draw a billboard texture defined by source and rotation
+ 
+ // Mesh management functions
+ RLAPI void UploadMesh(Mesh *mesh, bool dynamic);                                            // Upload mesh vertex data in GPU and provide VAO/VBO ids
 diff --git a/src/raylib/rcore.c b/src/raylib/rcore.c
 index 3cdacbd..1eb4e85 100644
 --- a/src/raylib/rcore.c
@@ -500,10 +511,10 @@ index 3cdacbd..1eb4e85 100644
      #endif
  
 diff --git a/src/raylib/rmodels.c b/src/raylib/rmodels.c
-index ebdd178..74df4a5 100644
+index d2bf528..a36069a 100644
 --- a/src/raylib/rmodels.c
 +++ b/src/raylib/rmodels.c
-@@ -3785,13 +3785,13 @@ void DrawModelPointsEx(Model model, Vector3 position, Vector3 rotationAxis, floa
+@@ -3798,13 +3798,13 @@ void DrawModelPointsEx(Model model, Vector3 position, Vector3 rotationAxis, floa
  // Draw a billboard
  void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float scale, Color tint)
  {
@@ -519,7 +530,7 @@ index ebdd178..74df4a5 100644
  {
      // NOTE: Billboard locked on axis-Y
      Vector3 up = { 0.0f, 1.0f, 0.0f };
-@@ -3800,7 +3800,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector
+@@ -3813,7 +3813,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector
  }
  
  // Draw a billboard with additional parameters
@@ -528,7 +539,7 @@ index ebdd178..74df4a5 100644
  {
      // Compute the up vector and the right vector
      Matrix matView = MatrixLookAt(camera.position, camera.target, camera.up);
-@@ -5118,7 +5118,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
+@@ -5131,7 +5131,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
          }
          else     // Check if image is provided as image path
          {
@@ -1232,5 +1243,5 @@ index 6d3c21c..ca78bbb 100644
      if (texture.id > 0)
      {
 -- 
-2.46.1
+2.46.2
 
