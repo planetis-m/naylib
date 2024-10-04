@@ -1388,8 +1388,6 @@ proc loadModelAnimationsPriv(fileName: cstring, animCount: ptr int32): ptr Unche
 proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation".}
   ## Update model animation pose
 proc unloadModelAnimation(anim: ModelAnimation) {.importc: "UnloadModelAnimation".}
-proc updateModelAnimationBoneMatrices*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimationBoneMatrices".}
-  ## Update model animation mesh bone matrices
 proc initAudioDevice*() {.importc: "InitAudioDevice".}
   ## Initialize audio device and context
 proc closeAudioDevice*() {.importc: "CloseAudioDevice".}
@@ -1693,6 +1691,8 @@ proc isMaterialReady*(material: Material): bool {.importc: "IsMaterialReady".}
   ## Check if a material is ready
 proc isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
   ## Check model animation skeleton match
+proc updateModelAnimationBoneMatrices*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimationBoneMatrices".}
+  ## Update model animation mesh bone matrices
 proc checkCollisionSpheres*(center1: Vector3, radius1: float32, center2: Vector3, radius2: float32): bool {.importc: "CheckCollisionSpheres".}
   ## Check collision between two spheres
 proc checkCollisionBoxes*(box1: BoundingBox, box2: BoundingBox): bool {.importc: "CheckCollisionBoxes".}

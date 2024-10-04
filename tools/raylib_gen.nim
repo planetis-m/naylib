@@ -520,6 +520,7 @@ const
     "UpdateAudioStream",
   ]
   nosideeffectsFuncs = [
+    "UpdateModelAnimationBoneMatrices",
     "GenImageText",
     "GenImageFontAtlas",
     "GetMeshBoundingBox",
