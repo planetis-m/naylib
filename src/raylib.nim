@@ -1252,8 +1252,6 @@ proc drawTexture*(texture: Texture2D, source: Rectangle, dest: Rectangle, origin
   ## Draw a part of a texture defined by a rectangle with 'pro' parameters
 proc drawTextureNPatch*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch".}
   ## Draws a texture (or part of it) that stretches or shrinks nicely
-proc colorLerp*(color1: Color, color2: Color, factor: float32): Color {.importc: "ColorLerp".}
-  ## Get color lerp interpolation between two colors, factor [0.0f..1.0f]
 proc getPixelColorPriv(srcPtr: pointer, format: PixelFormat): Color {.importc: "GetPixelColor".}
 proc setPixelColorPriv(dstPtr: pointer, color: Color, format: PixelFormat) {.importc: "SetPixelColor".}
 proc getFontDefault*(): Font {.importc: "GetFontDefault".}
@@ -1388,15 +1386,11 @@ proc genMeshCubicmap*(cubicmap: Image, cubeSize: Vector3): Mesh {.importc: "GenM
 proc loadMaterialsPriv(fileName: cstring, materialCount: ptr int32): ptr UncheckedArray[Material] {.importc: "LoadMaterials".}
 proc loadMaterialDefault*(): Material {.importc: "LoadMaterialDefault".}
   ## Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
-proc isMaterialReady*(material: Material): bool {.importc: "IsMaterialReady".}
-  ## Check if a material is ready
 proc unloadMaterial(material: Material) {.importc: "UnloadMaterial".}
 proc loadModelAnimationsPriv(fileName: cstring, animCount: ptr int32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations".}
 proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation".}
   ## Update model animation pose
 proc unloadModelAnimation(anim: ModelAnimation) {.importc: "UnloadModelAnimation".}
-proc isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
-  ## Check model animation skeleton match
 proc updateModelAnimationBoneMatrices*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimationBoneMatrices".}
   ## Update model animation mesh bone matrices
 proc initAudioDevice*() {.importc: "InitAudioDevice".}
@@ -1412,8 +1406,6 @@ proc loadWaveFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint
 proc loadSoundPriv(fileName: cstring): Sound {.importc: "LoadSound".}
 proc loadSoundFromWavePriv(wave: Wave): Sound {.importc: "LoadSoundFromWave".}
 proc loadSoundAliasPriv(source: Sound): Sound {.importc: "LoadSoundAlias".}
-proc isSoundReady*(sound: Sound): bool {.importc: "IsSoundReady".}
-  ## Checks if a sound is ready
 proc updateSoundPriv(sound: Sound, data: pointer, sampleCount: int32) {.importc: "UpdateSound".}
 proc unloadWave(wave: Wave) {.importc: "UnloadWave".}
 proc unloadSound(sound: Sound) {.importc: "UnloadSound".}
@@ -1675,6 +1667,8 @@ proc colorAlpha*(color: Color, alpha: float32): Color {.importc: "ColorAlpha".}
   ## Get color with alpha applied, alpha goes from 0.0f to 1.0f
 proc colorAlphaBlend*(dst: Color, src: Color, tint: Color): Color {.importc: "ColorAlphaBlend".}
   ## Get src alpha-blended into dst color with tint
+proc colorLerp*(color1: Color, color2: Color, factor: float32): Color {.importc: "ColorLerp".}
+  ## Get color lerp interpolation between two colors, factor [0.0f..1.0f]
 proc getPixelDataSize*(width: int32, height: int32, format: PixelFormat): int32 {.importc: "GetPixelDataSize".}
   ## Get pixel data size in bytes for certain format
 proc isFontReady*(font: Font): bool {.importc: "IsFontReady".}
@@ -1689,6 +1683,10 @@ proc getGlyphAtlasRec*(font: Font, codepoint: Rune): Rectangle {.importc: "GetGl
   ## Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
 proc isModelReady*(model: Model): bool {.importc: "IsModelReady".}
   ## Check if a model is ready
+proc isMaterialReady*(material: Material): bool {.importc: "IsMaterialReady".}
+  ## Check if a material is ready
+proc isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
+  ## Check model animation skeleton match
 proc checkCollisionSpheres*(center1: Vector3, radius1: float32, center2: Vector3, radius2: float32): bool {.importc: "CheckCollisionSpheres".}
   ## Check collision between two spheres
 proc checkCollisionBoxes*(box1: BoundingBox, box2: BoundingBox): bool {.importc: "CheckCollisionBoxes".}
@@ -1709,6 +1707,8 @@ proc isAudioDeviceReady*(): bool {.importc: "IsAudioDeviceReady".}
   ## Check if audio device has been initialized successfully
 proc isWaveReady*(wave: Wave): bool {.importc: "IsWaveReady".}
   ## Checks if wave data is ready
+proc isSoundReady*(sound: Sound): bool {.importc: "IsSoundReady".}
+  ## Checks if a sound is ready
 proc isSoundPlaying*(sound: Sound): bool {.importc: "IsSoundPlaying".}
   ## Check if a sound is currently playing
 proc waveCopy*(wave: Wave): Wave {.importc: "WaveCopy".}

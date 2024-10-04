@@ -520,6 +520,9 @@ const
     "UpdateAudioStream",
   ]
   nosideeffectsFuncs = [
+    "IsModelAnimationValid",
+    "IsSoundReady",
+    "IsMaterialReady",
     "IsShaderReady",
     "GetScreenToWorldRay",
     "GetScreenToWorldRayEx",
@@ -607,6 +610,7 @@ const
     "ColorToHSV",
     "ColorFromHSV",
     "ColorTint",
+    "ColorLerp",
     "ColorBrightness",
     "ColorContrast",
     "ColorAlpha",
