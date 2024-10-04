@@ -520,6 +520,22 @@ const
     "UpdateAudioStream",
   ]
   nosideeffectsFuncs = [
+    "GenImageText",
+    "GenImageFontAtlas",
+    # "GenTextureMipmaps",
+    "GenMeshCubicmap",
+    "GenMeshHeightmap",
+    "GenMeshKnot",
+    "GenMeshTorus",
+    "GenMeshCone",
+    "GenMeshCylinder",
+    "GenMeshHemiSphere",
+    "GenMeshSphere",
+    "GenMeshCube",
+    "GenMeshPlane",
+    "GenMeshPoly",
+    "GenMeshTangents",
+    "GetMeshBoundingBox",
     "IsModelAnimationValid",
     "IsSoundReady",
     "IsMaterialReady",
@@ -632,15 +648,12 @@ const
     "GetRayCollisionQuad",
     "IsAudioDeviceReady",
     "IsWaveReady",
-    "IsSoundPlaying",
     "WaveCopy",
     "WaveCrop",
     "WaveFormat",
     "IsMusicReady",
-    "IsMusicStreamPlaying",
     "GetMusicTimeLength",
     "IsAudioStreamReady",
-    "IsAudioStreamPlaying",
   ]
 
 proc genBindings(t: TopLevel, fname: string; header, middle: string) =

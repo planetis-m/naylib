@@ -1261,7 +1261,6 @@ proc loadFontPriv(fileName: cstring, fontSize: int32, codepoints: ptr UncheckedA
 proc loadFontFromImagePriv(image: Image, key: Color, firstChar: int32): Font {.importc: "LoadFontFromImage".}
 proc loadFontFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontFromMemory".}
 proc loadFontDataPriv(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData".}
-proc genImageFontAtlasPriv(glyphs: ptr UncheckedArray[GlyphInfo], glyphRecs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
 proc unloadFont(font: Font) {.importc: "UnloadFont".}
 proc exportFontAsCode*(font: Font, fileName: cstring): bool {.importc: "ExportFontAsCode".}
   ## Export font as code file, returns true on success
@@ -1353,36 +1352,10 @@ proc unloadMesh(mesh: Mesh) {.importc: "UnloadMesh".}
 proc drawMesh*(mesh: Mesh, material: Material, transform: Matrix) {.importc: "DrawMesh".}
   ## Draw a 3d mesh with material and transform
 proc drawMeshInstancedPriv(mesh: Mesh, material: Material, transforms: ptr UncheckedArray[Matrix], instances: int32) {.importc: "DrawMeshInstanced".}
-proc getMeshBoundingBox*(mesh: Mesh): BoundingBox {.importc: "GetMeshBoundingBox".}
-  ## Compute mesh bounding box limits
-proc genMeshTangents*(mesh: var Mesh) {.importc: "GenMeshTangents".}
-  ## Compute mesh tangents
 proc exportMesh*(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMesh".}
   ## Export mesh data to file, returns true on success
 proc exportMeshAsCode*(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMeshAsCode".}
   ## Export mesh as code file (.h) defining multiple arrays of vertex attributes
-proc genMeshPoly*(sides: int32, radius: float32): Mesh {.importc: "GenMeshPoly".}
-  ## Generate polygonal mesh
-proc genMeshPlane*(width: float32, length: float32, resX: int32, resZ: int32): Mesh {.importc: "GenMeshPlane".}
-  ## Generate plane mesh (with subdivisions)
-proc genMeshCube*(width: float32, height: float32, length: float32): Mesh {.importc: "GenMeshCube".}
-  ## Generate cuboid mesh
-proc genMeshSphere*(radius: float32, rings: int32, slices: int32): Mesh {.importc: "GenMeshSphere".}
-  ## Generate sphere mesh (standard sphere)
-proc genMeshHemiSphere*(radius: float32, rings: int32, slices: int32): Mesh {.importc: "GenMeshHemiSphere".}
-  ## Generate half-sphere mesh (no bottom cap)
-proc genMeshCylinder*(radius: float32, height: float32, slices: int32): Mesh {.importc: "GenMeshCylinder".}
-  ## Generate cylinder mesh
-proc genMeshCone*(radius: float32, height: float32, slices: int32): Mesh {.importc: "GenMeshCone".}
-  ## Generate cone/pyramid mesh
-proc genMeshTorus*(radius: float32, size: float32, radSeg: int32, sides: int32): Mesh {.importc: "GenMeshTorus".}
-  ## Generate torus mesh
-proc genMeshKnot*(radius: float32, size: float32, radSeg: int32, sides: int32): Mesh {.importc: "GenMeshKnot".}
-  ## Generate trefoil knot mesh
-proc genMeshHeightmap*(heightmap: Image, size: Vector3): Mesh {.importc: "GenMeshHeightmap".}
-  ## Generate heightmap mesh from image data
-proc genMeshCubicmap*(cubicmap: Image, cubeSize: Vector3): Mesh {.importc: "GenMeshCubicmap".}
-  ## Generate cubes-based map mesh from image data
 proc loadMaterialsPriv(fileName: cstring, materialCount: ptr int32): ptr UncheckedArray[Material] {.importc: "LoadMaterials".}
 proc loadMaterialDefault*(): Material {.importc: "LoadMaterialDefault".}
   ## Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
@@ -1422,6 +1395,8 @@ proc pauseSound*(sound: Sound) {.importc: "PauseSound".}
   ## Pause a sound
 proc resumeSound*(sound: Sound) {.importc: "ResumeSound".}
   ## Resume a paused sound
+proc isSoundPlaying*(sound: Sound): bool {.importc: "IsSoundPlaying".}
+  ## Check if a sound is currently playing
 proc setSoundVolume*(sound: Sound, volume: float32) {.importc: "SetSoundVolume".}
   ## Set volume for a sound (1.0 is max level)
 proc setSoundPitch*(sound: Sound, pitch: float32) {.importc: "SetSoundPitch".}
@@ -1434,6 +1409,8 @@ proc loadMusicStreamFromMemoryPriv(fileType: cstring, data: ptr UncheckedArray[u
 proc unloadMusicStream(music: Music) {.importc: "UnloadMusicStream".}
 proc playMusicStream*(music: Music) {.importc: "PlayMusicStream".}
   ## Start music playing
+proc isMusicStreamPlaying*(music: Music): bool {.importc: "IsMusicStreamPlaying".}
+  ## Check if music is playing
 proc updateMusicStream*(music: Music) {.importc: "UpdateMusicStream".}
   ## Updates buffers for music streaming
 proc stopMusicStream*(music: Music) {.importc: "StopMusicStream".}
@@ -1463,6 +1440,8 @@ proc pauseAudioStream*(stream: AudioStream) {.importc: "PauseAudioStream".}
   ## Pause audio stream
 proc resumeAudioStream*(stream: AudioStream) {.importc: "ResumeAudioStream".}
   ## Resume audio stream
+proc isAudioStreamPlaying*(stream: AudioStream): bool {.importc: "IsAudioStreamPlaying".}
+  ## Check if audio stream is playing
 proc stopAudioStream*(stream: AudioStream) {.importc: "StopAudioStream".}
   ## Stop audio stream
 proc setAudioStreamVolume*(stream: AudioStream, volume: float32) {.importc: "SetAudioStreamVolume".}
@@ -1673,6 +1652,7 @@ proc getPixelDataSize*(width: int32, height: int32, format: PixelFormat): int32 
   ## Get pixel data size in bytes for certain format
 proc isFontReady*(font: Font): bool {.importc: "IsFontReady".}
   ## Check if a font is ready
+proc genImageFontAtlasPriv(glyphs: ptr UncheckedArray[GlyphInfo], glyphRecs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
 proc measureText*(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
   ## Measure string size for Font
 proc getGlyphIndex*(font: Font, codepoint: Rune): int32 {.importc: "GetGlyphIndex".}
@@ -1683,6 +1663,32 @@ proc getGlyphAtlasRec*(font: Font, codepoint: Rune): Rectangle {.importc: "GetGl
   ## Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
 proc isModelReady*(model: Model): bool {.importc: "IsModelReady".}
   ## Check if a model is ready
+proc getMeshBoundingBox*(mesh: Mesh): BoundingBox {.importc: "GetMeshBoundingBox".}
+  ## Compute mesh bounding box limits
+proc genMeshTangents*(mesh: var Mesh) {.importc: "GenMeshTangents".}
+  ## Compute mesh tangents
+proc genMeshPoly*(sides: int32, radius: float32): Mesh {.importc: "GenMeshPoly".}
+  ## Generate polygonal mesh
+proc genMeshPlane*(width: float32, length: float32, resX: int32, resZ: int32): Mesh {.importc: "GenMeshPlane".}
+  ## Generate plane mesh (with subdivisions)
+proc genMeshCube*(width: float32, height: float32, length: float32): Mesh {.importc: "GenMeshCube".}
+  ## Generate cuboid mesh
+proc genMeshSphere*(radius: float32, rings: int32, slices: int32): Mesh {.importc: "GenMeshSphere".}
+  ## Generate sphere mesh (standard sphere)
+proc genMeshHemiSphere*(radius: float32, rings: int32, slices: int32): Mesh {.importc: "GenMeshHemiSphere".}
+  ## Generate half-sphere mesh (no bottom cap)
+proc genMeshCylinder*(radius: float32, height: float32, slices: int32): Mesh {.importc: "GenMeshCylinder".}
+  ## Generate cylinder mesh
+proc genMeshCone*(radius: float32, height: float32, slices: int32): Mesh {.importc: "GenMeshCone".}
+  ## Generate cone/pyramid mesh
+proc genMeshTorus*(radius: float32, size: float32, radSeg: int32, sides: int32): Mesh {.importc: "GenMeshTorus".}
+  ## Generate torus mesh
+proc genMeshKnot*(radius: float32, size: float32, radSeg: int32, sides: int32): Mesh {.importc: "GenMeshKnot".}
+  ## Generate trefoil knot mesh
+proc genMeshHeightmap*(heightmap: Image, size: Vector3): Mesh {.importc: "GenMeshHeightmap".}
+  ## Generate heightmap mesh from image data
+proc genMeshCubicmap*(cubicmap: Image, cubeSize: Vector3): Mesh {.importc: "GenMeshCubicmap".}
+  ## Generate cubes-based map mesh from image data
 proc isMaterialReady*(material: Material): bool {.importc: "IsMaterialReady".}
   ## Check if a material is ready
 proc isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
@@ -1709,8 +1715,6 @@ proc isWaveReady*(wave: Wave): bool {.importc: "IsWaveReady".}
   ## Checks if wave data is ready
 proc isSoundReady*(sound: Sound): bool {.importc: "IsSoundReady".}
   ## Checks if a sound is ready
-proc isSoundPlaying*(sound: Sound): bool {.importc: "IsSoundPlaying".}
-  ## Check if a sound is currently playing
 proc waveCopy*(wave: Wave): Wave {.importc: "WaveCopy".}
   ## Copy a wave to a new wave
 proc waveCrop*(wave: var Wave, initFrame: int32, finalFrame: int32) {.importc: "WaveCrop".}
@@ -1719,14 +1723,10 @@ proc waveFormat*(wave: var Wave, sampleRate: int32, sampleSize: int32, channels:
   ## Convert wave data to desired format
 proc isMusicReady*(music: Music): bool {.importc: "IsMusicReady".}
   ## Checks if a music stream is ready
-proc isMusicStreamPlaying*(music: Music): bool {.importc: "IsMusicStreamPlaying".}
-  ## Check if music is playing
 proc getMusicTimeLength*(music: Music): float32 {.importc: "GetMusicTimeLength".}
   ## Get music time length (in seconds)
 proc isAudioStreamReady*(stream: AudioStream): bool {.importc: "IsAudioStreamReady".}
   ## Checks if an audio stream is ready
-proc isAudioStreamPlaying*(stream: AudioStream): bool {.importc: "IsAudioStreamPlaying".}
-  ## Check if audio stream is playing
 {.pop.}
 {.pop.}
 
