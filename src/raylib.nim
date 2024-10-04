@@ -1209,21 +1209,8 @@ proc exportImage*(image: Image, fileName: cstring): bool {.importc: "ExportImage
 proc exportImageToMemoryPriv(image: Image, fileType: cstring, fileSize: ptr int32): ptr uint8 {.importc: "ExportImageToMemory".}
 proc exportImageAsCode*(image: Image, fileName: cstring): bool {.importc: "ExportImageAsCode".}
   ## Export image as code file defining an array of bytes, returns true on success
-proc imageFromChannel*(image: Image, selectedChannel: int32): Image {.importc: "ImageFromChannel".}
-  ## Create an image from a selected channel of another image (GRAYSCALE)
-proc imageKernelConvolutionPriv(image: var Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
 proc loadImageColorsPriv(image: Image): ptr UncheckedArray[Color] {.importc: "LoadImageColors".}
 proc loadImagePalettePriv(image: Image, maxPaletteSize: int32, colorCount: ptr int32): ptr UncheckedArray[Color] {.importc: "LoadImagePalette".}
-proc imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, thick: int32, color: Color) {.importc: "ImageDrawLineEx".}
-  ## Draw a line defining thickness within an image
-proc imageDrawTriangle*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "ImageDrawTriangle".}
-  ## Draw triangle within an image
-proc imageDrawTriangle*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, c1: Color, c2: Color, c3: Color) {.importc: "ImageDrawTriangleEx".}
-  ## Draw triangle with interpolated colors within an image
-proc imageDrawTriangleLines*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "ImageDrawTriangleLines".}
-  ## Draw triangle outline within an image
-proc imageDrawTriangleFanPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleFan".}
-proc imageDrawTriangleStripPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleStrip".}
 proc loadTexturePriv(fileName: cstring): Texture2D {.importc: "LoadTexture".}
 proc loadTextureFromImagePriv(image: Image): Texture2D {.importc: "LoadTextureFromImage".}
 proc loadTextureCubemapPriv(image: Image, layout: CubemapLayout): TextureCubemap {.importc: "LoadTextureCubemap".}
@@ -1558,6 +1545,8 @@ proc imageCopy*(image: Image): Image {.importc: "ImageCopy".}
   ## Create an image duplicate (useful for transformations)
 proc imageFromImage*(image: Image, rec: Rectangle): Image {.importc: "ImageFromImage".}
   ## Create an image from another image piece
+proc imageFromChannel*(image: Image, selectedChannel: int32): Image {.importc: "ImageFromChannel".}
+  ## Create an image from a selected channel of another image (GRAYSCALE)
 proc imageText*(text: cstring, fontSize: int32, color: Color): Image {.importc: "ImageText".}
   ## Create an image from text (default font)
 proc imageText*(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
@@ -1578,6 +1567,7 @@ proc imageAlphaPremultiply*(image: var Image) {.importc: "ImageAlphaPremultiply"
   ## Premultiply alpha channel
 proc imageBlurGaussian*(image: var Image, blurSize: int32) {.importc: "ImageBlurGaussian".}
   ## Apply Gaussian blur using a box blur approximation
+proc imageKernelConvolutionPriv(image: var Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
 proc imageResize*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize".}
   ## Resize image (Bicubic scaling algorithm)
 proc imageResizeNN*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN".}
@@ -1624,6 +1614,8 @@ proc imageDrawLine*(dst: var Image, startPosX: int32, startPosY: int32, endPosX:
   ## Draw line within an image
 proc imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, color: Color) {.importc: "ImageDrawLineV".}
   ## Draw line within an image (Vector version)
+proc imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, thick: int32, color: Color) {.importc: "ImageDrawLineEx".}
+  ## Draw a line defining thickness within an image
 proc imageDrawCircle*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircle".}
   ## Draw a filled circle within an image
 proc imageDrawCircle*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV".}
@@ -1640,6 +1632,14 @@ proc imageDrawRectangle*(dst: var Image, rec: Rectangle, color: Color) {.importc
   ## Draw rectangle within an image
 proc imageDrawRectangleLines*(dst: var Image, rec: Rectangle, thick: int32, color: Color) {.importc: "ImageDrawRectangleLines".}
   ## Draw rectangle lines within an image
+proc imageDrawTriangle*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "ImageDrawTriangle".}
+  ## Draw triangle within an image
+proc imageDrawTriangle*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, c1: Color, c2: Color, c3: Color) {.importc: "ImageDrawTriangleEx".}
+  ## Draw triangle with interpolated colors within an image
+proc imageDrawTriangleLines*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "ImageDrawTriangleLines".}
+  ## Draw triangle outline within an image
+proc imageDrawTriangleFanPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleFan".}
+proc imageDrawTriangleStripPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleStrip".}
 proc imageDraw*(dst: var Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) {.importc: "ImageDraw".}
   ## Draw a source image within a destination image (tint applied to source)
 proc imageDrawText*(dst: var Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
