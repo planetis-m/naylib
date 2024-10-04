@@ -520,6 +520,7 @@ const
     "UpdateAudioStream",
   ]
   nosideeffectsFuncs = [
+    "CheckCollisionCircleLine",
     "UpdateModelAnimationBoneMatrices",
     "GenImageText",
     "GenImageFontAtlas",

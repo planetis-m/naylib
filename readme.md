@@ -76,7 +76,9 @@ Here are quick links to some important sections:
 
 [![Native & WebAssembly CI](https://img.shields.io/github/actions/workflow/status/planetis-m/naylib/ci.yml?branch=main&label=Native%20%26%20WebAssembly%20CI)](https://github.com/planetis-m/naylib/actions/workflows/ci.yml)
 
-[![Android CI](https://img.shields.io/github/actions/workflow/status/planetis-m/raylib-game-template/ci.yml?branch=master&label=Android%20CI)](https://github.com/planetis-m/raylib-game-template/actions/workflows/ci.yml)
+[![Android CI](https://img.shields.io/github/actions/workflow/status/planetis-m/naylib-game-template/ci.yml?branch=master&label=Android%20CI)](https://github.com/planetis-m/naylib-game-template/actions/workflows/ci.yml)
+
+[![Examples CI](https://img.shields.io/github/actions/workflow/status/planetis-m/raylib-examples/ci.yml?branch=master&label=Nim%20CI)](https://github.com/planetis-m/raylib-examples/actions/workflows/ci.yml)
 
 ## Alternative Game Development Libraries
 

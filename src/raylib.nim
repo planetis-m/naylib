@@ -1193,8 +1193,6 @@ proc drawSplineSegmentBezierQuadratic*(p1: Vector2, c2: Vector2, p3: Vector2, th
   ## Draw spline segment: Quadratic Bezier, 2 points, 1 control point
 proc drawSplineSegmentBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBezierCubic".}
   ## Draw spline segment: Cubic Bezier, 2 points, 2 control points
-proc checkCollisionCircleLine*(center: Vector2, radius: float32, p1: Vector2, p2: Vector2): bool {.importc: "CheckCollisionCircleLine".}
-  ## Check if circle collides with a line created betweeen two points [p1] and [p2]
 proc loadImagePriv(fileName: cstring): Image {.importc: "rlLoadImage".}
 proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw".}
 proc loadImageSvgPriv(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg".}
@@ -1532,6 +1530,8 @@ proc checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vecto
   ## Check the collision between two lines defined by two points each, returns collision point by reference
 proc checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshold: int32): bool {.importc: "CheckCollisionPointLine".}
   ## Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
+proc checkCollisionCircleLine*(center: Vector2, radius: float32, p1: Vector2, p2: Vector2): bool {.importc: "CheckCollisionCircleLine".}
+  ## Check if circle collides with a line created betweeen two points [p1] and [p2]
 proc getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "GetCollisionRec".}
   ## Get collision rectangle for two rectangles collision
 proc isImageReady*(image: Image): bool {.importc: "IsImageReady".}
