@@ -952,6 +952,14 @@ proc setShaderValueMatrix*(shader: Shader, locIndex: ShaderLocation, mat: Matrix
 proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocation, texture: Texture2D) {.importc: "SetShaderValueTexture".}
   ## Set shader uniform value for texture (sampler2d)
 proc unloadShader(shader: Shader) {.importc: "UnloadShader".}
+proc getScreenToWorldRay*(position: Vector2, camera: Camera): Ray {.importc: "GetScreenToWorldRay".}
+  ## Get a ray trace from screen position (i.e mouse)
+proc getScreenToWorldRay*(position: Vector2, camera: Camera, width: int32, height: int32): Ray {.importc: "GetScreenToWorldRayEx".}
+  ## Get a ray trace from screen position (i.e mouse) in a viewport
+proc getWorldToScreen*(position: Vector3, camera: Camera): Vector2 {.importc: "GetWorldToScreen".}
+  ## Get the screen space position for a 3d world space position
+proc getWorldToScreen*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx".}
+  ## Get size position for a 3d world space position
 proc setTargetFPS*(fps: int32) {.importc: "SetTargetFPS".}
   ## Set target FPS (maximum)
 proc getFrameTime*(): float32 {.importc: "GetFrameTime".}
@@ -1474,14 +1482,6 @@ proc detachAudioMixedProcessor*(processor: AudioCallback) {.importc: "DetachAudi
 {.push noSideEffect.}
 proc isShaderReady*(shader: Shader): bool {.importc: "IsShaderReady".}
   ## Check if a shader is ready
-proc getScreenToWorldRay*(position: Vector2, camera: Camera): Ray {.importc: "GetScreenToWorldRay".}
-  ## Get a ray trace from screen position (i.e mouse)
-proc getScreenToWorldRay*(position: Vector2, camera: Camera, width: int32, height: int32): Ray {.importc: "GetScreenToWorldRayEx".}
-  ## Get a ray trace from screen position (i.e mouse) in a viewport
-proc getWorldToScreen*(position: Vector3, camera: Camera): Vector2 {.importc: "GetWorldToScreen".}
-  ## Get the screen space position for a 3d world space position
-proc getWorldToScreen*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx".}
-  ## Get size position for a 3d world space position
 proc getWorldToScreen2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetWorldToScreen2D".}
   ## Get the screen space position for a 2d camera world space position
 proc getScreenToWorld2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetScreenToWorld2D".}
