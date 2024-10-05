@@ -155,10 +155,10 @@ proc toNimType(cType: string): string =
   of "float16": "Float16"
   of "size_t": "csize_t"
   of "char": "char"
-  else:
-    var result = cType
-    result.removePrefix("rl")
-    result
+  of "rlVertexBuffer": "VertexBuffer"
+  of "rlRenderBatch": "RenderBatch"
+  of "rlDrawCall": "DrawCall"
+  else: cType
 
 proc convertType*(s, pattern: string, many, isVar: bool, baseKind: var string): string =
   let typeInfo = parseType(s)

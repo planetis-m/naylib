@@ -660,48 +660,44 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
   try:
     otp = openFileStream(fname, fmWrite)
     lit header
+
+    proc generateEnums(enums: seq[EnumInfo]) =
+      proc removeCommonPrefixes(name: string): string =
+        result = name
+        const prefixes = [
+          "FLAG_", "LOG_", "KEY_", "MOUSE_CURSOR_", "MOUSE_BUTTON_",
+          "GAMEPAD_BUTTON_", "GAMEPAD_AXIS_", "FONT_", "BLEND_", "GESTURE_",
+          "CAMERA_", "MATERIAL_MAP_", "SHADER_LOC_", "SHADER_UNIFORM_",
+          "SHADER_ATTRIB_", "PIXELFORMAT_", "TEXTURE_FILTER_", "TEXTURE_WRAP_",
+          "NPATCH_", "CUBEMAP_LAYOUT_"
+        ]
+        for prefix in prefixes:
+          result.removePrefix(prefix)
+
+      lit "\ntype"
+      scope:
+        for enm in items(enums):
+          spaces
+          ident enm.name
+          lit "* {.size: sizeof(int32).} = enum"
+          doc enm
+          scope:
+            var prev = -1
+            for i, val in pairs(enm.values):
+              if val.value == prev: continue
+              spaces
+              let valName = removeCommonPrefixes(val.name)
+              ident camelCaseAscii(valName)
+              if prev + 1 != val.value:
+                lit " = "
+                lit $val.value
+              doc val
+              prev = val.value
+            lit "\n"
+        lit "\n"
+
     # Generate enum definitions
-    lit "\ntype"
-    scope:
-      for enm in items(t.enums):
-        spaces
-        ident enm.name
-        lit "* {.size: sizeof(int32).} = enum"
-        doc enm
-        scope:
-          var prev = -1
-          for i, val in pairs(enm.values):
-            if val.value == prev: continue
-            spaces
-            var valName = val.name
-            removePrefix(valName, "FLAG_")
-            removePrefix(valName, "LOG_")
-            removePrefix(valName, "KEY_")
-            removePrefix(valName, "MOUSE_CURSOR_")
-            removePrefix(valName, "MOUSE_BUTTON_")
-            removePrefix(valName, "GAMEPAD_BUTTON_")
-            removePrefix(valName, "GAMEPAD_AXIS_")
-            removePrefix(valName, "FONT_")
-            removePrefix(valName, "BLEND_")
-            removePrefix(valName, "GESTURE_")
-            removePrefix(valName, "CAMERA_")
-            removePrefix(valName, "MATERIAL_MAP_")
-            removePrefix(valName, "SHADER_LOC_")
-            removePrefix(valName, "SHADER_UNIFORM_")
-            removePrefix(valName, "SHADER_ATTRIB_")
-            removePrefix(valName, "PIXELFORMAT_")
-            removePrefix(valName, "TEXTURE_FILTER_")
-            removePrefix(valName, "TEXTURE_WRAP_")
-            removePrefix(valName, "NPATCH_")
-            removePrefix(valName, "CUBEMAP_LAYOUT_")
-            ident camelCaseAscii(valName)
-            if prev + 1 != val.value:
-              lit " = "
-              lit $val.value
-            doc val
-            prev = val.value
-          lit "\n"
-      lit "\n"
+    generateEnums(t.enums)
     lit extraDistinct
     # Generate type definitions
     var procProperties: seq[(string, string, string)] = @[]
@@ -721,11 +717,11 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         doc obj
         scope:
           for fld in items(obj.fields):
-            if obj.name != "Matrix" or fld.name notin ["m4", "m8", "m12", "m5", "m9", "m13", "m6", "m10", "m14", "m7", "m11", "m15"]:
+            if obj.name != "Matrix" or fld.name in ["m0", "m1", "m2", "m3"]:
               spaces
             var name = fld.name
             ident name
-            if obj.name == "Matrix" and fld.name in ["m0", "m4", "m8", "m1", "m5", "m9", "m2", "m6", "m10", "m3", "m7", "m11"]:
+            if obj.name == "Matrix" and fld.name notin ["m12", "m13", "m14", "m15"]:
               lit "*, "
               continue
             let isPrivate = (obj.name, name) notin
@@ -753,7 +749,7 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
               let pat = getReplacement(obj.name, name, replacements)
               var baseKind = ""
               let kind = convertType(fld.`type`, pat, many, false, baseKind)
-              var isArray = many and not endsWith(name.normalize, "data") and
+              let isArray = many and not endsWith(name.normalize, "data") and
                   (obj.name, name) notin {"Material": "params", "VrDeviceInfo": "lensDistortionValues", "FilePathList": "paths", "AutomationEvent": "params"}
               if isPrivate or isArray or obj.name in ["FilePathList", "AutomationEventList"] or
                   (obj.name, name) in {"MaterialMap": "texture", "Material": "shader", "AudioStream": "buffer",
@@ -792,21 +788,64 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
     lit middle
 
     proc generateProcs(holder: seq[FunctionInfo]) =
+      proc shouldRemoveSuffix(fnc: FunctionInfo): bool =
+        const exceptions = [
+          "DrawRectangleGradientV",
+          "SetShaderValueV",
+          "ColorToHSV",
+          "ColorFromHSV",
+          "CheckCollisionCircleRec",
+          "CheckCollisionPointRec"
+        ]
+        fnc.name notin exceptions and
+          ((fnc.name.endsWith("V") and fnc.returnType != "Vector2") or
+          (fnc.name.endsWith("Rec") and fnc.returnType != "Rectangle") or
+          fnc.name.endsWith("Ex") or fnc.name.endsWith("Pro"))
+
+      proc generateProcName(fnc: FunctionInfo): string =
+        result = fnc.name
+        if shouldRemoveSuffix(fnc):
+          result.removeSuffix("V")
+          result.removeSuffix("Rec")
+          result.removeSuffix("Ex")
+          result.removeSuffix("Pro")
+        result = uncapitalizeAscii(result)
+
+      proc shouldUsePluralType(fnc: FunctionInfo, param: ParamInfo): bool =
+        result = isPlural(param.name)
+        if (fnc.name, param.name) == ("LoadImageAnim", "frames"):
+          result = false
+        elif (fnc.name, param.name) == ("ImageKernelConvolution", "kernel"):
+          result = true
+
+      proc shouldUsePluralReturnType(fnc: FunctionInfo): bool =
+        isPlural(fnc.name) or fnc.name == "LoadImagePalette"
+
+      proc getMangledFunctionName(name: string): string =
+        const mangledFunctions = ["ShowCursor", "CloseWindow", "LoadImage", "DrawText", "DrawTextEx"]
+        if name in mangledFunctions:
+          result = "rl" & name
+        else:
+          result = name
+
+      proc findEnumTypeForParam(fnc: FunctionInfo, param: ParamInfo): string =
+        for j, (fncName, paramName) in enumInFuncParams.pairs:
+          if fnc.name == fncName and param.name == paramName:
+            return enumInFuncs[j]
+        return ""
+
+      proc findEnumTypeForReturn(fnc: FunctionInfo): string =
+        for (fncName, idx) in enumInFuncReturn.items:
+          if fnc.name == fncName:
+            return enumInFuncs[idx]
+        return ""
+
       for fnc in items(holder):
-        if fnc.name in excludedFuncs: continue
+        if fnc.name in excludedFuncs:
+          continue
+        # Generate proc signature
         lit "\nproc "
-        var fncName = fnc.name # Follow Nim's naming convention for proc names.
-        if fncName notin ["DrawRectangleGradientV", "SetShaderValueV", "ColorToHSV", "ColorFromHSV",
-            "CheckCollisionCircleRec", "CheckCollisionPointRec"] and
-            (fncName.endsWith("V") and fnc.returnType != "Vector2" or
-            fncName.endsWith("Rec") and fnc.returnType != "Rectangle") or
-            fncName.endsWith("Ex") or fncName.endsWith("Pro"):
-          fncName.removeSuffix("V")
-          fncName.removeSuffix("Rec")
-          fncName.removeSuffix("Ex")
-          fncName.removeSuffix("Pro")
-        fncName = uncapitalizeAscii(fncName)
-        ident fncName
+        ident generateProcName(fnc)
         let isPrivate = fnc.name in privateFuncs
         let isAlloc = fnc.name in allocFuncs
         if isPrivate:
@@ -815,21 +854,20 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
           lit "("
         else:
           lit "*("
+        # Generate parameters
         var hasVarargs = false
         for i, param in fnc.params.pairs:
-          if param.name == "args" and param.`type` == "...": # , ...) {
+          if param.name == "args" and param.`type` == "...":
             hasVarargs = true
           else:
             if i > 0: lit ", "
             ident param.name
             lit ": "
-            block outer:
-              for j, (name, param1) in enumInFuncParams.pairs:
-                if name == fnc.name and param1 == param.name:
-                  lit enumInFuncs[j]
-                  break outer
-              let many = (fnc.name, param.name) != ("LoadImageAnim", "frames") and
-                  isPlural(param.name) or (fnc.name, param.name) == ("ImageKernelConvolution", "kernel")
+            let enumType = findEnumTypeForParam(fnc, param)
+            if enumType != "":
+              lit enumType
+            else:
+              let many = shouldUsePluralType(fnc, param)
               const
                 replacements = [
                   ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[$1]"),
@@ -843,26 +881,26 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
               let kind = convertType(param.`type`, pat, many, not isPrivate or fnc.name == "ImageKernelConvolution", baseKind)
               lit kind
         lit ")"
+        # Generate return type
         if fnc.returnType != "void":
           lit ": "
-          block outer:
-            for (name, idx) in enumInFuncReturn.items:
-              if name == fnc.name:
-                lit enumInFuncs[idx]
-                break outer
-            let many = isPlural(fnc.name) or fnc.name == "LoadImagePalette"
+          let enumType = findEnumTypeForReturn(fnc)
+          if enumType != "":
+            lit enumType
+          else:
+            let many = shouldUsePluralReturnType(fnc)
             var baseKind = ""
             let kind = convertType(fnc.returnType, "", many, not isPrivate, baseKind)
             lit kind
+        # Generate import pragma
         lit " {.importc: "
         lit "\""
-        if fnc.name in ["ShowCursor", "CloseWindow", "LoadImage", "DrawText", "DrawTextEx"]:
-          lit "rl" & fnc.name
-        else: ident fnc.name
+        ident getMangledFunctionName(fnc.name)
         lit "\""
         if hasVarargs:
           lit ", varargs"
         lit ".}"
+        # Generate documentation comment
         if not (isAlloc or isPrivate) and fnc.description != "":
           scope:
             spaces
