@@ -1,4 +1,4 @@
-import common, std/streams, std/sets
+import common, std/[streams, sets, tables]
 import std/strutils except spaces
 when defined(nimPreviewSlimSystem):
   import std/syncio
@@ -208,146 +208,70 @@ const
   Magenta* = Color(r: 255, g: 0, b: 255, a: 255)
   RayWhite* = Color(r: 245, g: 245, b: 245, a: 255)
 """
-  enumInFuncReturn = [
-    ("GetKeyPressed", 0),
-    ("GetGamepadButtonPressed", 15),
-    ("GetGestureDetected", 26),
-    ("GetShaderLocation", 36),
-    ("GetShaderLocationAttrib", 36)
-  ]
-  enumInFuncParams = [
-    # KeyboardKey
-    ("IsKeyPressed", "key"),
-    ("IsKeyPressedRepeat", "key"),
-    ("IsKeyDown", "key"),
-    ("IsKeyReleased", "key"),
-    ("IsKeyUp", "key"),
-    ("SetExitKey", "key"),
-    ("SetCameraAltControl", "keyAlt"),
-    ("SetCameraSmoothZoomControl", "keySmoothZoom"),
-    ("SetCameraMoveControls", "keyFront"),
-    ("SetCameraMoveControls", "keyBack"),
-    ("SetCameraMoveControls", "keyRight"),
-    ("SetCameraMoveControls", "keyLeft"),
-    ("SetCameraMoveControls", "keyUp"),
-    ("SetCameraMoveControls", "keyDown"),
-    # GamepadButton
-    ("IsGamepadButtonPressed", "button"),
-    ("IsGamepadButtonDown", "button"),
-    ("IsGamepadButtonReleased", "button"),
-    ("IsGamepadButtonUp", "button"),
-    # GamepadAxis
-    ("GetGamepadAxisMovement", "axis"),
-    # MouseCursor
-    ("SetMouseCursor", "cursor"),
-    # MouseButton
-    ("IsMouseButtonPressed", "button"),
-    ("IsMouseButtonDown", "button"),
-    ("IsMouseButtonReleased", "button"),
-    ("IsMouseButtonUp", "button"),
-    ("SetCameraPanControl", "keyPan"),
-    # Gesture
-    ("SetGesturesEnabled", "flags"),
-    ("IsGestureDetected", "gesture"),
-    # ConfigFlags
-    ("SetConfigFlags", "flags"),
-    ("SetWindowState", "flags"),
-    ("ClearWindowState", "flags"),
-    ("IsWindowState", "flag"),
-    # TraceLogLevel
-    ("TraceLog", "logLevel"),
-    ("SetTraceLogLevel", "logLevel"),
-    # CameraMode
-    ("UpdateCamera", "mode"),
-    # BlendMode
-    ("BeginBlendMode", "mode"),
-    # MaterialMapIndex
-    ("SetMaterialTexture", "mapType"),
-    # ShaderLocation
-    ("SetShaderValue", "locIndex"),
-    ("SetShaderValueV", "locIndex"),
-    ("SetShaderValueMatrix", "locIndex"),
-    ("SetShaderValueTexture", "locIndex"),
-    # ShaderUniformDataType
-    ("SetShaderValue", "uniformType"),
-    ("SetShaderValueV", "uniformType"),
-    # PixelFormat
-    ("LoadImageRaw", "format"),
-    ("ImageFormat", "newFormat"),
-    ("GetPixelColor", "format"),
-    ("SetPixelColor", "format"),
-    ("GetPixelDataSize", "format"),
-    # TextureFilter
-    ("SetTextureFilter", "filter"),
-    # TextureWrap
-    ("SetTextureWrap", "wrap"),
-    # CubemapLayout
-    ("LoadTextureCubemap", "layout"),
-    # FontType
-    ("LoadFontData", "type"),
-    # Rune
-    ("DrawTextCodepoint", "codepoint"),
-    ("GetGlyphIndex", "codepoint"),
-    ("GetGlyphInfo", "codepoint"),
-    ("GetGlyphAtlasRec", "codepoint"),
-  ]
-  enumInFuncs = [
-    "KeyboardKey",
-    "KeyboardKey",
-    "KeyboardKey",
-    "KeyboardKey",
-    "KeyboardKey",
-    "KeyboardKey",
-    "KeyboardKey",
-    "KeyboardKey",
-    "KeyboardKey",
-    "KeyboardKey",
-    "KeyboardKey",
-    "KeyboardKey",
-    "KeyboardKey",
-    "KeyboardKey",
-    "GamepadButton",
-    "GamepadButton",
-    "GamepadButton",
-    "GamepadButton",
-    "GamepadAxis",
-    "MouseCursor",
-    "MouseButton",
-    "MouseButton",
-    "MouseButton",
-    "MouseButton",
-    "MouseButton",
-    "Flags[Gesture]",
-    "Gesture",
-    "Flags[ConfigFlags]",
-    "Flags[ConfigFlags]",
-    "Flags[ConfigFlags]",
-    "ConfigFlags",
-    "TraceLogLevel",
-    "TraceLogLevel",
-    "CameraMode",
-    "BlendMode",
-    "MaterialMapIndex",
-    "ShaderLocation",
-    "ShaderLocation",
-    "ShaderLocation",
-    "ShaderLocation",
-    "ShaderUniformDataType",
-    "ShaderUniformDataType",
-    "PixelFormat",
-    "PixelFormat",
-    "PixelFormat",
-    "PixelFormat",
-    "PixelFormat",
-    "TextureFilter",
-    "TextureWrap",
-    "CubemapLayout",
-    "FontType",
-    "Rune",
-    "Rune",
-    "Rune",
-    "Rune",
-  ]
+  enumInFuncReturn = toTable({
+    "GetKeyPressed": "KeyboardKey",
+    "GetGamepadButtonPressed": "GamepadButton",
+    "GetGestureDetected": "Gesture",
+    "GetShaderLocation": "ShaderLocation",
+    "GetShaderLocationAttrib": "ShaderLocation",
+  })
+  enumInFuncParams = toTable({
+    ("IsKeyPressed", "key"): "KeyboardKey",
+    ("IsKeyPressedRepeat", "key"): "KeyboardKey",
+    ("IsKeyDown", "key"): "KeyboardKey",
+    ("IsKeyReleased", "key"): "KeyboardKey",
+    ("IsKeyUp", "key"): "KeyboardKey",
+    ("SetExitKey", "key"): "KeyboardKey",
+    ("SetCameraAltControl", "keyAlt"): "KeyboardKey",
+    ("SetCameraSmoothZoomControl", "keySmoothZoom"): "KeyboardKey",
+    ("SetCameraMoveControls", "keyFront"): "KeyboardKey",
+    ("SetCameraMoveControls", "keyBack"): "KeyboardKey",
+    ("SetCameraMoveControls", "keyRight"): "KeyboardKey",
+    ("SetCameraMoveControls", "keyLeft"): "KeyboardKey",
+    ("SetCameraMoveControls", "keyUp"): "KeyboardKey",
+    ("SetCameraMoveControls", "keyDown"): "KeyboardKey",
+    ("IsGamepadButtonPressed", "button"): "GamepadButton",
+    ("IsGamepadButtonDown", "button"): "GamepadButton",
+    ("IsGamepadButtonReleased", "button"): "GamepadButton",
+    ("IsGamepadButtonUp", "button"): "GamepadButton",
+    ("GetGamepadAxisMovement", "axis"): "GamepadAxis",
+    ("SetMouseCursor", "cursor"): "MouseCursor",
+    ("IsMouseButtonPressed", "button"): "MouseButton",
+    ("IsMouseButtonDown", "button"): "MouseButton",
+    ("IsMouseButtonReleased", "button"): "MouseButton",
+    ("IsMouseButtonUp", "button"): "MouseButton",
+    ("SetCameraPanControl", "keyPan"): "MouseButton",
+    ("SetGesturesEnabled", "flags"): "Flags[Gesture]",
+    ("IsGestureDetected", "gesture"): "Gesture",
+    ("SetConfigFlags", "flags"): "Flags[ConfigFlags]",
+    ("SetWindowState", "flags"): "Flags[ConfigFlags]",
+    ("ClearWindowState", "flags"): "Flags[ConfigFlags]",
+    ("IsWindowState", "flag"): "ConfigFlags",
+    ("TraceLog", "logLevel"): "TraceLogLevel",
+    ("SetTraceLogLevel", "logLevel"): "TraceLogLevel",
+    ("UpdateCamera", "mode"): "CameraMode",
+    ("BeginBlendMode", "mode"): "BlendMode",
+    ("SetMaterialTexture", "mapType"): "MaterialMapIndex",
+    ("SetShaderValue", "locIndex"): "ShaderLocation",
+    ("SetShaderValueV", "locIndex"): "ShaderLocation",
+    ("SetShaderValueMatrix", "locIndex"): "ShaderLocation",
+    ("SetShaderValueTexture", "locIndex"): "ShaderLocation",
+    ("SetShaderValue", "uniformType"): "ShaderUniformDataType",
+    ("SetShaderValueV", "uniformType"): "ShaderUniformDataType",
+    ("LoadImageRaw", "format"): "PixelFormat",
+    ("ImageFormat", "newFormat"): "PixelFormat",
+    ("GetPixelColor", "format"): "PixelFormat",
+    ("SetPixelColor", "format"): "PixelFormat",
+    ("GetPixelDataSize", "format"): "PixelFormat",
+    ("SetTextureFilter", "filter"): "TextureFilter",
+    ("SetTextureWrap", "wrap"): "TextureWrap",
+    ("LoadTextureCubemap", "layout"): "CubemapLayout",
+    ("LoadFontData", "type"): "FontType",
+    ("DrawTextCodepoint", "codepoint"): "Rune",
+    ("GetGlyphIndex", "codepoint"): "Rune",
+    ("GetGlyphInfo", "codepoint"): "Rune",
+    ("GetGlyphAtlasRec", "codepoint"): "Rune"
+  })
   excludedFuncs = toHashSet([
     "ColorIsEqual",
     # Text strings management functions
@@ -730,16 +654,10 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]) =
     isPlural(fnc.name) or fnc.name == "LoadImagePalette"
 
   proc findEnumTypeForParam(fnc: FunctionInfo, param: ParamInfo): string =
-    for j, (fncName, paramName) in enumInFuncParams.pairs:
-      if fnc.name == fncName and param.name == paramName:
-        return enumInFuncs[j]
-    return ""
+    enumInFuncParams.getOrDefault((fnc.name, param.name))
 
   proc findEnumTypeForReturn(fnc: FunctionInfo): string =
-    for (fncName, idx) in enumInFuncReturn.items:
-      if fnc.name == fncName:
-        return enumInFuncs[idx]
-    return ""
+    enumInFuncReturn.getOrDefault(fnc.name)
 
   for fnc in mitems(holder):
     if fnc.name in excludedFuncs:
