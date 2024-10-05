@@ -642,7 +642,7 @@ proc preprocessEnums(enums: var seq[EnumInfo]) =
   for enm in mitems(enums):
     sort(enm.values, proc (x, y: ValueInfo): int = cmp(x.value, y.value))
 
-proc preprocessFunctions(holder: var seq[FunctionInfo]) =
+proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[FunctionInfo]) =
   proc shouldUsePluralType(fnc: FunctionInfo, param: ParamInfo): bool =
     result = isPlural(param.name)
     if (fnc.name, param.name) == ("LoadImageAnim", "frames"):
@@ -673,6 +673,7 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]) =
       if fnc.hasVarargs:
         fnc.params.setLen(fnc.params.high)
 
+    var foundCstring = false
     for i, param in fnc.params.mpairs:
       var paramType = findEnumTypeForParam(fnc, param)
       if paramType == "":
@@ -686,6 +687,10 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]) =
           ]
         let pat = getReplacement(fnc.name, param.name, replacements)
         (paramType, _) = convertType(param.`type`, pat, many, not fnc.isPrivate)
+      if paramType == "cstring" and
+          fnc.name notin privateFuncs and not fnc.hasVarargs:
+        foundCstring = true
+        fnc.isPrivate = true
       param.`type` = paramType
     if fnc.returnType != "void":
       var returnType = findEnumTypeForReturn(fnc)
@@ -693,8 +698,11 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]) =
         let many = shouldUsePluralReturnType(fnc)
         (returnType, _) = convertType(fnc.returnType, "", many, not fnc.isPrivate)
       fnc.returnType = returnType
+    if foundCstring:
+      wrappedFuncs.add fnc
 
 proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
+                 wrappedFuncs: seq[FunctionInfo],
                  fname: string; header, middle: string) =
   var buf = newStringOfCap(50)
   var indent = 0
@@ -800,29 +808,30 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       lit "\n"
     lit middle
 
-    proc generateProcs(holder: seq[FunctionInfo]) =
-      proc shouldRemoveSuffix(fnc: FunctionInfo): bool =
-        const exceptions = [
-          "DrawRectangleGradientV",
-          "SetShaderValueV",
-          "ColorToHSV",
-          "ColorFromHSV",
-          "CheckCollisionCircleRec",
-          "CheckCollisionPointRec"
-        ]
-        fnc.name notin exceptions and
-          ((fnc.name.endsWith("V") and fnc.returnType != "Vector2") or
-          (fnc.name.endsWith("Rec") and fnc.returnType != "Rectangle") or
-          fnc.name.endsWith("Ex") or fnc.name.endsWith("Pro"))
+    proc shouldRemoveSuffix(fnc: FunctionInfo): bool =
+      const exceptions = [
+        "DrawRectangleGradientV",
+        "SetShaderValueV",
+        "ColorToHSV",
+        "ColorFromHSV",
+        "CheckCollisionCircleRec",
+        "CheckCollisionPointRec"
+      ]
+      fnc.name notin exceptions and
+        ((fnc.name.endsWith("V") and fnc.returnType != "Vector2") or
+        (fnc.name.endsWith("Rec") and fnc.returnType != "Rectangle") or
+        fnc.name.endsWith("Ex") or fnc.name.endsWith("Pro"))
 
-      proc generateProcName(fnc: FunctionInfo): string =
-        result = fnc.name
-        if shouldRemoveSuffix(fnc):
-          result.removeSuffix("V")
-          result.removeSuffix("Rec")
-          result.removeSuffix("Ex")
-          result.removeSuffix("Pro")
-        result = uncapitalizeAscii(result)
+    proc generateProcName(fnc: FunctionInfo): string =
+      result = fnc.name
+      if shouldRemoveSuffix(fnc):
+        result.removeSuffix("V")
+        result.removeSuffix("Rec")
+        result.removeSuffix("Ex")
+        result.removeSuffix("Pro")
+      result = uncapitalizeAscii(result)
+
+    proc generateProcs(holder: seq[FunctionInfo]) =
 
       proc getMangledFunctionName(name: string): string =
         const mangledFunctions = ["ShowCursor", "CloseWindow", "LoadImage", "DrawText", "DrawTextEx"]
@@ -901,6 +910,43 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       lit " {.inline.} = x."
       ident x.field
       lit "\n"
+    # Generate wrapped functions
+    for fnc in items(wrappedFuncs):
+      # Generate proc signature
+      lit "\nproc "
+      ident generateProcName(fnc)
+      lit "*("
+      # Generate parameters
+      for i, param in fnc.params.pairs:
+        if i > 0: lit ", "
+        ident param.name
+        lit ": "
+        if param.`type` == "cstring":
+          lit "string"
+        else:
+          lit param.`type`
+      lit ")"
+      # Generate return type
+      if fnc.returnType != "void":
+        lit ": "
+        lit fnc.returnType
+      lit " ="
+      # Generate documentation comment
+      if fnc.description != "":
+        scope:
+          spaces
+          lit "## "
+          lit fnc.description
+      scope:
+        spaces
+        lit generateProcName(fnc)
+        lit "Priv("
+        for i, param in fnc.params.pairs:
+          if i > 0: lit ", "
+          ident param.name
+          if param.`type` == "cstring":
+            lit ".cstring"
+        lit ")\n"
     lit readFile("raylib_wrap.nim")
     lit readFile("raylib_fields.nim")
   finally:
@@ -915,14 +961,15 @@ type
     api: TopLevel
     procProperties: seq[PropertyInfo] = @[]
     procArrays: seq[PropertyInfo] = @[]
+    wrappedFuncs: seq[FunctionInfo] = @[]
 
 proc preprocessApi(ctx: var ApiContext) =
   preprocessStructs(ctx.api.structs, ctx.procProperties, ctx.procArrays)
   preprocessEnums(ctx.api.enums)
-  preprocessFunctions(ctx.api.functions)
+  preprocessFunctions(ctx.api.functions, ctx.wrappedFuncs)
 
 proc generateOutput(ctx: ApiContext) =
-  genBindings(ctx.api, ctx.procProperties, ctx.procArrays, outputname, raylibHeader, helpers)
+  genBindings(ctx.api, ctx.procProperties, ctx.procArrays, ctx.wrappedFuncs, outputname, raylibHeader, helpers)
 
 proc main =
   var t = ApiContext(api: parseApi(raylibApi))

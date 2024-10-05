@@ -836,8 +836,7 @@ proc restoreWindow*() {.importc: "RestoreWindow".}
 proc setWindowIcon*(image: Image) {.importc: "SetWindowIcon".}
   ## Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
 proc setWindowIconsPriv(images: ptr UncheckedArray[Image], count: int32) {.importc: "SetWindowIcons".}
-proc setWindowTitle*(title: cstring) {.importc: "SetWindowTitle".}
-  ## Set title for window (only PLATFORM_DESKTOP and PLATFORM_WEB)
+proc setWindowTitlePriv(title: cstring) {.importc: "SetWindowTitle".}
 proc setWindowPosition*(x: int32, y: int32) {.importc: "SetWindowPosition".}
   ## Set window position on screen (only PLATFORM_DESKTOP)
 proc setWindowMonitor*(monitor: int32) {.importc: "SetWindowMonitor".}
@@ -883,8 +882,7 @@ proc getWindowPosition*(): Vector2 {.importc: "GetWindowPosition".}
 proc getWindowScaleDPI*(): Vector2 {.importc: "GetWindowScaleDPI".}
   ## Get window scale DPI factor
 proc getMonitorNamePriv(monitor: int32): cstring {.importc: "GetMonitorName".}
-proc setClipboardText*(text: cstring) {.importc: "SetClipboardText".}
-  ## Set clipboard text content
+proc setClipboardTextPriv(text: cstring) {.importc: "SetClipboardText".}
 proc getClipboardTextPriv(): cstring {.importc: "GetClipboardText".}
 proc enableEventWaiting*() {.importc: "EnableEventWaiting".}
   ## Enable waiting for events on EndDrawing(), no automatic event polling
@@ -941,10 +939,8 @@ proc loadVrStereoConfig*(device: VrDeviceInfo): VrStereoConfig {.importc: "LoadV
 proc unloadVrStereoConfig(config: VrStereoConfig) {.importc: "UnloadVrStereoConfig".}
 proc loadShaderPriv(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader".}
 proc loadShaderFromMemoryPriv(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory".}
-proc getShaderLocation*(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation".}
-  ## Get shader uniform location
-proc getShaderLocationAttrib*(shader: Shader, attribName: cstring): ShaderLocation {.importc: "GetShaderLocationAttrib".}
-  ## Get shader attribute location
+proc getShaderLocationPriv(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation".}
+proc getShaderLocationAttribPriv(shader: Shader, attribName: cstring): ShaderLocation {.importc: "GetShaderLocationAttrib".}
 proc setShaderValuePriv(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue".}
 proc setShaderValueVPriv(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV".}
 proc setShaderValueMatrix*(shader: Shader, locIndex: ShaderLocation, mat: Matrix) {.importc: "SetShaderValueMatrix".}
@@ -974,8 +970,7 @@ proc pollInputEvents*() {.importc: "PollInputEvents".}
   ## Register all input events
 proc waitTime*(seconds: float) {.importc: "WaitTime".}
   ## Wait for some time (halt program execution)
-proc takeScreenshot*(fileName: cstring) {.importc: "TakeScreenshot".}
-  ## Takes a screenshot of current screen (filename extension defines format)
+proc takeScreenshotPriv(fileName: cstring) {.importc: "TakeScreenshot".}
 proc setConfigFlags*(flags: Flags[ConfigFlags]) {.importc: "SetConfigFlags".}
   ## Setup init configuration flags (view FLAGS)
 proc traceLog*(logLevel: TraceLogLevel, text: cstring) {.importc: "TraceLog", varargs.}
@@ -998,12 +993,10 @@ proc isFileDropped*(): bool {.importc: "IsFileDropped".}
   ## Check if a file has been dropped into window
 proc loadDroppedFilesPriv(): FilePathList {.importc: "LoadDroppedFiles".}
 proc unloadDroppedFilesPriv(files: FilePathList) {.importc: "UnloadDroppedFiles".}
-proc loadAutomationEventList*(fileName: cstring): AutomationEventList {.importc: "LoadAutomationEventList".}
-  ## Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
+proc loadAutomationEventListPriv(fileName: cstring): AutomationEventList {.importc: "LoadAutomationEventList".}
 proc unloadAutomationEventList*(list: AutomationEventList) {.importc: "UnloadAutomationEventList".}
   ## Unload automation events list from file
-proc exportAutomationEventList*(list: AutomationEventList, fileName: cstring): bool {.importc: "ExportAutomationEventList".}
-  ## Export automation events list as text file
+proc exportAutomationEventListPriv(list: AutomationEventList, fileName: cstring): bool {.importc: "ExportAutomationEventList".}
 proc setAutomationEventList*(list: var AutomationEventList) {.importc: "SetAutomationEventList".}
   ## Set automation event list to record to
 proc setAutomationEventBaseFrame*(frame: int32) {.importc: "SetAutomationEventBaseFrame".}
@@ -1047,8 +1040,7 @@ proc getGamepadAxisCount*(gamepad: int32): int32 {.importc: "GetGamepadAxisCount
   ## Get gamepad axis count for a gamepad
 proc getGamepadAxisMovement*(gamepad: int32, axis: GamepadAxis): float32 {.importc: "GetGamepadAxisMovement".}
   ## Get axis movement value for a gamepad axis
-proc setGamepadMappings*(mappings: cstring): int32 {.importc: "SetGamepadMappings".}
-  ## Set internal gamepad mappings (SDL_GameControllerDB)
+proc setGamepadMappingsPriv(mappings: cstring): int32 {.importc: "SetGamepadMappings".}
 proc setGamepadVibration*(gamepad: int32, leftMotor: float32, rightMotor: float32) {.importc: "SetGamepadVibration".}
   ## Set gamepad vibration for both motors
 proc isMouseButtonPressed*(button: MouseButton): bool {.importc: "IsMouseButtonPressed".}
@@ -1204,19 +1196,16 @@ proc drawSplineSegmentBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Ve
 proc loadImagePriv(fileName: cstring): Image {.importc: "rlLoadImage".}
 proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw".}
 proc loadImageSvgPriv(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg".}
-proc loadImageAnim*(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim".}
-  ## Load image sequence from file (frames appended to image.data)
+proc loadImageAnimPriv(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim".}
 proc loadImageAnimFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, frames: ptr UncheckedArray[int32]): Image {.importc: "LoadImageAnimFromMemory".}
 proc loadImageFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Image {.importc: "LoadImageFromMemory".}
 proc loadImageFromTexturePriv(texture: Texture2D): Image {.importc: "LoadImageFromTexture".}
 proc loadImageFromScreen*(): Image {.importc: "LoadImageFromScreen".}
   ## Load image from screen buffer and (screenshot)
 proc unloadImage(image: Image) {.importc: "UnloadImage".}
-proc exportImage*(image: Image, fileName: cstring): bool {.importc: "ExportImage".}
-  ## Export image data to file, returns true on success
+proc exportImagePriv(image: Image, fileName: cstring): bool {.importc: "ExportImage".}
 proc exportImageToMemoryPriv(image: Image, fileType: cstring, fileSize: ptr int32): ptr uint8 {.importc: "ExportImageToMemory".}
-proc exportImageAsCode*(image: Image, fileName: cstring): bool {.importc: "ExportImageAsCode".}
-  ## Export image as code file defining an array of bytes, returns true on success
+proc exportImageAsCodePriv(image: Image, fileName: cstring): bool {.importc: "ExportImageAsCode".}
 proc loadImageColorsPriv(image: Image): ptr UncheckedArray[Color] {.importc: "LoadImageColors".}
 proc loadImagePalettePriv(image: Image, maxPaletteSize: int32, colorCount: ptr int32): ptr UncheckedArray[Color] {.importc: "LoadImagePalette".}
 proc loadTexturePriv(fileName: cstring): Texture2D {.importc: "LoadTexture".}
@@ -1255,23 +1244,18 @@ proc loadFontFromImagePriv(image: Image, key: Color, firstChar: int32): Font {.i
 proc loadFontFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontFromMemory".}
 proc loadFontDataPriv(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData".}
 proc unloadFont(font: Font) {.importc: "UnloadFont".}
-proc exportFontAsCode*(font: Font, fileName: cstring): bool {.importc: "ExportFontAsCode".}
-  ## Export font as code file, returns true on success
+proc exportFontAsCodePriv(font: Font, fileName: cstring): bool {.importc: "ExportFontAsCode".}
 proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS".}
   ## Draw current FPS
-proc drawText*(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "rlDrawText".}
-  ## Draw text (using default font)
-proc drawText*(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "rlDrawTextEx".}
-  ## Draw text using font and additional parameters
-proc drawText*(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro".}
-  ## Draw text using Font and pro parameters (rotation)
+proc drawTextPriv(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "rlDrawText".}
+proc drawTextPriv(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "rlDrawTextEx".}
+proc drawTextPriv(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro".}
 proc drawTextCodepoint*(font: Font, codepoint: Rune, position: Vector2, fontSize: float32, tint: Color) {.importc: "DrawTextCodepoint".}
   ## Draw one character (codepoint)
 proc drawTextCodepointsPriv(font: Font, codepoints: ptr UncheckedArray[int32], codepointCount: int32, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextCodepoints".}
 proc setTextLineSpacing*(spacing: int32) {.importc: "SetTextLineSpacing".}
   ## Set vertical line spacing when drawing with line-breaks
-proc measureText*(text: cstring, fontSize: int32): int32 {.importc: "MeasureText".}
-  ## Measure string width for default font
+proc measureTextPriv(text: cstring, fontSize: int32): int32 {.importc: "MeasureText".}
 proc drawLine3D*(startPos: Vector3, endPos: Vector3, color: Color) {.importc: "DrawLine3D".}
   ## Draw a line in 3D world space
 proc drawPoint3D*(position: Vector3, color: Color) {.importc: "DrawPoint3D".}
@@ -1347,10 +1331,8 @@ proc drawMesh*(mesh: Mesh, material: Material, transform: Matrix) {.importc: "Dr
 proc drawMeshInstancedPriv(mesh: Mesh, material: Material, transforms: ptr UncheckedArray[Matrix], instances: int32) {.importc: "DrawMeshInstanced".}
 proc genMeshTangents*(mesh: var Mesh) {.importc: "GenMeshTangents".}
   ## Compute mesh tangents
-proc exportMesh*(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMesh".}
-  ## Export mesh data to file, returns true on success
-proc exportMeshAsCode*(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMeshAsCode".}
-  ## Export mesh as code file (.h) defining multiple arrays of vertex attributes
+proc exportMeshPriv(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMesh".}
+proc exportMeshAsCodePriv(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMeshAsCode".}
 proc genMeshPoly*(sides: int32, radius: float32): Mesh {.importc: "GenMeshPoly".}
   ## Generate polygonal mesh
 proc genMeshPlane*(width: float32, length: float32, resX: int32, resZ: int32): Mesh {.importc: "GenMeshPlane".}
@@ -1398,10 +1380,8 @@ proc updateSoundPriv(sound: Sound, data: pointer, sampleCount: int32) {.importc:
 proc unloadWave(wave: Wave) {.importc: "UnloadWave".}
 proc unloadSound(sound: Sound) {.importc: "UnloadSound".}
 proc unloadSoundAlias(alias: Sound) {.importc: "UnloadSoundAlias".}
-proc exportWave*(wave: Wave, fileName: cstring): bool {.importc: "ExportWave".}
-  ## Export wave data to file, returns true on success
-proc exportWaveAsCode*(wave: Wave, fileName: cstring): bool {.importc: "ExportWaveAsCode".}
-  ## Export wave sample data to code (.h), returns true on success
+proc exportWavePriv(wave: Wave, fileName: cstring): bool {.importc: "ExportWave".}
+proc exportWaveAsCodePriv(wave: Wave, fileName: cstring): bool {.importc: "ExportWaveAsCode".}
 proc playSound*(sound: Sound) {.importc: "PlaySound".}
   ## Play a sound
 proc stopSound*(sound: Sound) {.importc: "StopSound".}
@@ -1539,18 +1519,15 @@ proc genImagePerlinNoise*(width: int32, height: int32, offsetX: int32, offsetY: 
   ## Generate image: perlin noise
 proc genImageCellular*(width: int32, height: int32, tileSize: int32): Image {.importc: "GenImageCellular".}
   ## Generate image: cellular algorithm, bigger tileSize means bigger cells
-proc genImageText*(width: int32, height: int32, text: cstring): Image {.importc: "GenImageText".}
-  ## Generate image: grayscale image from text data
+proc genImageTextPriv(width: int32, height: int32, text: cstring): Image {.importc: "GenImageText".}
 proc imageCopy*(image: Image): Image {.importc: "ImageCopy".}
   ## Create an image duplicate (useful for transformations)
 proc imageFromImage*(image: Image, rec: Rectangle): Image {.importc: "ImageFromImage".}
   ## Create an image from another image piece
 proc imageFromChannel*(image: Image, selectedChannel: int32): Image {.importc: "ImageFromChannel".}
   ## Create an image from a selected channel of another image (GRAYSCALE)
-proc imageText*(text: cstring, fontSize: int32, color: Color): Image {.importc: "ImageText".}
-  ## Create an image from text (default font)
-proc imageText*(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
-  ## Create an image from text (custom sprite font)
+proc imageTextPriv(text: cstring, fontSize: int32, color: Color): Image {.importc: "ImageText".}
+proc imageTextPriv(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
 proc imageFormat*(image: var Image, newFormat: PixelFormat) {.importc: "ImageFormat".}
   ## Convert image data to desired format
 proc imageToPOT*(image: var Image, fill: Color) {.importc: "ImageToPOT".}
@@ -1642,10 +1619,8 @@ proc imageDrawTriangleFanPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2
 proc imageDrawTriangleStripPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleStrip".}
 proc imageDraw*(dst: var Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) {.importc: "ImageDraw".}
   ## Draw a source image within a destination image (tint applied to source)
-proc imageDrawText*(dst: var Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
-  ## Draw text (using default font) within an image (destination)
-proc imageDrawText*(dst: var Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
-  ## Draw text (custom sprite font) within an image (destination)
+proc imageDrawTextPriv(dst: var Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
+proc imageDrawTextPriv(dst: var Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
 proc isTextureReady*(texture: Texture2D): bool {.importc: "IsTextureReady".}
   ## Check if a texture is ready
 proc isRenderTextureReady*(target: RenderTexture2D): bool {.importc: "IsRenderTextureReady".}
@@ -1675,8 +1650,7 @@ proc getPixelDataSize*(width: int32, height: int32, format: PixelFormat): int32 
 proc isFontReady*(font: Font): bool {.importc: "IsFontReady".}
   ## Check if a font is ready
 proc genImageFontAtlasPriv(glyphs: ptr UncheckedArray[GlyphInfo], glyphRecs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
-proc measureText*(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
-  ## Measure string size for Font
+proc measureTextPriv(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
 proc getGlyphIndex*(font: Font, codepoint: Rune): int32 {.importc: "GetGlyphIndex".}
   ## Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
 proc getGlyphInfo*(font: Font, codepoint: Rune): GlyphInfo {.importc: "GetGlyphInfo".}
@@ -1929,6 +1903,110 @@ proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
 proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
 proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
 proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
+
+proc setWindowTitle*(title: string) =
+  ## Set title for window (only PLATFORM_DESKTOP and PLATFORM_WEB)
+  setWindowTitlePriv(title.cstring)
+
+proc setClipboardText*(text: string) =
+  ## Set clipboard text content
+  setClipboardTextPriv(text.cstring)
+
+proc getShaderLocation*(shader: Shader, uniformName: string): ShaderLocation =
+  ## Get shader uniform location
+  getShaderLocationPriv(shader, uniformName.cstring)
+
+proc getShaderLocationAttrib*(shader: Shader, attribName: string): ShaderLocation =
+  ## Get shader attribute location
+  getShaderLocationAttribPriv(shader, attribName.cstring)
+
+proc takeScreenshot*(fileName: string) =
+  ## Takes a screenshot of current screen (filename extension defines format)
+  takeScreenshotPriv(fileName.cstring)
+
+proc loadAutomationEventList*(fileName: string): AutomationEventList =
+  ## Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
+  loadAutomationEventListPriv(fileName.cstring)
+
+proc exportAutomationEventList*(list: AutomationEventList, fileName: string): bool =
+  ## Export automation events list as text file
+  exportAutomationEventListPriv(list, fileName.cstring)
+
+proc setGamepadMappings*(mappings: string): int32 =
+  ## Set internal gamepad mappings (SDL_GameControllerDB)
+  setGamepadMappingsPriv(mappings.cstring)
+
+proc loadImageAnim*(fileName: string, frames: out int32): Image =
+  ## Load image sequence from file (frames appended to image.data)
+  loadImageAnimPriv(fileName.cstring, frames)
+
+proc exportImage*(image: Image, fileName: string): bool =
+  ## Export image data to file, returns true on success
+  exportImagePriv(image, fileName.cstring)
+
+proc exportImageAsCode*(image: Image, fileName: string): bool =
+  ## Export image as code file defining an array of bytes, returns true on success
+  exportImageAsCodePriv(image, fileName.cstring)
+
+proc genImageText*(width: int32, height: int32, text: string): Image =
+  ## Generate image: grayscale image from text data
+  genImageTextPriv(width, height, text.cstring)
+
+proc imageText*(text: string, fontSize: int32, color: Color): Image =
+  ## Create an image from text (default font)
+  imageTextPriv(text.cstring, fontSize, color)
+
+proc imageText*(font: Font, text: string, fontSize: float32, spacing: float32, tint: Color): Image =
+  ## Create an image from text (custom sprite font)
+  imageTextPriv(font, text.cstring, fontSize, spacing, tint)
+
+proc imageDrawText*(dst: var Image, text: string, posX: int32, posY: int32, fontSize: int32, color: Color) =
+  ## Draw text (using default font) within an image (destination)
+  imageDrawTextPriv(dst, text.cstring, posX, posY, fontSize, color)
+
+proc imageDrawText*(dst: var Image, font: Font, text: string, position: Vector2, fontSize: float32, spacing: float32, tint: Color) =
+  ## Draw text (custom sprite font) within an image (destination)
+  imageDrawTextPriv(dst, font, text.cstring, position, fontSize, spacing, tint)
+
+proc exportFontAsCode*(font: Font, fileName: string): bool =
+  ## Export font as code file, returns true on success
+  exportFontAsCodePriv(font, fileName.cstring)
+
+proc drawText*(text: string, posX: int32, posY: int32, fontSize: int32, color: Color) =
+  ## Draw text (using default font)
+  drawTextPriv(text.cstring, posX, posY, fontSize, color)
+
+proc drawText*(font: Font, text: string, position: Vector2, fontSize: float32, spacing: float32, tint: Color) =
+  ## Draw text using font and additional parameters
+  drawTextPriv(font, text.cstring, position, fontSize, spacing, tint)
+
+proc drawText*(font: Font, text: string, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) =
+  ## Draw text using Font and pro parameters (rotation)
+  drawTextPriv(font, text.cstring, position, origin, rotation, fontSize, spacing, tint)
+
+proc measureText*(text: string, fontSize: int32): int32 =
+  ## Measure string width for default font
+  measureTextPriv(text.cstring, fontSize)
+
+proc measureText*(font: Font, text: string, fontSize: float32, spacing: float32): Vector2 =
+  ## Measure string size for Font
+  measureTextPriv(font, text.cstring, fontSize, spacing)
+
+proc exportMesh*(mesh: Mesh, fileName: string): bool =
+  ## Export mesh data to file, returns true on success
+  exportMeshPriv(mesh, fileName.cstring)
+
+proc exportMeshAsCode*(mesh: Mesh, fileName: string): bool =
+  ## Export mesh as code file (.h) defining multiple arrays of vertex attributes
+  exportMeshAsCodePriv(mesh, fileName.cstring)
+
+proc exportWave*(wave: Wave, fileName: string): bool =
+  ## Export wave data to file, returns true on success
+  exportWavePriv(wave, fileName.cstring)
+
+proc exportWaveAsCode*(wave: Wave, fileName: string): bool =
+  ## Export wave sample data to code (.h), returns true on success
+  exportWaveAsCodePriv(wave, fileName.cstring)
 
 type
   RaylibError* = object of CatchableError
