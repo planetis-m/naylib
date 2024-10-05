@@ -161,46 +161,48 @@ proc toNimType(cType: string): string =
   of "rlDrawCall": "DrawCall"
   else: cType
 
-proc convertType*(s, pattern: string, many, isVar: bool, baseKind: var string): string =
+proc convertType*(s, pattern: string, many, isVar: bool): (string, string) =
   let typeInfo = parseType(s)
-  result = toNimType(typeInfo.baseType)
+  var nimType = toNimType(typeInfo.baseType)
 
   if typeInfo.isUnsigned:
-    if result == "char":
-      result = "uint8"
+    if nimType == "char":
+      nimType = "uint8"
     else:
-      result = "u" & result
+      nimType = "u" & nimType
 
-  baseKind = result
+  let baseType = nimType
 
   if pattern != "":
-    return pattern % result
+    return (pattern % nimType, baseType)
 
   if typeInfo.isDoublePointer:
-    if result == "void":
-      result = "ptr pointer"
-    elif result == "char" and not typeInfo.isUnsigned:
-      result = "cstringArray"
+    if nimType == "void":
+      nimType = "ptr pointer"
+    elif nimType == "char" and not typeInfo.isUnsigned:
+      nimType = "cstringArray"
     elif many:
-      result = &"ptr UncheckedArray[ptr {result}]"
+      nimType = &"ptr UncheckedArray[ptr {nimType}]"
     else:
-      result = "ptr ptr " & result
+      nimType = "ptr ptr " & nimType
 
   elif typeInfo.isPointer:
-    if result == "void":
-      result = "pointer"
-    elif result == "char" and not typeInfo.isUnsigned:
-      result = "cstring"
+    if nimType == "void":
+      nimType = "pointer"
+    elif nimType == "char" and not typeInfo.isUnsigned:
+      nimType = "cstring"
     elif many:
-      result = &"ptr UncheckedArray[{result}]"
+      nimType = &"ptr UncheckedArray[{nimType}]"
     else:
       if isVar:
-        result = "var " & result
+        nimType = "var " & nimType
       else:
-        result = "ptr " & result
+        nimType = "ptr " & nimType
 
   if typeInfo.isArray:
-    result = &"array[{typeInfo.arraySize}, {result}]"
+    nimType = &"array[{typeInfo.arraySize}, {nimType}]"
+
+  result = (nimType, baseType)
 
 proc isPlural*(x: string): bool {.inline.} =
   ## Tries to determine if an identifier is plural

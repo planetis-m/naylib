@@ -449,10 +449,9 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
             # if kind != "":
             #   lit kind
             #   continue
-            var baseKind = ""
             let isPrivate = (objName, name) in {"VertexBuffer": "elementCount", "RenderBatch": "bufferCount"}
             let many = isPlural(name) or (objName, name) == ("RenderBatch", "vertexBuffer")
-            let kind = convertType(fld.`type`, "", many, false, baseKind)
+            let (kind, baseKind) = convertType(fld.`type`, "", many, false)
             if many or isPrivate:
               lit ": "
             else:
@@ -500,7 +499,6 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
               if name == fnc.name and param1 == param.name:
                 lit enumInFuncs[j]
                 break outer
-            var baseKind = ""
             const
               replacements = [
                 ("rlLoadExtensions", "loader", "rlglLoadProc"),
@@ -512,7 +510,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
                 ("rlMultMatrixf", "matf", "array[16, $1]"),
               ]
             let pat = getReplacement(fnc.name, param.name, replacements)
-            let kind = convertType(param.`type`, pat, false, true, baseKind)
+            let (kind, _) = convertType(param.`type`, pat, false, true)
             lit kind
       lit ")"
       if fnc.returnType != "void":
@@ -522,14 +520,13 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
             if name == fnc.name:
               lit enumInFuncs[idx]
               break outer
-          var baseKind = ""
           const
             replacements = [
               ("rlGetShaderLocsDefault", "", "ShaderLocsPtr"),
               # ("rlReadScreenPixels", "", ""),
             ]
           let pat = getReplacement(fnc.name, "", replacements)
-          let kind = convertType(fnc.returnType, pat, false, true, baseKind)
+          let (kind, _) = convertType(fnc.returnType, pat, false, true)
           lit kind
       lit " {.importc: \""
       ident fnc.name

@@ -619,6 +619,7 @@ proc preprocessStructs(structs: var seq[StructInfo];
         ("NPatchInfo", "layout", "NPatchLayout")
       ]
       var fieldType = getReplacement(obj.name, fld.name, replacements)
+      var baseType = ""
       if fieldType == "":
         let many = shouldUsePluralType(obj, fld)
         const replacements = [
@@ -628,8 +629,7 @@ proc preprocessStructs(structs: var seq[StructInfo];
           ("Shader", "locs", "ptr UncheckedArray[ShaderLocation]")
         ]
         let pattern = getReplacement(obj.name, fld.name, replacements)
-        var baseType = ""
-        fieldType = convertType(fld.`type`, pattern, many, false, baseType)
+        (fieldType, baseType) = convertType(fld.`type`, pattern, many, false)
         let isArray = isArrayField(obj, fld, many)
         if fld.isPrivate:
           procProperties.add PropertyInfo(struct: obj.name, field: fld.name, `type`: fieldType)
@@ -686,16 +686,14 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]) =
             # ("ImageKernelConvolution", "kernel", "ptr UncheckedArray[float32]")
           ]
         let pat = getReplacement(fnc.name, param.name, replacements)
-        var baseType = ""
         let isVar = not fnc.isPrivate or fnc.name == "ImageKernelConvolution"
-        paramType = convertType(param.`type`, pat, many, isVar, baseType)
+        (paramType, _) = convertType(param.`type`, pat, many, isVar)
       param.`type` = paramType
     if fnc.returnType != "void":
       var returnType = findEnumTypeForReturn(fnc)
       if returnType == "":
         let many = shouldUsePluralReturnType(fnc)
-        var baseType = ""
-        returnType = convertType(fnc.returnType, "", many, not fnc.isPrivate, baseType)
+        (returnType, _) = convertType(fnc.returnType, "", many, not fnc.isPrivate)
       fnc.returnType = returnType
 
 proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
