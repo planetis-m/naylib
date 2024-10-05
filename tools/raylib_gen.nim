@@ -1,4 +1,4 @@
-import common, std/[streams, sets, tables]
+import common, std/[algorithm, streams, sets, tables]
 import std/strutils except spaces
 when defined(nimPreviewSlimSystem):
   import std/syncio
@@ -642,6 +642,10 @@ proc preprocessStructs(structs: var seq[StructInfo];
         fld.isPrivate = shouldBePrivate(obj, fld, isArray, fld.isPrivate)
       fld.`type` = fieldType
 
+proc preprocessEnums(enums: var seq[EnumInfo]) =
+  for enm in mitems(enums):
+    sort(enm.values, proc (x, y: ValueInfo): int = cmp(x.value, y.value))
+
 proc preprocessFunctions(holder: var seq[FunctionInfo]) =
   proc shouldUsePluralType(fnc: FunctionInfo, param: ParamInfo): bool =
     result = isPlural(param.name)
@@ -664,30 +668,32 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]) =
       continue
     fnc.isPrivate = fnc.name in privateFuncs
     fnc.isAlloc = fnc.name in allocFuncs
-    var toDelete = -1
+
+    proc isVarargsParam(param: ParamInfo): bool =
+      param.name == "args" and param.`type` == "..."
+
+    if fnc.params.len > 0:
+      fnc.hasVarargs = isVarargsParam(fnc.params[^1])
+      if fnc.hasVarargs:
+        fnc.params.setLen(fnc.params.high)
+
     for i, param in fnc.params.mpairs:
-      if param.name == "args" and param.`type` == "...":
-        toDelete = i
-        fnc.hasVarargs = true
-      else:
-        var paramType = findEnumTypeForParam(fnc, param)
-        if paramType == "":
-          let many = shouldUsePluralType(fnc, param)
-          const
-            replacements = [
-              ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[$1]"),
-              ("CheckCollisionLines", "collisionPoint", "out $1"),
-              ("LoadImageAnim", "frames", "out $1"),
-              ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),
-              # ("ImageKernelConvolution", "kernel", "ptr UncheckedArray[float32]")
-            ]
-          let pat = getReplacement(fnc.name, param.name, replacements)
-          var baseType = ""
-          let isVar = not fnc.isPrivate or fnc.name == "ImageKernelConvolution"
-          paramType = convertType(param.`type`, pat, many, isVar, baseType)
-        param.`type` = paramType
-    if toDelete >= 0:
-      delete(fnc.params, toDelete)
+      var paramType = findEnumTypeForParam(fnc, param)
+      if paramType == "":
+        let many = shouldUsePluralType(fnc, param)
+        const
+          replacements = [
+            ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[$1]"),
+            ("CheckCollisionLines", "collisionPoint", "out $1"),
+            ("LoadImageAnim", "frames", "out $1"),
+            ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),
+            # ("ImageKernelConvolution", "kernel", "ptr UncheckedArray[float32]")
+          ]
+        let pat = getReplacement(fnc.name, param.name, replacements)
+        var baseType = ""
+        let isVar = not fnc.isPrivate or fnc.name == "ImageKernelConvolution"
+        paramType = convertType(param.`type`, pat, many, isVar, baseType)
+      param.`type` = paramType
     if fnc.returnType != "void":
       var returnType = findEnumTypeForReturn(fnc)
       if returnType == "":
@@ -912,12 +918,23 @@ const
   raylibApi = "../api/raylib.json"
   outputname = "../src/raylib.nim"
 
+type
+  ApiContext = object
+    api: TopLevel
+    procProperties: seq[PropertyInfo] = @[]
+    procArrays: seq[PropertyInfo] = @[]
+
+proc preprocessApi(ctx: var ApiContext) =
+  preprocessStructs(ctx.api.structs, ctx.procProperties, ctx.procArrays)
+  preprocessEnums(ctx.api.enums)
+  preprocessFunctions(ctx.api.functions)
+
+proc generateOutput(ctx: ApiContext) =
+  genBindings(ctx.api, ctx.procProperties, ctx.procArrays, outputname, raylibHeader, helpers)
+
 proc main =
-  var t = parseApi(raylibApi)
-  var procProperties: seq[PropertyInfo] = @[]
-  var procArrays: seq[PropertyInfo] = @[]
-  preprocessStructs(t.structs, procProperties, procArrays)
-  preprocessFunctions(t.functions)
-  genBindings(t, procProperties, procArrays, outputname, raylibHeader, helpers)
+  var t = ApiContext(api: parseApi(raylibApi))
+  preprocessApi(t)
+  generateOutput(t)
 
 main()

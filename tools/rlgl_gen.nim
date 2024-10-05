@@ -1,4 +1,4 @@
-import common, std/streams
+import common, std/[algorithm, streams]
 import std/strutils except spaces
 when defined(nimPreviewSlimSystem):
   import std/syncio
@@ -561,8 +561,13 @@ const
   rlglApi = "../api/rlgl.json"
   outputname = "../src/rlgl.nim"
 
+proc preprocessEnums(enums: var seq[EnumInfo]) =
+  for enm in mitems(enums):
+    sort(enm.values, proc (x, y: ValueInfo): int = cmp(x.value, y.value))
+
 proc main =
   var t = parseApi(rlglApi)
+  preprocessEnums(t.enums)
   genBindings(t, outputname, rlglHeader, helpers)
 
 main()
