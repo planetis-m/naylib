@@ -167,6 +167,8 @@ proc `@`*[T](x: RArray[T]): seq[T] {.inline.} =
   for i in 0..x.len-1: result[i] = x[i]
 
 template toOpenArray*(x: RArray, first, last: int): untyped =
+  rangeCheck(first <= last)
+  checkArrayAccess(last, x.len)
   toOpenArray(x.data, first, last)
 
 template toOpenArray*(x: RArray): untyped =
