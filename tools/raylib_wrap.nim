@@ -240,7 +240,7 @@ proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
 proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
   ## Apply custom square convolution kernel to image
   ## NOTE: The convolution kernel matrix is expected to be square
-  imageKernelConvolutionPriv(image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
+  imageKernelConvolutionPriv(addr image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
 
 type
   Pixel* = concept

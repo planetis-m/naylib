@@ -616,26 +616,26 @@ proc preprocessStructs(structs: var seq[StructInfo];
         ("Camera3D", "projection", "CameraProjection"),
         ("Image", "format", "PixelFormat"),
         ("Texture", "format", "PixelFormat"),
-        ("NPatchInfo", "layout", "NPatchLayout")
+        ("NPatchInfo", "layout", "NPatchLayout"),
+        ("Shader", "locs", "ptr UncheckedArray[ShaderLocation]")
       ]
       var fieldType = getReplacement(obj.name, fld.name, replacements)
       var baseType = ""
+      let many = shouldUsePluralType(obj, fld)
       if fieldType == "":
-        let many = shouldUsePluralType(obj, fld)
         const replacements = [
           ("ModelAnimation", "framePoses", "ptr UncheckedArray[ptr UncheckedArray[$1]]"),
           ("Mesh", "vboId", "ptr array[MaxMeshVertexBuffers, $1]"),
-          ("Material", "maps", "ptr array[MaxMaterialMaps, $1]"),
-          ("Shader", "locs", "ptr UncheckedArray[ShaderLocation]")
+          ("Material", "maps", "ptr array[MaxMaterialMaps, $1]")
         ]
         let pattern = getReplacement(obj.name, fld.name, replacements)
         (fieldType, baseType) = convertType(fld.`type`, pattern, many, false)
-        let isArray = isArrayField(obj, fld, many)
-        if fld.isPrivate:
-          procProperties.add PropertyInfo(struct: obj.name, field: fld.name, `type`: fieldType)
-        if isArray:
-          procArrays.add PropertyInfo(struct: obj.name, field: fld.name, `type`: baseType)
-        fld.isPrivate = shouldBePrivate(obj, fld, isArray, fld.isPrivate)
+      let isArray = isArrayField(obj, fld, many)
+      if fld.isPrivate:
+        procProperties.add PropertyInfo(struct: obj.name, field: fld.name, `type`: fieldType)
+      if isArray:
+        procArrays.add PropertyInfo(struct: obj.name, field: fld.name, `type`: baseType)
+      fld.isPrivate = shouldBePrivate(obj, fld, isArray, fld.isPrivate)
       fld.`type` = fieldType
 
 proc preprocessEnums(enums: var seq[EnumInfo]) =
@@ -683,11 +683,9 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]) =
             ("CheckCollisionLines", "collisionPoint", "out $1"),
             ("LoadImageAnim", "frames", "out $1"),
             ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),
-            # ("ImageKernelConvolution", "kernel", "ptr UncheckedArray[float32]")
           ]
         let pat = getReplacement(fnc.name, param.name, replacements)
-        let isVar = not fnc.isPrivate or fnc.name == "ImageKernelConvolution"
-        (paramType, _) = convertType(param.`type`, pat, many, isVar)
+        (paramType, _) = convertType(param.`type`, pat, many, not fnc.isPrivate)
       param.`type` = paramType
     if fnc.returnType != "void":
       var returnType = findEnumTypeForReturn(fnc)

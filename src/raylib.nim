@@ -1567,7 +1567,7 @@ proc imageAlphaPremultiply*(image: var Image) {.importc: "ImageAlphaPremultiply"
   ## Premultiply alpha channel
 proc imageBlurGaussian*(image: var Image, blurSize: int32) {.importc: "ImageBlurGaussian".}
   ## Apply Gaussian blur using a box blur approximation
-proc imageKernelConvolutionPriv(image: var Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
+proc imageKernelConvolutionPriv(image: ptr Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
 proc imageResize*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize".}
   ## Resize image (Bicubic scaling algorithm)
 proc imageResizeNN*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN".}
@@ -2171,7 +2171,7 @@ proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
 proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
   ## Apply custom square convolution kernel to image
   ## NOTE: The convolution kernel matrix is expected to be square
-  imageKernelConvolutionPriv(image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
+  imageKernelConvolutionPriv(addr image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
 
 type
   Pixel* = concept
