@@ -402,6 +402,7 @@ const
     "LoadTextureCubemap",
     "LoadTexture",
     "LoadRenderTexture",
+    "LoadImageAnim",
     "LoadImageAnimFromMemory",
     "LoadFont",
     "LoadFontEx",
@@ -555,6 +556,20 @@ const
     "GetMusicTimeLength",
     "IsAudioStreamReady",
   ])
+  needErrorChecking = [
+    "Window",
+    "Shader",
+    "Image",
+    "Texture2D",
+    "RenderTexture2D",
+    "Font",
+    "Model",
+    "Material",
+    "Wave",
+    "Sound",
+    "Music",
+    "AudioStream"
+  ]
 
 type
   PropertyInfo = object
@@ -677,6 +692,8 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
       let baseType = convertTypeSimple(fnc.returnType)
       if checkCstringType(fnc, baseType):
         autoWrap = true
+      if baseType in needErrorChecking and fnc.name notin privateFuncs:
+        echo "WARNING: Function might require error checking: ", fnc.name
 
     for i, param in fnc.params.mpairs:
       var paramType = findEnumTypeForParam(fnc, param)

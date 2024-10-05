@@ -1988,10 +1988,6 @@ proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool 
   ## Check if point is within a polygon described by array of vertices
   checkCollisionPointPolyPriv(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
 
-proc loadImageAnim*(fileName: string, frames: out int32): Image =
-  ## Load image sequence from file (frames appended to image.data)
-  loadImageAnimPriv(fileName.cstring, frames)
-
 proc exportImage*(image: Image, fileName: string): bool =
   ## Export image data to file, returns true on success
   exportImagePriv(image, fileName.cstring)
@@ -2226,6 +2222,11 @@ proc loadImageRaw*(fileName: string, width, height: int32, format: PixelFormat, 
   ## Load image sequence from file (frames appended to image.data)
   result = loadImageRawPriv(fileName.cstring, width, height, format, headerSize)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
+
+proc loadImageAnim*(fileName: string, frames: out int32): Image =
+  ## Load image sequence from file (frames appended to image.data)
+  result = loadImageAnimPriv(fileName.cstring, frames)
+  if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from " & fileName)
 
 proc loadImageSvg*(fileNameOrString: string, width, height: int32): Image =
   ## Load image from SVG file data or string with specified size

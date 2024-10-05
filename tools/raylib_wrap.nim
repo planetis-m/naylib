@@ -150,6 +150,11 @@ proc loadImageRaw*(fileName: string, width, height: int32, format: PixelFormat, 
   result = loadImageRawPriv(fileName.cstring, width, height, format, headerSize)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
 
+proc loadImageAnim*(fileName: string, frames: out int32): Image =
+  ## Load image sequence from file (frames appended to image.data)
+  result = loadImageAnimPriv(fileName.cstring, frames)
+  if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from " & fileName)
+
 proc loadImageSvg*(fileNameOrString: string, width, height: int32): Image =
   ## Load image from SVG file data or string with specified size
   result = loadImageSvgPriv(fileNameOrString.cstring, width, height)
