@@ -704,6 +704,36 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
     var procArrays: seq[(string, string, string)] = @[]
     lit "\ntype"
     scope:
+      proc isPrivateField(obj: StructInfo, fld: FieldInfo): bool =
+        (obj.name, fld.name) notin {"Wave": "frameCount", "Sound": "frameCount", "Music": "frameCount"} and
+        fld.name.endsWith("Count")
+
+      proc isArrayField(obj: StructInfo, fld: FieldInfo, isPlural: bool): bool =
+        isPlural and not endsWith(fld.name.normalize, "data") and
+        (obj.name, fld.name) notin {
+          "Material": "params",
+          "VrDeviceInfo": "lensDistortionValues",
+          "FilePathList": "paths",
+          "AutomationEvent": "params"
+        }
+
+      proc shouldUsePluralType(obj: StructInfo, fld: FieldInfo): bool =
+        result = isPlural(fld.name)
+        if fld.name in ["mipmaps", "channels"]:
+          result = false
+        elif (obj.name, fld.name) in {"Model": "meshMaterial", "Model": "bindPose", "Mesh": "vboId"}:
+          result = true
+
+      proc shouldBePrivate(obj: StructInfo, fld: FieldInfo, isArray, isPrivate: bool): bool =
+        isPrivate or isArray or
+        obj.name in ["FilePathList", "AutomationEventList"] or
+        (obj.name, fld.name) in {
+          "MaterialMap": "texture",
+          "Material": "shader",
+          "AudioStream": "buffer",
+          "AudioStream": "processor"
+        }
+
       for obj in items(t.structs):
         spaces
         ident obj.name
@@ -717,59 +747,55 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         doc obj
         scope:
           for fld in items(obj.fields):
-            if obj.name != "Matrix" or fld.name in ["m0", "m1", "m2", "m3"]:
+            # Group Matrix fields by rows
+            if obj.name != "Matrix" or fld.name in ["m0", "m1", "m2", "m3"]: # row starts
               spaces
-            var name = fld.name
-            ident name
-            if obj.name == "Matrix" and fld.name notin ["m12", "m13", "m14", "m15"]:
+            ident fld.name
+            if obj.name == "Matrix" and fld.name notin ["m12", "m13", "m14", "m15"]: # row ends
               lit "*, "
               continue
-            let isPrivate = (obj.name, name) notin
-                {"Wave": "frameCount", "Sound": "frameCount", "Music": "frameCount"} and
-                name.endsWith("Count")
+            let isPrivate = isPrivateField(obj, fld)
             const replacements = [
               ("Camera3D", "projection", "CameraProjection"),
               ("Image", "format", "PixelFormat"),
               ("Texture", "format", "PixelFormat"),
               ("NPatchInfo", "layout", "NPatchLayout")
             ]
-            let kind = getReplacement(obj.name, name, replacements)
+            let kind = getReplacement(obj.name, fld.name, replacements)
             if kind != "":
               lit "*: "
               lit kind
             else:
-              let many = name notin ["mipmaps", "channels"] and isPlural(name) or
-                  (obj.name, name) in {"Model": "meshMaterial", "Model": "bindPose", "Mesh": "vboId"}
+              let many = shouldUsePluralType(obj, fld)
               const replacements = [
                 ("ModelAnimation", "framePoses", "ptr UncheckedArray[ptr UncheckedArray[$1]]"),
                 ("Mesh", "vboId", "ptr array[MaxMeshVertexBuffers, $1]"),
                 ("Material", "maps", "ptr array[MaxMaterialMaps, $1]"),
                 ("Shader", "locs", "ptr UncheckedArray[ShaderLocation]")
               ]
-              let pat = getReplacement(obj.name, name, replacements)
+              let pat = getReplacement(obj.name, fld.name, replacements)
               var baseKind = ""
               let kind = convertType(fld.`type`, pat, many, false, baseKind)
-              let isArray = many and not endsWith(name.normalize, "data") and
-                  (obj.name, name) notin {"Material": "params", "VrDeviceInfo": "lensDistortionValues", "FilePathList": "paths", "AutomationEvent": "params"}
-              if isPrivate or isArray or obj.name in ["FilePathList", "AutomationEventList"] or
-                  (obj.name, name) in {"MaterialMap": "texture", "Material": "shader", "AudioStream": "buffer",
-                  "AudioStream": "processor"}:
+              let isArray = isArrayField(obj, fld, many)
+              if shouldBePrivate(obj, fld, isArray, isPrivate):
                 lit ": "
               else:
                 lit "*: "
               lit kind
               if isPrivate:
-                procProperties.add (obj.name, name, kind)
+                procProperties.add (obj.name, fld.name, kind)
               if isArray:
-                procArrays.add (obj.name, name, baseKind)
+                procArrays.add (obj.name, fld.name, baseKind)
             doc fld
         lit "\n"
       # Add a type alias or a missing type
       for alias in items(t.aliases):
         spaces
         ident alias.name
-        if alias.name == "Quaternion": lit "* {.borrow: `.`.} = distinct "
-        else: lit "* = "
+        if alias.name == "Quaternion":
+          lit "* {.borrow: `.`.} = distinct "
+        else:
+          lit "* = "
         ident alias.`type`
         doc alias
       lit "\n"
@@ -777,11 +803,11 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         spaces
         lit extra
       lit "\n"
-      for obj, name, _ in procArrays.items:
-        if (obj, name) == ("AutomationEventList", "events"): continue
+      for obj, fld, _ in procArrays.items:
+        if (obj, fld) == ("AutomationEventList", "events"): continue
         spaces
         lit obj
-        lit capitalizeAscii(name)
+        lit capitalizeAscii(fld)
         lit "* = distinct "
         ident obj
       lit "\n"
