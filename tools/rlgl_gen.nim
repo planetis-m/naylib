@@ -286,15 +286,15 @@ proc getPixelFormatName*(format: PixelFormat): string =
   of CompressedAstc4x4Rgba: "ASTC_4x4_RGBA" # 8 bpp
   of CompressedAstc8x8Rgba: "ASTC_8x8_RGBA" # 2 bpp
 """
-  excludedEnums = [
-    "rlTraceLogLevel",
-    "rlPixelFormat",
-    "rlTextureFilter",
-    "rlBlendMode",
-    "rlShaderLocationIndex",
-    "rlShaderUniformDataType",
-    "rlShaderAttributeDataType"
-  ]
+  # excludedEnums = [
+  #   "rlTraceLogLevel",
+  #   "rlPixelFormat",
+  #   "rlTextureFilter",
+  #   "rlBlendMode",
+  #   "rlShaderLocationIndex",
+  #   "rlShaderUniformDataType",
+  #   "rlShaderAttributeDataType"
+  # ]
   excludedFuncs = [
     "rlGetPixelFormatName",
   ]

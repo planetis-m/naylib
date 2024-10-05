@@ -120,6 +120,7 @@ type
     arraySize: string
 
 proc parseType(s: string): TypeInfo =
+  result = TypeInfo()
   for token, isSep in tokenize(s):
     if isSep: continue
     case token
