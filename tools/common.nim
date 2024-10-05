@@ -56,7 +56,7 @@ type
     isPrivate*, isAlloc*, hasVarargs*: bool
 
   ParamInfo* = object
-    `type`*, name*: string
+    `type`*, baseType*, name*: string
 
   StructInfo* = object
     name*, description*: string
@@ -161,6 +161,21 @@ proc toNimType(cType: string): string =
   of "rlDrawCall": "DrawCall"
   else: cType
 
+proc convertTypeSimple*(s: string): string =
+  let typeInfo = parseType(s)
+  var nimType = toNimType(typeInfo.baseType)
+  if typeInfo.isUnsigned:
+    if nimType == "char":
+      nimType = "uint8"
+    else:
+      nimType = "u" & nimType
+  if typeInfo.isPointer:
+    if nimType == "void":
+      nimType = "pointer"
+    elif nimType == "char" and not typeInfo.isUnsigned:
+      nimType = "cstring"
+  result = nimType
+
 proc convertType*(s, pattern: string, many, isVar: bool): (string, string) =
   let typeInfo = parseType(s)
   var nimType = toNimType(typeInfo.baseType)
@@ -207,8 +222,8 @@ proc convertType*(s, pattern: string, many, isVar: bool): (string, string) =
 proc isPlural*(x: string): bool {.inline.} =
   ## Tries to determine if an identifier is plural
   let x = strip(x, false, chars = Digits)
-  x.endsWith("es") or (not x.endsWith("ss") and x.endsWith('s')) or
-      endsWith(x.normalize, "data")
+  x.endsWith("es") or (not (x.endsWith("ss") or x.endsWith("radius") or
+      x.endsWith("Pos")) and x.endsWith('s')) or endsWith(x.normalize, "data")
 
 proc camelCaseAscii*(s: string): string =
   ## Converts snake_case to CamelCase

@@ -33,10 +33,6 @@ proc initWindow*(width: int32, height: int32, title: string) =
   initWindowPriv(width, height, title.cstring)
   if not isWindowReady(): raiseRaylibError("Failed to create Window")
 
-proc setWindowIcons*(images: openArray[Image]) =
-  ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
-  setWindowIconsPriv(cast[ptr UncheckedArray[Image]](images), images.len.int32)
-
 proc getDroppedFiles*(): seq[string] =
   ## Get dropped files names
   let dropfiles = loadDroppedFilesPriv()
@@ -144,49 +140,6 @@ proc loadMaterials*(fileName: string): RArray[Material] =
   if len <= 0: raiseRaylibError("Failed to load Materials from " & fileName)
   result = RArray[Material](len: len, data: data)
 
-proc drawLineStrip*(points: openArray[Vector2]; color: Color) {.inline.} =
-  ## Draw lines sequence
-  drawLineStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc drawSplineLinear*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: Linear, minimum 2 points
-  drawSplineLinearPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawSplineBasis*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: B-Spline, minimum 4 points
-  drawSplineBasisPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawSplineCatmullRom*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: Catmull-Rom, minimum 4 points
-  drawSplineCatmullRomPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawSplineBezierQuadratic*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
-  drawSplineBezierQuadraticPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawSplineBezierCubic*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
-  drawSplineBezierCubicPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawTriangleFan*(points: openArray[Vector2]; color: Color) =
-  ## Draw a triangle fan defined by points (first vertex is the center)
-  drawTriangleFanPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc drawTriangleStrip*(points: openArray[Vector2]; color: Color) =
-  ## Draw a triangle strip defined by points
-  drawTriangleStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool =
-  checkCollisionPointPolyPriv(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
-
-proc imageDrawTriangleFan*(dst: var Image, points: openArray[Vector2], color: Color) =
-  ## Draw a triangle fan defined by points within an image (first vertex is the center)
-  imageDrawTriangleFanPriv(dst.addr, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc imageDrawTriangleStrip*(dst: var Image, points: openArray[Vector2], color: Color) =
-  ## Draw a triangle strip defined by points within an image
-  imageDrawTriangleStripPriv(dst.addr, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
 proc loadImage*(fileName: string): Image =
   ## Load image from file into CPU memory (RAM)
   result = loadImagePriv(fileName.cstring)
@@ -224,11 +177,6 @@ proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
   var len = 0'i32
   let data = exportImageToMemoryPriv(image, fileType.cstring, addr len)
   result = RArray[uint8](len: len, data: cast[ptr UncheckedArray[uint8]](data))
-
-proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
-  ## Apply custom square convolution kernel to image
-  ## NOTE: The convolution kernel matrix is expected to be square
-  imageKernelConvolutionPriv(addr image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
 
 type
   Pixel* = concept
@@ -363,10 +311,6 @@ proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out RArray[Rectangle]
   result = genImageFontAtlasPriv(cast[ptr UncheckedArray[GlyphInfo]](chars), addr data,
       chars.len.int32, fontSize, padding, packMethod)
   recs = RArray[Rectangle](len: chars.len, data: data)
-
-proc drawTriangleStrip3D*(points: openArray[Vector3]; color: Color) =
-  ## Draw a triangle strip defined by points
-  drawTriangleStrip3DPriv(cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
 
 proc updateMeshBuffer*[T](mesh: var Mesh, index: int32, data: openArray[T], offset: int32) =
   ## Update mesh vertex data in GPU for a specific buffer index

@@ -377,7 +377,6 @@ const
   ])
   privateFuncs = toHashSet([
     "InitWindow",
-    "SetWindowIcons",
     "UpdateTexture",
     "UpdateTextureRec",
     "GetPixelColor",
@@ -394,7 +393,6 @@ const
     "LoadImageSvg",
     "LoadImageFromMemory",
     "ExportImageToMemory",
-    "ImageKernelConvolution",
     "LoadImageColors",
     "SetTraceLogCallback",
     "LoadFontData",
@@ -404,24 +402,12 @@ const
     "LoadTextureCubemap",
     "LoadTexture",
     "LoadRenderTexture",
-    "DrawLineStrip",
-    "DrawSplineLinear",
-    "DrawSplineBasis",
-    "DrawSplineCatmullRom",
-    "DrawSplineBezierQuadratic",
-    "DrawSplineBezierCubic",
-    "DrawTriangleFan",
-    "DrawTriangleStrip",
-    "CheckCollisionPointPoly",
     "LoadImageAnimFromMemory",
     "LoadFont",
     "LoadFontEx",
     "LoadFontFromImage",
     "LoadFontFromMemory",
     "GenImageFontAtlas",
-    "ImageDrawTriangleFan",
-    "ImageDrawTriangleStrip",
-    "DrawTriangleStrip3D",
     "DrawMeshInstanced",
     "DrawTextCodepoints",
     "LoadModel",
@@ -659,6 +645,11 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
   proc checkCstringType(fnc: FunctionInfo, kind: string): bool =
     kind == "cstring" and fnc.name notin privateFuncs and not fnc.hasVarargs
 
+  proc checkOpenarrayType(fnc: FunctionInfo, kind: string, many: bool, nextName: string): bool =
+    kind != "pointer" and many and ((nextName == "count" or nextName.endsWith("Count")) or
+        (nextName == "size" or nextName.endsWith("Size"))) and
+        fnc.name notin privateFuncs and not fnc.hasVarargs
+
   for fnc in mitems(holder):
     if fnc.name in excludedFuncs:
       continue
@@ -673,7 +664,20 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
       if fnc.hasVarargs:
         fnc.params.setLen(fnc.params.high)
 
-    var foundCstring = false
+    var autoWrap = false
+    for i, param in fnc.params.mpairs:
+      let many = shouldUsePluralType(fnc, param)
+      let baseType = convertTypeSimple(param.`type`)
+      if checkCstringType(fnc, baseType):
+        autoWrap = true
+      if i < fnc.params.high and checkOpenarrayType(fnc, baseType, many, fnc.params[i+1].name):
+        param.baseType = baseType
+        autoWrap = true
+    if fnc.returnType != "void":
+      let baseType = convertTypeSimple(fnc.returnType)
+      if checkCstringType(fnc, baseType):
+        autoWrap = true
+
     for i, param in fnc.params.mpairs:
       var paramType = findEnumTypeForParam(fnc, param)
       if paramType == "":
@@ -687,20 +691,16 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
           ]
         let pat = getReplacement(fnc.name, param.name, replacements)
         (paramType, _) = convertType(param.`type`, pat, many, not fnc.isPrivate)
-      if checkCstringType(fnc, paramType):
-        foundCstring = true
-        fnc.isPrivate = true
       param.`type` = paramType
     if fnc.returnType != "void":
       var returnType = findEnumTypeForReturn(fnc)
       if returnType == "":
         let many = shouldUsePluralReturnType(fnc)
         (returnType, _) = convertType(fnc.returnType, "", many, not fnc.isPrivate)
-      if checkCstringType(fnc, returnType):
-        foundCstring = true
-        fnc.isPrivate = true
       fnc.returnType = returnType
-    if foundCstring:
+
+    if autoWrap:
+      fnc.isPrivate = true
       wrappedFuncs.add fnc
 
 proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
@@ -920,14 +920,23 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
         ident generateProcName(fnc)
         lit "*("
         # Generate parameters
+        var skipNext = false
         for i, param in fnc.params.pairs:
-          if i > 0: lit ", "
-          ident param.name
-          lit ": "
-          if param.`type` == "cstring":
-            lit "string"
+          if skipNext:
+            skipNext = false
           else:
-            lit param.`type`
+            if i > 0: lit ", "
+            ident param.name
+            lit ": "
+            if param.`type` == "cstring":
+              lit "string"
+            elif param.baseType != "":
+              lit "openArray["
+              lit param.baseType
+              lit "]"
+              skipNext = true
+            else:
+              lit param.`type`
         lit ")"
         # Generate return type
         if fnc.returnType != "void":
@@ -949,11 +958,25 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
             lit "$"
           lit generateProcName(fnc)
           lit "Priv("
+          var nextValue = ""
           for i, param in fnc.params.pairs:
             if i > 0: lit ", "
-            ident param.name
+            if param.baseType != "":
+              lit "cast["
+              lit param.`type`
+              lit "]("
+            if nextValue != "":
+              lit nextValue
+              lit ".len."
+              lit param.`type`
+              nextValue = ""
+            else:
+              ident param.name
             if param.`type` == "cstring":
               lit ".cstring"
+            if param.baseType != "":
+              lit ")"
+              nextValue = param.name
           lit ")\n"
 
     # Generate wrapped functions
