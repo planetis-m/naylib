@@ -37,23 +37,11 @@ proc setWindowIcons*(images: openArray[Image]) =
   ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
   setWindowIconsPriv(cast[ptr UncheckedArray[Image]](images), images.len.int32)
 
-proc getMonitorName*(monitor: int32): string {.inline.} =
-  ## Get the human-readable, UTF-8 encoded name of the primary monitor
-  result = $getMonitorNamePriv(monitor)
-
-proc getClipboardText*(): string {.inline.} =
-  ## Get clipboard text content
-  result = $getClipboardTextPriv()
-
 proc getDroppedFiles*(): seq[string] =
   ## Get dropped files names
   let dropfiles = loadDroppedFilesPriv()
   result = cstringArrayToSeq(dropfiles.paths, dropfiles.count)
   unloadDroppedFilesPriv(dropfiles) # Clear internal buffers
-
-proc getGamepadName*(gamepad: int32): string {.inline.} =
-  ## Get gamepad internal name id
-  result = $getGamepadNamePriv(gamepad)
 
 proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
   ## Export data to code (.nim), returns true on success

@@ -378,9 +378,6 @@ const
   privateFuncs = toHashSet([
     "InitWindow",
     "SetWindowIcons",
-    "GetMonitorName",
-    "GetClipboardText",
-    "GetGamepadName",
     "UpdateTexture",
     "UpdateTextureRec",
     "GetPixelColor",
@@ -659,6 +656,9 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
   proc findEnumTypeForReturn(fnc: FunctionInfo): string =
     enumInFuncReturn.getOrDefault(fnc.name)
 
+  proc checkCstringType(fnc: FunctionInfo, kind: string): bool =
+    kind == "cstring" and fnc.name notin privateFuncs and not fnc.hasVarargs
+
   for fnc in mitems(holder):
     if fnc.name in excludedFuncs:
       continue
@@ -687,8 +687,7 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
           ]
         let pat = getReplacement(fnc.name, param.name, replacements)
         (paramType, _) = convertType(param.`type`, pat, many, not fnc.isPrivate)
-      if paramType == "cstring" and
-          fnc.name notin privateFuncs and not fnc.hasVarargs:
+      if checkCstringType(fnc, paramType):
         foundCstring = true
         fnc.isPrivate = true
       param.`type` = paramType
@@ -697,6 +696,9 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
       if returnType == "":
         let many = shouldUsePluralReturnType(fnc)
         (returnType, _) = convertType(fnc.returnType, "", many, not fnc.isPrivate)
+      if checkCstringType(fnc, returnType):
+        foundCstring = true
+        fnc.isPrivate = true
       fnc.returnType = returnType
     if foundCstring:
       wrappedFuncs.add fnc
@@ -910,43 +912,52 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       lit " {.inline.} = x."
       ident x.field
       lit "\n"
-    # Generate wrapped functions
-    for fnc in items(wrappedFuncs):
-      # Generate proc signature
-      lit "\nproc "
-      ident generateProcName(fnc)
-      lit "*("
-      # Generate parameters
-      for i, param in fnc.params.pairs:
-        if i > 0: lit ", "
-        ident param.name
-        lit ": "
-        if param.`type` == "cstring":
-          lit "string"
-        else:
-          lit param.`type`
-      lit ")"
-      # Generate return type
-      if fnc.returnType != "void":
-        lit ": "
-        lit fnc.returnType
-      lit " ="
-      # Generate documentation comment
-      if fnc.description != "":
-        scope:
-          spaces
-          lit "## "
-          lit fnc.description
-      scope:
-        spaces
-        lit generateProcName(fnc)
-        lit "Priv("
+
+    proc generateWrappedProcs(holder: seq[FunctionInfo]) =
+      for fnc in items(holder):
+        # Generate proc signature
+        lit "\nproc "
+        ident generateProcName(fnc)
+        lit "*("
+        # Generate parameters
         for i, param in fnc.params.pairs:
           if i > 0: lit ", "
           ident param.name
+          lit ": "
           if param.`type` == "cstring":
-            lit ".cstring"
-        lit ")\n"
+            lit "string"
+          else:
+            lit param.`type`
+        lit ")"
+        # Generate return type
+        if fnc.returnType != "void":
+          lit ": "
+          if fnc.returnType == "cstring":
+            lit "string"
+          else:
+            lit fnc.returnType
+        lit " ="
+        # Generate documentation comment
+        if fnc.description != "":
+          scope:
+            spaces
+            lit "## "
+            lit fnc.description
+        scope:
+          spaces
+          if fnc.returnType == "cstring":
+            lit "$"
+          lit generateProcName(fnc)
+          lit "Priv("
+          for i, param in fnc.params.pairs:
+            if i > 0: lit ", "
+            ident param.name
+            if param.`type` == "cstring":
+              lit ".cstring"
+          lit ")\n"
+
+    # Generate wrapped functions
+    generateWrappedProcs(wrappedFuncs)
     lit readFile("raylib_wrap.nim")
     lit readFile("raylib_fields.nim")
   finally:
