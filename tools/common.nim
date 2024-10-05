@@ -63,6 +63,7 @@ type
 
   FieldInfo* = object
     `type`*, name*, description*: string
+    isPrivate*: bool
 
   EnumInfo* = object
     name*, description*: string

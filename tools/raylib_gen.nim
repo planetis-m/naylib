@@ -653,7 +653,73 @@ const
     "IsAudioStreamReady",
   ]
 
-proc genBindings(t: TopLevel, fname: string; header, middle: string) =
+type
+  PropertyInfo = object
+    struct, field, `type`: string
+
+proc preprocessStructs(structs: var seq[StructInfo];
+                       procProperties, procArrays: var seq[PropertyInfo]) =
+  proc isPrivateField(obj: StructInfo, fld: FieldInfo): bool =
+    (obj.name, fld.name) notin {"Wave": "frameCount", "Sound": "frameCount", "Music": "frameCount"} and
+    fld.name.endsWith("Count")
+
+  proc isArrayField(obj: StructInfo, fld: FieldInfo, isPlural: bool): bool =
+    isPlural and not endsWith(fld.name.normalize, "data") and
+    (obj.name, fld.name) notin {
+      "Material": "params",
+      "VrDeviceInfo": "lensDistortionValues",
+      "FilePathList": "paths",
+      "AutomationEvent": "params"
+    }
+
+  proc shouldUsePluralType(obj: StructInfo, fld: FieldInfo): bool =
+    result = isPlural(fld.name)
+    if fld.name in ["mipmaps", "channels"]:
+      result = false
+    elif (obj.name, fld.name) in {"Model": "meshMaterial", "Model": "bindPose", "Mesh": "vboId"}:
+      result = true
+
+  proc shouldBePrivate(obj: StructInfo, fld: FieldInfo, isArray, isPrivate: bool): bool =
+    isPrivate or isArray or
+    obj.name in ["FilePathList", "AutomationEventList"] or
+    (obj.name, fld.name) in {
+      "MaterialMap": "texture",
+      "Material": "shader",
+      "AudioStream": "buffer",
+      "AudioStream": "processor"
+    }
+
+  for obj in mitems(structs):
+    for fld in mitems(obj.fields):
+      fld.isPrivate = isPrivateField(obj, fld)
+      const replacements = [
+        ("Camera3D", "projection", "CameraProjection"),
+        ("Image", "format", "PixelFormat"),
+        ("Texture", "format", "PixelFormat"),
+        ("NPatchInfo", "layout", "NPatchLayout")
+      ]
+      var fieldType = getReplacement(obj.name, fld.name, replacements)
+      if fieldType == "":
+        let many = shouldUsePluralType(obj, fld)
+        const replacements = [
+          ("ModelAnimation", "framePoses", "ptr UncheckedArray[ptr UncheckedArray[$1]]"),
+          ("Mesh", "vboId", "ptr array[MaxMeshVertexBuffers, $1]"),
+          ("Material", "maps", "ptr array[MaxMaterialMaps, $1]"),
+          ("Shader", "locs", "ptr UncheckedArray[ShaderLocation]")
+        ]
+        let pattern = getReplacement(obj.name, fld.name, replacements)
+        var baseType = ""
+        fieldType = convertType(fld.`type`, pattern, many, false, baseType)
+        let isArray = isArrayField(obj, fld, many)
+        if fld.isPrivate:
+          procProperties.add PropertyInfo(struct: obj.name, field: fld.name, `type`: fieldType)
+        if isArray:
+          procArrays.add PropertyInfo(struct: obj.name, field: fld.name, `type`: baseType)
+        fld.isPrivate = shouldBePrivate(obj, fld, isArray, fld.isPrivate)
+      fld.`type` = fieldType
+
+proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
+                 fname: string; header, middle: string) =
   var buf = newStringOfCap(50)
   var indent = 0
   var otp: FileStream
@@ -699,42 +765,9 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
     # Generate enum definitions
     generateEnums(t.enums)
     lit extraDistinct
-    # Generate type definitions
-    var procProperties: seq[(string, string, string)] = @[]
-    var procArrays: seq[(string, string, string)] = @[]
-    lit "\ntype"
-    scope:
-      proc isPrivateField(obj: StructInfo, fld: FieldInfo): bool =
-        (obj.name, fld.name) notin {"Wave": "frameCount", "Sound": "frameCount", "Music": "frameCount"} and
-        fld.name.endsWith("Count")
 
-      proc isArrayField(obj: StructInfo, fld: FieldInfo, isPlural: bool): bool =
-        isPlural and not endsWith(fld.name.normalize, "data") and
-        (obj.name, fld.name) notin {
-          "Material": "params",
-          "VrDeviceInfo": "lensDistortionValues",
-          "FilePathList": "paths",
-          "AutomationEvent": "params"
-        }
-
-      proc shouldUsePluralType(obj: StructInfo, fld: FieldInfo): bool =
-        result = isPlural(fld.name)
-        if fld.name in ["mipmaps", "channels"]:
-          result = false
-        elif (obj.name, fld.name) in {"Model": "meshMaterial", "Model": "bindPose", "Mesh": "vboId"}:
-          result = true
-
-      proc shouldBePrivate(obj: StructInfo, fld: FieldInfo, isArray, isPrivate: bool): bool =
-        isPrivate or isArray or
-        obj.name in ["FilePathList", "AutomationEventList"] or
-        (obj.name, fld.name) in {
-          "MaterialMap": "texture",
-          "Material": "shader",
-          "AudioStream": "buffer",
-          "AudioStream": "processor"
-        }
-
-      for obj in items(t.structs):
+    proc generateObjects(structs: seq[StructInfo]) =
+      for obj in items(structs):
         spaces
         ident obj.name
         if obj.name == "FilePathList":
@@ -754,40 +787,18 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
             if obj.name == "Matrix" and fld.name notin ["m12", "m13", "m14", "m15"]: # row ends
               lit "*, "
               continue
-            let isPrivate = isPrivateField(obj, fld)
-            const replacements = [
-              ("Camera3D", "projection", "CameraProjection"),
-              ("Image", "format", "PixelFormat"),
-              ("Texture", "format", "PixelFormat"),
-              ("NPatchInfo", "layout", "NPatchLayout")
-            ]
-            let kind = getReplacement(obj.name, fld.name, replacements)
-            if kind != "":
-              lit "*: "
-              lit kind
+            if fld.isPrivate:
+              lit ": "
             else:
-              let many = shouldUsePluralType(obj, fld)
-              const replacements = [
-                ("ModelAnimation", "framePoses", "ptr UncheckedArray[ptr UncheckedArray[$1]]"),
-                ("Mesh", "vboId", "ptr array[MaxMeshVertexBuffers, $1]"),
-                ("Material", "maps", "ptr array[MaxMaterialMaps, $1]"),
-                ("Shader", "locs", "ptr UncheckedArray[ShaderLocation]")
-              ]
-              let pat = getReplacement(obj.name, fld.name, replacements)
-              var baseKind = ""
-              let kind = convertType(fld.`type`, pat, many, false, baseKind)
-              let isArray = isArrayField(obj, fld, many)
-              if shouldBePrivate(obj, fld, isArray, isPrivate):
-                lit ": "
-              else:
-                lit "*: "
-              lit kind
-              if isPrivate:
-                procProperties.add (obj.name, fld.name, kind)
-              if isArray:
-                procArrays.add (obj.name, fld.name, baseKind)
+              lit "*: "
+            lit fld.`type`
             doc fld
         lit "\n"
+
+    lit "\ntype"
+    scope:
+      # Generate type definitions
+      generateObjects(t.structs)
       # Add a type alias or a missing type
       for alias in items(t.aliases):
         spaces
@@ -803,13 +814,13 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
         spaces
         lit extra
       lit "\n"
-      for obj, fld, _ in procArrays.items:
-        if (obj, fld) == ("AutomationEventList", "events"): continue
+      for x in procArrays.items:
+        if (x.struct, x.field) == ("AutomationEventList", "events"): continue
         spaces
-        lit obj
-        lit capitalizeAscii(fld)
+        lit x.struct
+        lit capitalizeAscii(x.field)
         lit "* = distinct "
-        ident obj
+        ident x.struct
       lit "\n"
     lit middle
 
@@ -955,15 +966,15 @@ proc genBindings(t: TopLevel, fname: string; header, middle: string) =
 
     lit readFile("raylib_types.nim")
     lit "\n"
-    for obj, field, kind in procProperties.items:
+    for x in procProperties.items:
       lit "proc "
-      ident field
+      ident x.field
       lit "*(x: "
-      ident obj
+      ident x.struct
       lit "): "
-      lit kind
+      lit x.`type`
       lit " {.inline.} = x."
-      ident field
+      ident x.field
       lit "\n"
     lit readFile("raylib_wrap.nim")
     lit readFile("raylib_fields.nim")
@@ -976,6 +987,9 @@ const
 
 proc main =
   var t = parseApi(raylibApi)
-  genBindings(t, outputname, raylibHeader, helpers)
+  var procProperties: seq[PropertyInfo] = @[]
+  var procArrays: seq[PropertyInfo] = @[]
+  preprocessStructs(t.structs, procProperties, procArrays)
+  genBindings(t, procProperties, procArrays, outputname, raylibHeader, helpers)
 
 main()
