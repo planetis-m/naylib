@@ -1,4 +1,4 @@
-import common, std/streams
+import common, std/streams, std/sets
 import std/strutils except spaces
 when defined(nimPreviewSlimSystem):
   import std/syncio
@@ -348,7 +348,7 @@ const
     "Rune",
     "Rune",
   ]
-  excludedFuncs = [
+  excludedFuncs = toHashSet([
     "ColorIsEqual",
     # Text strings management functions
     "TextCopy",
@@ -430,8 +430,8 @@ const
     "UnloadFontData",
     "UnloadModelAnimations",
     "UnloadWaveSamples",
-  ]
-  allocFuncs = [
+  ])
+  allocFuncs = toHashSet([
     "MemAlloc",
     "MemRealloc",
     "MemFree",
@@ -450,8 +450,8 @@ const
     "UnloadSoundAlias",
     "UnloadMusicStream",
     "UnloadAudioStream",
-  ]
-  privateFuncs = [
+  ])
+  privateFuncs = toHashSet([
     "InitWindow",
     "SetWindowIcons",
     "GetMonitorName",
@@ -518,8 +518,8 @@ const
     "UpdateSound",
     "LoadAudioStream",
     "UpdateAudioStream",
-  ]
-  nosideeffectsFuncs = [
+  ])
+  nosideeffectsFuncs = toHashSet([
     "CheckCollisionCircleLine",
     "UpdateModelAnimationBoneMatrices",
     "GenImageText",
@@ -651,7 +651,7 @@ const
     "IsMusicReady",
     "GetMusicTimeLength",
     "IsAudioStreamReady",
-  ]
+  ])
 
 type
   PropertyInfo = object
@@ -717,6 +717,66 @@ proc preprocessStructs(structs: var seq[StructInfo];
           procArrays.add PropertyInfo(struct: obj.name, field: fld.name, `type`: baseType)
         fld.isPrivate = shouldBePrivate(obj, fld, isArray, fld.isPrivate)
       fld.`type` = fieldType
+
+proc preprocessFunctions(holder: var seq[FunctionInfo]) =
+  proc shouldUsePluralType(fnc: FunctionInfo, param: ParamInfo): bool =
+    result = isPlural(param.name)
+    if (fnc.name, param.name) == ("LoadImageAnim", "frames"):
+      result = false
+    elif (fnc.name, param.name) == ("ImageKernelConvolution", "kernel"):
+      result = true
+
+  proc shouldUsePluralReturnType(fnc: FunctionInfo): bool =
+    isPlural(fnc.name) or fnc.name == "LoadImagePalette"
+
+  proc findEnumTypeForParam(fnc: FunctionInfo, param: ParamInfo): string =
+    for j, (fncName, paramName) in enumInFuncParams.pairs:
+      if fnc.name == fncName and param.name == paramName:
+        return enumInFuncs[j]
+    return ""
+
+  proc findEnumTypeForReturn(fnc: FunctionInfo): string =
+    for (fncName, idx) in enumInFuncReturn.items:
+      if fnc.name == fncName:
+        return enumInFuncs[idx]
+    return ""
+
+  for fnc in mitems(holder):
+    if fnc.name in excludedFuncs:
+      continue
+    fnc.isPrivate = fnc.name in privateFuncs
+    fnc.isAlloc = fnc.name in allocFuncs
+    var toDelete = -1
+    for i, param in fnc.params.mpairs:
+      if param.name == "args" and param.`type` == "...":
+        toDelete = i
+        fnc.hasVarargs = true
+      else:
+        var paramType = findEnumTypeForParam(fnc, param)
+        if paramType == "":
+          let many = shouldUsePluralType(fnc, param)
+          const
+            replacements = [
+              ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[$1]"),
+              ("CheckCollisionLines", "collisionPoint", "out $1"),
+              ("LoadImageAnim", "frames", "out $1"),
+              ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),
+              # ("ImageKernelConvolution", "kernel", "ptr UncheckedArray[float32]")
+            ]
+          let pat = getReplacement(fnc.name, param.name, replacements)
+          var baseType = ""
+          let isVar = not fnc.isPrivate or fnc.name == "ImageKernelConvolution"
+          paramType = convertType(param.`type`, pat, many, isVar, baseType)
+        param.`type` = paramType
+    if toDelete >= 0:
+      delete(fnc.params, toDelete)
+    if fnc.returnType != "void":
+      var returnType = findEnumTypeForReturn(fnc)
+      if returnType == "":
+        let many = shouldUsePluralReturnType(fnc)
+        var baseType = ""
+        returnType = convertType(fnc.returnType, "", many, not fnc.isPrivate, baseType)
+      fnc.returnType = returnType
 
 proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
                  fname: string; header, middle: string) =
@@ -848,16 +908,6 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
           result.removeSuffix("Pro")
         result = uncapitalizeAscii(result)
 
-      proc shouldUsePluralType(fnc: FunctionInfo, param: ParamInfo): bool =
-        result = isPlural(param.name)
-        if (fnc.name, param.name) == ("LoadImageAnim", "frames"):
-          result = false
-        elif (fnc.name, param.name) == ("ImageKernelConvolution", "kernel"):
-          result = true
-
-      proc shouldUsePluralReturnType(fnc: FunctionInfo): bool =
-        isPlural(fnc.name) or fnc.name == "LoadImagePalette"
-
       proc getMangledFunctionName(name: string): string =
         const mangledFunctions = ["ShowCursor", "CloseWindow", "LoadImage", "DrawText", "DrawTextEx"]
         if name in mangledFunctions:
@@ -865,80 +915,39 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
         else:
           result = name
 
-      proc findEnumTypeForParam(fnc: FunctionInfo, param: ParamInfo): string =
-        for j, (fncName, paramName) in enumInFuncParams.pairs:
-          if fnc.name == fncName and param.name == paramName:
-            return enumInFuncs[j]
-        return ""
-
-      proc findEnumTypeForReturn(fnc: FunctionInfo): string =
-        for (fncName, idx) in enumInFuncReturn.items:
-          if fnc.name == fncName:
-            return enumInFuncs[idx]
-        return ""
-
       for fnc in items(holder):
         if fnc.name in excludedFuncs:
           continue
         # Generate proc signature
         lit "\nproc "
         ident generateProcName(fnc)
-        let isPrivate = fnc.name in privateFuncs
-        let isAlloc = fnc.name in allocFuncs
-        if isPrivate:
+        if fnc.isPrivate:
           lit "Priv("
-        elif isAlloc:
+        elif fnc.isAlloc:
           lit "("
         else:
           lit "*("
         # Generate parameters
-        var hasVarargs = false
         for i, param in fnc.params.pairs:
-          if param.name == "args" and param.`type` == "...":
-            hasVarargs = true
-          else:
-            if i > 0: lit ", "
-            ident param.name
-            lit ": "
-            let enumType = findEnumTypeForParam(fnc, param)
-            if enumType != "":
-              lit enumType
-            else:
-              let many = shouldUsePluralType(fnc, param)
-              const
-                replacements = [
-                  ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[$1]"),
-                  ("CheckCollisionLines", "collisionPoint", "out $1"),
-                  ("LoadImageAnim", "frames", "out $1"),
-                  ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),
-                  # ("ImageKernelConvolution", "kernel", "ptr UncheckedArray[float32]")
-                ]
-              let pat = getReplacement(fnc.name, param.name, replacements)
-              var baseKind = ""
-              let kind = convertType(param.`type`, pat, many, not isPrivate or fnc.name == "ImageKernelConvolution", baseKind)
-              lit kind
+          if i > 0: lit ", "
+          ident param.name
+          lit ": "
+          lit param.`type`
         lit ")"
         # Generate return type
         if fnc.returnType != "void":
           lit ": "
-          let enumType = findEnumTypeForReturn(fnc)
-          if enumType != "":
-            lit enumType
-          else:
-            let many = shouldUsePluralReturnType(fnc)
-            var baseKind = ""
-            let kind = convertType(fnc.returnType, "", many, not isPrivate, baseKind)
-            lit kind
+          lit fnc.returnType
         # Generate import pragma
         lit " {.importc: "
         lit "\""
         ident getMangledFunctionName(fnc.name)
         lit "\""
-        if hasVarargs:
+        if fnc.hasVarargs:
           lit ", varargs"
         lit ".}"
         # Generate documentation comment
-        if not (isAlloc or isPrivate) and fnc.description != "":
+        if not (fnc.isAlloc or fnc.isPrivate) and fnc.description != "":
           scope:
             spaces
             lit "## "
@@ -990,6 +999,7 @@ proc main =
   var procProperties: seq[PropertyInfo] = @[]
   var procArrays: seq[PropertyInfo] = @[]
   preprocessStructs(t.structs, procProperties, procArrays)
+  preprocessFunctions(t.functions)
   genBindings(t, procProperties, procArrays, outputname, raylibHeader, helpers)
 
 main()

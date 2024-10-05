@@ -53,6 +53,7 @@ type
   FunctionInfo* = object
     name*, description*, returnType*: string
     params*: seq[ParamInfo]
+    isPrivate*, isAlloc*, hasVarargs*: bool
 
   ParamInfo* = object
     `type`*, name*: string
