@@ -286,15 +286,15 @@ proc getPixelFormatName*(format: PixelFormat): string =
   of CompressedAstc4x4Rgba: "ASTC_4x4_RGBA" # 8 bpp
   of CompressedAstc8x8Rgba: "ASTC_8x8_RGBA" # 2 bpp
 """
-  # excludedEnums = [
-  #   "rlTraceLogLevel",
-  #   "rlPixelFormat",
-  #   "rlTextureFilter",
-  #   "rlBlendMode",
-  #   "rlShaderLocationIndex",
-  #   "rlShaderUniformDataType",
-  #   "rlShaderAttributeDataType"
-  # ]
+  excludedEnums = [
+    "rlTraceLogLevel",
+    "rlPixelFormat",
+    "rlTextureFilter",
+    "rlBlendMode",
+    "rlShaderLocationIndex",
+    "rlShaderUniformDataType",
+    "rlShaderAttributeDataType"
+  ]
   excludedFuncs = [
     "rlGetPixelFormatName",
   ]
@@ -391,8 +391,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
     # Generate type definitions
     scope:
       for enm in items(t.enums):
-        if enm.name in ["rlTraceLogLevel", "rlPixelFormat", "rlTextureFilter", "rlBlendMode",
-            "rlShaderLocationIndex", "rlShaderUniformDataType", "rlShaderAttributeDataType"]: continue
+        if enm.name in excludedEnums: continue
         var enmName = enm.name
         spaces
         removePrefix(enmName, "rl")
@@ -404,9 +403,6 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           for i, val in pairs(enm.values):
             if val.value == prev: continue
             spaces
-            if prev == -1 and enm.name == "GamepadButton":
-              lit "None = -1 ## No button pressed"
-              spaces
             var valName = val.name
             removePrefix(valName, "RL_")
             removePrefix(valName, "ATTACHMENT_")
@@ -428,8 +424,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
         if obj.name in excludedTypes: continue
         spaces
         var objName = obj.name
-        if objName != "rlglData":
-          removePrefix(objName, "rl")
+        removePrefix(objName, "rl")
         ident capitalizeAscii(objName)
         lit "* {.importc: \""
         lit obj.name

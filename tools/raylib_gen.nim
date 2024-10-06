@@ -983,6 +983,7 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
             lit fnc.description
         scope:
           spaces
+          # Generate forwarding call
           if fnc.returnType == "cstring":
             lit "$"
           lit fnc.name
