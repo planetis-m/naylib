@@ -556,6 +556,13 @@ const
     "GetMusicTimeLength",
     "IsAudioStreamReady",
   ])
+  mangledFunctions = toHashSet([
+    "ShowCursor",
+    "CloseWindow",
+    "LoadImage",
+    "DrawText",
+    "DrawTextEx"
+  ])
   needErrorChecking = toHashSet([
     "Window",
     "Shader",
@@ -609,6 +616,8 @@ proc preprocessStructs(structs: var seq[StructInfo];
     }
 
   for obj in mitems(structs):
+    if obj.name == "Rectangle":
+      obj.flags.incl isMangled
     if obj.name in ["Color", "Vector2", "Vector3", "Vector4"]:
       obj.flags.incl isCompleteStruct
     if obj.name == "FilePathList":
@@ -693,13 +702,6 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; funcsToWrap: var seq[Fun
       result.removeSuffix("Pro")
     result = uncapitalizeAscii(result)
 
-  proc getMangledFunctionName(name: string): string =
-    const mangledFunctions = ["ShowCursor", "CloseWindow", "LoadImage", "DrawText", "DrawTextEx"]
-    if name in mangledFunctions:
-      result = "rl" & name
-    else:
-      result = name
-
   proc shouldUsePluralType(fnc: FunctionInfo, param: ParamInfo): bool =
     result = isPlural(param.name)
     if (fnc.name, param.name) == ("LoadImageAnim", "frames"):
@@ -727,6 +729,8 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; funcsToWrap: var seq[Fun
   for fnc in mitems(holder):
     if fnc.name in excludedFuncs:
       continue
+    if fnc.name in mangledFunctions:
+      fnc.flags.incl isMangled
     if fnc.name in wrappedFuncs:
       fnc.flags.incl isWrappedFunc
       fnc.flags.incl isPrivate
@@ -741,27 +745,27 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; funcsToWrap: var seq[Fun
         fnc.flags.incl hasVarargs
         fnc.params.setLen(fnc.params.high)
 
-    var autoWrapped = false
+    var autoWrap = false
     for i, param in fnc.params.mpairs:
       let many = shouldUsePluralType(fnc, param)
       let (paramType, baseType) = convertType(param.`type`, many)
       if checkCstringType(fnc, paramType):
-        autoWrapped = true
+        autoWrap = true
       if i < fnc.params.high and checkOpenarrayType(fnc, paramType, many, fnc.params[i+1].name):
         param.baseType = baseType
         param.flags.incl isOpenArray
-        autoWrapped = true
+        autoWrap = true
       if paramType.startsWith("var "):
         param.flags.incl isVarParam
         param.baseType = baseType
     if fnc.returnType != "void":
       let (returnType, baseType) = convertType(fnc.returnType, false)
       if checkCstringType(fnc, returnType):
-        autoWrapped = true
+        autoWrap = true
       if baseType in needErrorChecking and fnc.name notin privateFuncs:
         echo "WARNING: Function might require error checking: ", fnc.name
 
-    if autoWrapped:
+    if autoWrap:
       fnc.flags.incl isWrappedFunc
       fnc.flags.incl isPrivate
 
@@ -787,9 +791,9 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; funcsToWrap: var seq[Fun
         (returnType, _) = convertType(fnc.returnType, "", many, isPrivate notin fnc.flags)
       fnc.returnType = returnType
 
-    fnc.importName = getMangledFunctionName(fnc.name)
+    fnc.importName = (if isMangled in fnc.flags: "rl" else: "") & fnc.name
     fnc.name = generateProcName(fnc)
-    if autoWrapped:
+    if autoWrap:
       funcsToWrap.add fnc
 
 proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
@@ -827,8 +831,10 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       ident obj.name
       if isPrivate notin obj.flags:
         lit "*"
-      if obj.name == "Rectangle":
-        lit " {.importc: \"rlRectangle\""
+      if isMangled in obj.flags:
+        lit " {.importc: \"rl"
+        ident obj.name
+        lit "\""
       else:
         lit " {.importc"
       lit ", header: \"raylib.h\""

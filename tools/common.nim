@@ -36,7 +36,7 @@ type
 
   InfoFlags* = enum
     isPrivate, isWrappedFunc, hasVarargs, isOpenArray, isVarParam,
-    isDistinct, isCompleteStruct
+    isDistinct, isCompleteStruct, isMangled
 
   TopLevel* = object
     defines*: seq[DefineInfo]
