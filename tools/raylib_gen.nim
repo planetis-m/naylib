@@ -556,7 +556,7 @@ const
     "GetMusicTimeLength",
     "IsAudioStreamReady",
   ])
-  needErrorChecking = [
+  needErrorChecking = toHashSet([
     "Window",
     "Shader",
     "Image",
@@ -569,7 +569,7 @@ const
     "Sound",
     "Music",
     "AudioStream"
-  ]
+  ])
 
 type
   PropertyInfo = object
@@ -609,7 +609,8 @@ proc preprocessStructs(structs: var seq[StructInfo];
 
   for obj in mitems(structs):
     for fld in mitems(obj.fields):
-      fld.isPrivate = isPrivateField(obj, fld)
+      if isPrivateField(obj, fld):
+        fld.flags.incl isPrivate
       const replacements = [
         ("Camera3D", "projection", "CameraProjection"),
         ("Image", "format", "PixelFormat"),
@@ -629,11 +630,12 @@ proc preprocessStructs(structs: var seq[StructInfo];
         let pattern = getReplacement(obj.name, fld.name, replacements)
         (fieldType, baseType) = convertType(fld.`type`, pattern, many, false)
       let isArray = isArrayField(obj, fld, many)
-      if fld.isPrivate:
+      if isPrivate in fld.flags:
         procProperties.add PropertyInfo(struct: obj.name, field: fld.name, `type`: fieldType)
       if isArray:
         procArrays.add PropertyInfo(struct: obj.name, field: fld.name, `type`: baseType)
-      fld.isPrivate = shouldBePrivate(obj, fld, isArray, fld.isPrivate)
+      if shouldBePrivate(obj, fld, isArray, isPrivate in fld.flags):
+        fld.flags.incl isPrivate
       fld.`type` = fieldType
 
 proc preprocessEnums(enums: var seq[EnumInfo]) =
@@ -658,40 +660,39 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
     enumInFuncReturn.getOrDefault(fnc.name)
 
   proc checkCstringType(fnc: FunctionInfo, kind: string): bool =
-    kind == "cstring" and fnc.name notin privateFuncs and not fnc.hasVarargs
+    kind == "cstring" and fnc.name notin privateFuncs and hasVarargs notin fnc.flags
 
   proc checkOpenarrayType(fnc: FunctionInfo, kind: string, many: bool, nextName: string): bool =
     kind != "pointer" and many and ((nextName == "count" or nextName.endsWith("Count")) or
         (nextName == "size" or nextName.endsWith("Size"))) and
-        fnc.name notin privateFuncs and not fnc.hasVarargs
+        fnc.name notin privateFuncs and hasVarargs notin fnc.flags
 
   for fnc in mitems(holder):
     if fnc.name in excludedFuncs:
       continue
-    fnc.isPrivate = fnc.name in privateFuncs
-    fnc.isAlloc = fnc.name in allocFuncs
+    if fnc.name in privateFuncs: fnc.flags.incl isPrivate
+    if fnc.name in allocFuncs: fnc.flags.incl isAllocFunc
 
     proc isVarargsParam(param: ParamInfo): bool =
       param.name == "args" and param.`type` == "..."
 
     if fnc.params.len > 0:
-      fnc.hasVarargs = isVarargsParam(fnc.params[^1])
-      if fnc.hasVarargs:
+      if isVarargsParam(fnc.params[^1]):
+        fnc.flags.incl hasVarargs
         fnc.params.setLen(fnc.params.high)
 
-    var autoWrap = false
     for i, param in fnc.params.mpairs:
       let many = shouldUsePluralType(fnc, param)
-      let baseType = convertTypeSimple(param.`type`)
+      let baseType = convertBaseType(param.`type`)
       if checkCstringType(fnc, baseType):
-        autoWrap = true
+        fnc.flags.incl autoWrapped
       if i < fnc.params.high and checkOpenarrayType(fnc, baseType, many, fnc.params[i+1].name):
         param.baseType = baseType
-        autoWrap = true
+        fnc.flags.incl autoWrapped
     if fnc.returnType != "void":
-      let baseType = convertTypeSimple(fnc.returnType)
+      let baseType = convertBaseType(fnc.returnType)
       if checkCstringType(fnc, baseType):
-        autoWrap = true
+        fnc.flags.incl autoWrapped
       if baseType in needErrorChecking and fnc.name notin privateFuncs:
         echo "WARNING: Function might require error checking: ", fnc.name
 
@@ -707,17 +708,17 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
             ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),
           ]
         let pat = getReplacement(fnc.name, param.name, replacements)
-        (paramType, _) = convertType(param.`type`, pat, many, not fnc.isPrivate)
+        (paramType, _) = convertType(param.`type`, pat, many, isPrivate notin fnc.flags)
       param.`type` = paramType
     if fnc.returnType != "void":
       var returnType = findEnumTypeForReturn(fnc)
       if returnType == "":
         let many = shouldUsePluralReturnType(fnc)
-        (returnType, _) = convertType(fnc.returnType, "", many, not fnc.isPrivate)
+        (returnType, _) = convertType(fnc.returnType, "", many, isPrivate notin fnc.flags)
       fnc.returnType = returnType
 
-    if autoWrap:
-      fnc.isPrivate = true
+    if autoWrapped in fnc.flags:
+      fnc.flags.incl isPrivate
       wrappedFuncs.add fnc
 
 proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
@@ -790,7 +791,7 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
             if obj.name == "Matrix" and fld.name notin ["m12", "m13", "m14", "m15"]: # row ends
               lit "*, "
               continue
-            if fld.isPrivate:
+            if isPrivate in fld.flags:
               lit ": "
             else:
               lit "*: "
@@ -865,9 +866,9 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
         # Generate proc signature
         lit "\nproc "
         ident generateProcName(fnc)
-        if fnc.isPrivate:
+        if isPrivate in fnc.flags:
           lit "Priv("
-        elif fnc.isAlloc:
+        elif isAllocFunc in fnc.flags:
           lit "("
         else:
           lit "*("
@@ -887,11 +888,11 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
         lit "\""
         ident getMangledFunctionName(fnc.name)
         lit "\""
-        if fnc.hasVarargs:
+        if hasVarargs in fnc.flags:
           lit ", varargs"
         lit ".}"
         # Generate documentation comment
-        if not (fnc.isAlloc or fnc.isPrivate) and fnc.description != "":
+        if {isAllocFunc, isPrivate} * fnc.flags == {} and fnc.description != "":
           scope:
             spaces
             lit "## "

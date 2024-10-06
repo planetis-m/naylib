@@ -31,7 +31,11 @@ proc isKeyword*(s: string): bool {.inline.} =
 ## The raylib_parser produces JSON with the following structure.
 ## The type definitions are used by the deserializer to process the file.
 type
-  DefineValue* = distinct string
+  BaseInfo* = object of RootObj
+    flags*: set[InfoFlags]
+
+  InfoFlags* = enum
+    isPrivate, isAllocFunc, hasVarargs, autoWrapped, isArray
 
   TopLevel* = object
     defines*: seq[DefineInfo]
@@ -44,38 +48,38 @@ type
   DefineType* = enum
     UNKNOWN, MACRO, GUARD, INT, LONG, FLOAT, FLOAT_MATH, DOUBLE, CHAR, STRING, COLOR
 
-  DefineInfo* = object
+  DefineValue* = distinct string
+
+  DefineInfo* = object of BaseInfo
     name*: string
     `type`*: DefineType
     value*: DefineValue
     description*: string
 
-  FunctionInfo* = object
+  FunctionInfo* = object of BaseInfo
     name*, description*, returnType*: string
     params*: seq[ParamInfo]
-    isPrivate*, isAlloc*, hasVarargs*: bool
 
-  ParamInfo* = object
+  ParamInfo* = object of BaseInfo
     `type`*, baseType*, name*: string
 
-  StructInfo* = object
+  StructInfo* = object of BaseInfo
     name*, description*: string
     fields*: seq[FieldInfo]
 
-  FieldInfo* = object
+  FieldInfo* = object of BaseInfo
     `type`*, name*, description*: string
-    isPrivate*: bool
 
-  EnumInfo* = object
+  EnumInfo* = object of BaseInfo
     name*, description*: string
     values*: seq[ValueInfo]
 
-  ValueInfo* = object
+  ValueInfo* = object of BaseInfo
     name*: string
     value*: int
     description*: string
 
-  AliasInfo* = object
+  AliasInfo* = object of BaseInfo
     `type`*, name*, description*: string
 
 proc initFromJson*(dst: var DefineValue; p: var JsonParser) =
@@ -161,40 +165,40 @@ proc toNimType(cType: string): string =
   of "rlDrawCall": "DrawCall"
   else: cType
 
-proc convertTypeSimple*(s: string): string =
-  let typeInfo = parseType(s)
+proc convertBaseType(typeInfo: TypeInfo): string =
   var nimType = toNimType(typeInfo.baseType)
+
   if typeInfo.isUnsigned:
     if nimType == "char":
       nimType = "uint8"
     else:
       nimType = "u" & nimType
+
   if typeInfo.isPointer:
     if nimType == "void":
       nimType = "pointer"
     elif nimType == "char" and not typeInfo.isUnsigned:
       nimType = "cstring"
+
   result = nimType
+
+proc convertBaseType*(s: string): string =
+  let typeInfo = parseType(s)
+  result = convertBaseType(typeInfo)
 
 proc convertType*(s, pattern: string, many, isVar: bool): (string, string) =
   let typeInfo = parseType(s)
-  var nimType = toNimType(typeInfo.baseType)
+  let baseType = convertBaseType(typeInfo)
 
-  if typeInfo.isUnsigned:
-    if nimType == "char":
-      nimType = "uint8"
-    else:
-      nimType = "u" & nimType
-
-  let baseType = nimType
+  var nimType = baseType
 
   if pattern != "":
     return (pattern % nimType, baseType)
 
   if typeInfo.isDoublePointer:
-    if nimType == "void":
+    if nimType == "pointer":
       nimType = "ptr pointer"
-    elif nimType == "char" and not typeInfo.isUnsigned:
+    elif nimType == "cstring":
       nimType = "cstringArray"
     elif many:
       nimType = &"ptr UncheckedArray[ptr {nimType}]"
@@ -202,10 +206,8 @@ proc convertType*(s, pattern: string, many, isVar: bool): (string, string) =
       nimType = "ptr ptr " & nimType
 
   elif typeInfo.isPointer:
-    if nimType == "void":
-      nimType = "pointer"
-    elif nimType == "char" and not typeInfo.isUnsigned:
-      nimType = "cstring"
+    if nimType == "pointer": discard
+    elif nimType == "cstring": discard
     elif many:
       nimType = &"ptr UncheckedArray[{nimType}]"
     else:
