@@ -587,7 +587,8 @@ proc preprocessStructs(structs: var seq[StructInfo];
       "Material": "params",
       "VrDeviceInfo": "lensDistortionValues",
       "FilePathList": "paths",
-      "AutomationEvent": "params"
+      "AutomationEvent": "params",
+      "AutomationEventList": "events"
     }
 
   proc shouldUsePluralType(obj: StructInfo, fld: FieldInfo): bool =
@@ -608,6 +609,11 @@ proc preprocessStructs(structs: var seq[StructInfo];
     }
 
   for obj in mitems(structs):
+    if obj.name in ["Color", "Vector2", "Vector3", "Vector4"]:
+      obj.flags.incl isCompleteStruct
+    if obj.name == "FilePathList":
+      obj.flags.incl isPrivate
+
     for fld in mitems(obj.fields):
       if isPrivateField(obj, fld):
         fld.flags.incl isPrivate
@@ -633,14 +639,33 @@ proc preprocessStructs(structs: var seq[StructInfo];
       if isPrivate in fld.flags:
         procProperties.add PropertyInfo(struct: obj.name, field: fld.name, `type`: fieldType)
       if isArray:
-        procArrays.add PropertyInfo(struct: obj.name, field: fld.name, `type`: baseType)
+        procArrays.add PropertyInfo(struct: obj.name, field: capitalizeAscii(fld.name), `type`: baseType)
       if shouldBePrivate(obj, fld, isArray, isPrivate in fld.flags):
         fld.flags.incl isPrivate
       fld.`type` = fieldType
 
 proc preprocessEnums(enums: var seq[EnumInfo]) =
+  proc removeCommonPrefixes(name: string): string =
+    result = name
+    const prefixes = [
+      "FLAG_", "LOG_", "KEY_", "MOUSE_CURSOR_", "MOUSE_BUTTON_",
+      "GAMEPAD_BUTTON_", "GAMEPAD_AXIS_", "FONT_", "BLEND_", "GESTURE_",
+      "CAMERA_", "MATERIAL_MAP_", "SHADER_LOC_", "SHADER_UNIFORM_",
+      "SHADER_ATTRIB_", "PIXELFORMAT_", "TEXTURE_FILTER_", "TEXTURE_WRAP_",
+      "NPATCH_", "CUBEMAP_LAYOUT_"
+    ]
+    for prefix in prefixes:
+      result.removePrefix(prefix)
+
   for enm in mitems(enums):
     sort(enm.values, proc (x, y: ValueInfo): int = cmp(x.value, y.value))
+    for val in mitems(enm.values):
+      val.name = removeCommonPrefixes(val.name).camelCaseAscii()
+
+proc preprocessAliases(aliases: var seq[AliasInfo]) =
+  for alias in mitems(aliases):
+    if alias.name == "Quaternion":
+      alias.flags.incl isDistinct
 
 proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[FunctionInfo]) =
   proc shouldRemoveSuffix(fnc: FunctionInfo): bool =
@@ -771,18 +796,6 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
     lit header
 
     proc generateEnums(enums: seq[EnumInfo]) =
-      proc removeCommonPrefixes(name: string): string =
-        result = name
-        const prefixes = [
-          "FLAG_", "LOG_", "KEY_", "MOUSE_CURSOR_", "MOUSE_BUTTON_",
-          "GAMEPAD_BUTTON_", "GAMEPAD_AXIS_", "FONT_", "BLEND_", "GESTURE_",
-          "CAMERA_", "MATERIAL_MAP_", "SHADER_LOC_", "SHADER_UNIFORM_",
-          "SHADER_ATTRIB_", "PIXELFORMAT_", "TEXTURE_FILTER_", "TEXTURE_WRAP_",
-          "NPATCH_", "CUBEMAP_LAYOUT_"
-        ]
-        for prefix in prefixes:
-          result.removePrefix(prefix)
-
       lit "\ntype"
       scope:
         for enm in items(enums):
@@ -795,8 +808,7 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
             for i, val in pairs(enm.values):
               if val.value == prev: continue
               spaces
-              let valName = removeCommonPrefixes(val.name)
-              ident camelCaseAscii(valName)
+              ident val.name
               if prev + 1 != val.value:
                 lit " = "
                 lit $val.value
@@ -813,13 +825,16 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       for obj in items(structs):
         spaces
         ident obj.name
-        if obj.name == "FilePathList":
-          lit " {.importc, header: \"raylib.h\", bycopy.} = object"
-        elif obj.name in ["Color", "Vector2", "Vector3", "Vector4"]:
-          lit "* {.importc, header: \"raylib.h\", completeStruct, bycopy.} = object"
-        elif obj.name == "Rectangle":
-          lit "* {.importc: \"rlRectangle\", header: \"raylib.h\", bycopy.} = object"
-        else: lit "* {.importc, header: \"raylib.h\", bycopy.} = object"
+        if isPrivate notin obj.flags:
+          lit "*"
+        if obj.name == "Rectangle":
+          lit " {.importc: \"rlRectangle\""
+        else:
+          lit " {.importc"
+        lit ", header: \"raylib.h\""
+        if isCompleteStruct in obj.flags:
+          lit ", completeStruct"
+        lit ", bycopy.} = object"
         doc obj
         scope:
           for fld in items(obj.fields):
@@ -846,7 +861,7 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       for alias in items(t.aliases):
         spaces
         ident alias.name
-        if alias.name == "Quaternion":
+        if isDistinct in alias.flags:
           lit "* {.borrow: `.`.} = distinct "
         else:
           lit "* = "
@@ -858,10 +873,9 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
         lit extra
       lit "\n"
       for x in procArrays.items:
-        if (x.struct, x.field) == ("AutomationEventList", "events"): continue
         spaces
         lit x.struct
-        lit capitalizeAscii(x.field)
+        lit x.field
         lit "* = distinct "
         ident x.struct
       lit "\n"
@@ -1032,6 +1046,7 @@ type
 proc preprocessApi(ctx: var ApiContext) =
   preprocessStructs(ctx.api.structs, ctx.procProperties, ctx.procArrays)
   preprocessEnums(ctx.api.enums)
+  preprocessAliases(ctx.api.aliases)
   preprocessFunctions(ctx.api.functions, ctx.wrappedFuncs)
 
 proc generateOutput(ctx: ApiContext) =
