@@ -1,4 +1,4 @@
-import common, std/[algorithm, streams]
+import common, std/[algorithm, streams, sets, tables]
 import std/strutils except spaces
 when defined(nimPreviewSlimSystem):
   import std/syncio
@@ -286,7 +286,7 @@ proc getPixelFormatName*(format: PixelFormat): string =
   of CompressedAstc4x4Rgba: "ASTC_4x4_RGBA" # 8 bpp
   of CompressedAstc8x8Rgba: "ASTC_8x8_RGBA" # 2 bpp
 """
-  excludedEnums = [
+  excludedEnums = toHashSet([
     "rlTraceLogLevel",
     "rlPixelFormat",
     "rlTextureFilter",
@@ -294,91 +294,54 @@ proc getPixelFormatName*(format: PixelFormat): string =
     "rlShaderLocationIndex",
     "rlShaderUniformDataType",
     "rlShaderAttributeDataType"
-  ]
-  excludedFuncs = [
+  ])
+  excludedFuncs = toHashSet([
     "rlGetPixelFormatName",
-  ]
-  excludedTypes = [
+  ])
+  excludedTypes = toHashSet([
     "Matrix",
     "rlglData"
-  ]
-  enumInFuncReturn = [
-    ("rlGetLocationUniform", 20),
-    ("rlGetLocationAttrib", 20),
-    ("rlGetVersion", 33),
-  ]
-  enumInFuncParams = [
-    # TextureParameter
-    ("rlTextureParameters", "param"),
-    ("rlMatrixMode", "mode"),
-    ("rlBegin", "mode"),
-    ("rlSetVertexAttribute", "type"),
-    ("rlCompileShader", "type"),
-    ("rlBindFramebuffer", "target"),
-    ("rlLoadShaderBuffer", "usageHint"),
-    ("rlFramebufferAttach", "attachType"),
-    ("rlFramebufferAttach", "texType"),
-    ("rlSetCullFace", "mode"),
-    ("rlSetBlendMode", "mode"),
-    ("rlSetUniform", "uniformType"),
-    ("rlSetVertexAttributeDefault", "attribType"),
-    ("rlGetPixelFormatName", "format"),
-    ("rlLoadTextureCubemap", "format"),
-    ("rlGetGlTextureFormats", "format"),
-    ("rlUpdateTexture", "format"),
-    ("rlGenTextureMipmaps", "format"),
-    ("rlReadTexturePixels", "format"),
-    ("rlBindImageTexture", "format"),
-    ("rlSetVertexAttributeDefault", "locIndex"),
-    ("rlSetUniform", "locIndex"),
-    ("rlSetUniformMatrix", "locIndex"),
-    ("rlSetUniformSampler", "locIndex"),
-    ("rlSetBlendFactors", "glSrcFactor"),
-    ("rlSetBlendFactors", "glDstFactor"),
-    ("rlSetBlendFactorsSeparate", "glSrcRGB"),
-    ("rlSetBlendFactorsSeparate", "glDstRGB"),
-    ("rlSetBlendFactorsSeparate", "glSrcAlpha"),
-    ("rlSetBlendFactorsSeparate", "glDstAlpha"),
-    ("rlSetBlendFactors", "glEquation"),
-    ("rlSetBlendFactorsSeparate", "glEqRGB"),
-    ("rlSetBlendFactorsSeparate", "glEqAlpha"),
-  ]
-  enumInFuncs = [
-    "TextureParameter",
-    "MatrixMode",
-    "DrawMode",
-    "GlType",
-    "ShaderType",
-    "FramebufferTarget",
-    "BufferUsageHint",
-    "FramebufferAttachType",
-    "FramebufferAttachTextureType",
-    "CullMode",
-    "BlendMode",
-    "ShaderUniformDataType",
-    "ShaderAttributeDataType",
-    "PixelFormat",
-    "PixelFormat",
-    "PixelFormat",
-    "PixelFormat",
-    "PixelFormat",
-    "PixelFormat",
-    "PixelFormat",
-    "ShaderLocation",
-    "ShaderLocation",
-    "ShaderLocation",
-    "ShaderLocation",
-    "BlendFactor",
-    "BlendFactor",
-    "BlendFactor",
-    "BlendFactor",
-    "BlendFactor",
-    "BlendFactor",
-    "BlendFuncOrEq",
-    "BlendFuncOrEq",
-    "BlendFuncOrEq",
-    "GlVersion",
-  ]
+  ])
+  enumInFuncReturn = toTable({
+    "rlGetLocationUniform": "ShaderLocation",
+    "rlGetLocationAttrib": "ShaderLocation",
+    "rlGetVersion": "GlVersion",
+  })
+  enumInFuncParams = toTable({
+    ("rlTextureParameters", "param"): "TextureParameter",
+    ("rlMatrixMode", "mode"): "MatrixMode",
+    ("rlBegin", "mode"): "DrawMode",
+    ("rlSetVertexAttribute", "type"): "GlType",
+    ("rlCompileShader", "type"): "ShaderType",
+    ("rlBindFramebuffer", "target"): "FramebufferTarget",
+    ("rlLoadShaderBuffer", "usageHint"): "BufferUsageHint",
+    ("rlFramebufferAttach", "attachType"): "FramebufferAttachType",
+    ("rlFramebufferAttach", "texType"): "FramebufferAttachTextureType",
+    ("rlSetCullFace", "mode"): "CullMode",
+    ("rlSetBlendMode", "mode"): "BlendMode",
+    ("rlSetUniform", "uniformType"): "ShaderUniformDataType",
+    ("rlSetVertexAttributeDefault", "attribType"): "ShaderAttributeDataType",
+    ("rlGetPixelFormatName", "format"): "PixelFormat",
+    ("rlLoadTextureCubemap", "format"): "PixelFormat",
+    ("rlGetGlTextureFormats", "format"): "PixelFormat",
+    ("rlUpdateTexture", "format"): "PixelFormat",
+    ("rlGenTextureMipmaps", "format"): "PixelFormat",
+    ("rlReadTexturePixels", "format"): "PixelFormat",
+    ("rlBindImageTexture", "format"): "PixelFormat",
+    ("rlSetVertexAttributeDefault", "locIndex"): "ShaderLocation",
+    ("rlSetUniform", "locIndex"): "ShaderLocation",
+    ("rlSetUniformMatrix", "locIndex"): "ShaderLocation",
+    ("rlSetUniformSampler", "locIndex"): "ShaderLocation",
+    ("rlSetBlendFactors", "glSrcFactor"): "BlendFactor",
+    ("rlSetBlendFactors", "glDstFactor"): "BlendFactor",
+    ("rlSetBlendFactorsSeparate", "glSrcRGB"): "BlendFactor",
+    ("rlSetBlendFactorsSeparate", "glDstRGB"): "BlendFactor",
+    ("rlSetBlendFactorsSeparate", "glSrcAlpha"): "BlendFactor",
+    ("rlSetBlendFactorsSeparate", "glDstAlpha"): "BlendFactor",
+    ("rlSetBlendFactors", "glEquation"): "BlendFuncOrEq",
+    ("rlSetBlendFactorsSeparate", "glEqRGB"): "BlendFuncOrEq",
+    ("rlSetBlendFactorsSeparate", "glEqAlpha"): "BlendFuncOrEq"
+  })
 
 proc genBindings(t: TopLevel, fname: string, header, footer: string) =
   var buf = newStringOfCap(50)
@@ -489,11 +452,8 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           if i > 0: lit ", "
           ident param.name
           lit ": "
-          block outer:
-            for j, (name, param1) in enumInFuncParams.pairs:
-              if name == fnc.name and param1 == param.name:
-                lit enumInFuncs[j]
-                break outer
+          var paramType = enumInFuncParams.getOrDefault((fnc.name, param.name))
+          if paramType == "":
             const
               replacements = [
                 ("rlLoadExtensions", "loader", "rlglLoadProc"),
@@ -505,24 +465,21 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
                 ("rlMultMatrixf", "matf", "array[16, $1]"),
               ]
             let pat = getReplacement(fnc.name, param.name, replacements)
-            let (kind, _) = convertType(param.`type`, pat, false, true)
-            lit kind
+            (paramType, _) = convertType(param.`type`, pat, false, true)
+          lit paramType
       lit ")"
       if fnc.returnType != "void":
         lit ": "
-        block outer:
-          for (name, idx) in enumInFuncReturn.items:
-            if name == fnc.name:
-              lit enumInFuncs[idx]
-              break outer
+        var returnType = enumInFuncReturn.getOrDefault(fnc.name)
+        if returnType == "":
           const
             replacements = [
               ("rlGetShaderLocsDefault", "", "ShaderLocsPtr"),
               # ("rlReadScreenPixels", "", ""),
             ]
           let pat = getReplacement(fnc.name, "", replacements)
-          let (kind, _) = convertType(fnc.returnType, pat, false, true)
-          lit kind
+          (returnType, _) = convertType(fnc.returnType, pat, false, true)
+        lit returnType
       lit " {.importc: \""
       ident fnc.name
       lit "\""
