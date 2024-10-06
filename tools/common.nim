@@ -35,7 +35,7 @@ type
     flags*: set[InfoFlags]
 
   InfoFlags* = enum
-    isPrivate, isAllocFunc, hasVarargs, autoWrapped, isArray
+    isPrivate, isAllocFunc, hasVarargs, autoWrapped, isOpenArray, isVarParam
 
   TopLevel* = object
     defines*: seq[DefineInfo]
@@ -165,7 +165,8 @@ proc toNimType(cType: string): string =
   of "rlDrawCall": "DrawCall"
   else: cType
 
-proc convertBaseType(typeInfo: TypeInfo): string =
+proc convertType*(s, pattern: string, many, isVar: bool): (string, string) =
+  let typeInfo = parseType(s)
   var nimType = toNimType(typeInfo.baseType)
 
   if typeInfo.isUnsigned:
@@ -174,31 +175,15 @@ proc convertBaseType(typeInfo: TypeInfo): string =
     else:
       nimType = "u" & nimType
 
-  if typeInfo.isPointer:
-    if nimType == "void":
-      nimType = "pointer"
-    elif nimType == "char" and not typeInfo.isUnsigned:
-      nimType = "cstring"
-
-  result = nimType
-
-proc convertBaseType*(s: string): string =
-  let typeInfo = parseType(s)
-  result = convertBaseType(typeInfo)
-
-proc convertType*(s, pattern: string, many, isVar: bool): (string, string) =
-  let typeInfo = parseType(s)
-  let baseType = convertBaseType(typeInfo)
-
-  var nimType = baseType
+  let baseType = nimType
 
   if pattern != "":
     return (pattern % nimType, baseType)
 
   if typeInfo.isDoublePointer:
-    if nimType == "pointer":
+    if nimType == "void":
       nimType = "ptr pointer"
-    elif nimType == "cstring":
+    elif nimType == "char" and not typeInfo.isUnsigned:
       nimType = "cstringArray"
     elif many:
       nimType = &"ptr UncheckedArray[ptr {nimType}]"
@@ -206,8 +191,10 @@ proc convertType*(s, pattern: string, many, isVar: bool): (string, string) =
       nimType = "ptr ptr " & nimType
 
   elif typeInfo.isPointer:
-    if nimType == "pointer": discard
-    elif nimType == "cstring": discard
+    if nimType == "void":
+      nimType = "pointer"
+    elif nimType == "char" and not typeInfo.isUnsigned:
+      nimType = "cstring"
     elif many:
       nimType = &"ptr UncheckedArray[{nimType}]"
     else:
@@ -220,6 +207,9 @@ proc convertType*(s, pattern: string, many, isVar: bool): (string, string) =
     nimType = &"array[{typeInfo.arraySize}, {nimType}]"
 
   result = (nimType, baseType)
+
+proc convertType*(s: string): (string, string) =
+  convertType(s, "", false, false)
 
 proc isPlural*(x: string): bool {.inline.} =
   ## Tries to determine if an identifier is plural

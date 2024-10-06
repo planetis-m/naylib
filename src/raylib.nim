@@ -1544,7 +1544,7 @@ proc imageAlphaPremultiply*(image: var Image) {.importc: "ImageAlphaPremultiply"
   ## Premultiply alpha channel
 proc imageBlurGaussian*(image: var Image, blurSize: int32) {.importc: "ImageBlurGaussian".}
   ## Apply Gaussian blur using a box blur approximation
-proc imageKernelConvolutionPriv(image: var Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
+proc imageKernelConvolutionPriv(image: ptr Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
 proc imageResize*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize".}
   ## Resize image (Bicubic scaling algorithm)
 proc imageResizeNN*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN".}
@@ -1615,12 +1615,12 @@ proc imageDrawTriangle*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, c
   ## Draw triangle with interpolated colors within an image
 proc imageDrawTriangleLines*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "ImageDrawTriangleLines".}
   ## Draw triangle outline within an image
-proc imageDrawTriangleFanPriv(dst: var Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleFan".}
-proc imageDrawTriangleStripPriv(dst: var Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleStrip".}
+proc imageDrawTriangleFanPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleFan".}
+proc imageDrawTriangleStripPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleStrip".}
 proc imageDraw*(dst: var Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) {.importc: "ImageDraw".}
   ## Draw a source image within a destination image (tint applied to source)
-proc imageDrawTextPriv(dst: var Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
-proc imageDrawTextPriv(dst: var Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
+proc imageDrawTextPriv(dst: ptr Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
+proc imageDrawTextPriv(dst: ptr Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
 proc isTextureReady*(texture: Texture2D): bool {.importc: "IsTextureReady".}
   ## Check if a texture is ready
 proc isRenderTextureReady*(target: RenderTexture2D): bool {.importc: "IsRenderTextureReady".}
@@ -2010,23 +2010,23 @@ proc imageText*(font: Font, text: string, fontSize: float32, spacing: float32, t
 
 proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
   ## Apply custom square convolution kernel to image
-  imageKernelConvolutionPriv(image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
+  imageKernelConvolutionPriv(addr image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
 
 proc imageDrawTriangleFan*(dst: var Image, points: openArray[Vector2], color: Color) =
   ## Draw a triangle fan defined by points within an image (first vertex is the center)
-  imageDrawTriangleFanPriv(dst, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  imageDrawTriangleFanPriv(addr dst, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc imageDrawTriangleStrip*(dst: var Image, points: openArray[Vector2], color: Color) =
   ## Draw a triangle strip defined by points within an image
-  imageDrawTriangleStripPriv(dst, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  imageDrawTriangleStripPriv(addr dst, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc imageDrawText*(dst: var Image, text: string, posX: int32, posY: int32, fontSize: int32, color: Color) =
   ## Draw text (using default font) within an image (destination)
-  imageDrawTextPriv(dst, text.cstring, posX, posY, fontSize, color)
+  imageDrawTextPriv(addr dst, text.cstring, posX, posY, fontSize, color)
 
 proc imageDrawText*(dst: var Image, font: Font, text: string, position: Vector2, fontSize: float32, spacing: float32, tint: Color) =
   ## Draw text (custom sprite font) within an image (destination)
-  imageDrawTextPriv(dst, font, text.cstring, position, fontSize, spacing, tint)
+  imageDrawTextPriv(addr dst, font, text.cstring, position, fontSize, spacing, tint)
 
 proc exportFontAsCode*(font: Font, fileName: string): bool =
   ## Export font as code file, returns true on success

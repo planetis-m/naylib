@@ -683,22 +683,27 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
 
     for i, param in fnc.params.mpairs:
       let many = shouldUsePluralType(fnc, param)
-      let baseType = convertBaseType(param.`type`)
-      if checkCstringType(fnc, baseType):
+      let (paramType, baseType) = convertType(param.`type`)
+      if checkCstringType(fnc, paramType):
         fnc.flags.incl autoWrapped
-      if i < fnc.params.high and checkOpenarrayType(fnc, baseType, many, fnc.params[i+1].name):
+      if i < fnc.params.high and checkOpenarrayType(fnc, paramType, many, fnc.params[i+1].name):
         param.baseType = baseType
+        param.flags.incl isOpenArray
         fnc.flags.incl autoWrapped
     if fnc.returnType != "void":
-      let baseType = convertBaseType(fnc.returnType)
-      if checkCstringType(fnc, baseType):
+      let (returnType, baseType) = convertType(fnc.returnType)
+      if checkCstringType(fnc, returnType):
         fnc.flags.incl autoWrapped
       if baseType in needErrorChecking and fnc.name notin privateFuncs:
         echo "WARNING: Function might require error checking: ", fnc.name
 
+    if autoWrapped in fnc.flags:
+      fnc.flags.incl isPrivate
+
     for i, param in fnc.params.mpairs:
       var paramType = findEnumTypeForParam(fnc, param)
       if paramType == "":
+        var baseType = ""
         let many = shouldUsePluralType(fnc, param)
         const
           replacements = [
@@ -708,7 +713,11 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
             ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),
           ]
         let pat = getReplacement(fnc.name, param.name, replacements)
-        (paramType, _) = convertType(param.`type`, pat, many, isPrivate notin fnc.flags)
+        (paramType, baseType) = convertType(param.`type`, pat, many, isPrivate notin fnc.flags)
+        if paramType.startsWith("ptr ") and baseType != "void" and
+            not many and {autoWrapped, isPrivate} <= fnc.flags:
+          param.flags.incl isVarParam
+          param.baseType = baseType
       param.`type` = paramType
     if fnc.returnType != "void":
       var returnType = findEnumTypeForReturn(fnc)
@@ -718,7 +727,6 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
       fnc.returnType = returnType
 
     if autoWrapped in fnc.flags:
-      fnc.flags.incl isPrivate
       wrappedFuncs.add fnc
 
 proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
@@ -948,11 +956,14 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
             lit ": "
             if param.`type` == "cstring":
               lit "string"
-            elif param.baseType != "":
+            elif isOpenArray in param.flags:
               lit "openArray["
               lit param.baseType
               lit "]"
               skipNext = true
+            elif isVarParam in param.flags:
+              lit "var "
+              lit param.baseType
             else:
               lit param.`type`
         lit ")"
@@ -979,7 +990,7 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
           var nextValue = ""
           for i, param in fnc.params.pairs:
             if i > 0: lit ", "
-            if param.baseType != "":
+            if isOpenArray in param.flags:
               lit "cast["
               lit param.`type`
               lit "]("
@@ -989,10 +1000,12 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
               lit param.`type`
               nextValue = ""
             else:
+              if isVarParam in param.flags:
+                lit "addr "
               ident param.name
             if param.`type` == "cstring":
               lit ".cstring"
-            if param.baseType != "":
+            if isOpenArray in param.flags:
               lit ")"
               nextValue = param.name
           lit ")\n"
