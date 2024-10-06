@@ -655,7 +655,9 @@ proc preprocessEnums(enums: var seq[EnumInfo]) =
       "NPATCH_", "CUBEMAP_LAYOUT_"
     ]
     for prefix in prefixes:
-      result.removePrefix(prefix)
+      if name.startsWith(prefix):
+        result.removePrefix(prefix)
+        break
 
   for enm in mitems(enums):
     sort(enm.values, proc (x, y: ValueInfo): int = cmp(x.value, y.value))
@@ -791,68 +793,178 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
   var buf = newStringOfCap(50)
   var indent = 0
   var otp: FileStream
+
+  proc generateEnums(enums: seq[EnumInfo]) =
+    lit "\ntype"
+    scope:
+      for enm in items(enums):
+        spaces
+        ident enm.name
+        lit "* {.size: sizeof(int32).} = enum"
+        doc enm
+        scope:
+          var prev = -1
+          for i, val in pairs(enm.values):
+            if val.value == prev: continue
+            spaces
+            ident val.name
+            if prev + 1 != val.value:
+              lit " = "
+              lit $val.value
+            doc val
+            prev = val.value
+          lit "\n"
+      lit "\n"
+
+  proc generateObjects(structs: seq[StructInfo]) =
+    for obj in items(structs):
+      spaces
+      ident obj.name
+      if isPrivate notin obj.flags:
+        lit "*"
+      if obj.name == "Rectangle":
+        lit " {.importc: \"rlRectangle\""
+      else:
+        lit " {.importc"
+      lit ", header: \"raylib.h\""
+      if isCompleteStruct in obj.flags:
+        lit ", completeStruct"
+      lit ", bycopy.} = object"
+      doc obj
+      scope:
+        for fld in items(obj.fields):
+          # Group Matrix fields by rows
+          if obj.name != "Matrix" or fld.name in ["m0", "m1", "m2", "m3"]: # row starts
+            spaces
+          ident fld.name
+          if obj.name == "Matrix" and fld.name notin ["m12", "m13", "m14", "m15"]: # row ends
+            lit "*, "
+            continue
+          if isPrivate in fld.flags:
+            lit ": "
+          else:
+            lit "*: "
+          lit fld.`type`
+          doc fld
+      lit "\n"
+
+  proc generateProcs(holder: seq[FunctionInfo]) =
+    for fnc in items(holder):
+      if fnc.name in excludedFuncs:
+        continue
+      # Generate proc signature
+      lit "\nproc "
+      ident fnc.name
+      if isPrivate in fnc.flags:
+        lit "Priv("
+      elif isAllocFunc in fnc.flags:
+        lit "("
+      else:
+        lit "*("
+      # Generate parameters
+      for i, param in fnc.params.pairs:
+        if i > 0: lit ", "
+        ident param.name
+        lit ": "
+        lit param.`type`
+      lit ")"
+      # Generate return type
+      if fnc.returnType != "void":
+        lit ": "
+        lit fnc.returnType
+      # Generate import pragma
+      lit " {.importc: "
+      lit "\""
+      ident fnc.importName
+      lit "\""
+      if hasVarargs in fnc.flags:
+        lit ", varargs"
+      lit ".}"
+      # Generate documentation comment
+      if {isAllocFunc, isPrivate} * fnc.flags == {} and fnc.description != "":
+        scope:
+          spaces
+          lit "## "
+          lit fnc.description
+
+  proc generateWrappedProcs(holder: seq[FunctionInfo]) =
+    for fnc in items(holder):
+      # Generate proc signature
+      lit "\nproc "
+      ident fnc.name
+      lit "*("
+      # Generate parameters
+      var skipNext = false
+      for i, param in fnc.params.pairs:
+        if skipNext:
+          skipNext = false
+        else:
+          if i > 0: lit ", "
+          ident param.name
+          lit ": "
+          if param.`type` == "cstring":
+            lit "string"
+          elif isOpenArray in param.flags:
+            lit "openArray["
+            lit param.baseType
+            lit "]"
+            skipNext = true
+          elif isVarParam in param.flags:
+            lit "var "
+            lit param.baseType
+          else:
+            lit param.`type`
+      lit ")"
+      # Generate return type
+      if fnc.returnType != "void":
+        lit ": "
+        if fnc.returnType == "cstring":
+          lit "string"
+        else:
+          lit fnc.returnType
+      lit " ="
+      # Generate documentation comment
+      if fnc.description != "":
+        scope:
+          spaces
+          lit "## "
+          lit fnc.description
+      scope:
+        spaces
+        # Generate forwarding call
+        if fnc.returnType == "cstring":
+          lit "$"
+        lit fnc.name
+        lit "Priv("
+        var nextValue = ""
+        for i, param in fnc.params.pairs:
+          if i > 0: lit ", "
+          if isOpenArray in param.flags:
+            lit "cast["
+            lit param.`type`
+            lit "]("
+          elif isVarParam in param.flags:
+            lit "addr "
+          if nextValue != "":
+            lit nextValue
+            lit ".len."
+            lit param.`type`
+            nextValue = ""
+          else:
+            ident param.name
+          if param.`type` == "cstring":
+            lit ".cstring"
+          if isOpenArray in param.flags:
+            lit ")"
+            nextValue = param.name
+        lit ")\n"
+
   try:
     otp = openFileStream(fname, fmWrite)
     lit header
-
-    proc generateEnums(enums: seq[EnumInfo]) =
-      lit "\ntype"
-      scope:
-        for enm in items(enums):
-          spaces
-          ident enm.name
-          lit "* {.size: sizeof(int32).} = enum"
-          doc enm
-          scope:
-            var prev = -1
-            for i, val in pairs(enm.values):
-              if val.value == prev: continue
-              spaces
-              ident val.name
-              if prev + 1 != val.value:
-                lit " = "
-                lit $val.value
-              doc val
-              prev = val.value
-            lit "\n"
-        lit "\n"
-
     # Generate enum definitions
     generateEnums(t.enums)
     lit extraDistinct
-
-    proc generateObjects(structs: seq[StructInfo]) =
-      for obj in items(structs):
-        spaces
-        ident obj.name
-        if isPrivate notin obj.flags:
-          lit "*"
-        if obj.name == "Rectangle":
-          lit " {.importc: \"rlRectangle\""
-        else:
-          lit " {.importc"
-        lit ", header: \"raylib.h\""
-        if isCompleteStruct in obj.flags:
-          lit ", completeStruct"
-        lit ", bycopy.} = object"
-        doc obj
-        scope:
-          for fld in items(obj.fields):
-            # Group Matrix fields by rows
-            if obj.name != "Matrix" or fld.name in ["m0", "m1", "m2", "m3"]: # row starts
-              spaces
-            ident fld.name
-            if obj.name == "Matrix" and fld.name notin ["m12", "m13", "m14", "m15"]: # row ends
-              lit "*, "
-              continue
-            if isPrivate in fld.flags:
-              lit ": "
-            else:
-              lit "*: "
-            lit fld.`type`
-            doc fld
-        lit "\n"
-
     lit "\ntype"
     scope:
       # Generate type definitions
@@ -881,45 +993,6 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       lit "\n"
     lit middle
 
-    proc generateProcs(holder: seq[FunctionInfo]) =
-      for fnc in items(holder):
-        if fnc.name in excludedFuncs:
-          continue
-        # Generate proc signature
-        lit "\nproc "
-        ident fnc.name
-        if isPrivate in fnc.flags:
-          lit "Priv("
-        elif isAllocFunc in fnc.flags:
-          lit "("
-        else:
-          lit "*("
-        # Generate parameters
-        for i, param in fnc.params.pairs:
-          if i > 0: lit ", "
-          ident param.name
-          lit ": "
-          lit param.`type`
-        lit ")"
-        # Generate return type
-        if fnc.returnType != "void":
-          lit ": "
-          lit fnc.returnType
-        # Generate import pragma
-        lit " {.importc: "
-        lit "\""
-        ident fnc.importName
-        lit "\""
-        if hasVarargs in fnc.flags:
-          lit ", varargs"
-        lit ".}"
-        # Generate documentation comment
-        if {isAllocFunc, isPrivate} * fnc.flags == {} and fnc.description != "":
-          scope:
-            spaces
-            lit "## "
-            lit fnc.description
-
     # Seperate funcs and procs
     var
       withSideEffect: seq[FunctionInfo] = @[]
@@ -935,9 +1008,10 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
     generateProcs withSideEffect
     lit "\n{.pop.}\n"
 
-    lit "\n{.push noSideEffect.}"
-    generateProcs withoutSideEffect
-    lit "\n{.pop.}"
+    if withoutSideEffect.len != 0:
+      lit "\n{.push noSideEffect.}"
+      generateProcs withoutSideEffect
+      lit "\n{.pop.}"
     lit "\n{.pop.}\n"
 
     lit readFile("raylib_types.nim")
@@ -952,78 +1026,6 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       lit " {.inline.} = x."
       ident x.field
       lit "\n"
-
-    proc generateWrappedProcs(holder: seq[FunctionInfo]) =
-      for fnc in items(holder):
-        # Generate proc signature
-        lit "\nproc "
-        ident fnc.name
-        lit "*("
-        # Generate parameters
-        var skipNext = false
-        for i, param in fnc.params.pairs:
-          if skipNext:
-            skipNext = false
-          else:
-            if i > 0: lit ", "
-            ident param.name
-            lit ": "
-            if param.`type` == "cstring":
-              lit "string"
-            elif isOpenArray in param.flags:
-              lit "openArray["
-              lit param.baseType
-              lit "]"
-              skipNext = true
-            elif isVarParam in param.flags:
-              lit "var "
-              lit param.baseType
-            else:
-              lit param.`type`
-        lit ")"
-        # Generate return type
-        if fnc.returnType != "void":
-          lit ": "
-          if fnc.returnType == "cstring":
-            lit "string"
-          else:
-            lit fnc.returnType
-        lit " ="
-        # Generate documentation comment
-        if fnc.description != "":
-          scope:
-            spaces
-            lit "## "
-            lit fnc.description
-        scope:
-          spaces
-          # Generate forwarding call
-          if fnc.returnType == "cstring":
-            lit "$"
-          lit fnc.name
-          lit "Priv("
-          var nextValue = ""
-          for i, param in fnc.params.pairs:
-            if i > 0: lit ", "
-            if isOpenArray in param.flags:
-              lit "cast["
-              lit param.`type`
-              lit "]("
-            elif isVarParam in param.flags:
-              lit "addr "
-            if nextValue != "":
-              lit nextValue
-              lit ".len."
-              lit param.`type`
-              nextValue = ""
-            else:
-              ident param.name
-            if param.`type` == "cstring":
-              lit ".cstring"
-            if isOpenArray in param.flags:
-              lit ")"
-              nextValue = param.name
-          lit ")\n"
 
     # Generate wrapped functions
     generateWrappedProcs(wrappedFuncs)
