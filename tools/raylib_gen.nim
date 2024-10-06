@@ -355,7 +355,7 @@ const
     "UnloadModelAnimations",
     "UnloadWaveSamples",
   ])
-  allocFuncs = toHashSet([
+  privateFuncs = toHashSet([
     "MemAlloc",
     "MemRealloc",
     "MemFree",
@@ -375,7 +375,7 @@ const
     "UnloadMusicStream",
     "UnloadAudioStream",
   ])
-  privateFuncs = toHashSet([
+  wrappedFuncs = toHashSet([
     "InitWindow",
     "UpdateTexture",
     "UpdateTextureRec",
@@ -600,7 +600,7 @@ proc preprocessStructs(structs: var seq[StructInfo];
 
   proc shouldBePrivate(obj: StructInfo, fld: FieldInfo, isArray, isPrivate: bool): bool =
     isPrivate or isArray or
-    obj.name in ["FilePathList", "AutomationEventList"] or
+    obj.name == "AutomationEventList" or
     (obj.name, fld.name) in {
       "MaterialMap": "texture",
       "Material": "shader",
@@ -640,7 +640,7 @@ proc preprocessStructs(structs: var seq[StructInfo];
         procProperties.add PropertyInfo(struct: obj.name, field: fld.name, `type`: fieldType)
       if isArray:
         procArrays.add PropertyInfo(struct: obj.name, field: capitalizeAscii(fld.name), `type`: baseType)
-      if shouldBePrivate(obj, fld, isArray, isPrivate in fld.flags):
+      if shouldBePrivate(obj, fld, isArray, isPrivate in fld.flags + obj.flags):
         fld.flags.incl isPrivate
       fld.`type` = fieldType
 
@@ -669,7 +669,7 @@ proc preprocessAliases(aliases: var seq[AliasInfo]) =
     if alias.name == "Quaternion":
       alias.flags.incl isDistinct
 
-proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[FunctionInfo]) =
+proc preprocessFunctions(holder: var seq[FunctionInfo]; funcsToWrap: var seq[FunctionInfo]) =
   proc shouldRemoveSuffix(fnc: FunctionInfo): bool =
     const exceptions = [
       "DrawRectangleGradientV",
@@ -717,18 +717,21 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
     enumInFuncReturn.getOrDefault(fnc.name)
 
   proc checkCstringType(fnc: FunctionInfo, kind: string): bool =
-    kind == "cstring" and fnc.name notin privateFuncs and hasVarargs notin fnc.flags
+    kind == "cstring" and fnc.name notin wrappedFuncs and hasVarargs notin fnc.flags
 
   proc checkOpenarrayType(fnc: FunctionInfo, kind: string, many: bool, nextName: string): bool =
     kind != "pointer" and many and ((nextName == "count" or nextName.endsWith("Count")) or
         (nextName == "size" or nextName.endsWith("Size"))) and
-        fnc.name notin privateFuncs and hasVarargs notin fnc.flags
+        fnc.name notin wrappedFuncs and hasVarargs notin fnc.flags
 
   for fnc in mitems(holder):
     if fnc.name in excludedFuncs:
       continue
-    if fnc.name in privateFuncs: fnc.flags.incl isPrivate
-    if fnc.name in allocFuncs: fnc.flags.incl isAllocFunc
+    if fnc.name in wrappedFuncs:
+      fnc.flags.incl isWrappedFunc
+      fnc.flags.incl isPrivate
+    if fnc.name in privateFuncs:
+      fnc.flags.incl isPrivate
 
     proc isVarargsParam(param: ParamInfo): bool =
       param.name == "args" and param.`type` == "..."
@@ -738,26 +741,28 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
         fnc.flags.incl hasVarargs
         fnc.params.setLen(fnc.params.high)
 
+    var autoWrapped = false
     for i, param in fnc.params.mpairs:
       let many = shouldUsePluralType(fnc, param)
       let (paramType, baseType) = convertType(param.`type`, many)
       if checkCstringType(fnc, paramType):
-        fnc.flags.incl autoWrapped
+        autoWrapped = true
       if i < fnc.params.high and checkOpenarrayType(fnc, paramType, many, fnc.params[i+1].name):
         param.baseType = baseType
         param.flags.incl isOpenArray
-        fnc.flags.incl autoWrapped
+        autoWrapped = true
       if paramType.startsWith("var "):
         param.flags.incl isVarParam
         param.baseType = baseType
     if fnc.returnType != "void":
       let (returnType, baseType) = convertType(fnc.returnType, false)
       if checkCstringType(fnc, returnType):
-        fnc.flags.incl autoWrapped
+        autoWrapped = true
       if baseType in needErrorChecking and fnc.name notin privateFuncs:
         echo "WARNING: Function might require error checking: ", fnc.name
 
-    if autoWrapped in fnc.flags:
+    if autoWrapped:
+      fnc.flags.incl isWrappedFunc
       fnc.flags.incl isPrivate
 
     for i, param in fnc.params.mpairs:
@@ -784,11 +789,11 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
 
     fnc.importName = getMangledFunctionName(fnc.name)
     fnc.name = generateProcName(fnc)
-    if autoWrapped in fnc.flags:
-      wrappedFuncs.add fnc
+    if autoWrapped:
+      funcsToWrap.add fnc
 
 proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
-                 wrappedFuncs: seq[FunctionInfo],
+                 funcsToWrap: seq[FunctionInfo],
                  fname: string; header, middle: string) =
   var buf = newStringOfCap(50)
   var indent = 0
@@ -855,9 +860,9 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       # Generate proc signature
       lit "\nproc "
       ident fnc.name
+      if isWrappedFunc in fnc.flags:
+        lit "Priv"
       if isPrivate in fnc.flags:
-        lit "Priv("
-      elif isAllocFunc in fnc.flags:
         lit "("
       else:
         lit "*("
@@ -881,7 +886,7 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
         lit ", varargs"
       lit ".}"
       # Generate documentation comment
-      if {isAllocFunc, isPrivate} * fnc.flags == {} and fnc.description != "":
+      if isPrivate notin fnc.flags and fnc.description != "":
         scope:
           spaces
           lit "## "
@@ -1028,7 +1033,7 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       lit "\n"
 
     # Generate wrapped functions
-    generateWrappedProcs(wrappedFuncs)
+    generateWrappedProcs(funcsToWrap)
     lit readFile("raylib_wrap.nim")
     lit readFile("raylib_fields.nim")
   finally:
@@ -1043,16 +1048,16 @@ type
     api: TopLevel
     procProperties: seq[PropertyInfo] = @[]
     procArrays: seq[PropertyInfo] = @[]
-    wrappedFuncs: seq[FunctionInfo] = @[]
+    funcsToWrap: seq[FunctionInfo] = @[]
 
 proc preprocessApi(ctx: var ApiContext) =
   preprocessStructs(ctx.api.structs, ctx.procProperties, ctx.procArrays)
   preprocessEnums(ctx.api.enums)
   preprocessAliases(ctx.api.aliases)
-  preprocessFunctions(ctx.api.functions, ctx.wrappedFuncs)
+  preprocessFunctions(ctx.api.functions, ctx.funcsToWrap)
 
 proc generateOutput(ctx: ApiContext) =
-  genBindings(ctx.api, ctx.procProperties, ctx.procArrays, ctx.wrappedFuncs, outputname, raylibHeader, helpers)
+  genBindings(ctx.api, ctx.procProperties, ctx.procArrays, ctx.funcsToWrap, outputname, raylibHeader, helpers)
 
 proc main =
   var t = ApiContext(api: parseApi(raylibApi))
