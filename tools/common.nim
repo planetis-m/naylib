@@ -208,8 +208,8 @@ proc convertType*(s, pattern: string, many, isVar: bool): (string, string) =
 
   result = (nimType, baseType)
 
-proc convertType*(s: string): (string, string) =
-  convertType(s, "", false, false)
+proc convertType*(s: string, many: bool): (string, string) =
+  convertType(s, "", many, true)
 
 proc isPlural*(x: string): bool {.inline.} =
   ## Tries to determine if an identifier is plural

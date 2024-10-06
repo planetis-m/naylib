@@ -683,15 +683,18 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
 
     for i, param in fnc.params.mpairs:
       let many = shouldUsePluralType(fnc, param)
-      let (paramType, baseType) = convertType(param.`type`)
+      let (paramType, baseType) = convertType(param.`type`, many)
       if checkCstringType(fnc, paramType):
         fnc.flags.incl autoWrapped
       if i < fnc.params.high and checkOpenarrayType(fnc, paramType, many, fnc.params[i+1].name):
         param.baseType = baseType
         param.flags.incl isOpenArray
         fnc.flags.incl autoWrapped
+      if paramType.startsWith("var "):
+        param.flags.incl isVarParam
+        param.baseType = baseType
     if fnc.returnType != "void":
-      let (returnType, baseType) = convertType(fnc.returnType)
+      let (returnType, baseType) = convertType(fnc.returnType, false)
       if checkCstringType(fnc, returnType):
         fnc.flags.incl autoWrapped
       if baseType in needErrorChecking and fnc.name notin privateFuncs:
@@ -714,10 +717,6 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
           ]
         let pat = getReplacement(fnc.name, param.name, replacements)
         (paramType, baseType) = convertType(param.`type`, pat, many, isPrivate notin fnc.flags)
-        if paramType.startsWith("ptr ") and baseType != "void" and
-            not many and {autoWrapped, isPrivate} <= fnc.flags:
-          param.flags.incl isVarParam
-          param.baseType = baseType
       param.`type` = paramType
     if fnc.returnType != "void":
       var returnType = findEnumTypeForReturn(fnc)
@@ -994,14 +993,14 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
               lit "cast["
               lit param.`type`
               lit "]("
+            elif isVarParam in param.flags:
+              lit "addr "
             if nextValue != "":
               lit nextValue
               lit ".len."
               lit param.`type`
               nextValue = ""
             else:
-              if isVarParam in param.flags:
-                lit "addr "
               ident param.name
             if param.`type` == "cstring":
               lit ".cstring"
