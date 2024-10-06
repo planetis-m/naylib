@@ -643,6 +643,36 @@ proc preprocessEnums(enums: var seq[EnumInfo]) =
     sort(enm.values, proc (x, y: ValueInfo): int = cmp(x.value, y.value))
 
 proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[FunctionInfo]) =
+  proc shouldRemoveSuffix(fnc: FunctionInfo): bool =
+    const exceptions = [
+      "DrawRectangleGradientV",
+      "SetShaderValueV",
+      "ColorToHSV",
+      "ColorFromHSV",
+      "CheckCollisionCircleRec",
+      "CheckCollisionPointRec"
+    ]
+    fnc.name notin exceptions and
+      ((fnc.name.endsWith("V") and fnc.returnType != "Vector2") or
+      (fnc.name.endsWith("Rec") and fnc.returnType != "Rectangle") or
+      fnc.name.endsWith("Ex") or fnc.name.endsWith("Pro"))
+
+  proc generateProcName(fnc: FunctionInfo): string =
+    result = fnc.name
+    if shouldRemoveSuffix(fnc):
+      result.removeSuffix("V")
+      result.removeSuffix("Rec")
+      result.removeSuffix("Ex")
+      result.removeSuffix("Pro")
+    result = uncapitalizeAscii(result)
+
+  proc getMangledFunctionName(name: string): string =
+    const mangledFunctions = ["ShowCursor", "CloseWindow", "LoadImage", "DrawText", "DrawTextEx"]
+    if name in mangledFunctions:
+      result = "rl" & name
+    else:
+      result = name
+
   proc shouldUsePluralType(fnc: FunctionInfo, param: ParamInfo): bool =
     result = isPlural(param.name)
     if (fnc.name, param.name) == ("LoadImageAnim", "frames"):
@@ -725,6 +755,8 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; wrappedFuncs: var seq[Fu
         (returnType, _) = convertType(fnc.returnType, "", many, isPrivate notin fnc.flags)
       fnc.returnType = returnType
 
+    fnc.importName = getMangledFunctionName(fnc.name)
+    fnc.name = generateProcName(fnc)
     if autoWrapped in fnc.flags:
       wrappedFuncs.add fnc
 
@@ -835,44 +867,13 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       lit "\n"
     lit middle
 
-    proc shouldRemoveSuffix(fnc: FunctionInfo): bool =
-      const exceptions = [
-        "DrawRectangleGradientV",
-        "SetShaderValueV",
-        "ColorToHSV",
-        "ColorFromHSV",
-        "CheckCollisionCircleRec",
-        "CheckCollisionPointRec"
-      ]
-      fnc.name notin exceptions and
-        ((fnc.name.endsWith("V") and fnc.returnType != "Vector2") or
-        (fnc.name.endsWith("Rec") and fnc.returnType != "Rectangle") or
-        fnc.name.endsWith("Ex") or fnc.name.endsWith("Pro"))
-
-    proc generateProcName(fnc: FunctionInfo): string =
-      result = fnc.name
-      if shouldRemoveSuffix(fnc):
-        result.removeSuffix("V")
-        result.removeSuffix("Rec")
-        result.removeSuffix("Ex")
-        result.removeSuffix("Pro")
-      result = uncapitalizeAscii(result)
-
     proc generateProcs(holder: seq[FunctionInfo]) =
-
-      proc getMangledFunctionName(name: string): string =
-        const mangledFunctions = ["ShowCursor", "CloseWindow", "LoadImage", "DrawText", "DrawTextEx"]
-        if name in mangledFunctions:
-          result = "rl" & name
-        else:
-          result = name
-
       for fnc in items(holder):
         if fnc.name in excludedFuncs:
           continue
         # Generate proc signature
         lit "\nproc "
-        ident generateProcName(fnc)
+        ident fnc.name
         if isPrivate in fnc.flags:
           lit "Priv("
         elif isAllocFunc in fnc.flags:
@@ -893,7 +894,7 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
         # Generate import pragma
         lit " {.importc: "
         lit "\""
-        ident getMangledFunctionName(fnc.name)
+        ident fnc.importName
         lit "\""
         if hasVarargs in fnc.flags:
           lit ", varargs"
@@ -910,8 +911,8 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       withSideEffect: seq[FunctionInfo] = @[]
       withoutSideEffect: seq[FunctionInfo] = @[]
     for fnc in t.functions:
-      if fnc.name in excludedFuncs: continue
-      elif fnc.name in nosideeffectsFuncs: withoutSideEffect.add fnc
+      if fnc.importName in excludedFuncs: continue
+      elif fnc.importName in nosideeffectsFuncs: withoutSideEffect.add fnc
       else: withSideEffect.add fnc
 
     # Generate procs
@@ -942,7 +943,7 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
       for fnc in items(holder):
         # Generate proc signature
         lit "\nproc "
-        ident generateProcName(fnc)
+        ident fnc.name
         lit "*("
         # Generate parameters
         var skipNext = false
@@ -984,7 +985,7 @@ proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
           spaces
           if fnc.returnType == "cstring":
             lit "$"
-          lit generateProcName(fnc)
+          lit fnc.name
           lit "Priv("
           var nextValue = ""
           for i, param in fnc.params.pairs:

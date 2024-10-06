@@ -57,7 +57,7 @@ type
     description*: string
 
   FunctionInfo* = object of BaseInfo
-    name*, description*, returnType*: string
+    name*, importName*, description*, returnType*: string
     params*: seq[ParamInfo]
 
   ParamInfo* = object of BaseInfo
