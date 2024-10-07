@@ -24,7 +24,7 @@ proc put*(b: Builder; c: char) =
   write b.outp, c
 
 proc addTree*(b: var Builder, kind: string) =
-  b.put 'n'
+  b.put '\n'
   for i in 1..b.nesting: b.put "  "
   if kind != "":
     b.put kind
@@ -262,7 +262,7 @@ proc genBindings*(b: var Builder; ctx: ApiContext;
     b.addRaw x.`type`
     b.addRaw " {.inline.} = x."
     b.addIdent x.field
-    b.addRaw "\n"
+    b.addNewLine()
   # Generate wrapped functions
   for fnc in items(ctx.funcsToWrap):
     generateWrappedProc(b, fnc)

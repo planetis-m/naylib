@@ -449,10 +449,6 @@ const
     "AudioStream"
   ])
 
-type
-  PropertyInfo = object
-    struct, field, `type`: string
-
 proc preprocessStructs(ctx: var ApiContext) =
   proc isPrivateField(obj: StructInfo, fld: FieldInfo): bool =
     (obj.name, fld.name) notin {"Wave": "frameCount", "Sound": "frameCount", "Music": "frameCount"} and
