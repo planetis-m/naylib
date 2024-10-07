@@ -24,7 +24,7 @@ proc put*(b: Builder; c: char) =
   write b.outp, c
 
 proc addTree*(b: var Builder, kind: string) =
-  b.put "\n"
+  b.put 'n'
   for i in 1..b.nesting: b.put "  "
   if kind != "":
     b.put kind
@@ -75,10 +75,8 @@ proc addIntLit*(b: var Builder; i: BiggestInt) =
 proc addRaw*(b: var Builder; s: string) =
   put b, s
 
-proc addNewline*(b: var Builder) =
-  b.put "\n"
-  for i in 1..b.nesting:
-    b.put ' '
+proc addNewLine*(b: var Builder) =
+  b.put '\n'
 
 proc generateEnum*(b: var Builder, enm: EnumInfo) =
   withSection(b, enm.name):
@@ -222,14 +220,14 @@ proc genBindings*(b: var Builder; ctx: ApiContext;
   withSection(b, "type"):
     for enm in items(ctx.api.enums):
       generateEnum(b, enm)
-      b.addRaw("\n")
-  b.addRaw("\n")
+      b.addNewLine()
+  b.addNewLine()
   b.addRaw afterEnums
   # Generate type definitions
   withSection(b, "type"):
     for obj in items(ctx.api.structs):
       generateObject(b, obj)
-      b.addRaw("\n")
+      b.addNewLine()
     # Add type alias or missing type
     for alias in items(ctx.api.aliases):
       withSection(b, alias.name):
@@ -250,9 +248,9 @@ proc genBindings*(b: var Builder; ctx: ApiContext;
   b.addRaw "\n{.push callconv: cdecl, header: \"raylib.h\".}"
   for fnc in items(ctx.api.functions):
     generateProc(b, fnc)
-    # b.addRaw("\n")
+    # b.addNewLine()
   b.addRaw "\n{.pop.}"
-  b.addRaw("\n")
+  b.addNewLine()
   b.addRaw afterFuncs
   # Generate property procs
   for x in items(ctx.readOnlyFieldAccessors):
@@ -268,5 +266,5 @@ proc genBindings*(b: var Builder; ctx: ApiContext;
   # Generate wrapped functions
   for fnc in items(ctx.funcsToWrap):
     generateWrappedProc(b, fnc)
-  b.addRaw("\n")
+  b.addNewLine()
   b.addRaw moduleEnd
