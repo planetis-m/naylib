@@ -624,7 +624,7 @@ proc preprocessFunctions(ctx: var ApiContext) =
         param.baseType = baseType
         param.flags.incl isOpenArray
         fnc.params[i+1].flags.incl isArrayLength
-        fnc.params[i+1].baseType = param.name # Needs cleanup
+        fnc.params[i+1].baseType = param.name # stores array name
         autoWrap = true
       if paramType.startsWith("var "):
         param.flags.incl isVarParam
@@ -679,7 +679,7 @@ proc preprocessApi(ctx: var ApiContext) =
   preprocessFunctions(ctx)
 
 proc generateOutput(ctx: ApiContext) =
-  var b = openBuilder(outputname)
+  var b = openBuilder(outputname, header = "raylib.h")
   genBindings(b, ctx,
               moduleHeader = raylibHeader, afterEnums = bitsetsHelperAndDuplicateValues,
               afterObjects = opaqueStructs & callbacksAndColors, afterFuncs = destructorHooks & arrayAccessors,

@@ -4,13 +4,14 @@ import common
 type
   Builder* = object
     nesting: int
+    header: string
     outp: Stream
 
-proc openBuilder*(filename: string): Builder =
-  Builder(outp: openFileStream(filename, fmWrite), nesting: 0)
+proc openBuilder*(filename, header: string): Builder =
+  Builder(outp: openFileStream(filename, fmWrite), header: header, nesting: 0)
 
-proc openBuilder*(sizeHint: int): Builder =
-  Builder(outp: newStringStream(newStringOfCap(sizeHint)), nesting: 0)
+proc openBuilder*(sizeHint: int; header: string): Builder =
+  Builder(outp: newStringStream(newStringOfCap(sizeHint)), header: header, nesting: 0)
 
 proc close*(b: Builder) =
   if b.outp != nil:
@@ -103,7 +104,7 @@ proc generateObject*(b: var Builder, obj: StructInfo) =
       b.addRaw ": "
       b.addStrLit "rl" & obj.name
     b.addRaw ", header: "
-    b.addStrLit "raylib.h"
+    b.addStrLit b.header
     if isCompleteStruct in obj.flags:
       b.addRaw ", completeStruct"
     b.addRaw ", bycopy.} = object"
@@ -196,7 +197,7 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
         elif isVarParam in param.flags:
           b.addRaw "addr "
         if isArrayLength in param.flags:
-          b.addRaw param.baseType
+          b.addRaw param.baseType # stores array name
           b.addRaw ".len."
           b.addRaw param.`type`
         else:
@@ -239,7 +240,9 @@ proc genBindings*(b: var Builder; ctx: ApiContext;
   b.addRaw("\n\n")
   b.addRaw afterObjects
   # Generate procs
-  b.addRaw "\n{.push callconv: cdecl, header: \"raylib.h\".}"
+  b.addRaw "\n{.push callconv: cdecl, header: "
+  b.addStrLit b.header
+  b.addRaw ".}"
   for fnc in items(ctx.api.functions):
     generateProc(b, fnc)
     # b.addNewLine()
