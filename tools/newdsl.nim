@@ -113,11 +113,11 @@ proc generateObject*(b: var Builder, obj: StructInfo) =
       if obj.name != "Matrix" or fld.name in ["m0", "m1", "m2", "m3"]: # row starts
         b.addTree("")
       b.addIdent fld.name
-      if obj.name == "Matrix" and fld.name notin ["m12", "m13", "m14", "m15"]: # row ends
-        b.addRaw "*, "
-        continue
       if isPrivate notin fld.flags:
         b.addRaw "*"
+      if obj.name == "Matrix" and fld.name notin ["m12", "m13", "m14", "m15"]: # row ends
+        b.addRaw ", "
+        continue
       b.addRaw ": "
       b.addIdent fld.`type`
       b.addDoc fld.description
@@ -154,10 +154,8 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
   withSection(b, "proc "):
     b.addIdent fnc.name
     b.addRaw "*("
-    var skipNext = false
     for i, param in fnc.params:
-      if skipNext:
-        skipNext = false
+      if isArrayLength in param.flags:
         continue
       if i > 0:
         b.addRaw ", "
@@ -169,7 +167,6 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
         b.addRaw "openArray["
         b.addRaw param.baseType
         b.addRaw "]"
-        skipNext = true
       elif isVarParam in param.flags:
         b.addRaw "var "
         b.addRaw param.baseType
@@ -189,7 +186,6 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
         b.addRaw "$"
       b.addIdent fnc.name
       b.addRaw "Priv("
-      var nextValue = ""
       for i, param in fnc.params:
         if i > 0:
           b.addRaw ", "
@@ -199,18 +195,16 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
           b.addRaw "]("
         elif isVarParam in param.flags:
           b.addRaw "addr "
-        if nextValue != "":
-          b.addRaw nextValue
+        if isArrayLength in param.flags:
+          b.addRaw param.baseType
           b.addRaw ".len."
           b.addRaw param.`type`
-          nextValue = ""
         else:
           b.addIdent param.name
         if isString in param.flags:
           b.addRaw ".cstring"
         if isOpenArray in param.flags:
           b.addRaw ")"
-          nextValue = param.name
       b.addRaw ")\n"
 
 proc genBindings*(b: var Builder; ctx: ApiContext;
@@ -249,9 +243,9 @@ proc genBindings*(b: var Builder; ctx: ApiContext;
   for fnc in items(ctx.api.functions):
     generateProc(b, fnc)
     # b.addNewLine()
-  b.addRaw "\n{.pop.}"
-  b.addNewLine()
+  b.addRaw "\n{.pop.}\n"
   b.addRaw afterFuncs
+  b.addNewLine()
   # Generate property procs
   for x in items(ctx.readOnlyFieldAccessors):
     b.addRaw "proc "

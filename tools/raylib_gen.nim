@@ -623,6 +623,8 @@ proc preprocessFunctions(ctx: var ApiContext) =
       if i < fnc.params.high and checkOpenarrayType(fnc, paramType, many, fnc.params[i+1].name):
         param.baseType = baseType
         param.flags.incl isOpenArray
+        fnc.params[i+1].flags.incl isArrayLength
+        fnc.params[i+1].baseType = param.name # Needs cleanup
         autoWrap = true
       if paramType.startsWith("var "):
         param.flags.incl isVarParam

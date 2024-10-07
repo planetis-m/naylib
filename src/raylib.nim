@@ -2265,6 +2265,7 @@ proc `[]=`*(x: var ModelAnimationFramePoses; i, j: int, val: Transform) =
   checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
   checkArrayAccess(ModelAnimation(x).framePoses[i], j, ModelAnimation(x).boneCount)
   ModelAnimation(x).framePoses[i][j] = val
+
 proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
 proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
 proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
