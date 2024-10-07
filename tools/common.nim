@@ -24,10 +24,6 @@ const
     "xor",
     "yield"]
 
-proc isKeyword*(s: string): bool {.inline.} =
-  ## Checks if an indentifier is a Nim keyword
-  binarySearch(nimKeyw, s) >= 0
-
 ## The raylib_parser produces JSON with the following structure.
 ## The type definitions are used by the deserializer to process the file.
 type
@@ -36,7 +32,7 @@ type
 
   InfoFlags* = enum
     isPrivate, isWrappedFunc, hasVarargs, isOpenArray, isVarParam,
-    isDistinct, isCompleteStruct, isMangled
+    isDistinct, isCompleteStruct, isMangled, isString, isFunc
 
   TopLevel* = object
     defines*: seq[DefineInfo]
@@ -83,6 +79,14 @@ type
   AliasInfo* = object of BaseInfo
     `type`*, name*, description*: string
 
+  PropertyInfo* = tuple[struct, field, `type`: string]
+
+  ApiContext* = object
+    api*: TopLevel
+    readOnlyFieldAccessors*: seq[PropertyInfo]
+    boundCheckedArrayAccessors*: seq[PropertyInfo]
+    funcsToWrap*: seq[FunctionInfo]
+
 proc initFromJson*(dst: var DefineValue; p: var JsonParser) =
   if p.tok == tkNull:
     dst = DefineValue""
@@ -100,11 +104,6 @@ proc parseApi*(fname: string): TopLevel =
     result = inp.jsonTo(TopLevel)
   finally:
     if inp != nil: inp.close()
-
-proc addIndent*(result: var string, indent: int) =
-  result.add("\n")
-  for i in 1..indent:
-    result.add(' ')
 
 proc getReplacement*(x, y: string, replacements: openarray[(string, string, string)]): string =
   # Manual replacements for some fields
@@ -240,6 +239,15 @@ proc camelCaseAscii*(s: string): string =
 proc uncapitalizeAscii*(s: string): string =
   if s.len == 0: result = ""
   else: result = toLowerAscii(s[0]) & substr(s, 1)
+
+proc isKeyword*(s: string): bool {.inline.} =
+  ## Checks if an indentifier is a Nim keyword
+  binarySearch(nimKeyw, s) >= 0
+
+proc addIndent*(result: var string, indent: int) =
+  result.add("\n")
+  for i in 1..indent:
+    result.add(' ')
 
 # used internally by the genBindings procs
 template ident*(x: string) =

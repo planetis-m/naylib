@@ -379,8 +379,8 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           lit "\n"
       lit "\n"
     lit "template BlendEquationRgb*(_: typedesc[BlendFuncOrEq]): untyped = BlendEquation"
-    var procProperties: seq[(string, string, string)] = @[]
-    var procArrays: seq[(string, string, string)] = @[]
+    var readOnlyFieldAccessors: seq[(string, string, string)] = @[]
+    var boundCheckedArrayAccessors: seq[(string, string, string)] = @[]
     lit "\n\ntype"
     scope:
       for obj in items(t.structs):
@@ -423,11 +423,11 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
                 spaces
                 lit "indices: ptr UncheckedArray[uint16]"
             if isPrivate:
-              procProperties.add (objName, name, kind)
+              readOnlyFieldAccessors.add (objName, name, kind)
             if many:
-              procArrays.add (objName, name, baseKind)
+              boundCheckedArrayAccessors.add (objName, name, baseKind)
         lit "\n"
-      for obj, name, _ in procArrays.items:
+      for obj, name, _ in boundCheckedArrayAccessors.items:
         spaces
         lit obj
         lit capitalizeAscii(name)
@@ -492,7 +492,7 @@ proc genBindings(t: TopLevel, fname: string, header, footer: string) =
           lit "## "
           lit fnc.description
     lit "\n{.pop.}\n\n"
-    for obj, field, kind in procProperties.items:
+    for obj, field, kind in readOnlyFieldAccessors.items:
       lit "proc "
       ident field
       lit "*(x: "

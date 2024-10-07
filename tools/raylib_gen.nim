@@ -1,147 +1,18 @@
-import common, std/[algorithm, streams, sets, tables]
-import std/strutils except spaces
+import std/[algorithm, sets, tables, sequtils, strutils]
 when defined(nimPreviewSlimSystem):
-  import std/syncio
+  from std/syncio import readFile
+import common, newdsl
 
 const
-  extraTypes = [
-    """rAudioBuffer {.importc, nodecl, bycopy.} = object""",
-    """rAudioProcessor {.importc, nodecl, bycopy.} = object"""
-  ]
-  raylibHeader = """
-from std/strutils import addf, toHex
-from std/unicode import Rune
-from std/syncio import writeFile
-import std/[assertions, paths]
-const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
-
-{.passC: "-I" & raylibDir.string.}
-{.passC: "-I" & string(raylibDir / Path"external/glfw/include").}
-{.passC: "-I" & string(raylibDir / Path"external/glfw/deps/mingw").}
-{.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
-when defined(emscripten):
-  {.passC: "-DPLATFORM_WEB".}
-  when defined(GraphicsApiOpenGlEs3):
-    {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
-    {.passL: "-sFULL_ES3 -sMAX_WEBGL_VERSION=2".}
-  else: {.passC: "-DGRAPHICS_API_OPENGL_ES2".}
-  {.passL: "-sUSE_GLFW=3 -sWASM=1 -sTOTAL_MEMORY=67108864".} # 64MiB
-  {.passL: "-sEXPORTED_RUNTIME_METHODS=ccall".}
-  when compileOption("threads"):
-    const NaylibWebPthreadPoolSize {.intdefine.} = 2
-    {.passL: "-sPTHREAD_POOL_SIZE=" & $NaylibWebPthreadPoolSize.}
-  when defined(NaylibWebAsyncify): {.passL: "-sASYNCIFY".}
-  when defined(NaylibWebResources):
-    const NaylibWebResourcesPath {.strdefine.} = "resources"
-    {.passL: "-sFORCE_FILESYSTEM=1 --preload-file " & NaylibWebResourcesPath.}
-
-  type emCallbackFunc* = proc() {.cdecl.}
-  proc emscriptenSetMainLoop*(f: emCallbackFunc, fps, simulateInfiniteLoop: int32) {.
-      cdecl, importc: "emscripten_set_main_loop", header: "<emscripten.h>".}
-
-elif defined(android):
-  const AndroidNdk {.strdefine.} = "/opt/android-ndk"
-  const ProjectLibraryName = "main"
-  {.passC: "-I" & string(AndroidNdk.Path / Path"sources/android/native_app_glue").}
-
-  {.passC: "-DPLATFORM_ANDROID".}
-  when defined(GraphicsApiOpenGlEs3): {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
-  else: {.passC: "-DGRAPHICS_API_OPENGL_ES2".}
-  {.passC: "-ffunction-sections -funwind-tables -fstack-protector-strong -fPIE -fPIC".}
-  {.passC: "-Wa,--noexecstack -Wformat -no-canonical-prefixes".}
-
-  {.passL: "-Wl,-soname,lib" & ProjectLibraryName & ".so -Wl,--exclude-libs,libatomic.a".}
-  {.passL: "-Wl,--build-id -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -Wl,--warn-shared-textrel".}
-  {.passL: "-Wl,--fatal-warnings -u ANativeActivity_onCreate -Wl,-no-undefined".}
-  {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm -ldl".}
-
-else:
-  {.passC: "-DPLATFORM_DESKTOP_GLFW".}
-  when defined(GraphicsApiOpenGl11): {.passC: "-DGRAPHICS_API_OPENGL_11".}
-  elif defined(GraphicsApiOpenGl21): {.passC: "-DGRAPHICS_API_OPENGL_21".}
-  elif defined(GraphicsApiOpenGl43): {.passC: "-DGRAPHICS_API_OPENGL_43".}
-  elif defined(GraphicsApiOpenGlEs2): {.passC: "-DGRAPHICS_API_OPENGL_ES2".}
-  elif defined(GraphicsApiOpenGlEs3): {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
-  else: {.passC: "-DGRAPHICS_API_OPENGL_33".}
-
-  when defined(windows):
-    when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
-    else: {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
-
-  elif defined(macosx):
-    {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo".}
-
-  elif defined(drm):
-    {.passC: staticExec("pkg-config libdrm --cflags").}
-    {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
-    # pkg-config glesv2 egl libdrm gbm --libs
-    # nanosleep: -lrt, miniaudio linux 32bit ARM: -ldl -lpthread -lm -latomic
-    {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lrt -ldl -lpthread -lm -latomic".}
-
-  else:
-    when defined(linux):
-      {.passC: "-fPIC".}
-      {.passL: "-lGL -lrt -lm -lpthread -ldl".} # pkg-config gl --libs, nanosleep, miniaudio linux
-
-    elif defined(bsd):
-      {.passC: staticExec("pkg-config ossaudio --variable=includedir").}
-      {.passL: "-lGL -lrt -lossaudio -lpthread -lm -ldl".} # pkg-config gl ossaudio --libs, nanosleep, miniaudio BSD
-
-    when defined(wayland):
-      {.passC: "-D_GLFW_WAYLAND".}
-      # pkg-config wayland-client wayland-cursor wayland-egl xkbcommon --libs
-      {.passL: "-lwayland-client -lwayland-cursor -lwayland-egl -lxkbcommon".}
-      const wlProtocolsDir = raylibDir / Path"external/glfw/deps/wayland"
-
-      proc wlGenerate(protocol: Path, basename: string) =
-        discard staticExec("wayland-scanner client-header " & protocol.string & " " &
-            string(raylibDir / Path(basename & ".h")))
-        discard staticExec("wayland-scanner private-code " & protocol.string & " " &
-            string(raylibDir / Path(basename & "-code.h")))
-
-      static:
-        wlGenerate(wlProtocolsDir / Path"wayland.xml", "wayland-client-protocol")
-        wlGenerate(wlProtocolsDir / Path"xdg-shell.xml", "xdg-shell-client-protocol")
-        wlGenerate(wlProtocolsDir / Path"xdg-decoration-unstable-v1.xml",
-            "xdg-decoration-unstable-v1-client-protocol")
-        wlGenerate(wlProtocolsDir / Path"viewporter.xml", "viewporter-client-protocol")
-        wlGenerate(wlProtocolsDir / Path"relative-pointer-unstable-v1.xml",
-            "relative-pointer-unstable-v1-client-protocol")
-        wlGenerate(wlProtocolsDir / Path"pointer-constraints-unstable-v1.xml",
-            "pointer-constraints-unstable-v1-client-protocol")
-        wlGenerate(wlProtocolsDir / Path"fractional-scale-v1.xml", "fractional-scale-v1-client-protocol")
-        wlGenerate(wlProtocolsDir / Path"xdg-activation-v1.xml", "xdg-activation-v1-client-protocol")
-        wlGenerate(wlProtocolsDir / Path"idle-inhibit-unstable-v1.xml",
-            "idle-inhibit-unstable-v1-client-protocol")
-
-    else:
-      {.passC: "-D_GLFW_X11".}
-      # pkg-config x11 xrandr xinerama xi xcursor --libs
-      {.passL: "-lX11 -lXrandr -lXinerama -lXi -lXcursor".}
-
-when defined(emscripten): discard
-elif defined(android): discard
-elif defined(macosx): {.compile(raylibDir / Path"rglfw.c", "-x objective-c").}
-else: {.compile: raylibDir / Path"rglfw.c".}
-{.compile: raylibDir / Path"rshapes.c".}
-{.compile: raylibDir / Path"rtextures.c".}
-{.compile: raylibDir / Path"rtext.c".}
-{.compile: raylibDir / Path"utils.c".}
-{.compile: raylibDir / Path"rmodels.c".}
-{.compile: raylibDir / Path"raudio.c".}
-{.compile: raylibDir / Path"rcore.c".}
-when defined(android):
-  {.compile: AndroidNdk.Path / Path"sources/android/native_app_glue/android_native_app_glue.c".}
-
-const
-  RaylibVersion* = (5, 5, 0)
-
-  # Taken from raylib/src/config.h
-  MaxShaderLocations* = 32 ## Maximum number of shader locations supported
-  MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
-  MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
+  raylibHeader = readFile("raylib_header.nim")
+  destructorHooks = readFile("raylib_types.nim")
+  manualWrappers = readFile("raylib_wrap.nim")
+  arrayAccessors = readFile("raylib_fields.nim")
+  opaqueStructs = """
+  rAudioBuffer {.importc, nodecl, bycopy.} = object
+  rAudioProcessor {.importc, nodecl, bycopy.} = object
 """
-  extraDistinct = """
+  bitsetsHelperAndDuplicateValues = """
   ShaderLocation* = distinct int32 ## Shader location
 
   FlagsEnum = ConfigFlags|Gesture
@@ -159,7 +30,7 @@ template Specular*(_: typedesc[MaterialMapIndex]): untyped = Metalness
 template MapDiffuse*(_: typedesc[ShaderLocationIndex]): untyped = MapAlbedo
 template MapSpecular*(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
 """
-  helpers = """
+  callbacksAndColors = """
 
 type va_list {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
 proc vsprintf(s: cstring, format: cstring, args: va_list) {.cdecl, importc: "vsprintf", header: "<stdio.h>".}
@@ -427,7 +298,7 @@ const
     "LoadAudioStream",
     "UpdateAudioStream",
   ])
-  nosideeffectsFuncs = toHashSet([
+  noSideeffectsFuncs = toHashSet([
     "CheckCollisionCircleLine",
     "UpdateModelAnimationBoneMatrices",
     "GenImageText",
@@ -556,7 +427,7 @@ const
     "GetMusicTimeLength",
     "IsAudioStreamReady",
   ])
-  mangledFunctions = toHashSet([
+  mangledFuncs = toHashSet([
     "ShowCursor",
     "CloseWindow",
     "LoadImage",
@@ -582,8 +453,7 @@ type
   PropertyInfo = object
     struct, field, `type`: string
 
-proc preprocessStructs(structs: var seq[StructInfo];
-                       procProperties, procArrays: var seq[PropertyInfo]) =
+proc preprocessStructs(ctx: var ApiContext) =
   proc isPrivateField(obj: StructInfo, fld: FieldInfo): bool =
     (obj.name, fld.name) notin {"Wave": "frameCount", "Sound": "frameCount", "Music": "frameCount"} and
     fld.name.endsWith("Count")
@@ -615,7 +485,7 @@ proc preprocessStructs(structs: var seq[StructInfo];
       "AudioStream": "processor"
     }
 
-  for obj in mitems(structs):
+  for obj in mitems(ctx.api.structs):
     if obj.name == "Rectangle":
       obj.flags.incl isMangled
     if obj.name in ["Color", "Vector2", "Vector3", "Vector4"]:
@@ -646,14 +516,15 @@ proc preprocessStructs(structs: var seq[StructInfo];
         (fieldType, baseType) = convertType(fld.`type`, pattern, many, false)
       let isArray = isArrayField(obj, fld, many)
       if isPrivate in fld.flags:
-        procProperties.add PropertyInfo(struct: obj.name, field: fld.name, `type`: fieldType)
+        ctx.readOnlyFieldAccessors.add (struct: obj.name, field: fld.name, `type`: fieldType)
       if isArray:
-        procArrays.add PropertyInfo(struct: obj.name, field: capitalizeAscii(fld.name), `type`: baseType)
+        let tmp = capitalizeAscii(fld.name)
+        ctx.boundCheckedArrayAccessors.add (struct: obj.name & tmp, field: obj.name, `type`: "")
       if shouldBePrivate(obj, fld, isArray, isPrivate in fld.flags + obj.flags):
         fld.flags.incl isPrivate
       fld.`type` = fieldType
 
-proc preprocessEnums(enums: var seq[EnumInfo]) =
+proc preprocessEnums(ctx: var ApiContext) =
   proc removeCommonPrefixes(name: string): string =
     result = name
     const prefixes = [
@@ -668,17 +539,17 @@ proc preprocessEnums(enums: var seq[EnumInfo]) =
         result.removePrefix(prefix)
         break
 
-  for enm in mitems(enums):
+  for enm in mitems(ctx.api.enums):
     sort(enm.values, proc (x, y: ValueInfo): int = cmp(x.value, y.value))
     for val in mitems(enm.values):
       val.name = removeCommonPrefixes(val.name).camelCaseAscii()
 
-proc preprocessAliases(aliases: var seq[AliasInfo]) =
-  for alias in mitems(aliases):
+proc preprocessAliases(ctx: var ApiContext) =
+  for alias in mitems(ctx.api.aliases):
     if alias.name == "Quaternion":
       alias.flags.incl isDistinct
 
-proc preprocessFunctions(holder: var seq[FunctionInfo]; funcsToWrap: var seq[FunctionInfo]) =
+proc preprocessFunctions(ctx: var ApiContext) =
   proc shouldRemoveSuffix(fnc: FunctionInfo): bool =
     const exceptions = [
       "DrawRectangleGradientV",
@@ -726,16 +597,17 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; funcsToWrap: var seq[Fun
         (nextName == "size" or nextName.endsWith("Size"))) and
         fnc.name notin wrappedFuncs and hasVarargs notin fnc.flags
 
-  for fnc in mitems(holder):
-    if fnc.name in excludedFuncs:
-      continue
-    if fnc.name in mangledFunctions:
+  keepIf(ctx.api.functions, proc (x: FunctionInfo): bool = x.name notin excludedFuncs)
+  for fnc in mitems(ctx.api.functions):
+    if fnc.name in mangledFuncs:
       fnc.flags.incl isMangled
     if fnc.name in wrappedFuncs:
       fnc.flags.incl isWrappedFunc
       fnc.flags.incl isPrivate
     if fnc.name in privateFuncs:
       fnc.flags.incl isPrivate
+    if fnc.name in noSideeffectsFuncs:
+      fnc.flags.incl isFunc
 
     proc isVarargsParam(param: ParamInfo): bool =
       param.name == "args" and param.`type` == "..."
@@ -750,6 +622,7 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; funcsToWrap: var seq[Fun
       let many = shouldUsePluralType(fnc, param)
       let (paramType, baseType) = convertType(param.`type`, many)
       if checkCstringType(fnc, paramType):
+        param.flags.incl isString
         autoWrap = true
       if i < fnc.params.high and checkOpenarrayType(fnc, paramType, many, fnc.params[i+1].name):
         param.baseType = baseType
@@ -761,6 +634,7 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; funcsToWrap: var seq[Fun
     if fnc.returnType != "void":
       let (returnType, baseType) = convertType(fnc.returnType, false)
       if checkCstringType(fnc, returnType):
+        fnc.flags.incl isString
         autoWrap = true
       if baseType in needErrorChecking and fnc.name notin privateFuncs:
         echo "WARNING: Function might require error checking: ", fnc.name
@@ -794,280 +668,29 @@ proc preprocessFunctions(holder: var seq[FunctionInfo]; funcsToWrap: var seq[Fun
     fnc.importName = (if isMangled in fnc.flags: "rl" else: "") & fnc.name
     fnc.name = generateProcName(fnc)
     if autoWrap:
-      funcsToWrap.add fnc
-
-proc genBindings(t: TopLevel, procProperties, procArrays: seq[PropertyInfo],
-                 funcsToWrap: seq[FunctionInfo],
-                 fname: string; header, middle: string) =
-  var buf = newStringOfCap(50)
-  var indent = 0
-  var otp: FileStream
-
-  proc generateEnums(enums: seq[EnumInfo]) =
-    lit "\ntype"
-    scope:
-      for enm in items(enums):
-        spaces
-        ident enm.name
-        lit "* {.size: sizeof(int32).} = enum"
-        doc enm
-        scope:
-          var prev = -1
-          for i, val in pairs(enm.values):
-            if val.value == prev: continue
-            spaces
-            ident val.name
-            if prev + 1 != val.value:
-              lit " = "
-              lit $val.value
-            doc val
-            prev = val.value
-          lit "\n"
-      lit "\n"
-
-  proc generateObjects(structs: seq[StructInfo]) =
-    for obj in items(structs):
-      spaces
-      ident obj.name
-      if isPrivate notin obj.flags:
-        lit "*"
-      if isMangled in obj.flags:
-        lit " {.importc: \"rl"
-        ident obj.name
-        lit "\""
-      else:
-        lit " {.importc"
-      lit ", header: \"raylib.h\""
-      if isCompleteStruct in obj.flags:
-        lit ", completeStruct"
-      lit ", bycopy.} = object"
-      doc obj
-      scope:
-        for fld in items(obj.fields):
-          # Group Matrix fields by rows
-          if obj.name != "Matrix" or fld.name in ["m0", "m1", "m2", "m3"]: # row starts
-            spaces
-          ident fld.name
-          if obj.name == "Matrix" and fld.name notin ["m12", "m13", "m14", "m15"]: # row ends
-            lit "*, "
-            continue
-          if isPrivate in fld.flags:
-            lit ": "
-          else:
-            lit "*: "
-          lit fld.`type`
-          doc fld
-      lit "\n"
-
-  proc generateProcs(holder: seq[FunctionInfo]) =
-    for fnc in items(holder):
-      if fnc.name in excludedFuncs:
-        continue
-      # Generate proc signature
-      lit "\nproc "
-      ident fnc.name
-      if isWrappedFunc in fnc.flags:
-        lit "Priv"
-      if isPrivate in fnc.flags:
-        lit "("
-      else:
-        lit "*("
-      # Generate parameters
-      for i, param in fnc.params.pairs:
-        if i > 0: lit ", "
-        ident param.name
-        lit ": "
-        lit param.`type`
-      lit ")"
-      # Generate return type
-      if fnc.returnType != "void":
-        lit ": "
-        lit fnc.returnType
-      # Generate import pragma
-      lit " {.importc: "
-      lit "\""
-      ident fnc.importName
-      lit "\""
-      if hasVarargs in fnc.flags:
-        lit ", varargs"
-      lit ".}"
-      # Generate documentation comment
-      if isPrivate notin fnc.flags and fnc.description != "":
-        scope:
-          spaces
-          lit "## "
-          lit fnc.description
-
-  proc generateWrappedProcs(holder: seq[FunctionInfo]) =
-    for fnc in items(holder):
-      # Generate proc signature
-      lit "\nproc "
-      ident fnc.name
-      lit "*("
-      # Generate parameters
-      var skipNext = false
-      for i, param in fnc.params.pairs:
-        if skipNext:
-          skipNext = false
-        else:
-          if i > 0: lit ", "
-          ident param.name
-          lit ": "
-          if param.`type` == "cstring":
-            lit "string"
-          elif isOpenArray in param.flags:
-            lit "openArray["
-            lit param.baseType
-            lit "]"
-            skipNext = true
-          elif isVarParam in param.flags:
-            lit "var "
-            lit param.baseType
-          else:
-            lit param.`type`
-      lit ")"
-      # Generate return type
-      if fnc.returnType != "void":
-        lit ": "
-        if fnc.returnType == "cstring":
-          lit "string"
-        else:
-          lit fnc.returnType
-      lit " ="
-      # Generate documentation comment
-      if fnc.description != "":
-        scope:
-          spaces
-          lit "## "
-          lit fnc.description
-      scope:
-        spaces
-        # Generate forwarding call
-        if fnc.returnType == "cstring":
-          lit "$"
-        lit fnc.name
-        lit "Priv("
-        var nextValue = ""
-        for i, param in fnc.params.pairs:
-          if i > 0: lit ", "
-          if isOpenArray in param.flags:
-            lit "cast["
-            lit param.`type`
-            lit "]("
-          elif isVarParam in param.flags:
-            lit "addr "
-          if nextValue != "":
-            lit nextValue
-            lit ".len."
-            lit param.`type`
-            nextValue = ""
-          else:
-            ident param.name
-          if param.`type` == "cstring":
-            lit ".cstring"
-          if isOpenArray in param.flags:
-            lit ")"
-            nextValue = param.name
-        lit ")\n"
-
-  try:
-    otp = openFileStream(fname, fmWrite)
-    lit header
-    # Generate enum definitions
-    generateEnums(t.enums)
-    lit extraDistinct
-    lit "\ntype"
-    scope:
-      # Generate type definitions
-      generateObjects(t.structs)
-      # Add a type alias or a missing type
-      for alias in items(t.aliases):
-        spaces
-        ident alias.name
-        if isDistinct in alias.flags:
-          lit "* {.borrow: `.`.} = distinct "
-        else:
-          lit "* = "
-        ident alias.`type`
-        doc alias
-      lit "\n"
-      for extra in extraTypes.items:
-        spaces
-        lit extra
-      lit "\n"
-      for x in procArrays.items:
-        spaces
-        lit x.struct
-        lit x.field
-        lit "* = distinct "
-        ident x.struct
-      lit "\n"
-    lit middle
-
-    # Seperate funcs and procs
-    var
-      withSideEffect: seq[FunctionInfo] = @[]
-      withoutSideEffect: seq[FunctionInfo] = @[]
-    for fnc in t.functions:
-      if fnc.importName in excludedFuncs: continue
-      elif fnc.importName in nosideeffectsFuncs: withoutSideEffect.add fnc
-      else: withSideEffect.add fnc
-
-    # Generate procs
-    lit "\n{.push callconv: cdecl, header: \"raylib.h\".}"
-    lit "\n{.push sideEffect.}"
-    generateProcs withSideEffect
-    lit "\n{.pop.}\n"
-
-    if withoutSideEffect.len != 0:
-      lit "\n{.push noSideEffect.}"
-      generateProcs withoutSideEffect
-      lit "\n{.pop.}"
-    lit "\n{.pop.}\n"
-
-    lit readFile("raylib_types.nim")
-    lit "\n"
-    for x in procProperties.items:
-      lit "proc "
-      ident x.field
-      lit "*(x: "
-      ident x.struct
-      lit "): "
-      lit x.`type`
-      lit " {.inline.} = x."
-      ident x.field
-      lit "\n"
-
-    # Generate wrapped functions
-    generateWrappedProcs(funcsToWrap)
-    lit readFile("raylib_wrap.nim")
-    lit readFile("raylib_fields.nim")
-  finally:
-    if otp != nil: otp.close()
+      ctx.funcsToWrap.add fnc
 
 const
   raylibApi = "../api/raylib.json"
   outputname = "../src/raylib.nim"
 
-type
-  ApiContext = object
-    api: TopLevel
-    procProperties: seq[PropertyInfo] = @[]
-    procArrays: seq[PropertyInfo] = @[]
-    funcsToWrap: seq[FunctionInfo] = @[]
-
 proc preprocessApi(ctx: var ApiContext) =
-  preprocessStructs(ctx.api.structs, ctx.procProperties, ctx.procArrays)
-  preprocessEnums(ctx.api.enums)
-  preprocessAliases(ctx.api.aliases)
-  preprocessFunctions(ctx.api.functions, ctx.funcsToWrap)
+  preprocessStructs(ctx)
+  preprocessEnums(ctx)
+  preprocessAliases(ctx)
+  preprocessFunctions(ctx)
 
 proc generateOutput(ctx: ApiContext) =
-  genBindings(ctx.api, ctx.procProperties, ctx.procArrays, ctx.funcsToWrap, outputname, raylibHeader, helpers)
+  var b = openBuilder(outputname)
+  genBindings(b, ctx,
+              moduleHeader = raylibHeader, afterEnums = bitsetsHelperAndDuplicateValues,
+              afterObjects = opaqueStructs & callbacksAndColors, afterFuncs = destructorHooks & arrayAccessors,
+              moduleEnd = manualWrappers)
+  b.close()
 
 proc main =
-  var t = ApiContext(api: parseApi(raylibApi))
-  preprocessApi(t)
-  generateOutput(t)
+  var ctx = ApiContext(api: parseApi(raylibApi))
+  preprocessApi(ctx)
+  generateOutput(ctx)
 
 main()

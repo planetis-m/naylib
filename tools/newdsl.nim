@@ -1,0 +1,272 @@
+import std/streams
+import common
+
+type
+  Builder* = object
+    nesting: int
+    outp: Stream
+
+proc openBuilder*(filename: string): Builder =
+  Builder(outp: openFileStream(filename, fmWrite), nesting: 0)
+
+proc openBuilder*(sizeHint: int): Builder =
+  Builder(outp: newStringStream(newStringOfCap(sizeHint)), nesting: 0)
+
+proc close*(b: Builder) =
+  if b.outp != nil:
+    b.outp.close()
+  assert b.nesting == 0
+
+proc put*(b: Builder; s: string) =
+  write b.outp, s
+
+proc put*(b: Builder; c: char) =
+  write b.outp, c
+
+proc addTree*(b: var Builder, kind: string) =
+  b.put "\n"
+  for i in 1..b.nesting: b.put "  "
+  if kind != "":
+    b.put kind
+  inc b.nesting
+
+proc endTree*(b: var Builder) =
+  assert b.nesting > 0
+  dec b.nesting
+
+template withSection*(b: var Builder, kind: string, body: untyped) =
+  addTree b, kind
+  body
+  endTree b
+
+template withBlock*(b: var Builder, body: untyped) =
+  addTree b, ""
+  body
+  endTree b
+
+proc addIdent*(b: var Builder, s: string) =
+  let isKeyw = isKeyword(s)
+  if isKeyw:
+    b.put '`'
+  b.put s
+  if isKeyw:
+    b.put '`'
+
+proc addDoc*(b: var Builder, s: string) =
+  if s != "":
+    b.put " ## "
+    b.put s
+
+proc addBlockDoc*(b: var Builder, s: string) =
+  if s != "":
+    addTree b, ""
+    b.put "## "
+    b.put s
+    endTree b
+
+proc addStrLit*(b: var Builder; s: string) =
+  b.put '"'
+  b.put s
+  b.put '"'
+
+proc addIntLit*(b: var Builder; i: BiggestInt) =
+  b.put $i
+
+proc addRaw*(b: var Builder; s: string) =
+  put b, s
+
+proc addNewline*(b: var Builder) =
+  b.put "\n"
+  for i in 1..b.nesting:
+    b.put ' '
+
+proc generateEnum*(b: var Builder, enm: EnumInfo) =
+  withSection(b, enm.name):
+    if isPrivate notin enm.flags:
+      b.addRaw "*"
+    b.addRaw " {.size: sizeof(int32).} = enum"
+    b.addDoc enm.description
+    var prev = -1
+    for i, val in pairs(enm.values):
+      if val.value == prev: continue
+      withSection(b, val.name):
+        if prev + 1 != val.value:
+          b.addRaw " = "
+          b.addIntLit val.value
+        b.addDoc val.description
+        prev = val.value
+
+proc generateObject*(b: var Builder, obj: StructInfo) =
+  withSection(b, obj.name):
+    if isPrivate notin obj.flags:
+      b.addRaw "*"
+    b.addRaw " {.importc"
+    if isMangled in obj.flags:
+      b.addRaw ": "
+      b.addStrLit "rl" & obj.name
+    b.addRaw ", header: "
+    b.addStrLit "raylib.h"
+    if isCompleteStruct in obj.flags:
+      b.addRaw ", completeStruct"
+    b.addRaw ", bycopy.} = object"
+    b.addDoc obj.description
+    for fld in items(obj.fields):
+      # Group Matrix fields by rows
+      if obj.name != "Matrix" or fld.name in ["m0", "m1", "m2", "m3"]: # row starts
+        b.addTree("")
+      b.addIdent fld.name
+      if obj.name == "Matrix" and fld.name notin ["m12", "m13", "m14", "m15"]: # row ends
+        b.addRaw "*, "
+        continue
+      if isPrivate notin fld.flags:
+        b.addRaw "*"
+      b.addRaw ": "
+      b.addIdent fld.`type`
+      b.addDoc fld.description
+      b.endTree()
+
+proc generateProc*(b: var Builder, fnc: FunctionInfo) =
+  withSection(b, if isFunc in fnc.flags: "func " else: "proc "):
+    b.addIdent fnc.name
+    if isWrappedFunc in fnc.flags: b.addRaw "Priv"
+    if isPrivate in fnc.flags:
+      b.addRaw "("
+    else:
+      b.addRaw "*("
+    for i, param in fnc.params:
+      if i > 0: b.addRaw ", "
+      b.addIdent param.name
+      b.addRaw ": "
+      b.addIdent param.`type`
+    b.addRaw ")"
+    if fnc.returnType != "void":
+      b.addRaw ": "
+      b.addIdent fnc.returnType
+    b.addRaw " {.importc: "
+    b.addStrLit fnc.importName
+    if hasVarargs in fnc.flags:
+      b.addRaw ", varargs"
+    if isFunc notin fnc.flags:
+      b.addRaw ", sideEffect"
+    b.addRaw ".}"
+    if isPrivate notin fnc.flags:
+      b.addBlockDoc fnc.description
+
+proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
+  withSection(b, "proc "):
+    b.addIdent fnc.name
+    b.addRaw "*("
+    var skipNext = false
+    for i, param in fnc.params:
+      if skipNext:
+        skipNext = false
+        continue
+      if i > 0:
+        b.addRaw ", "
+      b.addIdent param.name
+      b.addRaw ": "
+      if isString in param.flags:
+        b.addRaw "string"
+      elif isOpenArray in param.flags:
+        b.addRaw "openArray["
+        b.addRaw param.baseType
+        b.addRaw "]"
+        skipNext = true
+      elif isVarParam in param.flags:
+        b.addRaw "var "
+        b.addRaw param.baseType
+      else:
+        b.addRaw param.`type`
+    b.addRaw ")"
+    if fnc.returnType != "void":
+      b.addRaw ": "
+      if isString in fnc.flags:
+        b.addRaw "string"
+      else:
+        b.addRaw fnc.returnType
+    b.addRaw " ="
+    b.addBlockDoc fnc.description
+    withBlock(b):
+      if isString in fnc.flags:
+        b.addRaw "$"
+      b.addIdent fnc.name
+      b.addRaw "Priv("
+      var nextValue = ""
+      for i, param in fnc.params:
+        if i > 0:
+          b.addRaw ", "
+        if isOpenArray in param.flags:
+          b.addRaw "cast["
+          b.addRaw param.`type`
+          b.addRaw "]("
+        elif isVarParam in param.flags:
+          b.addRaw "addr "
+        if nextValue != "":
+          b.addRaw nextValue
+          b.addRaw ".len."
+          b.addRaw param.`type`
+          nextValue = ""
+        else:
+          b.addIdent param.name
+        if isString in param.flags:
+          b.addRaw ".cstring"
+        if isOpenArray in param.flags:
+          b.addRaw ")"
+          nextValue = param.name
+      b.addRaw ")\n"
+
+proc genBindings*(b: var Builder; ctx: ApiContext;
+                  moduleHeader, afterEnums, afterObjects, afterFuncs, moduleEnd: string) =
+  b.addRaw moduleHeader
+  # Generate enum definitions
+  withSection(b, "type"):
+    for enm in items(ctx.api.enums):
+      generateEnum(b, enm)
+      b.addRaw("\n")
+  b.addRaw("\n")
+  b.addRaw afterEnums
+  # Generate type definitions
+  withSection(b, "type"):
+    for obj in items(ctx.api.structs):
+      generateObject(b, obj)
+      b.addRaw("\n")
+    # Add type alias or missing type
+    for alias in items(ctx.api.aliases):
+      withSection(b, alias.name):
+        if isDistinct in alias.flags:
+          b.addRaw "* {.borrow: `.`.} = distinct "
+        else:
+          b.addRaw "* = "
+        b.addIdent alias.`type`
+        b.addDoc alias.description
+    # Distinct procs for arrays
+    for x in items(ctx.boundCheckedArrayAccessors):
+      withSection(b, x.struct):
+        b.addRaw "* = distinct "
+        b.addIdent x.field
+  b.addRaw("\n\n")
+  b.addRaw afterObjects
+  # Generate procs
+  b.addRaw "\n{.push callconv: cdecl, header: \"raylib.h\".}"
+  for fnc in items(ctx.api.functions):
+    generateProc(b, fnc)
+    # b.addRaw("\n")
+  b.addRaw "\n{.pop.}"
+  b.addRaw("\n")
+  b.addRaw afterFuncs
+  # Generate property procs
+  for x in items(ctx.readOnlyFieldAccessors):
+    b.addRaw "proc "
+    b.addIdent x.field
+    b.addRaw "*(x: "
+    b.addIdent x.struct
+    b.addRaw "): "
+    b.addRaw x.`type`
+    b.addRaw " {.inline.} = x."
+    b.addIdent x.field
+    b.addRaw "\n"
+  # Generate wrapped functions
+  for fnc in items(ctx.funcsToWrap):
+    generateWrappedProc(b, fnc)
+  b.addRaw("\n")
+  b.addRaw moduleEnd
