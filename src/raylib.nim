@@ -796,7 +796,7 @@ const
   RayWhite* = Color(r: 245, g: 245, b: 245, a: 255)
 
 {.push callconv: cdecl, header: "raylib.h".}
-proc initWindowPriv(width: int32, height: int32, title: cstring) {.importc: "InitWindow", sideEffect.}
+proc initWindowImpl(width: int32, height: int32, title: cstring) {.importc: "InitWindow", sideEffect.}
 proc closeWindow*() {.importc: "rlCloseWindow", sideEffect.}
   ## Close window and unload OpenGL context
 proc windowShouldClose*(): bool {.importc: "WindowShouldClose", sideEffect.}
@@ -833,8 +833,8 @@ proc restoreWindow*() {.importc: "RestoreWindow", sideEffect.}
   ## Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
 proc setWindowIcon*(image: Image) {.importc: "SetWindowIcon", sideEffect.}
   ## Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
-proc setWindowIconsPriv(images: ptr UncheckedArray[Image], count: int32) {.importc: "SetWindowIcons", sideEffect.}
-proc setWindowTitlePriv(title: cstring) {.importc: "SetWindowTitle", sideEffect.}
+proc setWindowIconsImpl(images: ptr UncheckedArray[Image], count: int32) {.importc: "SetWindowIcons", sideEffect.}
+proc setWindowTitleImpl(title: cstring) {.importc: "SetWindowTitle", sideEffect.}
 proc setWindowPosition*(x: int32, y: int32) {.importc: "SetWindowPosition", sideEffect.}
   ## Set window position on screen (only PLATFORM_DESKTOP)
 proc setWindowMonitor*(monitor: int32) {.importc: "SetWindowMonitor", sideEffect.}
@@ -879,9 +879,9 @@ proc getWindowPosition*(): Vector2 {.importc: "GetWindowPosition", sideEffect.}
   ## Get window position XY on monitor
 proc getWindowScaleDPI*(): Vector2 {.importc: "GetWindowScaleDPI", sideEffect.}
   ## Get window scale DPI factor
-proc getMonitorNamePriv(monitor: int32): cstring {.importc: "GetMonitorName", sideEffect.}
-proc setClipboardTextPriv(text: cstring) {.importc: "SetClipboardText", sideEffect.}
-proc getClipboardTextPriv(): cstring {.importc: "GetClipboardText", sideEffect.}
+proc getMonitorNameImpl(monitor: int32): cstring {.importc: "GetMonitorName", sideEffect.}
+proc setClipboardTextImpl(text: cstring) {.importc: "SetClipboardText", sideEffect.}
+proc getClipboardTextImpl(): cstring {.importc: "GetClipboardText", sideEffect.}
 proc enableEventWaiting*() {.importc: "EnableEventWaiting", sideEffect.}
   ## Enable waiting for events on EndDrawing(), no automatic event polling
 proc disableEventWaiting*() {.importc: "DisableEventWaiting", sideEffect.}
@@ -935,14 +935,14 @@ proc endVrStereoMode*() {.importc: "EndVrStereoMode", sideEffect.}
 proc loadVrStereoConfig*(device: VrDeviceInfo): VrStereoConfig {.importc: "LoadVrStereoConfig", sideEffect.}
   ## Load VR stereo config for VR simulator device parameters
 proc unloadVrStereoConfig(config: VrStereoConfig) {.importc: "UnloadVrStereoConfig", sideEffect.}
-proc loadShaderPriv(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader", sideEffect.}
-proc loadShaderFromMemoryPriv(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory", sideEffect.}
+proc loadShaderImpl(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader", sideEffect.}
+proc loadShaderFromMemoryImpl(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory", sideEffect.}
 func isShaderReady*(shader: Shader): bool {.importc: "IsShaderReady".}
   ## Check if a shader is ready
-proc getShaderLocationPriv(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation", sideEffect.}
-proc getShaderLocationAttribPriv(shader: Shader, attribName: cstring): ShaderLocation {.importc: "GetShaderLocationAttrib", sideEffect.}
-proc setShaderValuePriv(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue", sideEffect.}
-proc setShaderValueVPriv(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV", sideEffect.}
+proc getShaderLocationImpl(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation", sideEffect.}
+proc getShaderLocationAttribImpl(shader: Shader, attribName: cstring): ShaderLocation {.importc: "GetShaderLocationAttrib", sideEffect.}
+proc setShaderValueImpl(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue", sideEffect.}
+proc setShaderValueVImpl(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV", sideEffect.}
 proc setShaderValueMatrix*(shader: Shader, locIndex: ShaderLocation, mat: Matrix) {.importc: "SetShaderValueMatrix", sideEffect.}
   ## Set shader uniform value (matrix 4x4)
 proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocation, texture: Texture2D) {.importc: "SetShaderValueTexture", sideEffect.}
@@ -978,7 +978,7 @@ proc pollInputEvents*() {.importc: "PollInputEvents", sideEffect.}
   ## Register all input events
 proc waitTime*(seconds: float) {.importc: "WaitTime", sideEffect.}
   ## Wait for some time (halt program execution)
-proc takeScreenshotPriv(fileName: cstring) {.importc: "TakeScreenshot", sideEffect.}
+proc takeScreenshotImpl(fileName: cstring) {.importc: "TakeScreenshot", sideEffect.}
 proc setConfigFlags*(flags: Flags[ConfigFlags]) {.importc: "SetConfigFlags", sideEffect.}
   ## Setup init configuration flags (view FLAGS)
 proc traceLog*(logLevel: TraceLogLevel, text: cstring) {.importc: "TraceLog", varargs, sideEffect.}
@@ -988,7 +988,7 @@ proc setTraceLogLevel*(logLevel: TraceLogLevel) {.importc: "SetTraceLogLevel", s
 proc memAlloc(size: uint32): pointer {.importc: "MemAlloc", sideEffect.}
 proc memRealloc(`ptr`: pointer, size: uint32): pointer {.importc: "MemRealloc", sideEffect.}
 proc memFree(`ptr`: pointer) {.importc: "MemFree", sideEffect.}
-proc setTraceLogCallbackPriv(callback: TraceLogCallbackImpl) {.importc: "SetTraceLogCallback", sideEffect.}
+proc setTraceLogCallbackImpl(callback: TraceLogCallbackImpl) {.importc: "SetTraceLogCallback", sideEffect.}
 proc setLoadFileDataCallback*(callback: LoadFileDataCallback) {.importc: "SetLoadFileDataCallback", sideEffect.}
   ## Set custom file binary data loader
 proc setSaveFileDataCallback*(callback: SaveFileDataCallback) {.importc: "SetSaveFileDataCallback", sideEffect.}
@@ -999,12 +999,12 @@ proc setSaveFileTextCallback*(callback: SaveFileTextCallback) {.importc: "SetSav
   ## Set custom file text data saver
 proc isFileDropped*(): bool {.importc: "IsFileDropped", sideEffect.}
   ## Check if a file has been dropped into window
-proc loadDroppedFilesPriv(): FilePathList {.importc: "LoadDroppedFiles", sideEffect.}
-proc unloadDroppedFilesPriv(files: FilePathList) {.importc: "UnloadDroppedFiles", sideEffect.}
-proc loadAutomationEventListPriv(fileName: cstring): AutomationEventList {.importc: "LoadAutomationEventList", sideEffect.}
+proc loadDroppedFilesImpl(): FilePathList {.importc: "LoadDroppedFiles", sideEffect.}
+proc unloadDroppedFilesImpl(files: FilePathList) {.importc: "UnloadDroppedFiles", sideEffect.}
+proc loadAutomationEventListImpl(fileName: cstring): AutomationEventList {.importc: "LoadAutomationEventList", sideEffect.}
 proc unloadAutomationEventList*(list: AutomationEventList) {.importc: "UnloadAutomationEventList", sideEffect.}
   ## Unload automation events list from file
-proc exportAutomationEventListPriv(list: AutomationEventList, fileName: cstring): bool {.importc: "ExportAutomationEventList", sideEffect.}
+proc exportAutomationEventListImpl(list: AutomationEventList, fileName: cstring): bool {.importc: "ExportAutomationEventList", sideEffect.}
 proc setAutomationEventList*(list: var AutomationEventList) {.importc: "SetAutomationEventList", sideEffect.}
   ## Set automation event list to record to
 proc setAutomationEventBaseFrame*(frame: int32) {.importc: "SetAutomationEventBaseFrame", sideEffect.}
@@ -1033,7 +1033,7 @@ proc setExitKey*(key: KeyboardKey) {.importc: "SetExitKey", sideEffect.}
   ## Set a custom key to exit program (default is ESC)
 proc isGamepadAvailable*(gamepad: int32): bool {.importc: "IsGamepadAvailable", sideEffect.}
   ## Check if a gamepad is available
-proc getGamepadNamePriv(gamepad: int32): cstring {.importc: "GetGamepadName", sideEffect.}
+proc getGamepadNameImpl(gamepad: int32): cstring {.importc: "GetGamepadName", sideEffect.}
 proc isGamepadButtonPressed*(gamepad: int32, button: GamepadButton): bool {.importc: "IsGamepadButtonPressed", sideEffect.}
   ## Check if a gamepad button has been pressed once
 proc isGamepadButtonDown*(gamepad: int32, button: GamepadButton): bool {.importc: "IsGamepadButtonDown", sideEffect.}
@@ -1048,7 +1048,7 @@ proc getGamepadAxisCount*(gamepad: int32): int32 {.importc: "GetGamepadAxisCount
   ## Get gamepad axis count for a gamepad
 proc getGamepadAxisMovement*(gamepad: int32, axis: GamepadAxis): float32 {.importc: "GetGamepadAxisMovement", sideEffect.}
   ## Get axis movement value for a gamepad axis
-proc setGamepadMappingsPriv(mappings: cstring): int32 {.importc: "SetGamepadMappings", sideEffect.}
+proc setGamepadMappingsImpl(mappings: cstring): int32 {.importc: "SetGamepadMappings", sideEffect.}
 proc setGamepadVibration*(gamepad: int32, leftMotor: float32, rightMotor: float32) {.importc: "SetGamepadVibration", sideEffect.}
   ## Set gamepad vibration for both motors
 proc isMouseButtonPressed*(button: MouseButton): bool {.importc: "IsMouseButtonPressed", sideEffect.}
@@ -1125,7 +1125,7 @@ proc drawLine*(startPos: Vector2, endPos: Vector2, color: Color) {.importc: "Dra
   ## Draw a line (using gl lines)
 proc drawLine*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineEx", sideEffect.}
   ## Draw a line (using triangles/quads)
-proc drawLineStripPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawLineStrip", sideEffect.}
+proc drawLineStripImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawLineStrip", sideEffect.}
 proc drawLineBezier*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineBezier", sideEffect.}
   ## Draw line segment cubic-bezier in-out interpolation
 proc drawCircle*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircle", sideEffect.}
@@ -1178,19 +1178,19 @@ proc drawTriangle*(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.import
   ## Draw a color-filled triangle (vertex in counter-clockwise order!)
 proc drawTriangleLines*(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "DrawTriangleLines", sideEffect.}
   ## Draw triangle outline (vertex in counter-clockwise order!)
-proc drawTriangleFanPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawTriangleFan", sideEffect.}
-proc drawTriangleStripPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip", sideEffect.}
+proc drawTriangleFanImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawTriangleFan", sideEffect.}
+proc drawTriangleStripImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip", sideEffect.}
 proc drawPoly*(center: Vector2, sides: int32, radius: float32, rotation: float32, color: Color) {.importc: "DrawPoly", sideEffect.}
   ## Draw a regular polygon (Vector version)
 proc drawPolyLines*(center: Vector2, sides: int32, radius: float32, rotation: float32, color: Color) {.importc: "DrawPolyLines", sideEffect.}
   ## Draw a polygon outline of n sides
 proc drawPolyLines*(center: Vector2, sides: int32, radius: float32, rotation: float32, lineThick: float32, color: Color) {.importc: "DrawPolyLinesEx", sideEffect.}
   ## Draw a polygon outline of n sides with extended parameters
-proc drawSplineLinearPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineLinear", sideEffect.}
-proc drawSplineBasisPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBasis", sideEffect.}
-proc drawSplineCatmullRomPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineCatmullRom", sideEffect.}
-proc drawSplineBezierQuadraticPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBezierQuadratic", sideEffect.}
-proc drawSplineBezierCubicPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBezierCubic", sideEffect.}
+proc drawSplineLinearImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineLinear", sideEffect.}
+proc drawSplineBasisImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBasis", sideEffect.}
+proc drawSplineCatmullRomImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineCatmullRom", sideEffect.}
+proc drawSplineBezierQuadraticImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBezierQuadratic", sideEffect.}
+proc drawSplineBezierCubicImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBezierCubic", sideEffect.}
 proc drawSplineSegmentLinear*(p1: Vector2, p2: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentLinear", sideEffect.}
   ## Draw spline segment: Linear, 2 points
 proc drawSplineSegmentBasis*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBasis", sideEffect.}
@@ -1223,7 +1223,7 @@ func checkCollisionPointCircle*(point: Vector2, center: Vector2, radius: float32
   ## Check if point is inside circle
 func checkCollisionPointTriangle*(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): bool {.importc: "CheckCollisionPointTriangle".}
   ## Check if point is inside a triangle
-func checkCollisionPointPolyPriv(point: Vector2, points: ptr UncheckedArray[Vector2], pointCount: int32): bool {.importc: "CheckCollisionPointPoly".}
+func checkCollisionPointPolyImpl(point: Vector2, points: ptr UncheckedArray[Vector2], pointCount: int32): bool {.importc: "CheckCollisionPointPoly".}
 func checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: out Vector2): bool {.importc: "CheckCollisionLines".}
   ## Check the collision between two lines defined by two points each, returns collision point by reference
 func checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshold: int32): bool {.importc: "CheckCollisionPointLine".}
@@ -1232,21 +1232,21 @@ func checkCollisionCircleLine*(center: Vector2, radius: float32, p1: Vector2, p2
   ## Check if circle collides with a line created betweeen two points [p1] and [p2]
 func getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "GetCollisionRec".}
   ## Get collision rectangle for two rectangles collision
-proc loadImagePriv(fileName: cstring): Image {.importc: "rlLoadImage", sideEffect.}
-proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw", sideEffect.}
-proc loadImageSvgPriv(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg", sideEffect.}
-proc loadImageAnimPriv(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim", sideEffect.}
-proc loadImageAnimFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, frames: ptr UncheckedArray[int32]): Image {.importc: "LoadImageAnimFromMemory", sideEffect.}
-proc loadImageFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Image {.importc: "LoadImageFromMemory", sideEffect.}
-proc loadImageFromTexturePriv(texture: Texture2D): Image {.importc: "LoadImageFromTexture", sideEffect.}
+proc loadImageImpl(fileName: cstring): Image {.importc: "rlLoadImage", sideEffect.}
+proc loadImageRawImpl(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw", sideEffect.}
+proc loadImageSvgImpl(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg", sideEffect.}
+proc loadImageAnimImpl(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim", sideEffect.}
+proc loadImageAnimFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, frames: ptr UncheckedArray[int32]): Image {.importc: "LoadImageAnimFromMemory", sideEffect.}
+proc loadImageFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Image {.importc: "LoadImageFromMemory", sideEffect.}
+proc loadImageFromTextureImpl(texture: Texture2D): Image {.importc: "LoadImageFromTexture", sideEffect.}
 proc loadImageFromScreen*(): Image {.importc: "LoadImageFromScreen", sideEffect.}
   ## Load image from screen buffer and (screenshot)
 func isImageReady*(image: Image): bool {.importc: "IsImageReady".}
   ## Check if an image is ready
 proc unloadImage(image: Image) {.importc: "UnloadImage", sideEffect.}
-proc exportImagePriv(image: Image, fileName: cstring): bool {.importc: "ExportImage", sideEffect.}
-proc exportImageToMemoryPriv(image: Image, fileType: cstring, fileSize: ptr int32): ptr uint8 {.importc: "ExportImageToMemory", sideEffect.}
-proc exportImageAsCodePriv(image: Image, fileName: cstring): bool {.importc: "ExportImageAsCode", sideEffect.}
+proc exportImageImpl(image: Image, fileName: cstring): bool {.importc: "ExportImage", sideEffect.}
+proc exportImageToMemoryImpl(image: Image, fileType: cstring, fileSize: ptr int32): ptr uint8 {.importc: "ExportImageToMemory", sideEffect.}
+proc exportImageAsCodeImpl(image: Image, fileName: cstring): bool {.importc: "ExportImageAsCode", sideEffect.}
 func genImageColor*(width: int32, height: int32, color: Color): Image {.importc: "GenImageColor".}
   ## Generate image: plain color
 func genImageGradientLinear*(width: int32, height: int32, direction: int32, start: Color, `end`: Color): Image {.importc: "GenImageGradientLinear".}
@@ -1263,15 +1263,15 @@ func genImagePerlinNoise*(width: int32, height: int32, offsetX: int32, offsetY: 
   ## Generate image: perlin noise
 func genImageCellular*(width: int32, height: int32, tileSize: int32): Image {.importc: "GenImageCellular".}
   ## Generate image: cellular algorithm, bigger tileSize means bigger cells
-func genImageTextPriv(width: int32, height: int32, text: cstring): Image {.importc: "GenImageText".}
+func genImageTextImpl(width: int32, height: int32, text: cstring): Image {.importc: "GenImageText".}
 func imageCopy*(image: Image): Image {.importc: "ImageCopy".}
   ## Create an image duplicate (useful for transformations)
 func imageFromImage*(image: Image, rec: Rectangle): Image {.importc: "ImageFromImage".}
   ## Create an image from another image piece
 func imageFromChannel*(image: Image, selectedChannel: int32): Image {.importc: "ImageFromChannel".}
   ## Create an image from a selected channel of another image (GRAYSCALE)
-func imageTextPriv(text: cstring, fontSize: int32, color: Color): Image {.importc: "ImageText".}
-func imageTextPriv(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
+func imageTextImpl(text: cstring, fontSize: int32, color: Color): Image {.importc: "ImageText".}
+func imageTextImpl(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
 func imageFormat*(image: var Image, newFormat: PixelFormat) {.importc: "ImageFormat".}
   ## Convert image data to desired format
 func imageToPOT*(image: var Image, fill: Color) {.importc: "ImageToPOT".}
@@ -1288,7 +1288,7 @@ func imageAlphaPremultiply*(image: var Image) {.importc: "ImageAlphaPremultiply"
   ## Premultiply alpha channel
 func imageBlurGaussian*(image: var Image, blurSize: int32) {.importc: "ImageBlurGaussian".}
   ## Apply Gaussian blur using a box blur approximation
-func imageKernelConvolutionPriv(image: ptr Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
+func imageKernelConvolutionImpl(image: ptr Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
 func imageResize*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize".}
   ## Resize image (Bicubic scaling algorithm)
 func imageResizeNN*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN".}
@@ -1321,8 +1321,8 @@ func imageColorBrightness*(image: var Image, brightness: int32) {.importc: "Imag
   ## Modify image color: brightness (-255 to 255)
 func imageColorReplace*(image: var Image, color: Color, replace: Color) {.importc: "ImageColorReplace".}
   ## Modify image color: replace color
-proc loadImageColorsPriv(image: Image): ptr UncheckedArray[Color] {.importc: "LoadImageColors", sideEffect.}
-proc loadImagePalettePriv(image: Image, maxPaletteSize: int32, colorCount: ptr int32): ptr UncheckedArray[Color] {.importc: "LoadImagePalette", sideEffect.}
+proc loadImageColorsImpl(image: Image): ptr UncheckedArray[Color] {.importc: "LoadImageColors", sideEffect.}
+proc loadImagePaletteImpl(image: Image, maxPaletteSize: int32, colorCount: ptr int32): ptr UncheckedArray[Color] {.importc: "LoadImagePalette", sideEffect.}
 func getImageAlphaBorder*(image: Image, threshold: float32): Rectangle {.importc: "GetImageAlphaBorder".}
   ## Get image alpha border rectangle
 func getImageColor*(image: Image, x: int32, y: int32): Color {.importc: "GetImageColor".}
@@ -1361,24 +1361,24 @@ func imageDrawTriangle*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, c
   ## Draw triangle with interpolated colors within an image
 func imageDrawTriangleLines*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "ImageDrawTriangleLines".}
   ## Draw triangle outline within an image
-func imageDrawTriangleFanPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleFan".}
-func imageDrawTriangleStripPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleStrip".}
+func imageDrawTriangleFanImpl(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleFan".}
+func imageDrawTriangleStripImpl(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleStrip".}
 func imageDraw*(dst: var Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) {.importc: "ImageDraw".}
   ## Draw a source image within a destination image (tint applied to source)
-func imageDrawTextPriv(dst: ptr Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
-func imageDrawTextPriv(dst: ptr Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
-proc loadTexturePriv(fileName: cstring): Texture2D {.importc: "LoadTexture", sideEffect.}
-proc loadTextureFromImagePriv(image: Image): Texture2D {.importc: "LoadTextureFromImage", sideEffect.}
-proc loadTextureCubemapPriv(image: Image, layout: CubemapLayout): TextureCubemap {.importc: "LoadTextureCubemap", sideEffect.}
-proc loadRenderTexturePriv(width: int32, height: int32): RenderTexture2D {.importc: "LoadRenderTexture", sideEffect.}
+func imageDrawTextImpl(dst: ptr Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
+func imageDrawTextImpl(dst: ptr Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
+proc loadTextureImpl(fileName: cstring): Texture2D {.importc: "LoadTexture", sideEffect.}
+proc loadTextureFromImageImpl(image: Image): Texture2D {.importc: "LoadTextureFromImage", sideEffect.}
+proc loadTextureCubemapImpl(image: Image, layout: CubemapLayout): TextureCubemap {.importc: "LoadTextureCubemap", sideEffect.}
+proc loadRenderTextureImpl(width: int32, height: int32): RenderTexture2D {.importc: "LoadRenderTexture", sideEffect.}
 func isTextureReady*(texture: Texture2D): bool {.importc: "IsTextureReady".}
   ## Check if a texture is ready
 proc unloadTexture(texture: Texture2D) {.importc: "UnloadTexture", sideEffect.}
 func isRenderTextureReady*(target: RenderTexture2D): bool {.importc: "IsRenderTextureReady".}
   ## Check if a render texture is ready
 proc unloadRenderTexture(target: RenderTexture2D) {.importc: "UnloadRenderTexture", sideEffect.}
-proc updateTexturePriv(texture: Texture2D, pixels: pointer) {.importc: "UpdateTexture", sideEffect.}
-proc updateTexturePriv(texture: Texture2D, rec: Rectangle, pixels: pointer) {.importc: "UpdateTextureRec", sideEffect.}
+proc updateTextureImpl(texture: Texture2D, pixels: pointer) {.importc: "UpdateTexture", sideEffect.}
+proc updateTextureImpl(texture: Texture2D, rec: Rectangle, pixels: pointer) {.importc: "UpdateTextureRec", sideEffect.}
 proc genTextureMipmaps*(texture: var Texture2D) {.importc: "GenTextureMipmaps", sideEffect.}
   ## Generate GPU mipmaps for a texture
 proc setTextureFilter*(texture: Texture2D, filter: TextureFilter) {.importc: "SetTextureFilter", sideEffect.}
@@ -1417,34 +1417,34 @@ func colorAlphaBlend*(dst: Color, src: Color, tint: Color): Color {.importc: "Co
   ## Get src alpha-blended into dst color with tint
 func colorLerp*(color1: Color, color2: Color, factor: float32): Color {.importc: "ColorLerp".}
   ## Get color lerp interpolation between two colors, factor [0.0f..1.0f]
-proc getPixelColorPriv(srcPtr: pointer, format: PixelFormat): Color {.importc: "GetPixelColor", sideEffect.}
-proc setPixelColorPriv(dstPtr: pointer, color: Color, format: PixelFormat) {.importc: "SetPixelColor", sideEffect.}
+proc getPixelColorImpl(srcPtr: pointer, format: PixelFormat): Color {.importc: "GetPixelColor", sideEffect.}
+proc setPixelColorImpl(dstPtr: pointer, color: Color, format: PixelFormat) {.importc: "SetPixelColor", sideEffect.}
 func getPixelDataSize*(width: int32, height: int32, format: PixelFormat): int32 {.importc: "GetPixelDataSize".}
   ## Get pixel data size in bytes for certain format
 proc getFontDefault*(): Font {.importc: "GetFontDefault", sideEffect.}
   ## Get the default Font
-proc loadFontPriv(fileName: cstring): Font {.importc: "LoadFont", sideEffect.}
-proc loadFontPriv(fileName: cstring, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontEx", sideEffect.}
-proc loadFontFromImagePriv(image: Image, key: Color, firstChar: int32): Font {.importc: "LoadFontFromImage", sideEffect.}
-proc loadFontFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontFromMemory", sideEffect.}
+proc loadFontImpl(fileName: cstring): Font {.importc: "LoadFont", sideEffect.}
+proc loadFontImpl(fileName: cstring, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontEx", sideEffect.}
+proc loadFontFromImageImpl(image: Image, key: Color, firstChar: int32): Font {.importc: "LoadFontFromImage", sideEffect.}
+proc loadFontFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontFromMemory", sideEffect.}
 func isFontReady*(font: Font): bool {.importc: "IsFontReady".}
   ## Check if a font is ready
-proc loadFontDataPriv(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData", sideEffect.}
-func genImageFontAtlasPriv(glyphs: ptr UncheckedArray[GlyphInfo], glyphRecs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
+proc loadFontDataImpl(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData", sideEffect.}
+func genImageFontAtlasImpl(glyphs: ptr UncheckedArray[GlyphInfo], glyphRecs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
 proc unloadFont(font: Font) {.importc: "UnloadFont", sideEffect.}
-proc exportFontAsCodePriv(font: Font, fileName: cstring): bool {.importc: "ExportFontAsCode", sideEffect.}
+proc exportFontAsCodeImpl(font: Font, fileName: cstring): bool {.importc: "ExportFontAsCode", sideEffect.}
 proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS", sideEffect.}
   ## Draw current FPS
-proc drawTextPriv(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "rlDrawText", sideEffect.}
-proc drawTextPriv(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "rlDrawTextEx", sideEffect.}
-proc drawTextPriv(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro", sideEffect.}
+proc drawTextImpl(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "rlDrawText", sideEffect.}
+proc drawTextImpl(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "rlDrawTextEx", sideEffect.}
+proc drawTextImpl(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro", sideEffect.}
 proc drawTextCodepoint*(font: Font, codepoint: Rune, position: Vector2, fontSize: float32, tint: Color) {.importc: "DrawTextCodepoint", sideEffect.}
   ## Draw one character (codepoint)
-proc drawTextCodepointsPriv(font: Font, codepoints: ptr UncheckedArray[int32], codepointCount: int32, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextCodepoints", sideEffect.}
+proc drawTextCodepointsImpl(font: Font, codepoints: ptr UncheckedArray[int32], codepointCount: int32, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextCodepoints", sideEffect.}
 proc setTextLineSpacing*(spacing: int32) {.importc: "SetTextLineSpacing", sideEffect.}
   ## Set vertical line spacing when drawing with line-breaks
-proc measureTextPriv(text: cstring, fontSize: int32): int32 {.importc: "MeasureText", sideEffect.}
-func measureTextPriv(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
+proc measureTextImpl(text: cstring, fontSize: int32): int32 {.importc: "MeasureText", sideEffect.}
+func measureTextImpl(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
 func getGlyphIndex*(font: Font, codepoint: Rune): int32 {.importc: "GetGlyphIndex".}
   ## Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
 func getGlyphInfo*(font: Font, codepoint: Rune): GlyphInfo {.importc: "GetGlyphInfo".}
@@ -1459,7 +1459,7 @@ proc drawCircle3D*(center: Vector3, radius: float32, rotationAxis: Vector3, rota
   ## Draw a circle in 3D world space
 proc drawTriangle3D*(v1: Vector3, v2: Vector3, v3: Vector3, color: Color) {.importc: "DrawTriangle3D", sideEffect.}
   ## Draw a color-filled triangle (vertex in counter-clockwise order!)
-proc drawTriangleStrip3DPriv(points: ptr UncheckedArray[Vector3], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip3D", sideEffect.}
+proc drawTriangleStrip3DImpl(points: ptr UncheckedArray[Vector3], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip3D", sideEffect.}
 proc drawCube*(position: Vector3, width: float32, height: float32, length: float32, color: Color) {.importc: "DrawCube", sideEffect.}
   ## Draw cube
 proc drawCube*(position: Vector3, size: Vector3, color: Color) {.importc: "DrawCubeV", sideEffect.}
@@ -1492,8 +1492,8 @@ proc drawRay*(ray: Ray, color: Color) {.importc: "DrawRay", sideEffect.}
   ## Draw a ray line
 proc drawGrid*(slices: int32, spacing: float32) {.importc: "DrawGrid", sideEffect.}
   ## Draw a grid (centered at (0, 0, 0))
-proc loadModelPriv(fileName: cstring): Model {.importc: "LoadModel", sideEffect.}
-proc loadModelFromMeshPriv(mesh: Mesh): Model {.importc: "LoadModelFromMesh", sideEffect.}
+proc loadModelImpl(fileName: cstring): Model {.importc: "LoadModel", sideEffect.}
+proc loadModelFromMeshImpl(mesh: Mesh): Model {.importc: "LoadModelFromMesh", sideEffect.}
 func isModelReady*(model: Model): bool {.importc: "IsModelReady".}
   ## Check if a model is ready
 proc unloadModel(model: Model) {.importc: "UnloadModel", sideEffect.}
@@ -1521,17 +1521,17 @@ proc drawBillboard*(camera: Camera, texture: Texture2D, source: Rectangle, posit
   ## Draw a billboard texture defined by source and rotation
 proc uploadMesh*(mesh: var Mesh, dynamic: bool) {.importc: "UploadMesh", sideEffect.}
   ## Upload mesh vertex data in GPU and provide VAO/VBO ids
-proc updateMeshBufferPriv(mesh: Mesh, index: int32, data: pointer, dataSize: int32, offset: int32) {.importc: "UpdateMeshBuffer", sideEffect.}
+proc updateMeshBufferImpl(mesh: Mesh, index: int32, data: pointer, dataSize: int32, offset: int32) {.importc: "UpdateMeshBuffer", sideEffect.}
 proc unloadMesh(mesh: Mesh) {.importc: "UnloadMesh", sideEffect.}
 proc drawMesh*(mesh: Mesh, material: Material, transform: Matrix) {.importc: "DrawMesh", sideEffect.}
   ## Draw a 3d mesh with material and transform
-proc drawMeshInstancedPriv(mesh: Mesh, material: Material, transforms: ptr UncheckedArray[Matrix], instances: int32) {.importc: "DrawMeshInstanced", sideEffect.}
+proc drawMeshInstancedImpl(mesh: Mesh, material: Material, transforms: ptr UncheckedArray[Matrix], instances: int32) {.importc: "DrawMeshInstanced", sideEffect.}
 func getMeshBoundingBox*(mesh: Mesh): BoundingBox {.importc: "GetMeshBoundingBox".}
   ## Compute mesh bounding box limits
 proc genMeshTangents*(mesh: var Mesh) {.importc: "GenMeshTangents", sideEffect.}
   ## Compute mesh tangents
-proc exportMeshPriv(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMesh", sideEffect.}
-proc exportMeshAsCodePriv(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMeshAsCode", sideEffect.}
+proc exportMeshImpl(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMesh", sideEffect.}
+proc exportMeshAsCodeImpl(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMeshAsCode", sideEffect.}
 proc genMeshPoly*(sides: int32, radius: float32): Mesh {.importc: "GenMeshPoly", sideEffect.}
   ## Generate polygonal mesh
 proc genMeshPlane*(width: float32, length: float32, resX: int32, resZ: int32): Mesh {.importc: "GenMeshPlane", sideEffect.}
@@ -1554,13 +1554,13 @@ proc genMeshHeightmap*(heightmap: Image, size: Vector3): Mesh {.importc: "GenMes
   ## Generate heightmap mesh from image data
 proc genMeshCubicmap*(cubicmap: Image, cubeSize: Vector3): Mesh {.importc: "GenMeshCubicmap", sideEffect.}
   ## Generate cubes-based map mesh from image data
-proc loadMaterialsPriv(fileName: cstring, materialCount: ptr int32): ptr UncheckedArray[Material] {.importc: "LoadMaterials", sideEffect.}
+proc loadMaterialsImpl(fileName: cstring, materialCount: ptr int32): ptr UncheckedArray[Material] {.importc: "LoadMaterials", sideEffect.}
 proc loadMaterialDefault*(): Material {.importc: "LoadMaterialDefault", sideEffect.}
   ## Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 func isMaterialReady*(material: Material): bool {.importc: "IsMaterialReady".}
   ## Check if a material is ready
 proc unloadMaterial(material: Material) {.importc: "UnloadMaterial", sideEffect.}
-proc loadModelAnimationsPriv(fileName: cstring, animCount: ptr int32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations", sideEffect.}
+proc loadModelAnimationsImpl(fileName: cstring, animCount: ptr int32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations", sideEffect.}
 proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation", sideEffect.}
   ## Update model animation pose
 proc unloadModelAnimation(anim: ModelAnimation) {.importc: "UnloadModelAnimation", sideEffect.}
@@ -1594,21 +1594,21 @@ proc setMasterVolume*(volume: float32) {.importc: "SetMasterVolume", sideEffect.
   ## Set master volume (listener)
 proc getMasterVolume*(): float32 {.importc: "GetMasterVolume", sideEffect.}
   ## Get master volume (listener)
-proc loadWavePriv(fileName: cstring): Wave {.importc: "LoadWave", sideEffect.}
-proc loadWaveFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Wave {.importc: "LoadWaveFromMemory", sideEffect.}
+proc loadWaveImpl(fileName: cstring): Wave {.importc: "LoadWave", sideEffect.}
+proc loadWaveFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Wave {.importc: "LoadWaveFromMemory", sideEffect.}
 func isWaveReady*(wave: Wave): bool {.importc: "IsWaveReady".}
   ## Checks if wave data is ready
-proc loadSoundPriv(fileName: cstring): Sound {.importc: "LoadSound", sideEffect.}
-proc loadSoundFromWavePriv(wave: Wave): Sound {.importc: "LoadSoundFromWave", sideEffect.}
-proc loadSoundAliasPriv(source: Sound): Sound {.importc: "LoadSoundAlias", sideEffect.}
+proc loadSoundImpl(fileName: cstring): Sound {.importc: "LoadSound", sideEffect.}
+proc loadSoundFromWaveImpl(wave: Wave): Sound {.importc: "LoadSoundFromWave", sideEffect.}
+proc loadSoundAliasImpl(source: Sound): Sound {.importc: "LoadSoundAlias", sideEffect.}
 func isSoundReady*(sound: Sound): bool {.importc: "IsSoundReady".}
   ## Checks if a sound is ready
-proc updateSoundPriv(sound: Sound, data: pointer, sampleCount: int32) {.importc: "UpdateSound", sideEffect.}
+proc updateSoundImpl(sound: Sound, data: pointer, sampleCount: int32) {.importc: "UpdateSound", sideEffect.}
 proc unloadWave(wave: Wave) {.importc: "UnloadWave", sideEffect.}
 proc unloadSound(sound: Sound) {.importc: "UnloadSound", sideEffect.}
 proc unloadSoundAlias(alias: Sound) {.importc: "UnloadSoundAlias", sideEffect.}
-proc exportWavePriv(wave: Wave, fileName: cstring): bool {.importc: "ExportWave", sideEffect.}
-proc exportWaveAsCodePriv(wave: Wave, fileName: cstring): bool {.importc: "ExportWaveAsCode", sideEffect.}
+proc exportWaveImpl(wave: Wave, fileName: cstring): bool {.importc: "ExportWave", sideEffect.}
+proc exportWaveAsCodeImpl(wave: Wave, fileName: cstring): bool {.importc: "ExportWaveAsCode", sideEffect.}
 proc playSound*(sound: Sound) {.importc: "PlaySound", sideEffect.}
   ## Play a sound
 proc stopSound*(sound: Sound) {.importc: "StopSound", sideEffect.}
@@ -1631,9 +1631,9 @@ func waveCrop*(wave: var Wave, initFrame: int32, finalFrame: int32) {.importc: "
   ## Crop a wave to defined frames range
 func waveFormat*(wave: var Wave, sampleRate: int32, sampleSize: int32, channels: int32) {.importc: "WaveFormat".}
   ## Convert wave data to desired format
-proc loadWaveSamplesPriv(wave: Wave): ptr UncheckedArray[float32] {.importc: "LoadWaveSamples", sideEffect.}
-proc loadMusicStreamPriv(fileName: cstring): Music {.importc: "LoadMusicStream", sideEffect.}
-proc loadMusicStreamFromMemoryPriv(fileType: cstring, data: ptr UncheckedArray[uint8], dataSize: int32): Music {.importc: "LoadMusicStreamFromMemory", sideEffect.}
+proc loadWaveSamplesImpl(wave: Wave): ptr UncheckedArray[float32] {.importc: "LoadWaveSamples", sideEffect.}
+proc loadMusicStreamImpl(fileName: cstring): Music {.importc: "LoadMusicStream", sideEffect.}
+proc loadMusicStreamFromMemoryImpl(fileType: cstring, data: ptr UncheckedArray[uint8], dataSize: int32): Music {.importc: "LoadMusicStreamFromMemory", sideEffect.}
 func isMusicReady*(music: Music): bool {.importc: "IsMusicReady".}
   ## Checks if a music stream is ready
 proc unloadMusicStream(music: Music) {.importc: "UnloadMusicStream", sideEffect.}
@@ -1661,11 +1661,11 @@ func getMusicTimeLength*(music: Music): float32 {.importc: "GetMusicTimeLength".
   ## Get music time length (in seconds)
 proc getMusicTimePlayed*(music: Music): float32 {.importc: "GetMusicTimePlayed", sideEffect.}
   ## Get current music time played (in seconds)
-proc loadAudioStreamPriv(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream {.importc: "LoadAudioStream", sideEffect.}
+proc loadAudioStreamImpl(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream {.importc: "LoadAudioStream", sideEffect.}
 func isAudioStreamReady*(stream: AudioStream): bool {.importc: "IsAudioStreamReady".}
   ## Checks if an audio stream is ready
 proc unloadAudioStream(stream: AudioStream) {.importc: "UnloadAudioStream", sideEffect.}
-proc updateAudioStreamPriv(stream: AudioStream, data: pointer, frameCount: int32) {.importc: "UpdateAudioStream", sideEffect.}
+proc updateAudioStreamImpl(stream: AudioStream, data: pointer, frameCount: int32) {.importc: "UpdateAudioStream", sideEffect.}
 proc isAudioStreamProcessed*(stream: AudioStream): bool {.importc: "IsAudioStreamProcessed", sideEffect.}
   ## Check if any audio stream buffers requires refill
 proc playAudioStream*(stream: AudioStream) {.importc: "PlayAudioStream", sideEffect.}
@@ -2278,171 +2278,171 @@ proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
 
 proc setWindowIcons*(images: openArray[Image]) =
   ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
-  setWindowIconsPriv(cast[ptr UncheckedArray[Image]](images), images.len.int32)
+  setWindowIconsImpl(cast[ptr UncheckedArray[Image]](images), images.len.int32)
 
 proc setWindowTitle*(title: string) =
   ## Set title for window (only PLATFORM_DESKTOP and PLATFORM_WEB)
-  setWindowTitlePriv(title.cstring)
+  setWindowTitleImpl(title.cstring)
 
 proc getMonitorName*(monitor: int32): string =
   ## Get the human-readable, UTF-8 encoded name of the specified monitor
-  $getMonitorNamePriv(monitor)
+  $getMonitorNameImpl(monitor)
 
 proc setClipboardText*(text: string) =
   ## Set clipboard text content
-  setClipboardTextPriv(text.cstring)
+  setClipboardTextImpl(text.cstring)
 
 proc getClipboardText*(): string =
   ## Get clipboard text content
-  $getClipboardTextPriv()
+  $getClipboardTextImpl()
 
 proc getShaderLocation*(shader: Shader, uniformName: string): ShaderLocation =
   ## Get shader uniform location
-  getShaderLocationPriv(shader, uniformName.cstring)
+  getShaderLocationImpl(shader, uniformName.cstring)
 
 proc getShaderLocationAttrib*(shader: Shader, attribName: string): ShaderLocation =
   ## Get shader attribute location
-  getShaderLocationAttribPriv(shader, attribName.cstring)
+  getShaderLocationAttribImpl(shader, attribName.cstring)
 
 proc takeScreenshot*(fileName: string) =
   ## Takes a screenshot of current screen (filename extension defines format)
-  takeScreenshotPriv(fileName.cstring)
+  takeScreenshotImpl(fileName.cstring)
 
 proc loadAutomationEventList*(fileName: string): AutomationEventList =
   ## Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
-  loadAutomationEventListPriv(fileName.cstring)
+  loadAutomationEventListImpl(fileName.cstring)
 
 proc exportAutomationEventList*(list: AutomationEventList, fileName: string): bool =
   ## Export automation events list as text file
-  exportAutomationEventListPriv(list, fileName.cstring)
+  exportAutomationEventListImpl(list, fileName.cstring)
 
 proc getGamepadName*(gamepad: int32): string =
   ## Get gamepad internal name id
-  $getGamepadNamePriv(gamepad)
+  $getGamepadNameImpl(gamepad)
 
 proc setGamepadMappings*(mappings: string): int32 =
   ## Set internal gamepad mappings (SDL_GameControllerDB)
-  setGamepadMappingsPriv(mappings.cstring)
+  setGamepadMappingsImpl(mappings.cstring)
 
 proc drawLineStrip*(points: openArray[Vector2], color: Color) =
   ## Draw lines sequence (using gl lines)
-  drawLineStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  drawLineStripImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc drawTriangleFan*(points: openArray[Vector2], color: Color) =
   ## Draw a triangle fan defined by points (first vertex is the center)
-  drawTriangleFanPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  drawTriangleFanImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc drawTriangleStrip*(points: openArray[Vector2], color: Color) =
   ## Draw a triangle strip defined by points
-  drawTriangleStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  drawTriangleStripImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc drawSplineLinear*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: Linear, minimum 2 points
-  drawSplineLinearPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+  drawSplineLinearImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc drawSplineBasis*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: B-Spline, minimum 4 points
-  drawSplineBasisPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+  drawSplineBasisImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc drawSplineCatmullRom*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: Catmull-Rom, minimum 4 points
-  drawSplineCatmullRomPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+  drawSplineCatmullRomImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc drawSplineBezierQuadratic*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
-  drawSplineBezierQuadraticPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+  drawSplineBezierQuadraticImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc drawSplineBezierCubic*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
-  drawSplineBezierCubicPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+  drawSplineBezierCubicImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool =
   ## Check if point is within a polygon described by array of vertices
-  checkCollisionPointPolyPriv(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
+  checkCollisionPointPolyImpl(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
 
 proc exportImage*(image: Image, fileName: string): bool =
   ## Export image data to file, returns true on success
-  exportImagePriv(image, fileName.cstring)
+  exportImageImpl(image, fileName.cstring)
 
 proc exportImageAsCode*(image: Image, fileName: string): bool =
   ## Export image as code file defining an array of bytes, returns true on success
-  exportImageAsCodePriv(image, fileName.cstring)
+  exportImageAsCodeImpl(image, fileName.cstring)
 
 proc genImageText*(width: int32, height: int32, text: string): Image =
   ## Generate image: grayscale image from text data
-  genImageTextPriv(width, height, text.cstring)
+  genImageTextImpl(width, height, text.cstring)
 
 proc imageText*(text: string, fontSize: int32, color: Color): Image =
   ## Create an image from text (default font)
-  imageTextPriv(text.cstring, fontSize, color)
+  imageTextImpl(text.cstring, fontSize, color)
 
 proc imageText*(font: Font, text: string, fontSize: float32, spacing: float32, tint: Color): Image =
   ## Create an image from text (custom sprite font)
-  imageTextPriv(font, text.cstring, fontSize, spacing, tint)
+  imageTextImpl(font, text.cstring, fontSize, spacing, tint)
 
 proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
   ## Apply custom square convolution kernel to image
-  imageKernelConvolutionPriv(addr image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
+  imageKernelConvolutionImpl(addr image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
 
 proc imageDrawTriangleFan*(dst: var Image, points: openArray[Vector2], color: Color) =
   ## Draw a triangle fan defined by points within an image (first vertex is the center)
-  imageDrawTriangleFanPriv(addr dst, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  imageDrawTriangleFanImpl(addr dst, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc imageDrawTriangleStrip*(dst: var Image, points: openArray[Vector2], color: Color) =
   ## Draw a triangle strip defined by points within an image
-  imageDrawTriangleStripPriv(addr dst, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  imageDrawTriangleStripImpl(addr dst, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc imageDrawText*(dst: var Image, text: string, posX: int32, posY: int32, fontSize: int32, color: Color) =
   ## Draw text (using default font) within an image (destination)
-  imageDrawTextPriv(addr dst, text.cstring, posX, posY, fontSize, color)
+  imageDrawTextImpl(addr dst, text.cstring, posX, posY, fontSize, color)
 
 proc imageDrawText*(dst: var Image, font: Font, text: string, position: Vector2, fontSize: float32, spacing: float32, tint: Color) =
   ## Draw text (custom sprite font) within an image (destination)
-  imageDrawTextPriv(addr dst, font, text.cstring, position, fontSize, spacing, tint)
+  imageDrawTextImpl(addr dst, font, text.cstring, position, fontSize, spacing, tint)
 
 proc exportFontAsCode*(font: Font, fileName: string): bool =
   ## Export font as code file, returns true on success
-  exportFontAsCodePriv(font, fileName.cstring)
+  exportFontAsCodeImpl(font, fileName.cstring)
 
 proc drawText*(text: string, posX: int32, posY: int32, fontSize: int32, color: Color) =
   ## Draw text (using default font)
-  drawTextPriv(text.cstring, posX, posY, fontSize, color)
+  drawTextImpl(text.cstring, posX, posY, fontSize, color)
 
 proc drawText*(font: Font, text: string, position: Vector2, fontSize: float32, spacing: float32, tint: Color) =
   ## Draw text using font and additional parameters
-  drawTextPriv(font, text.cstring, position, fontSize, spacing, tint)
+  drawTextImpl(font, text.cstring, position, fontSize, spacing, tint)
 
 proc drawText*(font: Font, text: string, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) =
   ## Draw text using Font and pro parameters (rotation)
-  drawTextPriv(font, text.cstring, position, origin, rotation, fontSize, spacing, tint)
+  drawTextImpl(font, text.cstring, position, origin, rotation, fontSize, spacing, tint)
 
 proc measureText*(text: string, fontSize: int32): int32 =
   ## Measure string width for default font
-  measureTextPriv(text.cstring, fontSize)
+  measureTextImpl(text.cstring, fontSize)
 
 proc measureText*(font: Font, text: string, fontSize: float32, spacing: float32): Vector2 =
   ## Measure string size for Font
-  measureTextPriv(font, text.cstring, fontSize, spacing)
+  measureTextImpl(font, text.cstring, fontSize, spacing)
 
 proc drawTriangleStrip3D*(points: openArray[Vector3], color: Color) =
   ## Draw a triangle strip defined by points
-  drawTriangleStrip3DPriv(cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
+  drawTriangleStrip3DImpl(cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
 
 proc exportMesh*(mesh: Mesh, fileName: string): bool =
   ## Export mesh data to file, returns true on success
-  exportMeshPriv(mesh, fileName.cstring)
+  exportMeshImpl(mesh, fileName.cstring)
 
 proc exportMeshAsCode*(mesh: Mesh, fileName: string): bool =
   ## Export mesh as code file (.h) defining multiple arrays of vertex attributes
-  exportMeshAsCodePriv(mesh, fileName.cstring)
+  exportMeshAsCodeImpl(mesh, fileName.cstring)
 
 proc exportWave*(wave: Wave, fileName: string): bool =
   ## Export wave data to file, returns true on success
-  exportWavePriv(wave, fileName.cstring)
+  exportWaveImpl(wave, fileName.cstring)
 
 proc exportWaveAsCode*(wave: Wave, fileName: string): bool =
   ## Export wave sample data to code (.h), returns true on success
-  exportWaveAsCodePriv(wave, fileName.cstring)
+  exportWaveAsCodeImpl(wave, fileName.cstring)
 
 
 type
@@ -2466,7 +2466,7 @@ proc wrapperTraceLogCallback(logLevel: int32; text: cstring; args: va_list) {.cd
 proc setTraceLogCallback*(callback: TraceLogCallback) =
   ## Set custom trace log
   traceLogCallback = callback
-  setTraceLogCallbackPriv(cast[TraceLogCallbackImpl](wrapperTraceLogCallback))
+  setTraceLogCallbackImpl(cast[TraceLogCallbackImpl](wrapperTraceLogCallback))
 
 proc toWeakImage*(data: openArray[byte], width, height: int32, format: PixelFormat): WeakImage {.inline.} =
   Image(data: cast[pointer](data), width: width, height: height, mipmaps: 1, format: format).WeakImage
@@ -2476,14 +2476,14 @@ proc toWeakWave*(data: openArray[byte], frameCount, sampleRate, sampleSize, chan
 
 proc initWindow*(width: int32, height: int32, title: string) =
   ## Initialize window and OpenGL context
-  initWindowPriv(width, height, title.cstring)
+  initWindowImpl(width, height, title.cstring)
   if not isWindowReady(): raiseRaylibError("Failed to create Window")
 
 proc getDroppedFiles*(): seq[string] =
   ## Get dropped files names
-  let dropfiles = loadDroppedFilesPriv()
+  let dropfiles = loadDroppedFilesImpl()
   result = cstringArrayToSeq(dropfiles.paths, dropfiles.count)
-  unloadDroppedFilesPriv(dropfiles) # Clear internal buffers
+  unloadDroppedFilesImpl(dropfiles) # Clear internal buffers
 
 proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
   ## Export data to code (.nim), returns true on success
@@ -2522,12 +2522,12 @@ proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
 
 proc loadShader*(vsFileName, fsFileName: string): Shader =
   ## Load shader from files and bind default locations
-  result = loadShaderPriv(if vsFileName.len == 0: nil else: vsFileName.cstring,
+  result = loadShaderImpl(if vsFileName.len == 0: nil else: vsFileName.cstring,
       if fsFileName.len == 0: nil else: fsFileName.cstring)
 
 proc loadShaderFromMemory*(vsCode, fsCode: string): Shader =
   ## Load shader from code strings and bind default locations
-  result = loadShaderFromMemoryPriv(if vsCode.len == 0: nil else: vsCode.cstring,
+  result = loadShaderFromMemoryImpl(if vsCode.len == 0: nil else: vsCode.cstring,
       if fsCode.len == 0: nil else: fsCode.cstring)
 
 type
@@ -2548,85 +2548,85 @@ template kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = Vec4
 
 proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: T) =
   ## Set shader uniform value
-  setShaderValuePriv(shader, locIndex, addr value, kind(T))
+  setShaderValueImpl(shader, locIndex, addr value, kind(T))
 
 proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: openArray[T]) =
   ## Set shader uniform value vector
-  setShaderValueVPriv(shader, locIndex, cast[pointer](value), kind(T), value.len.int32)
+  setShaderValueVImpl(shader, locIndex, cast[pointer](value), kind(T), value.len.int32)
 
 proc loadModelAnimations*(fileName: string): RArray[ModelAnimation] =
   ## Load model animations from file
   var len = 0'i32
-  let data = loadModelAnimationsPriv(fileName.cstring, addr len)
+  let data = loadModelAnimationsImpl(fileName.cstring, addr len)
   if len <= 0: raiseRaylibError("Failed to load ModelAnimations from " & fileName)
   result = RArray[ModelAnimation](len: len.int, data: data)
 
 proc loadWaveSamples*(wave: Wave): RArray[float32] =
   ## Load samples data from wave as a floats array
-  let data = loadWaveSamplesPriv(wave)
+  let data = loadWaveSamplesImpl(wave)
   let len = int(wave.frameCount * wave.channels)
   result = RArray[float32](len: len, data: data)
 
 proc loadImageColors*(image: Image): RArray[Color] =
   ## Load color data from image as a Color array (RGBA - 32bit)
-  let data = loadImageColorsPriv(image)
+  let data = loadImageColorsImpl(image)
   let len = int(image.width * image.height)
   result = RArray[Color](len: len, data: data)
 
 proc loadImagePalette*(image: Image; maxPaletteSize: int32): RArray[Color] =
   ## Load colors palette from image as a Color array (RGBA - 32bit)
   var len = 0'i32
-  let data = loadImagePalettePriv(image, maxPaletteSize, addr len)
+  let data = loadImagePaletteImpl(image, maxPaletteSize, addr len)
   result = RArray[Color](len: len, data: data)
 
 proc loadMaterials*(fileName: string): RArray[Material] =
   ## Load materials from model file
   var len = 0'i32
-  let data = loadMaterialsPriv(fileName.cstring, addr len)
+  let data = loadMaterialsImpl(fileName.cstring, addr len)
   if len <= 0: raiseRaylibError("Failed to load Materials from " & fileName)
   result = RArray[Material](len: len, data: data)
 
 proc loadImage*(fileName: string): Image =
   ## Load image from file into CPU memory (RAM)
-  result = loadImagePriv(fileName.cstring)
+  result = loadImageImpl(fileName.cstring)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
 
 proc loadImageRaw*(fileName: string, width, height: int32, format: PixelFormat, headerSize: int32): Image =
   ## Load image sequence from file (frames appended to image.data)
-  result = loadImageRawPriv(fileName.cstring, width, height, format, headerSize)
+  result = loadImageRawImpl(fileName.cstring, width, height, format, headerSize)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
 
 proc loadImageAnim*(fileName: string, frames: out int32): Image =
   ## Load image sequence from file (frames appended to image.data)
-  result = loadImageAnimPriv(fileName.cstring, frames)
+  result = loadImageAnimImpl(fileName.cstring, frames)
   if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from " & fileName)
 
 proc loadImageSvg*(fileNameOrString: string, width, height: int32): Image =
   ## Load image from SVG file data or string with specified size
-  result = loadImageSvgPriv(fileNameOrString.cstring, width, height)
+  result = loadImageSvgImpl(fileNameOrString.cstring, width, height)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from SVG")
 
 proc loadImageAnimFromMemory*(fileType: string, fileData: openArray[uint8], frames: openArray[int32]): Image =
   ## Load image sequence from memory buffer
-  result = loadImageAnimFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+  result = loadImageAnimFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32, cast[ptr UncheckedArray[int32]](frames))
   if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from buffer")
 
 proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
-  result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+  result = loadImageFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from buffer")
 
 proc loadImageFromTexture*(texture: Texture2D): Image =
   ## Load image from GPU texture data
-  result = loadImageFromTexturePriv(texture)
+  result = loadImageFromTextureImpl(texture)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from Texture")
 
 proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
   ## Export image to memory buffer
   var len = 0'i32
-  let data = exportImageToMemoryPriv(image, fileType.cstring, addr len)
+  let data = exportImageToMemoryImpl(image, fileType.cstring, addr len)
   result = RArray[uint8](len: len, data: cast[ptr UncheckedArray[uint8]](data))
 
 type
@@ -2649,27 +2649,27 @@ proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: 
       "Mismatch between expected and actual data size"
   let image = Image(data: cast[pointer](pixels), width: width, height: height,
       format: kind(T), mipmaps: 1).WeakImage
-  result = loadTextureFromImagePriv(image.Image)
+  result = loadTextureFromImageImpl(image.Image)
   if not isTextureReady(result): raiseRaylibError("Failed to load Texture from buffer")
 
 proc loadTexture*(fileName: string): Texture2D =
   ## Load texture from file into GPU memory (VRAM)
-  result = loadTexturePriv(fileName.cstring)
+  result = loadTextureImpl(fileName.cstring)
   if not isTextureReady(result): raiseRaylibError("Failed to load Texture from " & fileName)
 
 proc loadTextureFromImage*(image: Image): Texture2D =
   ## Load texture from image data
-  result = loadTextureFromImagePriv(image)
+  result = loadTextureFromImageImpl(image)
   if not isTextureReady(result): raiseRaylibError("Failed to load Texture from Image")
 
 proc loadTextureCubemap*(image: Image, layout: CubemapLayout): TextureCubemap =
   ## Load cubemap from image, multiple image cubemap layouts supported
-  result = loadTextureCubemapPriv(image, layout)
+  result = loadTextureCubemapImpl(image, layout)
   if not isTextureReady(result): raiseRaylibError("Failed to load Texture from Cubemap")
 
 proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
   ## Load texture for rendering (framebuffer)
-  result = loadRenderTexturePriv(width, height)
+  result = loadRenderTextureImpl(width, height)
   if not isRenderTextureReady(result): raiseRaylibError("Failed to load RenderTexture")
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
@@ -2677,70 +2677,70 @@ proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   assert texture.format == kind(T), "Incompatible texture format"
   assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
-  updateTexturePriv(texture, cast[pointer](pixels))
+  updateTextureImpl(texture, cast[pointer](pixels))
 
 proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
   ## Update GPU texture rectangle with new data
   assert texture.format == kind(T), "Incompatible texture format"
   assert getPixelDataSize(rec.width.int32, rec.height.int32, texture.format) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
-  updateTexturePriv(texture, rec, cast[pointer](pixels))
+  updateTextureImpl(texture, rec, cast[pointer](pixels))
 
 proc getPixelColor*[T: Pixel](pixel: T): Color =
   ## Get Color from a source pixel pointer of certain format
   assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
-  getPixelColorPriv(addr pixel, kind(T))
+  getPixelColorImpl(addr pixel, kind(T))
 
 proc setPixelColor*[T: Pixel](pixel: var T, color: Color) =
   ## Set color formatted into destination pixel pointer
   assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
-  setPixelColorPriv(addr pixel, color, kind(T))
+  setPixelColorImpl(addr pixel, color, kind(T))
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; codepoints: openArray[int32];
     `type`: FontType): RArray[GlyphInfo] =
   ## Load font data for further use
-  let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
+  let data = loadFontDataImpl(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
       fontSize, if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints),
       codepoints.len.int32, `type`)
   result = RArray[GlyphInfo](len: if codepoints.len == 0: 95 else: codepoints.len, data: data)
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize, glyphCount: int32;
     `type`: FontType): RArray[GlyphInfo] =
-  let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
+  let data = loadFontDataImpl(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
       fontSize, nil, glyphCount, `type`)
   result = RArray[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
 
 proc loadFont*(fileName: string): Font =
   ## Load font from file into GPU memory (VRAM)
-  result = loadFontPriv(fileName.cstring)
+  result = loadFontImpl(fileName.cstring)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFont*(fileName: string; fontSize: int32; codepoints: openArray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for codepoints to load the default character set
-  result = loadFontPriv(fileName.cstring, fontSize,
+  result = loadFontImpl(fileName.cstring, fontSize,
       if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFont*(fileName: string; fontSize, glyphCount: int32): Font =
-  result = loadFontPriv(fileName.cstring, fontSize, nil, glyphCount)
+  result = loadFontImpl(fileName.cstring, fontSize, nil, glyphCount)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFontFromImage*(image: Image, key: Color, firstChar: int32): Font =
   ## Load font from Image (XNA style)
-  result = loadFontFromImagePriv(image, key, firstChar)
+  result = loadFontFromImageImpl(image, key, firstChar)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
 
 proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
     codepoints: openArray[int32]): Font =
   ## Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
-  result = loadFontFromMemoryPriv(fileType.cstring,
+  result = loadFontFromMemoryImpl(fileType.cstring,
       cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
       if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
 
 proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
     glyphCount: int32): Font =
-  result = loadFontFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+  result = loadFontFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32, fontSize, nil, glyphCount)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
 
@@ -2750,7 +2750,7 @@ proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, 
   result.glyphCount = chars.len.int32
   result.glyphs = chars.data
   wasMoved(chars)
-  let atlas = genImageFontAtlasPriv(result.glyphs, addr result.recs, result.glyphCount, baseSize,
+  let atlas = genImageFontAtlasImpl(result.glyphs, addr result.recs, result.glyphCount, baseSize,
       padding, packMethod)
   result.texture = loadTextureFromImage(atlas)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
@@ -2759,83 +2759,83 @@ proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out RArray[Rectangle]
     padding: int32; packMethod: int32): Image =
   ## Generate image font atlas using chars info
   var data: ptr UncheckedArray[Rectangle] = nil
-  result = genImageFontAtlasPriv(cast[ptr UncheckedArray[GlyphInfo]](chars), addr data,
+  result = genImageFontAtlasImpl(cast[ptr UncheckedArray[GlyphInfo]](chars), addr data,
       chars.len.int32, fontSize, padding, packMethod)
   recs = RArray[Rectangle](len: chars.len, data: data)
 
 proc updateMeshBuffer*[T](mesh: var Mesh, index: int32, data: openArray[T], offset: int32) =
   ## Update mesh vertex data in GPU for a specific buffer index
-  updateMeshBufferPriv(mesh, index, cast[ptr UncheckedArray[T]](data), data.len.int32, offset)
+  updateMeshBufferImpl(mesh, index, cast[ptr UncheckedArray[T]](data), data.len.int32, offset)
 
 proc drawMeshInstanced*(mesh: Mesh; material: Material; transforms: openArray[Matrix]) =
   ## Draw multiple mesh instances with material and different transforms
-  drawMeshInstancedPriv(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms),
+  drawMeshInstancedImpl(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms),
       transforms.len.int32)
 
 proc loadWave*(fileName: string): Wave =
   ## Load wave data from file
-  result = loadWavePriv(fileName.cstring)
+  result = loadWaveImpl(fileName.cstring)
   if not isWaveReady(result): raiseRaylibError("Failed to load Wave from " & fileName)
 
 proc loadWaveFromMemory*(fileType: string; fileData: openArray[uint8]): Wave =
   ## Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
-  result = loadWaveFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+  result = loadWaveFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
   if not isWaveReady(result): raiseRaylibError("Failed to load Wave from buffer")
 
 proc loadSound*(fileName: string): Sound =
   ## Load sound from file
-  result = loadSoundPriv(fileName.cstring)
+  result = loadSoundImpl(fileName.cstring)
   if not isSoundReady(result): raiseRaylibError("Failed to load Sound from " & fileName)
 
 proc loadSoundAlias*(source: Sound): SoundAlias =
   ## Create a new sound that shares the same sample data as the source sound, does not own the sound data
-  result = SoundAlias(loadSoundAliasPriv(source))
+  result = SoundAlias(loadSoundAliasImpl(source))
   if not isSoundReady(Sound(result)): raiseRaylibError("Failed to load SoundAlias from source")
 
 proc loadSoundFromWave*(wave: Wave): Sound =
   ## Load sound from wave data
-  result = loadSoundFromWavePriv(wave)
+  result = loadSoundFromWaveImpl(wave)
   if not isSoundReady(result): raiseRaylibError("Failed to load Sound from Wave")
 
 proc updateSound*[T](sound: var Sound, data: openArray[T]) =
   ## Update sound buffer with new data
-  updateSoundPriv(sound, cast[ptr UncheckedArray[T]](data), data.len.int32)
+  updateSoundImpl(sound, cast[ptr UncheckedArray[T]](data), data.len.int32)
 
 proc loadMusicStream*(fileName: string): Music =
   ## Load music stream from file
-  result = loadMusicStreamPriv(fileName.cstring)
+  result = loadMusicStreamImpl(fileName.cstring)
   if not isMusicReady(result): raiseRaylibError("Failed to load Music from " & fileName)
 
 proc loadMusicStreamFromMemory*(fileType: string; data: openArray[uint8]): Music =
   ## Load music stream from data
-  result = loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
+  result = loadMusicStreamFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
       data.len.int32)
   if not isMusicReady(result): raiseRaylibError("Failed to load Music from buffer")
 
 proc loadAudioStream*(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream =
   ## Load audio stream (to stream raw audio pcm data)
-  result = loadAudioStreamPriv(sampleRate, sampleSize, channels)
+  result = loadAudioStreamImpl(sampleRate, sampleSize, channels)
   if not isAudioStreamReady(result): raiseRaylibError("Failed to load AudioStream")
 
 proc updateAudioStream*[T](stream: var AudioStream, data: openArray[T]) =
   ## Update audio stream buffers with data
-  updateAudioStreamPriv(stream, cast[ptr UncheckedArray[T]](data), data.len.int32)
+  updateAudioStreamImpl(stream, cast[ptr UncheckedArray[T]](data), data.len.int32)
 
 proc drawTextCodepoints*(font: Font; codepoints: openArray[Rune]; position: Vector2;
     fontSize: float32; spacing: float32; tint: Color) =
   ## Draw multiple character (codepoint)
-  drawTextCodepointsPriv(font, cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32,
+  drawTextCodepointsImpl(font, cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32,
       position, fontSize, spacing, tint)
 
 proc loadModel*(fileName: string): Model =
   ## Load model from files (meshes and materials)
-  result = loadModelPriv(fileName.cstring)
+  result = loadModelImpl(fileName.cstring)
   if not isModelReady(result): raiseRaylibError("Failed to load Model from " & fileName)
 
 proc loadModelFromMesh*(mesh: sink Mesh): Model =
   ## Load model from generated mesh (default material)
-  result = loadModelFromMeshPriv(mesh)
+  result = loadModelFromMeshImpl(mesh)
   wasMoved(mesh)
   if not isModelReady(result): raiseRaylibError("Failed to load Model from Mesh")
 

@@ -127,7 +127,7 @@ proc generateObject*(b: var Builder, obj: StructInfo) =
 proc generateProc*(b: var Builder, fnc: FunctionInfo) =
   withSection(b, if isFunc in fnc.flags: "func " else: "proc "):
     b.addIdent fnc.name
-    if isWrappedFunc in fnc.flags: b.addRaw "Priv"
+    if isWrappedFunc in fnc.flags: b.addRaw "Impl"
     if isPrivate in fnc.flags:
       b.addRaw "("
     else:
@@ -186,7 +186,7 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
       if isString in fnc.flags:
         b.addRaw "$"
       b.addIdent fnc.name
-      b.addRaw "Priv("
+      b.addRaw "Impl("
       for i, param in fnc.params:
         if i > 0:
           b.addRaw ", "
