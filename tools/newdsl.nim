@@ -123,13 +123,13 @@ proc generateObject*(b: var Builder, obj: StructInfo) =
         b.addRaw ", "
         continue
       b.addRaw ": "
-      b.addIdent fld.`type`
+      b.addRaw fld.`type`
       b.addDoc fld.description
       b.endTree()
 
 proc generateProc*(b: var Builder, fnc: FunctionInfo) =
   withSection(b, if isFunc in fnc.flags: "func " else: "proc "):
-    b.addIdent fnc.name
+    b.addRaw fnc.name
     if isWrappedFunc in fnc.flags: b.addRaw "Impl"
     if isPrivate in fnc.flags:
       b.addRaw "("
@@ -139,11 +139,11 @@ proc generateProc*(b: var Builder, fnc: FunctionInfo) =
       if i > 0: b.addRaw ", "
       b.addIdent param.name
       b.addRaw ": "
-      b.addIdent param.`type`
+      b.addRaw param.`type`
     b.addRaw ")"
     if fnc.returnType != "void":
       b.addRaw ": "
-      b.addIdent fnc.returnType
+      b.addRaw fnc.returnType
     b.addRaw " {.importc: "
     b.addStrLit fnc.importName
     if hasVarargs in fnc.flags:
@@ -156,7 +156,7 @@ proc generateProc*(b: var Builder, fnc: FunctionInfo) =
 
 proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
   withSection(b, "proc "):
-    b.addIdent fnc.name
+    b.addRaw fnc.name
     b.addRaw "*("
     for i, param in fnc.params:
       if isArrayLength in param.flags:
@@ -188,7 +188,7 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
     withBlock(b):
       if isString in fnc.flags:
         b.addRaw "$"
-      b.addIdent fnc.name
+      b.addRaw fnc.name
       b.addRaw "Impl("
       for i, param in fnc.params:
         if i > 0:
@@ -200,7 +200,7 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
         elif isVarParam in param.flags:
           b.addRaw "addr "
         if isArrayLength in param.flags:
-          b.addRaw param.baseType # stores array name
+          b.addIdent param.baseType # stores array name
           b.addRaw ".len."
           b.addRaw param.`type`
         else:
@@ -233,13 +233,13 @@ proc genBindings*(b: var Builder; ctx: ApiContext;
           b.addRaw "* {.borrow: `.`.} = distinct "
         else:
           b.addRaw "* = "
-        b.addIdent alias.`type`
+        b.addRaw alias.`type`
         b.addDoc alias.description
     # Distinct procs for arrays
     for x in items(ctx.boundCheckedArrayAccessors):
       withSection(b, x.struct):
         b.addRaw "* = distinct "
-        b.addIdent x.field
+        b.addRaw x.field
   b.addRaw("\n\n")
   b.addRaw afterObjects
   # Generate procs
@@ -257,7 +257,7 @@ proc genBindings*(b: var Builder; ctx: ApiContext;
     b.addRaw "proc "
     b.addIdent x.field
     b.addRaw "*(x: "
-    b.addIdent x.struct
+    b.addRaw x.struct
     b.addRaw "): "
     b.addRaw x.`type`
     b.addRaw " {.inline.} = x."
