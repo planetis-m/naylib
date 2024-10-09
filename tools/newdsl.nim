@@ -130,13 +130,14 @@ proc generateObject*(b: var Builder, obj: StructInfo) =
 proc generateProc*(b: var Builder, fnc: FunctionInfo) =
   withSection(b, if isFunc in fnc.flags: "func " else: "proc "):
     b.addRaw fnc.name
-    if isWrappedFunc in fnc.flags: b.addRaw "Impl"
-    if isPrivate in fnc.flags:
-      b.addRaw "("
-    else:
-      b.addRaw "*("
+    if isWrappedFunc in fnc.flags:
+      b.addRaw "Impl"
+    if isPrivate notin fnc.flags:
+      b.addRaw "*"
+    b.addRaw "("
     for i, param in fnc.params:
-      if i > 0: b.addRaw ", "
+      if i > 0:
+        b.addRaw ", "
       b.addIdent param.name
       b.addRaw ": "
       b.addRaw param.`type`
@@ -252,7 +253,7 @@ proc genBindings*(b: var Builder; ctx: ApiContext;
   b.addRaw "\n{.pop.}\n"
   b.addRaw afterFuncs
   b.addNL()
-  # Generate property procs
+  # Generate getter procs
   for x in items(ctx.readOnlyFieldAccessors):
     b.addRaw "proc "
     b.addIdent x.field

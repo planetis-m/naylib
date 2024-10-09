@@ -31,7 +31,7 @@ type
     flags*: set[InfoFlags]
 
   InfoFlags* = enum
-    isPrivate, isWrappedFunc, hasVarargs, isOpenArray, isVarParam,
+    isPrivate, isWrappedFunc, hasVarargs, isOpenArray, isVarParam, isOutParam,
     isDistinct, isCompleteStruct, isMangled, isString, isFunc, isArrayLength
 
   TopLevel* = object
