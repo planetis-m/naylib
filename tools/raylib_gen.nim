@@ -1,14 +1,13 @@
 import std/[algorithm, sets, tables, sequtils, strutils]
 when defined(nimPreviewSlimSystem):
   from std/syncio import readFile
-import common except convertType
-import builder, ctypes
+import schema, builder, ctypes, utils
 
 const
-  raylibHeader = readFile("raylib_header.nim")
-  destructorHooks = readFile("raylib_types.nim")
-  manualWrappers = readFile("raylib_wrap.nim")
-  arrayAccessors = readFile("raylib_fields.nim")
+  raylibHeader = readFile("snippets/raylib_header.nim")
+  destructorHooks = readFile("snippets/raylib_types.nim")
+  manualWrappers = readFile("snippets/raylib_wrap.nim")
+  arrayAccessors = readFile("snippets/raylib_fields.nim")
   opaqueStructs = """
   rAudioBuffer {.importc, nodecl, bycopy.} = object
   rAudioProcessor {.importc, nodecl, bycopy.} = object
@@ -435,6 +434,19 @@ const
     "DrawText",
     "DrawTextEx"
   ])
+
+proc isPlural*(x: string): bool {.inline.} =
+  ## Tries to determine if an identifier is plural
+  let x = strip(x, false, chars = Digits)
+  x.endsWith("es") or (not (x.endsWith("ss") or x.endsWith("radius") or
+      x.endsWith("Pos")) and x.endsWith('s')) or endsWith(x.normalize, "data")
+
+proc getReplacement*(x, y: string, replacements: openarray[(string, string, string)]): string =
+  # Manual replacements for some fields
+  result = ""
+  for a, b, pattern in replacements.items:
+    if x == a and y == b:
+      return pattern
 
 proc preprocessStructs(ctx: var ApiContext) =
   proc isPrivateField(obj: StructInfo, fld: FieldInfo): bool =

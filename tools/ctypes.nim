@@ -63,9 +63,9 @@ const
 
 type
   PointerType* = enum
+    ptPtr
     ptVar
     ptOut
-    ptPtr
     ptArray
     ptOpenArray
 
@@ -82,7 +82,7 @@ proc convertPointerType(s: string, pointerType: PointerType): string =
       of ptArray:
         result = "ptr UncheckedArray[" & result & "]"
     case pointerType
-    of ptVar:
+    of ptVar: # can't be nested
       result = "var " & result
     of ptOut:
       result = "out " & result

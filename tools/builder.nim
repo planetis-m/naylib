@@ -1,5 +1,5 @@
 import std/streams
-import common
+import schema, utils
 
 type
   Builder* = object
