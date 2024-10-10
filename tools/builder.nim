@@ -168,12 +168,7 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
       b.addRaw ": "
       if isString in param.flags:
         b.addRaw "string"
-      elif isOpenArray in param.flags:
-        b.addRaw "openArray["
-        b.addRaw param.baseType
-        b.addRaw "]"
-      elif isVarParam in param.flags:
-        b.addRaw "var "
+      elif {isOpenArray, isVarParam} * param.flags != {}:
         b.addRaw param.baseType
       else:
         b.addRaw param.`type`

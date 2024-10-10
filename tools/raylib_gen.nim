@@ -1,7 +1,8 @@
 import std/[algorithm, sets, tables, sequtils, strutils]
 when defined(nimPreviewSlimSystem):
   from std/syncio import readFile
-import common, newdsl
+import common except convertType
+import builder, ctypes
 
 const
   raylibHeader = readFile("raylib_header.nim")
@@ -434,20 +435,6 @@ const
     "DrawText",
     "DrawTextEx"
   ])
-  needErrorChecking = toHashSet([
-    "Window",
-    "Shader",
-    "Image",
-    "Texture2D",
-    "RenderTexture2D",
-    "Font",
-    "Model",
-    "Material",
-    "Wave",
-    "Sound",
-    "Music",
-    "AudioStream"
-  ])
 
 proc preprocessStructs(ctx: var ApiContext) =
   proc isPrivateField(obj: StructInfo, fld: FieldInfo): bool =
@@ -497,19 +484,14 @@ proc preprocessStructs(ctx: var ApiContext) =
         ("Image", "format", "PixelFormat"),
         ("Texture", "format", "PixelFormat"),
         ("NPatchInfo", "layout", "NPatchLayout"),
-        ("Shader", "locs", "ptr UncheckedArray[ShaderLocation]")
+        ("Shader", "locs", "ptr UncheckedArray[ShaderLocation]"),
+        ("Mesh", "vboId", "ptr array[MaxMeshVertexBuffers, uint32]"),
+        ("Material", "maps", "ptr array[MaxMaterialMaps, MaterialMap]"),
       ]
       var fieldType = getReplacement(obj.name, fld.name, replacements)
-      var baseType = ""
       let many = shouldUsePluralType(obj, fld)
       if fieldType == "":
-        const replacements = [
-          ("ModelAnimation", "framePoses", "ptr UncheckedArray[ptr UncheckedArray[$1]]"),
-          ("Mesh", "vboId", "ptr array[MaxMeshVertexBuffers, $1]"),
-          ("Material", "maps", "ptr array[MaxMaterialMaps, $1]")
-        ]
-        let pattern = getReplacement(obj.name, fld.name, replacements)
-        (fieldType, baseType) = convertType(fld.`type`, pattern, many, false)
+        fieldType = convertType(fld.`type`, if many: ptArray else: ptPtr)
       let isArray = isArrayField(obj, fld, many)
       if isPrivate in fld.flags:
         ctx.readOnlyFieldAccessors.add (struct: obj.name, field: fld.name, `type`: fieldType)
@@ -616,26 +598,24 @@ proc preprocessFunctions(ctx: var ApiContext) =
     var autoWrap = false
     for i, param in fnc.params.mpairs:
       let many = shouldUsePluralType(fnc, param)
-      let (paramType, baseType) = convertType(param.`type`, many)
+      let paramType = convertType(param.`type`, if many: ptArray elif isPrivate notin fnc.flags: ptVar else: ptPtr)
       if checkCstringType(fnc, paramType):
         param.flags.incl isString
         autoWrap = true
       if i < fnc.params.high and checkOpenarrayType(fnc, paramType, many, fnc.params[i+1].name):
-        param.baseType = baseType
+        param.baseType = convertType(param.`type`, ptOpenArray)
         param.flags.incl isOpenArray
         fnc.params[i+1].flags.incl isArrayLength
         fnc.params[i+1].baseType = param.name # stores array name
         autoWrap = true
       if paramType.startsWith("var "):
         param.flags.incl isVarParam
-        param.baseType = baseType
+        param.baseType = paramType
     if fnc.returnType != "void":
-      let (returnType, baseType) = convertType(fnc.returnType, false)
+      let returnType = convertType(fnc.returnType)
       if checkCstringType(fnc, returnType):
         fnc.flags.incl isString
         autoWrap = true
-      if baseType in needErrorChecking and fnc.name notin privateFuncs:
-        echo "WARNING: Function might require error checking: ", fnc.name
 
     if autoWrap:
       fnc.flags.incl isWrappedFunc
@@ -644,23 +624,25 @@ proc preprocessFunctions(ctx: var ApiContext) =
     for i, param in fnc.params.mpairs:
       var paramType = findEnumTypeForParam(fnc, param)
       if paramType == "":
-        var baseType = ""
-        let many = shouldUsePluralType(fnc, param)
         const
           replacements = [
-            ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[$1]"),
-            ("CheckCollisionLines", "collisionPoint", "out $1"),
-            ("LoadImageAnim", "frames", "out $1"),
+            ("GenImageFontAtlas", "glyphRecs", "ptr ptr UncheckedArray[Rectangle]"),
+            ("CheckCollisionLines", "collisionPoint", "out Vector2"),
+            ("LoadImageAnim", "frames", "out int32"),
             ("SetTraceLogCallback", "callback", "TraceLogCallbackImpl"),
           ]
-        let pat = getReplacement(fnc.name, param.name, replacements)
-        (paramType, baseType) = convertType(param.`type`, pat, many, isPrivate notin fnc.flags)
+        paramType = getReplacement(fnc.name, param.name, replacements)
+      if paramType == "":
+        let many = shouldUsePluralType(fnc, param)
+        paramType = convertType(param.`type`,
+            if many: ptArray elif {isPrivate, isWrappedFunc} * fnc.flags == {}: ptVar else: ptPtr)
       param.`type` = paramType
     if fnc.returnType != "void":
       var returnType = findEnumTypeForReturn(fnc)
       if returnType == "":
         let many = shouldUsePluralReturnType(fnc)
-        (returnType, _) = convertType(fnc.returnType, "", many, isPrivate notin fnc.flags)
+        returnType = convertType(fnc.returnType,
+            if many: ptArray elif isPrivate notin fnc.flags: ptVar else: ptPtr)
       fnc.returnType = returnType
 
     fnc.importName = (if isMangled in fnc.flags: "rl" else: "") & fnc.name

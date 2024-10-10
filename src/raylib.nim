@@ -968,7 +968,7 @@ proc setTargetFPS*(fps: int32) {.importc: "SetTargetFPS", sideEffect.}
   ## Set target FPS (maximum)
 proc getFrameTime*(): float32 {.importc: "GetFrameTime", sideEffect.}
   ## Get time in seconds for last frame drawn (delta time)
-proc getTime*(): float {.importc: "GetTime", sideEffect.}
+proc getTime*(): float64 {.importc: "GetTime", sideEffect.}
   ## Get elapsed time in seconds since InitWindow()
 proc getFPS*(): int32 {.importc: "GetFPS", sideEffect.}
   ## Get current FPS
@@ -976,7 +976,7 @@ proc swapScreenBuffer*() {.importc: "SwapScreenBuffer", sideEffect.}
   ## Swap back buffer with front buffer (screen drawing)
 proc pollInputEvents*() {.importc: "PollInputEvents", sideEffect.}
   ## Register all input events
-proc waitTime*(seconds: float) {.importc: "WaitTime", sideEffect.}
+proc waitTime*(seconds: float64) {.importc: "WaitTime", sideEffect.}
   ## Wait for some time (halt program execution)
 proc takeScreenshotImpl(fileName: cstring) {.importc: "TakeScreenshot", sideEffect.}
 proc setConfigFlags*(flags: Flags[ConfigFlags]) {.importc: "SetConfigFlags", sideEffect.}

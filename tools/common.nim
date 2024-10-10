@@ -142,7 +142,6 @@ proc parseType(s: string): TypeInfo =
         if result.baseType == "":
           result.baseType = token[0 ..< openBracket]
         result.arraySize = token[openBracket + 1 ..< closeBracket]
-        removePrefix(result.arraySize, "RL_")
         result.arraySize = camelCaseAscii(result.arraySize)
       elif result.baseType == "":
         result.baseType = token
@@ -156,10 +155,10 @@ proc toNimType(cType: string): string =
   of "short": "int16"
   of "long": "int64"
   of "int": "int32"
-  of "float3": "Float3"
-  of "float16": "Float16"
   of "size_t": "csize_t"
   of "char": "char"
+  of "float3": "Float3"
+  of "float16": "Float16"
   of "rlVertexBuffer": "VertexBuffer"
   of "rlRenderBatch": "RenderBatch"
   of "rlDrawCall": "DrawCall"
