@@ -169,7 +169,7 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
       if isString in param.flags:
         b.addRaw "string"
       elif {isOpenArray, isVarParam} * param.flags != {}:
-        b.addRaw param.baseType
+        b.addRaw param.extra # stores native type
       else:
         b.addRaw param.`type`
     b.addRaw ")"
@@ -196,7 +196,7 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
         elif isVarParam in param.flags:
           b.addRaw "addr "
         if isArrayLength in param.flags:
-          b.addIdent param.baseType # stores array name
+          b.addIdent param.extra # stores array name
           b.addRaw ".len."
           b.addRaw param.`type`
         else:

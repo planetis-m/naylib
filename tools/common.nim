@@ -58,7 +58,7 @@ type
     params*: seq[ParamInfo]
 
   ParamInfo* = object of BaseInfo
-    `type`*, baseType*, name*: string
+    `type`*, name*, extra*: string
 
   StructInfo* = object of BaseInfo
     name*, description*: string

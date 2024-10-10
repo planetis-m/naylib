@@ -603,14 +603,14 @@ proc preprocessFunctions(ctx: var ApiContext) =
         param.flags.incl isString
         autoWrap = true
       if i < fnc.params.high and checkOpenarrayType(fnc, paramType, many, fnc.params[i+1].name):
-        param.baseType = convertType(param.`type`, ptOpenArray)
+        param.extra = convertType(param.`type`, ptOpenArray)
         param.flags.incl isOpenArray
         fnc.params[i+1].flags.incl isArrayLength
-        fnc.params[i+1].baseType = param.name # stores array name
+        fnc.params[i+1].extra = param.name # stores array name
         autoWrap = true
       if paramType.startsWith("var "):
         param.flags.incl isVarParam
-        param.baseType = paramType
+        param.extra = paramType
     if fnc.returnType != "void":
       let returnType = convertType(fnc.returnType)
       if checkCstringType(fnc, returnType):
