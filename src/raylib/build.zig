@@ -24,7 +24,7 @@ pub fn addRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
         .rshapes = options.rshapes,
         .rtext = options.rtext,
         .rtextures = options.rtextures,
-        .platform_drm = options.platform_drm,
+        .platform = options.platform,
         .shared = options.shared,
         .linux_display_backend = options.linux_display_backend,
         .opengl_version = options.opengl_version,
@@ -47,8 +47,12 @@ fn setDesktopPlatform(raylib: *std.Build.Step.Compile, platform: PlatformBackend
         .glfw => raylib.defineCMacro("PLATFORM_DESKTOP_GLFW", null),
         .rgfw => raylib.defineCMacro("PLATFORM_DESKTOP_RGFW", null),
         .sdl => raylib.defineCMacro("PLATFORM_DESKTOP_SDL", null),
-        else => {}
+        else => {},
     }
+}
+
+fn srcDir() []const u8 {
+    return std.fs.path.dirname(@src().file) orelse ".";
 }
 
 fn compileRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode, options: Options) !*std.Build.Step.Compile {
@@ -65,8 +69,7 @@ fn compileRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
         "-fno-sanitize=undefined", // https://github.com/raysan5/raylib/issues/3674
     });
     if (options.config) |config| {
-        const file = try std.fs.path.join(b.allocator, &.{ std.fs.path.dirname(@src().file) orelse ".", "config.h" });
-        defer b.allocator.free(file);
+        const file = b.pathJoin(&.{ srcDir(), "config.h" });
         const content = try std.fs.cwd().readFileAlloc(b.allocator, file, std.math.maxInt(usize));
         defer b.allocator.free(content);
 
@@ -74,11 +77,12 @@ fn compileRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
         while (lines.next()) |line| {
             if (!std.mem.containsAtLeast(u8, line, 1, "SUPPORT")) continue;
             if (std.mem.startsWith(u8, line, "//")) continue;
+            if (std.mem.startsWith(u8, line, "#if")) continue;
 
             var flag = std.mem.trimLeft(u8, line, " \t"); // Trim whitespace
             flag = flag["#define ".len - 1 ..]; // Remove #define
             flag = std.mem.trimLeft(u8, flag, " \t"); // Trim whitespace
-            flag = flag[0..std.mem.indexOf(u8, flag, " ").?]; // Flag is only one word, so capture till space
+            flag = flag[0 .. std.mem.indexOf(u8, flag, " ") orelse continue]; // Flag is only one word, so capture till space
             flag = try std.fmt.allocPrint(b.allocator, "-D{s}", .{flag}); // Prepend with -D
 
             // If user specifies the flag skip it
@@ -114,7 +118,7 @@ fn compileRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
 
     // No GLFW required on PLATFORM_DRM
     if (options.platform != .drm) {
-        raylib.addIncludePath(b.path("src/external/glfw/include"));
+        raylib.addIncludePath(b.path(b.pathJoin(&.{ srcDir(), "external/glfw/include" })));
     }
 
     var c_source_files = try std.ArrayList([]const u8).initCapacity(b.allocator, 2);
@@ -167,17 +171,16 @@ fn compileRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
                 if (options.linux_display_backend == .Wayland or options.linux_display_backend == .Both) {
                     _ = b.findProgram(&.{"wayland-scanner"}, &.{}) catch {
                         std.log.err(
-                            \\ Wayland may not be installed on the system.
+                            \\ `wayland-scanner` may not be installed on the system.
                             \\ You can switch to X11 in your `build.zig` by changing `Options.linux_display_backend`
                         , .{});
-                        @panic("No Wayland");
+                        @panic("`wayland-scanner` not found");
                     };
                     raylib.defineCMacro("_GLFW_WAYLAND", null);
                     raylib.linkSystemLibrary("wayland-client");
                     raylib.linkSystemLibrary("wayland-cursor");
                     raylib.linkSystemLibrary("wayland-egl");
                     raylib.linkSystemLibrary("xkbcommon");
-                    raylib.addIncludePath(b.path("src"));
                     waylandGenerate(b, raylib, "wayland.xml", "wayland-client-protocol");
                     waylandGenerate(b, raylib, "xdg-shell.xml", "xdg-shell-client-protocol");
                     waylandGenerate(b, raylib, "xdg-decoration-unstable-v1.xml", "xdg-decoration-unstable-v1-client-protocol");
@@ -228,7 +231,7 @@ fn compileRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
             // On macos rglfw.c include Objective-C files.
             try raylib_flags_arr.append(b.allocator, "-ObjC");
             raylib.root_module.addCSourceFile(.{
-                .file = b.path("src/rglfw.c"),
+                .file = b.path(b.pathJoin(&.{ srcDir(), "rglfw.c" })),
                 .flags = raylib_flags_arr.items,
             });
             _ = raylib_flags_arr.pop();
@@ -250,8 +253,7 @@ fn compileRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
                 @panic("Pass '--sysroot \"$EMSDK/upstream/emscripten\"'");
             }
 
-            const cache_include = std.fs.path.join(b.allocator, &.{ b.sysroot.?, "cache", "sysroot", "include" }) catch @panic("Out of memory");
-            defer b.allocator.free(cache_include);
+            const cache_include = b.pathJoin(&.{ b.sysroot.?, "cache", "sysroot", "include" });
 
             var dir = std.fs.openDirAbsolute(cache_include, std.fs.Dir.OpenDirOptions{ .access_sub_paths = true, .no_follow = true }) catch @panic("No emscripten cache. Generate it!");
             dir.close();
@@ -262,9 +264,8 @@ fn compileRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
         },
     }
 
-    raylib.addIncludePath(b.path("src"));
     raylib.root_module.addCSourceFiles(.{
-        .root = b.path("src"),
+        .root = b.path(srcDir()),
         .files = c_source_files.items,
         .flags = raylib_flags_arr.items,
     });
@@ -301,6 +302,7 @@ pub const Options = struct {
     shared: bool = false,
     linux_display_backend: LinuxDisplayBackend = .Both,
     opengl_version: OpenglVersion = .auto,
+    /// config should be a list of cflags, eg, "-DSUPPORT_CUSTOM_FRAME_CONTROL"
     config: ?[]const u8 = null,
 
     raygui_dependency_name: []const u8 = "raygui",
@@ -338,7 +340,7 @@ pub const PlatformBackend = enum {
     glfw,
     rgfw,
     sdl,
-    drm
+    drm,
 };
 
 pub fn build(b: *std.Build) !void {
@@ -356,6 +358,7 @@ pub fn build(b: *std.Build) !void {
     const options = Options{
         .platform = b.option(PlatformBackend, "platform", "Choose the platform backedn for desktop target") orelse defaults.platform,
         .raudio = b.option(bool, "raudio", "Compile with audio support") orelse defaults.raudio,
+        .raygui = b.option(bool, "raygui", "Compile with raygui support") orelse defaults.raygui,
         .rmodels = b.option(bool, "rmodels", "Compile with models support") orelse defaults.rmodels,
         .rtext = b.option(bool, "rtext", "Compile with text support") orelse defaults.rtext,
         .rtextures = b.option(bool, "rtextures", "Compile with textures support") orelse defaults.rtextures,
@@ -368,17 +371,21 @@ pub fn build(b: *std.Build) !void {
 
     const lib = try compileRaylib(b, target, optimize, options);
 
-    lib.installHeader(b.path("src/raylib.h"), "raylib.h");
-    lib.installHeader(b.path("src/raymath.h"), "raymath.h");
-    lib.installHeader(b.path("src/rlgl.h"), "rlgl.h");
+    lib.installHeader(b.path(b.pathJoin(&.{ srcDir(), "raylib.h" })), "raylib.h");
+    lib.installHeader(b.path(b.pathJoin(&.{ srcDir(), "raymath.h" })), "raymath.h");
+    lib.installHeader(b.path(b.pathJoin(&.{ srcDir(), "rlgl.h" })), "rlgl.h");
 
     b.installArtifact(lib);
 }
 
-const waylandDir = "src/external/glfw/deps/wayland";
-
-fn waylandGenerate(b: *std.Build, raylib: *std.Build.Step.Compile, comptime protocol: []const u8, comptime basename: []const u8) void {
-    const protocolDir = waylandDir ++ "/" ++ protocol;
+fn waylandGenerate(
+    b: *std.Build,
+    raylib: *std.Build.Step.Compile,
+    comptime protocol: []const u8,
+    comptime basename: []const u8,
+) void {
+    const waylandDir = b.pathJoin(&.{ srcDir(), "external/glfw/deps/wayland" });
+    const protocolDir = b.pathJoin(&.{ waylandDir, protocol });
     const clientHeader = basename ++ ".h";
     const privateCode = basename ++ "-code.h";
 

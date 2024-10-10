@@ -106,12 +106,12 @@ proc convertType*(s: string; pointerType = ptPtr): string =
   result = convertArrayType(result, pointerType)
 
 when isMainModule:
-  echo convertType("Transform **", ptArray)
-  echo convertType("unsigned int *")
-  echo convertType("void **")
-  echo convertType("void *")
-  echo convertType("const char *")
-  echo convertType("const char**")
-  echo convertType("char **")
-  echo convertType("Image *", ptOpenArray)
-  echo convertType("const char *[MAX_TEXT_COUNT]", ptOpenArray)
+  assert convertType("Transform **", ptArray) == "ptr UncheckedArray[ptr UncheckedArray[Transform]]"
+  assert convertType("unsigned int *") == "ptr uint32"
+  assert convertType("void **") == "ptr pointer"
+  assert convertType("void *") == "pointer"
+  assert convertType("const char *") == "cstring"
+  assert convertType("const char**") == "cstringArray"
+  assert convertType("char **") == "cstringArray"
+  assert convertType("Image *", ptOpenArray) == "openArray[Image]"
+  assert convertType("const char *[MAX_TEXT_COUNT]", ptOpenArray) == "array[MAX_TEXT_COUNT, cstring]"
