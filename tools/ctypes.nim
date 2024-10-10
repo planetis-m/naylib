@@ -2,6 +2,11 @@ import std/strutils
 
 const
   TypeMapping = {
+    "float3": "Float3",
+    "float16": "Float16",
+    "rlVertexBuffer": "VertexBuffer",
+    "rlRenderBatch": "RenderBatch",
+    "rlDrawCall": "DrawCall",
     "char **": "cstringArray",
     "char**": "cstringArray",
     "void **": "ptr pointer",
@@ -54,11 +59,6 @@ const
     "uintptr_t": "uint",
     "intmax_t": "BiggestInt",
     "uintmax_t": "BiggestUInt",
-    "float3": "Float3",
-    "float16": "Float16",
-    "rlVertexBuffer": "VertexBuffer",
-    "rlRenderBatch": "RenderBatch",
-    "rlDrawCall": "DrawCall",
   }
 
 type
@@ -115,3 +115,6 @@ when isMainModule:
   assert convertType("char **") == "cstringArray"
   assert convertType("Image *", ptOpenArray) == "openArray[Image]"
   assert convertType("const char *[MAX_TEXT_COUNT]", ptOpenArray) == "array[MAX_TEXT_COUNT, cstring]"
+  assert convertType("float3") == "Float3"
+  assert convertType("unsigned char") == "uint8"
+  assert convertType("signed int") == "int32"
