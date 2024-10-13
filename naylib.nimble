@@ -1,6 +1,6 @@
 # Package
 
-version     = "24.40"
+version     = "24.41"
 author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
