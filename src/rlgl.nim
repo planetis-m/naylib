@@ -31,6 +31,42 @@ else:
 type
   rlglLoadProc* = proc (name: cstring): pointer ## OpenGL extension functions loader signature (same as GLADloadproc)
 
+type
+  GlVersion* {.size: sizeof(int32).} = enum ## OpenGL version
+    Opengl11 = 1 ## OpenGL 1.1
+    Opengl21 ## OpenGL 2.1 (GLSL 120)
+    Opengl33 ## OpenGL 3.3 (GLSL 330)
+    Opengl43 ## OpenGL 4.3 (using GLSL 330)
+    OpenglEs20 ## OpenGL ES 2.0 (GLSL 100)
+    OpenglEs30 ## OpenGL ES 3.0 (GLSL 300 es)
+
+  FramebufferAttachType* {.size: sizeof(int32).} = enum ## Framebuffer attachment type
+    AttachmentColorChannel0 ## Framebuffer attachment type: color 0
+    AttachmentColorChannel1 ## Framebuffer attachment type: color 1
+    AttachmentColorChannel2 ## Framebuffer attachment type: color 2
+    AttachmentColorChannel3 ## Framebuffer attachment type: color 3
+    AttachmentColorChannel4 ## Framebuffer attachment type: color 4
+    AttachmentColorChannel5 ## Framebuffer attachment type: color 5
+    AttachmentColorChannel6 ## Framebuffer attachment type: color 6
+    AttachmentColorChannel7 ## Framebuffer attachment type: color 7
+    AttachmentDepth = 100 ## Framebuffer attachment type: depth
+    AttachmentStencil = 200 ## Framebuffer attachment type: stencil
+
+  FramebufferAttachTextureType* {.size: sizeof(int32).} = enum ## Framebuffer texture attachment type
+    AttachmentCubemapPositiveX ## Framebuffer texture attachment type: cubemap, +X side
+    AttachmentCubemapNegativeX ## Framebuffer texture attachment type: cubemap, -X side
+    AttachmentCubemapPositiveY ## Framebuffer texture attachment type: cubemap, +Y side
+    AttachmentCubemapNegativeY ## Framebuffer texture attachment type: cubemap, -Y side
+    AttachmentCubemapPositiveZ ## Framebuffer texture attachment type: cubemap, +Z side
+    AttachmentCubemapNegativeZ ## Framebuffer texture attachment type: cubemap, -Z side
+    AttachmentTexture2d = 100 ## Framebuffer texture attachment type: texture2d
+    AttachmentRenderbuffer = 200 ## Framebuffer texture attachment type: renderbuffer
+
+  CullMode* {.size: sizeof(int32).} = enum ## Face culling mode
+    CullFaceFront
+    CullFaceBack
+
+
   TextureParameter* {.size: sizeof(int32).} = enum ## Texture parameters (equivalent to OpenGL defines)
     FilterNearest = 0x2600 ## GL_NEAREST
     FilterLinear = 0x2601 ## GL_LINEAR
@@ -145,63 +181,32 @@ type
     Sampler2dTexture1 = "texture1" ## texture1 (texture slot active 1)
     Sampler2dTexture2 = "texture2" ## texture2 (texture slot active 2)
 
-  GlVersion* {.size: sizeof(int32).} = enum ## OpenGL version
-    Opengl11 = 1 ## OpenGL 1.1
-    Opengl21 ## OpenGL 2.1 (GLSL 120)
-    Opengl33 ## OpenGL 3.3 (GLSL 330)
-    Opengl43 ## OpenGL 4.3 (using GLSL 330)
-    OpenglEs20 ## OpenGL ES 2.0 (GLSL 100)
-    OpenglEs30 ## OpenGL ES 3.0 (GLSL 300 es)
-
-  FramebufferAttachType* {.size: sizeof(int32).} = enum ## Framebuffer attachment type
-    ColorChannel0 ## Framebuffer attachment type: color 0
-    ColorChannel1 ## Framebuffer attachment type: color 1
-    ColorChannel2 ## Framebuffer attachment type: color 2
-    ColorChannel3 ## Framebuffer attachment type: color 3
-    ColorChannel4 ## Framebuffer attachment type: color 4
-    ColorChannel5 ## Framebuffer attachment type: color 5
-    ColorChannel6 ## Framebuffer attachment type: color 6
-    ColorChannel7 ## Framebuffer attachment type: color 7
-    Depth = 100 ## Framebuffer attachment type: depth
-    Stencil = 200 ## Framebuffer attachment type: stencil
-
-  FramebufferAttachTextureType* {.size: sizeof(int32).} = enum ## Framebuffer texture attachment type
-    CubemapPositiveX ## Framebuffer texture attachment type: cubemap, +X side
-    CubemapNegativeX ## Framebuffer texture attachment type: cubemap, -X side
-    CubemapPositiveY ## Framebuffer texture attachment type: cubemap, +Y side
-    CubemapNegativeY ## Framebuffer texture attachment type: cubemap, -Y side
-    CubemapPositiveZ ## Framebuffer texture attachment type: cubemap, +Z side
-    CubemapNegativeZ ## Framebuffer texture attachment type: cubemap, -Z side
-    Texture2d = 100 ## Framebuffer texture attachment type: texture2d
-    Renderbuffer = 200 ## Framebuffer texture attachment type: renderbuffer
-
-  CullMode* {.size: sizeof(int32).} = enum ## Face culling mode
-    FaceFront
-    FaceBack
-
 template BlendEquationRgb*(_: typedesc[BlendFuncOrEq]): untyped = BlendEquation
 
+template VertexBufferIndicesType(): untyped =
+  when not UseEmbeddedGraphicsApi:
+    ptr UncheckedArray[uint32]
+  else:
+    ptr UncheckedArray[uint16]
+
 type
-  VertexBuffer* {.importc: "rlVertexBuffer", nodecl, bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
+  VertexBuffer* {.importc: "rlVertexBuffer", header: "rlgl.h", completeStruct, bycopy.} = object ## Dynamic vertex buffers (position + texcoords + colors + indices arrays)
     elementCount: int32 ## Number of elements in the buffer (QUADS)
     vertices: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
     texcoords: ptr UncheckedArray[float32] ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
     normals: ptr UncheckedArray[float32] ## Vertex normal (XYZ - 3 components per vertex) (shader-location = 2)
     colors: ptr UncheckedArray[uint8] ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-    when not UseEmbeddedGraphicsApi:
-      indices: ptr UncheckedArray[uint32] ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
-    else:
-      indices: ptr UncheckedArray[uint16]
+    indices: VertexBufferIndicesType ## Vertex indices (in case vertex data comes indexed) (6 indices per quad)
     vaoId*: uint32 ## OpenGL Vertex Array Object id
     vboId*: array[5, uint32] ## OpenGL Vertex Buffer Objects id (5 types of vertex data)
 
-  DrawCall* {.importc: "rlDrawCall", nodecl, bycopy.} = object ## of those state-change happens (this is done in core module)
+  DrawCall* {.importc: "rlDrawCall", header: "rlgl.h", completeStruct, bycopy.} = object ## of those state-change happens (this is done in core module)
     mode*: int32 ## Drawing mode: LINES, TRIANGLES, QUADS
     vertexCount*: int32 ## Number of vertex of the draw
     vertexAlignment*: int32 ## Number of vertex required for index alignment (LINES, TRIANGLES)
     textureId*: uint32 ## Texture id to be used on the draw -> Use to create new draw call if changes
 
-  RenderBatch* {.importc: "rlRenderBatch", nodecl, bycopy.} = object ## rlRenderBatch type
+  RenderBatch* {.importc: "rlRenderBatch", header: "rlgl.h", completeStruct, bycopy.} = object ## rlRenderBatch type
     bufferCount: int32 ## Number of vertex buffers (multi-buffering support)
     currentBuffer*: int32 ## Current buffer tracking in case of multi-buffering
     vertexBuffer: ptr UncheckedArray[VertexBuffer] ## Dynamic buffer(s) for vertex data
@@ -217,319 +222,333 @@ type
   RenderBatchVertexBuffer* = distinct RenderBatch
   RenderBatchDraws* = distinct RenderBatch
 
+
 {.push callconv: cdecl, header: "rlgl.h".}
-proc matrixMode*(mode: MatrixMode) {.importc: "rlMatrixMode".}
+proc matrixMode*(mode: MatrixMode) {.importc: "rlMatrixMode", sideEffect.}
   ## Choose the current matrix to be transformed
-proc pushMatrix*() {.importc: "rlPushMatrix".}
+proc pushMatrix*() {.importc: "rlPushMatrix", sideEffect.}
   ## Push the current matrix to stack
-proc popMatrix*() {.importc: "rlPopMatrix".}
+proc popMatrix*() {.importc: "rlPopMatrix", sideEffect.}
   ## Pop latest inserted matrix from stack
-proc loadIdentity*() {.importc: "rlLoadIdentity".}
+proc loadIdentity*() {.importc: "rlLoadIdentity", sideEffect.}
   ## Reset current matrix to identity matrix
-proc translatef*(x: float32, y: float32, z: float32) {.importc: "rlTranslatef".}
+proc translatef*(x: float32, y: float32, z: float32) {.importc: "rlTranslatef", sideEffect.}
   ## Multiply the current matrix by a translation matrix
-proc rotatef*(angle: float32, x: float32, y: float32, z: float32) {.importc: "rlRotatef".}
+proc rotatef*(angle: float32, x: float32, y: float32, z: float32) {.importc: "rlRotatef", sideEffect.}
   ## Multiply the current matrix by a rotation matrix
-proc scalef*(x: float32, y: float32, z: float32) {.importc: "rlScalef".}
+proc scalef*(x: float32, y: float32, z: float32) {.importc: "rlScalef", sideEffect.}
   ## Multiply the current matrix by a scaling matrix
-proc multMatrixf*(matf: array[16, float32]) {.importc: "rlMultMatrixf".}
+proc multMatrixf*(matf: array[16, float32]) {.importc: "rlMultMatrixf", sideEffect.}
   ## Multiply the current matrix by another matrix
-proc frustum*(left: float, right: float, bottom: float, top: float, znear: float, zfar: float) {.importc: "rlFrustum".}
-proc ortho*(left: float, right: float, bottom: float, top: float, znear: float, zfar: float) {.importc: "rlOrtho".}
-proc viewport*(x: int32, y: int32, width: int32, height: int32) {.importc: "rlViewport".}
+proc frustum*(left: float64, right: float64, bottom: float64, top: float64, znear: float64, zfar: float64) {.importc: "rlFrustum", sideEffect.}
+proc ortho*(left: float64, right: float64, bottom: float64, top: float64, znear: float64, zfar: float64) {.importc: "rlOrtho", sideEffect.}
+proc viewport*(x: int32, y: int32, width: int32, height: int32) {.importc: "rlViewport", sideEffect.}
   ## Set the viewport area
-proc setClipPlanes*(nearPlane: float, farPlane: float) {.importc: "rlSetClipPlanes".}
+proc setClipPlanes*(nearPlane: float64, farPlane: float64) {.importc: "rlSetClipPlanes", sideEffect.}
   ## Set clip planes distances
-proc getCullDistanceNear*(): float {.importc: "rlGetCullDistanceNear".}
+proc getCullDistanceNear*(): float64 {.importc: "rlGetCullDistanceNear", sideEffect.}
   ## Get cull plane distance near
-proc getCullDistanceFar*(): float {.importc: "rlGetCullDistanceFar".}
+proc getCullDistanceFar*(): float64 {.importc: "rlGetCullDistanceFar", sideEffect.}
   ## Get cull plane distance far
-proc rlBegin*(mode: DrawMode) {.importc: "rlBegin".}
+proc rlBegin*(mode: DrawMode) {.importc: "rlBegin", sideEffect.}
   ## Initialize drawing mode (how to organize vertex)
-proc rlEnd*() {.importc: "rlEnd".}
+proc rlEnd*() {.importc: "rlEnd", sideEffect.}
   ## Finish vertex providing
-proc vertex2i*(x: int32, y: int32) {.importc: "rlVertex2i".}
+proc vertex2i*(x: int32, y: int32) {.importc: "rlVertex2i", sideEffect.}
   ## Define one vertex (position) - 2 int
-proc vertex2f*(x: float32, y: float32) {.importc: "rlVertex2f".}
+proc vertex2f*(x: float32, y: float32) {.importc: "rlVertex2f", sideEffect.}
   ## Define one vertex (position) - 2 float
-proc vertex3f*(x: float32, y: float32, z: float32) {.importc: "rlVertex3f".}
+proc vertex3f*(x: float32, y: float32, z: float32) {.importc: "rlVertex3f", sideEffect.}
   ## Define one vertex (position) - 3 float
-proc texCoord2f*(x: float32, y: float32) {.importc: "rlTexCoord2f".}
+proc texCoord2f*(x: float32, y: float32) {.importc: "rlTexCoord2f", sideEffect.}
   ## Define one vertex (texture coordinate) - 2 float
-proc normal3f*(x: float32, y: float32, z: float32) {.importc: "rlNormal3f".}
+proc normal3f*(x: float32, y: float32, z: float32) {.importc: "rlNormal3f", sideEffect.}
   ## Define one vertex (normal) - 3 float
-proc color4ub*(r: uint8, g: uint8, b: uint8, a: uint8) {.importc: "rlColor4ub".}
+proc color4ub*(r: uint8, g: uint8, b: uint8, a: uint8) {.importc: "rlColor4ub", sideEffect.}
   ## Define one vertex (color) - 4 byte
-proc color3f*(x: float32, y: float32, z: float32) {.importc: "rlColor3f".}
+proc color3f*(x: float32, y: float32, z: float32) {.importc: "rlColor3f", sideEffect.}
   ## Define one vertex (color) - 3 float
-proc color4f*(x: float32, y: float32, z: float32, w: float32) {.importc: "rlColor4f".}
+proc color4f*(x: float32, y: float32, z: float32, w: float32) {.importc: "rlColor4f", sideEffect.}
   ## Define one vertex (color) - 4 float
-proc enableVertexArray*(vaoId: uint32): bool {.importc: "rlEnableVertexArray".}
+proc enableVertexArray*(vaoId: uint32): bool {.importc: "rlEnableVertexArray", sideEffect.}
   ## Enable vertex array (VAO, if supported)
-proc disableVertexArray*() {.importc: "rlDisableVertexArray".}
+proc disableVertexArray*() {.importc: "rlDisableVertexArray", sideEffect.}
   ## Disable vertex array (VAO, if supported)
-proc enableVertexBuffer*(id: uint32) {.importc: "rlEnableVertexBuffer".}
+proc enableVertexBuffer*(id: uint32) {.importc: "rlEnableVertexBuffer", sideEffect.}
   ## Enable vertex buffer (VBO)
-proc disableVertexBuffer*() {.importc: "rlDisableVertexBuffer".}
+proc disableVertexBuffer*() {.importc: "rlDisableVertexBuffer", sideEffect.}
   ## Disable vertex buffer (VBO)
-proc enableVertexBufferElement*(id: uint32) {.importc: "rlEnableVertexBufferElement".}
+proc enableVertexBufferElement*(id: uint32) {.importc: "rlEnableVertexBufferElement", sideEffect.}
   ## Enable vertex buffer element (VBO element)
-proc disableVertexBufferElement*() {.importc: "rlDisableVertexBufferElement".}
+proc disableVertexBufferElement*() {.importc: "rlDisableVertexBufferElement", sideEffect.}
   ## Disable vertex buffer element (VBO element)
-proc enableVertexAttribute*(index: uint32) {.importc: "rlEnableVertexAttribute".}
+proc enableVertexAttribute*(index: uint32) {.importc: "rlEnableVertexAttribute", sideEffect.}
   ## Enable vertex attribute index
-proc disableVertexAttribute*(index: uint32) {.importc: "rlDisableVertexAttribute".}
+proc disableVertexAttribute*(index: uint32) {.importc: "rlDisableVertexAttribute", sideEffect.}
   ## Disable vertex attribute index
-proc enableStatePointer*(vertexAttribType: int32, buffer: pointer) {.importc: "rlEnableStatePointer".}
+proc enableStatePointer*(vertexAttribType: int32, buffer: pointer) {.importc: "rlEnableStatePointer", sideEffect.}
   ## Enable attribute state pointer
-proc disableStatePointer*(vertexAttribType: int32) {.importc: "rlDisableStatePointer".}
+proc disableStatePointer*(vertexAttribType: int32) {.importc: "rlDisableStatePointer", sideEffect.}
   ## Disable attribute state pointer
-proc activeTextureSlot*(slot: int32) {.importc: "rlActiveTextureSlot".}
+proc activeTextureSlot*(slot: int32) {.importc: "rlActiveTextureSlot", sideEffect.}
   ## Select and active a texture slot
-proc enableTexture*(id: uint32) {.importc: "rlEnableTexture".}
+proc enableTexture*(id: uint32) {.importc: "rlEnableTexture", sideEffect.}
   ## Enable texture
-proc disableTexture*() {.importc: "rlDisableTexture".}
+proc disableTexture*() {.importc: "rlDisableTexture", sideEffect.}
   ## Disable texture
-proc enableTextureCubemap*(id: uint32) {.importc: "rlEnableTextureCubemap".}
+proc enableTextureCubemap*(id: uint32) {.importc: "rlEnableTextureCubemap", sideEffect.}
   ## Enable texture cubemap
-proc disableTextureCubemap*() {.importc: "rlDisableTextureCubemap".}
+proc disableTextureCubemap*() {.importc: "rlDisableTextureCubemap", sideEffect.}
   ## Disable texture cubemap
-proc textureParameters*(id: uint32, param: TextureParameter, value: int32) {.importc: "rlTextureParameters".}
+proc textureParameters*(id: uint32, param: TextureParameter, value: int32) {.importc: "rlTextureParameters", sideEffect.}
   ## Set texture parameters (filter, wrap)
-proc cubemapParameters*(id: uint32, param: int32, value: int32) {.importc: "rlCubemapParameters".}
+proc cubemapParameters*(id: uint32, param: int32, value: int32) {.importc: "rlCubemapParameters", sideEffect.}
   ## Set cubemap parameters (filter, wrap)
-proc enableShader*(id: uint32) {.importc: "rlEnableShader".}
+proc enableShader*(id: uint32) {.importc: "rlEnableShader", sideEffect.}
   ## Enable shader program
-proc disableShader*() {.importc: "rlDisableShader".}
+proc disableShader*() {.importc: "rlDisableShader", sideEffect.}
   ## Disable shader program
-proc enableFramebuffer*(id: uint32) {.importc: "rlEnableFramebuffer".}
+proc enableFramebuffer*(id: uint32) {.importc: "rlEnableFramebuffer", sideEffect.}
   ## Enable render texture (fbo)
-proc disableFramebuffer*() {.importc: "rlDisableFramebuffer".}
+proc disableFramebuffer*() {.importc: "rlDisableFramebuffer", sideEffect.}
   ## Disable render texture (fbo), return to default framebuffer
-proc getActiveFramebuffer*(): uint32 {.importc: "rlGetActiveFramebuffer".}
+proc getActiveFramebuffer*(): uint32 {.importc: "rlGetActiveFramebuffer", sideEffect.}
   ## Get the currently active render texture (fbo), 0 for default framebuffer
-proc activeDrawBuffers*(count: int32) {.importc: "rlActiveDrawBuffers".}
+proc activeDrawBuffers*(count: int32) {.importc: "rlActiveDrawBuffers", sideEffect.}
   ## Activate multiple draw color buffers
-proc blitFramebuffer*(srcX: int32, srcY: int32, srcWidth: int32, srcHeight: int32, dstX: int32, dstY: int32, dstWidth: int32, dstHeight: int32, bufferMask: int32) {.importc: "rlBlitFramebuffer".}
+proc blitFramebuffer*(srcX: int32, srcY: int32, srcWidth: int32, srcHeight: int32, dstX: int32, dstY: int32, dstWidth: int32, dstHeight: int32, bufferMask: int32) {.importc: "rlBlitFramebuffer", sideEffect.}
   ## Blit active framebuffer to main framebuffer
-proc bindFramebuffer*(target: FramebufferTarget, framebuffer: uint32) {.importc: "rlBindFramebuffer".}
+proc bindFramebuffer*(target: FramebufferTarget, framebuffer: uint32) {.importc: "rlBindFramebuffer", sideEffect.}
   ## Bind framebuffer (FBO)
-proc enableColorBlend*() {.importc: "rlEnableColorBlend".}
+proc enableColorBlend*() {.importc: "rlEnableColorBlend", sideEffect.}
   ## Enable color blending
-proc disableColorBlend*() {.importc: "rlDisableColorBlend".}
+proc disableColorBlend*() {.importc: "rlDisableColorBlend", sideEffect.}
   ## Disable color blending
-proc enableDepthTest*() {.importc: "rlEnableDepthTest".}
+proc enableDepthTest*() {.importc: "rlEnableDepthTest", sideEffect.}
   ## Enable depth test
-proc disableDepthTest*() {.importc: "rlDisableDepthTest".}
+proc disableDepthTest*() {.importc: "rlDisableDepthTest", sideEffect.}
   ## Disable depth test
-proc enableDepthMask*() {.importc: "rlEnableDepthMask".}
+proc enableDepthMask*() {.importc: "rlEnableDepthMask", sideEffect.}
   ## Enable depth write
-proc disableDepthMask*() {.importc: "rlDisableDepthMask".}
+proc disableDepthMask*() {.importc: "rlDisableDepthMask", sideEffect.}
   ## Disable depth write
-proc enableBackfaceCulling*() {.importc: "rlEnableBackfaceCulling".}
+proc enableBackfaceCulling*() {.importc: "rlEnableBackfaceCulling", sideEffect.}
   ## Enable backface culling
-proc disableBackfaceCulling*() {.importc: "rlDisableBackfaceCulling".}
+proc disableBackfaceCulling*() {.importc: "rlDisableBackfaceCulling", sideEffect.}
   ## Disable backface culling
-proc colorMask*(r: bool, g: bool, b: bool, a: bool) {.importc: "rlColorMask".}
+proc colorMask*(r: bool, g: bool, b: bool, a: bool) {.importc: "rlColorMask", sideEffect.}
   ## Color mask control
-proc setCullFace*(mode: CullMode) {.importc: "rlSetCullFace".}
+proc setCullFace*(mode: CullMode) {.importc: "rlSetCullFace", sideEffect.}
   ## Set face culling mode
-proc enableScissorTest*() {.importc: "rlEnableScissorTest".}
+proc enableScissorTest*() {.importc: "rlEnableScissorTest", sideEffect.}
   ## Enable scissor test
-proc disableScissorTest*() {.importc: "rlDisableScissorTest".}
+proc disableScissorTest*() {.importc: "rlDisableScissorTest", sideEffect.}
   ## Disable scissor test
-proc scissor*(x: int32, y: int32, width: int32, height: int32) {.importc: "rlScissor".}
+proc scissor*(x: int32, y: int32, width: int32, height: int32) {.importc: "rlScissor", sideEffect.}
   ## Scissor test
-proc enableWireMode*() {.importc: "rlEnableWireMode".}
+proc enableWireMode*() {.importc: "rlEnableWireMode", sideEffect.}
   ## Enable wire mode
-proc enablePointMode*() {.importc: "rlEnablePointMode".}
+proc enablePointMode*() {.importc: "rlEnablePointMode", sideEffect.}
   ## Enable point mode
-proc disableWireMode*() {.importc: "rlDisableWireMode".}
+proc disableWireMode*() {.importc: "rlDisableWireMode", sideEffect.}
   ## Disable wire (and point) mode
-proc setLineWidth*(width: float32) {.importc: "rlSetLineWidth".}
+proc setLineWidth*(width: float32) {.importc: "rlSetLineWidth", sideEffect.}
   ## Set the line drawing width
-proc getLineWidth*(): float32 {.importc: "rlGetLineWidth".}
+proc getLineWidth*(): float32 {.importc: "rlGetLineWidth", sideEffect.}
   ## Get the line drawing width
-proc enableSmoothLines*() {.importc: "rlEnableSmoothLines".}
+proc enableSmoothLines*() {.importc: "rlEnableSmoothLines", sideEffect.}
   ## Enable line aliasing
-proc disableSmoothLines*() {.importc: "rlDisableSmoothLines".}
+proc disableSmoothLines*() {.importc: "rlDisableSmoothLines", sideEffect.}
   ## Disable line aliasing
-proc enableStereoRender*() {.importc: "rlEnableStereoRender".}
+proc enableStereoRender*() {.importc: "rlEnableStereoRender", sideEffect.}
   ## Enable stereo rendering
-proc disableStereoRender*() {.importc: "rlDisableStereoRender".}
+proc disableStereoRender*() {.importc: "rlDisableStereoRender", sideEffect.}
   ## Disable stereo rendering
-proc isStereoRenderEnabled*(): bool {.importc: "rlIsStereoRenderEnabled".}
+proc isStereoRenderEnabled*(): bool {.importc: "rlIsStereoRenderEnabled", sideEffect.}
   ## Check if stereo render is enabled
-proc clearColor*(r: uint8, g: uint8, b: uint8, a: uint8) {.importc: "rlClearColor".}
+proc clearColor*(r: uint8, g: uint8, b: uint8, a: uint8) {.importc: "rlClearColor", sideEffect.}
   ## Clear color buffer with color
-proc clearScreenBuffers*() {.importc: "rlClearScreenBuffers".}
+proc clearScreenBuffers*() {.importc: "rlClearScreenBuffers", sideEffect.}
   ## Clear used screen buffers (color and depth)
-proc checkErrors*() {.importc: "rlCheckErrors".}
+proc checkErrors*() {.importc: "rlCheckErrors", sideEffect.}
   ## Check and log OpenGL error codes
-proc setBlendMode*(mode: BlendMode) {.importc: "rlSetBlendMode".}
+proc setBlendMode*(mode: BlendMode) {.importc: "rlSetBlendMode", sideEffect.}
   ## Set blending mode
-proc setBlendFactors*(glSrcFactor: BlendFactor, glDstFactor: BlendFactor, glEquation: BlendFuncOrEq) {.importc: "rlSetBlendFactors".}
+proc setBlendFactors*(glSrcFactor: BlendFactor, glDstFactor: BlendFactor, glEquation: BlendFuncOrEq) {.importc: "rlSetBlendFactors", sideEffect.}
   ## Set blending mode factor and equation (using OpenGL factors)
-proc setBlendFactorsSeparate*(glSrcRGB: BlendFactor, glDstRGB: BlendFactor, glSrcAlpha: BlendFactor, glDstAlpha: BlendFactor, glEqRGB: BlendFuncOrEq, glEqAlpha: BlendFuncOrEq) {.importc: "rlSetBlendFactorsSeparate".}
+proc setBlendFactorsSeparate*(glSrcRGB: BlendFactor, glDstRGB: BlendFactor, glSrcAlpha: BlendFactor, glDstAlpha: BlendFactor, glEqRGB: BlendFuncOrEq, glEqAlpha: BlendFuncOrEq) {.importc: "rlSetBlendFactorsSeparate", sideEffect.}
   ## Set blending mode factors and equations separately (using OpenGL factors)
-proc rlglInit*(width: int32, height: int32) {.importc: "rlglInit".}
+proc rlglInit*(width: int32, height: int32) {.importc: "rlglInit", sideEffect.}
   ## Initialize rlgl (buffers, shaders, textures, states)
-proc rlglClose*() {.importc: "rlglClose".}
+proc rlglClose*() {.importc: "rlglClose", sideEffect.}
   ## De-initialize rlgl (buffers, shaders, textures)
-proc loadExtensions*(loader: rlglLoadProc) {.importc: "rlLoadExtensions".}
+proc loadExtensions*(loader: rlglLoadProc) {.importc: "rlLoadExtensions", sideEffect.}
   ## Load OpenGL extensions (loader function required)
-proc getVersion*(): GlVersion {.importc: "rlGetVersion".}
+proc getVersion*(): GlVersion {.importc: "rlGetVersion", sideEffect.}
   ## Get current OpenGL version
-proc setFramebufferWidth*(width: int32) {.importc: "rlSetFramebufferWidth".}
+proc setFramebufferWidth*(width: int32) {.importc: "rlSetFramebufferWidth", sideEffect.}
   ## Set current framebuffer width
-proc getFramebufferWidth*(): int32 {.importc: "rlGetFramebufferWidth".}
+proc getFramebufferWidth*(): int32 {.importc: "rlGetFramebufferWidth", sideEffect.}
   ## Get default framebuffer width
-proc setFramebufferHeight*(height: int32) {.importc: "rlSetFramebufferHeight".}
+proc setFramebufferHeight*(height: int32) {.importc: "rlSetFramebufferHeight", sideEffect.}
   ## Set current framebuffer height
-proc getFramebufferHeight*(): int32 {.importc: "rlGetFramebufferHeight".}
+proc getFramebufferHeight*(): int32 {.importc: "rlGetFramebufferHeight", sideEffect.}
   ## Get default framebuffer height
-proc getTextureIdDefault*(): uint32 {.importc: "rlGetTextureIdDefault".}
+proc getTextureIdDefault*(): uint32 {.importc: "rlGetTextureIdDefault", sideEffect.}
   ## Get default texture id
-proc getShaderIdDefault*(): uint32 {.importc: "rlGetShaderIdDefault".}
+proc getShaderIdDefault*(): uint32 {.importc: "rlGetShaderIdDefault", sideEffect.}
   ## Get default shader id
-proc getShaderLocsDefault*(): ShaderLocsPtr {.importc: "rlGetShaderLocsDefault".}
+proc getShaderLocsDefault*(): ShaderLocsPtr {.importc: "rlGetShaderLocsDefault", sideEffect.}
   ## Get default shader locations
-proc loadRenderBatch*(numBuffers: int32, bufferElements: int32): RenderBatch {.importc: "rlLoadRenderBatch".}
+proc loadRenderBatch*(numBuffers: int32, bufferElements: int32): RenderBatch {.importc: "rlLoadRenderBatch", sideEffect.}
   ## Load a render batch system
-proc unloadRenderBatch*(batch: RenderBatch) {.importc: "rlUnloadRenderBatch".}
+proc unloadRenderBatch*(batch: RenderBatch) {.importc: "rlUnloadRenderBatch", sideEffect.}
   ## Unload render batch system
-proc drawRenderBatch*(batch: var RenderBatch) {.importc: "rlDrawRenderBatch".}
+proc drawRenderBatch*(batch: var RenderBatch) {.importc: "rlDrawRenderBatch", sideEffect.}
   ## Draw render batch data (Update->Draw->Reset)
-proc setRenderBatchActive*(batch: var RenderBatch) {.importc: "rlSetRenderBatchActive".}
+proc setRenderBatchActive*(batch: var RenderBatch) {.importc: "rlSetRenderBatchActive", sideEffect.}
   ## Set the active render batch for rlgl (NULL for default internal)
-proc drawRenderBatchActive*() {.importc: "rlDrawRenderBatchActive".}
+proc drawRenderBatchActive*() {.importc: "rlDrawRenderBatchActive", sideEffect.}
   ## Update and draw internal render batch
-proc checkRenderBatchLimit*(vCount: int32): bool {.importc: "rlCheckRenderBatchLimit".}
+proc checkRenderBatchLimit*(vCount: int32): bool {.importc: "rlCheckRenderBatchLimit", sideEffect.}
   ## Check internal buffer overflow for a given number of vertex
-proc setTexture*(id: uint32) {.importc: "rlSetTexture".}
+proc setTexture*(id: uint32) {.importc: "rlSetTexture", sideEffect.}
   ## Set current texture for render batch and check buffers limits
-proc loadVertexArray*(): uint32 {.importc: "rlLoadVertexArray".}
+proc loadVertexArray*(): uint32 {.importc: "rlLoadVertexArray", sideEffect.}
   ## Load vertex array (vao) if supported
-proc loadVertexBuffer*(buffer: pointer, size: int32, dynamic: bool): uint32 {.importc: "rlLoadVertexBuffer".}
+proc loadVertexBuffer*(buffer: pointer, size: int32, dynamic: bool): uint32 {.importc: "rlLoadVertexBuffer", sideEffect.}
   ## Load a vertex buffer object
-proc loadVertexBufferElement*(buffer: pointer, size: int32, dynamic: bool): uint32 {.importc: "rlLoadVertexBufferElement".}
+proc loadVertexBufferElement*(buffer: pointer, size: int32, dynamic: bool): uint32 {.importc: "rlLoadVertexBufferElement", sideEffect.}
   ## Load vertex buffer elements object
-proc updateVertexBuffer*(bufferId: uint32, data: pointer, dataSize: int32, offset: int32) {.importc: "rlUpdateVertexBuffer".}
+proc updateVertexBuffer*(bufferId: uint32, data: pointer, dataSize: int32, offset: int32) {.importc: "rlUpdateVertexBuffer", sideEffect.}
   ## Update vertex buffer object data on GPU buffer
-proc updateVertexBufferElements*(id: uint32, data: pointer, dataSize: int32, offset: int32) {.importc: "rlUpdateVertexBufferElements".}
+proc updateVertexBufferElements*(id: uint32, data: pointer, dataSize: int32, offset: int32) {.importc: "rlUpdateVertexBufferElements", sideEffect.}
   ## Update vertex buffer elements data on GPU buffer
-proc unloadVertexArray*(vaoId: uint32) {.importc: "rlUnloadVertexArray".}
+proc unloadVertexArray*(vaoId: uint32) {.importc: "rlUnloadVertexArray", sideEffect.}
   ## Unload vertex array (vao)
-proc unloadVertexBuffer*(vboId: uint32) {.importc: "rlUnloadVertexBuffer".}
+proc unloadVertexBuffer*(vboId: uint32) {.importc: "rlUnloadVertexBuffer", sideEffect.}
   ## Unload vertex buffer object
-proc setVertexAttribute*(index: uint32, compSize: int32, `type`: GlType, normalized: bool, stride: int32, offset: int32) {.importc: "rlSetVertexAttribute".}
+proc setVertexAttribute*(index: uint32, compSize: int32, `type`: GlType, normalized: bool, stride: int32, offset: int32) {.importc: "rlSetVertexAttribute", sideEffect.}
   ## Set vertex attribute data configuration
-proc setVertexAttributeDivisor*(index: uint32, divisor: int32) {.importc: "rlSetVertexAttributeDivisor".}
+proc setVertexAttributeDivisor*(index: uint32, divisor: int32) {.importc: "rlSetVertexAttributeDivisor", sideEffect.}
   ## Set vertex attribute data divisor
-proc setVertexAttributeDefault*(locIndex: ShaderLocation, value: pointer, attribType: ShaderAttributeDataType, count: int32) {.importc: "rlSetVertexAttributeDefault".}
+proc setVertexAttributeDefault*(locIndex: ShaderLocation, value: pointer, attribType: ShaderAttributeDataType, count: int32) {.importc: "rlSetVertexAttributeDefault", sideEffect.}
   ## Set vertex attribute default value, when attribute to provided
-proc drawVertexArray*(offset: int32, count: int32) {.importc: "rlDrawVertexArray".}
+proc drawVertexArray*(offset: int32, count: int32) {.importc: "rlDrawVertexArray", sideEffect.}
   ## Draw vertex array (currently active vao)
-proc drawVertexArrayElements*(offset: int32, count: int32, buffer: pointer) {.importc: "rlDrawVertexArrayElements".}
+proc drawVertexArrayElements*(offset: int32, count: int32, buffer: pointer) {.importc: "rlDrawVertexArrayElements", sideEffect.}
   ## Draw vertex array elements
-proc drawVertexArrayInstanced*(offset: int32, count: int32, instances: int32) {.importc: "rlDrawVertexArrayInstanced".}
+proc drawVertexArrayInstanced*(offset: int32, count: int32, instances: int32) {.importc: "rlDrawVertexArrayInstanced", sideEffect.}
   ## Draw vertex array (currently active vao) with instancing
-proc drawVertexArrayElementsInstanced*(offset: int32, count: int32, buffer: pointer, instances: int32) {.importc: "rlDrawVertexArrayElementsInstanced".}
+proc drawVertexArrayElementsInstanced*(offset: int32, count: int32, buffer: pointer, instances: int32) {.importc: "rlDrawVertexArrayElementsInstanced", sideEffect.}
   ## Draw vertex array elements with instancing
-proc loadTexture*(data: pointer, width: int32, height: int32, format: int32, mipmapCount: int32): uint32 {.importc: "rlLoadTexture".}
+proc loadTexture*(data: pointer, width: int32, height: int32, format: int32, mipmapCount: int32): uint32 {.importc: "rlLoadTexture", sideEffect.}
   ## Load texture data
-proc loadTextureDepth*(width: int32, height: int32, useRenderBuffer: bool): uint32 {.importc: "rlLoadTextureDepth".}
+proc loadTextureDepth*(width: int32, height: int32, useRenderBuffer: bool): uint32 {.importc: "rlLoadTextureDepth", sideEffect.}
   ## Load depth texture/renderbuffer (to be attached to fbo)
-proc loadTextureCubemap*(data: pointer, size: int32, format: PixelFormat): uint32 {.importc: "rlLoadTextureCubemap".}
+proc loadTextureCubemap*(data: pointer, size: int32, format: PixelFormat): uint32 {.importc: "rlLoadTextureCubemap", sideEffect.}
   ## Load texture cubemap data
-proc updateTexture*(id: uint32, offsetX: int32, offsetY: int32, width: int32, height: int32, format: PixelFormat, data: pointer) {.importc: "rlUpdateTexture".}
+proc updateTexture*(id: uint32, offsetX: int32, offsetY: int32, width: int32, height: int32, format: PixelFormat, data: pointer) {.importc: "rlUpdateTexture", sideEffect.}
   ## Update texture with new data on GPU
-proc getGlTextureFormats*(format: PixelFormat, glInternalFormat: out uint32, glFormat: out uint32, glType: out uint32) {.importc: "rlGetGlTextureFormats".}
+proc getGlTextureFormats*(format: PixelFormat, glInternalFormat: out uint32, glFormat: out uint32, glType: out uint32) {.importc: "rlGetGlTextureFormats", sideEffect.}
   ## Get OpenGL internal formats
-proc unloadTexture*(id: uint32) {.importc: "rlUnloadTexture".}
+proc unloadTexture*(id: uint32) {.importc: "rlUnloadTexture", sideEffect.}
   ## Unload texture from GPU memory
-proc genTextureMipmaps*(id: uint32, width: int32, height: int32, format: PixelFormat, mipmaps: out int32) {.importc: "rlGenTextureMipmaps".}
+proc genTextureMipmaps*(id: uint32, width: int32, height: int32, format: PixelFormat, mipmaps: out int32) {.importc: "rlGenTextureMipmaps", sideEffect.}
   ## Generate mipmap data for selected texture
-proc readTexturePixels*(id: uint32, width: int32, height: int32, format: PixelFormat): pointer {.importc: "rlReadTexturePixels".}
+proc readTexturePixels*(id: uint32, width: int32, height: int32, format: PixelFormat): pointer {.importc: "rlReadTexturePixels", sideEffect.}
   ## Read texture pixel data
-proc readScreenPixels*(width: int32, height: int32): var uint8 {.importc: "rlReadScreenPixels".}
+proc readScreenPixels*(width: int32, height: int32): var uint8 {.importc: "rlReadScreenPixels", sideEffect.}
   ## Read screen pixel data (color buffer)
-proc loadFramebuffer*(): uint32 {.importc: "rlLoadFramebuffer".}
+proc loadFramebuffer*(): uint32 {.importc: "rlLoadFramebuffer", sideEffect.}
   ## Load an empty framebuffer
-proc framebufferAttach*(fboId: uint32, texId: uint32, attachType: FramebufferAttachType, texType: FramebufferAttachTextureType, mipLevel: int32) {.importc: "rlFramebufferAttach".}
+proc framebufferAttach*(fboId: uint32, texId: uint32, attachType: FramebufferAttachType, texType: FramebufferAttachTextureType, mipLevel: int32) {.importc: "rlFramebufferAttach", sideEffect.}
   ## Attach texture/renderbuffer to a framebuffer
-proc framebufferComplete*(id: uint32): bool {.importc: "rlFramebufferComplete".}
+proc framebufferComplete*(id: uint32): bool {.importc: "rlFramebufferComplete", sideEffect.}
   ## Verify framebuffer is complete
-proc unloadFramebuffer*(id: uint32) {.importc: "rlUnloadFramebuffer".}
+proc unloadFramebuffer*(id: uint32) {.importc: "rlUnloadFramebuffer", sideEffect.}
   ## Delete framebuffer from GPU
-proc loadShaderCode*(vsCode: cstring, fsCode: cstring): uint32 {.importc: "rlLoadShaderCode".}
-  ## Load shader from code strings
-proc compileShader*(shaderCode: cstring, `type`: ShaderType): uint32 {.importc: "rlCompileShader".}
-  ## Compile custom shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
-proc loadShaderProgram*(vShaderId: uint32, fShaderId: uint32): uint32 {.importc: "rlLoadShaderProgram".}
+proc loadShaderCodeImpl(vsCode: cstring, fsCode: cstring): uint32 {.importc: "rlLoadShaderCode", sideEffect.}
+proc compileShaderImpl(shaderCode: cstring, `type`: ShaderType): uint32 {.importc: "rlCompileShader", sideEffect.}
+proc loadShaderProgram*(vShaderId: uint32, fShaderId: uint32): uint32 {.importc: "rlLoadShaderProgram", sideEffect.}
   ## Load custom shader program
-proc unloadShaderProgram*(id: uint32) {.importc: "rlUnloadShaderProgram".}
+proc unloadShaderProgram*(id: uint32) {.importc: "rlUnloadShaderProgram", sideEffect.}
   ## Unload shader program
-proc getLocationUniform*(shaderId: uint32, uniformName: cstring): ShaderLocation {.importc: "rlGetLocationUniform".}
-  ## Get shader location uniform
-proc getLocationAttrib*(shaderId: uint32, attribName: cstring): ShaderLocation {.importc: "rlGetLocationAttrib".}
-  ## Get shader location attribute
-proc setUniform*(locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "rlSetUniform".}
+proc getLocationUniformImpl(shaderId: uint32, uniformName: cstring): ShaderLocation {.importc: "rlGetLocationUniform", sideEffect.}
+proc getLocationAttribImpl(shaderId: uint32, attribName: cstring): ShaderLocation {.importc: "rlGetLocationAttrib", sideEffect.}
+proc setUniform*(locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "rlSetUniform", sideEffect.}
   ## Set shader value uniform
-proc setUniformMatrix*(locIndex: ShaderLocation, mat: Matrix) {.importc: "rlSetUniformMatrix".}
+proc setUniformMatrix*(locIndex: ShaderLocation, mat: Matrix) {.importc: "rlSetUniformMatrix", sideEffect.}
   ## Set shader value matrix
-proc setUniformMatrices*(locIndex: int32, mat: var Matrix, count: int32) {.importc: "rlSetUniformMatrices".}
+proc setUniformMatrices*(locIndex: int32, mat: var Matrix, count: int32) {.importc: "rlSetUniformMatrices", sideEffect.}
   ## Set shader value matrices
-proc setUniformSampler*(locIndex: ShaderLocation, textureId: uint32) {.importc: "rlSetUniformSampler".}
+proc setUniformSampler*(locIndex: ShaderLocation, textureId: uint32) {.importc: "rlSetUniformSampler", sideEffect.}
   ## Set shader value sampler
-proc setShader*(id: uint32, locs: ShaderLocsPtr) {.importc: "rlSetShader".}
+proc setShader*(id: uint32, locs: ShaderLocsPtr) {.importc: "rlSetShader", sideEffect.}
   ## Set shader currently active (id and locations)
-proc loadComputeShaderProgram*(shaderId: uint32): uint32 {.importc: "rlLoadComputeShaderProgram".}
+proc loadComputeShaderProgram*(shaderId: uint32): uint32 {.importc: "rlLoadComputeShaderProgram", sideEffect.}
   ## Load compute shader program
-proc computeShaderDispatch*(groupX: uint32, groupY: uint32, groupZ: uint32) {.importc: "rlComputeShaderDispatch".}
+proc computeShaderDispatch*(groupX: uint32, groupY: uint32, groupZ: uint32) {.importc: "rlComputeShaderDispatch", sideEffect.}
   ## Dispatch compute shader (equivalent to *draw* for graphics pipeline)
-proc loadShaderBuffer*(size: uint32, data: pointer, usageHint: BufferUsageHint): uint32 {.importc: "rlLoadShaderBuffer".}
+proc loadShaderBuffer*(size: uint32, data: pointer, usageHint: BufferUsageHint): uint32 {.importc: "rlLoadShaderBuffer", sideEffect.}
   ## Load shader storage buffer object (SSBO)
-proc unloadShaderBuffer*(ssboId: uint32) {.importc: "rlUnloadShaderBuffer".}
+proc unloadShaderBuffer*(ssboId: uint32) {.importc: "rlUnloadShaderBuffer", sideEffect.}
   ## Unload shader storage buffer object (SSBO)
-proc updateShaderBuffer*(id: uint32, data: pointer, dataSize: uint32, offset: uint32) {.importc: "rlUpdateShaderBuffer".}
+proc updateShaderBuffer*(id: uint32, data: pointer, dataSize: uint32, offset: uint32) {.importc: "rlUpdateShaderBuffer", sideEffect.}
   ## Update SSBO buffer data
-proc bindShaderBuffer*(id: uint32, index: uint32) {.importc: "rlBindShaderBuffer".}
+proc bindShaderBuffer*(id: uint32, index: uint32) {.importc: "rlBindShaderBuffer", sideEffect.}
   ## Bind SSBO buffer
-proc readShaderBuffer*(id: uint32, dest: pointer, count: uint32, offset: uint32) {.importc: "rlReadShaderBuffer".}
+proc readShaderBuffer*(id: uint32, dest: pointer, count: uint32, offset: uint32) {.importc: "rlReadShaderBuffer", sideEffect.}
   ## Read SSBO buffer data (GPU->CPU)
-proc copyShaderBuffer*(destId: uint32, srcId: uint32, destOffset: uint32, srcOffset: uint32, count: uint32) {.importc: "rlCopyShaderBuffer".}
+proc copyShaderBuffer*(destId: uint32, srcId: uint32, destOffset: uint32, srcOffset: uint32, count: uint32) {.importc: "rlCopyShaderBuffer", sideEffect.}
   ## Copy SSBO data between buffers
-proc getShaderBufferSize*(id: uint32): uint32 {.importc: "rlGetShaderBufferSize".}
+proc getShaderBufferSize*(id: uint32): uint32 {.importc: "rlGetShaderBufferSize", sideEffect.}
   ## Get SSBO buffer size
-proc bindImageTexture*(id: uint32, index: uint32, format: PixelFormat, readonly: bool) {.importc: "rlBindImageTexture".}
+proc bindImageTexture*(id: uint32, index: uint32, format: PixelFormat, readonly: bool) {.importc: "rlBindImageTexture", sideEffect.}
   ## Bind image texture
-proc getMatrixModelview*(): Matrix {.importc: "rlGetMatrixModelview".}
+proc getMatrixModelview*(): Matrix {.importc: "rlGetMatrixModelview", sideEffect.}
   ## Get internal modelview matrix
-proc getMatrixProjection*(): Matrix {.importc: "rlGetMatrixProjection".}
+proc getMatrixProjection*(): Matrix {.importc: "rlGetMatrixProjection", sideEffect.}
   ## Get internal projection matrix
-proc getMatrixTransform*(): Matrix {.importc: "rlGetMatrixTransform".}
+proc getMatrixTransform*(): Matrix {.importc: "rlGetMatrixTransform", sideEffect.}
   ## Get internal accumulated transform matrix
-proc getMatrixProjectionStereo*(eye: int32): Matrix {.importc: "rlGetMatrixProjectionStereo".}
+proc getMatrixProjectionStereo*(eye: int32): Matrix {.importc: "rlGetMatrixProjectionStereo", sideEffect.}
   ## Get internal projection matrix for stereo render (selected eye)
-proc getMatrixViewOffsetStereo*(eye: int32): Matrix {.importc: "rlGetMatrixViewOffsetStereo".}
+proc getMatrixViewOffsetStereo*(eye: int32): Matrix {.importc: "rlGetMatrixViewOffsetStereo", sideEffect.}
   ## Get internal view offset matrix for stereo render (selected eye)
-proc setMatrixProjection*(proj: Matrix) {.importc: "rlSetMatrixProjection".}
+proc setMatrixProjection*(proj: Matrix) {.importc: "rlSetMatrixProjection", sideEffect.}
   ## Set a custom projection matrix (replaces internal projection matrix)
-proc setMatrixModelview*(view: Matrix) {.importc: "rlSetMatrixModelview".}
+proc setMatrixModelview*(view: Matrix) {.importc: "rlSetMatrixModelview", sideEffect.}
   ## Set a custom modelview matrix (replaces internal modelview matrix)
-proc setMatrixProjectionStereo*(right: Matrix, left: Matrix) {.importc: "rlSetMatrixProjectionStereo".}
+proc setMatrixProjectionStereo*(right: Matrix, left: Matrix) {.importc: "rlSetMatrixProjectionStereo", sideEffect.}
   ## Set eyes projection matrices for stereo rendering
-proc setMatrixViewOffsetStereo*(right: Matrix, left: Matrix) {.importc: "rlSetMatrixViewOffsetStereo".}
+proc setMatrixViewOffsetStereo*(right: Matrix, left: Matrix) {.importc: "rlSetMatrixViewOffsetStereo", sideEffect.}
   ## Set eyes view offsets matrices for stereo rendering
-proc loadDrawCube*() {.importc: "rlLoadDrawCube".}
+proc loadDrawCube*() {.importc: "rlLoadDrawCube", sideEffect.}
   ## Load and draw a cube
-proc loadDrawQuad*() {.importc: "rlLoadDrawQuad".}
+proc loadDrawQuad*() {.importc: "rlLoadDrawQuad", sideEffect.}
   ## Load and draw a quad
 {.pop.}
 
 proc elementCount*(x: VertexBuffer): int32 {.inline.} = x.elementCount
 proc bufferCount*(x: RenderBatch): int32 {.inline.} = x.bufferCount
+
+proc loadShaderCode*(vsCode: string, fsCode: string): uint32 =
+  ## Load shader from code strings
+  loadShaderCodeImpl(vsCode.cstring, fsCode.cstring)
+
+proc compileShader*(shaderCode: string, `type`: ShaderType): uint32 =
+  ## Compile custom shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
+  compileShaderImpl(shaderCode.cstring, `type`)
+
+proc getLocationUniform*(shaderId: uint32, uniformName: string): ShaderLocation =
+  ## Get shader location uniform
+  getLocationUniformImpl(shaderId, uniformName.cstring)
+
+proc getLocationAttrib*(shaderId: uint32, attribName: string): ShaderLocation =
+  ## Get shader location attribute
+  getLocationAttribImpl(shaderId, attribName.cstring)
+
 
 proc `=destroy`*(x: RenderBatch) =
   unloadRenderBatch(x)

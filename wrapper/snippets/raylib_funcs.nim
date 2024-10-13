@@ -20,7 +20,7 @@ proc wrapperTraceLogCallback(logLevel: int32; text: cstring; args: va_list) {.cd
 proc setTraceLogCallback*(callback: TraceLogCallback) =
   ## Set custom trace log
   traceLogCallback = callback
-  setTraceLogCallbackPriv(cast[TraceLogCallbackImpl](wrapperTraceLogCallback))
+  setTraceLogCallbackImpl(cast[TraceLogCallbackImpl](wrapperTraceLogCallback))
 
 proc toWeakImage*(data: openArray[byte], width, height: int32, format: PixelFormat): WeakImage {.inline.} =
   Image(data: cast[pointer](data), width: width, height: height, mipmaps: 1, format: format).WeakImage
@@ -30,30 +30,14 @@ proc toWeakWave*(data: openArray[byte], frameCount, sampleRate, sampleSize, chan
 
 proc initWindow*(width: int32, height: int32, title: string) =
   ## Initialize window and OpenGL context
-  initWindowPriv(width, height, title.cstring)
+  initWindowImpl(width, height, title.cstring)
   if not isWindowReady(): raiseRaylibError("Failed to create Window")
-
-proc setWindowIcons*(images: openArray[Image]) =
-  ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
-  setWindowIconsPriv(cast[ptr UncheckedArray[Image]](images), images.len.int32)
-
-proc getMonitorName*(monitor: int32): string {.inline.} =
-  ## Get the human-readable, UTF-8 encoded name of the primary monitor
-  result = $getMonitorNamePriv(monitor)
-
-proc getClipboardText*(): string {.inline.} =
-  ## Get clipboard text content
-  result = $getClipboardTextPriv()
 
 proc getDroppedFiles*(): seq[string] =
   ## Get dropped files names
-  let dropfiles = loadDroppedFilesPriv()
+  let dropfiles = loadDroppedFilesImpl()
   result = cstringArrayToSeq(dropfiles.paths, dropfiles.count)
-  unloadDroppedFilesPriv(dropfiles) # Clear internal buffers
-
-proc getGamepadName*(gamepad: int32): string {.inline.} =
-  ## Get gamepad internal name id
-  result = $getGamepadNamePriv(gamepad)
+  unloadDroppedFilesImpl(dropfiles) # Clear internal buffers
 
 proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
   ## Export data to code (.nim), returns true on success
@@ -92,12 +76,12 @@ proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
 
 proc loadShader*(vsFileName, fsFileName: string): Shader =
   ## Load shader from files and bind default locations
-  result = loadShaderPriv(if vsFileName.len == 0: nil else: vsFileName.cstring,
+  result = loadShaderImpl(if vsFileName.len == 0: nil else: vsFileName.cstring,
       if fsFileName.len == 0: nil else: fsFileName.cstring)
 
 proc loadShaderFromMemory*(vsCode, fsCode: string): Shader =
   ## Load shader from code strings and bind default locations
-  result = loadShaderFromMemoryPriv(if vsCode.len == 0: nil else: vsCode.cstring,
+  result = loadShaderFromMemoryImpl(if vsCode.len == 0: nil else: vsCode.cstring,
       if fsCode.len == 0: nil else: fsCode.cstring)
 
 type
@@ -118,129 +102,81 @@ template kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = Vec4
 
 proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: T) =
   ## Set shader uniform value
-  setShaderValuePriv(shader, locIndex, addr value, kind(T))
+  setShaderValueImpl(shader, locIndex, addr value, kind(T))
 
 proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: openArray[T]) =
   ## Set shader uniform value vector
-  setShaderValueVPriv(shader, locIndex, cast[pointer](value), kind(T), value.len.int32)
+  setShaderValueVImpl(shader, locIndex, cast[pointer](value), kind(T), value.len.int32)
 
 proc loadModelAnimations*(fileName: string): RArray[ModelAnimation] =
   ## Load model animations from file
   var len = 0'i32
-  let data = loadModelAnimationsPriv(fileName.cstring, addr len)
+  let data = loadModelAnimationsImpl(fileName.cstring, addr len)
   if len <= 0: raiseRaylibError("Failed to load ModelAnimations from " & fileName)
   result = RArray[ModelAnimation](len: len.int, data: data)
 
 proc loadWaveSamples*(wave: Wave): RArray[float32] =
   ## Load samples data from wave as a floats array
-  let data = loadWaveSamplesPriv(wave)
+  let data = loadWaveSamplesImpl(wave)
   let len = int(wave.frameCount * wave.channels)
   result = RArray[float32](len: len, data: data)
 
 proc loadImageColors*(image: Image): RArray[Color] =
   ## Load color data from image as a Color array (RGBA - 32bit)
-  let data = loadImageColorsPriv(image)
+  let data = loadImageColorsImpl(image)
   let len = int(image.width * image.height)
   result = RArray[Color](len: len, data: data)
 
 proc loadImagePalette*(image: Image; maxPaletteSize: int32): RArray[Color] =
   ## Load colors palette from image as a Color array (RGBA - 32bit)
   var len = 0'i32
-  let data = loadImagePalettePriv(image, maxPaletteSize, addr len)
+  let data = loadImagePaletteImpl(image, maxPaletteSize, addr len)
   result = RArray[Color](len: len, data: data)
 
 proc loadMaterials*(fileName: string): RArray[Material] =
   ## Load materials from model file
   var len = 0'i32
-  let data = loadMaterialsPriv(fileName.cstring, addr len)
+  let data = loadMaterialsImpl(fileName.cstring, addr len)
   if len <= 0: raiseRaylibError("Failed to load Materials from " & fileName)
   result = RArray[Material](len: len, data: data)
 
-proc drawLineStrip*(points: openArray[Vector2]; color: Color) {.inline.} =
-  ## Draw lines sequence
-  drawLineStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc drawSplineLinear*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: Linear, minimum 2 points
-  drawSplineLinearPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawSplineBasis*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: B-Spline, minimum 4 points
-  drawSplineBasisPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawSplineCatmullRom*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: Catmull-Rom, minimum 4 points
-  drawSplineCatmullRomPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawSplineBezierQuadratic*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
-  drawSplineBezierQuadraticPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawSplineBezierCubic*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
-  drawSplineBezierCubicPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawTriangleFan*(points: openArray[Vector2]; color: Color) =
-  ## Draw a triangle fan defined by points (first vertex is the center)
-  drawTriangleFanPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc drawTriangleStrip*(points: openArray[Vector2]; color: Color) =
-  ## Draw a triangle strip defined by points
-  drawTriangleStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool =
-  checkCollisionPointPolyPriv(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
-
-proc imageDrawTriangleFan*(dst: var Image, points: openArray[Vector2], color: Color) =
-  ## Draw a triangle fan defined by points within an image (first vertex is the center)
-  imageDrawTriangleFanPriv(dst.addr, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc imageDrawTriangleStrip*(dst: var Image, points: openArray[Vector2], color: Color) =
-  ## Draw a triangle strip defined by points within an image
-  imageDrawTriangleStripPriv(dst.addr, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
 proc loadImage*(fileName: string): Image =
   ## Load image from file into CPU memory (RAM)
-  result = loadImagePriv(fileName.cstring)
+  result = loadImageImpl(fileName.cstring)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
 
 proc loadImageRaw*(fileName: string, width, height: int32, format: PixelFormat, headerSize: int32): Image =
   ## Load image sequence from file (frames appended to image.data)
-  result = loadImageRawPriv(fileName.cstring, width, height, format, headerSize)
+  result = loadImageRawImpl(fileName.cstring, width, height, format, headerSize)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
 
-proc loadImageSvg*(fileNameOrString: string, width, height: int32): Image =
-  ## Load image from SVG file data or string with specified size
-  result = loadImageSvgPriv(fileNameOrString.cstring, width, height)
-  if not isImageReady(result): raiseRaylibError("Failed to load Image from SVG")
+proc loadImageAnim*(fileName: string, frames: out int32): Image =
+  ## Load image sequence from file (frames appended to image.data)
+  result = loadImageAnimImpl(fileName.cstring, frames)
+  if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from " & fileName)
 
 proc loadImageAnimFromMemory*(fileType: string, fileData: openArray[uint8], frames: openArray[int32]): Image =
   ## Load image sequence from memory buffer
-  result = loadImageAnimFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+  result = loadImageAnimFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32, cast[ptr UncheckedArray[int32]](frames))
   if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from buffer")
 
 proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
-  result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+  result = loadImageFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from buffer")
 
 proc loadImageFromTexture*(texture: Texture2D): Image =
   ## Load image from GPU texture data
-  result = loadImageFromTexturePriv(texture)
+  result = loadImageFromTextureImpl(texture)
   if not isImageReady(result): raiseRaylibError("Failed to load Image from Texture")
 
 proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
   ## Export image to memory buffer
   var len = 0'i32
-  let data = exportImageToMemoryPriv(image, fileType.cstring, addr len)
+  let data = exportImageToMemoryImpl(image, fileType.cstring, addr len)
   result = RArray[uint8](len: len, data: cast[ptr UncheckedArray[uint8]](data))
-
-proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
-  ## Apply custom square convolution kernel to image
-  ## NOTE: The convolution kernel matrix is expected to be square
-  imageKernelConvolutionPriv(image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
 
 type
   Pixel* = concept
@@ -262,27 +198,27 @@ proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: 
       "Mismatch between expected and actual data size"
   let image = Image(data: cast[pointer](pixels), width: width, height: height,
       format: kind(T), mipmaps: 1).WeakImage
-  result = loadTextureFromImagePriv(image.Image)
+  result = loadTextureFromImageImpl(image.Image)
   if not isTextureReady(result): raiseRaylibError("Failed to load Texture from buffer")
 
 proc loadTexture*(fileName: string): Texture2D =
   ## Load texture from file into GPU memory (VRAM)
-  result = loadTexturePriv(fileName.cstring)
+  result = loadTextureImpl(fileName.cstring)
   if not isTextureReady(result): raiseRaylibError("Failed to load Texture from " & fileName)
 
 proc loadTextureFromImage*(image: Image): Texture2D =
   ## Load texture from image data
-  result = loadTextureFromImagePriv(image)
+  result = loadTextureFromImageImpl(image)
   if not isTextureReady(result): raiseRaylibError("Failed to load Texture from Image")
 
 proc loadTextureCubemap*(image: Image, layout: CubemapLayout): TextureCubemap =
   ## Load cubemap from image, multiple image cubemap layouts supported
-  result = loadTextureCubemapPriv(image, layout)
+  result = loadTextureCubemapImpl(image, layout)
   if not isTextureReady(result): raiseRaylibError("Failed to load Texture from Cubemap")
 
 proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
   ## Load texture for rendering (framebuffer)
-  result = loadRenderTexturePriv(width, height)
+  result = loadRenderTextureImpl(width, height)
   if not isRenderTextureReady(result): raiseRaylibError("Failed to load RenderTexture")
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
@@ -290,70 +226,70 @@ proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   assert texture.format == kind(T), "Incompatible texture format"
   assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
-  updateTexturePriv(texture, cast[pointer](pixels))
+  updateTextureImpl(texture, cast[pointer](pixels))
 
 proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
   ## Update GPU texture rectangle with new data
   assert texture.format == kind(T), "Incompatible texture format"
   assert getPixelDataSize(rec.width.int32, rec.height.int32, texture.format) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
-  updateTexturePriv(texture, rec, cast[pointer](pixels))
+  updateTextureImpl(texture, rec, cast[pointer](pixels))
 
 proc getPixelColor*[T: Pixel](pixel: T): Color =
   ## Get Color from a source pixel pointer of certain format
   assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
-  getPixelColorPriv(addr pixel, kind(T))
+  getPixelColorImpl(addr pixel, kind(T))
 
 proc setPixelColor*[T: Pixel](pixel: var T, color: Color) =
   ## Set color formatted into destination pixel pointer
   assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
-  setPixelColorPriv(addr pixel, color, kind(T))
+  setPixelColorImpl(addr pixel, color, kind(T))
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; codepoints: openArray[int32];
     `type`: FontType): RArray[GlyphInfo] =
   ## Load font data for further use
-  let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
+  let data = loadFontDataImpl(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
       fontSize, if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints),
       codepoints.len.int32, `type`)
   result = RArray[GlyphInfo](len: if codepoints.len == 0: 95 else: codepoints.len, data: data)
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize, glyphCount: int32;
     `type`: FontType): RArray[GlyphInfo] =
-  let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
+  let data = loadFontDataImpl(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
       fontSize, nil, glyphCount, `type`)
   result = RArray[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
 
 proc loadFont*(fileName: string): Font =
   ## Load font from file into GPU memory (VRAM)
-  result = loadFontPriv(fileName.cstring)
+  result = loadFontImpl(fileName.cstring)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFont*(fileName: string; fontSize: int32; codepoints: openArray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for codepoints to load the default character set
-  result = loadFontPriv(fileName.cstring, fontSize,
+  result = loadFontImpl(fileName.cstring, fontSize,
       if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFont*(fileName: string; fontSize, glyphCount: int32): Font =
-  result = loadFontPriv(fileName.cstring, fontSize, nil, glyphCount)
+  result = loadFontImpl(fileName.cstring, fontSize, nil, glyphCount)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFontFromImage*(image: Image, key: Color, firstChar: int32): Font =
   ## Load font from Image (XNA style)
-  result = loadFontFromImagePriv(image, key, firstChar)
+  result = loadFontFromImageImpl(image, key, firstChar)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
 
 proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
     codepoints: openArray[int32]): Font =
   ## Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
-  result = loadFontFromMemoryPriv(fileType.cstring,
+  result = loadFontFromMemoryImpl(fileType.cstring,
       cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
       if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
 
 proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
     glyphCount: int32): Font =
-  result = loadFontFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+  result = loadFontFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32, fontSize, nil, glyphCount)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
 
@@ -363,7 +299,7 @@ proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, 
   result.glyphCount = chars.len.int32
   result.glyphs = chars.data
   wasMoved(chars)
-  let atlas = genImageFontAtlasPriv(result.glyphs, addr result.recs, result.glyphCount, baseSize,
+  let atlas = genImageFontAtlasImpl(result.glyphs, addr result.recs, result.glyphCount, baseSize,
       padding, packMethod)
   result.texture = loadTextureFromImage(atlas)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
@@ -372,87 +308,83 @@ proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out RArray[Rectangle]
     padding: int32; packMethod: int32): Image =
   ## Generate image font atlas using chars info
   var data: ptr UncheckedArray[Rectangle] = nil
-  result = genImageFontAtlasPriv(cast[ptr UncheckedArray[GlyphInfo]](chars), addr data,
+  result = genImageFontAtlasImpl(cast[ptr UncheckedArray[GlyphInfo]](chars), addr data,
       chars.len.int32, fontSize, padding, packMethod)
   recs = RArray[Rectangle](len: chars.len, data: data)
 
-proc drawTriangleStrip3D*(points: openArray[Vector3]; color: Color) =
-  ## Draw a triangle strip defined by points
-  drawTriangleStrip3DPriv(cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
-
 proc updateMeshBuffer*[T](mesh: var Mesh, index: int32, data: openArray[T], offset: int32) =
   ## Update mesh vertex data in GPU for a specific buffer index
-  updateMeshBufferPriv(mesh, index, cast[ptr UncheckedArray[T]](data), data.len.int32, offset)
+  updateMeshBufferImpl(mesh, index, cast[ptr UncheckedArray[T]](data), data.len.int32, offset)
 
 proc drawMeshInstanced*(mesh: Mesh; material: Material; transforms: openArray[Matrix]) =
   ## Draw multiple mesh instances with material and different transforms
-  drawMeshInstancedPriv(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms),
+  drawMeshInstancedImpl(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms),
       transforms.len.int32)
 
 proc loadWave*(fileName: string): Wave =
   ## Load wave data from file
-  result = loadWavePriv(fileName.cstring)
+  result = loadWaveImpl(fileName.cstring)
   if not isWaveReady(result): raiseRaylibError("Failed to load Wave from " & fileName)
 
 proc loadWaveFromMemory*(fileType: string; fileData: openArray[uint8]): Wave =
   ## Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
-  result = loadWaveFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+  result = loadWaveFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
   if not isWaveReady(result): raiseRaylibError("Failed to load Wave from buffer")
 
 proc loadSound*(fileName: string): Sound =
   ## Load sound from file
-  result = loadSoundPriv(fileName.cstring)
+  result = loadSoundImpl(fileName.cstring)
   if not isSoundReady(result): raiseRaylibError("Failed to load Sound from " & fileName)
 
 proc loadSoundAlias*(source: Sound): SoundAlias =
   ## Create a new sound that shares the same sample data as the source sound, does not own the sound data
-  result = SoundAlias(loadSoundAliasPriv(source))
+  result = SoundAlias(loadSoundAliasImpl(source))
   if not isSoundReady(Sound(result)): raiseRaylibError("Failed to load SoundAlias from source")
 
 proc loadSoundFromWave*(wave: Wave): Sound =
   ## Load sound from wave data
-  result = loadSoundFromWavePriv(wave)
+  result = loadSoundFromWaveImpl(wave)
   if not isSoundReady(result): raiseRaylibError("Failed to load Sound from Wave")
 
 proc updateSound*[T](sound: var Sound, data: openArray[T]) =
   ## Update sound buffer with new data
-  updateSoundPriv(sound, cast[ptr UncheckedArray[T]](data), data.len.int32)
+  updateSoundImpl(sound, cast[ptr UncheckedArray[T]](data), data.len.int32)
 
 proc loadMusicStream*(fileName: string): Music =
   ## Load music stream from file
-  result = loadMusicStreamPriv(fileName.cstring)
+  result = loadMusicStreamImpl(fileName.cstring)
   if not isMusicReady(result): raiseRaylibError("Failed to load Music from " & fileName)
 
 proc loadMusicStreamFromMemory*(fileType: string; data: openArray[uint8]): Music =
   ## Load music stream from data
-  result = loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
+  result = loadMusicStreamFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
       data.len.int32)
   if not isMusicReady(result): raiseRaylibError("Failed to load Music from buffer")
 
 proc loadAudioStream*(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream =
   ## Load audio stream (to stream raw audio pcm data)
-  result = loadAudioStreamPriv(sampleRate, sampleSize, channels)
+  result = loadAudioStreamImpl(sampleRate, sampleSize, channels)
   if not isAudioStreamReady(result): raiseRaylibError("Failed to load AudioStream")
 
 proc updateAudioStream*[T](stream: var AudioStream, data: openArray[T]) =
   ## Update audio stream buffers with data
-  updateAudioStreamPriv(stream, cast[ptr UncheckedArray[T]](data), data.len.int32)
+  updateAudioStreamImpl(stream, cast[ptr UncheckedArray[T]](data), data.len.int32)
 
 proc drawTextCodepoints*(font: Font; codepoints: openArray[Rune]; position: Vector2;
     fontSize: float32; spacing: float32; tint: Color) =
   ## Draw multiple character (codepoint)
-  drawTextCodepointsPriv(font, cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32,
+  drawTextCodepointsImpl(font, cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32,
       position, fontSize, spacing, tint)
 
 proc loadModel*(fileName: string): Model =
   ## Load model from files (meshes and materials)
-  result = loadModelPriv(fileName.cstring)
+  result = loadModelImpl(fileName.cstring)
   if not isModelReady(result): raiseRaylibError("Failed to load Model from " & fileName)
 
 proc loadModelFromMesh*(mesh: sink Mesh): Model =
   ## Load model from generated mesh (default material)
-  result = loadModelFromMeshPriv(mesh)
+  result = loadModelFromMeshImpl(mesh)
   wasMoved(mesh)
   if not isModelReady(result): raiseRaylibError("Failed to load Model from Mesh")
 

@@ -1,18 +1,20 @@
-import std/os
+import std/[os, strutils]
 
 const
   ProjectUrl = "https://github.com/planetis-m/naylib"
   PkgDir = thisDir()
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
-  RayLatestCommit = "f9e709915a2c3e9f75d0ad3bb3f55dcfe0fdbe23"
-  ApiDir = PkgDir / "api"
+  RayLatestCommit = "f5328a9bb63a0e0eca7dead15cfa01a3ec1417c2"
+  ApiDir = PkgDir / "wrapper/api"
   DocsDir = PkgDir / "docs"
+  ParserDir = RaylibDir / "parser"
+  WrapperDir = PkgDir / "wrapper"
 
 template `/.`(x: string): string =
-  (when defined(posix): "./" & x else: x)
+  when defined(posix): "./" & x else: x
 
-proc fetchLatestRaylib =
+proc fetchLatestRaylib() =
   if not dirExists(RaylibDir):
     exec "git clone --depth 1 " & RaylibGit & " " & quoteShell(RaylibDir)
   withDir(RaylibDir):
@@ -20,56 +22,72 @@ proc fetchLatestRaylib =
     exec "git fetch --depth 100 origin " & RayLatestCommit
     exec "git checkout " & RayLatestCommit
 
-proc genWrapper(lib: string) =
-  let src = lib & "_gen.nim"
-  withDir(PkgDir / "tools"):
-    let exe = toExe(lib & "_gen")
-    # Build the ray2nim tool
-    exec("nim c --mm:arc --panics:on -d:release -d:emiLenient " & src)
-    # Generate {lib} Nim wrapper
-    exec(/.exe)
+proc buildParser() =
+  withDir(ParserDir):
+    let src = "raylib_parser.c"
+    let exe = toExe("raylib_parser")
+    # if not fileExists(exe) or fileNewer(src, exe):
+    exec "cc " & src & " -o " & exe
+
+proc buildWrapper() =
+  withDir(WrapperDir):
+    let src = "naylib_wrapper.nim"
+    let exe = toExe("naylib_wrapper")
+    # if not fileExists(exe) or fileNewer(src, exe):
+    exec "nim c --mm:arc --panics:on -d:release -d:emiLenient " & src
 
 proc genApiJson(lib, prefix: string) =
-  let src = "raylib_parser.c"
-  withDir(RaylibDir / "parser"):
-    let exe = toExe("raylib_parser")
-    # Building raylib API parser
-    exec("cc " & src & " -o " & exe)
+  withDir(ParserDir):
     mkDir(ApiDir)
     let header = RaylibDir / "src" / (lib & ".h")
     let apiJson = ApiDir / (lib & ".json")
-    # Generate {lib} API JSON file
-    exec(/.exe & " -f JSON " & (if prefix != "": "-d " & prefix else: "") &
-        " -i " & header.quoteShell & " -o " & apiJson.quoteShell)
+    let prefixArg = if prefix != "": "-d " & prefix else: ""
+    exec /.toExe("raylib_parser") & " -f JSON " & prefixArg & " -i " & header.quoteShell & " -o " & apiJson.quoteShell
+
+proc genWrapper(lib: string) =
+  withDir(WrapperDir):
+    let outp = PkgDir / "src" / (lib & ".nim")
+    exec /.toExe("naylib_wrapper") & " -c:" & lib & ".cfg -o:" & outp
 
 proc wrapRaylib(lib, prefix: string) =
   genApiJson(lib, prefix)
   genWrapper(lib)
 
-task wrap, "Produce all raylib nim wrappers":
-  wrapRaylib("raylib", "RLAPI")
-  # genWrapper("raylib")
-  # wrapRaylib("raymath", "RMAPI")
+task buildTools, "Build raylib_parser and naylib_wrapper":
+  buildParser()
+  buildWrapper()
+
+task genApi, "Generate API JSON files":
+  buildParser()
+  genApiJson("raylib", "RLAPI")
+  # genApiJson("raymath", "RMAPI")
+  genApiJson("rlgl", "")
+
+task genWrappers, "Generate Nim wrappers":
+  genWrapper("raylib")
+  # genWrapper("raymath")
   genWrapper("rlgl")
-  # wrapRaylib("rlgl", "")
 
 task patch, "Patch raylib":
   withDir(PkgDir / "src/raylib"):
-    # exec "git rev-parse HEAD"
     let patchPath = PkgDir / "mangle_names.patch"
     exec "git apply --reject " & patchPath.quoteShell
 
 task update, "Update the raylib git directory":
   fetchLatestRaylib()
   cpDir(RaylibDir / "src", PkgDir / "src/raylib")
-  # patchTask()
+
+task wrap, "Produce all raylib Nim wrappers":
+  buildToolsTask()
+  wrapRaylib("raylib", "RLAPI")
+  # wrapRaylib("raymath", "RMAPI")
+  wrapRaylib("rlgl", "")
 
 task docs, "Generate documentation":
-  # https://nim-lang.github.io/Nim/docgen.html
   withDir(PkgDir):
-    for tmp in items(["raymath", "raylib", "rlgl", "reasings", "rmem"]):
+    for tmp in ["raymath", "raylib", "rlgl", "reasings", "rmem"]:
       let doc = DocsDir / (tmp & ".html")
       let src = "src" / tmp
-      # Generate the docs for {src}
-      exec("nim doc --verbosity:0 --git.url:" & ProjectUrl & (if tmp != "rmem": " --shownonexports" else: "") &
-          " --git.devel:main --git.commit:main --out:" & doc.quoteShell & " " & src)
+      let showNonExports = if tmp != "rmem": " --shownonexports" else: ""
+      exec "nim doc --verbosity:0 --git.url:" & ProjectUrl & showNonExports &
+           " --git.devel:main --git.commit:main --out:" & doc.quoteShell & " " & src

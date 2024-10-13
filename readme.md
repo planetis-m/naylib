@@ -86,6 +86,7 @@ While we believe that Naylib provides a great option for game development with N
 that it may not be the perfect fit for everyone. Here are some noteworthy alternatives:
 
 - [NimForUE](https://github.com/jmgomez/NimForUE): Plugin for Unreal Engine 5
+- [nsdl3](https://github.com/amnr/nsdl3): High level SDL 3 wrapper
 - [sokol-nim](https://github.com/floooh/sokol-nim): Auto-generated bindings for sokol headers
 - [gdextcore](https://github.com/godot-nim/gdextcore): Godot 4.x bindings
 - [godot-nim](https://github.com/pragmagic/godot-nim): Godot 3 bindings
@@ -110,5 +111,5 @@ the [zlib](LICENSE-RAYLIB) license.
 ## Contact
 
 For support and discussions, join us on Discord:
-- Nim server (#gamedev): [discord.gg/ByYHrPUY](https://discord.gg/ByYHrPUY)
+- Nim server (#gamedev): [discord.gg/nim](https://discord.gg/nim)
 - Raylib server (#raylib-nim): [discord.gg/raylib](https://discord.gg/raylib)

@@ -29,7 +29,7 @@ ChangeDirectory            os.setCurrentDir
 MakeDirectory              os.createDir
 GetFileModTime             os.getLastModificationTime
 IsPathFile                 os.getFileInfo
-IsFileNameValid            os.invalidFilenames costant      Use strutils.find
+IsFileNameValid            os.isValidFilename
 ========================== ================================ =================
 
 Text strings management functions

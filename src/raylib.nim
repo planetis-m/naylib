@@ -507,7 +507,7 @@ type
     z*: float32 ## Vector z component
     w*: float32 ## Vector w component
 
-  Matrix* {.importc, header: "raylib.h", bycopy.} = object ## Matrix, 4x4 components, column major, OpenGL style, right-handed
+  Matrix* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Matrix, 4x4 components, column major, OpenGL style, right-handed
     m0*, m4*, m8*, m12*: float32 ## Matrix first row (4 components)
     m1*, m5*, m9*, m13*: float32 ## Matrix second row (4 components)
     m2*, m6*, m10*, m14*: float32 ## Matrix third row (4 components)
@@ -519,32 +519,32 @@ type
     b*: uint8 ## Color blue value
     a*: uint8 ## Color alpha value
 
-  Rectangle* {.importc: "rlRectangle", header: "raylib.h", bycopy.} = object ## Rectangle, 4 components
+  Rectangle* {.importc: "rlRectangle", header: "raylib.h", completeStruct, bycopy.} = object ## Rectangle, 4 components
     x*: float32 ## Rectangle top-left corner position x
     y*: float32 ## Rectangle top-left corner position y
     width*: float32 ## Rectangle width
     height*: float32 ## Rectangle height
 
-  Image* {.importc, header: "raylib.h", bycopy.} = object ## Image, pixel data stored in CPU memory (RAM)
+  Image* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Image, pixel data stored in CPU memory (RAM)
     data*: pointer ## Image raw data
     width*: int32 ## Image base width
     height*: int32 ## Image base height
     mipmaps*: int32 ## Mipmap levels, 1 by default
     format*: PixelFormat ## Data format (PixelFormat type)
 
-  Texture* {.importc, header: "raylib.h", bycopy.} = object ## Texture, tex data stored in GPU memory (VRAM)
+  Texture* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Texture, tex data stored in GPU memory (VRAM)
     id*: uint32 ## OpenGL texture id
     width*: int32 ## Texture base width
     height*: int32 ## Texture base height
     mipmaps*: int32 ## Mipmap levels, 1 by default
     format*: PixelFormat ## Data format (PixelFormat type)
 
-  RenderTexture* {.importc, header: "raylib.h", bycopy.} = object ## RenderTexture, fbo for texture rendering
+  RenderTexture* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## RenderTexture, fbo for texture rendering
     id*: uint32 ## OpenGL framebuffer object id
     texture*: Texture ## Color buffer attachment texture
     depth*: Texture ## Depth buffer attachment texture
 
-  NPatchInfo* {.importc, header: "raylib.h", bycopy.} = object ## NPatchInfo, n-patch layout info
+  NPatchInfo* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## NPatchInfo, n-patch layout info
     source*: Rectangle ## Texture source rectangle
     left*: int32 ## Left border offset
     top*: int32 ## Top border offset
@@ -552,14 +552,14 @@ type
     bottom*: int32 ## Bottom border offset
     layout*: NPatchLayout ## Layout of the n-patch: 3x3, 1x3 or 3x1
 
-  GlyphInfo* {.importc, header: "raylib.h", bycopy.} = object ## GlyphInfo, font characters glyphs info
+  GlyphInfo* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## GlyphInfo, font characters glyphs info
     value*: int32 ## Character value (Unicode)
     offsetX*: int32 ## Character offset X when drawing
     offsetY*: int32 ## Character offset Y when drawing
     advanceX*: int32 ## Character advance position X
     image*: Image ## Character image data
 
-  Font* {.importc, header: "raylib.h", bycopy.} = object ## Font, font texture and GlyphInfo array data
+  Font* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Font, font texture and GlyphInfo array data
     baseSize*: int32 ## Base size (default chars height)
     glyphCount: int32 ## Number of glyph characters
     glyphPadding*: int32 ## Padding around the glyph characters
@@ -567,20 +567,20 @@ type
     recs: ptr UncheckedArray[Rectangle] ## Rectangles in texture for the glyphs
     glyphs: ptr UncheckedArray[GlyphInfo] ## Glyphs info data
 
-  Camera3D* {.importc, header: "raylib.h", bycopy.} = object ## Camera, defines position/orientation in 3d space
+  Camera3D* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Camera, defines position/orientation in 3d space
     position*: Vector3 ## Camera position
     target*: Vector3 ## Camera target it looks-at
     up*: Vector3 ## Camera up vector (rotation over its axis)
     fovy*: float32 ## Camera field-of-view aperture in Y (degrees) in perspective, used as near plane width in orthographic
     projection*: CameraProjection ## Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
 
-  Camera2D* {.importc, header: "raylib.h", bycopy.} = object ## Camera2D, defines position/orientation in 2d space
+  Camera2D* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Camera2D, defines position/orientation in 2d space
     offset*: Vector2 ## Camera offset (displacement from target)
     target*: Vector2 ## Camera target (rotation and zoom origin)
     rotation*: float32 ## Camera rotation in degrees
     zoom*: float32 ## Camera zoom (scaling), should be 1.0f by default
 
-  Mesh* {.importc, header: "raylib.h", bycopy.} = object ## Mesh, vertex data and vao/vbo
+  Mesh* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Mesh, vertex data and vao/vbo
     vertexCount: int32 ## Number of vertices stored in arrays
     triangleCount: int32 ## Number of triangles stored (indexed or not)
     vertices: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
@@ -597,32 +597,32 @@ type
     boneMatrices: ptr UncheckedArray[Matrix] ## Bones animated transformation matrices
     boneCount: int32 ## Number of bones
     vaoId*: uint32 ## OpenGL Vertex Array Object id
-    vboId: ptr array[MaxMeshVertexBuffers, uint32] ## OpenGL Vertex Buffer Objects id (default vertex data)
+    vboId: ptr UncheckedArray[uint32] ## OpenGL Vertex Buffer Objects id (default vertex data)
 
-  Shader* {.importc, header: "raylib.h", bycopy.} = object ## Shader
+  Shader* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Shader
     id*: uint32 ## Shader program id
     locs: ptr UncheckedArray[ShaderLocation] ## Shader locations array (RL_MAX_SHADER_LOCATIONS)
 
-  MaterialMap* {.importc, header: "raylib.h", bycopy.} = object ## MaterialMap
+  MaterialMap* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## MaterialMap
     texture: Texture2D ## Material map texture
     color*: Color ## Material map color
     value*: float32 ## Material map value
 
-  Material* {.importc, header: "raylib.h", bycopy.} = object ## Material, includes shader and maps
+  Material* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Material, includes shader and maps
     shader: Shader ## Material shader
-    maps: ptr array[MaxMaterialMaps, MaterialMap] ## Material maps array (MAX_MATERIAL_MAPS)
+    maps: ptr UncheckedArray[MaterialMap] ## Material maps array (MAX_MATERIAL_MAPS)
     params*: array[4, float32] ## Material generic parameters (if required)
 
-  Transform* {.importc, header: "raylib.h", bycopy.} = object ## Transform, vertex transformation data
+  Transform* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Transform, vertex transformation data
     translation*: Vector3 ## Translation
     rotation*: Quaternion ## Rotation
     scale*: Vector3 ## Scale
 
-  BoneInfo* {.importc, header: "raylib.h", bycopy.} = object ## Bone, skeletal animation bone
+  BoneInfo* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Bone, skeletal animation bone
     name*: array[32, char] ## Bone name
     parent*: int32 ## Bone parent
 
-  Model* {.importc, header: "raylib.h", bycopy.} = object ## Model, meshes, materials and animation data
+  Model* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Model, meshes, materials and animation data
     transform*: Matrix ## Local transform matrix
     meshCount: int32 ## Number of meshes
     materialCount: int32 ## Number of materials
@@ -633,53 +633,53 @@ type
     bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
     bindPose: ptr UncheckedArray[Transform] ## Bones base transformation (pose)
 
-  ModelAnimation* {.importc, header: "raylib.h", bycopy.} = object ## ModelAnimation
+  ModelAnimation* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## ModelAnimation
     boneCount: int32 ## Number of bones
     frameCount: int32 ## Number of animation frames
     bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
     framePoses: ptr UncheckedArray[ptr UncheckedArray[Transform]] ## Poses array by frame
     name*: array[32, char] ## Animation name
 
-  Ray* {.importc, header: "raylib.h", bycopy.} = object ## Ray, ray for raycasting
+  Ray* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Ray, ray for raycasting
     position*: Vector3 ## Ray position (origin)
     direction*: Vector3 ## Ray direction (normalized)
 
-  RayCollision* {.importc, header: "raylib.h", bycopy.} = object ## RayCollision, ray hit information
+  RayCollision* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## RayCollision, ray hit information
     hit*: bool ## Did the ray hit something?
     distance*: float32 ## Distance to the nearest hit
     point*: Vector3 ## Point of the nearest hit
     normal*: Vector3 ## Surface normal of hit
 
-  BoundingBox* {.importc, header: "raylib.h", bycopy.} = object ## BoundingBox
+  BoundingBox* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## BoundingBox
     min*: Vector3 ## Minimum vertex box-corner
     max*: Vector3 ## Maximum vertex box-corner
 
-  Wave* {.importc, header: "raylib.h", bycopy.} = object ## Wave, audio wave data
+  Wave* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Wave, audio wave data
     frameCount*: uint32 ## Total number of frames (considering channels)
     sampleRate*: uint32 ## Frequency (samples per second)
     sampleSize*: uint32 ## Bit depth (bits per sample): 8, 16, 32 (24 not supported)
     channels*: uint32 ## Number of channels (1-mono, 2-stereo, ...)
     data*: pointer ## Buffer data pointer
 
-  AudioStream* {.importc, header: "raylib.h", bycopy.} = object ## AudioStream, custom audio stream
+  AudioStream* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## AudioStream, custom audio stream
     buffer: ptr rAudioBuffer ## Pointer to internal data used by the audio system
     processor: ptr rAudioProcessor ## Pointer to internal data processor, useful for audio effects
     sampleRate*: uint32 ## Frequency (samples per second)
     sampleSize*: uint32 ## Bit depth (bits per sample): 8, 16, 32 (24 not supported)
     channels*: uint32 ## Number of channels (1-mono, 2-stereo, ...)
 
-  Sound* {.importc, header: "raylib.h", bycopy.} = object ## Sound
+  Sound* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Sound
     stream*: AudioStream ## Audio stream
     frameCount*: uint32 ## Total number of frames (considering channels)
 
-  Music* {.importc, header: "raylib.h", bycopy.} = object ## Music, audio stream, anything longer than ~10 seconds should be streamed
+  Music* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Music, audio stream, anything longer than ~10 seconds should be streamed
     stream*: AudioStream ## Audio stream
     frameCount*: uint32 ## Total number of frames (considering channels)
     looping*: bool ## Music looping enable
     ctxType*: int32 ## Type of music context (audio filetype)
     ctxData*: pointer ## Audio context data, depends on type
 
-  VrDeviceInfo* {.importc, header: "raylib.h", bycopy.} = object ## VrDeviceInfo, Head-Mounted-Display device parameters
+  VrDeviceInfo* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## VrDeviceInfo, Head-Mounted-Display device parameters
     hResolution*: int32 ## Horizontal resolution in pixels
     vResolution*: int32 ## Vertical resolution in pixels
     hScreenSize*: float32 ## Horizontal size in meters
@@ -690,7 +690,7 @@ type
     lensDistortionValues*: array[4, float32] ## Lens distortion constant parameters
     chromaAbCorrection*: array[4, float32] ## Chromatic aberration correction parameters
 
-  VrStereoConfig* {.importc, header: "raylib.h", bycopy.} = object ## VrStereoConfig, VR stereo rendering configuration for simulator
+  VrStereoConfig* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## VrStereoConfig, VR stereo rendering configuration for simulator
     projection*: array[2, Matrix] ## VR projection matrices (per eye)
     viewOffset*: array[2, Matrix] ## VR view offset matrices (per eye)
     leftLensCenter*: array[2, float32] ## VR left lens center
@@ -700,17 +700,17 @@ type
     scale*: array[2, float32] ## VR distortion scale
     scaleIn*: array[2, float32] ## VR distortion scale in
 
-  FilePathList {.importc, header: "raylib.h", bycopy.} = object ## File path list
+  FilePathList {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## File path list
     capacity: uint32 ## Filepaths max entries
     count: uint32 ## Filepaths entries count
     paths: cstringArray ## Filepaths entries
 
-  AutomationEvent* {.importc, header: "raylib.h", bycopy.} = object ## Automation event
+  AutomationEvent* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Automation event
     frame*: uint32 ## Event frame
     `type`*: uint32 ## Event type (AutomationEventType)
     params*: array[4, int32] ## Event parameters (if required)
 
-  AutomationEventList* {.importc, header: "raylib.h", bycopy.} = object ## Automation event list
+  AutomationEventList* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Automation event list
     capacity: uint32 ## Events max entries (MAX_AUTOMATION_EVENTS)
     count: uint32 ## Events entries count
     events: ptr UncheckedArray[AutomationEvent] ## Events entries
@@ -720,10 +720,6 @@ type
   TextureCubemap* = Texture ## TextureCubemap, same as Texture
   RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture
   Camera* = Camera3D ## Camera type fallback, defaults to Camera3D
-
-  rAudioBuffer {.importc, nodecl, bycopy.} = object
-  rAudioProcessor {.importc, nodecl, bycopy.} = object
-
   FontRecs* = distinct Font
   FontGlyphs* = distinct Font
   MeshVertices* = distinct Mesh
@@ -748,6 +744,9 @@ type
   ModelBindPose* = distinct Model
   ModelAnimationBones* = distinct ModelAnimation
   ModelAnimationFramePoses* = distinct ModelAnimation
+
+  rAudioBuffer {.importc, nodecl, bycopy.} = object
+  rAudioProcessor {.importc, nodecl, bycopy.} = object
 
 type va_list {.importc: "va_list", header: "<stdarg.h>".} = object ## Only used by TraceLogCallback
 proc vsprintf(s: cstring, format: cstring, args: va_list) {.cdecl, importc: "vsprintf", header: "<stdio.h>".}
@@ -797,937 +796,905 @@ const
   RayWhite* = Color(r: 245, g: 245, b: 245, a: 255)
 
 {.push callconv: cdecl, header: "raylib.h".}
-{.push sideEffect.}
-proc initWindowPriv(width: int32, height: int32, title: cstring) {.importc: "InitWindow".}
-proc closeWindow*() {.importc: "rlCloseWindow".}
+proc initWindowImpl(width: int32, height: int32, title: cstring) {.importc: "InitWindow", sideEffect.}
+proc closeWindow*() {.importc: "rlCloseWindow", sideEffect.}
   ## Close window and unload OpenGL context
-proc windowShouldClose*(): bool {.importc: "WindowShouldClose".}
+proc windowShouldClose*(): bool {.importc: "WindowShouldClose", sideEffect.}
   ## Check if application should close (KEY_ESCAPE pressed or windows close icon clicked)
-proc isWindowReady*(): bool {.importc: "IsWindowReady".}
+proc isWindowReady*(): bool {.importc: "IsWindowReady", sideEffect.}
   ## Check if window has been initialized successfully
-proc isWindowFullscreen*(): bool {.importc: "IsWindowFullscreen".}
+proc isWindowFullscreen*(): bool {.importc: "IsWindowFullscreen", sideEffect.}
   ## Check if window is currently fullscreen
-proc isWindowHidden*(): bool {.importc: "IsWindowHidden".}
+proc isWindowHidden*(): bool {.importc: "IsWindowHidden", sideEffect.}
   ## Check if window is currently hidden (only PLATFORM_DESKTOP)
-proc isWindowMinimized*(): bool {.importc: "IsWindowMinimized".}
+proc isWindowMinimized*(): bool {.importc: "IsWindowMinimized", sideEffect.}
   ## Check if window is currently minimized (only PLATFORM_DESKTOP)
-proc isWindowMaximized*(): bool {.importc: "IsWindowMaximized".}
+proc isWindowMaximized*(): bool {.importc: "IsWindowMaximized", sideEffect.}
   ## Check if window is currently maximized (only PLATFORM_DESKTOP)
-proc isWindowFocused*(): bool {.importc: "IsWindowFocused".}
+proc isWindowFocused*(): bool {.importc: "IsWindowFocused", sideEffect.}
   ## Check if window is currently focused (only PLATFORM_DESKTOP)
-proc isWindowResized*(): bool {.importc: "IsWindowResized".}
+proc isWindowResized*(): bool {.importc: "IsWindowResized", sideEffect.}
   ## Check if window has been resized last frame
-proc isWindowState*(flag: ConfigFlags): bool {.importc: "IsWindowState".}
+proc isWindowState*(flag: ConfigFlags): bool {.importc: "IsWindowState", sideEffect.}
   ## Check if one specific window flag is enabled
-proc setWindowState*(flags: Flags[ConfigFlags]) {.importc: "SetWindowState".}
+proc setWindowState*(flags: Flags[ConfigFlags]) {.importc: "SetWindowState", sideEffect.}
   ## Set window configuration state using flags (only PLATFORM_DESKTOP)
-proc clearWindowState*(flags: Flags[ConfigFlags]) {.importc: "ClearWindowState".}
+proc clearWindowState*(flags: Flags[ConfigFlags]) {.importc: "ClearWindowState", sideEffect.}
   ## Clear window configuration state flags
-proc toggleFullscreen*() {.importc: "ToggleFullscreen".}
+proc toggleFullscreen*() {.importc: "ToggleFullscreen", sideEffect.}
   ## Toggle window state: fullscreen/windowed [resizes monitor to match window resolution] (only PLATFORM_DESKTOP)
-proc toggleBorderlessWindowed*() {.importc: "ToggleBorderlessWindowed".}
+proc toggleBorderlessWindowed*() {.importc: "ToggleBorderlessWindowed", sideEffect.}
   ## Toggle window state: borderless windowed [resizes window to match monitor resolution] (only PLATFORM_DESKTOP)
-proc maximizeWindow*() {.importc: "MaximizeWindow".}
+proc maximizeWindow*() {.importc: "MaximizeWindow", sideEffect.}
   ## Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
-proc minimizeWindow*() {.importc: "MinimizeWindow".}
+proc minimizeWindow*() {.importc: "MinimizeWindow", sideEffect.}
   ## Set window state: minimized, if resizable (only PLATFORM_DESKTOP)
-proc restoreWindow*() {.importc: "RestoreWindow".}
+proc restoreWindow*() {.importc: "RestoreWindow", sideEffect.}
   ## Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
-proc setWindowIcon*(image: Image) {.importc: "SetWindowIcon".}
+proc setWindowIcon*(image: Image) {.importc: "SetWindowIcon", sideEffect.}
   ## Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
-proc setWindowIconsPriv(images: ptr UncheckedArray[Image], count: int32) {.importc: "SetWindowIcons".}
-proc setWindowTitle*(title: cstring) {.importc: "SetWindowTitle".}
-  ## Set title for window (only PLATFORM_DESKTOP and PLATFORM_WEB)
-proc setWindowPosition*(x: int32, y: int32) {.importc: "SetWindowPosition".}
+proc setWindowIconsImpl(images: ptr UncheckedArray[Image], count: int32) {.importc: "SetWindowIcons", sideEffect.}
+proc setWindowTitleImpl(title: cstring) {.importc: "SetWindowTitle", sideEffect.}
+proc setWindowPosition*(x: int32, y: int32) {.importc: "SetWindowPosition", sideEffect.}
   ## Set window position on screen (only PLATFORM_DESKTOP)
-proc setWindowMonitor*(monitor: int32) {.importc: "SetWindowMonitor".}
+proc setWindowMonitor*(monitor: int32) {.importc: "SetWindowMonitor", sideEffect.}
   ## Set monitor for the current window
-proc setWindowMinSize*(width: int32, height: int32) {.importc: "SetWindowMinSize".}
+proc setWindowMinSize*(width: int32, height: int32) {.importc: "SetWindowMinSize", sideEffect.}
   ## Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
-proc setWindowMaxSize*(width: int32, height: int32) {.importc: "SetWindowMaxSize".}
+proc setWindowMaxSize*(width: int32, height: int32) {.importc: "SetWindowMaxSize", sideEffect.}
   ## Set window maximum dimensions (for FLAG_WINDOW_RESIZABLE)
-proc setWindowSize*(width: int32, height: int32) {.importc: "SetWindowSize".}
+proc setWindowSize*(width: int32, height: int32) {.importc: "SetWindowSize", sideEffect.}
   ## Set window dimensions
-proc setWindowOpacity*(opacity: float32) {.importc: "SetWindowOpacity".}
+proc setWindowOpacity*(opacity: float32) {.importc: "SetWindowOpacity", sideEffect.}
   ## Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
-proc setWindowFocused*() {.importc: "SetWindowFocused".}
+proc setWindowFocused*() {.importc: "SetWindowFocused", sideEffect.}
   ## Set window focused (only PLATFORM_DESKTOP)
-proc getWindowHandle*(): pointer {.importc: "GetWindowHandle".}
+proc getWindowHandle*(): pointer {.importc: "GetWindowHandle", sideEffect.}
   ## Get native window handle
-proc getScreenWidth*(): int32 {.importc: "GetScreenWidth".}
+proc getScreenWidth*(): int32 {.importc: "GetScreenWidth", sideEffect.}
   ## Get current screen width
-proc getScreenHeight*(): int32 {.importc: "GetScreenHeight".}
+proc getScreenHeight*(): int32 {.importc: "GetScreenHeight", sideEffect.}
   ## Get current screen height
-proc getRenderWidth*(): int32 {.importc: "GetRenderWidth".}
+proc getRenderWidth*(): int32 {.importc: "GetRenderWidth", sideEffect.}
   ## Get current render width (it considers HiDPI)
-proc getRenderHeight*(): int32 {.importc: "GetRenderHeight".}
+proc getRenderHeight*(): int32 {.importc: "GetRenderHeight", sideEffect.}
   ## Get current render height (it considers HiDPI)
-proc getMonitorCount*(): int32 {.importc: "GetMonitorCount".}
+proc getMonitorCount*(): int32 {.importc: "GetMonitorCount", sideEffect.}
   ## Get number of connected monitors
-proc getCurrentMonitor*(): int32 {.importc: "GetCurrentMonitor".}
+proc getCurrentMonitor*(): int32 {.importc: "GetCurrentMonitor", sideEffect.}
   ## Get current connected monitor
-proc getMonitorPosition*(monitor: int32): Vector2 {.importc: "GetMonitorPosition".}
+proc getMonitorPosition*(monitor: int32): Vector2 {.importc: "GetMonitorPosition", sideEffect.}
   ## Get specified monitor position
-proc getMonitorWidth*(monitor: int32): int32 {.importc: "GetMonitorWidth".}
+proc getMonitorWidth*(monitor: int32): int32 {.importc: "GetMonitorWidth", sideEffect.}
   ## Get specified monitor width (current video mode used by monitor)
-proc getMonitorHeight*(monitor: int32): int32 {.importc: "GetMonitorHeight".}
+proc getMonitorHeight*(monitor: int32): int32 {.importc: "GetMonitorHeight", sideEffect.}
   ## Get specified monitor height (current video mode used by monitor)
-proc getMonitorPhysicalWidth*(monitor: int32): int32 {.importc: "GetMonitorPhysicalWidth".}
+proc getMonitorPhysicalWidth*(monitor: int32): int32 {.importc: "GetMonitorPhysicalWidth", sideEffect.}
   ## Get specified monitor physical width in millimetres
-proc getMonitorPhysicalHeight*(monitor: int32): int32 {.importc: "GetMonitorPhysicalHeight".}
+proc getMonitorPhysicalHeight*(monitor: int32): int32 {.importc: "GetMonitorPhysicalHeight", sideEffect.}
   ## Get specified monitor physical height in millimetres
-proc getMonitorRefreshRate*(monitor: int32): int32 {.importc: "GetMonitorRefreshRate".}
+proc getMonitorRefreshRate*(monitor: int32): int32 {.importc: "GetMonitorRefreshRate", sideEffect.}
   ## Get specified monitor refresh rate
-proc getWindowPosition*(): Vector2 {.importc: "GetWindowPosition".}
+proc getWindowPosition*(): Vector2 {.importc: "GetWindowPosition", sideEffect.}
   ## Get window position XY on monitor
-proc getWindowScaleDPI*(): Vector2 {.importc: "GetWindowScaleDPI".}
+proc getWindowScaleDPI*(): Vector2 {.importc: "GetWindowScaleDPI", sideEffect.}
   ## Get window scale DPI factor
-proc getMonitorNamePriv(monitor: int32): cstring {.importc: "GetMonitorName".}
-proc setClipboardText*(text: cstring) {.importc: "SetClipboardText".}
-  ## Set clipboard text content
-proc getClipboardTextPriv(): cstring {.importc: "GetClipboardText".}
-proc enableEventWaiting*() {.importc: "EnableEventWaiting".}
+proc getMonitorNameImpl(monitor: int32): cstring {.importc: "GetMonitorName", sideEffect.}
+proc setClipboardTextImpl(text: cstring) {.importc: "SetClipboardText", sideEffect.}
+proc getClipboardTextImpl(): cstring {.importc: "GetClipboardText", sideEffect.}
+proc enableEventWaiting*() {.importc: "EnableEventWaiting", sideEffect.}
   ## Enable waiting for events on EndDrawing(), no automatic event polling
-proc disableEventWaiting*() {.importc: "DisableEventWaiting".}
+proc disableEventWaiting*() {.importc: "DisableEventWaiting", sideEffect.}
   ## Disable waiting for events on EndDrawing(), automatic events polling
-proc showCursor*() {.importc: "rlShowCursor".}
+proc showCursor*() {.importc: "rlShowCursor", sideEffect.}
   ## Shows cursor
-proc hideCursor*() {.importc: "HideCursor".}
+proc hideCursor*() {.importc: "HideCursor", sideEffect.}
   ## Hides cursor
-proc isCursorHidden*(): bool {.importc: "IsCursorHidden".}
+proc isCursorHidden*(): bool {.importc: "IsCursorHidden", sideEffect.}
   ## Check if cursor is not visible
-proc enableCursor*() {.importc: "EnableCursor".}
+proc enableCursor*() {.importc: "EnableCursor", sideEffect.}
   ## Enables cursor (unlock cursor)
-proc disableCursor*() {.importc: "DisableCursor".}
+proc disableCursor*() {.importc: "DisableCursor", sideEffect.}
   ## Disables cursor (lock cursor)
-proc isCursorOnScreen*(): bool {.importc: "IsCursorOnScreen".}
+proc isCursorOnScreen*(): bool {.importc: "IsCursorOnScreen", sideEffect.}
   ## Check if cursor is on the screen
-proc clearBackground*(color: Color) {.importc: "ClearBackground".}
+proc clearBackground*(color: Color) {.importc: "ClearBackground", sideEffect.}
   ## Set background color (framebuffer clear color)
-proc beginDrawing*() {.importc: "BeginDrawing".}
+proc beginDrawing*() {.importc: "BeginDrawing", sideEffect.}
   ## Setup canvas (framebuffer) to start drawing
-proc endDrawing*() {.importc: "EndDrawing".}
+proc endDrawing*() {.importc: "EndDrawing", sideEffect.}
   ## End canvas drawing and swap buffers (double buffering)
-proc beginMode2D*(camera: Camera2D) {.importc: "BeginMode2D".}
+proc beginMode2D*(camera: Camera2D) {.importc: "BeginMode2D", sideEffect.}
   ## Begin 2D mode with custom camera (2D)
-proc endMode2D*() {.importc: "EndMode2D".}
+proc endMode2D*() {.importc: "EndMode2D", sideEffect.}
   ## Ends 2D mode with custom camera
-proc beginMode3D*(camera: Camera3D) {.importc: "BeginMode3D".}
+proc beginMode3D*(camera: Camera3D) {.importc: "BeginMode3D", sideEffect.}
   ## Begin 3D mode with custom camera (3D)
-proc endMode3D*() {.importc: "EndMode3D".}
+proc endMode3D*() {.importc: "EndMode3D", sideEffect.}
   ## Ends 3D mode and returns to default 2D orthographic mode
-proc beginTextureMode*(target: RenderTexture2D) {.importc: "BeginTextureMode".}
+proc beginTextureMode*(target: RenderTexture2D) {.importc: "BeginTextureMode", sideEffect.}
   ## Begin drawing to render texture
-proc endTextureMode*() {.importc: "EndTextureMode".}
+proc endTextureMode*() {.importc: "EndTextureMode", sideEffect.}
   ## Ends drawing to render texture
-proc beginShaderMode*(shader: Shader) {.importc: "BeginShaderMode".}
+proc beginShaderMode*(shader: Shader) {.importc: "BeginShaderMode", sideEffect.}
   ## Begin custom shader drawing
-proc endShaderMode*() {.importc: "EndShaderMode".}
+proc endShaderMode*() {.importc: "EndShaderMode", sideEffect.}
   ## End custom shader drawing (use default shader)
-proc beginBlendMode*(mode: BlendMode) {.importc: "BeginBlendMode".}
+proc beginBlendMode*(mode: BlendMode) {.importc: "BeginBlendMode", sideEffect.}
   ## Begin blending mode (alpha, additive, multiplied, subtract, custom)
-proc endBlendMode*() {.importc: "EndBlendMode".}
+proc endBlendMode*() {.importc: "EndBlendMode", sideEffect.}
   ## End blending mode (reset to default: alpha blending)
-proc beginScissorMode*(x: int32, y: int32, width: int32, height: int32) {.importc: "BeginScissorMode".}
+proc beginScissorMode*(x: int32, y: int32, width: int32, height: int32) {.importc: "BeginScissorMode", sideEffect.}
   ## Begin scissor mode (define screen area for following drawing)
-proc endScissorMode*() {.importc: "EndScissorMode".}
+proc endScissorMode*() {.importc: "EndScissorMode", sideEffect.}
   ## End scissor mode
-proc beginVrStereoMode*(config: VrStereoConfig) {.importc: "BeginVrStereoMode".}
+proc beginVrStereoMode*(config: VrStereoConfig) {.importc: "BeginVrStereoMode", sideEffect.}
   ## Begin stereo rendering (requires VR simulator)
-proc endVrStereoMode*() {.importc: "EndVrStereoMode".}
+proc endVrStereoMode*() {.importc: "EndVrStereoMode", sideEffect.}
   ## End stereo rendering (requires VR simulator)
-proc loadVrStereoConfig*(device: VrDeviceInfo): VrStereoConfig {.importc: "LoadVrStereoConfig".}
+proc loadVrStereoConfig*(device: VrDeviceInfo): VrStereoConfig {.importc: "LoadVrStereoConfig", sideEffect.}
   ## Load VR stereo config for VR simulator device parameters
-proc unloadVrStereoConfig(config: VrStereoConfig) {.importc: "UnloadVrStereoConfig".}
-proc loadShaderPriv(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader".}
-proc loadShaderFromMemoryPriv(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory".}
-proc getShaderLocation*(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation".}
-  ## Get shader uniform location
-proc getShaderLocationAttrib*(shader: Shader, attribName: cstring): ShaderLocation {.importc: "GetShaderLocationAttrib".}
-  ## Get shader attribute location
-proc setShaderValuePriv(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue".}
-proc setShaderValueVPriv(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV".}
-proc setShaderValueMatrix*(shader: Shader, locIndex: ShaderLocation, mat: Matrix) {.importc: "SetShaderValueMatrix".}
-  ## Set shader uniform value (matrix 4x4)
-proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocation, texture: Texture2D) {.importc: "SetShaderValueTexture".}
-  ## Set shader uniform value for texture (sampler2d)
-proc unloadShader(shader: Shader) {.importc: "UnloadShader".}
-proc setTargetFPS*(fps: int32) {.importc: "SetTargetFPS".}
-  ## Set target FPS (maximum)
-proc getFrameTime*(): float32 {.importc: "GetFrameTime".}
-  ## Get time in seconds for last frame drawn (delta time)
-proc getTime*(): float {.importc: "GetTime".}
-  ## Get elapsed time in seconds since InitWindow()
-proc getFPS*(): int32 {.importc: "GetFPS".}
-  ## Get current FPS
-proc swapScreenBuffer*() {.importc: "SwapScreenBuffer".}
-  ## Swap back buffer with front buffer (screen drawing)
-proc pollInputEvents*() {.importc: "PollInputEvents".}
-  ## Register all input events
-proc waitTime*(seconds: float) {.importc: "WaitTime".}
-  ## Wait for some time (halt program execution)
-proc takeScreenshot*(fileName: cstring) {.importc: "TakeScreenshot".}
-  ## Takes a screenshot of current screen (filename extension defines format)
-proc setConfigFlags*(flags: Flags[ConfigFlags]) {.importc: "SetConfigFlags".}
-  ## Setup init configuration flags (view FLAGS)
-proc traceLog*(logLevel: TraceLogLevel, text: cstring) {.importc: "TraceLog", varargs.}
-  ## Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
-proc setTraceLogLevel*(logLevel: TraceLogLevel) {.importc: "SetTraceLogLevel".}
-  ## Set the current threshold (minimum) log level
-proc memAlloc(size: uint32): pointer {.importc: "MemAlloc".}
-proc memRealloc(`ptr`: pointer, size: uint32): pointer {.importc: "MemRealloc".}
-proc memFree(`ptr`: pointer) {.importc: "MemFree".}
-proc setTraceLogCallbackPriv(callback: TraceLogCallbackImpl) {.importc: "SetTraceLogCallback".}
-proc setLoadFileDataCallback*(callback: LoadFileDataCallback) {.importc: "SetLoadFileDataCallback".}
-  ## Set custom file binary data loader
-proc setSaveFileDataCallback*(callback: SaveFileDataCallback) {.importc: "SetSaveFileDataCallback".}
-  ## Set custom file binary data saver
-proc setLoadFileTextCallback*(callback: LoadFileTextCallback) {.importc: "SetLoadFileTextCallback".}
-  ## Set custom file text data loader
-proc setSaveFileTextCallback*(callback: SaveFileTextCallback) {.importc: "SetSaveFileTextCallback".}
-  ## Set custom file text data saver
-proc isFileDropped*(): bool {.importc: "IsFileDropped".}
-  ## Check if a file has been dropped into window
-proc loadDroppedFilesPriv(): FilePathList {.importc: "LoadDroppedFiles".}
-proc unloadDroppedFilesPriv(files: FilePathList) {.importc: "UnloadDroppedFiles".}
-proc loadAutomationEventList*(fileName: cstring): AutomationEventList {.importc: "LoadAutomationEventList".}
-  ## Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
-proc unloadAutomationEventList*(list: AutomationEventList) {.importc: "UnloadAutomationEventList".}
-  ## Unload automation events list from file
-proc exportAutomationEventList*(list: AutomationEventList, fileName: cstring): bool {.importc: "ExportAutomationEventList".}
-  ## Export automation events list as text file
-proc setAutomationEventList*(list: var AutomationEventList) {.importc: "SetAutomationEventList".}
-  ## Set automation event list to record to
-proc setAutomationEventBaseFrame*(frame: int32) {.importc: "SetAutomationEventBaseFrame".}
-  ## Set automation event internal base frame to start recording
-proc startAutomationEventRecording*() {.importc: "StartAutomationEventRecording".}
-  ## Start recording automation events (AutomationEventList must be set)
-proc stopAutomationEventRecording*() {.importc: "StopAutomationEventRecording".}
-  ## Stop recording automation events
-proc playAutomationEvent*(event: AutomationEvent) {.importc: "PlayAutomationEvent".}
-  ## Play a recorded automation event
-proc isKeyPressed*(key: KeyboardKey): bool {.importc: "IsKeyPressed".}
-  ## Check if a key has been pressed once
-proc isKeyPressedRepeat*(key: KeyboardKey): bool {.importc: "IsKeyPressedRepeat".}
-  ## Check if a key has been pressed again (Only PLATFORM_DESKTOP)
-proc isKeyDown*(key: KeyboardKey): bool {.importc: "IsKeyDown".}
-  ## Check if a key is being pressed
-proc isKeyReleased*(key: KeyboardKey): bool {.importc: "IsKeyReleased".}
-  ## Check if a key has been released once
-proc isKeyUp*(key: KeyboardKey): bool {.importc: "IsKeyUp".}
-  ## Check if a key is NOT being pressed
-proc getKeyPressed*(): KeyboardKey {.importc: "GetKeyPressed".}
-  ## Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty
-proc getCharPressed*(): int32 {.importc: "GetCharPressed".}
-  ## Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty
-proc setExitKey*(key: KeyboardKey) {.importc: "SetExitKey".}
-  ## Set a custom key to exit program (default is ESC)
-proc isGamepadAvailable*(gamepad: int32): bool {.importc: "IsGamepadAvailable".}
-  ## Check if a gamepad is available
-proc getGamepadNamePriv(gamepad: int32): cstring {.importc: "GetGamepadName".}
-proc isGamepadButtonPressed*(gamepad: int32, button: GamepadButton): bool {.importc: "IsGamepadButtonPressed".}
-  ## Check if a gamepad button has been pressed once
-proc isGamepadButtonDown*(gamepad: int32, button: GamepadButton): bool {.importc: "IsGamepadButtonDown".}
-  ## Check if a gamepad button is being pressed
-proc isGamepadButtonReleased*(gamepad: int32, button: GamepadButton): bool {.importc: "IsGamepadButtonReleased".}
-  ## Check if a gamepad button has been released once
-proc isGamepadButtonUp*(gamepad: int32, button: GamepadButton): bool {.importc: "IsGamepadButtonUp".}
-  ## Check if a gamepad button is NOT being pressed
-proc getGamepadButtonPressed*(): GamepadButton {.importc: "GetGamepadButtonPressed".}
-  ## Get the last gamepad button pressed
-proc getGamepadAxisCount*(gamepad: int32): int32 {.importc: "GetGamepadAxisCount".}
-  ## Get gamepad axis count for a gamepad
-proc getGamepadAxisMovement*(gamepad: int32, axis: GamepadAxis): float32 {.importc: "GetGamepadAxisMovement".}
-  ## Get axis movement value for a gamepad axis
-proc setGamepadMappings*(mappings: cstring): int32 {.importc: "SetGamepadMappings".}
-  ## Set internal gamepad mappings (SDL_GameControllerDB)
-proc setGamepadVibration*(gamepad: int32, leftMotor: float32, rightMotor: float32) {.importc: "SetGamepadVibration".}
-  ## Set gamepad vibration for both motors
-proc isMouseButtonPressed*(button: MouseButton): bool {.importc: "IsMouseButtonPressed".}
-  ## Check if a mouse button has been pressed once
-proc isMouseButtonDown*(button: MouseButton): bool {.importc: "IsMouseButtonDown".}
-  ## Check if a mouse button is being pressed
-proc isMouseButtonReleased*(button: MouseButton): bool {.importc: "IsMouseButtonReleased".}
-  ## Check if a mouse button has been released once
-proc isMouseButtonUp*(button: MouseButton): bool {.importc: "IsMouseButtonUp".}
-  ## Check if a mouse button is NOT being pressed
-proc getMouseX*(): int32 {.importc: "GetMouseX".}
-  ## Get mouse position X
-proc getMouseY*(): int32 {.importc: "GetMouseY".}
-  ## Get mouse position Y
-proc getMousePosition*(): Vector2 {.importc: "GetMousePosition".}
-  ## Get mouse position XY
-proc getMouseDelta*(): Vector2 {.importc: "GetMouseDelta".}
-  ## Get mouse delta between frames
-proc setMousePosition*(x: int32, y: int32) {.importc: "SetMousePosition".}
-  ## Set mouse position XY
-proc setMouseOffset*(offsetX: int32, offsetY: int32) {.importc: "SetMouseOffset".}
-  ## Set mouse offset
-proc setMouseScale*(scaleX: float32, scaleY: float32) {.importc: "SetMouseScale".}
-  ## Set mouse scaling
-proc getMouseWheelMove*(): float32 {.importc: "GetMouseWheelMove".}
-  ## Get mouse wheel movement for X or Y, whichever is larger
-proc getMouseWheelMoveV*(): Vector2 {.importc: "GetMouseWheelMoveV".}
-  ## Get mouse wheel movement for both X and Y
-proc setMouseCursor*(cursor: MouseCursor) {.importc: "SetMouseCursor".}
-  ## Set mouse cursor
-proc getTouchX*(): int32 {.importc: "GetTouchX".}
-  ## Get touch position X for touch point 0 (relative to screen size)
-proc getTouchY*(): int32 {.importc: "GetTouchY".}
-  ## Get touch position Y for touch point 0 (relative to screen size)
-proc getTouchPosition*(index: int32): Vector2 {.importc: "GetTouchPosition".}
-  ## Get touch position XY for a touch point index (relative to screen size)
-proc getTouchPointId*(index: int32): int32 {.importc: "GetTouchPointId".}
-  ## Get touch point identifier for given index
-proc getTouchPointCount*(): int32 {.importc: "GetTouchPointCount".}
-  ## Get number of touch points
-proc setGesturesEnabled*(flags: Flags[Gesture]) {.importc: "SetGesturesEnabled".}
-  ## Enable a set of gestures using flags
-proc isGestureDetected*(gesture: Gesture): bool {.importc: "IsGestureDetected".}
-  ## Check if a gesture have been detected
-proc getGestureDetected*(): Gesture {.importc: "GetGestureDetected".}
-  ## Get latest detected gesture
-proc getGestureHoldDuration*(): float32 {.importc: "GetGestureHoldDuration".}
-  ## Get gesture hold time in milliseconds
-proc getGestureDragVector*(): Vector2 {.importc: "GetGestureDragVector".}
-  ## Get gesture drag vector
-proc getGestureDragAngle*(): float32 {.importc: "GetGestureDragAngle".}
-  ## Get gesture drag angle
-proc getGesturePinchVector*(): Vector2 {.importc: "GetGesturePinchVector".}
-  ## Get gesture pinch delta
-proc getGesturePinchAngle*(): float32 {.importc: "GetGesturePinchAngle".}
-  ## Get gesture pinch angle
-proc updateCamera*(camera: var Camera, mode: CameraMode) {.importc: "UpdateCamera".}
-  ## Update camera position for selected mode
-proc updateCamera*(camera: var Camera, movement: Vector3, rotation: Vector3, zoom: float32) {.importc: "UpdateCameraPro".}
-  ## Update camera movement/rotation
-proc setShapesTexture*(texture: Texture2D, source: Rectangle) {.importc: "SetShapesTexture".}
-  ## Set texture and rectangle to be used on shapes drawing
-proc getShapesTexture*(): Texture2D {.importc: "GetShapesTexture".}
-  ## Get texture that is used for shapes drawing
-proc getShapesTextureRectangle*(): Rectangle {.importc: "GetShapesTextureRectangle".}
-  ## Get texture source rectangle that is used for shapes drawing
-proc drawPixel*(posX: int32, posY: int32, color: Color) {.importc: "DrawPixel".}
-  ## Draw a pixel using geometry [Can be slow, use with care]
-proc drawPixel*(position: Vector2, color: Color) {.importc: "DrawPixelV".}
-  ## Draw a pixel using geometry (Vector version) [Can be slow, use with care]
-proc drawLine*(startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "DrawLine".}
-  ## Draw a line
-proc drawLine*(startPos: Vector2, endPos: Vector2, color: Color) {.importc: "DrawLineV".}
-  ## Draw a line (using gl lines)
-proc drawLine*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineEx".}
-  ## Draw a line (using triangles/quads)
-proc drawLineStripPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawLineStrip".}
-proc drawLineBezier*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineBezier".}
-  ## Draw line segment cubic-bezier in-out interpolation
-proc drawCircle*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircle".}
-  ## Draw a color-filled circle
-proc drawCircleSector*(center: Vector2, radius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawCircleSector".}
-  ## Draw a piece of a circle
-proc drawCircleSectorLines*(center: Vector2, radius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawCircleSectorLines".}
-  ## Draw circle sector outline
-proc drawCircleGradient*(centerX: int32, centerY: int32, radius: float32, inner: Color, outer: Color) {.importc: "DrawCircleGradient".}
-  ## Draw a gradient-filled circle
-proc drawCircle*(center: Vector2, radius: float32, color: Color) {.importc: "DrawCircleV".}
-  ## Draw a color-filled circle (Vector version)
-proc drawCircleLines*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircleLines".}
-  ## Draw circle outline
-proc drawCircleLines*(center: Vector2, radius: float32, color: Color) {.importc: "DrawCircleLinesV".}
-  ## Draw circle outline (Vector version)
-proc drawEllipse*(centerX: int32, centerY: int32, radiusH: float32, radiusV: float32, color: Color) {.importc: "DrawEllipse".}
-  ## Draw ellipse
-proc drawEllipseLines*(centerX: int32, centerY: int32, radiusH: float32, radiusV: float32, color: Color) {.importc: "DrawEllipseLines".}
-  ## Draw ellipse outline
-proc drawRing*(center: Vector2, innerRadius: float32, outerRadius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawRing".}
-  ## Draw ring
-proc drawRingLines*(center: Vector2, innerRadius: float32, outerRadius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawRingLines".}
-  ## Draw ring outline
-proc drawRectangle*(posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "DrawRectangle".}
-  ## Draw a color-filled rectangle
-proc drawRectangle*(position: Vector2, size: Vector2, color: Color) {.importc: "DrawRectangleV".}
-  ## Draw a color-filled rectangle (Vector version)
-proc drawRectangle*(rec: Rectangle, color: Color) {.importc: "DrawRectangleRec".}
-  ## Draw a color-filled rectangle
-proc drawRectangle*(rec: Rectangle, origin: Vector2, rotation: float32, color: Color) {.importc: "DrawRectanglePro".}
-  ## Draw a color-filled rectangle with pro parameters
-proc drawRectangleGradientV*(posX: int32, posY: int32, width: int32, height: int32, top: Color, bottom: Color) {.importc: "DrawRectangleGradientV".}
-  ## Draw a vertical-gradient-filled rectangle
-proc drawRectangleGradientH*(posX: int32, posY: int32, width: int32, height: int32, left: Color, right: Color) {.importc: "DrawRectangleGradientH".}
-  ## Draw a horizontal-gradient-filled rectangle
-proc drawRectangleGradient*(rec: Rectangle, topLeft: Color, bottomLeft: Color, topRight: Color, bottomRight: Color) {.importc: "DrawRectangleGradientEx".}
-  ## Draw a gradient-filled rectangle with custom vertex colors
-proc drawRectangleLines*(posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "DrawRectangleLines".}
-  ## Draw rectangle outline
-proc drawRectangleLines*(rec: Rectangle, lineThick: float32, color: Color) {.importc: "DrawRectangleLinesEx".}
-  ## Draw rectangle outline with extended parameters
-proc drawRectangleRounded*(rec: Rectangle, roundness: float32, segments: int32, color: Color) {.importc: "DrawRectangleRounded".}
-  ## Draw rectangle with rounded edges
-proc drawRectangleRoundedLines*(rec: Rectangle, roundness: float32, segments: int32, color: Color) {.importc: "DrawRectangleRoundedLines".}
-  ## Draw rectangle lines with rounded edges
-proc drawRectangleRoundedLines*(rec: Rectangle, roundness: float32, segments: int32, lineThick: float32, color: Color) {.importc: "DrawRectangleRoundedLinesEx".}
-  ## Draw rectangle with rounded edges outline
-proc drawTriangle*(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "DrawTriangle".}
-  ## Draw a color-filled triangle (vertex in counter-clockwise order!)
-proc drawTriangleLines*(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "DrawTriangleLines".}
-  ## Draw triangle outline (vertex in counter-clockwise order!)
-proc drawTriangleFanPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawTriangleFan".}
-proc drawTriangleStripPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip".}
-proc drawPoly*(center: Vector2, sides: int32, radius: float32, rotation: float32, color: Color) {.importc: "DrawPoly".}
-  ## Draw a regular polygon (Vector version)
-proc drawPolyLines*(center: Vector2, sides: int32, radius: float32, rotation: float32, color: Color) {.importc: "DrawPolyLines".}
-  ## Draw a polygon outline of n sides
-proc drawPolyLines*(center: Vector2, sides: int32, radius: float32, rotation: float32, lineThick: float32, color: Color) {.importc: "DrawPolyLinesEx".}
-  ## Draw a polygon outline of n sides with extended parameters
-proc drawSplineLinearPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineLinear".}
-proc drawSplineBasisPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBasis".}
-proc drawSplineCatmullRomPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineCatmullRom".}
-proc drawSplineBezierQuadraticPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBezierQuadratic".}
-proc drawSplineBezierCubicPriv(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBezierCubic".}
-proc drawSplineSegmentLinear*(p1: Vector2, p2: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentLinear".}
-  ## Draw spline segment: Linear, 2 points
-proc drawSplineSegmentBasis*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBasis".}
-  ## Draw spline segment: B-Spline, 4 points
-proc drawSplineSegmentCatmullRom*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentCatmullRom".}
-  ## Draw spline segment: Catmull-Rom, 4 points
-proc drawSplineSegmentBezierQuadratic*(p1: Vector2, c2: Vector2, p3: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBezierQuadratic".}
-  ## Draw spline segment: Quadratic Bezier, 2 points, 1 control point
-proc drawSplineSegmentBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBezierCubic".}
-  ## Draw spline segment: Cubic Bezier, 2 points, 2 control points
-proc loadImagePriv(fileName: cstring): Image {.importc: "rlLoadImage".}
-proc loadImageRawPriv(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw".}
-proc loadImageSvgPriv(fileNameOrString: cstring, width: int32, height: int32): Image {.importc: "LoadImageSvg".}
-proc loadImageAnim*(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim".}
-  ## Load image sequence from file (frames appended to image.data)
-proc loadImageAnimFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, frames: ptr UncheckedArray[int32]): Image {.importc: "LoadImageAnimFromMemory".}
-proc loadImageFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Image {.importc: "LoadImageFromMemory".}
-proc loadImageFromTexturePriv(texture: Texture2D): Image {.importc: "LoadImageFromTexture".}
-proc loadImageFromScreen*(): Image {.importc: "LoadImageFromScreen".}
-  ## Load image from screen buffer and (screenshot)
-proc unloadImage(image: Image) {.importc: "UnloadImage".}
-proc exportImage*(image: Image, fileName: cstring): bool {.importc: "ExportImage".}
-  ## Export image data to file, returns true on success
-proc exportImageToMemoryPriv(image: Image, fileType: cstring, fileSize: ptr int32): ptr uint8 {.importc: "ExportImageToMemory".}
-proc exportImageAsCode*(image: Image, fileName: cstring): bool {.importc: "ExportImageAsCode".}
-  ## Export image as code file defining an array of bytes, returns true on success
-proc loadImageColorsPriv(image: Image): ptr UncheckedArray[Color] {.importc: "LoadImageColors".}
-proc loadImagePalettePriv(image: Image, maxPaletteSize: int32, colorCount: ptr int32): ptr UncheckedArray[Color] {.importc: "LoadImagePalette".}
-proc loadTexturePriv(fileName: cstring): Texture2D {.importc: "LoadTexture".}
-proc loadTextureFromImagePriv(image: Image): Texture2D {.importc: "LoadTextureFromImage".}
-proc loadTextureCubemapPriv(image: Image, layout: CubemapLayout): TextureCubemap {.importc: "LoadTextureCubemap".}
-proc loadRenderTexturePriv(width: int32, height: int32): RenderTexture2D {.importc: "LoadRenderTexture".}
-proc unloadTexture(texture: Texture2D) {.importc: "UnloadTexture".}
-proc unloadRenderTexture(target: RenderTexture2D) {.importc: "UnloadRenderTexture".}
-proc updateTexturePriv(texture: Texture2D, pixels: pointer) {.importc: "UpdateTexture".}
-proc updateTexturePriv(texture: Texture2D, rec: Rectangle, pixels: pointer) {.importc: "UpdateTextureRec".}
-proc genTextureMipmaps*(texture: var Texture2D) {.importc: "GenTextureMipmaps".}
-  ## Generate GPU mipmaps for a texture
-proc setTextureFilter*(texture: Texture2D, filter: TextureFilter) {.importc: "SetTextureFilter".}
-  ## Set texture scaling filter mode
-proc setTextureWrap*(texture: Texture2D, wrap: TextureWrap) {.importc: "SetTextureWrap".}
-  ## Set texture wrapping mode
-proc drawTexture*(texture: Texture2D, posX: int32, posY: int32, tint: Color) {.importc: "DrawTexture".}
-  ## Draw a Texture2D
-proc drawTexture*(texture: Texture2D, position: Vector2, tint: Color) {.importc: "DrawTextureV".}
-  ## Draw a Texture2D with position defined as Vector2
-proc drawTexture*(texture: Texture2D, position: Vector2, rotation: float32, scale: float32, tint: Color) {.importc: "DrawTextureEx".}
-  ## Draw a Texture2D with extended parameters
-proc drawTexture*(texture: Texture2D, source: Rectangle, position: Vector2, tint: Color) {.importc: "DrawTextureRec".}
-  ## Draw a part of a texture defined by a rectangle
-proc drawTexture*(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTexturePro".}
-  ## Draw a part of a texture defined by a rectangle with 'pro' parameters
-proc drawTextureNPatch*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch".}
-  ## Draws a texture (or part of it) that stretches or shrinks nicely
-proc getPixelColorPriv(srcPtr: pointer, format: PixelFormat): Color {.importc: "GetPixelColor".}
-proc setPixelColorPriv(dstPtr: pointer, color: Color, format: PixelFormat) {.importc: "SetPixelColor".}
-proc getFontDefault*(): Font {.importc: "GetFontDefault".}
-  ## Get the default Font
-proc loadFontPriv(fileName: cstring): Font {.importc: "LoadFont".}
-proc loadFontPriv(fileName: cstring, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontEx".}
-proc loadFontFromImagePriv(image: Image, key: Color, firstChar: int32): Font {.importc: "LoadFontFromImage".}
-proc loadFontFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontFromMemory".}
-proc loadFontDataPriv(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData".}
-proc unloadFont(font: Font) {.importc: "UnloadFont".}
-proc exportFontAsCode*(font: Font, fileName: cstring): bool {.importc: "ExportFontAsCode".}
-  ## Export font as code file, returns true on success
-proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS".}
-  ## Draw current FPS
-proc drawText*(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "rlDrawText".}
-  ## Draw text (using default font)
-proc drawText*(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "rlDrawTextEx".}
-  ## Draw text using font and additional parameters
-proc drawText*(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro".}
-  ## Draw text using Font and pro parameters (rotation)
-proc drawTextCodepoint*(font: Font, codepoint: Rune, position: Vector2, fontSize: float32, tint: Color) {.importc: "DrawTextCodepoint".}
-  ## Draw one character (codepoint)
-proc drawTextCodepointsPriv(font: Font, codepoints: ptr UncheckedArray[int32], codepointCount: int32, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextCodepoints".}
-proc setTextLineSpacing*(spacing: int32) {.importc: "SetTextLineSpacing".}
-  ## Set vertical line spacing when drawing with line-breaks
-proc measureText*(text: cstring, fontSize: int32): int32 {.importc: "MeasureText".}
-  ## Measure string width for default font
-proc drawLine3D*(startPos: Vector3, endPos: Vector3, color: Color) {.importc: "DrawLine3D".}
-  ## Draw a line in 3D world space
-proc drawPoint3D*(position: Vector3, color: Color) {.importc: "DrawPoint3D".}
-  ## Draw a point in 3D space, actually a small line
-proc drawCircle3D*(center: Vector3, radius: float32, rotationAxis: Vector3, rotationAngle: float32, color: Color) {.importc: "DrawCircle3D".}
-  ## Draw a circle in 3D world space
-proc drawTriangle3D*(v1: Vector3, v2: Vector3, v3: Vector3, color: Color) {.importc: "DrawTriangle3D".}
-  ## Draw a color-filled triangle (vertex in counter-clockwise order!)
-proc drawTriangleStrip3DPriv(points: ptr UncheckedArray[Vector3], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip3D".}
-proc drawCube*(position: Vector3, width: float32, height: float32, length: float32, color: Color) {.importc: "DrawCube".}
-  ## Draw cube
-proc drawCube*(position: Vector3, size: Vector3, color: Color) {.importc: "DrawCubeV".}
-  ## Draw cube (Vector version)
-proc drawCubeWires*(position: Vector3, width: float32, height: float32, length: float32, color: Color) {.importc: "DrawCubeWires".}
-  ## Draw cube wires
-proc drawCubeWires*(position: Vector3, size: Vector3, color: Color) {.importc: "DrawCubeWiresV".}
-  ## Draw cube wires (Vector version)
-proc drawSphere*(centerPos: Vector3, radius: float32, color: Color) {.importc: "DrawSphere".}
-  ## Draw sphere
-proc drawSphere*(centerPos: Vector3, radius: float32, rings: int32, slices: int32, color: Color) {.importc: "DrawSphereEx".}
-  ## Draw sphere with extended parameters
-proc drawSphereWires*(centerPos: Vector3, radius: float32, rings: int32, slices: int32, color: Color) {.importc: "DrawSphereWires".}
-  ## Draw sphere wires
-proc drawCylinder*(position: Vector3, radiusTop: float32, radiusBottom: float32, height: float32, slices: int32, color: Color) {.importc: "DrawCylinder".}
-  ## Draw a cylinder/cone
-proc drawCylinder*(startPos: Vector3, endPos: Vector3, startRadius: float32, endRadius: float32, sides: int32, color: Color) {.importc: "DrawCylinderEx".}
-  ## Draw a cylinder with base at startPos and top at endPos
-proc drawCylinderWires*(position: Vector3, radiusTop: float32, radiusBottom: float32, height: float32, slices: int32, color: Color) {.importc: "DrawCylinderWires".}
-  ## Draw a cylinder/cone wires
-proc drawCylinderWires*(startPos: Vector3, endPos: Vector3, startRadius: float32, endRadius: float32, sides: int32, color: Color) {.importc: "DrawCylinderWiresEx".}
-  ## Draw a cylinder wires with base at startPos and top at endPos
-proc drawCapsule*(startPos: Vector3, endPos: Vector3, radius: float32, slices: int32, rings: int32, color: Color) {.importc: "DrawCapsule".}
-  ## Draw a capsule with the center of its sphere caps at startPos and endPos
-proc drawCapsuleWires*(startPos: Vector3, endPos: Vector3, radius: float32, slices: int32, rings: int32, color: Color) {.importc: "DrawCapsuleWires".}
-  ## Draw capsule wireframe with the center of its sphere caps at startPos and endPos
-proc drawPlane*(centerPos: Vector3, size: Vector2, color: Color) {.importc: "DrawPlane".}
-  ## Draw a plane XZ
-proc drawRay*(ray: Ray, color: Color) {.importc: "DrawRay".}
-  ## Draw a ray line
-proc drawGrid*(slices: int32, spacing: float32) {.importc: "DrawGrid".}
-  ## Draw a grid (centered at (0, 0, 0))
-proc loadModelPriv(fileName: cstring): Model {.importc: "LoadModel".}
-proc loadModelFromMeshPriv(mesh: Mesh): Model {.importc: "LoadModelFromMesh".}
-proc unloadModel(model: Model) {.importc: "UnloadModel".}
-proc getModelBoundingBox*(model: Model): BoundingBox {.importc: "GetModelBoundingBox".}
-  ## Compute model bounding box limits (considers all meshes)
-proc drawModel*(model: Model, position: Vector3, scale: float32, tint: Color) {.importc: "DrawModel".}
-  ## Draw a model (with texture if set)
-proc drawModel*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelEx".}
-  ## Draw a model with extended parameters
-proc drawModelWires*(model: Model, position: Vector3, scale: float32, tint: Color) {.importc: "DrawModelWires".}
-  ## Draw a model wires (with texture if set)
-proc drawModelWires*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelWiresEx".}
-  ## Draw a model wires (with texture if set) with extended parameters
-proc drawModelPoints*(model: Model, position: Vector3, scale: float32, tint: Color) {.importc: "DrawModelPoints".}
-  ## Draw a model as points
-proc drawModelPoints*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelPointsEx".}
-  ## Draw a model as points with extended parameters
-proc drawBoundingBox*(box: BoundingBox, color: Color) {.importc: "DrawBoundingBox".}
-  ## Draw bounding box (wires)
-proc drawBillboard*(camera: Camera, texture: Texture2D, position: Vector3, scale: float32, tint: Color) {.importc: "DrawBillboard".}
-  ## Draw a billboard texture
-proc drawBillboard*(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, size: Vector2, tint: Color) {.importc: "DrawBillboardRec".}
-  ## Draw a billboard texture defined by source
-proc drawBillboard*(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawBillboardPro".}
-  ## Draw a billboard texture defined by source and rotation
-proc uploadMesh*(mesh: var Mesh, dynamic: bool) {.importc: "UploadMesh".}
-  ## Upload mesh vertex data in GPU and provide VAO/VBO ids
-proc updateMeshBufferPriv(mesh: Mesh, index: int32, data: pointer, dataSize: int32, offset: int32) {.importc: "UpdateMeshBuffer".}
-proc unloadMesh(mesh: Mesh) {.importc: "UnloadMesh".}
-proc drawMesh*(mesh: Mesh, material: Material, transform: Matrix) {.importc: "DrawMesh".}
-  ## Draw a 3d mesh with material and transform
-proc drawMeshInstancedPriv(mesh: Mesh, material: Material, transforms: ptr UncheckedArray[Matrix], instances: int32) {.importc: "DrawMeshInstanced".}
-proc genMeshTangents*(mesh: var Mesh) {.importc: "GenMeshTangents".}
-  ## Compute mesh tangents
-proc exportMesh*(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMesh".}
-  ## Export mesh data to file, returns true on success
-proc exportMeshAsCode*(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMeshAsCode".}
-  ## Export mesh as code file (.h) defining multiple arrays of vertex attributes
-proc genMeshPoly*(sides: int32, radius: float32): Mesh {.importc: "GenMeshPoly".}
-  ## Generate polygonal mesh
-proc genMeshPlane*(width: float32, length: float32, resX: int32, resZ: int32): Mesh {.importc: "GenMeshPlane".}
-  ## Generate plane mesh (with subdivisions)
-proc genMeshCube*(width: float32, height: float32, length: float32): Mesh {.importc: "GenMeshCube".}
-  ## Generate cuboid mesh
-proc genMeshSphere*(radius: float32, rings: int32, slices: int32): Mesh {.importc: "GenMeshSphere".}
-  ## Generate sphere mesh (standard sphere)
-proc genMeshHemiSphere*(radius: float32, rings: int32, slices: int32): Mesh {.importc: "GenMeshHemiSphere".}
-  ## Generate half-sphere mesh (no bottom cap)
-proc genMeshCylinder*(radius: float32, height: float32, slices: int32): Mesh {.importc: "GenMeshCylinder".}
-  ## Generate cylinder mesh
-proc genMeshCone*(radius: float32, height: float32, slices: int32): Mesh {.importc: "GenMeshCone".}
-  ## Generate cone/pyramid mesh
-proc genMeshTorus*(radius: float32, size: float32, radSeg: int32, sides: int32): Mesh {.importc: "GenMeshTorus".}
-  ## Generate torus mesh
-proc genMeshKnot*(radius: float32, size: float32, radSeg: int32, sides: int32): Mesh {.importc: "GenMeshKnot".}
-  ## Generate trefoil knot mesh
-proc genMeshHeightmap*(heightmap: Image, size: Vector3): Mesh {.importc: "GenMeshHeightmap".}
-  ## Generate heightmap mesh from image data
-proc genMeshCubicmap*(cubicmap: Image, cubeSize: Vector3): Mesh {.importc: "GenMeshCubicmap".}
-  ## Generate cubes-based map mesh from image data
-proc loadMaterialsPriv(fileName: cstring, materialCount: ptr int32): ptr UncheckedArray[Material] {.importc: "LoadMaterials".}
-proc loadMaterialDefault*(): Material {.importc: "LoadMaterialDefault".}
-  ## Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
-proc unloadMaterial(material: Material) {.importc: "UnloadMaterial".}
-proc loadModelAnimationsPriv(fileName: cstring, animCount: ptr int32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations".}
-proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation".}
-  ## Update model animation pose
-proc unloadModelAnimation(anim: ModelAnimation) {.importc: "UnloadModelAnimation".}
-proc initAudioDevice*() {.importc: "InitAudioDevice".}
-  ## Initialize audio device and context
-proc closeAudioDevice*() {.importc: "CloseAudioDevice".}
-  ## Close the audio device and context
-proc setMasterVolume*(volume: float32) {.importc: "SetMasterVolume".}
-  ## Set master volume (listener)
-proc getMasterVolume*(): float32 {.importc: "GetMasterVolume".}
-  ## Get master volume (listener)
-proc loadWavePriv(fileName: cstring): Wave {.importc: "LoadWave".}
-proc loadWaveFromMemoryPriv(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Wave {.importc: "LoadWaveFromMemory".}
-proc loadSoundPriv(fileName: cstring): Sound {.importc: "LoadSound".}
-proc loadSoundFromWavePriv(wave: Wave): Sound {.importc: "LoadSoundFromWave".}
-proc loadSoundAliasPriv(source: Sound): Sound {.importc: "LoadSoundAlias".}
-proc updateSoundPriv(sound: Sound, data: pointer, sampleCount: int32) {.importc: "UpdateSound".}
-proc unloadWave(wave: Wave) {.importc: "UnloadWave".}
-proc unloadSound(sound: Sound) {.importc: "UnloadSound".}
-proc unloadSoundAlias(alias: Sound) {.importc: "UnloadSoundAlias".}
-proc exportWave*(wave: Wave, fileName: cstring): bool {.importc: "ExportWave".}
-  ## Export wave data to file, returns true on success
-proc exportWaveAsCode*(wave: Wave, fileName: cstring): bool {.importc: "ExportWaveAsCode".}
-  ## Export wave sample data to code (.h), returns true on success
-proc playSound*(sound: Sound) {.importc: "PlaySound".}
-  ## Play a sound
-proc stopSound*(sound: Sound) {.importc: "StopSound".}
-  ## Stop playing a sound
-proc pauseSound*(sound: Sound) {.importc: "PauseSound".}
-  ## Pause a sound
-proc resumeSound*(sound: Sound) {.importc: "ResumeSound".}
-  ## Resume a paused sound
-proc isSoundPlaying*(sound: Sound): bool {.importc: "IsSoundPlaying".}
-  ## Check if a sound is currently playing
-proc setSoundVolume*(sound: Sound, volume: float32) {.importc: "SetSoundVolume".}
-  ## Set volume for a sound (1.0 is max level)
-proc setSoundPitch*(sound: Sound, pitch: float32) {.importc: "SetSoundPitch".}
-  ## Set pitch for a sound (1.0 is base level)
-proc setSoundPan*(sound: Sound, pan: float32) {.importc: "SetSoundPan".}
-  ## Set pan for a sound (0.5 is center)
-proc loadWaveSamplesPriv(wave: Wave): ptr UncheckedArray[float32] {.importc: "LoadWaveSamples".}
-proc loadMusicStreamPriv(fileName: cstring): Music {.importc: "LoadMusicStream".}
-proc loadMusicStreamFromMemoryPriv(fileType: cstring, data: ptr UncheckedArray[uint8], dataSize: int32): Music {.importc: "LoadMusicStreamFromMemory".}
-proc unloadMusicStream(music: Music) {.importc: "UnloadMusicStream".}
-proc playMusicStream*(music: Music) {.importc: "PlayMusicStream".}
-  ## Start music playing
-proc isMusicStreamPlaying*(music: Music): bool {.importc: "IsMusicStreamPlaying".}
-  ## Check if music is playing
-proc updateMusicStream*(music: Music) {.importc: "UpdateMusicStream".}
-  ## Updates buffers for music streaming
-proc stopMusicStream*(music: Music) {.importc: "StopMusicStream".}
-  ## Stop music playing
-proc pauseMusicStream*(music: Music) {.importc: "PauseMusicStream".}
-  ## Pause music playing
-proc resumeMusicStream*(music: Music) {.importc: "ResumeMusicStream".}
-  ## Resume playing paused music
-proc seekMusicStream*(music: Music, position: float32) {.importc: "SeekMusicStream".}
-  ## Seek music to a position (in seconds)
-proc setMusicVolume*(music: Music, volume: float32) {.importc: "SetMusicVolume".}
-  ## Set volume for music (1.0 is max level)
-proc setMusicPitch*(music: Music, pitch: float32) {.importc: "SetMusicPitch".}
-  ## Set pitch for a music (1.0 is base level)
-proc setMusicPan*(music: Music, pan: float32) {.importc: "SetMusicPan".}
-  ## Set pan for a music (0.5 is center)
-proc getMusicTimePlayed*(music: Music): float32 {.importc: "GetMusicTimePlayed".}
-  ## Get current music time played (in seconds)
-proc loadAudioStreamPriv(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream {.importc: "LoadAudioStream".}
-proc unloadAudioStream(stream: AudioStream) {.importc: "UnloadAudioStream".}
-proc updateAudioStreamPriv(stream: AudioStream, data: pointer, frameCount: int32) {.importc: "UpdateAudioStream".}
-proc isAudioStreamProcessed*(stream: AudioStream): bool {.importc: "IsAudioStreamProcessed".}
-  ## Check if any audio stream buffers requires refill
-proc playAudioStream*(stream: AudioStream) {.importc: "PlayAudioStream".}
-  ## Play audio stream
-proc pauseAudioStream*(stream: AudioStream) {.importc: "PauseAudioStream".}
-  ## Pause audio stream
-proc resumeAudioStream*(stream: AudioStream) {.importc: "ResumeAudioStream".}
-  ## Resume audio stream
-proc isAudioStreamPlaying*(stream: AudioStream): bool {.importc: "IsAudioStreamPlaying".}
-  ## Check if audio stream is playing
-proc stopAudioStream*(stream: AudioStream) {.importc: "StopAudioStream".}
-  ## Stop audio stream
-proc setAudioStreamVolume*(stream: AudioStream, volume: float32) {.importc: "SetAudioStreamVolume".}
-  ## Set volume for audio stream (1.0 is max level)
-proc setAudioStreamPitch*(stream: AudioStream, pitch: float32) {.importc: "SetAudioStreamPitch".}
-  ## Set pitch for audio stream (1.0 is base level)
-proc setAudioStreamPan*(stream: AudioStream, pan: float32) {.importc: "SetAudioStreamPan".}
-  ## Set pan for audio stream (0.5 is centered)
-proc setAudioStreamBufferSizeDefault*(size: int32) {.importc: "SetAudioStreamBufferSizeDefault".}
-  ## Default size for new audio streams
-proc setAudioStreamCallback*(stream: AudioStream, callback: AudioCallback) {.importc: "SetAudioStreamCallback".}
-  ## Audio thread callback to request new data
-proc attachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "AttachAudioStreamProcessor".}
-  ## Attach audio stream processor to stream, receives the samples as 'float'
-proc detachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "DetachAudioStreamProcessor".}
-  ## Detach audio stream processor from stream
-proc attachAudioMixedProcessor*(processor: AudioCallback) {.importc: "AttachAudioMixedProcessor".}
-  ## Attach audio stream processor to the entire audio pipeline, receives the samples as 'float'
-proc detachAudioMixedProcessor*(processor: AudioCallback) {.importc: "DetachAudioMixedProcessor".}
-  ## Detach audio stream processor from the entire audio pipeline
-{.pop.}
-
-{.push noSideEffect.}
-proc isShaderReady*(shader: Shader): bool {.importc: "IsShaderReady".}
+proc unloadVrStereoConfig(config: VrStereoConfig) {.importc: "UnloadVrStereoConfig", sideEffect.}
+proc loadShaderImpl(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader", sideEffect.}
+proc loadShaderFromMemoryImpl(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory", sideEffect.}
+func isShaderReady*(shader: Shader): bool {.importc: "IsShaderReady".}
   ## Check if a shader is ready
-proc getScreenToWorldRay*(position: Vector2, camera: Camera): Ray {.importc: "GetScreenToWorldRay".}
+proc getShaderLocationImpl(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation", sideEffect.}
+proc getShaderLocationAttribImpl(shader: Shader, attribName: cstring): ShaderLocation {.importc: "GetShaderLocationAttrib", sideEffect.}
+proc setShaderValueImpl(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue", sideEffect.}
+proc setShaderValueVImpl(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "SetShaderValueV", sideEffect.}
+proc setShaderValueMatrix*(shader: Shader, locIndex: ShaderLocation, mat: Matrix) {.importc: "SetShaderValueMatrix", sideEffect.}
+  ## Set shader uniform value (matrix 4x4)
+proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocation, texture: Texture2D) {.importc: "SetShaderValueTexture", sideEffect.}
+  ## Set shader uniform value for texture (sampler2d)
+proc unloadShader(shader: Shader) {.importc: "UnloadShader", sideEffect.}
+proc getScreenToWorldRay*(position: Vector2, camera: Camera): Ray {.importc: "GetScreenToWorldRay", sideEffect.}
   ## Get a ray trace from screen position (i.e mouse)
-proc getScreenToWorldRay*(position: Vector2, camera: Camera, width: int32, height: int32): Ray {.importc: "GetScreenToWorldRayEx".}
+proc getScreenToWorldRay*(position: Vector2, camera: Camera, width: int32, height: int32): Ray {.importc: "GetScreenToWorldRayEx", sideEffect.}
   ## Get a ray trace from screen position (i.e mouse) in a viewport
-proc getWorldToScreen*(position: Vector3, camera: Camera): Vector2 {.importc: "GetWorldToScreen".}
+proc getWorldToScreen*(position: Vector3, camera: Camera): Vector2 {.importc: "GetWorldToScreen", sideEffect.}
   ## Get the screen space position for a 3d world space position
-proc getWorldToScreen*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx".}
+proc getWorldToScreen*(position: Vector3, camera: Camera, width: int32, height: int32): Vector2 {.importc: "GetWorldToScreenEx", sideEffect.}
   ## Get size position for a 3d world space position
-proc getWorldToScreen2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetWorldToScreen2D".}
+func getWorldToScreen2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetWorldToScreen2D".}
   ## Get the screen space position for a 2d camera world space position
-proc getScreenToWorld2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetScreenToWorld2D".}
+func getScreenToWorld2D*(position: Vector2, camera: Camera2D): Vector2 {.importc: "GetScreenToWorld2D".}
   ## Get the world space position for a 2d camera screen space position
-proc getCameraMatrix*(camera: Camera): Matrix {.importc: "GetCameraMatrix".}
+func getCameraMatrix*(camera: Camera): Matrix {.importc: "GetCameraMatrix".}
   ## Get camera transform matrix (view matrix)
-proc getCameraMatrix2D*(camera: Camera2D): Matrix {.importc: "GetCameraMatrix2D".}
+func getCameraMatrix2D*(camera: Camera2D): Matrix {.importc: "GetCameraMatrix2D".}
   ## Get camera 2d transform matrix
-proc getSplinePointLinear*(startPos: Vector2, endPos: Vector2, t: float32): Vector2 {.importc: "GetSplinePointLinear".}
+proc setTargetFPS*(fps: int32) {.importc: "SetTargetFPS", sideEffect.}
+  ## Set target FPS (maximum)
+proc getFrameTime*(): float32 {.importc: "GetFrameTime", sideEffect.}
+  ## Get time in seconds for last frame drawn (delta time)
+proc getTime*(): float64 {.importc: "GetTime", sideEffect.}
+  ## Get elapsed time in seconds since InitWindow()
+proc getFPS*(): int32 {.importc: "GetFPS", sideEffect.}
+  ## Get current FPS
+proc swapScreenBuffer*() {.importc: "SwapScreenBuffer", sideEffect.}
+  ## Swap back buffer with front buffer (screen drawing)
+proc pollInputEvents*() {.importc: "PollInputEvents", sideEffect.}
+  ## Register all input events
+proc waitTime*(seconds: float64) {.importc: "WaitTime", sideEffect.}
+  ## Wait for some time (halt program execution)
+proc takeScreenshotImpl(fileName: cstring) {.importc: "TakeScreenshot", sideEffect.}
+proc setConfigFlags*(flags: Flags[ConfigFlags]) {.importc: "SetConfigFlags", sideEffect.}
+  ## Setup init configuration flags (view FLAGS)
+proc traceLog*(logLevel: TraceLogLevel, text: cstring) {.importc: "TraceLog", varargs, sideEffect.}
+  ## Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
+proc setTraceLogLevel*(logLevel: TraceLogLevel) {.importc: "SetTraceLogLevel", sideEffect.}
+  ## Set the current threshold (minimum) log level
+proc memAlloc(size: uint32): pointer {.importc: "MemAlloc", sideEffect.}
+proc memRealloc(`ptr`: pointer, size: uint32): pointer {.importc: "MemRealloc", sideEffect.}
+proc memFree(`ptr`: pointer) {.importc: "MemFree", sideEffect.}
+proc setTraceLogCallbackImpl(callback: TraceLogCallbackImpl) {.importc: "SetTraceLogCallback", sideEffect.}
+proc setLoadFileDataCallback*(callback: LoadFileDataCallback) {.importc: "SetLoadFileDataCallback", sideEffect.}
+  ## Set custom file binary data loader
+proc setSaveFileDataCallback*(callback: SaveFileDataCallback) {.importc: "SetSaveFileDataCallback", sideEffect.}
+  ## Set custom file binary data saver
+proc setLoadFileTextCallback*(callback: LoadFileTextCallback) {.importc: "SetLoadFileTextCallback", sideEffect.}
+  ## Set custom file text data loader
+proc setSaveFileTextCallback*(callback: SaveFileTextCallback) {.importc: "SetSaveFileTextCallback", sideEffect.}
+  ## Set custom file text data saver
+proc isFileDropped*(): bool {.importc: "IsFileDropped", sideEffect.}
+  ## Check if a file has been dropped into window
+proc loadDroppedFilesImpl(): FilePathList {.importc: "LoadDroppedFiles", sideEffect.}
+proc unloadDroppedFilesImpl(files: FilePathList) {.importc: "UnloadDroppedFiles", sideEffect.}
+proc loadAutomationEventListImpl(fileName: cstring): AutomationEventList {.importc: "LoadAutomationEventList", sideEffect.}
+proc unloadAutomationEventList*(list: AutomationEventList) {.importc: "UnloadAutomationEventList", sideEffect.}
+  ## Unload automation events list from file
+proc exportAutomationEventListImpl(list: AutomationEventList, fileName: cstring): bool {.importc: "ExportAutomationEventList", sideEffect.}
+proc setAutomationEventList*(list: var AutomationEventList) {.importc: "SetAutomationEventList", sideEffect.}
+  ## Set automation event list to record to
+proc setAutomationEventBaseFrame*(frame: int32) {.importc: "SetAutomationEventBaseFrame", sideEffect.}
+  ## Set automation event internal base frame to start recording
+proc startAutomationEventRecording*() {.importc: "StartAutomationEventRecording", sideEffect.}
+  ## Start recording automation events (AutomationEventList must be set)
+proc stopAutomationEventRecording*() {.importc: "StopAutomationEventRecording", sideEffect.}
+  ## Stop recording automation events
+proc playAutomationEvent*(event: AutomationEvent) {.importc: "PlayAutomationEvent", sideEffect.}
+  ## Play a recorded automation event
+proc isKeyPressed*(key: KeyboardKey): bool {.importc: "IsKeyPressed", sideEffect.}
+  ## Check if a key has been pressed once
+proc isKeyPressedRepeat*(key: KeyboardKey): bool {.importc: "IsKeyPressedRepeat", sideEffect.}
+  ## Check if a key has been pressed again (Only PLATFORM_DESKTOP)
+proc isKeyDown*(key: KeyboardKey): bool {.importc: "IsKeyDown", sideEffect.}
+  ## Check if a key is being pressed
+proc isKeyReleased*(key: KeyboardKey): bool {.importc: "IsKeyReleased", sideEffect.}
+  ## Check if a key has been released once
+proc isKeyUp*(key: KeyboardKey): bool {.importc: "IsKeyUp", sideEffect.}
+  ## Check if a key is NOT being pressed
+proc getKeyPressed*(): KeyboardKey {.importc: "GetKeyPressed", sideEffect.}
+  ## Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty
+proc getCharPressed*(): int32 {.importc: "GetCharPressed", sideEffect.}
+  ## Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty
+proc setExitKey*(key: KeyboardKey) {.importc: "SetExitKey", sideEffect.}
+  ## Set a custom key to exit program (default is ESC)
+proc isGamepadAvailable*(gamepad: int32): bool {.importc: "IsGamepadAvailable", sideEffect.}
+  ## Check if a gamepad is available
+proc getGamepadNameImpl(gamepad: int32): cstring {.importc: "GetGamepadName", sideEffect.}
+proc isGamepadButtonPressed*(gamepad: int32, button: GamepadButton): bool {.importc: "IsGamepadButtonPressed", sideEffect.}
+  ## Check if a gamepad button has been pressed once
+proc isGamepadButtonDown*(gamepad: int32, button: GamepadButton): bool {.importc: "IsGamepadButtonDown", sideEffect.}
+  ## Check if a gamepad button is being pressed
+proc isGamepadButtonReleased*(gamepad: int32, button: GamepadButton): bool {.importc: "IsGamepadButtonReleased", sideEffect.}
+  ## Check if a gamepad button has been released once
+proc isGamepadButtonUp*(gamepad: int32, button: GamepadButton): bool {.importc: "IsGamepadButtonUp", sideEffect.}
+  ## Check if a gamepad button is NOT being pressed
+proc getGamepadButtonPressed*(): GamepadButton {.importc: "GetGamepadButtonPressed", sideEffect.}
+  ## Get the last gamepad button pressed
+proc getGamepadAxisCount*(gamepad: int32): int32 {.importc: "GetGamepadAxisCount", sideEffect.}
+  ## Get gamepad axis count for a gamepad
+proc getGamepadAxisMovement*(gamepad: int32, axis: GamepadAxis): float32 {.importc: "GetGamepadAxisMovement", sideEffect.}
+  ## Get axis movement value for a gamepad axis
+proc setGamepadMappingsImpl(mappings: cstring): int32 {.importc: "SetGamepadMappings", sideEffect.}
+proc setGamepadVibration*(gamepad: int32, leftMotor: float32, rightMotor: float32) {.importc: "SetGamepadVibration", sideEffect.}
+  ## Set gamepad vibration for both motors
+proc isMouseButtonPressed*(button: MouseButton): bool {.importc: "IsMouseButtonPressed", sideEffect.}
+  ## Check if a mouse button has been pressed once
+proc isMouseButtonDown*(button: MouseButton): bool {.importc: "IsMouseButtonDown", sideEffect.}
+  ## Check if a mouse button is being pressed
+proc isMouseButtonReleased*(button: MouseButton): bool {.importc: "IsMouseButtonReleased", sideEffect.}
+  ## Check if a mouse button has been released once
+proc isMouseButtonUp*(button: MouseButton): bool {.importc: "IsMouseButtonUp", sideEffect.}
+  ## Check if a mouse button is NOT being pressed
+proc getMouseX*(): int32 {.importc: "GetMouseX", sideEffect.}
+  ## Get mouse position X
+proc getMouseY*(): int32 {.importc: "GetMouseY", sideEffect.}
+  ## Get mouse position Y
+proc getMousePosition*(): Vector2 {.importc: "GetMousePosition", sideEffect.}
+  ## Get mouse position XY
+proc getMouseDelta*(): Vector2 {.importc: "GetMouseDelta", sideEffect.}
+  ## Get mouse delta between frames
+proc setMousePosition*(x: int32, y: int32) {.importc: "SetMousePosition", sideEffect.}
+  ## Set mouse position XY
+proc setMouseOffset*(offsetX: int32, offsetY: int32) {.importc: "SetMouseOffset", sideEffect.}
+  ## Set mouse offset
+proc setMouseScale*(scaleX: float32, scaleY: float32) {.importc: "SetMouseScale", sideEffect.}
+  ## Set mouse scaling
+proc getMouseWheelMove*(): float32 {.importc: "GetMouseWheelMove", sideEffect.}
+  ## Get mouse wheel movement for X or Y, whichever is larger
+proc getMouseWheelMoveV*(): Vector2 {.importc: "GetMouseWheelMoveV", sideEffect.}
+  ## Get mouse wheel movement for both X and Y
+proc setMouseCursor*(cursor: MouseCursor) {.importc: "SetMouseCursor", sideEffect.}
+  ## Set mouse cursor
+proc getTouchX*(): int32 {.importc: "GetTouchX", sideEffect.}
+  ## Get touch position X for touch point 0 (relative to screen size)
+proc getTouchY*(): int32 {.importc: "GetTouchY", sideEffect.}
+  ## Get touch position Y for touch point 0 (relative to screen size)
+proc getTouchPosition*(index: int32): Vector2 {.importc: "GetTouchPosition", sideEffect.}
+  ## Get touch position XY for a touch point index (relative to screen size)
+proc getTouchPointId*(index: int32): int32 {.importc: "GetTouchPointId", sideEffect.}
+  ## Get touch point identifier for given index
+proc getTouchPointCount*(): int32 {.importc: "GetTouchPointCount", sideEffect.}
+  ## Get number of touch points
+proc setGesturesEnabled*(flags: Flags[Gesture]) {.importc: "SetGesturesEnabled", sideEffect.}
+  ## Enable a set of gestures using flags
+proc isGestureDetected*(gesture: Gesture): bool {.importc: "IsGestureDetected", sideEffect.}
+  ## Check if a gesture have been detected
+proc getGestureDetected*(): Gesture {.importc: "GetGestureDetected", sideEffect.}
+  ## Get latest detected gesture
+proc getGestureHoldDuration*(): float32 {.importc: "GetGestureHoldDuration", sideEffect.}
+  ## Get gesture hold time in milliseconds
+proc getGestureDragVector*(): Vector2 {.importc: "GetGestureDragVector", sideEffect.}
+  ## Get gesture drag vector
+proc getGestureDragAngle*(): float32 {.importc: "GetGestureDragAngle", sideEffect.}
+  ## Get gesture drag angle
+proc getGesturePinchVector*(): Vector2 {.importc: "GetGesturePinchVector", sideEffect.}
+  ## Get gesture pinch delta
+proc getGesturePinchAngle*(): float32 {.importc: "GetGesturePinchAngle", sideEffect.}
+  ## Get gesture pinch angle
+proc updateCamera*(camera: var Camera, mode: CameraMode) {.importc: "UpdateCamera", sideEffect.}
+  ## Update camera position for selected mode
+proc updateCamera*(camera: var Camera, movement: Vector3, rotation: Vector3, zoom: float32) {.importc: "UpdateCameraPro", sideEffect.}
+  ## Update camera movement/rotation
+proc setShapesTexture*(texture: Texture2D, source: Rectangle) {.importc: "SetShapesTexture", sideEffect.}
+  ## Set texture and rectangle to be used on shapes drawing
+proc getShapesTexture*(): Texture2D {.importc: "GetShapesTexture", sideEffect.}
+  ## Get texture that is used for shapes drawing
+proc getShapesTextureRectangle*(): Rectangle {.importc: "GetShapesTextureRectangle", sideEffect.}
+  ## Get texture source rectangle that is used for shapes drawing
+proc drawPixel*(posX: int32, posY: int32, color: Color) {.importc: "DrawPixel", sideEffect.}
+  ## Draw a pixel using geometry [Can be slow, use with care]
+proc drawPixel*(position: Vector2, color: Color) {.importc: "DrawPixelV", sideEffect.}
+  ## Draw a pixel using geometry (Vector version) [Can be slow, use with care]
+proc drawLine*(startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "DrawLine", sideEffect.}
+  ## Draw a line
+proc drawLine*(startPos: Vector2, endPos: Vector2, color: Color) {.importc: "DrawLineV", sideEffect.}
+  ## Draw a line (using gl lines)
+proc drawLine*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineEx", sideEffect.}
+  ## Draw a line (using triangles/quads)
+proc drawLineStripImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawLineStrip", sideEffect.}
+proc drawLineBezier*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineBezier", sideEffect.}
+  ## Draw line segment cubic-bezier in-out interpolation
+proc drawCircle*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircle", sideEffect.}
+  ## Draw a color-filled circle
+proc drawCircleSector*(center: Vector2, radius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawCircleSector", sideEffect.}
+  ## Draw a piece of a circle
+proc drawCircleSectorLines*(center: Vector2, radius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawCircleSectorLines", sideEffect.}
+  ## Draw circle sector outline
+proc drawCircleGradient*(centerX: int32, centerY: int32, radius: float32, inner: Color, outer: Color) {.importc: "DrawCircleGradient", sideEffect.}
+  ## Draw a gradient-filled circle
+proc drawCircle*(center: Vector2, radius: float32, color: Color) {.importc: "DrawCircleV", sideEffect.}
+  ## Draw a color-filled circle (Vector version)
+proc drawCircleLines*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircleLines", sideEffect.}
+  ## Draw circle outline
+proc drawCircleLines*(center: Vector2, radius: float32, color: Color) {.importc: "DrawCircleLinesV", sideEffect.}
+  ## Draw circle outline (Vector version)
+proc drawEllipse*(centerX: int32, centerY: int32, radiusH: float32, radiusV: float32, color: Color) {.importc: "DrawEllipse", sideEffect.}
+  ## Draw ellipse
+proc drawEllipseLines*(centerX: int32, centerY: int32, radiusH: float32, radiusV: float32, color: Color) {.importc: "DrawEllipseLines", sideEffect.}
+  ## Draw ellipse outline
+proc drawRing*(center: Vector2, innerRadius: float32, outerRadius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawRing", sideEffect.}
+  ## Draw ring
+proc drawRingLines*(center: Vector2, innerRadius: float32, outerRadius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawRingLines", sideEffect.}
+  ## Draw ring outline
+proc drawRectangle*(posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "DrawRectangle", sideEffect.}
+  ## Draw a color-filled rectangle
+proc drawRectangle*(position: Vector2, size: Vector2, color: Color) {.importc: "DrawRectangleV", sideEffect.}
+  ## Draw a color-filled rectangle (Vector version)
+proc drawRectangle*(rec: Rectangle, color: Color) {.importc: "DrawRectangleRec", sideEffect.}
+  ## Draw a color-filled rectangle
+proc drawRectangle*(rec: Rectangle, origin: Vector2, rotation: float32, color: Color) {.importc: "DrawRectanglePro", sideEffect.}
+  ## Draw a color-filled rectangle with pro parameters
+proc drawRectangleGradientV*(posX: int32, posY: int32, width: int32, height: int32, top: Color, bottom: Color) {.importc: "DrawRectangleGradientV", sideEffect.}
+  ## Draw a vertical-gradient-filled rectangle
+proc drawRectangleGradientH*(posX: int32, posY: int32, width: int32, height: int32, left: Color, right: Color) {.importc: "DrawRectangleGradientH", sideEffect.}
+  ## Draw a horizontal-gradient-filled rectangle
+proc drawRectangleGradient*(rec: Rectangle, topLeft: Color, bottomLeft: Color, topRight: Color, bottomRight: Color) {.importc: "DrawRectangleGradientEx", sideEffect.}
+  ## Draw a gradient-filled rectangle with custom vertex colors
+proc drawRectangleLines*(posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "DrawRectangleLines", sideEffect.}
+  ## Draw rectangle outline
+proc drawRectangleLines*(rec: Rectangle, lineThick: float32, color: Color) {.importc: "DrawRectangleLinesEx", sideEffect.}
+  ## Draw rectangle outline with extended parameters
+proc drawRectangleRounded*(rec: Rectangle, roundness: float32, segments: int32, color: Color) {.importc: "DrawRectangleRounded", sideEffect.}
+  ## Draw rectangle with rounded edges
+proc drawRectangleRoundedLines*(rec: Rectangle, roundness: float32, segments: int32, color: Color) {.importc: "DrawRectangleRoundedLines", sideEffect.}
+  ## Draw rectangle lines with rounded edges
+proc drawRectangleRoundedLines*(rec: Rectangle, roundness: float32, segments: int32, lineThick: float32, color: Color) {.importc: "DrawRectangleRoundedLinesEx", sideEffect.}
+  ## Draw rectangle with rounded edges outline
+proc drawTriangle*(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "DrawTriangle", sideEffect.}
+  ## Draw a color-filled triangle (vertex in counter-clockwise order!)
+proc drawTriangleLines*(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "DrawTriangleLines", sideEffect.}
+  ## Draw triangle outline (vertex in counter-clockwise order!)
+proc drawTriangleFanImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawTriangleFan", sideEffect.}
+proc drawTriangleStripImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip", sideEffect.}
+proc drawPoly*(center: Vector2, sides: int32, radius: float32, rotation: float32, color: Color) {.importc: "DrawPoly", sideEffect.}
+  ## Draw a regular polygon (Vector version)
+proc drawPolyLines*(center: Vector2, sides: int32, radius: float32, rotation: float32, color: Color) {.importc: "DrawPolyLines", sideEffect.}
+  ## Draw a polygon outline of n sides
+proc drawPolyLines*(center: Vector2, sides: int32, radius: float32, rotation: float32, lineThick: float32, color: Color) {.importc: "DrawPolyLinesEx", sideEffect.}
+  ## Draw a polygon outline of n sides with extended parameters
+proc drawSplineLinearImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineLinear", sideEffect.}
+proc drawSplineBasisImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBasis", sideEffect.}
+proc drawSplineCatmullRomImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineCatmullRom", sideEffect.}
+proc drawSplineBezierQuadraticImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBezierQuadratic", sideEffect.}
+proc drawSplineBezierCubicImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, thick: float32, color: Color) {.importc: "DrawSplineBezierCubic", sideEffect.}
+proc drawSplineSegmentLinear*(p1: Vector2, p2: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentLinear", sideEffect.}
+  ## Draw spline segment: Linear, 2 points
+proc drawSplineSegmentBasis*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBasis", sideEffect.}
+  ## Draw spline segment: B-Spline, 4 points
+proc drawSplineSegmentCatmullRom*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentCatmullRom", sideEffect.}
+  ## Draw spline segment: Catmull-Rom, 4 points
+proc drawSplineSegmentBezierQuadratic*(p1: Vector2, c2: Vector2, p3: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBezierQuadratic", sideEffect.}
+  ## Draw spline segment: Quadratic Bezier, 2 points, 1 control point
+proc drawSplineSegmentBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, thick: float32, color: Color) {.importc: "DrawSplineSegmentBezierCubic", sideEffect.}
+  ## Draw spline segment: Cubic Bezier, 2 points, 2 control points
+func getSplinePointLinear*(startPos: Vector2, endPos: Vector2, t: float32): Vector2 {.importc: "GetSplinePointLinear".}
   ## Get (evaluate) spline point: Linear
-proc getSplinePointBasis*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBasis".}
+func getSplinePointBasis*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBasis".}
   ## Get (evaluate) spline point: B-Spline
-proc getSplinePointCatmullRom*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointCatmullRom".}
+func getSplinePointCatmullRom*(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointCatmullRom".}
   ## Get (evaluate) spline point: Catmull-Rom
-proc getSplinePointBezierQuad*(p1: Vector2, c2: Vector2, p3: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBezierQuad".}
+func getSplinePointBezierQuad*(p1: Vector2, c2: Vector2, p3: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBezierQuad".}
   ## Get (evaluate) spline point: Quadratic Bezier
-proc getSplinePointBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBezierCubic".}
+func getSplinePointBezierCubic*(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, t: float32): Vector2 {.importc: "GetSplinePointBezierCubic".}
   ## Get (evaluate) spline point: Cubic Bezier
-proc checkCollisionRecs*(rec1: Rectangle, rec2: Rectangle): bool {.importc: "CheckCollisionRecs".}
+func checkCollisionRecs*(rec1: Rectangle, rec2: Rectangle): bool {.importc: "CheckCollisionRecs".}
   ## Check collision between two rectangles
-proc checkCollisionCircles*(center1: Vector2, radius1: float32, center2: Vector2, radius2: float32): bool {.importc: "CheckCollisionCircles".}
+func checkCollisionCircles*(center1: Vector2, radius1: float32, center2: Vector2, radius2: float32): bool {.importc: "CheckCollisionCircles".}
   ## Check collision between two circles
-proc checkCollisionCircleRec*(center: Vector2, radius: float32, rec: Rectangle): bool {.importc: "CheckCollisionCircleRec".}
+func checkCollisionCircleRec*(center: Vector2, radius: float32, rec: Rectangle): bool {.importc: "CheckCollisionCircleRec".}
   ## Check collision between circle and rectangle
-proc checkCollisionPointRec*(point: Vector2, rec: Rectangle): bool {.importc: "CheckCollisionPointRec".}
+func checkCollisionPointRec*(point: Vector2, rec: Rectangle): bool {.importc: "CheckCollisionPointRec".}
   ## Check if point is inside rectangle
-proc checkCollisionPointCircle*(point: Vector2, center: Vector2, radius: float32): bool {.importc: "CheckCollisionPointCircle".}
+func checkCollisionPointCircle*(point: Vector2, center: Vector2, radius: float32): bool {.importc: "CheckCollisionPointCircle".}
   ## Check if point is inside circle
-proc checkCollisionPointTriangle*(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): bool {.importc: "CheckCollisionPointTriangle".}
+func checkCollisionPointTriangle*(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): bool {.importc: "CheckCollisionPointTriangle".}
   ## Check if point is inside a triangle
-proc checkCollisionPointPolyPriv(point: Vector2, points: ptr UncheckedArray[Vector2], pointCount: int32): bool {.importc: "CheckCollisionPointPoly".}
-proc checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: out Vector2): bool {.importc: "CheckCollisionLines".}
+func checkCollisionPointPolyImpl(point: Vector2, points: ptr UncheckedArray[Vector2], pointCount: int32): bool {.importc: "CheckCollisionPointPoly".}
+func checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: out Vector2): bool {.importc: "CheckCollisionLines".}
   ## Check the collision between two lines defined by two points each, returns collision point by reference
-proc checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshold: int32): bool {.importc: "CheckCollisionPointLine".}
+func checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshold: int32): bool {.importc: "CheckCollisionPointLine".}
   ## Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
-proc checkCollisionCircleLine*(center: Vector2, radius: float32, p1: Vector2, p2: Vector2): bool {.importc: "CheckCollisionCircleLine".}
+func checkCollisionCircleLine*(center: Vector2, radius: float32, p1: Vector2, p2: Vector2): bool {.importc: "CheckCollisionCircleLine".}
   ## Check if circle collides with a line created betweeen two points [p1] and [p2]
-proc getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "GetCollisionRec".}
+func getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "GetCollisionRec".}
   ## Get collision rectangle for two rectangles collision
-proc isImageReady*(image: Image): bool {.importc: "IsImageReady".}
+proc loadImageImpl(fileName: cstring): Image {.importc: "rlLoadImage", sideEffect.}
+proc loadImageRawImpl(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw", sideEffect.}
+proc loadImageAnimImpl(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim", sideEffect.}
+proc loadImageAnimFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, frames: ptr UncheckedArray[int32]): Image {.importc: "LoadImageAnimFromMemory", sideEffect.}
+proc loadImageFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Image {.importc: "LoadImageFromMemory", sideEffect.}
+proc loadImageFromTextureImpl(texture: Texture2D): Image {.importc: "LoadImageFromTexture", sideEffect.}
+proc loadImageFromScreen*(): Image {.importc: "LoadImageFromScreen", sideEffect.}
+  ## Load image from screen buffer and (screenshot)
+func isImageReady*(image: Image): bool {.importc: "IsImageReady".}
   ## Check if an image is ready
-proc genImageColor*(width: int32, height: int32, color: Color): Image {.importc: "GenImageColor".}
+proc unloadImage(image: Image) {.importc: "UnloadImage", sideEffect.}
+proc exportImageImpl(image: Image, fileName: cstring): bool {.importc: "ExportImage", sideEffect.}
+proc exportImageToMemoryImpl(image: Image, fileType: cstring, fileSize: ptr int32): ptr uint8 {.importc: "ExportImageToMemory", sideEffect.}
+proc exportImageAsCodeImpl(image: Image, fileName: cstring): bool {.importc: "ExportImageAsCode", sideEffect.}
+func genImageColor*(width: int32, height: int32, color: Color): Image {.importc: "GenImageColor".}
   ## Generate image: plain color
-proc genImageGradientLinear*(width: int32, height: int32, direction: int32, start: Color, `end`: Color): Image {.importc: "GenImageGradientLinear".}
+func genImageGradientLinear*(width: int32, height: int32, direction: int32, start: Color, `end`: Color): Image {.importc: "GenImageGradientLinear".}
   ## Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
-proc genImageGradientRadial*(width: int32, height: int32, density: float32, inner: Color, outer: Color): Image {.importc: "GenImageGradientRadial".}
+func genImageGradientRadial*(width: int32, height: int32, density: float32, inner: Color, outer: Color): Image {.importc: "GenImageGradientRadial".}
   ## Generate image: radial gradient
-proc genImageGradientSquare*(width: int32, height: int32, density: float32, inner: Color, outer: Color): Image {.importc: "GenImageGradientSquare".}
+func genImageGradientSquare*(width: int32, height: int32, density: float32, inner: Color, outer: Color): Image {.importc: "GenImageGradientSquare".}
   ## Generate image: square gradient
-proc genImageChecked*(width: int32, height: int32, checksX: int32, checksY: int32, col1: Color, col2: Color): Image {.importc: "GenImageChecked".}
+func genImageChecked*(width: int32, height: int32, checksX: int32, checksY: int32, col1: Color, col2: Color): Image {.importc: "GenImageChecked".}
   ## Generate image: checked
-proc genImageWhiteNoise*(width: int32, height: int32, factor: float32): Image {.importc: "GenImageWhiteNoise".}
+func genImageWhiteNoise*(width: int32, height: int32, factor: float32): Image {.importc: "GenImageWhiteNoise".}
   ## Generate image: white noise
-proc genImagePerlinNoise*(width: int32, height: int32, offsetX: int32, offsetY: int32, scale: float32): Image {.importc: "GenImagePerlinNoise".}
+func genImagePerlinNoise*(width: int32, height: int32, offsetX: int32, offsetY: int32, scale: float32): Image {.importc: "GenImagePerlinNoise".}
   ## Generate image: perlin noise
-proc genImageCellular*(width: int32, height: int32, tileSize: int32): Image {.importc: "GenImageCellular".}
+func genImageCellular*(width: int32, height: int32, tileSize: int32): Image {.importc: "GenImageCellular".}
   ## Generate image: cellular algorithm, bigger tileSize means bigger cells
-proc genImageText*(width: int32, height: int32, text: cstring): Image {.importc: "GenImageText".}
-  ## Generate image: grayscale image from text data
-proc imageCopy*(image: Image): Image {.importc: "ImageCopy".}
+func genImageTextImpl(width: int32, height: int32, text: cstring): Image {.importc: "GenImageText".}
+func imageCopy*(image: Image): Image {.importc: "ImageCopy".}
   ## Create an image duplicate (useful for transformations)
-proc imageFromImage*(image: Image, rec: Rectangle): Image {.importc: "ImageFromImage".}
+func imageFromImage*(image: Image, rec: Rectangle): Image {.importc: "ImageFromImage".}
   ## Create an image from another image piece
-proc imageFromChannel*(image: Image, selectedChannel: int32): Image {.importc: "ImageFromChannel".}
+func imageFromChannel*(image: Image, selectedChannel: int32): Image {.importc: "ImageFromChannel".}
   ## Create an image from a selected channel of another image (GRAYSCALE)
-proc imageText*(text: cstring, fontSize: int32, color: Color): Image {.importc: "ImageText".}
-  ## Create an image from text (default font)
-proc imageText*(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
-  ## Create an image from text (custom sprite font)
-proc imageFormat*(image: var Image, newFormat: PixelFormat) {.importc: "ImageFormat".}
+func imageTextImpl(text: cstring, fontSize: int32, color: Color): Image {.importc: "ImageText".}
+func imageTextImpl(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image {.importc: "ImageTextEx".}
+func imageFormat*(image: var Image, newFormat: PixelFormat) {.importc: "ImageFormat".}
   ## Convert image data to desired format
-proc imageToPOT*(image: var Image, fill: Color) {.importc: "ImageToPOT".}
+func imageToPOT*(image: var Image, fill: Color) {.importc: "ImageToPOT".}
   ## Convert image to POT (power-of-two)
-proc imageCrop*(image: var Image, crop: Rectangle) {.importc: "ImageCrop".}
+func imageCrop*(image: var Image, crop: Rectangle) {.importc: "ImageCrop".}
   ## Crop an image to a defined rectangle
-proc imageAlphaCrop*(image: var Image, threshold: float32) {.importc: "ImageAlphaCrop".}
+func imageAlphaCrop*(image: var Image, threshold: float32) {.importc: "ImageAlphaCrop".}
   ## Crop image depending on alpha value
-proc imageAlphaClear*(image: var Image, color: Color, threshold: float32) {.importc: "ImageAlphaClear".}
+func imageAlphaClear*(image: var Image, color: Color, threshold: float32) {.importc: "ImageAlphaClear".}
   ## Clear alpha channel to desired color
-proc imageAlphaMask*(image: var Image, alphaMask: Image) {.importc: "ImageAlphaMask".}
+func imageAlphaMask*(image: var Image, alphaMask: Image) {.importc: "ImageAlphaMask".}
   ## Apply alpha mask to image
-proc imageAlphaPremultiply*(image: var Image) {.importc: "ImageAlphaPremultiply".}
+func imageAlphaPremultiply*(image: var Image) {.importc: "ImageAlphaPremultiply".}
   ## Premultiply alpha channel
-proc imageBlurGaussian*(image: var Image, blurSize: int32) {.importc: "ImageBlurGaussian".}
+func imageBlurGaussian*(image: var Image, blurSize: int32) {.importc: "ImageBlurGaussian".}
   ## Apply Gaussian blur using a box blur approximation
-proc imageKernelConvolutionPriv(image: var Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
-proc imageResize*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize".}
+func imageKernelConvolutionImpl(image: ptr Image, kernel: ptr UncheckedArray[float32], kernelSize: int32) {.importc: "ImageKernelConvolution".}
+func imageResize*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResize".}
   ## Resize image (Bicubic scaling algorithm)
-proc imageResizeNN*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN".}
+func imageResizeNN*(image: var Image, newWidth: int32, newHeight: int32) {.importc: "ImageResizeNN".}
   ## Resize image (Nearest-Neighbor scaling algorithm)
-proc imageResizeCanvas*(image: var Image, newWidth: int32, newHeight: int32, offsetX: int32, offsetY: int32, fill: Color) {.importc: "ImageResizeCanvas".}
+func imageResizeCanvas*(image: var Image, newWidth: int32, newHeight: int32, offsetX: int32, offsetY: int32, fill: Color) {.importc: "ImageResizeCanvas".}
   ## Resize canvas and fill with color
-proc imageMipmaps*(image: var Image) {.importc: "ImageMipmaps".}
+func imageMipmaps*(image: var Image) {.importc: "ImageMipmaps".}
   ## Compute all mipmap levels for a provided image
-proc imageDither*(image: var Image, rBpp: int32, gBpp: int32, bBpp: int32, aBpp: int32) {.importc: "ImageDither".}
+func imageDither*(image: var Image, rBpp: int32, gBpp: int32, bBpp: int32, aBpp: int32) {.importc: "ImageDither".}
   ## Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
-proc imageFlipVertical*(image: var Image) {.importc: "ImageFlipVertical".}
+func imageFlipVertical*(image: var Image) {.importc: "ImageFlipVertical".}
   ## Flip image vertically
-proc imageFlipHorizontal*(image: var Image) {.importc: "ImageFlipHorizontal".}
+func imageFlipHorizontal*(image: var Image) {.importc: "ImageFlipHorizontal".}
   ## Flip image horizontally
-proc imageRotate*(image: var Image, degrees: int32) {.importc: "ImageRotate".}
+func imageRotate*(image: var Image, degrees: int32) {.importc: "ImageRotate".}
   ## Rotate image by input angle in degrees (-359 to 359)
-proc imageRotateCW*(image: var Image) {.importc: "ImageRotateCW".}
+func imageRotateCW*(image: var Image) {.importc: "ImageRotateCW".}
   ## Rotate image clockwise 90deg
-proc imageRotateCCW*(image: var Image) {.importc: "ImageRotateCCW".}
+func imageRotateCCW*(image: var Image) {.importc: "ImageRotateCCW".}
   ## Rotate image counter-clockwise 90deg
-proc imageColorTint*(image: var Image, color: Color) {.importc: "ImageColorTint".}
+func imageColorTint*(image: var Image, color: Color) {.importc: "ImageColorTint".}
   ## Modify image color: tint
-proc imageColorInvert*(image: var Image) {.importc: "ImageColorInvert".}
+func imageColorInvert*(image: var Image) {.importc: "ImageColorInvert".}
   ## Modify image color: invert
-proc imageColorGrayscale*(image: var Image) {.importc: "ImageColorGrayscale".}
+func imageColorGrayscale*(image: var Image) {.importc: "ImageColorGrayscale".}
   ## Modify image color: grayscale
-proc imageColorContrast*(image: var Image, contrast: float32) {.importc: "ImageColorContrast".}
+func imageColorContrast*(image: var Image, contrast: float32) {.importc: "ImageColorContrast".}
   ## Modify image color: contrast (-100 to 100)
-proc imageColorBrightness*(image: var Image, brightness: int32) {.importc: "ImageColorBrightness".}
+func imageColorBrightness*(image: var Image, brightness: int32) {.importc: "ImageColorBrightness".}
   ## Modify image color: brightness (-255 to 255)
-proc imageColorReplace*(image: var Image, color: Color, replace: Color) {.importc: "ImageColorReplace".}
+func imageColorReplace*(image: var Image, color: Color, replace: Color) {.importc: "ImageColorReplace".}
   ## Modify image color: replace color
-proc getImageAlphaBorder*(image: Image, threshold: float32): Rectangle {.importc: "GetImageAlphaBorder".}
+proc loadImageColorsImpl(image: Image): ptr UncheckedArray[Color] {.importc: "LoadImageColors", sideEffect.}
+proc loadImagePaletteImpl(image: Image, maxPaletteSize: int32, colorCount: ptr int32): ptr UncheckedArray[Color] {.importc: "LoadImagePalette", sideEffect.}
+func getImageAlphaBorder*(image: Image, threshold: float32): Rectangle {.importc: "GetImageAlphaBorder".}
   ## Get image alpha border rectangle
-proc getImageColor*(image: Image, x: int32, y: int32): Color {.importc: "GetImageColor".}
+func getImageColor*(image: Image, x: int32, y: int32): Color {.importc: "GetImageColor".}
   ## Get image pixel color at (x, y) position
-proc imageClearBackground*(dst: var Image, color: Color) {.importc: "ImageClearBackground".}
+func imageClearBackground*(dst: var Image, color: Color) {.importc: "ImageClearBackground".}
   ## Clear image background with given color
-proc imageDrawPixel*(dst: var Image, posX: int32, posY: int32, color: Color) {.importc: "ImageDrawPixel".}
+func imageDrawPixel*(dst: var Image, posX: int32, posY: int32, color: Color) {.importc: "ImageDrawPixel".}
   ## Draw pixel within an image
-proc imageDrawPixel*(dst: var Image, position: Vector2, color: Color) {.importc: "ImageDrawPixelV".}
+func imageDrawPixel*(dst: var Image, position: Vector2, color: Color) {.importc: "ImageDrawPixelV".}
   ## Draw pixel within an image (Vector version)
-proc imageDrawLine*(dst: var Image, startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "ImageDrawLine".}
+func imageDrawLine*(dst: var Image, startPosX: int32, startPosY: int32, endPosX: int32, endPosY: int32, color: Color) {.importc: "ImageDrawLine".}
   ## Draw line within an image
-proc imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, color: Color) {.importc: "ImageDrawLineV".}
+func imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, color: Color) {.importc: "ImageDrawLineV".}
   ## Draw line within an image (Vector version)
-proc imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, thick: int32, color: Color) {.importc: "ImageDrawLineEx".}
+func imageDrawLine*(dst: var Image, start: Vector2, `end`: Vector2, thick: int32, color: Color) {.importc: "ImageDrawLineEx".}
   ## Draw a line defining thickness within an image
-proc imageDrawCircle*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircle".}
+func imageDrawCircle*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircle".}
   ## Draw a filled circle within an image
-proc imageDrawCircle*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV".}
+func imageDrawCircle*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleV".}
   ## Draw a filled circle within an image (Vector version)
-proc imageDrawCircleLines*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircleLines".}
+func imageDrawCircleLines*(dst: var Image, centerX: int32, centerY: int32, radius: int32, color: Color) {.importc: "ImageDrawCircleLines".}
   ## Draw circle outline within an image
-proc imageDrawCircleLines*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleLinesV".}
+func imageDrawCircleLines*(dst: var Image, center: Vector2, radius: int32, color: Color) {.importc: "ImageDrawCircleLinesV".}
   ## Draw circle outline within an image (Vector version)
-proc imageDrawRectangle*(dst: var Image, posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "ImageDrawRectangle".}
+func imageDrawRectangle*(dst: var Image, posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "ImageDrawRectangle".}
   ## Draw rectangle within an image
-proc imageDrawRectangle*(dst: var Image, position: Vector2, size: Vector2, color: Color) {.importc: "ImageDrawRectangleV".}
+func imageDrawRectangle*(dst: var Image, position: Vector2, size: Vector2, color: Color) {.importc: "ImageDrawRectangleV".}
   ## Draw rectangle within an image (Vector version)
-proc imageDrawRectangle*(dst: var Image, rec: Rectangle, color: Color) {.importc: "ImageDrawRectangleRec".}
+func imageDrawRectangle*(dst: var Image, rec: Rectangle, color: Color) {.importc: "ImageDrawRectangleRec".}
   ## Draw rectangle within an image
-proc imageDrawRectangleLines*(dst: var Image, rec: Rectangle, thick: int32, color: Color) {.importc: "ImageDrawRectangleLines".}
+func imageDrawRectangleLines*(dst: var Image, rec: Rectangle, thick: int32, color: Color) {.importc: "ImageDrawRectangleLines".}
   ## Draw rectangle lines within an image
-proc imageDrawTriangle*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "ImageDrawTriangle".}
+func imageDrawTriangle*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "ImageDrawTriangle".}
   ## Draw triangle within an image
-proc imageDrawTriangle*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, c1: Color, c2: Color, c3: Color) {.importc: "ImageDrawTriangleEx".}
+func imageDrawTriangle*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, c1: Color, c2: Color, c3: Color) {.importc: "ImageDrawTriangleEx".}
   ## Draw triangle with interpolated colors within an image
-proc imageDrawTriangleLines*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "ImageDrawTriangleLines".}
+func imageDrawTriangleLines*(dst: var Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) {.importc: "ImageDrawTriangleLines".}
   ## Draw triangle outline within an image
-proc imageDrawTriangleFanPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleFan".}
-proc imageDrawTriangleStripPriv(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleStrip".}
-proc imageDraw*(dst: var Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) {.importc: "ImageDraw".}
+func imageDrawTriangleFanImpl(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleFan".}
+func imageDrawTriangleStripImpl(dst: ptr Image, points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "ImageDrawTriangleStrip".}
+func imageDraw*(dst: var Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) {.importc: "ImageDraw".}
   ## Draw a source image within a destination image (tint applied to source)
-proc imageDrawText*(dst: var Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
-  ## Draw text (using default font) within an image (destination)
-proc imageDrawText*(dst: var Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
-  ## Draw text (custom sprite font) within an image (destination)
-proc isTextureReady*(texture: Texture2D): bool {.importc: "IsTextureReady".}
+func imageDrawTextImpl(dst: ptr Image, text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "ImageDrawText".}
+func imageDrawTextImpl(dst: ptr Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "ImageDrawTextEx".}
+proc loadTextureImpl(fileName: cstring): Texture2D {.importc: "LoadTexture", sideEffect.}
+proc loadTextureFromImageImpl(image: Image): Texture2D {.importc: "LoadTextureFromImage", sideEffect.}
+proc loadTextureCubemapImpl(image: Image, layout: CubemapLayout): TextureCubemap {.importc: "LoadTextureCubemap", sideEffect.}
+proc loadRenderTextureImpl(width: int32, height: int32): RenderTexture2D {.importc: "LoadRenderTexture", sideEffect.}
+func isTextureReady*(texture: Texture2D): bool {.importc: "IsTextureReady".}
   ## Check if a texture is ready
-proc isRenderTextureReady*(target: RenderTexture2D): bool {.importc: "IsRenderTextureReady".}
+proc unloadTexture(texture: Texture2D) {.importc: "UnloadTexture", sideEffect.}
+func isRenderTextureReady*(target: RenderTexture2D): bool {.importc: "IsRenderTextureReady".}
   ## Check if a render texture is ready
-proc colorNormalize*(color: Color): Vector4 {.importc: "ColorNormalize".}
+proc unloadRenderTexture(target: RenderTexture2D) {.importc: "UnloadRenderTexture", sideEffect.}
+proc updateTextureImpl(texture: Texture2D, pixels: pointer) {.importc: "UpdateTexture", sideEffect.}
+proc updateTextureImpl(texture: Texture2D, rec: Rectangle, pixels: pointer) {.importc: "UpdateTextureRec", sideEffect.}
+proc genTextureMipmaps*(texture: var Texture2D) {.importc: "GenTextureMipmaps", sideEffect.}
+  ## Generate GPU mipmaps for a texture
+proc setTextureFilter*(texture: Texture2D, filter: TextureFilter) {.importc: "SetTextureFilter", sideEffect.}
+  ## Set texture scaling filter mode
+proc setTextureWrap*(texture: Texture2D, wrap: TextureWrap) {.importc: "SetTextureWrap", sideEffect.}
+  ## Set texture wrapping mode
+proc drawTexture*(texture: Texture2D, posX: int32, posY: int32, tint: Color) {.importc: "DrawTexture", sideEffect.}
+  ## Draw a Texture2D
+proc drawTexture*(texture: Texture2D, position: Vector2, tint: Color) {.importc: "DrawTextureV", sideEffect.}
+  ## Draw a Texture2D with position defined as Vector2
+proc drawTexture*(texture: Texture2D, position: Vector2, rotation: float32, scale: float32, tint: Color) {.importc: "DrawTextureEx", sideEffect.}
+  ## Draw a Texture2D with extended parameters
+proc drawTexture*(texture: Texture2D, source: Rectangle, position: Vector2, tint: Color) {.importc: "DrawTextureRec", sideEffect.}
+  ## Draw a part of a texture defined by a rectangle
+proc drawTexture*(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTexturePro", sideEffect.}
+  ## Draw a part of a texture defined by a rectangle with 'pro' parameters
+proc drawTextureNPatch*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch", sideEffect.}
+  ## Draws a texture (or part of it) that stretches or shrinks nicely
+func colorNormalize*(color: Color): Vector4 {.importc: "ColorNormalize".}
   ## Get Color normalized as float [0..1]
-proc colorFromNormalized*(normalized: Vector4): Color {.importc: "ColorFromNormalized".}
+func colorFromNormalized*(normalized: Vector4): Color {.importc: "ColorFromNormalized".}
   ## Get Color from normalized values [0..1]
-proc colorToHSV*(color: Color): Vector3 {.importc: "ColorToHSV".}
+func colorToHSV*(color: Color): Vector3 {.importc: "ColorToHSV".}
   ## Get HSV values for a Color, hue [0..360], saturation/value [0..1]
-proc colorFromHSV*(hue: float32, saturation: float32, value: float32): Color {.importc: "ColorFromHSV".}
+func colorFromHSV*(hue: float32, saturation: float32, value: float32): Color {.importc: "ColorFromHSV".}
   ## Get a Color from HSV values, hue [0..360], saturation/value [0..1]
-proc colorTint*(color: Color, tint: Color): Color {.importc: "ColorTint".}
+func colorTint*(color: Color, tint: Color): Color {.importc: "ColorTint".}
   ## Get color multiplied with another color
-proc colorBrightness*(color: Color, factor: float32): Color {.importc: "ColorBrightness".}
+func colorBrightness*(color: Color, factor: float32): Color {.importc: "ColorBrightness".}
   ## Get color with brightness correction, brightness factor goes from -1.0f to 1.0f
-proc colorContrast*(color: Color, contrast: float32): Color {.importc: "ColorContrast".}
+func colorContrast*(color: Color, contrast: float32): Color {.importc: "ColorContrast".}
   ## Get color with contrast correction, contrast values between -1.0f and 1.0f
-proc colorAlpha*(color: Color, alpha: float32): Color {.importc: "ColorAlpha".}
+func colorAlpha*(color: Color, alpha: float32): Color {.importc: "ColorAlpha".}
   ## Get color with alpha applied, alpha goes from 0.0f to 1.0f
-proc colorAlphaBlend*(dst: Color, src: Color, tint: Color): Color {.importc: "ColorAlphaBlend".}
+func colorAlphaBlend*(dst: Color, src: Color, tint: Color): Color {.importc: "ColorAlphaBlend".}
   ## Get src alpha-blended into dst color with tint
-proc colorLerp*(color1: Color, color2: Color, factor: float32): Color {.importc: "ColorLerp".}
+func colorLerp*(color1: Color, color2: Color, factor: float32): Color {.importc: "ColorLerp".}
   ## Get color lerp interpolation between two colors, factor [0.0f..1.0f]
-proc getPixelDataSize*(width: int32, height: int32, format: PixelFormat): int32 {.importc: "GetPixelDataSize".}
+proc getPixelColorImpl(srcPtr: pointer, format: PixelFormat): Color {.importc: "GetPixelColor", sideEffect.}
+proc setPixelColorImpl(dstPtr: pointer, color: Color, format: PixelFormat) {.importc: "SetPixelColor", sideEffect.}
+func getPixelDataSize*(width: int32, height: int32, format: PixelFormat): int32 {.importc: "GetPixelDataSize".}
   ## Get pixel data size in bytes for certain format
-proc isFontReady*(font: Font): bool {.importc: "IsFontReady".}
+proc getFontDefault*(): Font {.importc: "GetFontDefault", sideEffect.}
+  ## Get the default Font
+proc loadFontImpl(fileName: cstring): Font {.importc: "LoadFont", sideEffect.}
+proc loadFontImpl(fileName: cstring, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontEx", sideEffect.}
+proc loadFontFromImageImpl(image: Image, key: Color, firstChar: int32): Font {.importc: "LoadFontFromImage", sideEffect.}
+proc loadFontFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontFromMemory", sideEffect.}
+func isFontReady*(font: Font): bool {.importc: "IsFontReady".}
   ## Check if a font is ready
-proc genImageFontAtlasPriv(glyphs: ptr UncheckedArray[GlyphInfo], glyphRecs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
-proc measureText*(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
-  ## Measure string size for Font
-proc getGlyphIndex*(font: Font, codepoint: Rune): int32 {.importc: "GetGlyphIndex".}
+proc loadFontDataImpl(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData", sideEffect.}
+func genImageFontAtlasImpl(glyphs: ptr UncheckedArray[GlyphInfo], glyphRecs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
+proc unloadFont(font: Font) {.importc: "UnloadFont", sideEffect.}
+proc exportFontAsCodeImpl(font: Font, fileName: cstring): bool {.importc: "ExportFontAsCode", sideEffect.}
+proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS", sideEffect.}
+  ## Draw current FPS
+proc drawTextImpl(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "rlDrawText", sideEffect.}
+proc drawTextImpl(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "rlDrawTextEx", sideEffect.}
+proc drawTextImpl(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro", sideEffect.}
+proc drawTextCodepoint*(font: Font, codepoint: Rune, position: Vector2, fontSize: float32, tint: Color) {.importc: "DrawTextCodepoint", sideEffect.}
+  ## Draw one character (codepoint)
+proc drawTextCodepointsImpl(font: Font, codepoints: ptr UncheckedArray[int32], codepointCount: int32, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextCodepoints", sideEffect.}
+proc setTextLineSpacing*(spacing: int32) {.importc: "SetTextLineSpacing", sideEffect.}
+  ## Set vertical line spacing when drawing with line-breaks
+proc measureTextImpl(text: cstring, fontSize: int32): int32 {.importc: "MeasureText", sideEffect.}
+func measureTextImpl(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
+func getGlyphIndex*(font: Font, codepoint: Rune): int32 {.importc: "GetGlyphIndex".}
   ## Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
-proc getGlyphInfo*(font: Font, codepoint: Rune): GlyphInfo {.importc: "GetGlyphInfo".}
+func getGlyphInfo*(font: Font, codepoint: Rune): GlyphInfo {.importc: "GetGlyphInfo".}
   ## Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
-proc getGlyphAtlasRec*(font: Font, codepoint: Rune): Rectangle {.importc: "GetGlyphAtlasRec".}
+func getGlyphAtlasRec*(font: Font, codepoint: Rune): Rectangle {.importc: "GetGlyphAtlasRec".}
   ## Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
-proc isModelReady*(model: Model): bool {.importc: "IsModelReady".}
+proc drawLine3D*(startPos: Vector3, endPos: Vector3, color: Color) {.importc: "DrawLine3D", sideEffect.}
+  ## Draw a line in 3D world space
+proc drawPoint3D*(position: Vector3, color: Color) {.importc: "DrawPoint3D", sideEffect.}
+  ## Draw a point in 3D space, actually a small line
+proc drawCircle3D*(center: Vector3, radius: float32, rotationAxis: Vector3, rotationAngle: float32, color: Color) {.importc: "DrawCircle3D", sideEffect.}
+  ## Draw a circle in 3D world space
+proc drawTriangle3D*(v1: Vector3, v2: Vector3, v3: Vector3, color: Color) {.importc: "DrawTriangle3D", sideEffect.}
+  ## Draw a color-filled triangle (vertex in counter-clockwise order!)
+proc drawTriangleStrip3DImpl(points: ptr UncheckedArray[Vector3], pointCount: int32, color: Color) {.importc: "DrawTriangleStrip3D", sideEffect.}
+proc drawCube*(position: Vector3, width: float32, height: float32, length: float32, color: Color) {.importc: "DrawCube", sideEffect.}
+  ## Draw cube
+proc drawCube*(position: Vector3, size: Vector3, color: Color) {.importc: "DrawCubeV", sideEffect.}
+  ## Draw cube (Vector version)
+proc drawCubeWires*(position: Vector3, width: float32, height: float32, length: float32, color: Color) {.importc: "DrawCubeWires", sideEffect.}
+  ## Draw cube wires
+proc drawCubeWires*(position: Vector3, size: Vector3, color: Color) {.importc: "DrawCubeWiresV", sideEffect.}
+  ## Draw cube wires (Vector version)
+proc drawSphere*(centerPos: Vector3, radius: float32, color: Color) {.importc: "DrawSphere", sideEffect.}
+  ## Draw sphere
+proc drawSphere*(centerPos: Vector3, radius: float32, rings: int32, slices: int32, color: Color) {.importc: "DrawSphereEx", sideEffect.}
+  ## Draw sphere with extended parameters
+proc drawSphereWires*(centerPos: Vector3, radius: float32, rings: int32, slices: int32, color: Color) {.importc: "DrawSphereWires", sideEffect.}
+  ## Draw sphere wires
+proc drawCylinder*(position: Vector3, radiusTop: float32, radiusBottom: float32, height: float32, slices: int32, color: Color) {.importc: "DrawCylinder", sideEffect.}
+  ## Draw a cylinder/cone
+proc drawCylinder*(startPos: Vector3, endPos: Vector3, startRadius: float32, endRadius: float32, sides: int32, color: Color) {.importc: "DrawCylinderEx", sideEffect.}
+  ## Draw a cylinder with base at startPos and top at endPos
+proc drawCylinderWires*(position: Vector3, radiusTop: float32, radiusBottom: float32, height: float32, slices: int32, color: Color) {.importc: "DrawCylinderWires", sideEffect.}
+  ## Draw a cylinder/cone wires
+proc drawCylinderWires*(startPos: Vector3, endPos: Vector3, startRadius: float32, endRadius: float32, sides: int32, color: Color) {.importc: "DrawCylinderWiresEx", sideEffect.}
+  ## Draw a cylinder wires with base at startPos and top at endPos
+proc drawCapsule*(startPos: Vector3, endPos: Vector3, radius: float32, slices: int32, rings: int32, color: Color) {.importc: "DrawCapsule", sideEffect.}
+  ## Draw a capsule with the center of its sphere caps at startPos and endPos
+proc drawCapsuleWires*(startPos: Vector3, endPos: Vector3, radius: float32, slices: int32, rings: int32, color: Color) {.importc: "DrawCapsuleWires", sideEffect.}
+  ## Draw capsule wireframe with the center of its sphere caps at startPos and endPos
+proc drawPlane*(centerPos: Vector3, size: Vector2, color: Color) {.importc: "DrawPlane", sideEffect.}
+  ## Draw a plane XZ
+proc drawRay*(ray: Ray, color: Color) {.importc: "DrawRay", sideEffect.}
+  ## Draw a ray line
+proc drawGrid*(slices: int32, spacing: float32) {.importc: "DrawGrid", sideEffect.}
+  ## Draw a grid (centered at (0, 0, 0))
+proc loadModelImpl(fileName: cstring): Model {.importc: "LoadModel", sideEffect.}
+proc loadModelFromMeshImpl(mesh: Mesh): Model {.importc: "LoadModelFromMesh", sideEffect.}
+func isModelReady*(model: Model): bool {.importc: "IsModelReady".}
   ## Check if a model is ready
-proc getMeshBoundingBox*(mesh: Mesh): BoundingBox {.importc: "GetMeshBoundingBox".}
+proc unloadModel(model: Model) {.importc: "UnloadModel", sideEffect.}
+proc getModelBoundingBox*(model: Model): BoundingBox {.importc: "GetModelBoundingBox", sideEffect.}
+  ## Compute model bounding box limits (considers all meshes)
+proc drawModel*(model: Model, position: Vector3, scale: float32, tint: Color) {.importc: "DrawModel", sideEffect.}
+  ## Draw a model (with texture if set)
+proc drawModel*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelEx", sideEffect.}
+  ## Draw a model with extended parameters
+proc drawModelWires*(model: Model, position: Vector3, scale: float32, tint: Color) {.importc: "DrawModelWires", sideEffect.}
+  ## Draw a model wires (with texture if set)
+proc drawModelWires*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelWiresEx", sideEffect.}
+  ## Draw a model wires (with texture if set) with extended parameters
+proc drawModelPoints*(model: Model, position: Vector3, scale: float32, tint: Color) {.importc: "DrawModelPoints", sideEffect.}
+  ## Draw a model as points
+proc drawModelPoints*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelPointsEx", sideEffect.}
+  ## Draw a model as points with extended parameters
+proc drawBoundingBox*(box: BoundingBox, color: Color) {.importc: "DrawBoundingBox", sideEffect.}
+  ## Draw bounding box (wires)
+proc drawBillboard*(camera: Camera, texture: Texture2D, position: Vector3, scale: float32, tint: Color) {.importc: "DrawBillboard", sideEffect.}
+  ## Draw a billboard texture
+proc drawBillboard*(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, size: Vector2, tint: Color) {.importc: "DrawBillboardRec", sideEffect.}
+  ## Draw a billboard texture defined by source
+proc drawBillboard*(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawBillboardPro", sideEffect.}
+  ## Draw a billboard texture defined by source and rotation
+proc uploadMesh*(mesh: var Mesh, dynamic: bool) {.importc: "UploadMesh", sideEffect.}
+  ## Upload mesh vertex data in GPU and provide VAO/VBO ids
+proc updateMeshBufferImpl(mesh: Mesh, index: int32, data: pointer, dataSize: int32, offset: int32) {.importc: "UpdateMeshBuffer", sideEffect.}
+proc unloadMesh(mesh: Mesh) {.importc: "UnloadMesh", sideEffect.}
+proc drawMesh*(mesh: Mesh, material: Material, transform: Matrix) {.importc: "DrawMesh", sideEffect.}
+  ## Draw a 3d mesh with material and transform
+proc drawMeshInstancedImpl(mesh: Mesh, material: Material, transforms: ptr UncheckedArray[Matrix], instances: int32) {.importc: "DrawMeshInstanced", sideEffect.}
+func getMeshBoundingBox*(mesh: Mesh): BoundingBox {.importc: "GetMeshBoundingBox".}
   ## Compute mesh bounding box limits
-proc isMaterialReady*(material: Material): bool {.importc: "IsMaterialReady".}
+proc genMeshTangents*(mesh: var Mesh) {.importc: "GenMeshTangents", sideEffect.}
+  ## Compute mesh tangents
+proc exportMeshImpl(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMesh", sideEffect.}
+proc exportMeshAsCodeImpl(mesh: Mesh, fileName: cstring): bool {.importc: "ExportMeshAsCode", sideEffect.}
+proc genMeshPoly*(sides: int32, radius: float32): Mesh {.importc: "GenMeshPoly", sideEffect.}
+  ## Generate polygonal mesh
+proc genMeshPlane*(width: float32, length: float32, resX: int32, resZ: int32): Mesh {.importc: "GenMeshPlane", sideEffect.}
+  ## Generate plane mesh (with subdivisions)
+proc genMeshCube*(width: float32, height: float32, length: float32): Mesh {.importc: "GenMeshCube", sideEffect.}
+  ## Generate cuboid mesh
+proc genMeshSphere*(radius: float32, rings: int32, slices: int32): Mesh {.importc: "GenMeshSphere", sideEffect.}
+  ## Generate sphere mesh (standard sphere)
+proc genMeshHemiSphere*(radius: float32, rings: int32, slices: int32): Mesh {.importc: "GenMeshHemiSphere", sideEffect.}
+  ## Generate half-sphere mesh (no bottom cap)
+proc genMeshCylinder*(radius: float32, height: float32, slices: int32): Mesh {.importc: "GenMeshCylinder", sideEffect.}
+  ## Generate cylinder mesh
+proc genMeshCone*(radius: float32, height: float32, slices: int32): Mesh {.importc: "GenMeshCone", sideEffect.}
+  ## Generate cone/pyramid mesh
+proc genMeshTorus*(radius: float32, size: float32, radSeg: int32, sides: int32): Mesh {.importc: "GenMeshTorus", sideEffect.}
+  ## Generate torus mesh
+proc genMeshKnot*(radius: float32, size: float32, radSeg: int32, sides: int32): Mesh {.importc: "GenMeshKnot", sideEffect.}
+  ## Generate trefoil knot mesh
+proc genMeshHeightmap*(heightmap: Image, size: Vector3): Mesh {.importc: "GenMeshHeightmap", sideEffect.}
+  ## Generate heightmap mesh from image data
+proc genMeshCubicmap*(cubicmap: Image, cubeSize: Vector3): Mesh {.importc: "GenMeshCubicmap", sideEffect.}
+  ## Generate cubes-based map mesh from image data
+proc loadMaterialsImpl(fileName: cstring, materialCount: ptr int32): ptr UncheckedArray[Material] {.importc: "LoadMaterials", sideEffect.}
+proc loadMaterialDefault*(): Material {.importc: "LoadMaterialDefault", sideEffect.}
+  ## Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
+func isMaterialReady*(material: Material): bool {.importc: "IsMaterialReady".}
   ## Check if a material is ready
-proc isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
+proc unloadMaterial(material: Material) {.importc: "UnloadMaterial", sideEffect.}
+proc loadModelAnimationsImpl(fileName: cstring, animCount: ptr int32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations", sideEffect.}
+proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation", sideEffect.}
+  ## Update model animation pose
+proc unloadModelAnimation(anim: ModelAnimation) {.importc: "UnloadModelAnimation", sideEffect.}
+func isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
   ## Check model animation skeleton match
-proc updateModelAnimationBoneMatrices*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimationBoneMatrices".}
+func updateModelAnimationBoneMatrices*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimationBoneMatrices".}
   ## Update model animation mesh bone matrices (Note GPU skinning does not work on Mac)
-proc checkCollisionSpheres*(center1: Vector3, radius1: float32, center2: Vector3, radius2: float32): bool {.importc: "CheckCollisionSpheres".}
+func checkCollisionSpheres*(center1: Vector3, radius1: float32, center2: Vector3, radius2: float32): bool {.importc: "CheckCollisionSpheres".}
   ## Check collision between two spheres
-proc checkCollisionBoxes*(box1: BoundingBox, box2: BoundingBox): bool {.importc: "CheckCollisionBoxes".}
+func checkCollisionBoxes*(box1: BoundingBox, box2: BoundingBox): bool {.importc: "CheckCollisionBoxes".}
   ## Check collision between two bounding boxes
-proc checkCollisionBoxSphere*(box: BoundingBox, center: Vector3, radius: float32): bool {.importc: "CheckCollisionBoxSphere".}
+func checkCollisionBoxSphere*(box: BoundingBox, center: Vector3, radius: float32): bool {.importc: "CheckCollisionBoxSphere".}
   ## Check collision between box and sphere
-proc getRayCollisionSphere*(ray: Ray, center: Vector3, radius: float32): RayCollision {.importc: "GetRayCollisionSphere".}
+func getRayCollisionSphere*(ray: Ray, center: Vector3, radius: float32): RayCollision {.importc: "GetRayCollisionSphere".}
   ## Get collision info between ray and sphere
-proc getRayCollisionBox*(ray: Ray, box: BoundingBox): RayCollision {.importc: "GetRayCollisionBox".}
+func getRayCollisionBox*(ray: Ray, box: BoundingBox): RayCollision {.importc: "GetRayCollisionBox".}
   ## Get collision info between ray and box
-proc getRayCollisionMesh*(ray: Ray, mesh: Mesh, transform: Matrix): RayCollision {.importc: "GetRayCollisionMesh".}
+func getRayCollisionMesh*(ray: Ray, mesh: Mesh, transform: Matrix): RayCollision {.importc: "GetRayCollisionMesh".}
   ## Get collision info between ray and mesh
-proc getRayCollisionTriangle*(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3): RayCollision {.importc: "GetRayCollisionTriangle".}
+func getRayCollisionTriangle*(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3): RayCollision {.importc: "GetRayCollisionTriangle".}
   ## Get collision info between ray and triangle
-proc getRayCollisionQuad*(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): RayCollision {.importc: "GetRayCollisionQuad".}
+func getRayCollisionQuad*(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): RayCollision {.importc: "GetRayCollisionQuad".}
   ## Get collision info between ray and quad
-proc isAudioDeviceReady*(): bool {.importc: "IsAudioDeviceReady".}
+proc initAudioDevice*() {.importc: "InitAudioDevice", sideEffect.}
+  ## Initialize audio device and context
+proc closeAudioDevice*() {.importc: "CloseAudioDevice", sideEffect.}
+  ## Close the audio device and context
+func isAudioDeviceReady*(): bool {.importc: "IsAudioDeviceReady".}
   ## Check if audio device has been initialized successfully
-proc isWaveReady*(wave: Wave): bool {.importc: "IsWaveReady".}
+proc setMasterVolume*(volume: float32) {.importc: "SetMasterVolume", sideEffect.}
+  ## Set master volume (listener)
+proc getMasterVolume*(): float32 {.importc: "GetMasterVolume", sideEffect.}
+  ## Get master volume (listener)
+proc loadWaveImpl(fileName: cstring): Wave {.importc: "LoadWave", sideEffect.}
+proc loadWaveFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Wave {.importc: "LoadWaveFromMemory", sideEffect.}
+func isWaveReady*(wave: Wave): bool {.importc: "IsWaveReady".}
   ## Checks if wave data is ready
-proc isSoundReady*(sound: Sound): bool {.importc: "IsSoundReady".}
+proc loadSoundImpl(fileName: cstring): Sound {.importc: "LoadSound", sideEffect.}
+proc loadSoundFromWaveImpl(wave: Wave): Sound {.importc: "LoadSoundFromWave", sideEffect.}
+proc loadSoundAliasImpl(source: Sound): Sound {.importc: "LoadSoundAlias", sideEffect.}
+func isSoundReady*(sound: Sound): bool {.importc: "IsSoundReady".}
   ## Checks if a sound is ready
-proc waveCopy*(wave: Wave): Wave {.importc: "WaveCopy".}
+proc updateSoundImpl(sound: Sound, data: pointer, sampleCount: int32) {.importc: "UpdateSound", sideEffect.}
+proc unloadWave(wave: Wave) {.importc: "UnloadWave", sideEffect.}
+proc unloadSound(sound: Sound) {.importc: "UnloadSound", sideEffect.}
+proc unloadSoundAlias(alias: Sound) {.importc: "UnloadSoundAlias", sideEffect.}
+proc exportWaveImpl(wave: Wave, fileName: cstring): bool {.importc: "ExportWave", sideEffect.}
+proc exportWaveAsCodeImpl(wave: Wave, fileName: cstring): bool {.importc: "ExportWaveAsCode", sideEffect.}
+proc playSound*(sound: Sound) {.importc: "PlaySound", sideEffect.}
+  ## Play a sound
+proc stopSound*(sound: Sound) {.importc: "StopSound", sideEffect.}
+  ## Stop playing a sound
+proc pauseSound*(sound: Sound) {.importc: "PauseSound", sideEffect.}
+  ## Pause a sound
+proc resumeSound*(sound: Sound) {.importc: "ResumeSound", sideEffect.}
+  ## Resume a paused sound
+proc isSoundPlaying*(sound: Sound): bool {.importc: "IsSoundPlaying", sideEffect.}
+  ## Check if a sound is currently playing
+proc setSoundVolume*(sound: Sound, volume: float32) {.importc: "SetSoundVolume", sideEffect.}
+  ## Set volume for a sound (1.0 is max level)
+proc setSoundPitch*(sound: Sound, pitch: float32) {.importc: "SetSoundPitch", sideEffect.}
+  ## Set pitch for a sound (1.0 is base level)
+proc setSoundPan*(sound: Sound, pan: float32) {.importc: "SetSoundPan", sideEffect.}
+  ## Set pan for a sound (0.5 is center)
+func waveCopy*(wave: Wave): Wave {.importc: "WaveCopy".}
   ## Copy a wave to a new wave
-proc waveCrop*(wave: var Wave, initFrame: int32, finalFrame: int32) {.importc: "WaveCrop".}
+func waveCrop*(wave: var Wave, initFrame: int32, finalFrame: int32) {.importc: "WaveCrop".}
   ## Crop a wave to defined frames range
-proc waveFormat*(wave: var Wave, sampleRate: int32, sampleSize: int32, channels: int32) {.importc: "WaveFormat".}
+func waveFormat*(wave: var Wave, sampleRate: int32, sampleSize: int32, channels: int32) {.importc: "WaveFormat".}
   ## Convert wave data to desired format
-proc isMusicReady*(music: Music): bool {.importc: "IsMusicReady".}
+proc loadWaveSamplesImpl(wave: Wave): ptr UncheckedArray[float32] {.importc: "LoadWaveSamples", sideEffect.}
+proc loadMusicStreamImpl(fileName: cstring): Music {.importc: "LoadMusicStream", sideEffect.}
+proc loadMusicStreamFromMemoryImpl(fileType: cstring, data: ptr UncheckedArray[uint8], dataSize: int32): Music {.importc: "LoadMusicStreamFromMemory", sideEffect.}
+func isMusicReady*(music: Music): bool {.importc: "IsMusicReady".}
   ## Checks if a music stream is ready
-proc getMusicTimeLength*(music: Music): float32 {.importc: "GetMusicTimeLength".}
+proc unloadMusicStream(music: Music) {.importc: "UnloadMusicStream", sideEffect.}
+proc playMusicStream*(music: Music) {.importc: "PlayMusicStream", sideEffect.}
+  ## Start music playing
+proc isMusicStreamPlaying*(music: Music): bool {.importc: "IsMusicStreamPlaying", sideEffect.}
+  ## Check if music is playing
+proc updateMusicStream*(music: Music) {.importc: "UpdateMusicStream", sideEffect.}
+  ## Updates buffers for music streaming
+proc stopMusicStream*(music: Music) {.importc: "StopMusicStream", sideEffect.}
+  ## Stop music playing
+proc pauseMusicStream*(music: Music) {.importc: "PauseMusicStream", sideEffect.}
+  ## Pause music playing
+proc resumeMusicStream*(music: Music) {.importc: "ResumeMusicStream", sideEffect.}
+  ## Resume playing paused music
+proc seekMusicStream*(music: Music, position: float32) {.importc: "SeekMusicStream", sideEffect.}
+  ## Seek music to a position (in seconds)
+proc setMusicVolume*(music: Music, volume: float32) {.importc: "SetMusicVolume", sideEffect.}
+  ## Set volume for music (1.0 is max level)
+proc setMusicPitch*(music: Music, pitch: float32) {.importc: "SetMusicPitch", sideEffect.}
+  ## Set pitch for a music (1.0 is base level)
+proc setMusicPan*(music: Music, pan: float32) {.importc: "SetMusicPan", sideEffect.}
+  ## Set pan for a music (0.5 is center)
+func getMusicTimeLength*(music: Music): float32 {.importc: "GetMusicTimeLength".}
   ## Get music time length (in seconds)
-proc isAudioStreamReady*(stream: AudioStream): bool {.importc: "IsAudioStreamReady".}
+proc getMusicTimePlayed*(music: Music): float32 {.importc: "GetMusicTimePlayed", sideEffect.}
+  ## Get current music time played (in seconds)
+proc loadAudioStreamImpl(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream {.importc: "LoadAudioStream", sideEffect.}
+func isAudioStreamReady*(stream: AudioStream): bool {.importc: "IsAudioStreamReady".}
   ## Checks if an audio stream is ready
-{.pop.}
+proc unloadAudioStream(stream: AudioStream) {.importc: "UnloadAudioStream", sideEffect.}
+proc updateAudioStreamImpl(stream: AudioStream, data: pointer, frameCount: int32) {.importc: "UpdateAudioStream", sideEffect.}
+proc isAudioStreamProcessed*(stream: AudioStream): bool {.importc: "IsAudioStreamProcessed", sideEffect.}
+  ## Check if any audio stream buffers requires refill
+proc playAudioStream*(stream: AudioStream) {.importc: "PlayAudioStream", sideEffect.}
+  ## Play audio stream
+proc pauseAudioStream*(stream: AudioStream) {.importc: "PauseAudioStream", sideEffect.}
+  ## Pause audio stream
+proc resumeAudioStream*(stream: AudioStream) {.importc: "ResumeAudioStream", sideEffect.}
+  ## Resume audio stream
+proc isAudioStreamPlaying*(stream: AudioStream): bool {.importc: "IsAudioStreamPlaying", sideEffect.}
+  ## Check if audio stream is playing
+proc stopAudioStream*(stream: AudioStream) {.importc: "StopAudioStream", sideEffect.}
+  ## Stop audio stream
+proc setAudioStreamVolume*(stream: AudioStream, volume: float32) {.importc: "SetAudioStreamVolume", sideEffect.}
+  ## Set volume for audio stream (1.0 is max level)
+proc setAudioStreamPitch*(stream: AudioStream, pitch: float32) {.importc: "SetAudioStreamPitch", sideEffect.}
+  ## Set pitch for audio stream (1.0 is base level)
+proc setAudioStreamPan*(stream: AudioStream, pan: float32) {.importc: "SetAudioStreamPan", sideEffect.}
+  ## Set pan for audio stream (0.5 is centered)
+proc setAudioStreamBufferSizeDefault*(size: int32) {.importc: "SetAudioStreamBufferSizeDefault", sideEffect.}
+  ## Default size for new audio streams
+proc setAudioStreamCallback*(stream: AudioStream, callback: AudioCallback) {.importc: "SetAudioStreamCallback", sideEffect.}
+  ## Audio thread callback to request new data
+proc attachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "AttachAudioStreamProcessor", sideEffect.}
+  ## Attach audio stream processor to stream, receives the samples as 'float'
+proc detachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "DetachAudioStreamProcessor", sideEffect.}
+  ## Detach audio stream processor from stream
+proc attachAudioMixedProcessor*(processor: AudioCallback) {.importc: "AttachAudioMixedProcessor", sideEffect.}
+  ## Attach audio stream processor to the entire audio pipeline, receives the samples as 'float'
+proc detachAudioMixedProcessor*(processor: AudioCallback) {.importc: "DetachAudioMixedProcessor", sideEffect.}
+  ## Detach audio stream processor from the entire audio pipeline
 {.pop.}
 
 type
@@ -1898,6 +1865,8 @@ proc `@`*[T](x: RArray[T]): seq[T] {.inline.} =
   for i in 0..x.len-1: result[i] = x[i]
 
 template toOpenArray*(x: RArray, first, last: int): untyped =
+  rangeCheck(first <= last)
+  checkArrayAccess(last, x.len)
   toOpenArray(x.data, first, last)
 
 template toOpenArray*(x: RArray): untyped =
@@ -1917,555 +1886,6 @@ proc `[]`*(x: var AutomationEventList, i: int): var AutomationEvent =
 proc `[]=`*(x: var AutomationEventList, i: int, val: sink AutomationEvent) =
   checkArrayAccess(x.events, i, x.len)
   x.events[i] = val
-
-proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
-proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
-proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
-proc boneCount*(x: Mesh): int32 {.inline.} = x.boneCount
-proc meshCount*(x: Model): int32 {.inline.} = x.meshCount
-proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
-proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
-proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
-proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
-
-type
-  RaylibError* = object of CatchableError
-
-proc raiseRaylibError(msg: string) {.noinline, noreturn.} =
-  raise newException(RaylibError, msg)
-
-type
-  TraceLogCallback* = proc (logLevel: TraceLogLevel; text: string) {.
-      nimcall.} ## Logging: Redirect trace log messages
-
-var
-  traceLogCallback: TraceLogCallback # TraceLog callback function pointer
-
-proc wrapperTraceLogCallback(logLevel: int32; text: cstring; args: va_list) {.cdecl.} =
-  var buf = newString(128)
-  vsprintf(buf.cstring, text, args)
-  traceLogCallback(logLevel.TraceLogLevel, buf)
-
-proc setTraceLogCallback*(callback: TraceLogCallback) =
-  ## Set custom trace log
-  traceLogCallback = callback
-  setTraceLogCallbackPriv(cast[TraceLogCallbackImpl](wrapperTraceLogCallback))
-
-proc toWeakImage*(data: openArray[byte], width, height: int32, format: PixelFormat): WeakImage {.inline.} =
-  Image(data: cast[pointer](data), width: width, height: height, mipmaps: 1, format: format).WeakImage
-
-proc toWeakWave*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): WeakWave {.inline.} =
-  Wave(data: cast[pointer](data), frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).WeakWave
-
-proc initWindow*(width: int32, height: int32, title: string) =
-  ## Initialize window and OpenGL context
-  initWindowPriv(width, height, title.cstring)
-  if not isWindowReady(): raiseRaylibError("Failed to create Window")
-
-proc setWindowIcons*(images: openArray[Image]) =
-  ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
-  setWindowIconsPriv(cast[ptr UncheckedArray[Image]](images), images.len.int32)
-
-proc getMonitorName*(monitor: int32): string {.inline.} =
-  ## Get the human-readable, UTF-8 encoded name of the primary monitor
-  result = $getMonitorNamePriv(monitor)
-
-proc getClipboardText*(): string {.inline.} =
-  ## Get clipboard text content
-  result = $getClipboardTextPriv()
-
-proc getDroppedFiles*(): seq[string] =
-  ## Get dropped files names
-  let dropfiles = loadDroppedFilesPriv()
-  result = cstringArrayToSeq(dropfiles.paths, dropfiles.count)
-  unloadDroppedFilesPriv(dropfiles) # Clear internal buffers
-
-proc getGamepadName*(gamepad: int32): string {.inline.} =
-  ## Get gamepad internal name id
-  result = $getGamepadNamePriv(gamepad)
-
-proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
-  ## Export data to code (.nim), returns true on success
-  result = false
-  const TextBytesPerLine = 20
-  # NOTE: Text data buffer size is estimated considering raw data size in bytes
-  # and requiring 6 char bytes for every byte: "0x00, "
-  var txtData = newStringOfCap(data.len*6 + 300)
-  txtData.add("""
-#
-# DataAsCode exporter v1.0 - Raw data exported as an array of bytes
-#
-# more info and bugs-report:  github.com/raysan5/raylib
-# feedback and support:       ray[at]raylib.com
-#
-# Copyright (c) 2022-2023 Ramon Santamaria (@raysan5)
-#
-""")
-  # Get the file name from the path
-  var (_, name, _) = splitFile(fileName.Path)
-  txtData.addf("const $1Data: array[$2, byte] = [ ", name.string, data.len)
-  for i in 0..data.high - 1:
-    txtData.addf(
-        if i mod TextBytesPerLine == 0: "0x$1,\n" else: "0x$1, ", data[i].toHex)
-  txtData.addf("0x$1 ]\n", data[^1].toHex)
-  try:
-    writeFile(fileName, txtData)
-    result = true
-  except IOError:
-    discard
-
-  if result:
-    traceLog(Info, "FILEIO: [%s] Data as code exported successfully", fileName)
-  else:
-    traceLog(Warning, "FILEIO: [%s] Failed to export data as code", fileName)
-
-proc loadShader*(vsFileName, fsFileName: string): Shader =
-  ## Load shader from files and bind default locations
-  result = loadShaderPriv(if vsFileName.len == 0: nil else: vsFileName.cstring,
-      if fsFileName.len == 0: nil else: fsFileName.cstring)
-
-proc loadShaderFromMemory*(vsCode, fsCode: string): Shader =
-  ## Load shader from code strings and bind default locations
-  result = loadShaderFromMemoryPriv(if vsCode.len == 0: nil else: vsCode.cstring,
-      if fsCode.len == 0: nil else: fsCode.cstring)
-
-type
-  ShaderV* = concept
-    proc kind(x: typedesc[Self]): ShaderUniformDataType
-
-template kind*(x: typedesc[float32]): ShaderUniformDataType = Float
-template kind*(x: typedesc[Vector2]): ShaderUniformDataType = Vec2
-template kind*(x: typedesc[Vector3]): ShaderUniformDataType = Vec3
-template kind*(x: typedesc[Vector4]): ShaderUniformDataType = Vec4
-template kind*(x: typedesc[int32]): ShaderUniformDataType = Int
-template kind*(x: typedesc[array[2, int32]]): ShaderUniformDataType = Ivec2
-template kind*(x: typedesc[array[3, int32]]): ShaderUniformDataType = Ivec3
-template kind*(x: typedesc[array[4, int32]]): ShaderUniformDataType = Ivec4
-template kind*(x: typedesc[array[2, float32]]): ShaderUniformDataType = Vec2
-template kind*(x: typedesc[array[3, float32]]): ShaderUniformDataType = Vec3
-template kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = Vec4
-
-proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: T) =
-  ## Set shader uniform value
-  setShaderValuePriv(shader, locIndex, addr value, kind(T))
-
-proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: openArray[T]) =
-  ## Set shader uniform value vector
-  setShaderValueVPriv(shader, locIndex, cast[pointer](value), kind(T), value.len.int32)
-
-proc loadModelAnimations*(fileName: string): RArray[ModelAnimation] =
-  ## Load model animations from file
-  var len = 0'i32
-  let data = loadModelAnimationsPriv(fileName.cstring, addr len)
-  if len <= 0: raiseRaylibError("Failed to load ModelAnimations from " & fileName)
-  result = RArray[ModelAnimation](len: len.int, data: data)
-
-proc loadWaveSamples*(wave: Wave): RArray[float32] =
-  ## Load samples data from wave as a floats array
-  let data = loadWaveSamplesPriv(wave)
-  let len = int(wave.frameCount * wave.channels)
-  result = RArray[float32](len: len, data: data)
-
-proc loadImageColors*(image: Image): RArray[Color] =
-  ## Load color data from image as a Color array (RGBA - 32bit)
-  let data = loadImageColorsPriv(image)
-  let len = int(image.width * image.height)
-  result = RArray[Color](len: len, data: data)
-
-proc loadImagePalette*(image: Image; maxPaletteSize: int32): RArray[Color] =
-  ## Load colors palette from image as a Color array (RGBA - 32bit)
-  var len = 0'i32
-  let data = loadImagePalettePriv(image, maxPaletteSize, addr len)
-  result = RArray[Color](len: len, data: data)
-
-proc loadMaterials*(fileName: string): RArray[Material] =
-  ## Load materials from model file
-  var len = 0'i32
-  let data = loadMaterialsPriv(fileName.cstring, addr len)
-  if len <= 0: raiseRaylibError("Failed to load Materials from " & fileName)
-  result = RArray[Material](len: len, data: data)
-
-proc drawLineStrip*(points: openArray[Vector2]; color: Color) {.inline.} =
-  ## Draw lines sequence
-  drawLineStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc drawSplineLinear*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: Linear, minimum 2 points
-  drawSplineLinearPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawSplineBasis*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: B-Spline, minimum 4 points
-  drawSplineBasisPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawSplineCatmullRom*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: Catmull-Rom, minimum 4 points
-  drawSplineCatmullRomPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawSplineBezierQuadratic*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
-  drawSplineBezierQuadraticPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawSplineBezierCubic*(points: openArray[Vector2], thick: float32, color: Color) =
-  ## Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
-  drawSplineBezierCubicPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
-
-proc drawTriangleFan*(points: openArray[Vector2]; color: Color) =
-  ## Draw a triangle fan defined by points (first vertex is the center)
-  drawTriangleFanPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc drawTriangleStrip*(points: openArray[Vector2]; color: Color) =
-  ## Draw a triangle strip defined by points
-  drawTriangleStripPriv(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool =
-  checkCollisionPointPolyPriv(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
-
-proc imageDrawTriangleFan*(dst: var Image, points: openArray[Vector2], color: Color) =
-  ## Draw a triangle fan defined by points within an image (first vertex is the center)
-  imageDrawTriangleFanPriv(dst.addr, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc imageDrawTriangleStrip*(dst: var Image, points: openArray[Vector2], color: Color) =
-  ## Draw a triangle strip defined by points within an image
-  imageDrawTriangleStripPriv(dst.addr, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
-
-proc loadImage*(fileName: string): Image =
-  ## Load image from file into CPU memory (RAM)
-  result = loadImagePriv(fileName.cstring)
-  if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
-
-proc loadImageRaw*(fileName: string, width, height: int32, format: PixelFormat, headerSize: int32): Image =
-  ## Load image sequence from file (frames appended to image.data)
-  result = loadImageRawPriv(fileName.cstring, width, height, format, headerSize)
-  if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
-
-proc loadImageSvg*(fileNameOrString: string, width, height: int32): Image =
-  ## Load image from SVG file data or string with specified size
-  result = loadImageSvgPriv(fileNameOrString.cstring, width, height)
-  if not isImageReady(result): raiseRaylibError("Failed to load Image from SVG")
-
-proc loadImageAnimFromMemory*(fileType: string, fileData: openArray[uint8], frames: openArray[int32]): Image =
-  ## Load image sequence from memory buffer
-  result = loadImageAnimFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
-      fileData.len.int32, cast[ptr UncheckedArray[int32]](frames))
-  if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from buffer")
-
-proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
-  ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
-  result = loadImageFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
-      fileData.len.int32)
-  if not isImageReady(result): raiseRaylibError("Failed to load Image from buffer")
-
-proc loadImageFromTexture*(texture: Texture2D): Image =
-  ## Load image from GPU texture data
-  result = loadImageFromTexturePriv(texture)
-  if not isImageReady(result): raiseRaylibError("Failed to load Image from Texture")
-
-proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
-  ## Export image to memory buffer
-  var len = 0'i32
-  let data = exportImageToMemoryPriv(image, fileType.cstring, addr len)
-  result = RArray[uint8](len: len, data: cast[ptr UncheckedArray[uint8]](data))
-
-proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
-  ## Apply custom square convolution kernel to image
-  ## NOTE: The convolution kernel matrix is expected to be square
-  imageKernelConvolutionPriv(image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
-
-type
-  Pixel* = concept
-    proc kind(x: typedesc[Self]): PixelFormat
-
-template kind*(x: typedesc[Color]): PixelFormat = UncompressedR8g8b8a8
-
-template toColorArray*(a: openArray[byte]): untyped =
-  ## Note: that `a` should be properly formatted, with a byte representation that aligns
-  ## with the memory layout of the Color type.
-  let newLen = a.len div sizeof(Color)
-  assert(newLen * sizeof(Color) == a.len,
-      "The length of the byte array is not a multiple of the size of the Color type")
-  toOpenArray(cast[ptr UncheckedArray[Color]](addr a[0]), 0, newLen - 1)
-
-proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: int32): Texture =
-  ## Load texture using pixels
-  assert getPixelDataSize(width, height, kind(T)) == pixels.len*sizeof(T),
-      "Mismatch between expected and actual data size"
-  let image = Image(data: cast[pointer](pixels), width: width, height: height,
-      format: kind(T), mipmaps: 1).WeakImage
-  result = loadTextureFromImagePriv(image.Image)
-  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from buffer")
-
-proc loadTexture*(fileName: string): Texture2D =
-  ## Load texture from file into GPU memory (VRAM)
-  result = loadTexturePriv(fileName.cstring)
-  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from " & fileName)
-
-proc loadTextureFromImage*(image: Image): Texture2D =
-  ## Load texture from image data
-  result = loadTextureFromImagePriv(image)
-  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from Image")
-
-proc loadTextureCubemap*(image: Image, layout: CubemapLayout): TextureCubemap =
-  ## Load cubemap from image, multiple image cubemap layouts supported
-  result = loadTextureCubemapPriv(image, layout)
-  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from Cubemap")
-
-proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
-  ## Load texture for rendering (framebuffer)
-  result = loadRenderTexturePriv(width, height)
-  if not isRenderTextureReady(result): raiseRaylibError("Failed to load RenderTexture")
-
-proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
-  ## Update GPU texture with new data
-  assert texture.format == kind(T), "Incompatible texture format"
-  assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(T),
-      "Mismatch between expected and actual data size"
-  updateTexturePriv(texture, cast[pointer](pixels))
-
-proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
-  ## Update GPU texture rectangle with new data
-  assert texture.format == kind(T), "Incompatible texture format"
-  assert getPixelDataSize(rec.width.int32, rec.height.int32, texture.format) == pixels.len*sizeof(T),
-      "Mismatch between expected and actual data size"
-  updateTexturePriv(texture, rec, cast[pointer](pixels))
-
-proc getPixelColor*[T: Pixel](pixel: T): Color =
-  ## Get Color from a source pixel pointer of certain format
-  assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
-  getPixelColorPriv(addr pixel, kind(T))
-
-proc setPixelColor*[T: Pixel](pixel: var T, color: Color) =
-  ## Set color formatted into destination pixel pointer
-  assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
-  setPixelColorPriv(addr pixel, color, kind(T))
-
-proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; codepoints: openArray[int32];
-    `type`: FontType): RArray[GlyphInfo] =
-  ## Load font data for further use
-  let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
-      fontSize, if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints),
-      codepoints.len.int32, `type`)
-  result = RArray[GlyphInfo](len: if codepoints.len == 0: 95 else: codepoints.len, data: data)
-
-proc loadFontData*(fileData: openArray[uint8]; fontSize, glyphCount: int32;
-    `type`: FontType): RArray[GlyphInfo] =
-  let data = loadFontDataPriv(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
-      fontSize, nil, glyphCount, `type`)
-  result = RArray[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
-
-proc loadFont*(fileName: string): Font =
-  ## Load font from file into GPU memory (VRAM)
-  result = loadFontPriv(fileName.cstring)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
-
-proc loadFont*(fileName: string; fontSize: int32; codepoints: openArray[int32]): Font =
-  ## Load font from file with extended parameters, use an empty array for codepoints to load the default character set
-  result = loadFontPriv(fileName.cstring, fontSize,
-      if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
-
-proc loadFont*(fileName: string; fontSize, glyphCount: int32): Font =
-  result = loadFontPriv(fileName.cstring, fontSize, nil, glyphCount)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
-
-proc loadFontFromImage*(image: Image, key: Color, firstChar: int32): Font =
-  ## Load font from Image (XNA style)
-  result = loadFontFromImagePriv(image, key, firstChar)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
-
-proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
-    codepoints: openArray[int32]): Font =
-  ## Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
-  result = loadFontFromMemoryPriv(fileType.cstring,
-      cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
-      if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
-
-proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
-    glyphCount: int32): Font =
-  result = loadFontFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
-      fileData.len.int32, fontSize, nil, glyphCount)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
-
-proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, packMethod: int32): Font =
-  ## Load font using chars info
-  result.baseSize = baseSize
-  result.glyphCount = chars.len.int32
-  result.glyphs = chars.data
-  wasMoved(chars)
-  let atlas = genImageFontAtlasPriv(result.glyphs, addr result.recs, result.glyphCount, baseSize,
-      padding, packMethod)
-  result.texture = loadTextureFromImage(atlas)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
-
-proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out RArray[Rectangle]; fontSize: int32;
-    padding: int32; packMethod: int32): Image =
-  ## Generate image font atlas using chars info
-  var data: ptr UncheckedArray[Rectangle] = nil
-  result = genImageFontAtlasPriv(cast[ptr UncheckedArray[GlyphInfo]](chars), addr data,
-      chars.len.int32, fontSize, padding, packMethod)
-  recs = RArray[Rectangle](len: chars.len, data: data)
-
-proc drawTriangleStrip3D*(points: openArray[Vector3]; color: Color) =
-  ## Draw a triangle strip defined by points
-  drawTriangleStrip3DPriv(cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
-
-proc updateMeshBuffer*[T](mesh: var Mesh, index: int32, data: openArray[T], offset: int32) =
-  ## Update mesh vertex data in GPU for a specific buffer index
-  updateMeshBufferPriv(mesh, index, cast[ptr UncheckedArray[T]](data), data.len.int32, offset)
-
-proc drawMeshInstanced*(mesh: Mesh; material: Material; transforms: openArray[Matrix]) =
-  ## Draw multiple mesh instances with material and different transforms
-  drawMeshInstancedPriv(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms),
-      transforms.len.int32)
-
-proc loadWave*(fileName: string): Wave =
-  ## Load wave data from file
-  result = loadWavePriv(fileName.cstring)
-  if not isWaveReady(result): raiseRaylibError("Failed to load Wave from " & fileName)
-
-proc loadWaveFromMemory*(fileType: string; fileData: openArray[uint8]): Wave =
-  ## Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
-  result = loadWaveFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
-      fileData.len.int32)
-  if not isWaveReady(result): raiseRaylibError("Failed to load Wave from buffer")
-
-proc loadSound*(fileName: string): Sound =
-  ## Load sound from file
-  result = loadSoundPriv(fileName.cstring)
-  if not isSoundReady(result): raiseRaylibError("Failed to load Sound from " & fileName)
-
-proc loadSoundAlias*(source: Sound): SoundAlias =
-  ## Create a new sound that shares the same sample data as the source sound, does not own the sound data
-  result = SoundAlias(loadSoundAliasPriv(source))
-  if not isSoundReady(Sound(result)): raiseRaylibError("Failed to load SoundAlias from source")
-
-proc loadSoundFromWave*(wave: Wave): Sound =
-  ## Load sound from wave data
-  result = loadSoundFromWavePriv(wave)
-  if not isSoundReady(result): raiseRaylibError("Failed to load Sound from Wave")
-
-proc updateSound*[T](sound: var Sound, data: openArray[T]) =
-  ## Update sound buffer with new data
-  updateSoundPriv(sound, cast[ptr UncheckedArray[T]](data), data.len.int32)
-
-proc loadMusicStream*(fileName: string): Music =
-  ## Load music stream from file
-  result = loadMusicStreamPriv(fileName.cstring)
-  if not isMusicReady(result): raiseRaylibError("Failed to load Music from " & fileName)
-
-proc loadMusicStreamFromMemory*(fileType: string; data: openArray[uint8]): Music =
-  ## Load music stream from data
-  result = loadMusicStreamFromMemoryPriv(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
-      data.len.int32)
-  if not isMusicReady(result): raiseRaylibError("Failed to load Music from buffer")
-
-proc loadAudioStream*(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream =
-  ## Load audio stream (to stream raw audio pcm data)
-  result = loadAudioStreamPriv(sampleRate, sampleSize, channels)
-  if not isAudioStreamReady(result): raiseRaylibError("Failed to load AudioStream")
-
-proc updateAudioStream*[T](stream: var AudioStream, data: openArray[T]) =
-  ## Update audio stream buffers with data
-  updateAudioStreamPriv(stream, cast[ptr UncheckedArray[T]](data), data.len.int32)
-
-proc drawTextCodepoints*(font: Font; codepoints: openArray[Rune]; position: Vector2;
-    fontSize: float32; spacing: float32; tint: Color) =
-  ## Draw multiple character (codepoint)
-  drawTextCodepointsPriv(font, cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32,
-      position, fontSize, spacing, tint)
-
-proc loadModel*(fileName: string): Model =
-  ## Load model from files (meshes and materials)
-  result = loadModelPriv(fileName.cstring)
-  if not isModelReady(result): raiseRaylibError("Failed to load Model from " & fileName)
-
-proc loadModelFromMesh*(mesh: sink Mesh): Model =
-  ## Load model from generated mesh (default material)
-  result = loadModelFromMeshPriv(mesh)
-  wasMoved(mesh)
-  if not isModelReady(result): raiseRaylibError("Failed to load Model from Mesh")
-
-proc fade*(color: Color, alpha: float32): Color =
-  ## Get color with alpha applied, alpha goes from 0.0 to 1.0
-  let alpha = clamp(alpha, 0, 1)
-  Color(r: color.r, g: color.g, b: color.b, a: uint8(255*alpha))
-
-proc colorToInt*(color: Color): int32 =
-  ## Get hexadecimal value for a Color
-  int32((color.r.uint32 shl 24) or (color.g.uint32 shl 16) or (color.b.uint32 shl 8) or color.a.uint32)
-
-proc getColor*(hexValue: uint32): Color =
-  ## Get Color structure from hexadecimal value
-  result = Color(
-    r: uint8(hexValue shr 24 and 0xff),
-    g: uint8(hexValue shr 16 and 0xff),
-    b: uint8(hexValue shr 8 and 0xff),
-    a: uint8(hexValue and 0xff)
-  )
-
-template drawing*(body: untyped) =
-  ## Setup canvas (framebuffer) to start drawing
-  beginDrawing()
-  try:
-    body
-  finally:
-    endDrawing()
-
-template mode2D*(camera: Camera2D; body: untyped) =
-  ## 2D mode with custom camera (2D)
-  beginMode2D(camera)
-  try:
-    body
-  finally:
-    endMode2D()
-
-template mode3D*(camera: Camera3D; body: untyped) =
-  ## 3D mode with custom camera (3D)
-  beginMode3D(camera)
-  try:
-    body
-  finally:
-    endMode3D()
-
-template textureMode*(target: RenderTexture2D; body: untyped) =
-  ## Drawing to render texture
-  beginTextureMode(target)
-  try:
-    body
-  finally:
-    endTextureMode()
-
-template shaderMode*(shader: Shader; body: untyped) =
-  ## Custom shader drawing
-  beginShaderMode(shader)
-  try:
-    body
-  finally:
-    endShaderMode()
-
-template blendMode*(mode: BlendMode; body: untyped) =
-  ## Blending mode (alpha, additive, multiplied, subtract, custom)
-  beginBlendMode(mode)
-  try:
-    body
-  finally:
-    endBlendMode()
-
-template scissorMode*(x, y, width, height: int32; body: untyped) =
-  ## Scissor mode (define screen area for following drawing)
-  beginScissorMode(x, y, width, height)
-  try:
-    body
-  finally:
-    endScissorMode()
-
-template vrStereoMode*(config: VrStereoConfig; body: untyped) =
-  ## Stereo rendering (requires VR simulator)
-  beginVrStereoMode(config)
-  try:
-    body
-  finally:
-    endVrStereoMode()
 
 static:
   assert sizeof(Color) == 4*sizeof(uint8)
@@ -2844,3 +2264,653 @@ proc `[]=`*(x: var ModelAnimationFramePoses; i, j: int, val: Transform) =
   checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
   checkArrayAccess(ModelAnimation(x).framePoses[i], j, ModelAnimation(x).boneCount)
   ModelAnimation(x).framePoses[i][j] = val
+
+proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
+proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
+proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
+proc boneCount*(x: Mesh): int32 {.inline.} = x.boneCount
+proc meshCount*(x: Model): int32 {.inline.} = x.meshCount
+proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
+proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
+proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
+proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
+
+proc setWindowIcons*(images: openArray[Image]) =
+  ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
+  setWindowIconsImpl(cast[ptr UncheckedArray[Image]](images), images.len.int32)
+
+proc setWindowTitle*(title: string) =
+  ## Set title for window (only PLATFORM_DESKTOP and PLATFORM_WEB)
+  setWindowTitleImpl(title.cstring)
+
+proc getMonitorName*(monitor: int32): string =
+  ## Get the human-readable, UTF-8 encoded name of the specified monitor
+  $getMonitorNameImpl(monitor)
+
+proc setClipboardText*(text: string) =
+  ## Set clipboard text content
+  setClipboardTextImpl(text.cstring)
+
+proc getClipboardText*(): string =
+  ## Get clipboard text content
+  $getClipboardTextImpl()
+
+proc getShaderLocation*(shader: Shader, uniformName: string): ShaderLocation =
+  ## Get shader uniform location
+  getShaderLocationImpl(shader, uniformName.cstring)
+
+proc getShaderLocationAttrib*(shader: Shader, attribName: string): ShaderLocation =
+  ## Get shader attribute location
+  getShaderLocationAttribImpl(shader, attribName.cstring)
+
+proc takeScreenshot*(fileName: string) =
+  ## Takes a screenshot of current screen (filename extension defines format)
+  takeScreenshotImpl(fileName.cstring)
+
+proc loadAutomationEventList*(fileName: string): AutomationEventList =
+  ## Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
+  loadAutomationEventListImpl(fileName.cstring)
+
+proc exportAutomationEventList*(list: AutomationEventList, fileName: string): bool =
+  ## Export automation events list as text file
+  exportAutomationEventListImpl(list, fileName.cstring)
+
+proc getGamepadName*(gamepad: int32): string =
+  ## Get gamepad internal name id
+  $getGamepadNameImpl(gamepad)
+
+proc setGamepadMappings*(mappings: string): int32 =
+  ## Set internal gamepad mappings (SDL_GameControllerDB)
+  setGamepadMappingsImpl(mappings.cstring)
+
+proc drawLineStrip*(points: openArray[Vector2], color: Color) =
+  ## Draw lines sequence (using gl lines)
+  drawLineStripImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc drawTriangleFan*(points: openArray[Vector2], color: Color) =
+  ## Draw a triangle fan defined by points (first vertex is the center)
+  drawTriangleFanImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc drawTriangleStrip*(points: openArray[Vector2], color: Color) =
+  ## Draw a triangle strip defined by points
+  drawTriangleStripImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc drawSplineLinear*(points: openArray[Vector2], thick: float32, color: Color) =
+  ## Draw spline: Linear, minimum 2 points
+  drawSplineLinearImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawSplineBasis*(points: openArray[Vector2], thick: float32, color: Color) =
+  ## Draw spline: B-Spline, minimum 4 points
+  drawSplineBasisImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawSplineCatmullRom*(points: openArray[Vector2], thick: float32, color: Color) =
+  ## Draw spline: Catmull-Rom, minimum 4 points
+  drawSplineCatmullRomImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawSplineBezierQuadratic*(points: openArray[Vector2], thick: float32, color: Color) =
+  ## Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
+  drawSplineBezierQuadraticImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc drawSplineBezierCubic*(points: openArray[Vector2], thick: float32, color: Color) =
+  ## Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
+  drawSplineBezierCubicImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+
+proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool =
+  ## Check if point is within a polygon described by array of vertices
+  checkCollisionPointPolyImpl(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
+
+proc exportImage*(image: Image, fileName: string): bool =
+  ## Export image data to file, returns true on success
+  exportImageImpl(image, fileName.cstring)
+
+proc exportImageAsCode*(image: Image, fileName: string): bool =
+  ## Export image as code file defining an array of bytes, returns true on success
+  exportImageAsCodeImpl(image, fileName.cstring)
+
+proc genImageText*(width: int32, height: int32, text: string): Image =
+  ## Generate image: grayscale image from text data
+  genImageTextImpl(width, height, text.cstring)
+
+proc imageText*(text: string, fontSize: int32, color: Color): Image =
+  ## Create an image from text (default font)
+  imageTextImpl(text.cstring, fontSize, color)
+
+proc imageText*(font: Font, text: string, fontSize: float32, spacing: float32, tint: Color): Image =
+  ## Create an image from text (custom sprite font)
+  imageTextImpl(font, text.cstring, fontSize, spacing, tint)
+
+proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
+  ## Apply custom square convolution kernel to image
+  imageKernelConvolutionImpl(addr image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
+
+proc imageDrawTriangleFan*(dst: var Image, points: openArray[Vector2], color: Color) =
+  ## Draw a triangle fan defined by points within an image (first vertex is the center)
+  imageDrawTriangleFanImpl(addr dst, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc imageDrawTriangleStrip*(dst: var Image, points: openArray[Vector2], color: Color) =
+  ## Draw a triangle strip defined by points within an image
+  imageDrawTriangleStripImpl(addr dst, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+
+proc imageDrawText*(dst: var Image, text: string, posX: int32, posY: int32, fontSize: int32, color: Color) =
+  ## Draw text (using default font) within an image (destination)
+  imageDrawTextImpl(addr dst, text.cstring, posX, posY, fontSize, color)
+
+proc imageDrawText*(dst: var Image, font: Font, text: string, position: Vector2, fontSize: float32, spacing: float32, tint: Color) =
+  ## Draw text (custom sprite font) within an image (destination)
+  imageDrawTextImpl(addr dst, font, text.cstring, position, fontSize, spacing, tint)
+
+proc exportFontAsCode*(font: Font, fileName: string): bool =
+  ## Export font as code file, returns true on success
+  exportFontAsCodeImpl(font, fileName.cstring)
+
+proc drawText*(text: string, posX: int32, posY: int32, fontSize: int32, color: Color) =
+  ## Draw text (using default font)
+  drawTextImpl(text.cstring, posX, posY, fontSize, color)
+
+proc drawText*(font: Font, text: string, position: Vector2, fontSize: float32, spacing: float32, tint: Color) =
+  ## Draw text using font and additional parameters
+  drawTextImpl(font, text.cstring, position, fontSize, spacing, tint)
+
+proc drawText*(font: Font, text: string, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) =
+  ## Draw text using Font and pro parameters (rotation)
+  drawTextImpl(font, text.cstring, position, origin, rotation, fontSize, spacing, tint)
+
+proc measureText*(text: string, fontSize: int32): int32 =
+  ## Measure string width for default font
+  measureTextImpl(text.cstring, fontSize)
+
+proc measureText*(font: Font, text: string, fontSize: float32, spacing: float32): Vector2 =
+  ## Measure string size for Font
+  measureTextImpl(font, text.cstring, fontSize, spacing)
+
+proc drawTriangleStrip3D*(points: openArray[Vector3], color: Color) =
+  ## Draw a triangle strip defined by points
+  drawTriangleStrip3DImpl(cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
+
+proc exportMesh*(mesh: Mesh, fileName: string): bool =
+  ## Export mesh data to file, returns true on success
+  exportMeshImpl(mesh, fileName.cstring)
+
+proc exportMeshAsCode*(mesh: Mesh, fileName: string): bool =
+  ## Export mesh as code file (.h) defining multiple arrays of vertex attributes
+  exportMeshAsCodeImpl(mesh, fileName.cstring)
+
+proc exportWave*(wave: Wave, fileName: string): bool =
+  ## Export wave data to file, returns true on success
+  exportWaveImpl(wave, fileName.cstring)
+
+proc exportWaveAsCode*(wave: Wave, fileName: string): bool =
+  ## Export wave sample data to code (.h), returns true on success
+  exportWaveAsCodeImpl(wave, fileName.cstring)
+
+
+type
+  RaylibError* = object of CatchableError
+
+proc raiseRaylibError(msg: string) {.noinline, noreturn.} =
+  raise newException(RaylibError, msg)
+
+type
+  TraceLogCallback* = proc (logLevel: TraceLogLevel; text: string) {.
+      nimcall.} ## Logging: Redirect trace log messages
+
+var
+  traceLogCallback: TraceLogCallback # TraceLog callback function pointer
+
+proc wrapperTraceLogCallback(logLevel: int32; text: cstring; args: va_list) {.cdecl.} =
+  var buf = newString(128)
+  vsprintf(buf.cstring, text, args)
+  traceLogCallback(logLevel.TraceLogLevel, buf)
+
+proc setTraceLogCallback*(callback: TraceLogCallback) =
+  ## Set custom trace log
+  traceLogCallback = callback
+  setTraceLogCallbackImpl(cast[TraceLogCallbackImpl](wrapperTraceLogCallback))
+
+proc toWeakImage*(data: openArray[byte], width, height: int32, format: PixelFormat): WeakImage {.inline.} =
+  Image(data: cast[pointer](data), width: width, height: height, mipmaps: 1, format: format).WeakImage
+
+proc toWeakWave*(data: openArray[byte], frameCount, sampleRate, sampleSize, channels: uint32): WeakWave {.inline.} =
+  Wave(data: cast[pointer](data), frameCount: frameCount, sampleRate: sampleRate, sampleSize: sampleSize, channels: channels).WeakWave
+
+proc initWindow*(width: int32, height: int32, title: string) =
+  ## Initialize window and OpenGL context
+  initWindowImpl(width, height, title.cstring)
+  if not isWindowReady(): raiseRaylibError("Failed to create Window")
+
+proc getDroppedFiles*(): seq[string] =
+  ## Get dropped files names
+  let dropfiles = loadDroppedFilesImpl()
+  result = cstringArrayToSeq(dropfiles.paths, dropfiles.count)
+  unloadDroppedFilesImpl(dropfiles) # Clear internal buffers
+
+proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
+  ## Export data to code (.nim), returns true on success
+  result = false
+  const TextBytesPerLine = 20
+  # NOTE: Text data buffer size is estimated considering raw data size in bytes
+  # and requiring 6 char bytes for every byte: "0x00, "
+  var txtData = newStringOfCap(data.len*6 + 300)
+  txtData.add("""
+#
+# DataAsCode exporter v1.0 - Raw data exported as an array of bytes
+#
+# more info and bugs-report:  github.com/raysan5/raylib
+# feedback and support:       ray[at]raylib.com
+#
+# Copyright (c) 2022-2023 Ramon Santamaria (@raysan5)
+#
+""")
+  # Get the file name from the path
+  var (_, name, _) = splitFile(fileName.Path)
+  txtData.addf("const $1Data: array[$2, byte] = [ ", name.string, data.len)
+  for i in 0..data.high - 1:
+    txtData.addf(
+        if i mod TextBytesPerLine == 0: "0x$1,\n" else: "0x$1, ", data[i].toHex)
+  txtData.addf("0x$1 ]\n", data[^1].toHex)
+  try:
+    writeFile(fileName, txtData)
+    result = true
+  except IOError:
+    discard
+
+  if result:
+    traceLog(Info, "FILEIO: [%s] Data as code exported successfully", fileName)
+  else:
+    traceLog(Warning, "FILEIO: [%s] Failed to export data as code", fileName)
+
+proc loadShader*(vsFileName, fsFileName: string): Shader =
+  ## Load shader from files and bind default locations
+  result = loadShaderImpl(if vsFileName.len == 0: nil else: vsFileName.cstring,
+      if fsFileName.len == 0: nil else: fsFileName.cstring)
+
+proc loadShaderFromMemory*(vsCode, fsCode: string): Shader =
+  ## Load shader from code strings and bind default locations
+  result = loadShaderFromMemoryImpl(if vsCode.len == 0: nil else: vsCode.cstring,
+      if fsCode.len == 0: nil else: fsCode.cstring)
+
+type
+  ShaderV* = concept
+    proc kind(x: typedesc[Self]): ShaderUniformDataType
+
+template kind*(x: typedesc[float32]): ShaderUniformDataType = Float
+template kind*(x: typedesc[Vector2]): ShaderUniformDataType = Vec2
+template kind*(x: typedesc[Vector3]): ShaderUniformDataType = Vec3
+template kind*(x: typedesc[Vector4]): ShaderUniformDataType = Vec4
+template kind*(x: typedesc[int32]): ShaderUniformDataType = Int
+template kind*(x: typedesc[array[2, int32]]): ShaderUniformDataType = Ivec2
+template kind*(x: typedesc[array[3, int32]]): ShaderUniformDataType = Ivec3
+template kind*(x: typedesc[array[4, int32]]): ShaderUniformDataType = Ivec4
+template kind*(x: typedesc[array[2, float32]]): ShaderUniformDataType = Vec2
+template kind*(x: typedesc[array[3, float32]]): ShaderUniformDataType = Vec3
+template kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = Vec4
+
+proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: T) =
+  ## Set shader uniform value
+  setShaderValueImpl(shader, locIndex, addr value, kind(T))
+
+proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: openArray[T]) =
+  ## Set shader uniform value vector
+  setShaderValueVImpl(shader, locIndex, cast[pointer](value), kind(T), value.len.int32)
+
+proc loadModelAnimations*(fileName: string): RArray[ModelAnimation] =
+  ## Load model animations from file
+  var len = 0'i32
+  let data = loadModelAnimationsImpl(fileName.cstring, addr len)
+  if len <= 0: raiseRaylibError("Failed to load ModelAnimations from " & fileName)
+  result = RArray[ModelAnimation](len: len.int, data: data)
+
+proc loadWaveSamples*(wave: Wave): RArray[float32] =
+  ## Load samples data from wave as a floats array
+  let data = loadWaveSamplesImpl(wave)
+  let len = int(wave.frameCount * wave.channels)
+  result = RArray[float32](len: len, data: data)
+
+proc loadImageColors*(image: Image): RArray[Color] =
+  ## Load color data from image as a Color array (RGBA - 32bit)
+  let data = loadImageColorsImpl(image)
+  let len = int(image.width * image.height)
+  result = RArray[Color](len: len, data: data)
+
+proc loadImagePalette*(image: Image; maxPaletteSize: int32): RArray[Color] =
+  ## Load colors palette from image as a Color array (RGBA - 32bit)
+  var len = 0'i32
+  let data = loadImagePaletteImpl(image, maxPaletteSize, addr len)
+  result = RArray[Color](len: len, data: data)
+
+proc loadMaterials*(fileName: string): RArray[Material] =
+  ## Load materials from model file
+  var len = 0'i32
+  let data = loadMaterialsImpl(fileName.cstring, addr len)
+  if len <= 0: raiseRaylibError("Failed to load Materials from " & fileName)
+  result = RArray[Material](len: len, data: data)
+
+proc loadImage*(fileName: string): Image =
+  ## Load image from file into CPU memory (RAM)
+  result = loadImageImpl(fileName.cstring)
+  if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
+
+proc loadImageRaw*(fileName: string, width, height: int32, format: PixelFormat, headerSize: int32): Image =
+  ## Load image sequence from file (frames appended to image.data)
+  result = loadImageRawImpl(fileName.cstring, width, height, format, headerSize)
+  if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
+
+proc loadImageAnim*(fileName: string, frames: out int32): Image =
+  ## Load image sequence from file (frames appended to image.data)
+  result = loadImageAnimImpl(fileName.cstring, frames)
+  if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from " & fileName)
+
+proc loadImageAnimFromMemory*(fileType: string, fileData: openArray[uint8], frames: openArray[int32]): Image =
+  ## Load image sequence from memory buffer
+  result = loadImageAnimFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+      fileData.len.int32, cast[ptr UncheckedArray[int32]](frames))
+  if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from buffer")
+
+proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
+  ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
+  result = loadImageFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+      fileData.len.int32)
+  if not isImageReady(result): raiseRaylibError("Failed to load Image from buffer")
+
+proc loadImageFromTexture*(texture: Texture2D): Image =
+  ## Load image from GPU texture data
+  result = loadImageFromTextureImpl(texture)
+  if not isImageReady(result): raiseRaylibError("Failed to load Image from Texture")
+
+proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
+  ## Export image to memory buffer
+  var len = 0'i32
+  let data = exportImageToMemoryImpl(image, fileType.cstring, addr len)
+  result = RArray[uint8](len: len, data: cast[ptr UncheckedArray[uint8]](data))
+
+type
+  Pixel* = concept
+    proc kind(x: typedesc[Self]): PixelFormat
+
+template kind*(x: typedesc[Color]): PixelFormat = UncompressedR8g8b8a8
+
+template toColorArray*(a: openArray[byte]): untyped =
+  ## Note: that `a` should be properly formatted, with a byte representation that aligns
+  ## with the memory layout of the Color type.
+  let newLen = a.len div sizeof(Color)
+  assert(newLen * sizeof(Color) == a.len,
+      "The length of the byte array is not a multiple of the size of the Color type")
+  toOpenArray(cast[ptr UncheckedArray[Color]](addr a[0]), 0, newLen - 1)
+
+proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: int32): Texture =
+  ## Load texture using pixels
+  assert getPixelDataSize(width, height, kind(T)) == pixels.len*sizeof(T),
+      "Mismatch between expected and actual data size"
+  let image = Image(data: cast[pointer](pixels), width: width, height: height,
+      format: kind(T), mipmaps: 1).WeakImage
+  result = loadTextureFromImageImpl(image.Image)
+  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from buffer")
+
+proc loadTexture*(fileName: string): Texture2D =
+  ## Load texture from file into GPU memory (VRAM)
+  result = loadTextureImpl(fileName.cstring)
+  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from " & fileName)
+
+proc loadTextureFromImage*(image: Image): Texture2D =
+  ## Load texture from image data
+  result = loadTextureFromImageImpl(image)
+  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from Image")
+
+proc loadTextureCubemap*(image: Image, layout: CubemapLayout): TextureCubemap =
+  ## Load cubemap from image, multiple image cubemap layouts supported
+  result = loadTextureCubemapImpl(image, layout)
+  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from Cubemap")
+
+proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
+  ## Load texture for rendering (framebuffer)
+  result = loadRenderTextureImpl(width, height)
+  if not isRenderTextureReady(result): raiseRaylibError("Failed to load RenderTexture")
+
+proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
+  ## Update GPU texture with new data
+  assert texture.format == kind(T), "Incompatible texture format"
+  assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(T),
+      "Mismatch between expected and actual data size"
+  updateTextureImpl(texture, cast[pointer](pixels))
+
+proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
+  ## Update GPU texture rectangle with new data
+  assert texture.format == kind(T), "Incompatible texture format"
+  assert getPixelDataSize(rec.width.int32, rec.height.int32, texture.format) == pixels.len*sizeof(T),
+      "Mismatch between expected and actual data size"
+  updateTextureImpl(texture, rec, cast[pointer](pixels))
+
+proc getPixelColor*[T: Pixel](pixel: T): Color =
+  ## Get Color from a source pixel pointer of certain format
+  assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
+  getPixelColorImpl(addr pixel, kind(T))
+
+proc setPixelColor*[T: Pixel](pixel: var T, color: Color) =
+  ## Set color formatted into destination pixel pointer
+  assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
+  setPixelColorImpl(addr pixel, color, kind(T))
+
+proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; codepoints: openArray[int32];
+    `type`: FontType): RArray[GlyphInfo] =
+  ## Load font data for further use
+  let data = loadFontDataImpl(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
+      fontSize, if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints),
+      codepoints.len.int32, `type`)
+  result = RArray[GlyphInfo](len: if codepoints.len == 0: 95 else: codepoints.len, data: data)
+
+proc loadFontData*(fileData: openArray[uint8]; fontSize, glyphCount: int32;
+    `type`: FontType): RArray[GlyphInfo] =
+  let data = loadFontDataImpl(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
+      fontSize, nil, glyphCount, `type`)
+  result = RArray[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
+
+proc loadFont*(fileName: string): Font =
+  ## Load font from file into GPU memory (VRAM)
+  result = loadFontImpl(fileName.cstring)
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
+
+proc loadFont*(fileName: string; fontSize: int32; codepoints: openArray[int32]): Font =
+  ## Load font from file with extended parameters, use an empty array for codepoints to load the default character set
+  result = loadFontImpl(fileName.cstring, fontSize,
+      if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32)
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
+
+proc loadFont*(fileName: string; fontSize, glyphCount: int32): Font =
+  result = loadFontImpl(fileName.cstring, fontSize, nil, glyphCount)
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
+
+proc loadFontFromImage*(image: Image, key: Color, firstChar: int32): Font =
+  ## Load font from Image (XNA style)
+  result = loadFontFromImageImpl(image, key, firstChar)
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
+
+proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
+    codepoints: openArray[int32]): Font =
+  ## Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
+  result = loadFontFromMemoryImpl(fileType.cstring,
+      cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
+      if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32)
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
+
+proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
+    glyphCount: int32): Font =
+  result = loadFontFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+      fileData.len.int32, fontSize, nil, glyphCount)
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
+
+proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, packMethod: int32): Font =
+  ## Load font using chars info
+  result.baseSize = baseSize
+  result.glyphCount = chars.len.int32
+  result.glyphs = chars.data
+  wasMoved(chars)
+  let atlas = genImageFontAtlasImpl(result.glyphs, addr result.recs, result.glyphCount, baseSize,
+      padding, packMethod)
+  result.texture = loadTextureFromImage(atlas)
+  if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
+
+proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out RArray[Rectangle]; fontSize: int32;
+    padding: int32; packMethod: int32): Image =
+  ## Generate image font atlas using chars info
+  var data: ptr UncheckedArray[Rectangle] = nil
+  result = genImageFontAtlasImpl(cast[ptr UncheckedArray[GlyphInfo]](chars), addr data,
+      chars.len.int32, fontSize, padding, packMethod)
+  recs = RArray[Rectangle](len: chars.len, data: data)
+
+proc updateMeshBuffer*[T](mesh: var Mesh, index: int32, data: openArray[T], offset: int32) =
+  ## Update mesh vertex data in GPU for a specific buffer index
+  updateMeshBufferImpl(mesh, index, cast[ptr UncheckedArray[T]](data), data.len.int32, offset)
+
+proc drawMeshInstanced*(mesh: Mesh; material: Material; transforms: openArray[Matrix]) =
+  ## Draw multiple mesh instances with material and different transforms
+  drawMeshInstancedImpl(mesh, material, cast[ptr UncheckedArray[Matrix]](transforms),
+      transforms.len.int32)
+
+proc loadWave*(fileName: string): Wave =
+  ## Load wave data from file
+  result = loadWaveImpl(fileName.cstring)
+  if not isWaveReady(result): raiseRaylibError("Failed to load Wave from " & fileName)
+
+proc loadWaveFromMemory*(fileType: string; fileData: openArray[uint8]): Wave =
+  ## Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
+  result = loadWaveFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
+      fileData.len.int32)
+  if not isWaveReady(result): raiseRaylibError("Failed to load Wave from buffer")
+
+proc loadSound*(fileName: string): Sound =
+  ## Load sound from file
+  result = loadSoundImpl(fileName.cstring)
+  if not isSoundReady(result): raiseRaylibError("Failed to load Sound from " & fileName)
+
+proc loadSoundAlias*(source: Sound): SoundAlias =
+  ## Create a new sound that shares the same sample data as the source sound, does not own the sound data
+  result = SoundAlias(loadSoundAliasImpl(source))
+  if not isSoundReady(Sound(result)): raiseRaylibError("Failed to load SoundAlias from source")
+
+proc loadSoundFromWave*(wave: Wave): Sound =
+  ## Load sound from wave data
+  result = loadSoundFromWaveImpl(wave)
+  if not isSoundReady(result): raiseRaylibError("Failed to load Sound from Wave")
+
+proc updateSound*[T](sound: var Sound, data: openArray[T]) =
+  ## Update sound buffer with new data
+  updateSoundImpl(sound, cast[ptr UncheckedArray[T]](data), data.len.int32)
+
+proc loadMusicStream*(fileName: string): Music =
+  ## Load music stream from file
+  result = loadMusicStreamImpl(fileName.cstring)
+  if not isMusicReady(result): raiseRaylibError("Failed to load Music from " & fileName)
+
+proc loadMusicStreamFromMemory*(fileType: string; data: openArray[uint8]): Music =
+  ## Load music stream from data
+  result = loadMusicStreamFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
+      data.len.int32)
+  if not isMusicReady(result): raiseRaylibError("Failed to load Music from buffer")
+
+proc loadAudioStream*(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream =
+  ## Load audio stream (to stream raw audio pcm data)
+  result = loadAudioStreamImpl(sampleRate, sampleSize, channels)
+  if not isAudioStreamReady(result): raiseRaylibError("Failed to load AudioStream")
+
+proc updateAudioStream*[T](stream: var AudioStream, data: openArray[T]) =
+  ## Update audio stream buffers with data
+  updateAudioStreamImpl(stream, cast[ptr UncheckedArray[T]](data), data.len.int32)
+
+proc drawTextCodepoints*(font: Font; codepoints: openArray[Rune]; position: Vector2;
+    fontSize: float32; spacing: float32; tint: Color) =
+  ## Draw multiple character (codepoint)
+  drawTextCodepointsImpl(font, cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32,
+      position, fontSize, spacing, tint)
+
+proc loadModel*(fileName: string): Model =
+  ## Load model from files (meshes and materials)
+  result = loadModelImpl(fileName.cstring)
+  if not isModelReady(result): raiseRaylibError("Failed to load Model from " & fileName)
+
+proc loadModelFromMesh*(mesh: sink Mesh): Model =
+  ## Load model from generated mesh (default material)
+  result = loadModelFromMeshImpl(mesh)
+  wasMoved(mesh)
+  if not isModelReady(result): raiseRaylibError("Failed to load Model from Mesh")
+
+proc fade*(color: Color, alpha: float32): Color =
+  ## Get color with alpha applied, alpha goes from 0.0 to 1.0
+  let alpha = clamp(alpha, 0, 1)
+  Color(r: color.r, g: color.g, b: color.b, a: uint8(255*alpha))
+
+proc colorToInt*(color: Color): int32 =
+  ## Get hexadecimal value for a Color
+  int32((color.r.uint32 shl 24) or (color.g.uint32 shl 16) or (color.b.uint32 shl 8) or color.a.uint32)
+
+proc getColor*(hexValue: uint32): Color =
+  ## Get Color structure from hexadecimal value
+  result = Color(
+    r: uint8(hexValue shr 24 and 0xff),
+    g: uint8(hexValue shr 16 and 0xff),
+    b: uint8(hexValue shr 8 and 0xff),
+    a: uint8(hexValue and 0xff)
+  )
+
+template drawing*(body: untyped) =
+  ## Setup canvas (framebuffer) to start drawing
+  beginDrawing()
+  try:
+    body
+  finally:
+    endDrawing()
+
+template mode2D*(camera: Camera2D; body: untyped) =
+  ## 2D mode with custom camera (2D)
+  beginMode2D(camera)
+  try:
+    body
+  finally:
+    endMode2D()
+
+template mode3D*(camera: Camera3D; body: untyped) =
+  ## 3D mode with custom camera (3D)
+  beginMode3D(camera)
+  try:
+    body
+  finally:
+    endMode3D()
+
+template textureMode*(target: RenderTexture2D; body: untyped) =
+  ## Drawing to render texture
+  beginTextureMode(target)
+  try:
+    body
+  finally:
+    endTextureMode()
+
+template shaderMode*(shader: Shader; body: untyped) =
+  ## Custom shader drawing
+  beginShaderMode(shader)
+  try:
+    body
+  finally:
+    endShaderMode()
+
+template blendMode*(mode: BlendMode; body: untyped) =
+  ## Blending mode (alpha, additive, multiplied, subtract, custom)
+  beginBlendMode(mode)
+  try:
+    body
+  finally:
+    endBlendMode()
+
+template scissorMode*(x, y, width, height: int32; body: untyped) =
+  ## Scissor mode (define screen area for following drawing)
+  beginScissorMode(x, y, width, height)
+  try:
+    body
+  finally:
+    endScissorMode()
+
+template vrStereoMode*(config: VrStereoConfig; body: untyped) =
+  ## Stereo rendering (requires VR simulator)
+  beginVrStereoMode(config)
+  try:
+    body
+  finally:
+    endVrStereoMode()
