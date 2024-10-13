@@ -47,7 +47,8 @@ proc genApiJson(lib, prefix: string) =
 proc genWrapper(lib: string) =
   withDir(WrapperDir):
     let outp = PkgDir / "src" / (lib & ".nim")
-    exec /.toExe("naylib_wrapper") & " -c:" & lib & ".cfg -o:" & outp
+    let conf = "config" / (lib & ".cfg")
+    exec /.toExe("naylib_wrapper") & " -c:" & conf & " -o:" & outp
 
 proc wrapRaylib(lib, prefix: string) =
   genApiJson(lib, prefix)

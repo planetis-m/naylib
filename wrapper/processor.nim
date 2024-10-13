@@ -54,7 +54,7 @@ proc shouldMarkAsPrivate(module, name: string, config: ConfigData): bool =
   isPrivateSymbol(module, name, config)
 
 proc processEnums*(ctx: var ApiContext; config: ConfigData) =
-  proc removeCommonPrefixes(name: string, config: ConfigData): string =
+  proc removePrefixes(name: string, config: ConfigData): string =
     result = name
     for prefix in config.enumValuePrefixes:
       if result.startsWith(prefix):
@@ -68,7 +68,7 @@ proc processEnums*(ctx: var ApiContext; config: ConfigData) =
       removePrefix(enm.name, config.namespacePrefix)
 
     for val in mitems(enm.values):
-      val.name = removeCommonPrefixes(val.name, config).camelCaseAscii()
+      val.name = removePrefixes(val.name, config).camelCaseAscii()
 
 proc processAliases*(ctx: var ApiContext; config: ConfigData) =
   for alias in mitems(ctx.api.aliases):
