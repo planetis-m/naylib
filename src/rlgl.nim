@@ -41,31 +41,30 @@ type
     OpenglEs30 ## OpenGL ES 3.0 (GLSL 300 es)
 
   FramebufferAttachType* {.size: sizeof(int32).} = enum ## Framebuffer attachment type
-    AttachmentColorChannel0 ## Framebuffer attachment type: color 0
-    AttachmentColorChannel1 ## Framebuffer attachment type: color 1
-    AttachmentColorChannel2 ## Framebuffer attachment type: color 2
-    AttachmentColorChannel3 ## Framebuffer attachment type: color 3
-    AttachmentColorChannel4 ## Framebuffer attachment type: color 4
-    AttachmentColorChannel5 ## Framebuffer attachment type: color 5
-    AttachmentColorChannel6 ## Framebuffer attachment type: color 6
-    AttachmentColorChannel7 ## Framebuffer attachment type: color 7
-    AttachmentDepth = 100 ## Framebuffer attachment type: depth
-    AttachmentStencil = 200 ## Framebuffer attachment type: stencil
+    ColorChannel0 ## Framebuffer attachment type: color 0
+    ColorChannel1 ## Framebuffer attachment type: color 1
+    ColorChannel2 ## Framebuffer attachment type: color 2
+    ColorChannel3 ## Framebuffer attachment type: color 3
+    ColorChannel4 ## Framebuffer attachment type: color 4
+    ColorChannel5 ## Framebuffer attachment type: color 5
+    ColorChannel6 ## Framebuffer attachment type: color 6
+    ColorChannel7 ## Framebuffer attachment type: color 7
+    Depth = 100 ## Framebuffer attachment type: depth
+    Stencil = 200 ## Framebuffer attachment type: stencil
 
   FramebufferAttachTextureType* {.size: sizeof(int32).} = enum ## Framebuffer texture attachment type
-    AttachmentCubemapPositiveX ## Framebuffer texture attachment type: cubemap, +X side
-    AttachmentCubemapNegativeX ## Framebuffer texture attachment type: cubemap, -X side
-    AttachmentCubemapPositiveY ## Framebuffer texture attachment type: cubemap, +Y side
-    AttachmentCubemapNegativeY ## Framebuffer texture attachment type: cubemap, -Y side
-    AttachmentCubemapPositiveZ ## Framebuffer texture attachment type: cubemap, +Z side
-    AttachmentCubemapNegativeZ ## Framebuffer texture attachment type: cubemap, -Z side
-    AttachmentTexture2d = 100 ## Framebuffer texture attachment type: texture2d
-    AttachmentRenderbuffer = 200 ## Framebuffer texture attachment type: renderbuffer
+    CubemapPositiveX ## Framebuffer texture attachment type: cubemap, +X side
+    CubemapNegativeX ## Framebuffer texture attachment type: cubemap, -X side
+    CubemapPositiveY ## Framebuffer texture attachment type: cubemap, +Y side
+    CubemapNegativeY ## Framebuffer texture attachment type: cubemap, -Y side
+    CubemapPositiveZ ## Framebuffer texture attachment type: cubemap, +Z side
+    CubemapNegativeZ ## Framebuffer texture attachment type: cubemap, -Z side
+    Texture2d = 100 ## Framebuffer texture attachment type: texture2d
+    Renderbuffer = 200 ## Framebuffer texture attachment type: renderbuffer
 
   CullMode* {.size: sizeof(int32).} = enum ## Face culling mode
-    CullFaceFront
-    CullFaceBack
-
+    FaceFront
+    FaceBack
 
   TextureParameter* {.size: sizeof(int32).} = enum ## Texture parameters (equivalent to OpenGL defines)
     FilterNearest = 0x2600 ## GL_NEAREST

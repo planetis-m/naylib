@@ -1,4 +1,3 @@
-
   TextureParameter* {.size: sizeof(int32).} = enum ## Texture parameters (equivalent to OpenGL defines)
     FilterNearest = 0x2600 ## GL_NEAREST
     FilterLinear = 0x2601 ## GL_LINEAR
