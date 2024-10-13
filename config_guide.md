@@ -168,6 +168,10 @@ UpdateTextureRec
 GetPixelColor
 ```
 
+The C function will be made private and suffixed with `Impl`
+to prevent naming clashes. You can insert your wrapped function
+using the `afterFuncs` option.
+
 #### FunctionOverloads and FuncOverloadSuffixes
 
 Handle function overloading:
@@ -186,6 +190,8 @@ UpdateCameraPro
 DrawPixelV
 DrawLineV
 ```
+
+The suffixes are removed in the order they appear.
 
 #### NoSideEffectsFuncs
 
@@ -242,4 +248,4 @@ KEY_
 MOUSE_CURSOR_
 ```
 
-The prefixes are removed in the order they appear:
+The prefixes are removed in the order they appear.

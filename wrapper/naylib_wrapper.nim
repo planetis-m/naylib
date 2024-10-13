@@ -33,7 +33,7 @@ proc main =
   var
     outputpath, configpath = ""
   if not parseCommandLine(outputpath, configpath):
-    quit "Usage: naylib-parser  --config:<config_file> --output:<output_file>"
+    quit "Usage: naylib-parser --config:<config_file> --output:<output_file>"
 
   let config = parseConfig(configpath)
   var ctx = ApiContext(api: parseApi(config.apiDefinition))
