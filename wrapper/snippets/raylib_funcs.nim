@@ -304,6 +304,10 @@ proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, 
   result.texture = loadTextureFromImage(atlas)
   if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
 
+proc loadAutomationEventList*(fileName: string): AutomationEventList =
+  ## Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
+  loadAutomationEventListImpl(if fileName.len == 0: nil else: fileName.cstring)
+
 proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out RArray[Rectangle]; fontSize: int32;
     padding: int32; packMethod: int32): Image =
   ## Generate image font atlas using chars info
