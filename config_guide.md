@@ -1,4 +1,4 @@
-# naylib-wrapper Contributor's Guide
+# naylib-wrapper Configuration Guide
 
 naylib-wrapper is a tool for generating Nim wrappers for raylib projects using the JSON output of raylib-parser. This guide will walk you through the process of using naylib-wrapper effectively.
 

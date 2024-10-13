@@ -57,6 +57,8 @@ Here are quick links to some important sections:
 - [Building for Android](advanced_usage.md#building-for-android) - Step-by-step guide for Android development
 - [Raylib Functions to Nim Alternatives](alternatives_table.rst) - Find Nim equivalents for raylib functions
 
+Check out the wrapper's [Configuration Guide](config_guide.md) for detailed information on how to use and contribute to naylib-wrapper.
+
 ## Platform Support
 
 | Target           | Windows           | Linux             | macOS             |
@@ -99,7 +101,7 @@ visit [awesome-nim](https://github.com/ringabout/awesome-nim#game-development).
 ## Contributing
 
 We welcome contributions! Whether it's bug reports, feature requests, or code contributions,
-please feel free to engage with our project. For detailed guidelines on how to contribute, please refer to our [Contributor's Guide](contributors_guide.md).
+please feel free to engage with our project.
 
 ## License
 
