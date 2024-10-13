@@ -99,7 +99,7 @@ visit [awesome-nim](https://github.com/ringabout/awesome-nim#game-development).
 ## Contributing
 
 We welcome contributions! Whether it's bug reports, feature requests, or code contributions,
-please feel free to engage with our project.
+please feel free to engage with our project. For detailed guidelines on how to contribute, please refer to our [Contributor's Guide](contributors_guide.md).
 
 ## License
 
