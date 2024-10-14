@@ -64,8 +64,9 @@ Several sections control how different types are handled.
 The syntax for defining keys is as follows:
 
 - functionName/parameterName: For function parameters.
-- objectName/fieldName: For struct fields.
 - functionName: For return types.
+- objectName/fieldName: For struct fields.
+- objectName: For structs.
 
 #### OutParameters
 
@@ -209,6 +210,8 @@ IsSoundReady
 IsMaterialReady
 ```
 
+All other functions are assumed to have side effects.
+
 ### Special Cases
 
 #### MangledSymbols
@@ -228,13 +231,15 @@ This requires manual modifications to the C source files.
 
 #### IncompleteStructs
 
-Defines opaque types without the `completeStruct` pragma:
+Defines opaque types with the `inCompleteStruct` pragma:
 
 ```ini
 [IncompleteStructs]
 rAudioBuffer
 rAudioProcessor
 ```
+
+All other types are assumed to be complete structs.
 
 #### EnumValuePrefixes
 
@@ -249,3 +254,17 @@ MOUSE_CURSOR_
 ```
 
 The prefixes are removed in the order they appear.
+
+### Misc
+
+#### KeepNamespacePrefix
+
+The symbols defined in this section will not be altered by `namespacePrefix`.
+
+```ini
+[ KeepNamespacePrefix ]
+rlBegin
+rlEnd
+rlglInit
+rlglClose
+```
