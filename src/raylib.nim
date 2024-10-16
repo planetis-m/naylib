@@ -937,8 +937,8 @@ proc loadVrStereoConfig*(device: VrDeviceInfo): VrStereoConfig {.importc: "LoadV
 proc unloadVrStereoConfig(config: VrStereoConfig) {.importc: "UnloadVrStereoConfig", sideEffect.}
 proc loadShaderImpl(vsFileName: cstring, fsFileName: cstring): Shader {.importc: "LoadShader", sideEffect.}
 proc loadShaderFromMemoryImpl(vsCode: cstring, fsCode: cstring): Shader {.importc: "LoadShaderFromMemory", sideEffect.}
-func isShaderReady*(shader: Shader): bool {.importc: "IsShaderReady".}
-  ## Check if a shader is ready
+func isShaderValid*(shader: Shader): bool {.importc: "IsShaderValid".}
+  ## Check if a shader is valid (loaded on GPU)
 proc getShaderLocationImpl(shader: Shader, uniformName: cstring): ShaderLocation {.importc: "GetShaderLocation", sideEffect.}
 proc getShaderLocationAttribImpl(shader: Shader, attribName: cstring): ShaderLocation {.importc: "GetShaderLocationAttrib", sideEffect.}
 proc setShaderValueImpl(shader: Shader, locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType) {.importc: "SetShaderValue", sideEffect.}
@@ -1240,8 +1240,8 @@ proc loadImageFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uin
 proc loadImageFromTextureImpl(texture: Texture2D): Image {.importc: "LoadImageFromTexture", sideEffect.}
 proc loadImageFromScreen*(): Image {.importc: "LoadImageFromScreen", sideEffect.}
   ## Load image from screen buffer and (screenshot)
-func isImageReady*(image: Image): bool {.importc: "IsImageReady".}
-  ## Check if an image is ready
+func isImageValid*(image: Image): bool {.importc: "IsImageValid".}
+  ## Check if an image is valid (data and parameters)
 proc unloadImage(image: Image) {.importc: "UnloadImage", sideEffect.}
 proc exportImageImpl(image: Image, fileName: cstring): bool {.importc: "ExportImage", sideEffect.}
 proc exportImageToMemoryImpl(image: Image, fileType: cstring, fileSize: ptr int32): ptr uint8 {.importc: "ExportImageToMemory", sideEffect.}
@@ -1370,11 +1370,11 @@ proc loadTextureImpl(fileName: cstring): Texture2D {.importc: "LoadTexture", sid
 proc loadTextureFromImageImpl(image: Image): Texture2D {.importc: "LoadTextureFromImage", sideEffect.}
 proc loadTextureCubemapImpl(image: Image, layout: CubemapLayout): TextureCubemap {.importc: "LoadTextureCubemap", sideEffect.}
 proc loadRenderTextureImpl(width: int32, height: int32): RenderTexture2D {.importc: "LoadRenderTexture", sideEffect.}
-func isTextureReady*(texture: Texture2D): bool {.importc: "IsTextureReady".}
-  ## Check if a texture is ready
+func isTextureValid*(texture: Texture2D): bool {.importc: "IsTextureValid".}
+  ## Check if a texture is valid (loaded in GPU)
 proc unloadTexture(texture: Texture2D) {.importc: "UnloadTexture", sideEffect.}
-func isRenderTextureReady*(target: RenderTexture2D): bool {.importc: "IsRenderTextureReady".}
-  ## Check if a render texture is ready
+func isRenderTextureValid*(target: RenderTexture2D): bool {.importc: "IsRenderTextureValid".}
+  ## Check if a render texture is valid (loaded in GPU)
 proc unloadRenderTexture(target: RenderTexture2D) {.importc: "UnloadRenderTexture", sideEffect.}
 proc updateTextureImpl(texture: Texture2D, pixels: pointer) {.importc: "UpdateTexture", sideEffect.}
 proc updateTextureImpl(texture: Texture2D, rec: Rectangle, pixels: pointer) {.importc: "UpdateTextureRec", sideEffect.}
@@ -1426,8 +1426,8 @@ proc loadFontImpl(fileName: cstring): Font {.importc: "LoadFont", sideEffect.}
 proc loadFontImpl(fileName: cstring, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontEx", sideEffect.}
 proc loadFontFromImageImpl(image: Image, key: Color, firstChar: int32): Font {.importc: "LoadFontFromImage", sideEffect.}
 proc loadFontFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontFromMemory", sideEffect.}
-func isFontReady*(font: Font): bool {.importc: "IsFontReady".}
-  ## Check if a font is ready
+func isFontValid*(font: Font): bool {.importc: "IsFontValid".}
+  ## Check if a font is valid (font data loaded, WARNING: GPU texture not checked)
 proc loadFontDataImpl(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData", sideEffect.}
 func genImageFontAtlasImpl(glyphs: ptr UncheckedArray[GlyphInfo], glyphRecs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
 proc unloadFont(font: Font) {.importc: "UnloadFont", sideEffect.}
@@ -1493,8 +1493,8 @@ proc drawGrid*(slices: int32, spacing: float32) {.importc: "DrawGrid", sideEffec
   ## Draw a grid (centered at (0, 0, 0))
 proc loadModelImpl(fileName: cstring): Model {.importc: "LoadModel", sideEffect.}
 proc loadModelFromMeshImpl(mesh: Mesh): Model {.importc: "LoadModelFromMesh", sideEffect.}
-func isModelReady*(model: Model): bool {.importc: "IsModelReady".}
-  ## Check if a model is ready
+func isModelValid*(model: Model): bool {.importc: "IsModelValid".}
+  ## Check if a model is valid (loaded in GPU, VAO/VBOs)
 proc unloadModel(model: Model) {.importc: "UnloadModel", sideEffect.}
 proc getModelBoundingBox*(model: Model): BoundingBox {.importc: "GetModelBoundingBox", sideEffect.}
   ## Compute model bounding box limits (considers all meshes)
@@ -1556,8 +1556,8 @@ proc genMeshCubicmap*(cubicmap: Image, cubeSize: Vector3): Mesh {.importc: "GenM
 proc loadMaterialsImpl(fileName: cstring, materialCount: ptr int32): ptr UncheckedArray[Material] {.importc: "LoadMaterials", sideEffect.}
 proc loadMaterialDefault*(): Material {.importc: "LoadMaterialDefault", sideEffect.}
   ## Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
-func isMaterialReady*(material: Material): bool {.importc: "IsMaterialReady".}
-  ## Check if a material is ready
+func isMaterialValid*(material: Material): bool {.importc: "IsMaterialValid".}
+  ## Check if a material is valid (shader assigned, map textures loaded in GPU)
 proc unloadMaterial(material: Material) {.importc: "UnloadMaterial", sideEffect.}
 proc loadModelAnimationsImpl(fileName: cstring, animCount: ptr int32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations", sideEffect.}
 proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation", sideEffect.}
@@ -1595,13 +1595,13 @@ proc getMasterVolume*(): float32 {.importc: "GetMasterVolume", sideEffect.}
   ## Get master volume (listener)
 proc loadWaveImpl(fileName: cstring): Wave {.importc: "LoadWave", sideEffect.}
 proc loadWaveFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32): Wave {.importc: "LoadWaveFromMemory", sideEffect.}
-func isWaveReady*(wave: Wave): bool {.importc: "IsWaveReady".}
-  ## Checks if wave data is ready
+func isWaveValid*(wave: Wave): bool {.importc: "IsWaveValid".}
+  ## Checks if wave data is valid (data loaded and parameters)
 proc loadSoundImpl(fileName: cstring): Sound {.importc: "LoadSound", sideEffect.}
 proc loadSoundFromWaveImpl(wave: Wave): Sound {.importc: "LoadSoundFromWave", sideEffect.}
 proc loadSoundAliasImpl(source: Sound): Sound {.importc: "LoadSoundAlias", sideEffect.}
-func isSoundReady*(sound: Sound): bool {.importc: "IsSoundReady".}
-  ## Checks if a sound is ready
+func isSoundValid*(sound: Sound): bool {.importc: "IsSoundValid".}
+  ## Checks if a sound is valid (data loaded and buffers initialized)
 proc updateSoundImpl(sound: Sound, data: pointer, sampleCount: int32) {.importc: "UpdateSound", sideEffect.}
 proc unloadWave(wave: Wave) {.importc: "UnloadWave", sideEffect.}
 proc unloadSound(sound: Sound) {.importc: "UnloadSound", sideEffect.}
@@ -1633,8 +1633,8 @@ func waveFormat*(wave: var Wave, sampleRate: int32, sampleSize: int32, channels:
 proc loadWaveSamplesImpl(wave: Wave): ptr UncheckedArray[float32] {.importc: "LoadWaveSamples", sideEffect.}
 proc loadMusicStreamImpl(fileName: cstring): Music {.importc: "LoadMusicStream", sideEffect.}
 proc loadMusicStreamFromMemoryImpl(fileType: cstring, data: ptr UncheckedArray[uint8], dataSize: int32): Music {.importc: "LoadMusicStreamFromMemory", sideEffect.}
-func isMusicReady*(music: Music): bool {.importc: "IsMusicReady".}
-  ## Checks if a music stream is ready
+func isMusicValid*(music: Music): bool {.importc: "IsMusicValid".}
+  ## Checks if a music stream is valid (context and buffers initialized)
 proc unloadMusicStream(music: Music) {.importc: "UnloadMusicStream", sideEffect.}
 proc playMusicStream*(music: Music) {.importc: "PlayMusicStream", sideEffect.}
   ## Start music playing
@@ -1661,8 +1661,8 @@ func getMusicTimeLength*(music: Music): float32 {.importc: "GetMusicTimeLength".
 proc getMusicTimePlayed*(music: Music): float32 {.importc: "GetMusicTimePlayed", sideEffect.}
   ## Get current music time played (in seconds)
 proc loadAudioStreamImpl(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream {.importc: "LoadAudioStream", sideEffect.}
-func isAudioStreamReady*(stream: AudioStream): bool {.importc: "IsAudioStreamReady".}
-  ## Checks if an audio stream is ready
+func isAudioStreamValid*(stream: AudioStream): bool {.importc: "IsAudioStreamValid".}
+  ## Checks if an audio stream is valid (buffers initialized)
 proc unloadAudioStream(stream: AudioStream) {.importc: "UnloadAudioStream", sideEffect.}
 proc updateAudioStreamImpl(stream: AudioStream, data: pointer, frameCount: int32) {.importc: "UpdateAudioStream", sideEffect.}
 proc isAudioStreamProcessed*(stream: AudioStream): bool {.importc: "IsAudioStreamProcessed", sideEffect.}
@@ -2584,34 +2584,34 @@ proc loadMaterials*(fileName: string): RArray[Material] =
 proc loadImage*(fileName: string): Image =
   ## Load image from file into CPU memory (RAM)
   result = loadImageImpl(fileName.cstring)
-  if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
+  if not isImageValid(result): raiseRaylibError("Failed to load Image from " & fileName)
 
 proc loadImageRaw*(fileName: string, width, height: int32, format: PixelFormat, headerSize: int32): Image =
   ## Load image sequence from file (frames appended to image.data)
   result = loadImageRawImpl(fileName.cstring, width, height, format, headerSize)
-  if not isImageReady(result): raiseRaylibError("Failed to load Image from " & fileName)
+  if not isImageValid(result): raiseRaylibError("Failed to load Image from " & fileName)
 
 proc loadImageAnim*(fileName: string, frames: out int32): Image =
   ## Load image sequence from file (frames appended to image.data)
   result = loadImageAnimImpl(fileName.cstring, frames)
-  if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from " & fileName)
+  if not isImageValid(result): raiseRaylibError("Failed to load Image sequence from " & fileName)
 
 proc loadImageAnimFromMemory*(fileType: string, fileData: openArray[uint8], frames: openArray[int32]): Image =
   ## Load image sequence from memory buffer
   result = loadImageAnimFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32, cast[ptr UncheckedArray[int32]](frames))
-  if not isImageReady(result): raiseRaylibError("Failed to load Image sequence from buffer")
+  if not isImageValid(result): raiseRaylibError("Failed to load Image sequence from buffer")
 
 proc loadImageFromMemory*(fileType: string; fileData: openArray[uint8]): Image =
   ## Load image from memory buffer, fileType refers to extension: i.e. '.png'
   result = loadImageFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
-  if not isImageReady(result): raiseRaylibError("Failed to load Image from buffer")
+  if not isImageValid(result): raiseRaylibError("Failed to load Image from buffer")
 
 proc loadImageFromTexture*(texture: Texture2D): Image =
   ## Load image from GPU texture data
   result = loadImageFromTextureImpl(texture)
-  if not isImageReady(result): raiseRaylibError("Failed to load Image from Texture")
+  if not isImageValid(result): raiseRaylibError("Failed to load Image from Texture")
 
 proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
   ## Export image to memory buffer
@@ -2640,27 +2640,27 @@ proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: 
   let image = Image(data: cast[pointer](pixels), width: width, height: height,
       format: kind(T), mipmaps: 1).WeakImage
   result = loadTextureFromImageImpl(image.Image)
-  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from buffer")
+  if not isTextureValid(result): raiseRaylibError("Failed to load Texture from buffer")
 
 proc loadTexture*(fileName: string): Texture2D =
   ## Load texture from file into GPU memory (VRAM)
   result = loadTextureImpl(fileName.cstring)
-  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from " & fileName)
+  if not isTextureValid(result): raiseRaylibError("Failed to load Texture from " & fileName)
 
 proc loadTextureFromImage*(image: Image): Texture2D =
   ## Load texture from image data
   result = loadTextureFromImageImpl(image)
-  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from Image")
+  if not isTextureValid(result): raiseRaylibError("Failed to load Texture from Image")
 
 proc loadTextureCubemap*(image: Image, layout: CubemapLayout): TextureCubemap =
   ## Load cubemap from image, multiple image cubemap layouts supported
   result = loadTextureCubemapImpl(image, layout)
-  if not isTextureReady(result): raiseRaylibError("Failed to load Texture from Cubemap")
+  if not isTextureValid(result): raiseRaylibError("Failed to load Texture from Cubemap")
 
 proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
   ## Load texture for rendering (framebuffer)
   result = loadRenderTextureImpl(width, height)
-  if not isRenderTextureReady(result): raiseRaylibError("Failed to load RenderTexture")
+  if not isRenderTextureValid(result): raiseRaylibError("Failed to load RenderTexture")
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   ## Update GPU texture with new data
@@ -2703,22 +2703,22 @@ proc loadFontData*(fileData: openArray[uint8]; fontSize, glyphCount: int32;
 proc loadFont*(fileName: string): Font =
   ## Load font from file into GPU memory (VRAM)
   result = loadFontImpl(fileName.cstring)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
+  if not isFontValid(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFont*(fileName: string; fontSize: int32; codepoints: openArray[int32]): Font =
   ## Load font from file with extended parameters, use an empty array for codepoints to load the default character set
   result = loadFontImpl(fileName.cstring, fontSize,
       if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
+  if not isFontValid(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFont*(fileName: string; fontSize, glyphCount: int32): Font =
   result = loadFontImpl(fileName.cstring, fontSize, nil, glyphCount)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from " & fileName)
+  if not isFontValid(result): raiseRaylibError("Failed to load Font from " & fileName)
 
 proc loadFontFromImage*(image: Image, key: Color, firstChar: int32): Font =
   ## Load font from Image (XNA style)
   result = loadFontFromImageImpl(image, key, firstChar)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
+  if not isFontValid(result): raiseRaylibError("Failed to load Font from Image")
 
 proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
     codepoints: openArray[int32]): Font =
@@ -2726,13 +2726,13 @@ proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize:
   result = loadFontFromMemoryImpl(fileType.cstring,
       cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32, fontSize,
       if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
+  if not isFontValid(result): raiseRaylibError("Failed to load Font from buffer")
 
 proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize: int32;
     glyphCount: int32): Font =
   result = loadFontFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32, fontSize, nil, glyphCount)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from buffer")
+  if not isFontValid(result): raiseRaylibError("Failed to load Font from buffer")
 
 proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, packMethod: int32): Font =
   ## Load font using chars info
@@ -2743,7 +2743,7 @@ proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, 
   let atlas = genImageFontAtlasImpl(result.glyphs, addr result.recs, result.glyphCount, baseSize,
       padding, packMethod)
   result.texture = loadTextureFromImage(atlas)
-  if not isFontReady(result): raiseRaylibError("Failed to load Font from Image")
+  if not isFontValid(result): raiseRaylibError("Failed to load Font from Image")
 
 proc loadAutomationEventList*(fileName: string): AutomationEventList =
   ## Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
@@ -2769,28 +2769,28 @@ proc drawMeshInstanced*(mesh: Mesh; material: Material; transforms: openArray[Ma
 proc loadWave*(fileName: string): Wave =
   ## Load wave data from file
   result = loadWaveImpl(fileName.cstring)
-  if not isWaveReady(result): raiseRaylibError("Failed to load Wave from " & fileName)
+  if not isWaveValid(result): raiseRaylibError("Failed to load Wave from " & fileName)
 
 proc loadWaveFromMemory*(fileType: string; fileData: openArray[uint8]): Wave =
   ## Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
   result = loadWaveFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](fileData),
       fileData.len.int32)
-  if not isWaveReady(result): raiseRaylibError("Failed to load Wave from buffer")
+  if not isWaveValid(result): raiseRaylibError("Failed to load Wave from buffer")
 
 proc loadSound*(fileName: string): Sound =
   ## Load sound from file
   result = loadSoundImpl(fileName.cstring)
-  if not isSoundReady(result): raiseRaylibError("Failed to load Sound from " & fileName)
+  if not isSoundValid(result): raiseRaylibError("Failed to load Sound from " & fileName)
 
 proc loadSoundAlias*(source: Sound): SoundAlias =
   ## Create a new sound that shares the same sample data as the source sound, does not own the sound data
   result = SoundAlias(loadSoundAliasImpl(source))
-  if not isSoundReady(Sound(result)): raiseRaylibError("Failed to load SoundAlias from source")
+  if not isSoundValid(Sound(result)): raiseRaylibError("Failed to load SoundAlias from source")
 
 proc loadSoundFromWave*(wave: Wave): Sound =
   ## Load sound from wave data
   result = loadSoundFromWaveImpl(wave)
-  if not isSoundReady(result): raiseRaylibError("Failed to load Sound from Wave")
+  if not isSoundValid(result): raiseRaylibError("Failed to load Sound from Wave")
 
 proc updateSound*[T](sound: var Sound, data: openArray[T]) =
   ## Update sound buffer with new data
@@ -2799,18 +2799,18 @@ proc updateSound*[T](sound: var Sound, data: openArray[T]) =
 proc loadMusicStream*(fileName: string): Music =
   ## Load music stream from file
   result = loadMusicStreamImpl(fileName.cstring)
-  if not isMusicReady(result): raiseRaylibError("Failed to load Music from " & fileName)
+  if not isMusicValid(result): raiseRaylibError("Failed to load Music from " & fileName)
 
 proc loadMusicStreamFromMemory*(fileType: string; data: openArray[uint8]): Music =
   ## Load music stream from data
   result = loadMusicStreamFromMemoryImpl(fileType.cstring, cast[ptr UncheckedArray[uint8]](data),
       data.len.int32)
-  if not isMusicReady(result): raiseRaylibError("Failed to load Music from buffer")
+  if not isMusicValid(result): raiseRaylibError("Failed to load Music from buffer")
 
 proc loadAudioStream*(sampleRate: uint32, sampleSize: uint32, channels: uint32): AudioStream =
   ## Load audio stream (to stream raw audio pcm data)
   result = loadAudioStreamImpl(sampleRate, sampleSize, channels)
-  if not isAudioStreamReady(result): raiseRaylibError("Failed to load AudioStream")
+  if not isAudioStreamValid(result): raiseRaylibError("Failed to load AudioStream")
 
 proc updateAudioStream*[T](stream: var AudioStream, data: openArray[T]) =
   ## Update audio stream buffers with data
@@ -2825,13 +2825,13 @@ proc drawTextCodepoints*(font: Font; codepoints: openArray[Rune]; position: Vect
 proc loadModel*(fileName: string): Model =
   ## Load model from files (meshes and materials)
   result = loadModelImpl(fileName.cstring)
-  if not isModelReady(result): raiseRaylibError("Failed to load Model from " & fileName)
+  if not isModelValid(result): raiseRaylibError("Failed to load Model from " & fileName)
 
 proc loadModelFromMesh*(mesh: sink Mesh): Model =
   ## Load model from generated mesh (default material)
   result = loadModelFromMeshImpl(mesh)
   wasMoved(mesh)
-  if not isModelReady(result): raiseRaylibError("Failed to load Model from Mesh")
+  if not isModelValid(result): raiseRaylibError("Failed to load Model from Mesh")
 
 proc fade*(color: Color, alpha: float32): Color =
   ## Get color with alpha applied, alpha goes from 0.0 to 1.0
