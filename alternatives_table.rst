@@ -86,6 +86,8 @@ CompressData       zippy.compress        External package
 DecompressData     zippy.decompress
 EncodeDataBase64   base64.encode
 DecodeDataBase64   base64.decode
+ComputeCRC32       crunchy.crc32         External package
+ComputeMD5         checksums.md5         External package
 ================== ===================== ================
 
 Misc
