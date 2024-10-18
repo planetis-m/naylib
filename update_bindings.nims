@@ -36,13 +36,14 @@ proc buildWrapper() =
     # if not fileExists(exe) or fileNewer(src, exe):
     exec "nim c --mm:arc --panics:on -d:release -d:emiLenient " & src
 
-proc genApiJson(lib, prefix: string) =
+proc genApiJson(lib, prefix, after: string) =
   withDir(ParserDir):
     mkDir(ApiDir)
     let header = RaylibDir / "src" / (lib & ".h")
     let apiJson = ApiDir / (lib & ".json")
     let prefixArg = if prefix != "": "-d " & prefix else: ""
-    exec /.toExe("raylib_parser") & " -f JSON " & prefixArg & " -i " & header.quoteShell & " -o " & apiJson.quoteShell
+    exec /.toExe("raylib_parser") & " -f JSON " & prefixArg & " -i " & header.quoteShell &
+        " -t " & after.quoteShell & " -o " & apiJson.quoteShell
 
 proc genWrapper(lib: string) =
   withDir(WrapperDir):
@@ -50,8 +51,8 @@ proc genWrapper(lib: string) =
     let conf = "config" / (lib & ".cfg")
     exec /.toExe("naylib_wrapper") & " -c:" & conf & " -o:" & outp
 
-proc wrapRaylib(lib, prefix: string) =
-  genApiJson(lib, prefix)
+proc wrapRaylib(lib, prefix, after: string) =
+  genApiJson(lib, prefix, after)
   genWrapper(lib)
 
 task buildTools, "Build raylib_parser and naylib_wrapper":
@@ -60,9 +61,9 @@ task buildTools, "Build raylib_parser and naylib_wrapper":
 
 task genApi, "Generate API JSON files":
   buildParser()
-  genApiJson("raylib", "RLAPI")
-  # genApiJson("raymath", "RMAPI")
-  genApiJson("rlgl", "")
+  genApiJson("raylib", "RLAPI", "")
+  # genApiJson("raymath", "RMAPI", "")
+  genApiJson("rlgl", "", "#endif // RLGL_H")
 
 task genWrappers, "Generate Nim wrappers":
   genWrapper("raylib")
@@ -80,9 +81,9 @@ task update, "Update the raylib git directory":
 
 task wrap, "Produce all raylib Nim wrappers":
   buildToolsTask()
-  wrapRaylib("raylib", "RLAPI")
-  # wrapRaylib("raymath", "RMAPI")
-  wrapRaylib("rlgl", "")
+  wrapRaylib("raylib", "RLAPI", "")
+  # wrapRaylib("raymath", "RMAPI", "")
+  wrapRaylib("rlgl", "", "#endif // RLGL_H")
 
 task docs, "Generate documentation":
   withDir(PkgDir):
