@@ -43,6 +43,14 @@ func one*(_: typedesc[Vector2]): Vector2 {.inline.} =
   ## Vector with components value 1'f32
   result = Vector2(x: 1, y: 1)
 
+func unitX*(_: typedesc[Vector2]): Vector2 {.inline.} =
+  ## Unit vector along X axis
+  result = Vector2(x: 1, y: 0)
+
+func unitY*(_: typedesc[Vector2]): Vector2 {.inline.} =
+  ## Unit vector along Y axis
+  result = Vector2(x: 0, y: 1)
+
 func equals*(p, q: Vector2, tol = 1.0e-6'f32): bool {.inline.} =
   ## Check whether two given vectors are almost equal
   result = abs(p.x - q.x) <= tol * max(1'f32, max(abs(p.x), abs(q.x))) and
@@ -232,6 +240,18 @@ func zero*(_: typedesc[Vector3]): Vector3 {.inline.} =
 func one*(_: typedesc[Vector3]): Vector3 {.inline.} =
   ## Vector with components value 1'f32
   result = Vector3(x: 1, y: 1, z: 1)
+
+func unitX*(_: typedesc[Vector3]): Vector3 {.inline.} =
+  ## Unit vector along X axis
+  result = Vector3(x: 1, y: 0, z: 0)
+
+func unitY*(_: typedesc[Vector3]): Vector3 {.inline.} =
+  ## Unit vector along Y axis
+  result = Vector3(x: 0, y: 1, z: 0)
+
+func unitZ*(_: typedesc[Vector3]): Vector3 {.inline.} =
+  ## Unit vector along Z axis
+  result = Vector3(x: 0, y: 0, z: 1)
 
 func equals*(p, q: Vector3, tol = 1.0e-6'f32): bool {.inline.} =
   ## Check whether two given vectors are almost equal
@@ -654,7 +674,23 @@ func zero*(_: typedesc[Vector4]): Vector4 {.inline.} =
 
 func one*(_: typedesc[Vector4]): Vector4 {.inline.} =
   ## Vector with components value 1'f32
-  result = Vector2(x: 1, y: 1, z: 1, w: 1)
+  result = Vector4(x: 1, y: 1, z: 1, w: 1)
+
+func unitX*(_: typedesc[Vector4]): Vector4 {.inline.} =
+  ## Unit vector along X axis
+  result = Vector4(x: 1, y: 0, z: 0, w: 0)
+
+func unitY*(_: typedesc[Vector4]): Vector4 {.inline.} =
+  ## Unit vector along Y axis
+  result = Vector4(x: 0, y: 1, z: 0, w: 0)
+
+func unitZ*(_: typedesc[Vector4]): Vector4 {.inline.} =
+  ## Unit vector along Z axis
+  result = Vector4(x: 0, y: 0, z: 1, w: 0)
+
+func unitW*(_: typedesc[Vector4]): Vector4 {.inline.} =
+  ## Unit vector along W axis
+  result = Vector4(x: 0, y: 0, z: 0, w: 1)
 
 func equals*(p, q: Vector4, tol = 1.0e-6'f32): bool {.inline.} =
   ## Check whether two given quaternions are almost equal
