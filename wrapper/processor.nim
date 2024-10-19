@@ -57,7 +57,8 @@ proc processEnums*(ctx: var ApiContext; config: ConfigData) =
   proc removePrefixes(name: string, config: ConfigData): string =
     result = name
     for prefix in config.enumValuePrefixes:
-      if result.startsWith(prefix):
+      if result.startsWith(prefix) and
+          not isDigit(result[prefix.len]):
         result.removePrefix(prefix)
         break
 
