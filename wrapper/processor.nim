@@ -44,11 +44,11 @@ proc shouldRemoveNamespacePrefix(name: string, config: ConfigData): bool =
 proc shouldMarkAsMangled(name: string, config: ConfigData): bool =
   name in config.mangledSymbols
 
+proc shouldMarkAsDistinct(name: string, config: ConfigData): bool =
+  name in config.distinctAliases
+
 proc shouldMarkAsComplete(name: string, config: ConfigData): bool =
   name notin config.incompleteStructs
-
-proc shouldMarkAsDistinct(name: string, config: ConfigData): bool =
-  name notin config.distinctAliases
 
 proc shouldMarkAsPrivate(name: string, config: ConfigData): bool =
   isPrivateSymbol(name, config)
