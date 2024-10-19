@@ -69,7 +69,7 @@ type
     ptArray
     ptOpenArray
 
-proc convertPointerType(s: string, pointerType: PointerType): string =
+proc convertPointerType(s: sink string, pointerType: PointerType): string =
   result = s
   if result.contains('*'):
     let pointerDepth = result.count('*')
@@ -90,7 +90,7 @@ proc convertPointerType(s: string, pointerType: PointerType): string =
       result = "openArray[" & result & "]"
     else: discard
 
-proc convertArrayType(s: string, pointerType: PointerType): string =
+proc convertArrayType(s: sink string, pointerType: PointerType): string =
   result = s
   if result.endsWith(']'):
     let openBracket = result.find('[')
