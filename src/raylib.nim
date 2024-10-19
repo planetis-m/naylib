@@ -715,11 +715,11 @@ type
     count: uint32 ## Events entries count
     events: ptr UncheckedArray[AutomationEvent] ## Events entries
 
-  Quaternion* {.borrow: `.`.} = distinct Vector4 ## Quaternion, 4 components (Vector4 alias)
-  Texture2D* = Texture ## Texture2D, same as Texture
-  TextureCubemap* = Texture ## TextureCubemap, same as Texture
-  RenderTexture2D* = RenderTexture ## RenderTexture2D, same as RenderTexture
-  Camera* = Camera3D ## Camera type fallback, defaults to Camera3D
+  Quaternion* = Vector4 ## Quaternion, 4 components (Vector4 alias)
+  Texture2D* {.borrow: `.`.} = distinct Texture ## Texture2D, same as Texture
+  TextureCubemap* {.borrow: `.`.} = distinct Texture ## TextureCubemap, same as Texture
+  RenderTexture2D* {.borrow: `.`.} = distinct RenderTexture ## RenderTexture2D, same as RenderTexture
+  Camera* {.borrow: `.`.} = distinct Camera3D ## Camera type fallback, defaults to Camera3D
   FontRecs* = distinct Font
   FontGlyphs* = distinct Font
   MeshVertices* = distinct Mesh

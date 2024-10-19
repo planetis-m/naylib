@@ -47,6 +47,9 @@ proc shouldMarkAsMangled(name: string, config: ConfigData): bool =
 proc shouldMarkAsComplete(name: string, config: ConfigData): bool =
   name notin config.incompleteStructs
 
+proc shouldMarkAsDistinct(name: string, config: ConfigData): bool =
+  name notin config.distinctAliases
+
 proc shouldMarkAsPrivate(name: string, config: ConfigData): bool =
   isPrivateSymbol(name, config)
 
@@ -73,7 +76,7 @@ proc processEnums*(ctx: var ApiContext; config: ConfigData) =
 
 proc processAliases*(ctx: var ApiContext; config: ConfigData) =
   for alias in mitems(ctx.api.aliases):
-    if alias.name == "Quaternion":
+    if shouldMarkAsDistinct(alias.name, config):
       alias.flags.incl isDistinct
 
 proc preprocessStructs(ctx: var ApiContext, config: ConfigData) =

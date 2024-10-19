@@ -19,6 +19,7 @@ type
     noSideEffectsFuncs*: HashSet[string]
     mangledSymbols*: HashSet[string]
     incompleteStructs*: HashSet[string]
+    distinctAliases*: HashSet[string]
     keepNamespacePrefix*: HashSet[string]
     enumValuePrefixes*: seq[string]
     namespacePrefix*: string
@@ -65,6 +66,8 @@ proc processKeyWithoutValue(config: var ConfigData; section: string, key: string
     config.mangledSymbols.incl(key)
   of "IncompleteStructs":
     config.incompleteStructs.incl(key)
+  of "DistinctAliases":
+    config.distinctAliases.incl(key)
   of "KeepNamespacePrefix":
     config.keepNamespacePrefix.incl(key)
   of "EnumValuePrefixes":
