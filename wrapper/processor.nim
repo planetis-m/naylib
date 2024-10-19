@@ -56,6 +56,16 @@ proc shouldMarkAsPrivate(name: string, config: ConfigData): bool =
 proc shouldMarkAsPrivate(module, name: string, config: ConfigData): bool =
   isPrivateSymbol(module, name, config)
 
+proc updateType(typeVar: var string; module, name: string; pointerType: PointerType; config: ConfigData) =
+  let replacement = getReplacement(module, name, config)
+  if replacement != "":
+    typeVar = replacement
+  else:
+    typeVar = convertType(typeVar, pointerType)
+
+proc updateType(typeVar: var string; name: string; pointerType: PointerType; config: ConfigData) =
+  updateType(typeVar, name, "", pointerType, config)
+
 proc processEnums*(ctx: var ApiContext; config: ConfigData) =
   proc removePrefixes(name: string, config: ConfigData): string =
     result = name
@@ -105,12 +115,11 @@ proc processStructs*(ctx: var ApiContext; config: ConfigData) =
       if obj.importName != "": obj.importName else: obj.name
 
     for fld in mitems(obj.fields):
-      var fieldType = getReplacement(objName, fld.name, config)
-      if fieldType == "":
-        fieldType = convertType(fld.`type`, if isPtArray in fld.flags: ptArray else: ptPtr)
+      updateType(fld.`type`, objName, fld.name,
+                 if isPtArray in fld.flags: ptArray else: ptPtr, config)
       if isReadOnlyField(objName, fld.name, config):
         ctx.readOnlyFieldAccessors.add ParamInfo(
-          name: fld.name, `type`: obj.name, dirty: fieldType)
+          name: fld.name, `type`: obj.name, dirty: fld.`type`)
         fld.flags.incl isPrivate
       if {isPtArray, isPrivate} * fld.flags == {isPtArray}:
         let tmp = capitalizeAscii(fld.name)
@@ -118,7 +127,6 @@ proc processStructs*(ctx: var ApiContext; config: ConfigData) =
           `type`: obj.name, name: obj.name & tmp)
       if isPtArray in fld.flags:
         fld.flags.incl isPrivate
-      fld.`type` = fieldType
 
 proc checkCstringType(fnc: FunctionInfo, kind: string, config: ConfigData): bool =
   kind == "cstring" and fnc.name notin config.wrappedFuncs and hasVarargs notin fnc.flags
@@ -193,25 +201,22 @@ proc processFunctions*(ctx: var ApiContext; config: ConfigData) =
   preprocessFunctions(ctx, config)
   for fnc in mitems(ctx.api.functions):
     for i, param in enumerate(fnc.params.mitems):
-      var paramType = getReplacement(fnc.name, param.name, config)
-      if paramType == "":
-        let pointerType =
-          if isPtArray in param.flags: ptArray
-          elif isOutParameter(fnc.name, param.name, config): ptOut
-          elif isPrivate notin fnc.flags: ptVar
-          else: ptPtr
-        paramType = convertType(param.`type`, pointerType)
       if isOpenArray in param.flags:
         param.dirty = convertType(param.`type`, ptOpenArray)
         param.flags.incl isOpenArray
         fnc.params[i+1].dirty = param.name # stores array name
-      param.`type` = paramType
+      let pointerType =
+        if isPtArray in param.flags: ptArray
+        elif isOutParameter(fnc.name, param.name, config): ptOut
+        elif isPrivate notin fnc.flags: ptVar
+        else: ptPtr
+      updateType(param.`type`, fnc.name, param.name, pointerType, config)
     if fnc.returnType != "void":
-      var returnType = getReplacement(fnc.name, config)
-      if returnType == "":
-        returnType = convertType(fnc.returnType,
-            if isPtArray in fnc.flags: ptArray elif isPrivate notin fnc.flags: ptVar else: ptPtr)
-      fnc.returnType = returnType
+      let pointerType =
+        if isPtArray in fnc.flags: ptArray
+        elif isPrivate notin fnc.flags: ptVar
+        else: ptPtr
+      updateType(fnc.returnType, fnc.name, pointerType, config)
 
     fnc.importName = (if isMangled in fnc.flags: "rl" else: "") & fnc.name
     fnc.name = generateProcName(fnc, config)
