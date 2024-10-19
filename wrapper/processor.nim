@@ -106,7 +106,7 @@ proc processStructs*(ctx: var ApiContext; config: ConfigData) =
         fieldType = convertType(fld.`type`, if isPtArray in fld.flags: ptArray else: ptPtr)
       if isReadOnlyField(objName, fld.name, config):
         ctx.readOnlyFieldAccessors.add ParamInfo(
-          name: fld.name, `type`: obj.name, extra: fieldType)
+          name: fld.name, `type`: obj.name, dirty: fieldType)
         fld.flags.incl isPrivate
       if {isPtArray, isPrivate} * fld.flags == {isPtArray}:
         let tmp = capitalizeAscii(fld.name)
@@ -160,7 +160,7 @@ proc preprocessFunctions(ctx: var ApiContext, config: ConfigData) =
         fnc.flags.incl isAutoWrappedFunc
       if paramType.startsWith("var "):
         param.flags.incl isVarParam
-        param.extra = paramType
+        param.dirty = paramType
     if fnc.returnType != "void":
       if isArray(fnc.name, config):
         fnc.flags.incl isPtArray
@@ -198,9 +198,9 @@ proc processFunctions*(ctx: var ApiContext; config: ConfigData) =
           else: ptPtr
         paramType = convertType(param.`type`, pointerType)
       if isOpenArray in param.flags:
-        param.extra = convertType(param.`type`, ptOpenArray)
+        param.dirty = convertType(param.`type`, ptOpenArray)
         param.flags.incl isOpenArray
-        fnc.params[i+1].extra = param.name # stores array name
+        fnc.params[i+1].dirty = param.name # stores array name
       param.`type` = paramType
     if fnc.returnType != "void":
       var returnType = getReplacement(fnc.name, config)

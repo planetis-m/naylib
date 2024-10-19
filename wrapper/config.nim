@@ -123,7 +123,7 @@ proc parseConfig*(filename: string): ConfigData =
   result = ConfigData()
   var currentSection = ""
   while true:
-    var e = next(p)
+    let e = next(p)
     case e.kind
     of cfgEof: break
     of cfgSectionStart:
