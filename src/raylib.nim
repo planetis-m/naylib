@@ -54,6 +54,7 @@ else:
   else: {.passC: "-DGRAPHICS_API_OPENGL_33".}
 
   when defined(windows):
+    {.passC: "-DWIN32_LEAN_AND_MEAN".}
     when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
     else: {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
 
@@ -886,7 +887,7 @@ proc enableEventWaiting*() {.importc: "EnableEventWaiting", sideEffect.}
   ## Enable waiting for events on EndDrawing(), no automatic event polling
 proc disableEventWaiting*() {.importc: "DisableEventWaiting", sideEffect.}
   ## Disable waiting for events on EndDrawing(), automatic events polling
-proc showCursor*() {.importc: "rlShowCursor", sideEffect.}
+proc showCursor*() {.importc: "ShowCursor", sideEffect.}
   ## Shows cursor
 proc hideCursor*() {.importc: "HideCursor", sideEffect.}
   ## Hides cursor
