@@ -56,7 +56,8 @@ proc shouldMarkAsPrivate(name: string, config: ConfigData): bool =
 proc shouldMarkAsPrivate(module, name: string, config: ConfigData): bool =
   isPrivateSymbol(module, name, config)
 
-proc updateType(typeVar: var string; module, name: string; pointerType: PointerType; config: ConfigData) =
+proc updateType(typeVar: var string; module, name: string;
+                pointerType: PointerType; config: ConfigData) =
   let replacement = getReplacement(module, name, config)
   if replacement != "":
     typeVar = replacement
@@ -77,10 +78,8 @@ proc processEnums*(ctx: var ApiContext; config: ConfigData) =
 
   for enm in mitems(ctx.api.enums):
     sort(enm.values, proc (x, y: ValueInfo): int = cmp(x.value, y.value))
-
     if shouldRemoveNamespacePrefix(enm.name, config):
       removePrefix(enm.name, config.namespacePrefix)
-
     for val in mitems(enm.values):
       val.name = removePrefixes(val.name, config).camelCaseAscii()
 
@@ -149,10 +148,9 @@ proc preprocessFunctions(ctx: var ApiContext, config: ConfigData) =
     if fnc.name in config.noSideEffectsFuncs:
       fnc.flags.incl isFunc
 
-    if fnc.params.len > 0:
-      if isVarargsParam(fnc.params[^1]):
-        fnc.flags.incl hasVarargs
-        fnc.params.setLen(fnc.params.high)
+    if fnc.params.len > 0 and isVarargsParam(fnc.params[^1]):
+      fnc.flags.incl hasVarargs
+      fnc.params.setLen(fnc.params.high)
 
     for i, param in enumerate(fnc.params.mitems):
       if isArray(fnc.name, param.name, config):
@@ -187,11 +185,11 @@ proc processFunctions*(ctx: var ApiContext; config: ConfigData) =
   proc shouldRemoveSuffix(name: string, config: ConfigData): bool =
     name in config.functionOverloads
 
-  proc generateProcName(fnc: FunctionInfo, config: ConfigData): string =
-    result = fnc.name
-    if shouldRemoveNamespacePrefix(fnc.name, config):
+  proc generateProcName(name: string, config: ConfigData): string =
+    result = name
+    if shouldRemoveNamespacePrefix(name, config):
       result.removePrefix(config.namespacePrefix)
-    if shouldRemoveSuffix(fnc.name, config):
+    if shouldRemoveSuffix(name, config):
       for suffix in config.funcOverloadSuffixes:
         if result.endsWith(suffix):
           result.removeSuffix(suffix)
@@ -219,6 +217,6 @@ proc processFunctions*(ctx: var ApiContext; config: ConfigData) =
       updateType(fnc.returnType, fnc.name, pointerType, config)
 
     fnc.importName = (if isMangled in fnc.flags: "rl" else: "") & fnc.name
-    fnc.name = generateProcName(fnc, config)
+    fnc.name = generateProcName(fnc.name, config)
     if isAutoWrappedFunc in fnc.flags:
       ctx.funcsToWrap.add fnc
