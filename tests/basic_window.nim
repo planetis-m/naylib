@@ -33,6 +33,32 @@ const
   screenHeight = 450
 
 # ----------------------------------------------------------------------------------------
+# Module functions Definition
+# ----------------------------------------------------------------------------------------
+
+proc testShowCursor() =
+  showCursor()
+
+proc testDrawRectangle() =
+  let rec = Rectangle(x: 100, y: 100, width: 200, height: 150)
+  let color = Red
+  drawRectangle(rec, color)
+
+proc testLoadImage() =
+  try:
+    let image = loadImage("test_image.png")
+  except RaylibError:
+    echo "Error loading image"
+
+proc testDrawText() =
+  drawText("Hello, World!", 100, 100, 20, Black)
+
+proc testDrawTextWithFont() =
+  let font = getFontDefault()
+  let position = Vector2(x: 200, y: 200)
+  drawText(font, "Hello with custom font", position, 24, 2, DarkGray)
+
+# ----------------------------------------------------------------------------------------
 # Program main entry point
 # ----------------------------------------------------------------------------------------
 
@@ -42,6 +68,14 @@ proc main =
   initWindow(screenWidth, screenHeight, "raylib [core] example - basic window")
   setTargetFPS(60) # Set our game to run at 60 frames-per-second
   # --------------------------------------------------------------------------------------
+
+  # Run tests
+  testShowCursor()
+  testDrawRectangle()
+  testLoadImage()
+  testDrawText()
+  testDrawTextWithFont()
+
   # Main game loop
   while not windowShouldClose(): # Detect window close button or ESC key
     # Update
