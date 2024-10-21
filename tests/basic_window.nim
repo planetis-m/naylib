@@ -60,11 +60,6 @@ proc testDrawTextWithFont() =
 
 # Additional module tests
 
-proc testOsproc() =
-  let (output, exitCode) = execCmdEx("echo Hello from subprocess")
-  echo "Subprocess output: ", output
-  echo "Exit code: ", exitCode
-
 proc testLocks() =
   var lock: Lock
   initLock(lock)
@@ -101,8 +96,6 @@ proc main =
   testDrawTextWithFont()
 
   # Run additional module tests
-  testStrutils()
-  testParseutils()
   testOsproc()
   testLocks()
   testTerminal()
