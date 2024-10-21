@@ -18,6 +18,9 @@
 #
 # ****************************************************************************************
 
+when defined(nimPreviewSlimSystem):
+  import std/assertions
+
 runnableExamples:
   # Example 1: MemPool
 
