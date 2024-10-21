@@ -519,7 +519,7 @@ type
     b*: uint8 ## Color blue value
     a*: uint8 ## Color alpha value
 
-  Rectangle* {.importc: "rlRectangle", header: "raylib.h", completeStruct, bycopy.} = object ## Rectangle, 4 components
+  Rectangle* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Rectangle, 4 components
     x*: float32 ## Rectangle top-left corner position x
     y*: float32 ## Rectangle top-left corner position y
     width*: float32 ## Rectangle width
@@ -797,7 +797,7 @@ const
 
 {.push callconv: cdecl, header: "raylib.h".}
 proc initWindowImpl(width: int32, height: int32, title: cstring) {.importc: "InitWindow", sideEffect.}
-proc closeWindow*() {.importc: "rlCloseWindow", sideEffect.}
+proc closeWindow*() {.importc: "CloseWindow", sideEffect.}
   ## Close window and unload OpenGL context
 proc windowShouldClose*(): bool {.importc: "WindowShouldClose", sideEffect.}
   ## Check if application should close (KEY_ESCAPE pressed or windows close icon clicked)
@@ -1232,7 +1232,7 @@ func checkCollisionCircleLine*(center: Vector2, radius: float32, p1: Vector2, p2
   ## Check if circle collides with a line created betweeen two points [p1] and [p2]
 func getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "GetCollisionRec".}
   ## Get collision rectangle for two rectangles collision
-proc loadImageImpl(fileName: cstring): Image {.importc: "rlLoadImage", sideEffect.}
+proc loadImageImpl(fileName: cstring): Image {.importc: "LoadImage", sideEffect.}
 proc loadImageRawImpl(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw", sideEffect.}
 proc loadImageAnimImpl(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim", sideEffect.}
 proc loadImageAnimFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, frames: ptr UncheckedArray[int32]): Image {.importc: "LoadImageAnimFromMemory", sideEffect.}
@@ -1434,8 +1434,8 @@ proc unloadFont(font: Font) {.importc: "UnloadFont", sideEffect.}
 proc exportFontAsCodeImpl(font: Font, fileName: cstring): bool {.importc: "ExportFontAsCode", sideEffect.}
 proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS", sideEffect.}
   ## Draw current FPS
-proc drawTextImpl(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "rlDrawText", sideEffect.}
-proc drawTextImpl(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "rlDrawTextEx", sideEffect.}
+proc drawTextImpl(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "DrawText", sideEffect.}
+proc drawTextImpl(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextEx", sideEffect.}
 proc drawTextImpl(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro", sideEffect.}
 proc drawTextCodepoint*(font: Font, codepoint: Rune, position: Vector2, fontSize: float32, tint: Color) {.importc: "DrawTextCodepoint", sideEffect.}
   ## Draw one character (codepoint)

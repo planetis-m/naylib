@@ -112,8 +112,8 @@ proc testTerminal() =
   styledEcho(fgRed, "This is red text")
   styledEcho(fgGreen, bgBlue, "Green text on blue background")
 
-  echo "Cursor position: ", cursorPos()
-  setCursorPos(0, 5)
+  echo "Cursor position: ", getCursorPos()
+  stdout.setCursorPos(0, 5)
   echo "Moved cursor to row 5, column 0"
 
 # ----------------------------------------------------------------------------------------
