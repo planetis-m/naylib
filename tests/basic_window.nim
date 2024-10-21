@@ -22,7 +22,7 @@
 #
 # ****************************************************************************************
 
-import raylib, rlgl, raymath, rmem, reasings, std/[os, times, monotimes, syncio, streams]
+import raylib, rlgl, raymath, rmem, reasings, std/[os, times, monotimes, syncio, streams, strutils, parseutils, osproc, locks, terminal]
 
 # ----------------------------------------------------------------------------------------
 # Global Variables Definition
@@ -84,6 +84,38 @@ proc testStreams() =
     strm.writeLine("Hello, Streams!")
     strm.close()
 
+proc testStrutils() =
+  let str = "  Hello, World!  "
+  echo "Stripped: ", strip(str)
+  echo "To lower: ", toLowerAscii(str)
+
+proc testParseutils() =
+  var value: int
+  discard parseInt("42", value)
+  echo "Parsed integer: ", value
+
+proc testOsproc() =
+  let (output, exitCode) = execCmdEx("echo Hello from subprocess")
+  echo "Subprocess output: ", output
+  echo "Exit code: ", exitCode
+
+proc testLocks() =
+  var lock: Lock
+  initLock(lock)
+
+  withLock(lock):
+    echo "This is executed in a locked state"
+
+  deinitLock(lock)
+
+proc testTerminal() =
+  styledEcho(fgRed, "This is red text")
+  styledEcho(fgGreen, bgBlue, "Green text on blue background")
+
+  echo "Cursor position: ", getCursorPos()
+  stdout.setCursorPos(0, 5)
+  echo "Moved cursor to row 5, column 0"
+
 # ----------------------------------------------------------------------------------------
 # Program main entry point
 # ----------------------------------------------------------------------------------------
@@ -101,6 +133,13 @@ proc main =
   testLoadImage()
   testDrawText()
   testDrawTextWithFont()
+
+  # Run additional module tests
+  testOs()
+  testTimes()
+  testMonotimes()
+  testSyncio()
+  testStreams()
 
   # Main game loop
   while not windowShouldClose(): # Detect window close button or ESC key
