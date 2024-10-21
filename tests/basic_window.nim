@@ -22,7 +22,7 @@
 #
 # ****************************************************************************************
 
-import raylib, rlgl, raymath, rmem, reasings, std/[os, times, monotimes, syncio, streams, strutils, parseutils, osproc]
+import raylib, rlgl, raymath, rmem, reasings, std/[os, times, monotimes, syncio, streams, strutils, parseutils, osproc, locks, terminal]
 
 # ----------------------------------------------------------------------------------------
 # Global Variables Definition
@@ -99,6 +99,23 @@ proc testOsproc() =
   echo "Subprocess output: ", output
   echo "Exit code: ", exitCode
 
+proc testLocks() =
+  var lock: Lock
+  initLock(lock)
+
+  withLock(lock):
+    echo "This is executed in a locked state"
+
+  deinitLock(lock)
+
+proc testTerminal() =
+  styledEcho(fgRed, "This is red text")
+  styledEcho(fgGreen, bgBlue, "Green text on blue background")
+
+  echo "Cursor position: ", cursorPos()
+  setCursorPos(0, 5)
+  echo "Moved cursor to row 5, column 0"
+
 # ----------------------------------------------------------------------------------------
 # Program main entry point
 # ----------------------------------------------------------------------------------------
@@ -126,6 +143,8 @@ proc main =
   testStrutils()
   testParseutils()
   testOsproc()
+  testLocks()
+  testTerminal()
 
   # Main game loop
   while not windowShouldClose(): # Detect window close button or ESC key
