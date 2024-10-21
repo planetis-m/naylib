@@ -22,7 +22,7 @@
 #
 # ****************************************************************************************
 
-import raylib, rlgl, raymath, rmem, reasings, std/[osproc, locks, terminal]
+import raylib, rlgl, raymath, rmem, reasings, std/[syncio, osproc, locks, terminal]
 
 # ----------------------------------------------------------------------------------------
 # Global Variables Definition
