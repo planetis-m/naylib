@@ -135,11 +135,11 @@ proc main =
   testDrawTextWithFont()
 
   # Run additional module tests
-  testOs()
-  testTimes()
-  testMonotimes()
-  testSyncio()
-  testStreams()
+  testStrutils()
+  testParseutils()
+  testOsproc()
+  testLocks()
+  testTerminal()
 
   # Main game loop
   while not windowShouldClose(): # Detect window close button or ESC key
