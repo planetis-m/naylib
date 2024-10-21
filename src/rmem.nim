@@ -86,6 +86,8 @@ runnableExamples:
 
 from std/typetraits import supportsCopyMem
 from std/bitops import countLeadingZeroBits
+when defined(nimPreviewSlimSystem):
+  from std/assertions import assert
 
 proc log2Floor(x: int): int {.inline.} =
   # Undefined for zero argument

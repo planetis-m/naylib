@@ -5,7 +5,7 @@ const
   PkgDir = thisDir()
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
-  RayLatestCommit = "d6399622a0280bc8ea458104b946f1860d928156"
+  RayLatestCommit = "110ee74875412beb41ffb53330b47ec9cb052b2d"
   ApiDir = PkgDir / "wrapper/api"
   DocsDir = PkgDir / "docs"
   ParserDir = RaylibDir / "parser"
@@ -77,6 +77,7 @@ task patch, "Patch raylib":
 
 task update, "Update the raylib git directory":
   fetchLatestRaylib()
+  rmDir(PkgDir / "src/raylib")
   cpDir(RaylibDir / "src", PkgDir / "src/raylib")
 
 task wrap, "Produce all raylib Nim wrappers":

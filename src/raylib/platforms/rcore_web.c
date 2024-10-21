@@ -74,6 +74,8 @@
 typedef struct {
     GLFWwindow *handle;                 // GLFW window handle (graphic device)
     bool ourFullscreen;                 // Internal var to filter our handling of fullscreen vs the user handling of fullscreen
+    int unmaximizedWidth;               // Internal var to store the unmaximized window (canvas) width
+    int unmaximizedHeight;              // Internal var to store the unmaximized window (canvas) height
 } PlatformData;
 
 //----------------------------------------------------------------------------------
@@ -317,7 +319,18 @@ void ToggleBorderlessWindowed(void)
 // Set window state: maximized, if resizable
 void MaximizeWindow(void)
 {
-    TRACELOG(LOG_WARNING, "MaximizeWindow() not available on target platform");
+    if (glfwGetWindowAttrib(platform.handle, GLFW_RESIZABLE) == GLFW_TRUE && !(CORE.Window.flags & FLAG_WINDOW_MAXIMIZED))
+    {
+        platform.unmaximizedWidth = CORE.Window.screen.width;
+        platform.unmaximizedHeight = CORE.Window.screen.height;
+
+        const int tabWidth = EM_ASM_INT( { return window.innerWidth;  }, 0);
+        const int tabHeight = EM_ASM_INT( { return window.innerHeight; }, 0);
+
+        if (tabWidth && tabHeight) glfwSetWindowSize(platform.handle, tabWidth, tabHeight);
+
+        CORE.Window.flags |= FLAG_WINDOW_MAXIMIZED;
+    }
 }
 
 // Set window state: minimized
@@ -329,7 +342,12 @@ void MinimizeWindow(void)
 // Set window state: not minimized/maximized
 void RestoreWindow(void)
 {
-    TRACELOG(LOG_WARNING, "RestoreWindow() not available on target platform");
+    if (glfwGetWindowAttrib(platform.handle, GLFW_RESIZABLE) == GLFW_TRUE && (CORE.Window.flags & FLAG_WINDOW_MAXIMIZED))
+    {
+        if (platform.unmaximizedWidth && platform.unmaximizedHeight) glfwSetWindowSize(platform.handle, platform.unmaximizedWidth, platform.unmaximizedHeight);
+
+        CORE.Window.flags &= ~FLAG_WINDOW_MAXIMIZED;
+    }
 }
 
 // Set window configuration state using flags
@@ -398,9 +416,20 @@ void SetWindowState(unsigned int flags)
     }
 
     // State change: FLAG_WINDOW_MAXIMIZED
-    if ((flags & FLAG_WINDOW_MAXIMIZED) > 0)
+    if (((CORE.Window.flags & FLAG_WINDOW_MAXIMIZED) != (flags & FLAG_WINDOW_MAXIMIZED)) && ((flags & FLAG_WINDOW_MAXIMIZED) > 0))
     {
-        TRACELOG(LOG_WARNING, "SetWindowState(FLAG_WINDOW_MAXIMIZED) not available on target platform");
+        if (glfwGetWindowAttrib(platform.handle, GLFW_RESIZABLE) == GLFW_TRUE)
+        {
+            platform.unmaximizedWidth = CORE.Window.screen.width;
+            platform.unmaximizedHeight = CORE.Window.screen.height;
+
+            const int tabWidth = EM_ASM_INT( { return window.innerWidth;  }, 0);
+            const int tabHeight = EM_ASM_INT( { return window.innerHeight; }, 0);
+
+            if (tabWidth && tabHeight) glfwSetWindowSize(platform.handle, tabWidth, tabHeight);
+
+            CORE.Window.flags |= FLAG_WINDOW_MAXIMIZED;
+        }
     }
 
     // State change: FLAG_WINDOW_UNFOCUSED
@@ -516,9 +545,14 @@ void ClearWindowState(unsigned int flags)
     }
 
     // State change: FLAG_WINDOW_MAXIMIZED
-    if ((flags & FLAG_WINDOW_MAXIMIZED) > 0)
+    if (((CORE.Window.flags & FLAG_WINDOW_MAXIMIZED) > 0) && ((flags & FLAG_WINDOW_MAXIMIZED) > 0))
     {
-        TRACELOG(LOG_WARNING, "ClearWindowState(FLAG_WINDOW_MAXIMIZED) not available on target platform");
+        if (glfwGetWindowAttrib(platform.handle, GLFW_RESIZABLE) == GLFW_TRUE)
+        {
+            if (platform.unmaximizedWidth && platform.unmaximizedHeight) glfwSetWindowSize(platform.handle, platform.unmaximizedWidth, platform.unmaximizedHeight);
+
+            CORE.Window.flags &= ~FLAG_WINDOW_MAXIMIZED;
+        }
     }
 
     // State change: FLAG_WINDOW_UNDECORATED
@@ -639,7 +673,9 @@ void SetWindowSize(int width, int height)
 // Set window opacity, value opacity is between 0.0 and 1.0
 void SetWindowOpacity(float opacity)
 {
-    TRACELOG(LOG_WARNING, "SetWindowOpacity() not available on target platform");
+    if (opacity >= 1.0f) opacity = 1.0f;
+    else if (opacity <= 0.0f) opacity = 0.0f;
+    EM_ASM({ document.getElementById('canvas').style.opacity = $0; }, opacity);
 }
 
 // Set window focused
