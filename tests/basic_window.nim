@@ -37,7 +37,7 @@ const
 # ----------------------------------------------------------------------------------------
 
 proc testShowCursor() =
-  showCursor()
+  raylib.showCursor()
 
 proc testDrawRectangle() =
   let rec = Rectangle(x: 100, y: 100, width: 200, height: 150)
