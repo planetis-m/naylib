@@ -22,7 +22,7 @@
 #
 # ****************************************************************************************
 
-import raylib, rlgl, raymath, rmem, reasings
+import raylib, rlgl, raymath, rmem, reasings, std/[os, times, monotimes, syncio, streams, strutils, parseutils, osproc]
 
 # ----------------------------------------------------------------------------------------
 # Global Variables Definition
@@ -58,6 +58,47 @@ proc testDrawTextWithFont() =
   let position = Vector2(x: 200, y: 200)
   drawText(font, "Hello with custom font", position, 24, 2, DarkGray)
 
+# Additional module tests
+proc testOs() =
+  echo "Current directory: ", getCurrentDir()
+  echo "Temp directory: ", getTempDir()
+
+proc testTimes() =
+  echo "Current time: ", now()
+  echo "Current UTC time: ", utc(now())
+
+proc testMonotimes() =
+  let start = getMonoTime()
+  sleep(100)
+  let duration = getMonoTime() - start
+  echo "Slept for ", duration
+
+proc testSyncio() =
+  let file = open("test.txt", fmWrite)
+  file.write("Hello, SyncIO!")
+  file.close()
+
+proc testStreams() =
+  let strm = newFileStream("test_stream.txt", fmWrite)
+  if not isNil(strm):
+    strm.writeLine("Hello, Streams!")
+    strm.close()
+
+proc testStrutils() =
+  let str = "  Hello, World!  "
+  echo "Stripped: ", strip(str)
+  echo "To lower: ", toLowerAscii(str)
+
+proc testParseutils() =
+  var value: int
+  discard parseInt("42", value)
+  echo "Parsed integer: ", value
+
+proc testOsproc() =
+  let (output, exitCode) = execCmdEx("echo Hello from subprocess")
+  echo "Subprocess output: ", output
+  echo "Exit code: ", exitCode
+
 # ----------------------------------------------------------------------------------------
 # Program main entry point
 # ----------------------------------------------------------------------------------------
@@ -75,6 +116,16 @@ proc main =
   testLoadImage()
   testDrawText()
   testDrawTextWithFont()
+
+  # Run additional module tests
+  testOs()
+  testTimes()
+  testMonotimes()
+  testSyncio()
+  testStreams()
+  testStrutils()
+  testParseutils()
+  testOsproc()
 
   # Main game loop
   while not windowShouldClose(): # Detect window close button or ESC key
