@@ -54,6 +54,7 @@ else:
   else: {.passC: "-DGRAPHICS_API_OPENGL_33".}
 
   when defined(windows):
+    {.passC: "-DWIN32_LEAN_AND_MEAN".}
     when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
     else: {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
 
