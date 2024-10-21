@@ -22,7 +22,7 @@
 #
 # ****************************************************************************************
 
-import raylib, rlgl, raymath, rmem, reasings, std/[syncio, osproc, locks, terminal]
+import raylib, rlgl, raymath, rmem, reasings, std/[osproc, locks]
 
 # ----------------------------------------------------------------------------------------
 # Global Variables Definition
@@ -60,6 +60,11 @@ proc testDrawTextWithFont() =
 
 # Additional module tests
 
+proc testOsproc() =
+  let (output, exitCode) = execCmdEx("echo Hello from subprocess")
+  echo "Subprocess output: ", output
+  echo "Exit code: ", exitCode
+
 proc testLocks() =
   var lock: Lock
   initLock(lock)
@@ -68,14 +73,6 @@ proc testLocks() =
     echo "This is executed in a locked state"
 
   deinitLock(lock)
-
-proc testTerminal() =
-  styledEcho(fgRed, "This is red text")
-  styledEcho(fgGreen, bgBlue, "Green text on blue background")
-
-  echo "Cursor position: ", getCursorPos()
-  stdout.setCursorPos(0, 5)
-  echo "Moved cursor to row 5, column 0"
 
 # ----------------------------------------------------------------------------------------
 # Program main entry point
@@ -98,7 +95,6 @@ proc main =
   # Run additional module tests
   testOsproc()
   testLocks()
-  testTerminal()
 
   # Main game loop
   while not windowShouldClose(): # Detect window close button or ESC key
