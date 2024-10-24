@@ -108,7 +108,6 @@ else:
       # pkg-config x11 xrandr xinerama xi xcursor --libs
       {.passL: "-lX11 -lXrandr -lXinerama -lXi -lXcursor".}
 
-{.compile: raylibDir / Path"naylib.c".}
 when defined(emscripten): discard
 elif defined(android): discard
 elif defined(macosx): {.compile(raylibDir / Path"rglfw.c", "-x objective-c").}
