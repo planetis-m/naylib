@@ -75,6 +75,7 @@ task update, "Update the raylib git directory":
   rmDir(PkgDir / "src/raylib")
   cpDir(RaylibDir / "src", PkgDir / "src/raylib")
   cpFile(PkgDir / "src/naylib.h", PkgDir / "src/raylib/naylib.h")
+  cpFile(PkgDir / "src/naylib.c", PkgDir / "src/raylib/naylib.c")
 
 task wrap, "Produce all raylib Nim wrappers":
   buildToolsTask()
