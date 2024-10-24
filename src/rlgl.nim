@@ -401,8 +401,7 @@ proc getShaderLocsDefault*(): ShaderLocsPtr {.importc: "rlGetShaderLocsDefault",
   ## Get default shader locations
 proc loadRenderBatch*(numBuffers: int32, bufferElements: int32): RenderBatch {.importc: "rlLoadRenderBatch", sideEffect.}
   ## Load a render batch system
-proc unloadRenderBatch*(batch: RenderBatch) {.importc: "rlUnloadRenderBatch", sideEffect.}
-  ## Unload render batch system
+proc unloadRenderBatch(batch: RenderBatch) {.importc: "rlUnloadRenderBatch", sideEffect.}
 proc drawRenderBatch*(batch: var RenderBatch) {.importc: "rlDrawRenderBatch", sideEffect.}
   ## Draw render batch data (Update->Draw->Reset)
 proc setRenderBatchActive*(batch: var RenderBatch) {.importc: "rlSetRenderBatchActive", sideEffect.}
@@ -547,7 +546,6 @@ proc getLocationUniform*(shaderId: uint32, uniformName: string): ShaderLocation 
 proc getLocationAttrib*(shaderId: uint32, attribName: string): ShaderLocation =
   ## Get shader location attribute
   getLocationAttribImpl(shaderId, attribName.cstring)
-
 
 proc `=destroy`*(x: RenderBatch) =
   unloadRenderBatch(x)

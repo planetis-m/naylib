@@ -128,7 +128,7 @@ const
   # Taken from raylib/src/config.h
   MaxShaderLocations* = 32 ## Maximum number of shader locations supported
   MaxMaterialMaps* = 12 ## Maximum number of shader maps supported
-  MaxMeshVertexBuffers* = 7 ## Maximum vertex buffers (VBO) per mesh
+  MaxMeshVertexBuffers* = 9 ## Maximum vertex buffers (VBO) per mesh
 
 type
   ConfigFlags* {.size: sizeof(int32).} = enum ## System/Window config flags
@@ -2438,7 +2438,6 @@ proc exportWave*(wave: Wave, fileName: string): bool =
 proc exportWaveAsCode*(wave: Wave, fileName: string): bool =
   ## Export wave sample data to code (.h), returns true on success
   exportWaveAsCodeImpl(wave, fileName.cstring)
-
 
 type
   RaylibError* = object of CatchableError

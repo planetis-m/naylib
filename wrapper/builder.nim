@@ -266,5 +266,4 @@ proc genBindings*(b: var Builder; ctx: ApiContext;
   for fnc in ctx.funcsToWrap:
     generateWrappedProc(b, fnc)
     b.addNL()
-  b.addNL()
   b.addRaw moduleEnd
