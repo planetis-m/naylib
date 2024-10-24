@@ -691,7 +691,7 @@ void InitWindow(int width, int height, const char *title)
 
     // Initialize random seed
     SetRandomSeed((unsigned int)time(NULL));
-    
+
     TRACELOG(LOG_INFO, "SYSTEM: Working Directory: %s", GetWorkingDirectory());
 }
 
@@ -3295,8 +3295,7 @@ float GetGamepadAxisMovement(int gamepad, int axis)
     if ((gamepad < MAX_GAMEPADS) && CORE.Input.Gamepad.ready[gamepad] && (axis < MAX_GAMEPAD_AXIS)) {
         float movement = value < 0.0f ? CORE.Input.Gamepad.axisState[gamepad][axis] : fabsf(CORE.Input.Gamepad.axisState[gamepad][axis]);
 
-        // 0.1f = GAMEPAD_AXIS_MINIMUM_DRIFT/DELTA
-        if (movement > value + 0.1f) value = CORE.Input.Gamepad.axisState[gamepad][axis];
+        if (movement > value) value = CORE.Input.Gamepad.axisState[gamepad][axis];
     }
 
     return value;
@@ -3716,14 +3715,14 @@ static void ScanDirectoryFilesRecursively(const char *basePath, FilePathList *fi
                         break;
                     }
                 }
-                else 
+                else
                 {
                     if ((filter != NULL) && (TextFindIndex(filter, DIRECTORY_FILTER_TAG) >= 0))
                     {
                         strcpy(files->paths[files->count], path);
                         files->count++;
                     }
-                    
+
                     if (files->count >= files->capacity)
                     {
                         TRACELOG(LOG_WARNING, "FILEIO: Maximum filepath scan capacity reached (%i files)", files->capacity);

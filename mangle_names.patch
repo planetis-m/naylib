@@ -1,6 +1,6 @@
-From c0444c723b687f7ce9035cc4fd48691a87432a6d Mon Sep 17 00:00:00 2001
+From c083a5e73b5b78cc884c17e2d46f4981cd148858 Mon Sep 17 00:00:00 2001
 From: Antonis Geralis <b3lievem@yandex.com>
-Date: Mon, 21 Oct 2024 14:23:01 +0300
+Date: Thu, 24 Oct 2024 19:53:54 +0300
 Subject: [PATCH] mangle names
 
 ---
@@ -132,7 +132,7 @@ index b5e80e4..5459410 100644
              };
          };
 diff --git a/src/raylib/platforms/rcore_android.c b/src/raylib/platforms/rcore_android.c
-index 88438c9..29b346e 100644
+index 85ce82a..d42d07e 100644
 --- a/src/raylib/platforms/rcore_android.c
 +++ b/src/raylib/platforms/rcore_android.c
 @@ -516,7 +516,7 @@ const char *GetClipboardText(void)
@@ -174,7 +174,7 @@ index 88438c9..29b346e 100644
                  #endif
  
 diff --git a/src/raylib/platforms/rcore_desktop_glfw.c b/src/raylib/platforms/rcore_desktop_glfw.c
-index d42274d..bb68662 100644
+index 41f7fac..852b59b 100644
 --- a/src/raylib/platforms/rcore_desktop_glfw.c
 +++ b/src/raylib/platforms/rcore_desktop_glfw.c
 @@ -966,7 +966,7 @@ const char *GetClipboardText(void)
@@ -187,7 +187,7 @@ index d42274d..bb68662 100644
      glfwSetInputMode(platform.handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
      CORE.Input.Mouse.cursorHidden = false;
 diff --git a/src/raylib/platforms/rcore_desktop_sdl.c b/src/raylib/platforms/rcore_desktop_sdl.c
-index b4ceb78..0f2fc53 100644
+index 7cbe035..fd57ad2 100644
 --- a/src/raylib/platforms/rcore_desktop_sdl.c
 +++ b/src/raylib/platforms/rcore_desktop_sdl.c
 @@ -878,7 +878,7 @@ const char *GetClipboardText(void)
@@ -200,7 +200,7 @@ index b4ceb78..0f2fc53 100644
      SDL_ShowCursor(SDL_ENABLE);
  
 diff --git a/src/raylib/platforms/rcore_drm.c b/src/raylib/platforms/rcore_drm.c
-index e77457b..b62d56e 100644
+index eb8ef01..18a5d69 100644
 --- a/src/raylib/platforms/rcore_drm.c
 +++ b/src/raylib/platforms/rcore_drm.c
 @@ -119,7 +119,7 @@ typedef struct {
@@ -235,7 +235,7 @@ index 6bc3432..1f8c116 100644
      CORE.Input.Mouse.cursorHidden = false;
  }
 diff --git a/src/raylib/platforms/rcore_web.c b/src/raylib/platforms/rcore_web.c
-index 36af66a..7cef04e 100644
+index e15d3f5..0138c61 100644
 --- a/src/raylib/platforms/rcore_web.c
 +++ b/src/raylib/platforms/rcore_web.c
 @@ -806,7 +806,7 @@ const char *GetClipboardText(void)
@@ -248,10 +248,10 @@ index 36af66a..7cef04e 100644
      if (CORE.Input.Mouse.cursorHidden)
      {
 diff --git a/src/raylib/raylib.h b/src/raylib/raylib.h
-index 5ae45fa..ea2fdce 100644
+index c9d9f6e..38e2d56 100644
 --- a/src/raylib/raylib.h
 +++ b/src/raylib/raylib.h
-@@ -246,12 +246,12 @@ typedef struct Color {
+@@ -252,12 +252,12 @@ typedef struct Color {
  } Color;
  
  // Rectangle, 4 components
@@ -266,7 +266,7 @@ index 5ae45fa..ea2fdce 100644
  
  // Image, pixel data stored in CPU memory (RAM)
  typedef struct Image {
-@@ -289,7 +289,7 @@ typedef RenderTexture RenderTexture2D;
+@@ -295,7 +295,7 @@ typedef RenderTexture RenderTexture2D;
  
  // NPatchInfo, n-patch layout info
  typedef struct NPatchInfo {
@@ -275,7 +275,7 @@ index 5ae45fa..ea2fdce 100644
      int left;               // Left border offset
      int top;                // Top border offset
      int right;              // Right border offset
-@@ -312,7 +312,7 @@ typedef struct Font {
+@@ -318,7 +318,7 @@ typedef struct Font {
      int glyphCount;         // Number of glyph characters
      int glyphPadding;       // Padding around the glyph characters
      Texture2D texture;      // Texture atlas containing the glyphs
@@ -284,7 +284,7 @@ index 5ae45fa..ea2fdce 100644
      GlyphInfo *glyphs;      // Glyphs info data
  } Font;
  
-@@ -961,7 +961,7 @@ extern "C" {            // Prevents name mangling of functions
+@@ -966,7 +966,7 @@ extern "C" {            // Prevents name mangling of functions
  
  // Window-related functions
  RLAPI void InitWindow(int width, int height, const char *title);  // Initialize window and OpenGL context
@@ -293,7 +293,7 @@ index 5ae45fa..ea2fdce 100644
  RLAPI bool WindowShouldClose(void);                               // Check if application should close (KEY_ESCAPE pressed or windows close icon clicked)
  RLAPI bool IsWindowReady(void);                                   // Check if window has been initialized successfully
  RLAPI bool IsWindowFullscreen(void);                              // Check if window is currently fullscreen
-@@ -1010,7 +1010,7 @@ RLAPI void EnableEventWaiting(void);                              // Enable wait
+@@ -1015,7 +1015,7 @@ RLAPI void EnableEventWaiting(void);                              // Enable wait
  RLAPI void DisableEventWaiting(void);                             // Disable waiting for events on EndDrawing(), automatic events polling
  
  // Cursor-related functions
@@ -302,7 +302,7 @@ index 5ae45fa..ea2fdce 100644
  RLAPI void HideCursor(void);                                      // Hides cursor
  RLAPI bool IsCursorHidden(void);                                  // Check if cursor is not visible
  RLAPI void EnableCursor(void);                                    // Enables cursor (unlock cursor)
-@@ -1233,9 +1233,9 @@ RLAPI void UpdateCameraPro(Camera *camera, Vector3 movement, Vector3 rotation, f
+@@ -1238,9 +1238,9 @@ RLAPI void UpdateCameraPro(Camera *camera, Vector3 movement, Vector3 rotation, f
  // Set texture and rectangle to be used on shapes drawing
  // NOTE: It can be useful when using basic shapes and one single font,
  // defining a font char white rectangle would allow drawing everything in a single draw call
@@ -314,7 +314,7 @@ index 5ae45fa..ea2fdce 100644
  
  // Basic shapes drawing functions
  RLAPI void DrawPixel(int posX, int posY, Color color);                                                   // Draw a pixel using geometry [Can be slow, use with care]
-@@ -1258,16 +1258,16 @@ RLAPI void DrawRing(Vector2 center, float innerRadius, float outerRadius, float
+@@ -1263,16 +1263,16 @@ RLAPI void DrawRing(Vector2 center, float innerRadius, float outerRadius, float
  RLAPI void DrawRingLines(Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color);    // Draw ring outline
  RLAPI void DrawRectangle(int posX, int posY, int width, int height, Color color);                        // Draw a color-filled rectangle
  RLAPI void DrawRectangleV(Vector2 position, Vector2 size, Color color);                                  // Draw a color-filled rectangle (Vector version)
@@ -338,7 +338,7 @@ index 5ae45fa..ea2fdce 100644
  RLAPI void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color);                                // Draw a color-filled triangle (vertex in counter-clockwise order!)
  RLAPI void DrawTriangleLines(Vector2 v1, Vector2 v2, Vector2 v3, Color color);                           // Draw triangle outline (vertex in counter-clockwise order!)
  RLAPI void DrawTriangleFan(const Vector2 *points, int pointCount, Color color);                          // Draw a triangle fan defined by points (first vertex is the center)
-@@ -1296,17 +1296,17 @@ RLAPI Vector2 GetSplinePointBezierQuad(Vector2 p1, Vector2 c2, Vector2 p3, float
+@@ -1301,17 +1301,17 @@ RLAPI Vector2 GetSplinePointBezierQuad(Vector2 p1, Vector2 c2, Vector2 p3, float
  RLAPI Vector2 GetSplinePointBezierCubic(Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float t);        // Get (evaluate) spline point: Cubic Bezier
  
  // Basic shapes collision detection functions
@@ -346,21 +346,21 @@ index 5ae45fa..ea2fdce 100644
 +RLAPI bool CheckCollisionRecs(rlRectangle rec1, rlRectangle rec2);                                           // Check collision between two rectangles
  RLAPI bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, float radius2);        // Check collision between two circles
 -RLAPI bool CheckCollisionCircleRec(Vector2 center, float radius, Rectangle rec);                         // Check collision between circle and rectangle
--RLAPI bool CheckCollisionPointRec(Vector2 point, Rectangle rec);                                         // Check if point is inside rectangle
 +RLAPI bool CheckCollisionCircleRec(Vector2 center, float radius, rlRectangle rec);                         // Check collision between circle and rectangle
+ RLAPI bool CheckCollisionCircleLine(Vector2 center, float radius, Vector2 p1, Vector2 p2);               // Check if circle collides with a line created betweeen two points [p1] and [p2]
+-RLAPI bool CheckCollisionPointRec(Vector2 point, Rectangle rec);                                         // Check if point is inside rectangle
 +RLAPI bool CheckCollisionPointRec(Vector2 point, rlRectangle rec);                                         // Check if point is inside rectangle
  RLAPI bool CheckCollisionPointCircle(Vector2 point, Vector2 center, float radius);                       // Check if point is inside circle
  RLAPI bool CheckCollisionPointTriangle(Vector2 point, Vector2 p1, Vector2 p2, Vector2 p3);               // Check if point is inside a triangle
+ RLAPI bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshold);                // Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
  RLAPI bool CheckCollisionPointPoly(Vector2 point, const Vector2 *points, int pointCount);                // Check if point is within a polygon described by array of vertices
  RLAPI bool CheckCollisionLines(Vector2 startPos1, Vector2 endPos1, Vector2 startPos2, Vector2 endPos2, Vector2 *collisionPoint); // Check the collision between two lines defined by two points each, returns collision point by reference
- RLAPI bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshold);                // Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
- RLAPI bool CheckCollisionCircleLine(Vector2 center, float radius, Vector2 p1, Vector2 p2);               // Check if circle collides with a line created betweeen two points [p1] and [p2]
 -RLAPI Rectangle GetCollisionRec(Rectangle rec1, Rectangle rec2);                                         // Get collision rectangle for two rectangles collision
 +RLAPI rlRectangle GetCollisionRec(rlRectangle rec1, rlRectangle rec2);                                         // Get collision rectangle for two rectangles collision
  
  //------------------------------------------------------------------------------------
  // Texture Loading and Drawing Functions (Module: textures)
-@@ -1314,7 +1314,7 @@ RLAPI Rectangle GetCollisionRec(Rectangle rec1, Rectangle rec2);
+@@ -1319,7 +1319,7 @@ RLAPI Rectangle GetCollisionRec(Rectangle rec1, Rectangle rec2);
  
  // Image loading functions
  // NOTE: These functions do not require GPU access
@@ -369,7 +369,7 @@ index 5ae45fa..ea2fdce 100644
  RLAPI Image LoadImageRaw(const char *fileName, int width, int height, int format, int headerSize);       // Load image from RAW file data
  RLAPI Image LoadImageAnim(const char *fileName, int *frames);                                            // Load image sequence from file (frames appended to image.data)
  RLAPI Image LoadImageAnimFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int *frames); // Load image sequence from memory buffer
-@@ -1340,13 +1340,13 @@ RLAPI Image GenImageText(int width, int height, const char *text);
+@@ -1345,13 +1345,13 @@ RLAPI Image GenImageText(int width, int height, const char *text);
  
  // Image manipulation functions
  RLAPI Image ImageCopy(Image image);                                                                      // Create an image duplicate (useful for transformations)
@@ -385,7 +385,7 @@ index 5ae45fa..ea2fdce 100644
  RLAPI void ImageAlphaCrop(Image *image, float threshold);                                                // Crop image depending on alpha value
  RLAPI void ImageAlphaClear(Image *image, Color color, float threshold);                                  // Clear alpha channel to desired color
  RLAPI void ImageAlphaMask(Image *image, Image alphaMask);                                                // Apply alpha mask to image
-@@ -1373,7 +1373,7 @@ RLAPI Color *LoadImageColors(Image image);
+@@ -1378,7 +1378,7 @@ RLAPI Color *LoadImageColors(Image image);
  RLAPI Color *LoadImagePalette(Image image, int maxPaletteSize, int *colorCount);                         // Load colors palette from image as a Color array (RGBA - 32bit)
  RLAPI void UnloadImageColors(Color *colors);                                                             // Unload color data loaded with LoadImageColors()
  RLAPI void UnloadImagePalette(Color *colors);                                                            // Unload colors palette loaded with LoadImagePalette()
@@ -394,7 +394,7 @@ index 5ae45fa..ea2fdce 100644
  RLAPI Color GetImageColor(Image image, int x, int y);                                                    // Get image pixel color at (x, y) position
  
  // Image drawing functions
-@@ -1390,14 +1390,14 @@ RLAPI void ImageDrawCircleLines(Image *dst, int centerX, int centerY, int radius
+@@ -1395,14 +1395,14 @@ RLAPI void ImageDrawCircleLines(Image *dst, int centerX, int centerY, int radius
  RLAPI void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color);                   // Draw circle outline within an image (Vector version)
  RLAPI void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color);       // Draw rectangle within an image
  RLAPI void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color);                 // Draw rectangle within an image (Vector version)
@@ -412,7 +412,7 @@ index 5ae45fa..ea2fdce 100644
  RLAPI void ImageDrawText(Image *dst, const char *text, int posX, int posY, int fontSize, Color color);   // Draw text (using default font) within an image (destination)
  RLAPI void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text (custom sprite font) within an image (destination)
  
-@@ -1412,7 +1412,7 @@ RLAPI void UnloadTexture(Texture2D texture);
+@@ -1417,7 +1417,7 @@ RLAPI void UnloadTexture(Texture2D texture);
  RLAPI bool IsRenderTextureValid(RenderTexture2D target);                                                 // Check if a render texture is valid (loaded in GPU)
  RLAPI void UnloadRenderTexture(RenderTexture2D target);                                                  // Unload render texture from GPU memory (VRAM)
  RLAPI void UpdateTexture(Texture2D texture, const void *pixels);                                         // Update GPU texture with new data
@@ -421,7 +421,7 @@ index 5ae45fa..ea2fdce 100644
  
  // Texture configuration functions
  RLAPI void GenTextureMipmaps(Texture2D *texture);                                                        // Generate GPU mipmaps for a texture
-@@ -1423,9 +1423,9 @@ RLAPI void SetTextureWrap(Texture2D texture, int wrap);
+@@ -1428,9 +1428,9 @@ RLAPI void SetTextureWrap(Texture2D texture, int wrap);
  RLAPI void DrawTexture(Texture2D texture, int posX, int posY, Color tint);                               // Draw a Texture2D
  RLAPI void DrawTextureV(Texture2D texture, Vector2 position, Color tint);                                // Draw a Texture2D with position defined as Vector2
  RLAPI void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint);  // Draw a Texture2D with extended parameters
@@ -434,7 +434,7 @@ index 5ae45fa..ea2fdce 100644
  
  // Color/pixel related functions
  RLAPI bool ColorIsEqual(Color col1, Color col2);                            // Check if two colors are equal
-@@ -1458,15 +1458,15 @@ RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);
+@@ -1463,15 +1463,15 @@ RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);
  RLAPI Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount); // Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
  RLAPI bool IsFontValid(Font font);                                                          // Check if a font is valid (font data loaded, WARNING: GPU texture not checked)
  RLAPI GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount, int type); // Load font data for further use
@@ -453,7 +453,7 @@ index 5ae45fa..ea2fdce 100644
  RLAPI void DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint); // Draw text using Font and pro parameters (rotation)
  RLAPI void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSize, Color tint); // Draw one character (codepoint)
  RLAPI void DrawTextCodepoints(Font font, const int *codepoints, int codepointCount, Vector2 position, float fontSize, float spacing, Color tint); // Draw multiple character (codepoint)
-@@ -1477,7 +1477,7 @@ RLAPI int MeasureText(const char *text, int fontSize);
+@@ -1482,7 +1482,7 @@ RLAPI int MeasureText(const char *text, int fontSize);
  RLAPI Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing);    // Measure string size for Font
  RLAPI int GetGlyphIndex(Font font, int codepoint);                                          // Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
  RLAPI GlyphInfo GetGlyphInfo(Font font, int codepoint);                                     // Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
@@ -462,7 +462,7 @@ index 5ae45fa..ea2fdce 100644
  
  // Text codepoints management functions (unicode characters)
  RLAPI char *LoadUTF8(const int *codepoints, int length);                // Load UTF-8 text encoded from codepoints array
-@@ -1559,8 +1559,8 @@ RLAPI void DrawModelPoints(Model model, Vector3 position, float scale, Color tin
+@@ -1564,8 +1564,8 @@ RLAPI void DrawModelPoints(Model model, Vector3 position, float scale, Color tin
  RLAPI void DrawModelPointsEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model as points with extended parameters
  RLAPI void DrawBoundingBox(BoundingBox box, Color color);                                   // Draw bounding box (wires)
  RLAPI void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float scale, Color tint);   // Draw a billboard texture
@@ -474,7 +474,7 @@ index 5ae45fa..ea2fdce 100644
  // Mesh management functions
  RLAPI void UploadMesh(Mesh *mesh, bool dynamic);                                            // Upload mesh vertex data in GPU and provide VAO/VBO ids
 diff --git a/src/raylib/rcore.c b/src/raylib/rcore.c
-index 9b3eeee..ff3b0a9 100644
+index 9734972..6f95f1c 100644
 --- a/src/raylib/rcore.c
 +++ b/src/raylib/rcore.c
 @@ -664,16 +664,16 @@ void InitWindow(int width, int height, const char *title)
@@ -525,10 +525,10 @@ index 9b3eeee..ff3b0a9 100644
      #endif
  
 diff --git a/src/raylib/rmodels.c b/src/raylib/rmodels.c
-index e7208e1..8878f4c 100644
+index ed15d96..a1ebe0d 100644
 --- a/src/raylib/rmodels.c
 +++ b/src/raylib/rmodels.c
-@@ -3813,13 +3813,13 @@ void DrawModelPointsEx(Model model, Vector3 position, Vector3 rotationAxis, floa
+@@ -3816,13 +3816,13 @@ void DrawModelPointsEx(Model model, Vector3 position, Vector3 rotationAxis, floa
  // Draw a billboard
  void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float scale, Color tint)
  {
@@ -544,7 +544,7 @@ index e7208e1..8878f4c 100644
  {
      // NOTE: Billboard locked on axis-Y
      Vector3 up = { 0.0f, 1.0f, 0.0f };
-@@ -3828,7 +3828,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector
+@@ -3831,7 +3831,7 @@ void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector
  }
  
  // Draw a billboard with additional parameters
@@ -553,7 +553,7 @@ index e7208e1..8878f4c 100644
  {
      // Compute the up vector and the right vector
      Matrix matView = MatrixLookAt(camera.position, camera.target, camera.up);
-@@ -5146,7 +5146,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
+@@ -5149,7 +5149,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
          }
          else     // Check if image is provided as image path
          {
@@ -563,7 +563,7 @@ index e7208e1..8878f4c 100644
      }
      else if (cgltfImage->buffer_view->buffer->data != NULL)    // Check if image is provided as data buffer
 diff --git a/src/raylib/rshapes.c b/src/raylib/rshapes.c
-index e9b5ca8..2e3f807 100644
+index ece5513..b8caddd 100644
 --- a/src/raylib/rshapes.c
 +++ b/src/raylib/rshapes.c
 @@ -80,7 +80,7 @@
@@ -684,7 +684,7 @@ index e9b5ca8..2e3f807 100644
  
      rlBegin(RL_QUADS);
          rlNormal3f(0.0f, 0.0f, 1.0f);
-@@ -824,7 +824,7 @@ void DrawRectangleLines(int posX, int posY, int width, int height, Color color)
+@@ -850,7 +850,7 @@ void DrawRectangleLines(int posX, int posY, int width, int height, Color color)
  }
  
  // Draw rectangle outline with extended parameters
@@ -693,7 +693,7 @@ index e9b5ca8..2e3f807 100644
  {
      if ((lineThick > rec.width) || (lineThick > rec.height))
      {
-@@ -843,10 +843,10 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
+@@ -869,10 +869,10 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
      //   BBBBBBBB
      //
  
@@ -708,7 +708,7 @@ index e9b5ca8..2e3f807 100644
  
      DrawRectangleRec(top, color);
      DrawRectangleRec(bottom, color);
-@@ -855,7 +855,7 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
+@@ -881,7 +881,7 @@ void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color)
  }
  
  // Draw rectangle with rounded edges
@@ -717,7 +717,7 @@ index e9b5ca8..2e3f807 100644
  {
      // Not a rounded rectangle
      if ((roundness <= 0.0f) || (rec.width < 1) || (rec.height < 1 ))
-@@ -911,7 +911,7 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
+@@ -937,7 +937,7 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
  
  #if defined(SUPPORT_QUADS_DRAW_MODE)
      rlSetTexture(GetShapesTexture().id);
@@ -726,7 +726,7 @@ index e9b5ca8..2e3f807 100644
  
      rlBegin(RL_QUADS);
          // Draw all the 4 corners: [1] Upper Left Corner, [3] Upper Right Corner, [5] Lower Right Corner, [7] Lower Left Corner
-@@ -1082,20 +1082,20 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
+@@ -1108,20 +1108,20 @@ void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color co
  
  // Draw rectangle with rounded edges
  // TODO: This function should be refactored to use RL_LINES, for consistency with other Draw*Lines()
@@ -750,7 +750,7 @@ index e9b5ca8..2e3f807 100644
          return;
      }
  
-@@ -1154,7 +1154,7 @@ void DrawRectangleRoundedLinesEx(Rectangle rec, float roundness, int segments, f
+@@ -1180,7 +1180,7 @@ void DrawRectangleRoundedLinesEx(Rectangle rec, float roundness, int segments, f
      {
  #if defined(SUPPORT_QUADS_DRAW_MODE)
          rlSetTexture(GetShapesTexture().id);
@@ -759,7 +759,7 @@ index e9b5ca8..2e3f807 100644
  
          rlBegin(RL_QUADS);
  
-@@ -1330,7 +1330,7 @@ void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color)
+@@ -1356,7 +1356,7 @@ void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color)
  {
  #if defined(SUPPORT_QUADS_DRAW_MODE)
      rlSetTexture(GetShapesTexture().id);
@@ -768,7 +768,7 @@ index e9b5ca8..2e3f807 100644
  
      rlBegin(RL_QUADS);
          rlColor4ub(color.r, color.g, color.b, color.a);
-@@ -1384,7 +1384,7 @@ void DrawTriangleFan(const Vector2 *points, int pointCount, Color color)
+@@ -1410,7 +1410,7 @@ void DrawTriangleFan(const Vector2 *points, int pointCount, Color color)
      if (pointCount >= 3)
      {
          rlSetTexture(GetShapesTexture().id);
@@ -777,7 +777,7 @@ index e9b5ca8..2e3f807 100644
  
          rlBegin(RL_QUADS);
              rlColor4ub(color.r, color.g, color.b, color.a);
-@@ -1445,7 +1445,7 @@ void DrawPoly(Vector2 center, int sides, float radius, float rotation, Color col
+@@ -1471,7 +1471,7 @@ void DrawPoly(Vector2 center, int sides, float radius, float rotation, Color col
  
  #if defined(SUPPORT_QUADS_DRAW_MODE)
      rlSetTexture(GetShapesTexture().id);
@@ -786,7 +786,7 @@ index e9b5ca8..2e3f807 100644
  
      rlBegin(RL_QUADS);
          for (int i = 0; i < sides; i++)
-@@ -1514,7 +1514,7 @@ void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, fl
+@@ -1540,7 +1540,7 @@ void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, fl
  
  #if defined(SUPPORT_QUADS_DRAW_MODE)
      rlSetTexture(GetShapesTexture().id);
@@ -795,7 +795,7 @@ index e9b5ca8..2e3f807 100644
  
      rlBegin(RL_QUADS);
          for (int i = 0; i < sides; i++)
-@@ -2154,7 +2154,7 @@ Vector2 GetSplinePointBezierCubic(Vector2 startPos, Vector2 startControlPos, Vec
+@@ -2180,7 +2180,7 @@ Vector2 GetSplinePointBezierCubic(Vector2 startPos, Vector2 startControlPos, Vec
  //----------------------------------------------------------------------------------
  
  // Check if point is inside rectangle
@@ -804,7 +804,7 @@ index e9b5ca8..2e3f807 100644
  {
      bool collision = false;
  
-@@ -2215,7 +2215,7 @@ bool CheckCollisionPointPoly(Vector2 point, const Vector2 *points, int pointCoun
+@@ -2241,7 +2241,7 @@ bool CheckCollisionPointPoly(Vector2 point, const Vector2 *points, int pointCoun
  }
  
  // Check collision between two rectangles
@@ -813,7 +813,7 @@ index e9b5ca8..2e3f807 100644
  {
      bool collision = false;
  
-@@ -2243,7 +2243,7 @@ bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, floa
+@@ -2269,7 +2269,7 @@ bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, floa
  
  // Check collision between circle and rectangle
  // NOTE: Reviewed version to take into account corner limit case
@@ -822,7 +822,7 @@ index e9b5ca8..2e3f807 100644
  {
      bool collision = false;
  
-@@ -2341,9 +2341,9 @@ RLAPI bool CheckCollisionCircleLine(Vector2 center, float radius, Vector2 p1, Ve
+@@ -2367,9 +2367,9 @@ RLAPI bool CheckCollisionCircleLine(Vector2 center, float radius, Vector2 p1, Ve
  }
  
  // Get collision rectangle for two rectangles collision
@@ -835,7 +835,7 @@ index e9b5ca8..2e3f807 100644
      float left = (rec1.x > rec2.x)? rec1.x : rec2.x;
      float right1 = rec1.x + rec1.width;
 diff --git a/src/raylib/rtext.c b/src/raylib/rtext.c
-index 86aeb00..f6654c5 100644
+index 3510671..415aae4 100644
 --- a/src/raylib/rtext.c
 +++ b/src/raylib/rtext.c
 @@ -7,8 +7,8 @@
@@ -1032,7 +1032,7 @@ index 86aeb00..f6654c5 100644
              // Save data properly in sprite font
              font.glyphs[i].value = charId;
 diff --git a/src/raylib/rtextures.c b/src/raylib/rtextures.c
-index 9fc6332..2798a57 100644
+index ca3ad09..179009b 100644
 --- a/src/raylib/rtextures.c
 +++ b/src/raylib/rtextures.c
 @@ -263,7 +263,7 @@ static Vector4 *LoadImageDataNormalized(Image image);       // Load pixel data f
@@ -1053,7 +1053,7 @@ index 9fc6332..2798a57 100644
          frameCount = 1;
      }
  
-@@ -1172,7 +1172,7 @@ Image ImageCopy(Image image)
+@@ -1167,7 +1167,7 @@ Image ImageCopy(Image image)
  }
  
  // Create an image from another image piece
@@ -1062,7 +1062,7 @@ index 9fc6332..2798a57 100644
  {
      Image result = { 0 };
  
-@@ -1194,7 +1194,7 @@ Image ImageFromImage(Image image, Rectangle rec)
+@@ -1189,7 +1189,7 @@ Image ImageFromImage(Image image, Rectangle rec)
  
  // Crop an image to area defined by a rectangle
  // NOTE: Security checks are performed in case rectangle goes out of bounds
@@ -1071,7 +1071,7 @@ index 9fc6332..2798a57 100644
  {
      // Security check to avoid program crash
      if ((image->data == NULL) || (image->width == 0) || (image->height == 0)) return;
-@@ -1504,8 +1504,8 @@ Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Co
+@@ -1499,8 +1499,8 @@ Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Co
          {
              if ((codepoint != ' ') && (codepoint != '\t'))
              {
@@ -1082,7 +1082,7 @@ index 9fc6332..2798a57 100644
              }
  
              if (font.glyphs[index].advanceX == 0) textOffsetX += (int)(font.recs[index].width + spacing);
-@@ -1807,7 +1807,7 @@ void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, i
+@@ -1802,7 +1802,7 @@ void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, i
      if (image->format >= PIXELFORMAT_COMPRESSED_DXT1_RGB) TRACELOG(LOG_WARNING, "Image manipulation not supported for compressed formats");
      else if ((newWidth != image->width) || (newHeight != image->height))
      {
@@ -1091,7 +1091,7 @@ index 9fc6332..2798a57 100644
          Vector2 dstPos = { (float)offsetX, (float)offsetY };
  
          if (offsetX < 0)
-@@ -1887,7 +1887,7 @@ void ImageAlphaCrop(Image *image, float threshold)
+@@ -1882,7 +1882,7 @@ void ImageAlphaCrop(Image *image, float threshold)
      // Security check to avoid program crash
      if ((image->data == NULL) || (image->width == 0) || (image->height == 0)) return;
  
@@ -1100,7 +1100,7 @@ index 9fc6332..2798a57 100644
  
      // Crop if rectangle is valid
      if (((int)crop.width != 0) && ((int)crop.height != 0)) ImageCrop(image, crop);
-@@ -3139,9 +3139,9 @@ void UnloadImagePalette(Color *colors)
+@@ -3134,9 +3134,9 @@ void UnloadImagePalette(Color *colors)
  
  // Get image alpha border rectangle
  // NOTE: Threshold is defined as a percentage: 0.0f -> 1.0f
@@ -1112,7 +1112,7 @@ index 9fc6332..2798a57 100644
  
      Color *pixels = LoadImageColors(image);
  
-@@ -3169,7 +3169,7 @@ Rectangle GetImageAlphaBorder(Image image, float threshold)
+@@ -3164,7 +3164,7 @@ Rectangle GetImageAlphaBorder(Image image, float threshold)
          // Check for empty blank image
          if ((xMin != 65536) && (xMax != 65536))
          {
@@ -1121,7 +1121,7 @@ index 9fc6332..2798a57 100644
          }
  
          UnloadImageColors(pixels);
-@@ -3652,7 +3652,7 @@ void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color)
+@@ -3647,7 +3647,7 @@ void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color)
  // Draw rectangle within an image
  void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color)
  {
@@ -1130,7 +1130,7 @@ index 9fc6332..2798a57 100644
  }
  
  // Draw rectangle within an image (Vector version)
-@@ -3662,7 +3662,7 @@ void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color
+@@ -3657,7 +3657,7 @@ void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color
  }
  
  // Draw rectangle within an image
@@ -1139,7 +1139,7 @@ index 9fc6332..2798a57 100644
  {
      // Security check to avoid program crash
      if ((dst->data == NULL) || (dst->width == 0) || (dst->height == 0)) return;
-@@ -3707,7 +3707,7 @@ void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color)
+@@ -3702,7 +3702,7 @@ void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color)
  }
  
  // Draw rectangle lines within an image
@@ -1148,7 +1148,7 @@ index 9fc6332..2798a57 100644
  {
      ImageDrawRectangle(dst, (int)rec.x, (int)rec.y, (int)rec.width, thick, color);
      ImageDrawRectangle(dst, (int)rec.x, (int)(rec.y + thick), thick, (int)(rec.height - thick*2), color);
-@@ -3905,7 +3905,7 @@ void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color c
+@@ -3900,7 +3900,7 @@ void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color c
  
  // Draw an image (source) within an image (destination)
  // NOTE: Color tint is applied to source image
@@ -1157,7 +1157,7 @@ index 9fc6332..2798a57 100644
  {
      // Security check to avoid program crash
      if ((dst->data == NULL) || (dst->width == 0) || (dst->height == 0) ||
-@@ -3931,7 +3931,7 @@ void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color
+@@ -3926,7 +3926,7 @@ void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color
          {
              srcMod = ImageFromImage(src, srcRec);   // Create image from another image
              ImageResize(&srcMod, (int)dstRec.width, (int)dstRec.height);   // Resize to destination rectangle
@@ -1166,7 +1166,7 @@ index 9fc6332..2798a57 100644
  
              srcPtr = &srcMod;
              useSrcMod = true;
-@@ -4046,8 +4046,8 @@ void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position,
+@@ -4041,8 +4041,8 @@ void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position,
  {
      Image imText = ImageTextEx(font, text, fontSize, spacing, tint);
  
@@ -1177,7 +1177,7 @@ index 9fc6332..2798a57 100644
  
      ImageDraw(dst, imText, srcRec, dstRec, WHITE);
  
-@@ -4062,7 +4062,7 @@ Texture2D LoadTexture(const char *fileName)
+@@ -4057,7 +4057,7 @@ Texture2D LoadTexture(const char *fileName)
  {
      Texture2D texture = { 0 };
  
@@ -1186,7 +1186,7 @@ index 9fc6332..2798a57 100644
  
      if (image.data != NULL)
      {
-@@ -4130,9 +4130,9 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
+@@ -4123,9 +4123,9 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
          int size = cubemap.width;
  
          Image faces = { 0 };                // Vertical column image
@@ -1198,7 +1198,7 @@ index 9fc6332..2798a57 100644
  
          if (layout == CUBEMAP_LAYOUT_LINE_VERTICAL)
          {
-@@ -4171,7 +4171,7 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
+@@ -4164,7 +4164,7 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
  
              // NOTE: Image formatting does not work with compressed textures
  
@@ -1207,7 +1207,7 @@ index 9fc6332..2798a57 100644
          }
  
          // NOTE: Cubemap data is expected to be provided as 6 images in a single data array,
-@@ -4297,7 +4297,7 @@ void UpdateTexture(Texture2D texture, const void *pixels)
+@@ -4290,7 +4290,7 @@ void UpdateTexture(Texture2D texture, const void *pixels)
  
  // Update GPU texture rectangle with new data
  // NOTE: pixels data must match texture.format
@@ -1216,7 +1216,7 @@ index 9fc6332..2798a57 100644
  {
      rlUpdateTexture(texture.id, (int)rec.x, (int)rec.y, (int)rec.width, (int)rec.height, texture.format, pixels);
  }
-@@ -4427,17 +4427,17 @@ void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
+@@ -4420,17 +4420,17 @@ void DrawTextureV(Texture2D texture, Vector2 position, Color tint)
  // Draw a texture with extended parameters
  void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint)
  {
@@ -1238,7 +1238,7 @@ index 9fc6332..2798a57 100644
      Vector2 origin = { 0.0f, 0.0f };
  
      DrawTexturePro(texture, source, dest, origin, 0.0f, tint);
-@@ -4445,7 +4445,7 @@ void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color
+@@ -4438,7 +4438,7 @@ void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color
  
  // Draw a part of a texture (defined by a rectangle) with 'pro' parameters
  // NOTE: origin is relative to destination rectangle size
@@ -1247,7 +1247,7 @@ index 9fc6332..2798a57 100644
  {
      // Check if texture is valid
      if (texture.id > 0)
-@@ -4570,7 +4570,7 @@ void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2
+@@ -4563,7 +4563,7 @@ void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2
  }
  
  // Draws a texture (or part of it) that stretches or shrinks nicely using n-patch info

@@ -1007,7 +1007,7 @@ Image GenImagePerlinNoise(int width, int height, int offsetX, int offsetY, float
             // Apply aspect ratio compensation to wider side
             if (width > height) nx *= aspectRatio;
             else ny /= aspectRatio;
-            
+
             // Basic perlin noise implementation (not used)
             //float p = (stb_perlin_noise3(nx, ny, 0.0f, 0, 0, 0);
 
@@ -1111,8 +1111,7 @@ Image GenImageText(int width, int height, const char *text)
 {
     Image image = { 0 };
 
-#if defined(SUPPORT_MODULE_RTEXT)
-    int textLength = TextLength(text);
+    int textLength = (int)strlen(text);
     int imageViewSize = width*height;
 
     image.width = width;
@@ -1122,10 +1121,6 @@ Image GenImageText(int width, int height, const char *text)
     image.mipmaps = 1;
 
     memcpy(image.data, text, (textLength > imageViewSize)? imageViewSize : textLength);
-#else
-    TRACELOG(LOG_WARNING, "IMAGE: GenImageText() requires module: rtext");
-    image = GenImageColor(width, height, BLACK);     // Generating placeholder black image rectangle
-#endif
 
     return image;
 }
@@ -4105,7 +4100,6 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
         {
             if ((image.width/6) == image.height) { layout = CUBEMAP_LAYOUT_LINE_HORIZONTAL; cubemap.width = image.width/6; }
             else if ((image.width/4) == (image.height/3)) { layout = CUBEMAP_LAYOUT_CROSS_FOUR_BY_THREE; cubemap.width = image.width/4; }
-            else if (image.width >= (int)((float)image.height*1.85f)) { layout = CUBEMAP_LAYOUT_PANORAMA; cubemap.width = image.width/4; }
         }
         else if (image.height > image.width)
         {
@@ -4119,7 +4113,6 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
         if (layout == CUBEMAP_LAYOUT_LINE_HORIZONTAL) cubemap.width = image.width/6;
         if (layout == CUBEMAP_LAYOUT_CROSS_THREE_BY_FOUR) cubemap.width = image.width/3;
         if (layout == CUBEMAP_LAYOUT_CROSS_FOUR_BY_THREE) cubemap.width = image.width/4;
-        if (layout == CUBEMAP_LAYOUT_PANORAMA) cubemap.width = image.width/4;
     }
 
     cubemap.height = cubemap.width;
@@ -4138,11 +4131,11 @@ TextureCubemap LoadTextureCubemap(Image image, int layout)
         {
             faces = ImageCopy(image);       // Image data already follows expected convention
         }
-        else if (layout == CUBEMAP_LAYOUT_PANORAMA)
+        /*else if (layout == CUBEMAP_LAYOUT_PANORAMA)
         {
-            // TODO: Convert panorama image to square faces...
+            // TODO: implement panorama by converting image to square faces...
             // Ref: https://github.com/denivip/panorama/blob/master/panorama.cpp
-        }
+        } */
         else
         {
             if (layout == CUBEMAP_LAYOUT_LINE_HORIZONTAL) for (int i = 0; i < 6; i++) faceRecs[i].x = (float)size*i;
@@ -4457,7 +4450,7 @@ void DrawTexturePro(Texture2D texture, rlRectangle source, rlRectangle dest, Vec
 
         if (source.width < 0) { flipX = true; source.width *= -1; }
         if (source.height < 0) source.y -= source.height;
-        
+
         if (dest.width < 0) dest.width *= -1;
         if (dest.height < 0) dest.height *= -1;
 
@@ -5079,10 +5072,10 @@ Color ColorAlphaBlend(Color dst, Color src, Color tint)
 }
 
 // Get color lerp interpolation between two colors, factor [0.0f..1.0f]
-Color ColorLerp(Color color1, Color color2, float factor) 
-{ 
+Color ColorLerp(Color color1, Color color2, float factor)
+{
     Color color = { 0 };
-    
+
     if (factor < 0.0f) factor = 0.0f;
     else if (factor > 1.0f) factor = 1.0f;
 

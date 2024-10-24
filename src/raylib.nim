@@ -428,7 +428,6 @@ type
     LineHorizontal ## Layout is defined by a horizontal line with faces
     CrossThreeByFour ## Layout is defined by a 3x4 cross with cubemap faces
     CrossFourByThree ## Layout is defined by a 4x3 cross with cubemap faces
-    Panorama ## Layout is defined by a panorama image (equirrectangular map)
 
   FontType* {.size: sizeof(int32).} = enum ## Font type, defines generation method
     Default ## Default font generation, anti-aliased
@@ -806,37 +805,37 @@ proc isWindowReady*(): bool {.importc: "IsWindowReady", sideEffect.}
 proc isWindowFullscreen*(): bool {.importc: "IsWindowFullscreen", sideEffect.}
   ## Check if window is currently fullscreen
 proc isWindowHidden*(): bool {.importc: "IsWindowHidden", sideEffect.}
-  ## Check if window is currently hidden (only PLATFORM_DESKTOP)
+  ## Check if window is currently hidden
 proc isWindowMinimized*(): bool {.importc: "IsWindowMinimized", sideEffect.}
-  ## Check if window is currently minimized (only PLATFORM_DESKTOP)
+  ## Check if window is currently minimized
 proc isWindowMaximized*(): bool {.importc: "IsWindowMaximized", sideEffect.}
-  ## Check if window is currently maximized (only PLATFORM_DESKTOP)
+  ## Check if window is currently maximized
 proc isWindowFocused*(): bool {.importc: "IsWindowFocused", sideEffect.}
-  ## Check if window is currently focused (only PLATFORM_DESKTOP)
+  ## Check if window is currently focused
 proc isWindowResized*(): bool {.importc: "IsWindowResized", sideEffect.}
   ## Check if window has been resized last frame
 proc isWindowState*(flag: ConfigFlags): bool {.importc: "IsWindowState", sideEffect.}
   ## Check if one specific window flag is enabled
 proc setWindowState*(flags: Flags[ConfigFlags]) {.importc: "SetWindowState", sideEffect.}
-  ## Set window configuration state using flags (only PLATFORM_DESKTOP)
+  ## Set window configuration state using flags
 proc clearWindowState*(flags: Flags[ConfigFlags]) {.importc: "ClearWindowState", sideEffect.}
   ## Clear window configuration state flags
 proc toggleFullscreen*() {.importc: "ToggleFullscreen", sideEffect.}
-  ## Toggle window state: fullscreen/windowed [resizes monitor to match window resolution] (only PLATFORM_DESKTOP)
+  ## Toggle window state: fullscreen/windowed, resizes monitor to match window resolution
 proc toggleBorderlessWindowed*() {.importc: "ToggleBorderlessWindowed", sideEffect.}
-  ## Toggle window state: borderless windowed [resizes window to match monitor resolution] (only PLATFORM_DESKTOP)
+  ## Toggle window state: borderless windowed, resizes window to match monitor resolution
 proc maximizeWindow*() {.importc: "MaximizeWindow", sideEffect.}
-  ## Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
+  ## Set window state: maximized, if resizable
 proc minimizeWindow*() {.importc: "MinimizeWindow", sideEffect.}
-  ## Set window state: minimized, if resizable (only PLATFORM_DESKTOP)
+  ## Set window state: minimized, if resizable
 proc restoreWindow*() {.importc: "RestoreWindow", sideEffect.}
-  ## Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
+  ## Set window state: not minimized/maximized
 proc setWindowIcon*(image: Image) {.importc: "SetWindowIcon", sideEffect.}
-  ## Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
+  ## Set icon for window (single image, RGBA 32bit)
 proc setWindowIconsImpl(images: ptr UncheckedArray[Image], count: int32) {.importc: "SetWindowIcons", sideEffect.}
 proc setWindowTitleImpl(title: cstring) {.importc: "SetWindowTitle", sideEffect.}
 proc setWindowPosition*(x: int32, y: int32) {.importc: "SetWindowPosition", sideEffect.}
-  ## Set window position on screen (only PLATFORM_DESKTOP)
+  ## Set window position on screen
 proc setWindowMonitor*(monitor: int32) {.importc: "SetWindowMonitor", sideEffect.}
   ## Set monitor for the current window
 proc setWindowMinSize*(width: int32, height: int32) {.importc: "SetWindowMinSize", sideEffect.}
@@ -846,9 +845,9 @@ proc setWindowMaxSize*(width: int32, height: int32) {.importc: "SetWindowMaxSize
 proc setWindowSize*(width: int32, height: int32) {.importc: "SetWindowSize", sideEffect.}
   ## Set window dimensions
 proc setWindowOpacity*(opacity: float32) {.importc: "SetWindowOpacity", sideEffect.}
-  ## Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
+  ## Set window opacity [0.0f..1.0f]
 proc setWindowFocused*() {.importc: "SetWindowFocused", sideEffect.}
-  ## Set window focused (only PLATFORM_DESKTOP)
+  ## Set window focused
 proc getWindowHandle*(): pointer {.importc: "GetWindowHandle", sideEffect.}
   ## Get native window handle
 proc getScreenWidth*(): int32 {.importc: "GetScreenWidth", sideEffect.}
@@ -862,7 +861,7 @@ proc getRenderHeight*(): int32 {.importc: "GetRenderHeight", sideEffect.}
 proc getMonitorCount*(): int32 {.importc: "GetMonitorCount", sideEffect.}
   ## Get number of connected monitors
 proc getCurrentMonitor*(): int32 {.importc: "GetCurrentMonitor", sideEffect.}
-  ## Get current connected monitor
+  ## Get current monitor where window is placed
 proc getMonitorPosition*(monitor: int32): Vector2 {.importc: "GetMonitorPosition", sideEffect.}
   ## Get specified monitor position
 proc getMonitorWidth*(monitor: int32): int32 {.importc: "GetMonitorWidth", sideEffect.}
@@ -1018,7 +1017,7 @@ proc playAutomationEvent*(event: AutomationEvent) {.importc: "PlayAutomationEven
 proc isKeyPressed*(key: KeyboardKey): bool {.importc: "IsKeyPressed", sideEffect.}
   ## Check if a key has been pressed once
 proc isKeyPressedRepeat*(key: KeyboardKey): bool {.importc: "IsKeyPressedRepeat", sideEffect.}
-  ## Check if a key has been pressed again (Only PLATFORM_DESKTOP)
+  ## Check if a key has been pressed again
 proc isKeyDown*(key: KeyboardKey): bool {.importc: "IsKeyDown", sideEffect.}
   ## Check if a key is being pressed
 proc isKeyReleased*(key: KeyboardKey): bool {.importc: "IsKeyReleased", sideEffect.}
@@ -1049,8 +1048,8 @@ proc getGamepadAxisCount*(gamepad: int32): int32 {.importc: "GetGamepadAxisCount
 proc getGamepadAxisMovement*(gamepad: int32, axis: GamepadAxis): float32 {.importc: "GetGamepadAxisMovement", sideEffect.}
   ## Get axis movement value for a gamepad axis
 proc setGamepadMappingsImpl(mappings: cstring): int32 {.importc: "SetGamepadMappings", sideEffect.}
-proc setGamepadVibration*(gamepad: int32, leftMotor: float32, rightMotor: float32) {.importc: "SetGamepadVibration", sideEffect.}
-  ## Set gamepad vibration for both motors
+proc setGamepadVibration*(gamepad: int32, leftMotor: float32, rightMotor: float32, duration: float32) {.importc: "SetGamepadVibration", sideEffect.}
+  ## Set gamepad vibration for both motors (duration in seconds)
 proc isMouseButtonPressed*(button: MouseButton): bool {.importc: "IsMouseButtonPressed", sideEffect.}
   ## Check if a mouse button has been pressed once
 proc isMouseButtonDown*(button: MouseButton): bool {.importc: "IsMouseButtonDown", sideEffect.}
@@ -1096,7 +1095,7 @@ proc isGestureDetected*(gesture: Gesture): bool {.importc: "IsGestureDetected", 
 proc getGestureDetected*(): Gesture {.importc: "GetGestureDetected", sideEffect.}
   ## Get latest detected gesture
 proc getGestureHoldDuration*(): float32 {.importc: "GetGestureHoldDuration", sideEffect.}
-  ## Get gesture hold time in milliseconds
+  ## Get gesture hold time in seconds
 proc getGestureDragVector*(): Vector2 {.importc: "GetGestureDragVector", sideEffect.}
   ## Get gesture drag vector
 proc getGestureDragAngle*(): float32 {.importc: "GetGestureDragAngle", sideEffect.}
@@ -1217,19 +1216,19 @@ func checkCollisionCircles*(center1: Vector2, radius1: float32, center2: Vector2
   ## Check collision between two circles
 func checkCollisionCircleRec*(center: Vector2, radius: float32, rec: Rectangle): bool {.importc: "CheckCollisionCircleRec".}
   ## Check collision between circle and rectangle
+func checkCollisionCircleLine*(center: Vector2, radius: float32, p1: Vector2, p2: Vector2): bool {.importc: "CheckCollisionCircleLine".}
+  ## Check if circle collides with a line created betweeen two points [p1] and [p2]
 func checkCollisionPointRec*(point: Vector2, rec: Rectangle): bool {.importc: "CheckCollisionPointRec".}
   ## Check if point is inside rectangle
 func checkCollisionPointCircle*(point: Vector2, center: Vector2, radius: float32): bool {.importc: "CheckCollisionPointCircle".}
   ## Check if point is inside circle
 func checkCollisionPointTriangle*(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): bool {.importc: "CheckCollisionPointTriangle".}
   ## Check if point is inside a triangle
+func checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshold: int32): bool {.importc: "CheckCollisionPointLine".}
+  ## Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
 func checkCollisionPointPolyImpl(point: Vector2, points: ptr UncheckedArray[Vector2], pointCount: int32): bool {.importc: "CheckCollisionPointPoly".}
 func checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: out Vector2): bool {.importc: "CheckCollisionLines".}
   ## Check the collision between two lines defined by two points each, returns collision point by reference
-func checkCollisionPointLine*(point: Vector2, p1: Vector2, p2: Vector2, threshold: int32): bool {.importc: "CheckCollisionPointLine".}
-  ## Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
-func checkCollisionCircleLine*(center: Vector2, radius: float32, p1: Vector2, p2: Vector2): bool {.importc: "CheckCollisionCircleLine".}
-  ## Check if circle collides with a line created betweeen two points [p1] and [p2]
 func getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "GetCollisionRec".}
   ## Get collision rectangle for two rectangles collision
 proc loadImageImpl(fileName: cstring): Image {.importc: "rlLoadImage", sideEffect.}
@@ -1561,12 +1560,12 @@ func isMaterialValid*(material: Material): bool {.importc: "IsMaterialValid".}
 proc unloadMaterial(material: Material) {.importc: "UnloadMaterial", sideEffect.}
 proc loadModelAnimationsImpl(fileName: cstring, animCount: ptr int32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations", sideEffect.}
 proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation", sideEffect.}
-  ## Update model animation pose
+  ## Update model animation pose (CPU)
+func updateModelAnimationBoneMatrices*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimationBoneMatrices".}
+  ## Update model animation mesh bone matrices (GPU skinning)
 proc unloadModelAnimation(anim: ModelAnimation) {.importc: "UnloadModelAnimation", sideEffect.}
 func isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
   ## Check model animation skeleton match
-func updateModelAnimationBoneMatrices*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimationBoneMatrices".}
-  ## Update model animation mesh bone matrices (Note GPU skinning does not work on Mac)
 func checkCollisionSpheres*(center1: Vector3, radius1: float32, center2: Vector3, radius2: float32): bool {.importc: "CheckCollisionSpheres".}
   ## Check collision between two spheres
 func checkCollisionBoxes*(box1: BoundingBox, box2: BoundingBox): bool {.importc: "CheckCollisionBoxes".}
@@ -2276,11 +2275,11 @@ proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
 proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
 
 proc setWindowIcons*(images: openArray[Image]) =
-  ## Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
+  ## Set icon for window (multiple images, RGBA 32bit)
   setWindowIconsImpl(cast[ptr UncheckedArray[Image]](images), images.len.int32)
 
 proc setWindowTitle*(title: string) =
-  ## Set title for window (only PLATFORM_DESKTOP and PLATFORM_WEB)
+  ## Set title for window
   setWindowTitleImpl(title.cstring)
 
 proc getMonitorName*(monitor: int32): string =
