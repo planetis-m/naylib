@@ -22,7 +22,7 @@
 #
 # ****************************************************************************************
 
-import raylib, rlgl, raymath, rmem, reasings
+import raylib, rlgl, raymath, rmem, reasings, std/[osproc, locks]
 
 # ----------------------------------------------------------------------------------------
 # Global Variables Definition
@@ -37,7 +37,7 @@ const
 # ----------------------------------------------------------------------------------------
 
 proc testShowCursor() =
-  showCursor()
+  raylib.showCursor()
 
 proc testDrawRectangle() =
   let rec = Rectangle(x: 100, y: 100, width: 200, height: 150)
@@ -58,6 +58,22 @@ proc testDrawTextWithFont() =
   let position = Vector2(x: 200, y: 200)
   drawText(font, "Hello with custom font", position, 24, 2, DarkGray)
 
+# Additional module tests
+
+proc testOsproc() =
+  let (output, exitCode) = execCmdEx("echo Hello from subprocess")
+  echo "Subprocess output: ", output
+  echo "Exit code: ", exitCode
+
+proc testLocks() =
+  var lock: Lock
+  initLock(lock)
+
+  withLock(lock):
+    echo "This is executed in a locked state"
+
+  deinitLock(lock)
+
 # ----------------------------------------------------------------------------------------
 # Program main entry point
 # ----------------------------------------------------------------------------------------
@@ -75,6 +91,10 @@ proc main =
   testLoadImage()
   testDrawText()
   testDrawTextWithFont()
+
+  # Run additional module tests
+  testOsproc()
+  testLocks()
 
   # Main game loop
   while not windowShouldClose(): # Detect window close button or ESC key

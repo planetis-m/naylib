@@ -108,6 +108,7 @@ else:
       # pkg-config x11 xrandr xinerama xi xcursor --libs
       {.passL: "-lX11 -lXrandr -lXinerama -lXi -lXcursor".}
 
+# {.compile: raylibDir / Path"naylib.c".}
 when defined(emscripten): discard
 elif defined(android): discard
 elif defined(macosx): {.compile(raylibDir / Path"rglfw.c", "-x objective-c").}
@@ -491,59 +492,59 @@ template MapDiffuse*(_: typedesc[ShaderLocationIndex]): untyped = MapAlbedo
 template MapSpecular*(_: typedesc[ShaderLocationIndex]): untyped = MapMetalness
 
 type
-  Vector2* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Vector2, 2 components
+  Vector2* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Vector2, 2 components
     x*: float32 ## Vector x component
     y*: float32 ## Vector y component
 
-  Vector3* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Vector3, 3 components
+  Vector3* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Vector3, 3 components
     x*: float32 ## Vector x component
     y*: float32 ## Vector y component
     z*: float32 ## Vector z component
 
-  Vector4* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Vector4, 4 components
+  Vector4* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Vector4, 4 components
     x*: float32 ## Vector x component
     y*: float32 ## Vector y component
     z*: float32 ## Vector z component
     w*: float32 ## Vector w component
 
-  Matrix* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Matrix, 4x4 components, column major, OpenGL style, right-handed
+  Matrix* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Matrix, 4x4 components, column major, OpenGL style, right-handed
     m0*, m4*, m8*, m12*: float32 ## Matrix first row (4 components)
     m1*, m5*, m9*, m13*: float32 ## Matrix second row (4 components)
     m2*, m6*, m10*, m14*: float32 ## Matrix third row (4 components)
     m3*, m7*, m11*, m15*: float32 ## Matrix fourth row (4 components)
 
-  Color* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Color, 4 components, R8G8B8A8 (32bit)
+  Color* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Color, 4 components, R8G8B8A8 (32bit)
     r*: uint8 ## Color red value
     g*: uint8 ## Color green value
     b*: uint8 ## Color blue value
     a*: uint8 ## Color alpha value
 
-  Rectangle* {.importc: "rlRectangle", header: "raylib.h", completeStruct, bycopy.} = object ## Rectangle, 4 components
+  Rectangle* {.importc: "Rectangle", header: "naylib.h", completeStruct, bycopy.} = object ## Rectangle, 4 components
     x*: float32 ## Rectangle top-left corner position x
     y*: float32 ## Rectangle top-left corner position y
     width*: float32 ## Rectangle width
     height*: float32 ## Rectangle height
 
-  Image* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Image, pixel data stored in CPU memory (RAM)
+  Image* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Image, pixel data stored in CPU memory (RAM)
     data*: pointer ## Image raw data
     width*: int32 ## Image base width
     height*: int32 ## Image base height
     mipmaps*: int32 ## Mipmap levels, 1 by default
     format*: PixelFormat ## Data format (PixelFormat type)
 
-  Texture* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Texture, tex data stored in GPU memory (VRAM)
+  Texture* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Texture, tex data stored in GPU memory (VRAM)
     id*: uint32 ## OpenGL texture id
     width*: int32 ## Texture base width
     height*: int32 ## Texture base height
     mipmaps*: int32 ## Mipmap levels, 1 by default
     format*: PixelFormat ## Data format (PixelFormat type)
 
-  RenderTexture* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## RenderTexture, fbo for texture rendering
+  RenderTexture* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## RenderTexture, fbo for texture rendering
     id*: uint32 ## OpenGL framebuffer object id
     texture*: Texture ## Color buffer attachment texture
     depth*: Texture ## Depth buffer attachment texture
 
-  NPatchInfo* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## NPatchInfo, n-patch layout info
+  NPatchInfo* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## NPatchInfo, n-patch layout info
     source*: Rectangle ## Texture source rectangle
     left*: int32 ## Left border offset
     top*: int32 ## Top border offset
@@ -551,14 +552,14 @@ type
     bottom*: int32 ## Bottom border offset
     layout*: NPatchLayout ## Layout of the n-patch: 3x3, 1x3 or 3x1
 
-  GlyphInfo* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## GlyphInfo, font characters glyphs info
+  GlyphInfo* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## GlyphInfo, font characters glyphs info
     value*: int32 ## Character value (Unicode)
     offsetX*: int32 ## Character offset X when drawing
     offsetY*: int32 ## Character offset Y when drawing
     advanceX*: int32 ## Character advance position X
     image*: Image ## Character image data
 
-  Font* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Font, font texture and GlyphInfo array data
+  Font* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Font, font texture and GlyphInfo array data
     baseSize*: int32 ## Base size (default chars height)
     glyphCount: int32 ## Number of glyph characters
     glyphPadding*: int32 ## Padding around the glyph characters
@@ -566,20 +567,20 @@ type
     recs: ptr UncheckedArray[Rectangle] ## Rectangles in texture for the glyphs
     glyphs: ptr UncheckedArray[GlyphInfo] ## Glyphs info data
 
-  Camera3D* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Camera, defines position/orientation in 3d space
+  Camera3D* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Camera, defines position/orientation in 3d space
     position*: Vector3 ## Camera position
     target*: Vector3 ## Camera target it looks-at
     up*: Vector3 ## Camera up vector (rotation over its axis)
     fovy*: float32 ## Camera field-of-view aperture in Y (degrees) in perspective, used as near plane width in orthographic
     projection*: CameraProjection ## Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
 
-  Camera2D* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Camera2D, defines position/orientation in 2d space
+  Camera2D* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Camera2D, defines position/orientation in 2d space
     offset*: Vector2 ## Camera offset (displacement from target)
     target*: Vector2 ## Camera target (rotation and zoom origin)
     rotation*: float32 ## Camera rotation in degrees
     zoom*: float32 ## Camera zoom (scaling), should be 1.0f by default
 
-  Mesh* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Mesh, vertex data and vao/vbo
+  Mesh* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Mesh, vertex data and vao/vbo
     vertexCount: int32 ## Number of vertices stored in arrays
     triangleCount: int32 ## Number of triangles stored (indexed or not)
     vertices: ptr UncheckedArray[float32] ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
@@ -598,30 +599,30 @@ type
     vaoId*: uint32 ## OpenGL Vertex Array Object id
     vboId: ptr UncheckedArray[uint32] ## OpenGL Vertex Buffer Objects id (default vertex data)
 
-  Shader* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Shader
+  Shader* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Shader
     id*: uint32 ## Shader program id
     locs: ptr UncheckedArray[ShaderLocation] ## Shader locations array (RL_MAX_SHADER_LOCATIONS)
 
-  MaterialMap* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## MaterialMap
+  MaterialMap* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## MaterialMap
     texture: Texture2D ## Material map texture
     color*: Color ## Material map color
     value*: float32 ## Material map value
 
-  Material* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Material, includes shader and maps
+  Material* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Material, includes shader and maps
     shader: Shader ## Material shader
     maps: ptr UncheckedArray[MaterialMap] ## Material maps array (MAX_MATERIAL_MAPS)
     params*: array[4, float32] ## Material generic parameters (if required)
 
-  Transform* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Transform, vertex transformation data
+  Transform* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Transform, vertex transformation data
     translation*: Vector3 ## Translation
     rotation*: Quaternion ## Rotation
     scale*: Vector3 ## Scale
 
-  BoneInfo* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Bone, skeletal animation bone
+  BoneInfo* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Bone, skeletal animation bone
     name*: array[32, char] ## Bone name
     parent*: int32 ## Bone parent
 
-  Model* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Model, meshes, materials and animation data
+  Model* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Model, meshes, materials and animation data
     transform*: Matrix ## Local transform matrix
     meshCount: int32 ## Number of meshes
     materialCount: int32 ## Number of materials
@@ -632,53 +633,53 @@ type
     bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
     bindPose: ptr UncheckedArray[Transform] ## Bones base transformation (pose)
 
-  ModelAnimation* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## ModelAnimation
+  ModelAnimation* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## ModelAnimation
     boneCount: int32 ## Number of bones
     frameCount: int32 ## Number of animation frames
     bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
     framePoses: ptr UncheckedArray[ptr UncheckedArray[Transform]] ## Poses array by frame
     name*: array[32, char] ## Animation name
 
-  Ray* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Ray, ray for raycasting
+  Ray* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Ray, ray for raycasting
     position*: Vector3 ## Ray position (origin)
     direction*: Vector3 ## Ray direction (normalized)
 
-  RayCollision* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## RayCollision, ray hit information
+  RayCollision* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## RayCollision, ray hit information
     hit*: bool ## Did the ray hit something?
     distance*: float32 ## Distance to the nearest hit
     point*: Vector3 ## Point of the nearest hit
     normal*: Vector3 ## Surface normal of hit
 
-  BoundingBox* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## BoundingBox
+  BoundingBox* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## BoundingBox
     min*: Vector3 ## Minimum vertex box-corner
     max*: Vector3 ## Maximum vertex box-corner
 
-  Wave* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Wave, audio wave data
+  Wave* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Wave, audio wave data
     frameCount*: uint32 ## Total number of frames (considering channels)
     sampleRate*: uint32 ## Frequency (samples per second)
     sampleSize*: uint32 ## Bit depth (bits per sample): 8, 16, 32 (24 not supported)
     channels*: uint32 ## Number of channels (1-mono, 2-stereo, ...)
     data*: pointer ## Buffer data pointer
 
-  AudioStream* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## AudioStream, custom audio stream
+  AudioStream* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## AudioStream, custom audio stream
     buffer: ptr rAudioBuffer ## Pointer to internal data used by the audio system
     processor: ptr rAudioProcessor ## Pointer to internal data processor, useful for audio effects
     sampleRate*: uint32 ## Frequency (samples per second)
     sampleSize*: uint32 ## Bit depth (bits per sample): 8, 16, 32 (24 not supported)
     channels*: uint32 ## Number of channels (1-mono, 2-stereo, ...)
 
-  Sound* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Sound
+  Sound* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Sound
     stream*: AudioStream ## Audio stream
     frameCount*: uint32 ## Total number of frames (considering channels)
 
-  Music* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Music, audio stream, anything longer than ~10 seconds should be streamed
+  Music* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Music, audio stream, anything longer than ~10 seconds should be streamed
     stream*: AudioStream ## Audio stream
     frameCount*: uint32 ## Total number of frames (considering channels)
     looping*: bool ## Music looping enable
     ctxType*: int32 ## Type of music context (audio filetype)
     ctxData*: pointer ## Audio context data, depends on type
 
-  VrDeviceInfo* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## VrDeviceInfo, Head-Mounted-Display device parameters
+  VrDeviceInfo* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## VrDeviceInfo, Head-Mounted-Display device parameters
     hResolution*: int32 ## Horizontal resolution in pixels
     vResolution*: int32 ## Vertical resolution in pixels
     hScreenSize*: float32 ## Horizontal size in meters
@@ -689,7 +690,7 @@ type
     lensDistortionValues*: array[4, float32] ## Lens distortion constant parameters
     chromaAbCorrection*: array[4, float32] ## Chromatic aberration correction parameters
 
-  VrStereoConfig* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## VrStereoConfig, VR stereo rendering configuration for simulator
+  VrStereoConfig* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## VrStereoConfig, VR stereo rendering configuration for simulator
     projection*: array[2, Matrix] ## VR projection matrices (per eye)
     viewOffset*: array[2, Matrix] ## VR view offset matrices (per eye)
     leftLensCenter*: array[2, float32] ## VR left lens center
@@ -699,17 +700,17 @@ type
     scale*: array[2, float32] ## VR distortion scale
     scaleIn*: array[2, float32] ## VR distortion scale in
 
-  FilePathList {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## File path list
+  FilePathList {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## File path list
     capacity: uint32 ## Filepaths max entries
     count: uint32 ## Filepaths entries count
     paths: cstringArray ## Filepaths entries
 
-  AutomationEvent* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Automation event
+  AutomationEvent* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Automation event
     frame*: uint32 ## Event frame
     `type`*: uint32 ## Event type (AutomationEventType)
     params*: array[4, int32] ## Event parameters (if required)
 
-  AutomationEventList* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Automation event list
+  AutomationEventList* {.importc, header: "naylib.h", completeStruct, bycopy.} = object ## Automation event list
     capacity: uint32 ## Events max entries (MAX_AUTOMATION_EVENTS)
     count: uint32 ## Events entries count
     events: ptr UncheckedArray[AutomationEvent] ## Events entries
@@ -794,9 +795,9 @@ const
   Magenta* = Color(r: 255, g: 0, b: 255, a: 255)
   RayWhite* = Color(r: 245, g: 245, b: 245, a: 255)
 
-{.push callconv: cdecl, header: "raylib.h".}
+{.push callconv: cdecl, header: "naylib.h".}
 proc initWindowImpl(width: int32, height: int32, title: cstring) {.importc: "InitWindow", sideEffect.}
-proc closeWindow*() {.importc: "rlCloseWindow", sideEffect.}
+proc closeWindow*() {.importc: "CloseWindow", sideEffect.}
   ## Close window and unload OpenGL context
 proc windowShouldClose*(): bool {.importc: "WindowShouldClose", sideEffect.}
   ## Check if application should close (KEY_ESCAPE pressed or windows close icon clicked)
@@ -885,7 +886,7 @@ proc enableEventWaiting*() {.importc: "EnableEventWaiting", sideEffect.}
   ## Enable waiting for events on EndDrawing(), no automatic event polling
 proc disableEventWaiting*() {.importc: "DisableEventWaiting", sideEffect.}
   ## Disable waiting for events on EndDrawing(), automatic events polling
-proc showCursor*() {.importc: "rlShowCursor", sideEffect.}
+proc showCursor*() {.importc: "ShowCursor", sideEffect.}
   ## Shows cursor
 proc hideCursor*() {.importc: "HideCursor", sideEffect.}
   ## Hides cursor
@@ -1231,7 +1232,7 @@ func checkCollisionLines*(startPos1: Vector2, endPos1: Vector2, startPos2: Vecto
   ## Check the collision between two lines defined by two points each, returns collision point by reference
 func getCollisionRec*(rec1: Rectangle, rec2: Rectangle): Rectangle {.importc: "GetCollisionRec".}
   ## Get collision rectangle for two rectangles collision
-proc loadImageImpl(fileName: cstring): Image {.importc: "rlLoadImage", sideEffect.}
+proc loadImageImpl(fileName: cstring): Image {.importc: "LoadImage", sideEffect.}
 proc loadImageRawImpl(fileName: cstring, width: int32, height: int32, format: PixelFormat, headerSize: int32): Image {.importc: "LoadImageRaw", sideEffect.}
 proc loadImageAnimImpl(fileName: cstring, frames: out int32): Image {.importc: "LoadImageAnim", sideEffect.}
 proc loadImageAnimFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, frames: ptr UncheckedArray[int32]): Image {.importc: "LoadImageAnimFromMemory", sideEffect.}
@@ -1433,8 +1434,8 @@ proc unloadFont(font: Font) {.importc: "UnloadFont", sideEffect.}
 proc exportFontAsCodeImpl(font: Font, fileName: cstring): bool {.importc: "ExportFontAsCode", sideEffect.}
 proc drawFPS*(posX: int32, posY: int32) {.importc: "DrawFPS", sideEffect.}
   ## Draw current FPS
-proc drawTextImpl(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "rlDrawText", sideEffect.}
-proc drawTextImpl(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "rlDrawTextEx", sideEffect.}
+proc drawTextImpl(text: cstring, posX: int32, posY: int32, fontSize: int32, color: Color) {.importc: "DrawText", sideEffect.}
+proc drawTextImpl(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextEx", sideEffect.}
 proc drawTextImpl(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color) {.importc: "DrawTextPro", sideEffect.}
 proc drawTextCodepoint*(font: Font, codepoint: Rune, position: Vector2, fontSize: float32, tint: Color) {.importc: "DrawTextCodepoint", sideEffect.}
   ## Draw one character (codepoint)

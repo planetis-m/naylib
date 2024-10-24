@@ -5,7 +5,7 @@ const
   PkgDir = thisDir()
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
-  RayLatestCommit = "110ee74875412beb41ffb53330b47ec9cb052b2d"
+  RayLatestCommit = "15f6c47f0715afd1fce52d760053026c2b92214c"
   ApiDir = PkgDir / "wrapper/api"
   DocsDir = PkgDir / "docs"
   ParserDir = RaylibDir / "parser"
@@ -70,15 +70,11 @@ task genWrappers, "Generate Nim wrappers":
   # genWrapper("raymath")
   genWrapper("rlgl")
 
-task patch, "Patch raylib":
-  withDir(PkgDir / "src/raylib"):
-    let patchPath = PkgDir / "mangle_names.patch"
-    exec "git apply --reject " & patchPath.quoteShell
-
 task update, "Update the raylib git directory":
   fetchLatestRaylib()
   rmDir(PkgDir / "src/raylib")
   cpDir(RaylibDir / "src", PkgDir / "src/raylib")
+  cpFile(PkgDir / "src/naylib.h", PkgDir / "src/raylib/naylib.h")
 
 task wrap, "Produce all raylib Nim wrappers":
   buildToolsTask()

@@ -106,6 +106,8 @@ proc preprocessStructs(ctx: var ApiContext, config: ConfigData) =
 proc processStructs*(ctx: var ApiContext; config: ConfigData) =
   preprocessStructs(ctx, config)
   for obj in mitems(ctx.api.structs):
+    if isMangled in obj.flags:
+      obj.importName = "rl" & obj.name
     if shouldRemoveNamespacePrefix(obj.name, config):
       obj.importName = obj.name
       removePrefix(obj.name, config.namespacePrefix)
