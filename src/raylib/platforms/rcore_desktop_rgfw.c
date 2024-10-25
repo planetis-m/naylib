@@ -50,8 +50,8 @@
     #define RGFW_OPENGL_ES2
 #endif
 
-void ShowCursor(void);
-void CloseWindow(void);
+void rlShowCursor(void);
+void rlCloseWindow(void);
 
 #if defined(__linux__)
     #define _INPUT_EVENT_CODES_H
@@ -656,7 +656,7 @@ const char *GetClipboardText(void)
 }
 
 // Show mouse cursor
-void ShowCursor(void)
+void rlShowCursor(void)
 {
     RGFW_window_showMouse(platform.window, true);
     CORE.Input.Mouse.cursorHidden = false;

@@ -5,7 +5,7 @@ const
   PkgDir = thisDir()
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
-  RayLatestCommit = "110ee74875412beb41ffb53330b47ec9cb052b2d"
+  RayLatestCommit = "204872de0947c3f0c3b7bc1319c2d7e1b9568498"
   ApiDir = PkgDir / "wrapper/api"
   DocsDir = PkgDir / "docs"
   ParserDir = RaylibDir / "parser"
@@ -28,6 +28,13 @@ proc buildParser() =
     let exe = toExe("raylib_parser")
     # if not fileExists(exe) or fileNewer(src, exe):
     exec "cc " & src & " -o " & exe
+
+proc buildMangler() =
+  withDir(PkgDir):
+    let src = "mangle_names.nim"
+    let exe = toExe("mangle_names")
+    # if not fileExists(exe) or fileNewer(src, exe):
+    exec "nim c --mm:arc --panics:on -d:release " & src
 
 proc buildWrapper() =
   withDir(WrapperDir):
@@ -58,6 +65,7 @@ proc wrapRaylib(lib, prefix, after: string) =
 task buildTools, "Build raylib_parser and naylib_wrapper":
   buildParser()
   buildWrapper()
+  buildMangler()
 
 task genApi, "Generate API JSON files":
   buildParser()
@@ -70,10 +78,10 @@ task genWrappers, "Generate Nim wrappers":
   # genWrapper("raymath")
   genWrapper("rlgl")
 
-task patch, "Patch raylib":
-  withDir(PkgDir / "src/raylib"):
-    let patchPath = PkgDir / "mangle_names.patch"
-    exec "git apply --reject " & patchPath.quoteShell
+task mangle, "Mangle identifiers in raylib source":
+  buildMangler()
+  withDir(PkgDir):
+    exec /.toExe("mangle_names") & " src/raylib"
 
 task update, "Update the raylib git directory":
   fetchLatestRaylib()
