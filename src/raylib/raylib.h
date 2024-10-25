@@ -251,12 +251,12 @@ typedef struct Color {
     unsigned char a;        // Color alpha value
 } Color;
 
-// Rectangle, 4 components
+// rlRectangle, 4 components
 typedef struct rlRectangle {
-    float x;                // Rectangle top-left corner position x
-    float y;                // Rectangle top-left corner position y
-    float width;            // Rectangle width
-    float height;           // Rectangle height
+    float x;                // rlRectangle top-left corner position x
+    float y;                // rlRectangle top-left corner position y
+    float width;            // rlRectangle width
+    float height;           // rlRectangle height
 } rlRectangle;
 
 // Image, pixel data stored in CPU memory (RAM)

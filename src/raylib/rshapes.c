@@ -983,7 +983,7 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
             }
         }
 
-        // [2] Upper Rectangle
+        // [2] Upper rlRectangle
         rlColor4ub(color.r, color.g, color.b, color.a);
         rlTexCoord2f(shapeRect.x/texShapes.width, shapeRect.y/texShapes.height);
         rlVertex2f(point[0].x, point[0].y);
@@ -994,7 +994,7 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
         rlTexCoord2f((shapeRect.x + shapeRect.width)/texShapes.width, shapeRect.y/texShapes.height);
         rlVertex2f(point[1].x, point[1].y);
 
-        // [4] Right Rectangle
+        // [4] Right rlRectangle
         rlColor4ub(color.r, color.g, color.b, color.a);
         rlTexCoord2f(shapeRect.x/texShapes.width, shapeRect.y/texShapes.height);
         rlVertex2f(point[2].x, point[2].y);
@@ -1005,7 +1005,7 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
         rlTexCoord2f((shapeRect.x + shapeRect.width)/texShapes.width, shapeRect.y/texShapes.height);
         rlVertex2f(point[3].x, point[3].y);
 
-        // [6] Bottom Rectangle
+        // [6] Bottom rlRectangle
         rlColor4ub(color.r, color.g, color.b, color.a);
         rlTexCoord2f(shapeRect.x/texShapes.width, shapeRect.y/texShapes.height);
         rlVertex2f(point[11].x, point[11].y);
@@ -1016,7 +1016,7 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
         rlTexCoord2f((shapeRect.x + shapeRect.width)/texShapes.width, shapeRect.y/texShapes.height);
         rlVertex2f(point[10].x, point[10].y);
 
-        // [8] Left Rectangle
+        // [8] Left rlRectangle
         rlColor4ub(color.r, color.g, color.b, color.a);
         rlTexCoord2f(shapeRect.x/texShapes.width, shapeRect.y/texShapes.height);
         rlVertex2f(point[7].x, point[7].y);
@@ -1027,7 +1027,7 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
         rlTexCoord2f((shapeRect.x + shapeRect.width)/texShapes.width, shapeRect.y/texShapes.height);
         rlVertex2f(point[8].x, point[8].y);
 
-        // [9] Middle Rectangle
+        // [9] Middle rlRectangle
         rlColor4ub(color.r, color.g, color.b, color.a);
         rlTexCoord2f(shapeRect.x/texShapes.width, shapeRect.y/texShapes.height);
         rlVertex2f(point[8].x, point[8].y);
@@ -1058,7 +1058,7 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
             }
         }
 
-        // [2] Upper Rectangle
+        // [2] Upper rlRectangle
         rlColor4ub(color.r, color.g, color.b, color.a);
         rlVertex2f(point[0].x, point[0].y);
         rlVertex2f(point[8].x, point[8].y);
@@ -1067,7 +1067,7 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
         rlVertex2f(point[0].x, point[0].y);
         rlVertex2f(point[9].x, point[9].y);
 
-        // [4] Right Rectangle
+        // [4] Right rlRectangle
         rlColor4ub(color.r, color.g, color.b, color.a);
         rlVertex2f(point[9].x, point[9].y);
         rlVertex2f(point[10].x, point[10].y);
@@ -1076,7 +1076,7 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
         rlVertex2f(point[9].x, point[9].y);
         rlVertex2f(point[3].x, point[3].y);
 
-        // [6] Bottom Rectangle
+        // [6] Bottom rlRectangle
         rlColor4ub(color.r, color.g, color.b, color.a);
         rlVertex2f(point[11].x, point[11].y);
         rlVertex2f(point[5].x, point[5].y);
@@ -1085,7 +1085,7 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
         rlVertex2f(point[11].x, point[11].y);
         rlVertex2f(point[4].x, point[4].y);
 
-        // [8] Left Rectangle
+        // [8] Left rlRectangle
         rlColor4ub(color.r, color.g, color.b, color.a);
         rlVertex2f(point[7].x, point[7].y);
         rlVertex2f(point[6].x, point[6].y);
@@ -1094,7 +1094,7 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
         rlVertex2f(point[7].x, point[7].y);
         rlVertex2f(point[11].x, point[11].y);
 
-        // [9] Middle Rectangle
+        // [9] Middle rlRectangle
         rlColor4ub(color.r, color.g, color.b, color.a);
         rlVertex2f(point[8].x, point[8].y);
         rlVertex2f(point[11].x, point[11].y);
