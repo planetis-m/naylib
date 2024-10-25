@@ -1,4 +1,4 @@
-import std/[streams, enumerate]
+import std/[streams, enumerate, assertions]
 import schema, utils
 
 type
