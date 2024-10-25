@@ -45,6 +45,12 @@ static inline void rlDrawTextEx(Font font, const char* text, Vector2 position, f
     DrawTextEx(font, text, position, fontSize, spacing, tint);
 }
 
+#undef CloseWindow
+#undef ShowCursor
+#undef LoadImage
+#undef DrawText
+#undef DrawTextEx
+
 // Restore previous Windows definitions if they existed
 #ifdef PREV_CloseWindow
   #define CloseWindow PREV_CloseWindow
