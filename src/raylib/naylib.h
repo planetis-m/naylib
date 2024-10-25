@@ -32,15 +32,18 @@
   #undef DrawTextEx
 #endif
 
-#define rlRectangle Rectangle
-#define CloseWindow rlCloseWindow
-#define ShowCursor rlShowCursor
-#define LoadImage rlLoadImage
-#define DrawText rlDrawText
-#define DrawTextEx rlDrawTextEx
-
 // Include raylib with our names
 #include "raylib.h"
+
+// Create our wrapped versions with unique names
+typedef Rectangle rlRectangle;
+static inline void rlCloseWindow(void) { CloseWindow(); }
+static inline void rlShowCursor(void) { ShowCursor(); }
+static inline Image rlLoadImage(const char* fileName) { return LoadImage(fileName); }
+static inline void rlDrawText(const char* text, int x, int y, int fontSize, Color color) { DrawText(text, x, y, fontSize, color); }
+static inline void rlDrawTextEx(Font font, const char* text, Vector2 position, float fontSize, float spacing, Color tint) {
+    DrawTextEx(font, text, position, fontSize, spacing, tint);
+}
 
 #undef Rectangle
 #undef CloseWindow
