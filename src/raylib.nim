@@ -518,7 +518,7 @@ type
     b*: uint8 ## Color blue value
     a*: uint8 ## Color alpha value
 
-  Rectangle* {.importc: "Rectangle", header: "naylib.h", completeStruct, bycopy.} = object ## Rectangle, 4 components
+  Rectangle* {.importc: "rlRectangle", header: "naylib.h", completeStruct, bycopy.} = object ## Rectangle, 4 components
     x*: float32 ## Rectangle top-left corner position x
     y*: float32 ## Rectangle top-left corner position y
     width*: float32 ## Rectangle width

@@ -35,9 +35,9 @@
 // Include raylib with our names
 #include "raylib.h"
 
+#define rlRectangle Rectangle
 // Create our wrapped versions with unique names
 inline void rlCloseWindow(void) { CloseWindow(); }
-inline Rectangle rlRectangle(int x, int y, int width, int height) { return (Rectangle){x, y, width, height}; }
 inline void rlShowCursor(void) { ShowCursor(); }
 inline Image rlLoadImage(const char* fileName) { return LoadImage(fileName); }
 inline void rlDrawText(const char* text, int x, int y, int fontSize, Color color) { DrawText(text, x, y, fontSize, color); }
