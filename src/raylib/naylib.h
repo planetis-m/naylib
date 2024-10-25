@@ -32,19 +32,18 @@
   #undef DrawTextEx
 #endif
 
-// Include raylib with our names
+// Step 1: Redefine conflicting raylib symbols to custom names
+#define Rectangle rlRectangle
+#define CloseWindow rlCloseWindow
+#define ShowCursor rlShowCursor
+#define LoadImage rlLoadImage
+#define DrawText rlDrawText
+#define DrawTextEx rlDrawTextEx
+
+// Step 2: Include raylib.h with renamed symbols
 #include "raylib.h"
 
-// Create our wrapped versions with unique names
-typedef Rectangle rlRectangle;
-static inline void rlCloseWindow(void) { CloseWindow(); }
-static inline void rlShowCursor(void) { ShowCursor(); }
-static inline Image rlLoadImage(const char* fileName) { return LoadImage(fileName); }
-static inline void rlDrawText(const char* text, int x, int y, int fontSize, Color color) { DrawText(text, x, y, fontSize, color); }
-static inline void rlDrawTextEx(Font font, const char* text, Vector2 position, float fontSize, float spacing, Color tint) {
-    DrawTextEx(font, text, position, fontSize, spacing, tint);
-}
-
+// Step 3: Undefine the renaming macros to avoid affecting other includes
 #undef Rectangle
 #undef CloseWindow
 #undef ShowCursor
