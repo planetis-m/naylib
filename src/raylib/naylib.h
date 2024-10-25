@@ -1,77 +1,64 @@
-// raylib_wrapper.h
-#pragma once  // Prevent multiple inclusions
-
-// First, save any existing Windows macros/definitions if they exist
-#ifdef CloseWindow
-  #define PREV_CloseWindow CloseWindow
-  #undef CloseWindow
+// Only redefine if the Windows names aren't already defined
+#ifndef RECTANGLE_DEFINED
+  #define Rectangle rlRectangle
+  #define RECTANGLE_DEFINED
 #endif
 
-#ifdef Rectangle
-  #define PREV_Rectangle Rectangle
-  #undef Rectangle
+#ifndef CLOSEWINDOW_DEFINED
+  #define CloseWindow rlCloseWindow
+  #define CLOSEWINDOW_DEFINED
 #endif
 
-#ifdef ShowCursor
-  #define PREV_ShowCursor ShowCursor
-  #undef ShowCursor
+#ifndef SHOWCURSOR_DEFINED
+  #define ShowCursor rlShowCursor
+  #define SHOWCURSOR_DEFINED
 #endif
 
-#ifdef LoadImage
-  #define PREV_LoadImage LoadImage
-  #undef LoadImage
+#ifndef LOADIMAGE_DEFINED
+  #define LoadImage rlLoadImage
+  #define LOADIMAGE_DEFINED
 #endif
 
-#ifdef DrawText
-  #define PREV_DrawText DrawText
-  #undef DrawText
+#ifndef DRAWTEXT_DEFINED
+  #define DrawText rlDrawText
+  #define DRAWTEXT_DEFINED
 #endif
 
-#ifdef DrawTextEx
-  #define PREV_DrawTextEx DrawTextEx
-  #undef DrawTextEx
+#ifndef DRAWTEXTEX_DEFINED
+  #define DrawTextEx rlDrawTextEx
+  #define DRAWTEXTEX_DEFINED
 #endif
 
-// Include raylib with our names
+// Include raylib after setting up the defines
 #include "raylib.h"
 
-#define rlRectangle Rectangle
-// Create our wrapped versions with unique names
-inline void rlCloseWindow(void) { CloseWindow(); }
-inline void rlShowCursor(void) { ShowCursor(); }
-inline Image rlLoadImage(const char* fileName) { return LoadImage(fileName); }
-inline void rlDrawText(const char* text, int x, int y, int fontSize, Color color) { DrawText(text, x, y, fontSize, color); }
-inline void rlDrawTextEx(Font font, const char* text, Vector2 position, float fontSize, float spacing, Color tint) {
-    DrawTextEx(font, text, position, fontSize, spacing, tint);
-}
-
-// Restore previous Windows definitions if they existed
-#ifdef PREV_CloseWindow
-  #define CloseWindow PREV_CloseWindow
-  #undef PREV_CloseWindow
+// Undefine to restore original Windows API names if necessary
+#ifdef RECTANGLE_DEFINED
+  #undef Rectangle
+  #undef RECTANGLE_DEFINED
 #endif
 
-#ifdef PREV_Rectangle
-  #define Rectangle PREV_Rectangle
-  #undef PREV_Rectangle
+#ifdef CLOSEWINDOW_DEFINED
+  #undef CloseWindow
+  #undef CLOSEWINDOW_DEFINED
 #endif
 
-#ifdef PREV_ShowCursor
-  #define ShowCursor PREV_ShowCursor
-  #undef PREV_ShowCursor
+#ifdef SHOWCURSOR_DEFINED
+  #undef ShowCursor
+  #undef SHOWCURSOR_DEFINED
 #endif
 
-#ifdef PREV_LoadImage
-  #define LoadImage PREV_LoadImage
-  #undef PREV_LoadImage
+#ifdef LOADIMAGE_DEFINED
+  #undef LoadImage
+  #undef LOADIMAGE_DEFINED
 #endif
 
-#ifdef PREV_DrawText
-  #define DrawText PREV_DrawText
-  #undef PREV_DrawText
+#ifdef DRAWTEXT_DEFINED
+  #undef DrawText
+  #undef DRAWTEXT_DEFINED
 #endif
 
-#ifdef PREV_DrawTextEx
-  #define DrawTextEx PREV_DrawTextEx
-  #undef PREV_DrawTextEx
+#ifdef DRAWTEXTEX_DEFINED
+  #undef DrawTextEx
+  #undef DRAWTEXTEX_DEFINED
 #endif
