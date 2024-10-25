@@ -2,35 +2,31 @@ import std/[pegs, strutils, dirs, paths, cmdline]
 when defined(nimPreviewSlimSystem):
   from std/syncio import readFile, writeFile
 
-const nonWordChar = {'\1'..'\xff'} - IdentChars
+const NonWordChars = {'\1'..'\xff'} - IdentChars
 
-func matchIdentifier(identifier: string): Peg =
-  let wordBoundary = charSet(nonWordChar) / startAnchor() / endAnchor()
-  result = sequence(capture(wordBoundary), term(identifier), capture(wordBoundary))
+func identifier(name: string): Peg =
+  let wordBoundary = charSet(NonWordChars) / startAnchor() / endAnchor()
+  result = sequence(capture(wordBoundary), term(name), capture(wordBoundary))
 
 let replacements = [
   # Match identifier when surrounded by non-word chars, but only capture the identifier
-  (matchIdentifier("Rectangle"), "$1rlRectangle$2"),
-  (matchIdentifier("CloseWindow"), "$1rlCloseWindow$2"),
-  (matchIdentifier("ShowCursor"), "$1rlShowCursor$2"),
-  (matchIdentifier("LoadImage"), "$1rlLoadImage$2"),
-  (matchIdentifier("DrawText"), "$1rlDrawText$2"),
-  (matchIdentifier("DrawTextEx"), "$1rlDrawTextEx$2")
+  (identifier("Rectangle"), "$1rlRectangle$2"),
+  (identifier("CloseWindow"), "$1rlCloseWindow$2"),
+  (identifier("ShowCursor"), "$1rlShowCursor$2"),
+  (identifier("LoadImage"), "$1rlLoadImage$2"),
+  (identifier("DrawText"), "$1rlDrawText$2"),
+  (identifier("DrawTextEx"), "$1rlDrawTextEx$2")
 ]
 
 proc processFile(path: Path, replacements: openArray[(Peg, string)]) =
-  let pathStr = string(path)
-  if not (pathStr.endsWith(".c") or pathStr.endsWith(".h")):
-    return
-
-  echo "Processing: ", pathStr
-  var content = readFile(pathStr)
+  echo "Processing: ", path
+  var content = readFile($path)
   var newContent = content.parallelReplace(replacements)
 
   # Write back only if changes were made
   if newContent != content:
-    writeFile(pathStr, newContent)
-    echo "  Modified: ", pathStr
+    writeFile($path, newContent)
+    echo "  Modified: ", path
 
 proc main() =
   if paramCount() < 1:
@@ -41,10 +37,11 @@ proc main() =
   if dirExists(sourceDir):
     echo "Starting replacement process..."
     for path in walkDirRec(sourceDir):
-      processFile(path, replacements)
+      if endsWith($path, ".c") or endsWith($path, ".h"):
+        processFile(path, replacements)
     echo "Replacement process completed."
   else:
-    echo "Error: Directory '", string(sourceDir), "' not found!"
+    echo "Error: Directory '", sourceDir, "' not found!"
 
 when isMainModule:
   main()
