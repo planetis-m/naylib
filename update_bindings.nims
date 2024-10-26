@@ -6,10 +6,9 @@ const
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
   RayLatestCommit = "7ad8fa689f92de4796d9a4121677a16cd8798c81"
-  ApiDir = PkgDir / "wrapper/api"
   DocsDir = PkgDir / "docs"
-  ParserDir = RaylibDir / "parser"
-  WrapperDir = PkgDir / "wrapper"
+  ToolsDir = PkgDir / "tools"
+  ApiDir = ToolsDir / "wrapper/api"
 
 template `/.`(x: string): string =
   when defined(posix): "./" & x else: x
@@ -23,28 +22,28 @@ proc fetchLatestRaylib() =
     exec "git checkout " & RayLatestCommit
 
 proc buildParser() =
-  withDir(ParserDir):
+  withDir(ToolsDir / "parser"):
     let src = "raylib_parser.c"
     let exe = toExe("raylib_parser")
     # if not fileExists(exe) or fileNewer(src, exe):
     exec "cc " & src & " -o " & exe
 
 proc buildMangler() =
-  withDir(PkgDir):
-    let src = "mangle_names.nim"
-    let exe = toExe("mangle_names")
+  withDir(ToolsDir / "mangler"):
+    let src = "naylib_mangler.nim"
+    let exe = toExe("naylib_mangler")
     # if not fileExists(exe) or fileNewer(src, exe):
     exec "nim c --mm:arc --panics:on -d:release " & src
 
 proc buildWrapper() =
-  withDir(WrapperDir):
+  withDir(ToolsDir / "wrapper"):
     let src = "naylib_wrapper.nim"
     let exe = toExe("naylib_wrapper")
     # if not fileExists(exe) or fileNewer(src, exe):
     exec "nim c --mm:arc --panics:on -d:release -d:emiLenient " & src
 
 proc genApiJson(lib, prefix, after: string) =
-  withDir(ParserDir):
+  withDir(ToolsDir / "parser"):
     mkDir(ApiDir)
     let header = RaylibDir / "src" / (lib & ".h")
     let apiJson = ApiDir / (lib & ".json")
@@ -53,7 +52,7 @@ proc genApiJson(lib, prefix, after: string) =
         " -t " & after.quoteShell & " -o " & apiJson.quoteShell
 
 proc genWrapper(lib: string) =
-  withDir(WrapperDir):
+  withDir(ToolsDir / "wrapper"):
     let outp = PkgDir / "src" / (lib & ".nim")
     let conf = "config" / (lib & ".cfg")
     exec /.toExe("naylib_wrapper") & " -c:" & conf & " -o:" & outp
@@ -78,15 +77,16 @@ task genWrappers, "Generate Nim wrappers":
   # genWrapper("raymath")
   genWrapper("rlgl")
 
-task mangle, "Mangle identifiers in raylib source":
-  buildMangler()
-  withDir(PkgDir):
-    exec /.toExe("mangle_names") & " src/raylib"
-
 task update, "Update the raylib git directory":
   fetchLatestRaylib()
   rmDir(PkgDir / "src/raylib")
   cpDir(RaylibDir / "src", PkgDir / "src/raylib")
+  cpFile(RaylibDir / "parser/raylib_parser.c", ToolsDir / "parser/raylib_parser.c")
+
+task mangle, "Mangle identifiers in raylib source":
+  buildMangler()
+  withDir(ToolsDir / "mangler"):
+    exec /.toExe("naylib_mangler") & " " & (PkgDir / "src/raylib")
 
 task wrap, "Produce all raylib Nim wrappers":
   buildToolsTask()

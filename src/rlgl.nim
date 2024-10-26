@@ -444,7 +444,7 @@ proc loadTexture*(data: pointer, width: int32, height: int32, format: int32, mip
   ## Load texture data
 proc loadTextureDepth*(width: int32, height: int32, useRenderBuffer: bool): uint32 {.importc: "rlLoadTextureDepth", sideEffect.}
   ## Load depth texture/renderbuffer (to be attached to fbo)
-proc loadTextureCubemap*(data: pointer, size: int32, format: PixelFormat): uint32 {.importc: "rlLoadTextureCubemap", sideEffect.}
+proc loadTextureCubemap*(data: pointer, size: int32, format: PixelFormat, mipmapCount: int32): uint32 {.importc: "rlLoadTextureCubemap", sideEffect.}
   ## Load texture cubemap data
 proc updateTexture*(id: uint32, offsetX: int32, offsetY: int32, width: int32, height: int32, format: PixelFormat, data: pointer) {.importc: "rlUpdateTexture", sideEffect.}
   ## Update texture with new data on GPU
