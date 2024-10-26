@@ -2821,6 +2821,10 @@
         {
           "type": "int",
           "name": "format"
+        },
+        {
+          "type": "int",
+          "name": "mipmapCount"
         }
       ]
     },
