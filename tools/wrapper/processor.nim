@@ -129,10 +129,9 @@ proc processStructNames(obj: var StructInfo, config: ConfigData) =
   if shouldRemoveNamespacePrefix(obj.name, config):
     obj.importName = obj.name
     removePrefix(obj.name, config.namespacePrefix)
-    obj.flags.incl hasImportName
 
 template effectiveName(obj: StructInfo): untyped =
-  if hasImportName in obj.flags: obj.importName
+  if obj.importName != "": obj.importName
   else: obj.name
 
 proc updateFieldTypes(obj: var StructInfo, config: ConfigData) =
