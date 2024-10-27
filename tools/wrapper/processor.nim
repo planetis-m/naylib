@@ -2,6 +2,9 @@ import std/[algorithm, sets, tables, sequtils, strutils, enumerate]
 from std/sugar import `=>`
 import schema, ctypes, utils, config
 
+proc isMangled(name: string, config: ConfigData): bool =
+  name in config.mangledSymbols
+
 proc isNotIgnored(x: string, config: ConfigData): bool =
   (x, "") notin config.ignoredSymbols
 
@@ -40,9 +43,6 @@ proc filterIgnoredSymbols(ctx: var ApiContext; config: ConfigData) =
 proc shouldRemoveNamespacePrefix(name: string, config: ConfigData): bool =
   config.namespacePrefix != "" and name.startsWith(config.namespacePrefix) and
     name notin config.keepNamespacePrefix
-
-proc shouldMarkAsMangled(name: string, config: ConfigData): bool =
-  name in config.mangledSymbols
 
 proc shouldMarkAsDistinct(name: string, config: ConfigData): bool =
   name in config.distinctAliases
@@ -111,8 +111,6 @@ proc processAliases(ctx: var ApiContext, config: ConfigData) =
     processAliasFlags(alias, config)
 
 proc processStructFlags(obj: var StructInfo, config: ConfigData) =
-  if shouldMarkAsMangled(obj.name, config):
-    obj.flags.incl isMangled
   if shouldMarkAsComplete(obj.name, config):
     obj.flags.incl isCompleteStruct
   if shouldMarkAsPrivate(obj.name, config):
@@ -129,6 +127,8 @@ proc processStructNames(obj: var StructInfo, config: ConfigData) =
   if shouldRemoveNamespacePrefix(obj.name, config):
     obj.importName = obj.name
     removePrefix(obj.name, config.namespacePrefix)
+  if isMangled(obj.name, config):
+    obj.importName = "rl" & obj.name
 
 template effectiveName(obj: StructInfo): untyped =
   if obj.importName != "": obj.importName
@@ -166,10 +166,7 @@ proc processStructs(ctx: var ApiContext, config: ConfigData) =
     updateFieldTypes(obj, config)
     finalizeProcessing(obj, ctx, config)
 
-# Individual processing stages
 proc processFunctionFlags(fnc: var FunctionInfo, config: ConfigData) =
-  if shouldMarkAsMangled(fnc.name, config):
-    fnc.flags.incl isMangled
   if fnc.name in config.wrappedFuncs:
     fnc.flags.incl isWrappedFunc
     fnc.flags.incl isPrivate
@@ -251,7 +248,7 @@ proc generateNames(fnc: var FunctionInfo, config: ConfigData) =
           break
     result = uncapitalizeAscii(result)
 
-  fnc.importName = (if isMangled in fnc.flags: "rl" else: "") & fnc.name
+  fnc.importName = (if isMangled(fnc.name, config): "rl" else: "") & fnc.name
   fnc.name = generateProcName(fnc.name, config)
 
 proc finalizeProcessing(fnc: var FunctionInfo, ctx: var ApiContext, config: ConfigData) =

@@ -103,10 +103,7 @@ proc generateObject*(b: var Builder, obj: StructInfo) =
     if isPrivate notin obj.flags:
       b.addRaw "*"
     b.addRaw " {.importc"
-    if isMangled in obj.flags:
-      b.addRaw ": "
-      b.addStrLit "rl" & obj.name
-    elif obj.importName != "":
+    if obj.importName != "":
       b.addRaw ": "
       b.addStrLit obj.importName
     b.addRaw ", header: "
