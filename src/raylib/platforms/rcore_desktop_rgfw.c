@@ -63,13 +63,16 @@ void rlCloseWindow(void);
 
 #define RGFW_IMPLEMENTATION
 
-#if defined(__WIN32) || defined(__WIN64)
+#if defined(_WIN32) || defined(_WIN64)
     #define WIN32_LEAN_AND_MEAN
-    #define rlRectangle rectangle_win32
+	#define rlRectangle rectangle_win32
     #define rlCloseWindow CloseWindow_win32
     #define rlShowCursor __imp_ShowCursor
-    #define _APISETSTRING_
-    __declspec(dllimport) int __stdcall MultiByteToWideChar(unsigned int CodePage, unsigned long dwFlags, const char *lpMultiByteStr, int cbMultiByte, wchar_t *lpWideCharStr, int cchWideChar);
+	#define _APISETSTRING_
+	
+	#undef MAX_PATH
+
+	__declspec(dllimport) int __stdcall MultiByteToWideChar(unsigned int CodePage, unsigned long dwFlags, const char *lpMultiByteStr, int cbMultiByte, wchar_t *lpWideCharStr, int cchWideChar);
 #endif
 
 #if defined(__APPLE__)
@@ -79,11 +82,14 @@ void rlCloseWindow(void);
 
 #include "../external/RGFW.h"
 
-#if defined(__WIN32) || defined(__WIN64)
+#if defined(_WIN32) || defined(_WIN64)
     #undef rlDrawText
     #undef rlShowCursor
     #undef rlCloseWindow
     #undef rlRectangle
+
+	#undef MAX_PATH
+	#define MAX_PATH 1025
 #endif
 
 #if defined(__APPLE__)

@@ -5,7 +5,7 @@ const
   PkgDir = thisDir()
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
-  RayLatestCommit = "7ad8fa689f92de4796d9a4121677a16cd8798c81"
+  RayLatestCommit = "ad79d4a88422256d348ecfd06c53f8bc44b7777f"
   DocsDir = PkgDir / "docs"
   ToolsDir = PkgDir / "tools"
   ApiDir = ToolsDir / "wrapper/api"
@@ -14,10 +14,13 @@ template `/.`(x: string): string =
   when defined(posix): "./" & x else: x
 
 proc fetchLatestRaylib() =
+  var firstTime = false
   if not dirExists(RaylibDir):
+    firstTime = true
     exec "git clone --depth 1 " & RaylibGit & " " & quoteShell(RaylibDir)
   withDir(RaylibDir):
-    exec "git switch -"
+    if not firstTime:
+      exec "git switch -"
     exec "git fetch --depth 100 origin " & RayLatestCommit
     exec "git checkout " & RayLatestCommit
 
