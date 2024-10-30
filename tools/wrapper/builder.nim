@@ -189,6 +189,10 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
       for i, param in enumerate(fnc.params):
         if i > 0:
           b.addRaw ", "
+        if isNilIfEmpty in param.flags:
+          b.addRaw "if "
+          b.addIdent param.name
+          b.addRaw ".len == 0: nil else: "
         if isOpenArray in param.flags:
           b.addRaw "cast["
           b.addRaw param.`type`

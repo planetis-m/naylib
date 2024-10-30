@@ -533,7 +533,7 @@ proc bufferCount*(x: RenderBatch): int32 {.inline.} = x.bufferCount
 
 proc loadShaderCode*(vsCode: string, fsCode: string): uint32 =
   ## Load shader from code strings
-  loadShaderCodeImpl(vsCode.cstring, fsCode.cstring)
+  loadShaderCodeImpl(if vsCode.len == 0: nil else: vsCode.cstring, if fsCode.len == 0: nil else: fsCode.cstring)
 
 proc compileShader*(shaderCode: string, `type`: ShaderType): uint32 =
   ## Compile custom shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)

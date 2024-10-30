@@ -2276,7 +2276,7 @@ proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
 
 proc setWindowIcons*(images: openArray[Image]) =
   ## Set icon for window (multiple images, RGBA 32bit)
-  setWindowIconsImpl(cast[ptr UncheckedArray[Image]](images), images.len.int32)
+  setWindowIconsImpl(if images.len == 0: nil else: cast[ptr UncheckedArray[Image]](images), images.len.int32)
 
 proc setWindowTitle*(title: string) =
   ## Set title for window
@@ -2294,6 +2294,14 @@ proc getClipboardText*(): string =
   ## Get clipboard text content
   $getClipboardTextImpl()
 
+proc loadShader*(vsFileName: string, fsFileName: string): Shader =
+  ## Load shader from files and bind default locations
+  loadShaderImpl(if vsFileName.len == 0: nil else: vsFileName.cstring, if fsFileName.len == 0: nil else: fsFileName.cstring)
+
+proc loadShaderFromMemory*(vsCode: string, fsCode: string): Shader =
+  ## Load shader from code strings and bind default locations
+  loadShaderFromMemoryImpl(if vsCode.len == 0: nil else: vsCode.cstring, if fsCode.len == 0: nil else: fsCode.cstring)
+
 proc getShaderLocation*(shader: Shader, uniformName: string): ShaderLocation =
   ## Get shader uniform location
   getShaderLocationImpl(shader, uniformName.cstring)
@@ -2305,6 +2313,10 @@ proc getShaderLocationAttrib*(shader: Shader, attribName: string): ShaderLocatio
 proc takeScreenshot*(fileName: string) =
   ## Takes a screenshot of current screen (filename extension defines format)
   takeScreenshotImpl(fileName.cstring)
+
+proc loadAutomationEventList*(fileName: string): AutomationEventList =
+  ## Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
+  loadAutomationEventListImpl(if fileName.len == 0: nil else: fileName.cstring)
 
 proc exportAutomationEventList*(list: AutomationEventList, fileName: string): bool =
   ## Export automation events list as text file
@@ -2320,39 +2332,39 @@ proc setGamepadMappings*(mappings: string): int32 =
 
 proc drawLineStrip*(points: openArray[Vector2], color: Color) =
   ## Draw lines sequence (using gl lines)
-  drawLineStripImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  drawLineStripImpl(if points.len == 0: nil else: cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc drawTriangleFan*(points: openArray[Vector2], color: Color) =
   ## Draw a triangle fan defined by points (first vertex is the center)
-  drawTriangleFanImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  drawTriangleFanImpl(if points.len == 0: nil else: cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc drawTriangleStrip*(points: openArray[Vector2], color: Color) =
   ## Draw a triangle strip defined by points
-  drawTriangleStripImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  drawTriangleStripImpl(if points.len == 0: nil else: cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc drawSplineLinear*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: Linear, minimum 2 points
-  drawSplineLinearImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+  drawSplineLinearImpl(if points.len == 0: nil else: cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc drawSplineBasis*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: B-Spline, minimum 4 points
-  drawSplineBasisImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+  drawSplineBasisImpl(if points.len == 0: nil else: cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc drawSplineCatmullRom*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: Catmull-Rom, minimum 4 points
-  drawSplineCatmullRomImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+  drawSplineCatmullRomImpl(if points.len == 0: nil else: cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc drawSplineBezierQuadratic*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
-  drawSplineBezierQuadraticImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+  drawSplineBezierQuadraticImpl(if points.len == 0: nil else: cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc drawSplineBezierCubic*(points: openArray[Vector2], thick: float32, color: Color) =
   ## Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
-  drawSplineBezierCubicImpl(cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
+  drawSplineBezierCubicImpl(if points.len == 0: nil else: cast[ptr UncheckedArray[Vector2]](points), points.len.int32, thick, color)
 
 proc checkCollisionPointPoly*(point: Vector2, points: openArray[Vector2]): bool =
   ## Check if point is within a polygon described by array of vertices
-  checkCollisionPointPolyImpl(point, cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
+  checkCollisionPointPolyImpl(point, if points.len == 0: nil else: cast[ptr UncheckedArray[Vector2]](points), points.len.int32)
 
 proc exportImage*(image: Image, fileName: string): bool =
   ## Export image data to file, returns true on success
@@ -2376,15 +2388,15 @@ proc imageText*(font: Font, text: string, fontSize: float32, spacing: float32, t
 
 proc imageKernelConvolution*(image: var Image, kernel: openArray[float32]) =
   ## Apply custom square convolution kernel to image
-  imageKernelConvolutionImpl(addr image, cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
+  imageKernelConvolutionImpl(addr image, if kernel.len == 0: nil else: cast[ptr UncheckedArray[float32]](kernel), kernel.len.int32)
 
 proc imageDrawTriangleFan*(dst: var Image, points: openArray[Vector2], color: Color) =
   ## Draw a triangle fan defined by points within an image (first vertex is the center)
-  imageDrawTriangleFanImpl(addr dst, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  imageDrawTriangleFanImpl(addr dst, if points.len == 0: nil else: cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc imageDrawTriangleStrip*(dst: var Image, points: openArray[Vector2], color: Color) =
   ## Draw a triangle strip defined by points within an image
-  imageDrawTriangleStripImpl(addr dst, cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
+  imageDrawTriangleStripImpl(addr dst, if points.len == 0: nil else: cast[ptr UncheckedArray[Vector2]](points), points.len.int32, color)
 
 proc imageDrawText*(dst: var Image, text: string, posX: int32, posY: int32, fontSize: int32, color: Color) =
   ## Draw text (using default font) within an image (destination)
@@ -2420,7 +2432,7 @@ proc measureText*(font: Font, text: string, fontSize: float32, spacing: float32)
 
 proc drawTriangleStrip3D*(points: openArray[Vector3], color: Color) =
   ## Draw a triangle strip defined by points
-  drawTriangleStrip3DImpl(cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
+  drawTriangleStrip3DImpl(if points.len == 0: nil else: cast[ptr UncheckedArray[Vector3]](points), points.len.int32, color)
 
 proc exportMesh*(mesh: Mesh, fileName: string): bool =
   ## Export mesh data to file, returns true on success
@@ -2512,16 +2524,6 @@ proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
     traceLog(Info, "FILEIO: [%s] Data as code exported successfully", fileName)
   else:
     traceLog(Warning, "FILEIO: [%s] Failed to export data as code", fileName)
-
-proc loadShader*(vsFileName, fsFileName: string): Shader =
-  ## Load shader from files and bind default locations
-  result = loadShaderImpl(if vsFileName.len == 0: nil else: vsFileName.cstring,
-      if fsFileName.len == 0: nil else: fsFileName.cstring)
-
-proc loadShaderFromMemory*(vsCode, fsCode: string): Shader =
-  ## Load shader from code strings and bind default locations
-  result = loadShaderFromMemoryImpl(if vsCode.len == 0: nil else: vsCode.cstring,
-      if fsCode.len == 0: nil else: fsCode.cstring)
 
 type
   ShaderV* = concept
@@ -2742,10 +2744,6 @@ proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, 
       padding, packMethod)
   result.texture = loadTextureFromImage(atlas)
   if not isFontValid(result): raiseRaylibError("Failed to load Font from Image")
-
-proc loadAutomationEventList*(fileName: string): AutomationEventList =
-  ## Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
-  loadAutomationEventListImpl(if fileName.len == 0: nil else: fileName.cstring)
 
 proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out RArray[Rectangle]; fontSize: int32;
     padding: int32; packMethod: int32): Image =

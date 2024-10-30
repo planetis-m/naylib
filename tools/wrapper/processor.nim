@@ -23,6 +23,9 @@ proc isPrivateSymbol(x: string, config: ConfigData): bool =
 proc isReadOnlyField(x, y: string, config: ConfigData): bool =
   (x, y) in config.readOnlyFields
 
+proc isNotNilParameter(x, y: string, config: ConfigData): bool =
+  (x, y) in config.notNilParameters
+
 proc isOutParameter(x, y: string, config: ConfigData): bool =
   (x, y) in config.outParameters
 
@@ -197,6 +200,9 @@ proc processParameters(fnc: var FunctionInfo, config: ConfigData) =
       param.flags.incl isOpenArray
       fnc.params[i+1].flags.incl isArrayLen
       fnc.flags.incl isAutoWrappedFunc
+    if {isOpenArray, isString} * param.flags != {} and
+        not isNotNilParameter(fnc.name, param.name, config):
+      param.flags.incl isNilIfEmpty
     if paramType.startsWith("var "):
       param.flags.incl isVarParam
       param.dirty = paramType

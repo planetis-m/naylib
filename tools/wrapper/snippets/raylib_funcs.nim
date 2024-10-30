@@ -74,16 +74,6 @@ proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
   else:
     traceLog(Warning, "FILEIO: [%s] Failed to export data as code", fileName)
 
-proc loadShader*(vsFileName, fsFileName: string): Shader =
-  ## Load shader from files and bind default locations
-  result = loadShaderImpl(if vsFileName.len == 0: nil else: vsFileName.cstring,
-      if fsFileName.len == 0: nil else: fsFileName.cstring)
-
-proc loadShaderFromMemory*(vsCode, fsCode: string): Shader =
-  ## Load shader from code strings and bind default locations
-  result = loadShaderFromMemoryImpl(if vsCode.len == 0: nil else: vsCode.cstring,
-      if fsCode.len == 0: nil else: fsCode.cstring)
-
 type
   ShaderV* = concept
     proc kind(x: typedesc[Self]): ShaderUniformDataType
@@ -303,10 +293,6 @@ proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, 
       padding, packMethod)
   result.texture = loadTextureFromImage(atlas)
   if not isFontValid(result): raiseRaylibError("Failed to load Font from Image")
-
-proc loadAutomationEventList*(fileName: string): AutomationEventList =
-  ## Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
-  loadAutomationEventListImpl(if fileName.len == 0: nil else: fileName.cstring)
 
 proc genImageFontAtlas*(chars: openArray[GlyphInfo]; recs: out RArray[Rectangle]; fontSize: int32;
     padding: int32; packMethod: int32): Image =
