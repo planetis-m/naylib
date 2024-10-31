@@ -23,11 +23,11 @@ proc isPrivateSymbol(x: string, config: ConfigData): bool =
 proc isReadOnlyField(x, y: string, config: ConfigData): bool =
   (x, y) in config.readOnlyFields
 
-proc isNotNilParameter(x, y: string, config: ConfigData): bool =
-  (x, y) in config.notNilParameters
-
 proc isOutParameter(x, y: string, config: ConfigData): bool =
   (x, y) in config.outParameters
+
+proc isNilIfEmptyParameter(x, y: string, config: ConfigData): bool =
+  (x, y) in config.isNilIfEmptyParameters
 
 proc getReplacement(x, y: string, config: ConfigData): string =
   result = getOrDefault(config.typeReplacements, (x, y))
@@ -201,7 +201,7 @@ proc processParameters(fnc: var FunctionInfo, config: ConfigData) =
       fnc.params[i+1].flags.incl isArrayLen
       fnc.flags.incl isAutoWrappedFunc
     if {isOpenArray, isString} * param.flags != {} and
-        not isNotNilParameter(fnc.name, param.name, config):
+        isNilIfEmptyParameter(fnc.name, param.name, config):
       param.flags.incl isNilIfEmpty
     if paramType.startsWith("var "):
       param.flags.incl isVarParam

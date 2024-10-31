@@ -8,7 +8,7 @@ type
     # Processor config
     apiDefinition*: string
     outParameters*: HashSet[SymbolPair]
-    notNilParameters*: HashSet[SymbolPair]
+    isNilIfEmptyParameters*: HashSet[SymbolPair]
     typeReplacements*: Table[SymbolPair, string]
     readOnlyFields*: HashSet[SymbolPair]
     arrayTypes*: HashSet[SymbolPair]
@@ -47,8 +47,8 @@ proc processKeyWithoutValue(config: var ConfigData; section: string, key: string
   case section
   of "OutParameters":
     config.outParameters.incl(sp)
-  of "NotNilParameters":
-    config.notNilParameters.incl(sp)
+  of "NilIfEmptyParameters":
+    config.isNilIfEmptyParameters.incl(sp)
   of "ReadOnlyFields":
     config.readOnlyFields.incl(sp)
   of "ArrayTypes":
