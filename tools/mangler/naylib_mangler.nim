@@ -5,11 +5,11 @@ when defined(nimPreviewSlimSystem):
 const NonWordChars = {'\1'..'\xff'} - IdentChars
 
 func ident(name: string): Peg =
+  # Match identifier when surrounded by non-word chars.
   let wordBoundary = charSet(NonWordChars) / startAnchor() / endAnchor()
   sequence(capture(wordBoundary), term(name), capture(wordBoundary))
 
 let replacements = [
-  # Match identifier when surrounded by non-word chars.
   (ident"Rectangle", "$1rlRectangle$2"),
   (ident"CloseWindow", "$1rlCloseWindow$2"),
   (ident"ShowCursor", "$1rlShowCursor$2"),
