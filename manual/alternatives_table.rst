@@ -20,7 +20,7 @@ GetFileExtension           os.splitFile, os.searchExtPos
 GetFileName                os.extractFilename
 GetFileLength              os.getFileSize
 GetFileNameWithoutExt      os.splitFile
-GetDirectoryPath           os.splitFile
+GetDirectoryPath           os.splitFile, os.parentDir
 GetPrevDirectoryPath       os.parentDir, os.parentDirs
 GetWorkingDirectory        os.getCurrentDir
 GetApplicationDirectory    os.getAppDir
@@ -30,6 +30,8 @@ MakeDirectory              os.createDir
 GetFileModTime             os.getLastModificationTime
 IsPathFile                 os.getFileInfo
 IsFileNameValid            os.isValidFilename
+LoadDirectoryFiles         os.walkDirRec
+LoadDirectoryFilesEx       os.walkDirRecFilter
 ========================== ================================ =================
 
 Text strings management functions

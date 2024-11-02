@@ -177,12 +177,13 @@ proc processFunctionFlags(fnc: var FunctionInfo, config: ConfigData) =
     fnc.flags.incl isPrivate
   if fnc.name in config.noSideEffectsFuncs:
     fnc.flags.incl isFunc
-  if fnc.name in config.discardReturn:
-    fnc.flags.incl isDiscardable
-    fnc.flags.incl isAutoWrappedFunc
-  if fnc.name in config.boolReturn:
-    fnc.flags.incl isBoolReturn
-    fnc.flags.incl isAutoWrappedFunc
+  if isWrappedFunc notin fnc.flags:
+    if fnc.name in config.discardReturn:
+      fnc.flags.incl isDiscardable
+      fnc.flags.incl isAutoWrappedFunc
+    if fnc.name in config.boolReturn:
+      fnc.flags.incl isBoolReturn
+      fnc.flags.incl isAutoWrappedFunc
 
 proc processVarargs(fnc: var FunctionInfo, config: ConfigData) =
   if fnc.params.len > 0 and isVarargsParam(fnc.params[^1]):
