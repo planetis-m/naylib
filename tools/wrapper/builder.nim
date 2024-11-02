@@ -173,15 +173,19 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
       else:
         b.addRaw param.`type`
     b.addRaw ")"
-    if fnc.returnType != "void":
+    if isDiscardable notin fnc.flags and fnc.returnType != "void":
       b.addRaw ": "
       if isString in fnc.flags:
         b.addRaw "string"
+      elif isBoolReturn in fnc.flags:
+        b.addRaw "bool"
       else:
         b.addRaw fnc.returnType
     b.addRaw " ="
     b.addBlockDoc fnc.description
     withBlock(b):
+      if isDiscardable in fnc.flags:
+        b.addRaw "discard "
       if isString in fnc.flags:
         b.addRaw "$"
       b.addRaw fnc.name
@@ -210,6 +214,8 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
         if isOpenArray in param.flags:
           b.addRaw ")"
       b.addRaw ")"
+      if isBoolReturn in fnc.flags:
+        b.addRaw " != 0"
 
 proc genBindings*(b: var Builder; ctx: ApiContext;
                   moduleHeader, afterEnums, afterObjects, afterFuncs, moduleEnd: string) =
