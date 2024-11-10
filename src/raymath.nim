@@ -1677,7 +1677,13 @@ func decompose*(mat: Matrix, translation: var Vector3, rotation: var Quaternion,
   var clone = mat
   if not equals(det, 0):
     clone.m0 /= s.x
+    clone.m4 /= s.x
+    clone.m8 /= s.x
+    clone.m1 /= s.y
     clone.m5 /= s.y
+    clone.m9 /= s.y
+    clone.m2 /= s.z
+    clone.m6 /= s.z
     clone.m10 /= s.z
     # Extract rotation
     rotation = fromMatrix(clone)

@@ -14,7 +14,8 @@ when defined(emscripten):
     {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
     {.passL: "-sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2".}
   else: {.passC: "-DGRAPHICS_API_OPENGL_ES2".}
-  {.passL: "-sUSE_GLFW=3 -sWASM=1 -sTOTAL_MEMORY=67108864".} # 64MiB
+  const NaylibWebHeapSize {.intdefine.} = 134217728  # 128MiB default
+  {.passL: "-sUSE_GLFW=3 -sWASM=1 -sTOTAL_MEMORY=" & $NaylibWebHeapSize.}
   {.passL: "-sEXPORTED_RUNTIME_METHODS=ccall".}
   when compileOption("threads"):
     const NaylibWebPthreadPoolSize {.intdefine.} = 2
@@ -1561,7 +1562,7 @@ proc unloadMaterial(material: Material) {.importc: "UnloadMaterial", sideEffect.
 proc loadModelAnimationsImpl(fileName: cstring, animCount: ptr int32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations", sideEffect.}
 proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation", sideEffect.}
   ## Update model animation pose (CPU)
-func updateModelAnimationBoneMatrices*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimationBoneMatrices".}
+func updateModelAnimationBones*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimationBones".}
   ## Update model animation mesh bone matrices (GPU skinning)
 proc unloadModelAnimation(anim: ModelAnimation) {.importc: "UnloadModelAnimation", sideEffect.}
 func isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}

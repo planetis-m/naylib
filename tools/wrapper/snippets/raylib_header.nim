@@ -14,7 +14,8 @@ when defined(emscripten):
     {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
     {.passL: "-sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2".}
   else: {.passC: "-DGRAPHICS_API_OPENGL_ES2".}
-  {.passL: "-sUSE_GLFW=3 -sWASM=1 -sTOTAL_MEMORY=67108864".} # 64MiB
+  const NaylibWebHeapSize {.intdefine.} = 134217728  # 128MiB default
+  {.passL: "-sUSE_GLFW=3 -sWASM=1 -sTOTAL_MEMORY=" & $NaylibWebHeapSize.}
   {.passL: "-sEXPORTED_RUNTIME_METHODS=ccall".}
   when compileOption("threads"):
     const NaylibWebPthreadPoolSize {.intdefine.} = 2

@@ -26,6 +26,18 @@ To compile your project for web browsers using WebAssembly:
 
    You should now be able to see your game running in the browser window!
 
+### Customizing the Web Build
+
+When building for web, the following defines are available to customize your build:
+
+- `-d:GraphicsApiOpenGlEs3`: Use WebGL 2.0 instead of WebGL 1.0 (default: WebGL 1.0)
+- `-d:NaylibWebAsyncify`: Enable Asyncify support for blocking operations
+- `-d:NaylibWebResources`: Enable filesystem and resource preloading
+  - `-d:NaylibWebResourcesPath="resources"`: Set the path to preload resources from (default: "resources")
+- `--threads:on`: Enable multithreading support
+  - `-d:NaylibWebPthreadPoolSize=N`: Set the size of the pthread pool (default: 2)
+- `-d:NaylibWebHeapSize=N`: Set the WebAssembly heap size in bytes (default: 134217728 / 128MiB)
+
 ## Building for Android
 
 Building for Android is streamlined using the [naylib-game-template](https://github.com/planetis-m/naylib-game-template) repository. Follow these steps:
