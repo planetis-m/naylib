@@ -173,6 +173,45 @@ The C function will be made private and suffixed with `Impl`
 to prevent naming clashes. You can insert your wrapped function
 using the `afterFuncs` option.
 
+#### NilIfEmptyParameters
+
+Defines parameter handling for functions that accept nullable
+C strings or arrays. It automatically converts empty Nim strings or sequences
+to NULL pointers in C.
+
+```ini
+[NilIfEmptyParameters]
+GuiSetTooltip/tooltip
+GuiIconText/text
+GuiGroupBox/text
+GuiLine/text
+```
+
+#### DiscardReturn
+
+Lists functions whose return values should be discarded automatically.
+This eliminates the need for the `.discardable` pragma.
+
+```ini
+[DiscardReturn]
+GuiGroupBox
+GuiLine
+GuiPanel
+GuiScrollPanel
+```
+
+#### BoolReturn
+
+Specifies functions whose integer return values should be converted to boolean values in Nim.
+
+```ini
+[BoolReturn]
+GuiWindowBox
+GuiButton
+GuiLabelButton
+GuiToggleSlider
+```
+
 #### FunctionOverloads and FuncOverloadSuffixes
 
 Handle function overloading:

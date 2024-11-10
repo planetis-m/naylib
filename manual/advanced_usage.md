@@ -6,7 +6,7 @@ To compile your project for web browsers using WebAssembly:
 
 1. Install the Emscripten SDK. Follow the [official Emscripten installation guide](https://emscripten.org/docs/getting_started/downloads.html).
 
-2. Create a configuration file for your project. You can use [this example](tests/basic_window_web.nims)
+2. Create a configuration file for your project. You can use [this example](../tests/basic_window_web.nims)
    as a starting point.
 
 3. Add the `-d:emscripten` flag when compiling, e.g., `nim c -d:emscripten your_project.nim`.
