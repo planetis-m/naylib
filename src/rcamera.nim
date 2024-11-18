@@ -52,8 +52,8 @@ func moveForward*(camera: var Camera, distance: float32, moveInWorldPlane: bool)
   forward *= distance
 
   # Move position and target
-  camera.position = camera.position + forward
-  camera.target = camera.target + forward
+  camera.position += forward
+  camera.target += forward
 
 func moveUp*(camera: var Camera, distance: float32) =
   ## Moves the camera in its up direction
@@ -63,8 +63,8 @@ func moveUp*(camera: var Camera, distance: float32) =
   up *= distance
 
   # Move position and target
-  camera.position = camera.position + up
-  camera.target = camera.target + up
+  camera.position += up
+  camera.target += up
 
 func moveRight*(camera: var Camera, distance: float32, moveInWorldPlane: bool) =
   ## Moves the camera target in its current right direction

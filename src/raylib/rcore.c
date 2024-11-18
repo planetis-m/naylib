@@ -512,6 +512,29 @@ const char *TextFormat(const char *text, ...);              // Formatting of tex
     #define PLATFORM_DESKTOP_GLFW
 #endif
 
+// We're using `#pragma message` because `#warning` is not adopted by MSVC.
+#if defined(SUPPORT_CLIPBOARD_IMAGE)
+    #if !defined(SUPPORT_MODULE_RTEXTURES)
+        #pragma message ("Warning: Enabling SUPPORT_CLIPBOARD_IMAGE requires SUPPORT_MODULE_RTEXTURES to work properly")
+    #endif
+
+    // It's nice to have support Bitmap on Linux as well, but not as necessary as Windows
+    #if !defined(SUPPORT_FILEFORMAT_BMP) && defined(_WIN32)
+        #pragma message ("Warning: Enabling SUPPORT_CLIPBOARD_IMAGE requires SUPPORT_FILEFORMAT_BMP, specially on Windows")
+    #endif
+
+    // From what I've tested applications on Wayland saves images on clipboard as PNG.
+    #if (!defined(SUPPORT_FILEFORMAT_PNG) || !defined(SUPPORT_FILEFORMAT_JPG)) && !defined(_WIN32)
+        #pragma message ("Warning: Getting image from the clipboard might not work without SUPPORT_FILEFORMAT_PNG or SUPPORT_FILEFORMAT_JPG")
+    #endif
+
+    // Not needed because `rtexture.c` will automatically defined STBI_REQUIRED when any SUPPORT_FILEFORMAT_* is defined.
+    // #if !defined(STBI_REQUIRED)
+    //     #pragma message ("Warning: "STBI_REQUIRED is not defined, that means we can't load images from clipbard"
+    // #endif
+
+#endif // SUPPORT_CLIPBOARD_IMAGE
+
 // Include platform-specific submodules
 #if defined(PLATFORM_DESKTOP_GLFW)
     #include "platforms/rcore_desktop_glfw.c"
