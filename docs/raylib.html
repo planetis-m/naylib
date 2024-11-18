@@ -133,8 +133,7 @@
   LineVertical,             ## Layout is defined by a vertical line with faces
   LineHorizontal,           ## Layout is defined by a horizontal line with faces
   CrossThreeByFour,         ## Layout is defined by a 3x4 cross with cubemap faces
-  CrossFourByThree,         ## Layout is defined by a 4x3 cross with cubemap faces
-  Panorama                   ## Layout is defined by a panorama image (equirrectangular map)">CubemapLayout</a></li>
+  CrossFourByThree           ## Layout is defined by a 4x3 cross with cubemap faces">CubemapLayout</a></li>
 <li><a class="reference" href="#Flags" title="Flags[E] = distinct uint32">Flags</a></li>
 <li><a class="reference" href="#Font" title="Font {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
   baseSize*: int32           ## Base size (default chars height)
@@ -640,7 +639,7 @@
 <li><a class="reference" href="#Magenta" title="Magenta = (r: 255'u, g: 0'u, b: 255'u, a: 255'u)">Magenta</a></li>
 <li><a class="reference" href="#Maroon" title="Maroon = (r: 190'u, g: 33'u, b: 55'u, a: 255'u)">Maroon</a></li>
 <li><a class="reference" href="#MaxMaterialMaps" title="MaxMaterialMaps = 12">MaxMaterialMaps</a></li>
-<li><a class="reference" href="#MaxMeshVertexBuffers" title="MaxMeshVertexBuffers = 7">MaxMeshVertexBuffers</a></li>
+<li><a class="reference" href="#MaxMeshVertexBuffers" title="MaxMeshVertexBuffers = 9">MaxMeshVertexBuffers</a></li>
 <li><a class="reference" href="#MaxShaderLocations" title="MaxShaderLocations = 32">MaxShaderLocations</a></li>
 <li><a class="reference" href="#Orange" title="Orange = (r: 255'u, g: 161'u, b: 0'u, a: 255'u)">Orange</a></li>
 <li><a class="reference" href="#Pink" title="Pink = (r: 255'u, g: 109'u, b: 194'u, a: 255'u)">Pink</a></li>
@@ -2161,8 +2160,8 @@
   <li><a class="reference" href="#isAudioStreamProcessed%2CAudioStream" title="isAudioStreamProcessed(stream: AudioStream): bool">isAudioStreamProcessed(stream: AudioStream): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">isAudioStreamReady
-  <li><a class="reference" href="#isAudioStreamReady%2CAudioStream" title="isAudioStreamReady(stream: AudioStream): bool">isAudioStreamReady(stream: AudioStream): bool</a></li>
+<ul class="simple nested-toc-section">isAudioStreamValid
+  <li><a class="reference" href="#isAudioStreamValid%2CAudioStream" title="isAudioStreamValid(stream: AudioStream): bool">isAudioStreamValid(stream: AudioStream): bool</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">isCursorHidden
@@ -2177,8 +2176,8 @@
   <li><a class="reference" href="#isFileDropped" title="isFileDropped(): bool">isFileDropped(): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">isFontReady
-  <li><a class="reference" href="#isFontReady%2CFont" title="isFontReady(font: Font): bool">isFontReady(font: Font): bool</a></li>
+<ul class="simple nested-toc-section">isFontValid
+  <li><a class="reference" href="#isFontValid%2CFont" title="isFontValid(font: Font): bool">isFontValid(font: Font): bool</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">isGamepadAvailable
@@ -2205,8 +2204,8 @@
   <li><a class="reference" href="#isGestureDetected%2CGesture" title="isGestureDetected(gesture: Gesture): bool">isGestureDetected(gesture: Gesture): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">isImageReady
-  <li><a class="reference" href="#isImageReady%2CImage" title="isImageReady(image: Image): bool">isImageReady(image: Image): bool</a></li>
+<ul class="simple nested-toc-section">isImageValid
+  <li><a class="reference" href="#isImageValid%2CImage" title="isImageValid(image: Image): bool">isImageValid(image: Image): bool</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">isKeyDown
@@ -2229,16 +2228,16 @@
   <li><a class="reference" href="#isKeyUp%2CKeyboardKey" title="isKeyUp(key: KeyboardKey): bool">isKeyUp(key: KeyboardKey): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">isMaterialReady
-  <li><a class="reference" href="#isMaterialReady%2CMaterial" title="isMaterialReady(material: Material): bool">isMaterialReady(material: Material): bool</a></li>
+<ul class="simple nested-toc-section">isMaterialValid
+  <li><a class="reference" href="#isMaterialValid%2CMaterial" title="isMaterialValid(material: Material): bool">isMaterialValid(material: Material): bool</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">isModelAnimationValid
   <li><a class="reference" href="#isModelAnimationValid%2CModel%2CModelAnimation" title="isModelAnimationValid(model: Model; anim: ModelAnimation): bool">isModelAnimationValid(model: Model; anim: ModelAnimation): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">isModelReady
-  <li><a class="reference" href="#isModelReady%2CModel" title="isModelReady(model: Model): bool">isModelReady(model: Model): bool</a></li>
+<ul class="simple nested-toc-section">isModelValid
+  <li><a class="reference" href="#isModelValid%2CModel" title="isModelValid(model: Model): bool">isModelValid(model: Model): bool</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">isMouseButtonDown
@@ -2257,36 +2256,36 @@
   <li><a class="reference" href="#isMouseButtonUp%2CMouseButton" title="isMouseButtonUp(button: MouseButton): bool">isMouseButtonUp(button: MouseButton): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">isMusicReady
-  <li><a class="reference" href="#isMusicReady%2CMusic" title="isMusicReady(music: Music): bool">isMusicReady(music: Music): bool</a></li>
-
-</ul>
 <ul class="simple nested-toc-section">isMusicStreamPlaying
   <li><a class="reference" href="#isMusicStreamPlaying%2CMusic" title="isMusicStreamPlaying(music: Music): bool">isMusicStreamPlaying(music: Music): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">isRenderTextureReady
-  <li><a class="reference" href="#isRenderTextureReady%2CRenderTexture" title="isRenderTextureReady(target: RenderTexture2D): bool">isRenderTextureReady(target: RenderTexture2D): bool</a></li>
+<ul class="simple nested-toc-section">isMusicValid
+  <li><a class="reference" href="#isMusicValid%2CMusic" title="isMusicValid(music: Music): bool">isMusicValid(music: Music): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">isShaderReady
-  <li><a class="reference" href="#isShaderReady%2CShader" title="isShaderReady(shader: Shader): bool">isShaderReady(shader: Shader): bool</a></li>
+<ul class="simple nested-toc-section">isRenderTextureValid
+  <li><a class="reference" href="#isRenderTextureValid%2CRenderTexture" title="isRenderTextureValid(target: RenderTexture2D): bool">isRenderTextureValid(target: RenderTexture2D): bool</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">isShaderValid
+  <li><a class="reference" href="#isShaderValid%2CShader" title="isShaderValid(shader: Shader): bool">isShaderValid(shader: Shader): bool</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">isSoundPlaying
   <li><a class="reference" href="#isSoundPlaying%2CSound" title="isSoundPlaying(sound: Sound): bool">isSoundPlaying(sound: Sound): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">isSoundReady
-  <li><a class="reference" href="#isSoundReady%2CSound" title="isSoundReady(sound: Sound): bool">isSoundReady(sound: Sound): bool</a></li>
+<ul class="simple nested-toc-section">isSoundValid
+  <li><a class="reference" href="#isSoundValid%2CSound" title="isSoundValid(sound: Sound): bool">isSoundValid(sound: Sound): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">isTextureReady
-  <li><a class="reference" href="#isTextureReady%2CTexture" title="isTextureReady(texture: Texture2D): bool">isTextureReady(texture: Texture2D): bool</a></li>
+<ul class="simple nested-toc-section">isTextureValid
+  <li><a class="reference" href="#isTextureValid%2CTexture" title="isTextureValid(texture: Texture2D): bool">isTextureValid(texture: Texture2D): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">isWaveReady
-  <li><a class="reference" href="#isWaveReady%2CWave" title="isWaveReady(wave: Wave): bool">isWaveReady(wave: Wave): bool</a></li>
+<ul class="simple nested-toc-section">isWaveValid
+  <li><a class="reference" href="#isWaveValid%2CWave" title="isWaveValid(wave: Wave): bool">isWaveValid(wave: Wave): bool</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">isWindowFocused
@@ -2441,11 +2440,11 @@
 
 </ul>
 <ul class="simple nested-toc-section">loadShader
-  <li><a class="reference" href="#loadShader%2Cstring%2Cstring" title="loadShader(vsFileName, fsFileName: string): Shader">loadShader(vsFileName, fsFileName: string): Shader</a></li>
+  <li><a class="reference" href="#loadShader%2Cstring%2Cstring" title="loadShader(vsFileName: string; fsFileName: string): Shader">loadShader(vsFileName: string; fsFileName: string): Shader</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">loadShaderFromMemory
-  <li><a class="reference" href="#loadShaderFromMemory%2Cstring%2Cstring" title="loadShaderFromMemory(vsCode, fsCode: string): Shader">loadShaderFromMemory(vsCode, fsCode: string): Shader</a></li>
+  <li><a class="reference" href="#loadShaderFromMemory%2Cstring%2Cstring" title="loadShaderFromMemory(vsCode: string; fsCode: string): Shader">loadShaderFromMemory(vsCode: string; fsCode: string): Shader</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">loadSound
@@ -2618,7 +2617,9 @@
 
 </ul>
 <ul class="simple nested-toc-section">setGamepadVibration
-  <li><a class="reference" href="#setGamepadVibration%2Cint32%2Cfloat32%2Cfloat32" title="setGamepadVibration(gamepad: int32; leftMotor: float32; rightMotor: float32)">setGamepadVibration(gamepad: int32; leftMotor: float32; rightMotor: float32)</a></li>
+  <li><a class="reference" href="#setGamepadVibration%2Cint32%2Cfloat32%2Cfloat32%2Cfloat32" title="setGamepadVibration(gamepad: int32; leftMotor: float32; rightMotor: float32;
+                    duration: float32)">setGamepadVibration(gamepad: int32; leftMotor: float32; rightMotor: float32;
+                    duration: float32)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">setGesturesEnabled
@@ -2882,10 +2883,8 @@
   <li><a class="reference" href="#updateModelAnimation%2CModel%2CModelAnimation%2Cint32" title="updateModelAnimation(model: Model; anim: ModelAnimation; frame: int32)">updateModelAnimation(model: Model; anim: ModelAnimation; frame: int32)</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">updateModelAnimationBoneMatrices
-  <li><a class="reference" href="#updateModelAnimationBoneMatrices%2CModel%2CModelAnimation%2Cint32" title="updateModelAnimationBoneMatrices(model: Model; anim: ModelAnimation;
-                                 frame: int32)">updateModelAnimationBoneMatrices(model: Model; anim: ModelAnimation;
-                                 frame: int32)</a></li>
+<ul class="simple nested-toc-section">updateModelAnimationBones
+  <li><a class="reference" href="#updateModelAnimationBones%2CModel%2CModelAnimation%2Cint32" title="updateModelAnimationBones(model: Model; anim: ModelAnimation; frame: int32)">updateModelAnimationBones(model: Model; anim: ModelAnimation; frame: int32)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">updateMusicStream
@@ -3322,8 +3321,8 @@
   <dd>
     
     System/Window config flags
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L134" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L134" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L135" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L135" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3333,13 +3332,12 @@
   <span class="Identifier">LineVertical</span><span class="Other">,</span>             <span class="Comment">## Layout is defined by a vertical line with faces</span>
   <span class="Identifier">LineHorizontal</span><span class="Other">,</span>           <span class="Comment">## Layout is defined by a horizontal line with faces</span>
   <span class="Identifier">CrossThreeByFour</span><span class="Other">,</span>         <span class="Comment">## Layout is defined by a 3x4 cross with cubemap faces</span>
-  <span class="Identifier">CrossFourByThree</span><span class="Other">,</span>         <span class="Comment">## Layout is defined by a 4x3 cross with cubemap faces</span>
-  <span class="Identifier">Panorama</span>                   <span class="Comment">## Layout is defined by a panorama image (equirrectangular map)</span></pre></dt>
+  <span class="Identifier">CrossFourByThree</span>           <span class="Comment">## Layout is defined by a 4x3 cross with cubemap faces</span></pre></dt>
   <dd>
     
     Cubemap layouts
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L425" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L425" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L426" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L426" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3413,8 +3411,8 @@
   <dd>
     
     Gamepad axis
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L316" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L316" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L317" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L317" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3441,8 +3439,8 @@
   <dd>
     
     Gamepad buttons
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L296" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L296" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L297" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L297" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3612,8 +3610,8 @@
   <dd>
     
     Keyboard keys (US keyboard layout)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L162" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L162" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L163" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L163" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3680,8 +3678,8 @@
   <dd>
     
     Material map index
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L324" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L324" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L325" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L325" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3992,8 +3990,8 @@
   <dd>
     
     Mouse buttons
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L274" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L274" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L275" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L275" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4013,8 +4011,8 @@
   <dd>
     
     Mouse cursor
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L283" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L283" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L284" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L284" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4068,8 +4066,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2627" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2627" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2624" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2624" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4102,8 +4100,8 @@
   <dd>
     
     Pixel formats
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L385" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L385" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L386" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L386" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4160,8 +4158,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2448" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2448" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2455" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2455" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4245,8 +4243,8 @@
   <dd>
     
     Shader attribute data types
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L379" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L379" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L380" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L380" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4294,8 +4292,8 @@
   <dd>
     
     Shader location index
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L337" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L337" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L338" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L338" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4333,8 +4331,8 @@
   <dd>
     
     Shader uniform data type
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L368" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L368" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L369" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L369" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4344,8 +4342,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2533" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2533" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2530" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2530" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4417,8 +4415,8 @@
   <dd>
     
     Texture parameters: filter mode
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L411" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L411" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L412" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L412" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4431,8 +4429,8 @@
   <dd>
     
     Texture parameters: wrap mode
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L419" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L419" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L420" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L420" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4441,8 +4439,8 @@
   <dd>
     
     Logging: Redirect trace log messages
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2454" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2454" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2461" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2461" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4459,8 +4457,8 @@
   <dd>
     
     Trace log level
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L152" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L152" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L153" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L153" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4779,18 +4777,18 @@
   <dd>
     
     Maximum number of shader maps supported
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L130" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L130" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L131" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L131" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="MaxMeshVertexBuffers">
-  <dt><pre><a href="raylib.html#MaxMeshVertexBuffers"><span class="Identifier">MaxMeshVertexBuffers</span></a> <span class="Other">=</span> <span class="DecNumber">7</span></pre></dt>
+  <dt><pre><a href="raylib.html#MaxMeshVertexBuffers"><span class="Identifier">MaxMeshVertexBuffers</span></a> <span class="Other">=</span> <span class="DecNumber">9</span></pre></dt>
   <dd>
     
     Maximum vertex buffers (VBO) per mesh
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L131" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L131" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L132" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L132" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4799,8 +4797,8 @@
   <dd>
     
     Maximum number of shader locations supported
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L129" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L129" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L130" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L130" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4839,8 +4837,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L126" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L126" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L127" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L127" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -6621,8 +6619,8 @@
   <dd>
     
     Check if circle collides with a line created betweeen two points <a class="reference internal" href="#p1">p1</a> and <a class="reference internal" href="#p2">p2</a>
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1231" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1231" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1220" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1220" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -6669,8 +6667,8 @@
   <dd>
     
     Check the collision between two lines defined by two points each, returns collision point by reference
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1227" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1227" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1231" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1231" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -6684,8 +6682,8 @@
   <dd>
     
     Check if point is inside circle
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1222" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1222" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1224" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1224" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -6700,8 +6698,8 @@
   <dd>
     
     Check if point belongs to line created between two points <a class="reference internal" href="#p1">p1</a> and <a class="reference internal" href="#p2">p2</a> with defined margin in pixels <a class="reference internal" href="#threshold">threshold</a>
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1229" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1229" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1228" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1228" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -6714,8 +6712,8 @@
   <dd>
     
     Check if point is within a polygon described by array of vertices
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2358" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2358" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2366" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2366" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -6729,8 +6727,8 @@
   <dd>
     
     Check if point is inside rectangle
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1220" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1220" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1222" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1222" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -6745,8 +6743,8 @@
   <dd>
     
     Check if point is inside a triangle
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1224" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1224" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1226" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1226" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -6991,8 +6989,8 @@
   <dd>
     
     Get hexadecimal value for a Color
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2841" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2841" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2838" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2838" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -7515,8 +7513,8 @@
   <dd>
     
     Draw lines sequence (using gl lines)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2326" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2326" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2334" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2334" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -7545,8 +7543,8 @@
   <dd>
     
     Draw multiple mesh instances with material and different transforms
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2764" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2764" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2761" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2761" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8005,8 +8003,8 @@
   <dd>
     
     Draw spline: B-Spline, minimum 4 points
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2342" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2342" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2350" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2350" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8019,8 +8017,8 @@
   <dd>
     
     Draw spline: Cubic Bezier, minimum 4 points (2 control points): <a class="reference internal" href="#p1, c2, c3, p4, c5, c6...">p1, c2, c3, p4, c5, c6...</a>
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2354" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2354" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2362" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2362" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8033,8 +8031,8 @@
   <dd>
     
     Draw spline: Quadratic Bezier, minimum 3 points (1 control point): <a class="reference internal" href="#p1, c2, p3, c4...">p1, c2, p3, c4...</a>
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2350" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2350" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2358" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2358" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8047,8 +8045,8 @@
   <dd>
     
     Draw spline: Catmull-Rom, minimum 4 points
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2346" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2346" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2354" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2354" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8061,8 +8059,8 @@
   <dd>
     
     Draw spline: Linear, minimum 2 points
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2338" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2338" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2346" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2346" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8154,8 +8152,8 @@
   <dd>
     
     Draw text using font and additional parameters
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2410" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2410" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2418" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2418" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8166,8 +8164,8 @@
   <dd>
     
     Draw text using Font and pro parameters (rotation)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2414" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2414" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2422" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2422" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8177,8 +8175,8 @@
   <dd>
     
     Draw text (using default font)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2406" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2406" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2414" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2414" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8208,8 +8206,8 @@
   <dd>
     
     Draw multiple character (codepoint)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2819" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2819" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2816" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2816" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8334,8 +8332,8 @@
   <dd>
     
     Draw a triangle fan defined by points (first vertex is the center)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2330" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2330" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2338" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2338" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8363,8 +8361,8 @@
   <dd>
     
     Draw a triangle strip defined by points
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2334" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2334" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2342" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2342" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8377,8 +8375,8 @@
   <dd>
     
     Draw a triangle strip defined by points
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2426" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2426" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2434" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2434" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8532,8 +8530,8 @@
   <dd>
     
     Export automation events list as text file
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2314" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2314" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2322" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2322" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8546,8 +8544,8 @@
   <dd>
     
     Export data to code (.nim), returns true on success
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2487" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2487" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2494" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2494" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8560,8 +8558,8 @@
   <dd>
     
     Export font as code file, returns true on success
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2402" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2402" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2410" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2410" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8574,8 +8572,8 @@
   <dd>
     
     Export image data to file, returns true on success
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2362" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2362" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2370" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2370" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8588,8 +8586,8 @@
   <dd>
     
     Export image as code file defining an array of bytes, returns true on success
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2366" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2366" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2374" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2374" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8602,8 +8600,8 @@
   <dd>
     
     Export image to memory buffer
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2620" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2620" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2617" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2617" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8616,8 +8614,8 @@
   <dd>
     
     Export mesh data to file, returns true on success
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2430" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2430" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2438" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2438" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8630,8 +8628,8 @@
   <dd>
     
     Export mesh as code file (.h) defining multiple arrays of vertex attributes
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2434" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2434" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2442" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2442" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8644,8 +8642,8 @@
   <dd>
     
     Export wave data to file, returns true on success
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2438" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2438" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2446" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2446" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8658,8 +8656,8 @@
   <dd>
     
     Export wave sample data to code (.h), returns true on success
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2442" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2442" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2450" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2450" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8672,8 +8670,8 @@
   <dd>
     
     Get color with alpha applied, alpha goes from 0.0 to 1.0
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2836" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2836" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2833" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2833" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8760,8 +8758,8 @@
   <dd>
     
     Generate image font atlas using chars info
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2752" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2752" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2749" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2749" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -8838,8 +8836,8 @@
   <dd>
     
     Generate image: grayscale image from text data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2370" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2370" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2378" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2378" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -9130,8 +9128,8 @@
   <dd>
     
     Get Color structure from hexadecimal value
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2845" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2845" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2842" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2842" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -9144,7 +9142,7 @@
                                   <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Get current connected monitor
+    Get current monitor where window is placed
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L864" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L864" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -9158,8 +9156,8 @@
   <dd>
     
     Get dropped files names
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2481" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2481" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2488" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2488" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -9260,8 +9258,8 @@
   <dd>
     
     Get gamepad internal name id
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2318" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2318" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2326" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2326" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -9318,7 +9316,7 @@
     <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Get gesture hold time in milliseconds
+    Get gesture hold time in seconds
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1098" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1098" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -9729,8 +9727,8 @@
   <dd>
     
     Get Color from a source pixel pointer of certain format
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2683" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2683" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2680" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2680" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -9936,8 +9934,8 @@
   <dd>
     
     Get shader uniform location
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2298" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2298" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2306" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2306" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -9950,8 +9948,8 @@
   <dd>
     
     Get shader attribute location
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2302" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2302" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2310" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2310" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -10685,8 +10683,8 @@
   <dd>
     
     Draw text (custom sprite font) within an image (destination)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2398" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2398" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2406" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2406" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -10697,8 +10695,8 @@
   <dd>
     
     Draw text (using default font) within an image (destination)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2394" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2394" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2402" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2402" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -10740,8 +10738,8 @@
   <dd>
     
     Draw a triangle fan defined by points within an image (first vertex is the center)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2386" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2386" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2394" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2394" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -10770,8 +10768,8 @@
   <dd>
     
     Draw a triangle strip defined by points within an image
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2390" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2390" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2398" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2398" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -10857,8 +10855,8 @@
   <dd>
     
     Apply custom square convolution kernel to image
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2382" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2382" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2390" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2390" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -10976,8 +10974,8 @@
   <dd>
     
     Create an image from text (custom sprite font)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2378" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2378" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2386" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2386" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -10987,8 +10985,8 @@
   <dd>
     
     Create an image from text (default font)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2374" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2374" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2382" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2382" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11029,8 +11027,8 @@
   <dd>
     
     Initialize window and OpenGL context
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2476" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2476" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2483" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2483" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11081,14 +11079,14 @@
 </div>
 
 </div>
-<div id="isAudioStreamReady-procs-all">
-  <div id="isAudioStreamReady,AudioStream">
-  <dt><pre><span class="Keyword">func</span> <a href="#isAudioStreamReady%2CAudioStream"><span class="Identifier">isAudioStreamReady</span></a><span class="Other">(</span><span class="Identifier">stream</span><span class="Other">:</span> <a href="raylib.html#AudioStream"><span class="Identifier">AudioStream</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.
-    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsAudioStreamReady&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<div id="isAudioStreamValid-procs-all">
+  <div id="isAudioStreamValid,AudioStream">
+  <dt><pre><span class="Keyword">func</span> <a href="#isAudioStreamValid%2CAudioStream"><span class="Identifier">isAudioStreamValid</span></a><span class="Other">(</span><span class="Identifier">stream</span><span class="Other">:</span> <a href="raylib.html#AudioStream"><span class="Identifier">AudioStream</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsAudioStreamValid&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Checks if an audio stream is ready
+    Checks if an audio stream is valid (buffers initialized)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1664" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1664" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11141,13 +11139,13 @@
 </div>
 
 </div>
-<div id="isFontReady-procs-all">
-  <div id="isFontReady,Font">
-  <dt><pre><span class="Keyword">func</span> <a href="#isFontReady%2CFont"><span class="Identifier">isFontReady</span></a><span class="Other">(</span><span class="Identifier">font</span><span class="Other">:</span> <a href="raylib.html#Font"><span class="Identifier">Font</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsFontReady&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span>
+<div id="isFontValid-procs-all">
+  <div id="isFontValid,Font">
+  <dt><pre><span class="Keyword">func</span> <a href="#isFontValid%2CFont"><span class="Identifier">isFontValid</span></a><span class="Other">(</span><span class="Identifier">font</span><span class="Other">:</span> <a href="raylib.html#Font"><span class="Identifier">Font</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsFontValid&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span>
                                      <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Check if a font is ready
+    Check if a font is valid (font data loaded, WARNING: GPU texture not checked)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1429" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1429" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11243,14 +11241,14 @@
 </div>
 
 </div>
-<div id="isImageReady-procs-all">
-  <div id="isImageReady,Image">
-  <dt><pre><span class="Keyword">func</span> <a href="#isImageReady%2CImage"><span class="Identifier">isImageReady</span></a><span class="Other">(</span><span class="Identifier">image</span><span class="Other">:</span> <a href="raylib.html#Image"><span class="Identifier">Image</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsImageReady&quot;</span><span class="Other">,</span>
+<div id="isImageValid-procs-all">
+  <div id="isImageValid,Image">
+  <dt><pre><span class="Keyword">func</span> <a href="#isImageValid%2CImage"><span class="Identifier">isImageValid</span></a><span class="Other">(</span><span class="Identifier">image</span><span class="Other">:</span> <a href="raylib.html#Image"><span class="Identifier">Image</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsImageValid&quot;</span><span class="Other">,</span>
                                         <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
                                         <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Check if an image is ready
+    Check if an image is valid (data and parameters)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1243" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1243" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11292,7 +11290,7 @@
     <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Check if a key has been pressed again (Only PLATFORM_DESKTOP)
+    Check if a key has been pressed again
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1020" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1020" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11329,13 +11327,13 @@
 </div>
 
 </div>
-<div id="isMaterialReady-procs-all">
-  <div id="isMaterialReady,Material">
-  <dt><pre><span class="Keyword">func</span> <a href="#isMaterialReady%2CMaterial"><span class="Identifier">isMaterialReady</span></a><span class="Other">(</span><span class="Identifier">material</span><span class="Other">:</span> <a href="raylib.html#Material"><span class="Identifier">Material</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsMaterialReady&quot;</span><span class="Other">,</span>
+<div id="isMaterialValid-procs-all">
+  <div id="isMaterialValid,Material">
+  <dt><pre><span class="Keyword">func</span> <a href="#isMaterialValid%2CMaterial"><span class="Identifier">isMaterialValid</span></a><span class="Other">(</span><span class="Identifier">material</span><span class="Other">:</span> <a href="raylib.html#Material"><span class="Identifier">Material</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsMaterialValid&quot;</span><span class="Other">,</span>
     <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Check if a material is ready
+    Check if a material is valid (shader assigned, map textures loaded in GPU)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1559" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1559" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11351,21 +11349,21 @@
   <dd>
     
     Check model animation skeleton match
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1566" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1566" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1568" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1568" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
-<div id="isModelReady-procs-all">
-  <div id="isModelReady,Model">
-  <dt><pre><span class="Keyword">func</span> <a href="#isModelReady%2CModel"><span class="Identifier">isModelReady</span></a><span class="Other">(</span><span class="Identifier">model</span><span class="Other">:</span> <a href="raylib.html#Model"><span class="Identifier">Model</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsModelReady&quot;</span><span class="Other">,</span>
+<div id="isModelValid-procs-all">
+  <div id="isModelValid,Model">
+  <dt><pre><span class="Keyword">func</span> <a href="#isModelValid%2CModel"><span class="Identifier">isModelValid</span></a><span class="Other">(</span><span class="Identifier">model</span><span class="Other">:</span> <a href="raylib.html#Model"><span class="Identifier">Model</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsModelValid&quot;</span><span class="Other">,</span>
                                         <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
                                         <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Check if a model is ready
+    Check if a model is valid (loaded in GPU, VAO/VBOs)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1496" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1496" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11432,21 +11430,6 @@
 </div>
 
 </div>
-<div id="isMusicReady-procs-all">
-  <div id="isMusicReady,Music">
-  <dt><pre><span class="Keyword">func</span> <a href="#isMusicReady%2CMusic"><span class="Identifier">isMusicReady</span></a><span class="Other">(</span><span class="Identifier">music</span><span class="Other">:</span> <a href="raylib.html#Music"><span class="Identifier">Music</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsMusicReady&quot;</span><span class="Other">,</span>
-                                        <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-                                        <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    Checks if a music stream is ready
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1636" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1636" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
 <div id="isMusicStreamPlaying-procs-all">
   <div id="isMusicStreamPlaying,Music">
   <dt><pre><span class="Keyword">proc</span> <a href="#isMusicStreamPlaying%2CMusic"><span class="Identifier">isMusicStreamPlaying</span></a><span class="Other">(</span><span class="Identifier">music</span><span class="Other">:</span> <a href="raylib.html#Music"><span class="Identifier">Music</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsMusicStreamPlaying&quot;</span><span class="Other">,</span>
@@ -11461,14 +11444,29 @@
 </div>
 
 </div>
-<div id="isRenderTextureReady-procs-all">
-  <div id="isRenderTextureReady,RenderTexture">
-  <dt><pre><span class="Keyword">func</span> <a href="#isRenderTextureReady%2CRenderTexture"><span class="Identifier">isRenderTextureReady</span></a><span class="Other">(</span><span class="Identifier">target</span><span class="Other">:</span> <a href="raylib.html#RenderTexture2D"><span class="Identifier">RenderTexture2D</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.
-    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsRenderTextureReady&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<div id="isMusicValid-procs-all">
+  <div id="isMusicValid,Music">
+  <dt><pre><span class="Keyword">func</span> <a href="#isMusicValid%2CMusic"><span class="Identifier">isMusicValid</span></a><span class="Other">(</span><span class="Identifier">music</span><span class="Other">:</span> <a href="raylib.html#Music"><span class="Identifier">Music</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsMusicValid&quot;</span><span class="Other">,</span>
+                                        <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+                                        <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    Checks if a music stream is valid (context and buffers initialized)
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1636" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1636" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="isRenderTextureValid-procs-all">
+  <div id="isRenderTextureValid,RenderTexture">
+  <dt><pre><span class="Keyword">func</span> <a href="#isRenderTextureValid%2CRenderTexture"><span class="Identifier">isRenderTextureValid</span></a><span class="Other">(</span><span class="Identifier">target</span><span class="Other">:</span> <a href="raylib.html#RenderTexture2D"><span class="Identifier">RenderTexture2D</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsRenderTextureValid&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Check if a render texture is ready
+    Check if a render texture is valid (loaded in GPU)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1376" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1376" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11476,13 +11474,13 @@
 </div>
 
 </div>
-<div id="isShaderReady-procs-all">
-  <div id="isShaderReady,Shader">
-  <dt><pre><span class="Keyword">func</span> <a href="#isShaderReady%2CShader"><span class="Identifier">isShaderReady</span></a><span class="Other">(</span><span class="Identifier">shader</span><span class="Other">:</span> <a href="raylib.html#Shader"><span class="Identifier">Shader</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsShaderReady&quot;</span><span class="Other">,</span>
+<div id="isShaderValid-procs-all">
+  <div id="isShaderValid,Shader">
+  <dt><pre><span class="Keyword">func</span> <a href="#isShaderValid%2CShader"><span class="Identifier">isShaderValid</span></a><span class="Other">(</span><span class="Identifier">shader</span><span class="Other">:</span> <a href="raylib.html#Shader"><span class="Identifier">Shader</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsShaderValid&quot;</span><span class="Other">,</span>
     <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Check if a shader is ready
+    Check if a shader is valid (loaded on GPU)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L940" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L940" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11504,14 +11502,14 @@
 </div>
 
 </div>
-<div id="isSoundReady-procs-all">
-  <div id="isSoundReady,Sound">
-  <dt><pre><span class="Keyword">func</span> <a href="#isSoundReady%2CSound"><span class="Identifier">isSoundReady</span></a><span class="Other">(</span><span class="Identifier">sound</span><span class="Other">:</span> <a href="raylib.html#Sound"><span class="Identifier">Sound</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsSoundReady&quot;</span><span class="Other">,</span>
+<div id="isSoundValid-procs-all">
+  <div id="isSoundValid,Sound">
+  <dt><pre><span class="Keyword">func</span> <a href="#isSoundValid%2CSound"><span class="Identifier">isSoundValid</span></a><span class="Other">(</span><span class="Identifier">sound</span><span class="Other">:</span> <a href="raylib.html#Sound"><span class="Identifier">Sound</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsSoundValid&quot;</span><span class="Other">,</span>
                                         <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
                                         <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Checks if a sound is ready
+    Checks if a sound is valid (data loaded and buffers initialized)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1603" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1603" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11519,13 +11517,13 @@
 </div>
 
 </div>
-<div id="isTextureReady-procs-all">
-  <div id="isTextureReady,Texture">
-  <dt><pre><span class="Keyword">func</span> <a href="#isTextureReady%2CTexture"><span class="Identifier">isTextureReady</span></a><span class="Other">(</span><span class="Identifier">texture</span><span class="Other">:</span> <a href="raylib.html#Texture2D"><span class="Identifier">Texture2D</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsTextureReady&quot;</span><span class="Other">,</span>
+<div id="isTextureValid-procs-all">
+  <div id="isTextureValid,Texture">
+  <dt><pre><span class="Keyword">func</span> <a href="#isTextureValid%2CTexture"><span class="Identifier">isTextureValid</span></a><span class="Other">(</span><span class="Identifier">texture</span><span class="Other">:</span> <a href="raylib.html#Texture2D"><span class="Identifier">Texture2D</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsTextureValid&quot;</span><span class="Other">,</span>
     <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Check if a texture is ready
+    Check if a texture is valid (loaded in GPU)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1373" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1373" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11533,13 +11531,13 @@
 </div>
 
 </div>
-<div id="isWaveReady-procs-all">
-  <div id="isWaveReady,Wave">
-  <dt><pre><span class="Keyword">func</span> <a href="#isWaveReady%2CWave"><span class="Identifier">isWaveReady</span></a><span class="Other">(</span><span class="Identifier">wave</span><span class="Other">:</span> <a href="raylib.html#Wave"><span class="Identifier">Wave</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsWaveReady&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span>
+<div id="isWaveValid-procs-all">
+  <div id="isWaveValid,Wave">
+  <dt><pre><span class="Keyword">func</span> <a href="#isWaveValid%2CWave"><span class="Identifier">isWaveValid</span></a><span class="Other">(</span><span class="Identifier">wave</span><span class="Other">:</span> <a href="raylib.html#Wave"><span class="Identifier">Wave</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;IsWaveValid&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span>
                                      <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Checks if wave data is ready
+    Checks if wave data is valid (data loaded and parameters)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1598" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1598" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11554,7 +11552,7 @@
                                <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Check if window is currently focused (only PLATFORM_DESKTOP)
+    Check if window is currently focused
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L814" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L814" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11584,7 +11582,7 @@
                               <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Check if window is currently hidden (only PLATFORM_DESKTOP)
+    Check if window is currently hidden
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L808" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L808" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11599,7 +11597,7 @@
                                  <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Check if window is currently maximized (only PLATFORM_DESKTOP)
+    Check if window is currently maximized
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L812" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L812" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11614,7 +11612,7 @@
                                  <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Check if window is currently minimized (only PLATFORM_DESKTOP)
+    Check if window is currently minimized
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L810" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L810" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -11697,8 +11695,8 @@
   <dd>
     
     Load audio stream (to stream raw audio pcm data)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2810" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2810" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2807" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2807" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11711,8 +11709,8 @@
   <dd>
     
     Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2310" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2310" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2318" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2318" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11725,8 +11723,8 @@
   <dd>
     
     Load font from file into GPU memory (VRAM)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2707" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2707" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2704" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2704" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11736,8 +11734,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2718" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2718" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2715" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2715" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11747,8 +11745,8 @@
   <dd>
     
     Load font from file with extended parameters, use an empty array for codepoints to load the default character set
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2712" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2712" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2709" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2709" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11762,8 +11760,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2701" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2701" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2698" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2698" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11774,8 +11772,8 @@
   <dd>
     
     Load font data for further use
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2693" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2693" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2690" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2690" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11789,8 +11787,8 @@
   <dd>
     
     Load font using chars info
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2741" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2741" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2738" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2738" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11803,8 +11801,8 @@
   <dd>
     
     Load font from Image (XNA style)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2722" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2722" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2719" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2719" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11818,8 +11816,8 @@
   <dd>
     
     Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2727" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2727" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2724" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2724" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11830,8 +11828,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2735" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2735" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2732" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2732" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11844,8 +11842,8 @@
   <dd>
     
     Load image from file into CPU memory (RAM)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2588" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2588" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2585" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2585" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11858,8 +11856,8 @@
   <dd>
     
     Load image sequence from file (frames appended to image.data)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2598" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2598" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2595" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2595" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11873,8 +11871,8 @@
   <dd>
     
     Load image sequence from memory buffer
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2603" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2603" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2600" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2600" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11887,8 +11885,8 @@
   <dd>
     
     Load color data from image as a Color array (RGBA - 32bit)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2569" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2569" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2566" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2566" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11901,8 +11899,8 @@
   <dd>
     
     Load image from memory buffer, fileType refers to extension: i.e. '.png'
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2609" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2609" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2606" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2606" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11930,8 +11928,8 @@
   <dd>
     
     Load image from GPU texture data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2615" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2615" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2612" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2612" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11944,8 +11942,8 @@
   <dd>
     
     Load colors palette from image as a Color array (RGBA - 32bit)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2575" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2575" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2572" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2572" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11959,8 +11957,8 @@
   <dd>
     
     Load image sequence from file (frames appended to image.data)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2593" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2593" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2590" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2590" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -11988,8 +11986,8 @@
   <dd>
     
     Load materials from model file
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2581" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2581" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2578" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2578" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12002,8 +12000,8 @@
   <dd>
     
     Load model from files (meshes and materials)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2825" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2825" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2822" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2822" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12016,8 +12014,8 @@
   <dd>
     
     Load model animations from file
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2556" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2556" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2553" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2553" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12030,8 +12028,8 @@
   <dd>
     
     Load model from generated mesh (default material)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2830" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2830" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2827" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2827" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12044,8 +12042,8 @@
   <dd>
     
     Load music stream from file
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2799" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2799" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2796" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2796" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12058,8 +12056,8 @@
   <dd>
     
     Load music stream from data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2804" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2804" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2801" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2801" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12072,8 +12070,8 @@
   <dd>
     
     Load texture for rendering (framebuffer)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2664" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2664" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2661" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2661" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12081,13 +12079,13 @@
 </div>
 <div id="loadShader-procs-all">
   <div id="loadShader,string,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadShader%2Cstring%2Cstring"><span class="Identifier">loadShader</span></a><span class="Other">(</span><span class="Identifier">vsFileName</span><span class="Other">,</span> <span class="Identifier">fsFileName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Shader"><span class="Identifier">Shader</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadShader%2Cstring%2Cstring"><span class="Identifier">loadShader</span></a><span class="Other">(</span><span class="Identifier">vsFileName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">fsFileName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Shader"><span class="Identifier">Shader</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     Load shader from files and bind default locations
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2522" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2522" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2298" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2298" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12095,13 +12093,13 @@
 </div>
 <div id="loadShaderFromMemory-procs-all">
   <div id="loadShaderFromMemory,string,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadShaderFromMemory%2Cstring%2Cstring"><span class="Identifier">loadShaderFromMemory</span></a><span class="Other">(</span><span class="Identifier">vsCode</span><span class="Other">,</span> <span class="Identifier">fsCode</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Shader"><span class="Identifier">Shader</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadShaderFromMemory%2Cstring%2Cstring"><span class="Identifier">loadShaderFromMemory</span></a><span class="Other">(</span><span class="Identifier">vsCode</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">fsCode</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Shader"><span class="Identifier">Shader</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     Load shader from code strings and bind default locations
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2527" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2527" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2302" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2302" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12114,8 +12112,8 @@
   <dd>
     
     Load sound from file
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2780" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2780" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2777" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2777" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12128,8 +12126,8 @@
   <dd>
     
     Create a new sound that shares the same sample data as the source sound, does not own the sound data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2785" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2785" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2782" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2782" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12142,8 +12140,8 @@
   <dd>
     
     Load sound from wave data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2790" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2790" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2787" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2787" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12156,8 +12154,8 @@
   <dd>
     
     Load texture from file into GPU memory (VRAM)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2649" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2649" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2646" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2646" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12170,8 +12168,8 @@
   <dd>
     
     Load cubemap from image, multiple image cubemap layouts supported
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2659" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2659" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2656" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2656" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12184,8 +12182,8 @@
   <dd>
     
     Load texture using pixels
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2640" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2640" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2637" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2637" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12198,8 +12196,8 @@
   <dd>
     
     Load texture from image data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2654" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2654" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2651" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2651" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12227,8 +12225,8 @@
   <dd>
     
     Load wave data from file
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2769" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2769" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2766" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2766" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12241,8 +12239,8 @@
   <dd>
     
     Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2774" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2774" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2771" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2771" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12255,8 +12253,8 @@
   <dd>
     
     Load samples data from wave as a floats array
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2563" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2563" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2560" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2560" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12309,7 +12307,7 @@
                         <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
+    Set window state: maximized, if resizable
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L828" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L828" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -12324,8 +12322,8 @@
   <dd>
     
     Measure string size for Font
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2422" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2422" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2430" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2430" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12335,8 +12333,8 @@
   <dd>
     
     Measure string width for default font
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2418" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2418" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2426" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2426" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12361,7 +12359,7 @@
                         <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set window state: minimized, if resizable (only PLATFORM_DESKTOP)
+    Set window state: minimized, if resizable
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L830" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L830" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -12492,7 +12490,7 @@
                        <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
+    Set window state: not minimized/maximized
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L832" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L832" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -12713,21 +12711,22 @@
   <dd>
     
     Set internal gamepad mappings (SDL_GameControllerDB)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2322" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2322" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2330" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2330" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="setGamepadVibration-procs-all">
-  <div id="setGamepadVibration,int32,float32,float32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#setGamepadVibration%2Cint32%2Cfloat32%2Cfloat32"><span class="Identifier">setGamepadVibration</span></a><span class="Other">(</span><span class="Identifier">gamepad</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">leftMotor</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">;</span> <span class="Identifier">rightMotor</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span> {.
+  <div id="setGamepadVibration,int32,float32,float32,float32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#setGamepadVibration%2Cint32%2Cfloat32%2Cfloat32%2Cfloat32"><span class="Identifier">setGamepadVibration</span></a><span class="Other">(</span><span class="Identifier">gamepad</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">leftMotor</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">;</span>
+                         <span class="Identifier">rightMotor</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">;</span> <span class="Identifier">duration</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;SetGamepadVibration&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set gamepad vibration for both motors
+    Set gamepad vibration for both motors (duration in seconds)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1052" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1052" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -12898,8 +12897,8 @@
   <dd>
     
     Set color formatted into destination pixel pointer
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2688" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2688" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2685" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2685" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12942,8 +12941,8 @@
   <dd>
     
     Set shader uniform value
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2548" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2548" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2545" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2545" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -12987,8 +12986,8 @@
   <dd>
     
     Set shader uniform value vector
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2552" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2552" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2549" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2549" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -13117,8 +13116,8 @@
   <dd>
     
     Set custom trace log
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2465" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2465" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2472" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2472" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -13144,7 +13143,7 @@
                           <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set window focused (only PLATFORM_DESKTOP)
+    Set window focused
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L850" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L850" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13159,7 +13158,7 @@
                                    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
+    Set icon for window (single image, RGBA 32bit)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L834" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L834" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13173,7 +13172,7 @@
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
+    Set icon for window (multiple images, RGBA 32bit)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2278" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2278" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13232,7 +13231,7 @@
     <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set window opacity <a class="reference internal" href="#0.0f..1.0f">0.0f..1.0f</a> (only PLATFORM_DESKTOP)
+    Set window opacity <a class="reference internal" href="#0.0f..1.0f">0.0f..1.0f</a>
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L848" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L848" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13246,7 +13245,7 @@
     <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set window position on screen (only PLATFORM_DESKTOP)
+    Set window position on screen
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L838" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L838" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13274,7 +13273,7 @@
     <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set window configuration state using flags (only PLATFORM_DESKTOP)
+    Set window configuration state using flags
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L820" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L820" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13287,7 +13286,7 @@
   <dt><pre><span class="Keyword">proc</span> <a href="#setWindowTitle%2Cstring"><span class="Identifier">setWindowTitle</span></a><span class="Other">(</span><span class="Identifier">title</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set title for window (only PLATFORM_DESKTOP and PLATFORM_WEB)
+    Set title for window
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2282" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2282" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13442,8 +13441,8 @@
   <dd>
     
     Takes a screenshot of current screen (filename extension defines format)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2306" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2306" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2314" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2314" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -13495,7 +13494,7 @@
                                   <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Toggle window state: borderless windowed <a class="reference internal" href="#resizes window to match monitor resolution">resizes window to match monitor resolution</a> (only PLATFORM_DESKTOP)
+    Toggle window state: borderless windowed, resizes window to match monitor resolution
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L826" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L826" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13509,7 +13508,7 @@
                           <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Toggle window state: fullscreen/windowed <a class="reference internal" href="#resizes monitor to match window resolution">resizes monitor to match window resolution</a> (only PLATFORM_DESKTOP)
+    Toggle window state: fullscreen/windowed, resizes monitor to match window resolution
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L824" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L824" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13525,8 +13524,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2470" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2470" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2477" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2477" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -13540,8 +13539,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2473" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2473" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2480" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2480" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -13595,8 +13594,8 @@
   <dd>
     
     Update audio stream buffers with data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2815" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2815" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2812" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2812" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -13637,8 +13636,8 @@
   <dd>
     
     Update mesh vertex data in GPU for a specific buffer index
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2760" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2760" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2757" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2757" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -13651,7 +13650,7 @@
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Update model animation pose
+    Update model animation pose (CPU)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1563" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1563" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13659,17 +13658,16 @@
 </div>
 
 </div>
-<div id="updateModelAnimationBoneMatrices-procs-all">
-  <div id="updateModelAnimationBoneMatrices,Model,ModelAnimation,int32">
-  <dt><pre><span class="Keyword">func</span> <a href="#updateModelAnimationBoneMatrices%2CModel%2CModelAnimation%2Cint32"><span class="Identifier">updateModelAnimationBoneMatrices</span></a><span class="Other">(</span><span class="Identifier">model</span><span class="Other">:</span> <a href="raylib.html#Model"><span class="Identifier">Model</span></a><span class="Other">;</span> <span class="Identifier">anim</span><span class="Other">:</span> <a href="raylib.html#ModelAnimation"><span class="Identifier">ModelAnimation</span></a><span class="Other">;</span>
-                                      <span class="Identifier">frame</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span> {.
-    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;UpdateModelAnimationBoneMatrices&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<div id="updateModelAnimationBones-procs-all">
+  <div id="updateModelAnimationBones,Model,ModelAnimation,int32">
+  <dt><pre><span class="Keyword">func</span> <a href="#updateModelAnimationBones%2CModel%2CModelAnimation%2Cint32"><span class="Identifier">updateModelAnimationBones</span></a><span class="Other">(</span><span class="Identifier">model</span><span class="Other">:</span> <a href="raylib.html#Model"><span class="Identifier">Model</span></a><span class="Other">;</span> <span class="Identifier">anim</span><span class="Other">:</span> <a href="raylib.html#ModelAnimation"><span class="Identifier">ModelAnimation</span></a><span class="Other">;</span> <span class="Identifier">frame</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;UpdateModelAnimationBones&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Update model animation mesh bone matrices (Note GPU skinning does not work on Mac)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1568" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1568" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    Update model animation mesh bone matrices (GPU skinning)
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1565" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1565" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -13696,8 +13694,8 @@
   <dd>
     
     Update sound buffer with new data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2795" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2795" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2792" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2792" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -13709,8 +13707,8 @@
   <dd>
     
     Update GPU texture with new data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2669" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2669" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2666" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2666" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -13720,8 +13718,8 @@
   <dd>
     
     Update GPU texture rectangle with new data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2676" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2676" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2673" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2673" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -13878,8 +13876,8 @@
   <dd>
     
     Blending mode (alpha, additive, multiplied, subtract, custom)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2894" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2894" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2891" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2891" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -13979,8 +13977,8 @@
   <dd>
     
     Setup canvas (framebuffer) to start drawing
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2854" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2854" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2851" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2851" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14031,8 +14029,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2544" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2544" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2541" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2541" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14041,8 +14039,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2541" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2541" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2538" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2538" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14051,8 +14049,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2545" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2545" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2542" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2542" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14061,8 +14059,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2542" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2542" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2539" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2539" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14071,8 +14069,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2546" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2546" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2543" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2543" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14081,8 +14079,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2543" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2543" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2540" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2540" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14091,8 +14089,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2630" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2630" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2627" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2627" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14101,8 +14099,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2536" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2536" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2533" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2533" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14111,8 +14109,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2540" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2540" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2537" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2537" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14121,8 +14119,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2537" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2537" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2534" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2534" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14131,8 +14129,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2538" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2538" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2535" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2535" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14141,8 +14139,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2539" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2539" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2536" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2536" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14245,8 +14243,8 @@
   <dd>
     
     2D mode with custom camera (2D)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2862" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2862" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2859" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2859" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14258,8 +14256,8 @@
   <dd>
     
     3D mode with custom camera (3D)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2870" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2870" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2867" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2867" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14297,8 +14295,8 @@
   <dd>
     
     Scissor mode (define screen area for following drawing)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2902" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2902" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2899" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2899" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14323,8 +14321,8 @@
   <dd>
     
     Custom shader drawing
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2886" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2886" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2883" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2883" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14401,8 +14399,8 @@
   <dd>
     
     Drawing to render texture
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2878" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2878" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2875" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2875" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14414,8 +14412,8 @@
   <dd>
     
     Note: that <tt class="docutils literal"><span class="pre"><span class="Identifier">a</span></span></tt> should be properly formatted, with a byte representation that aligns with the memory layout of the Color type.
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2632" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2632" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2629" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2629" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14476,8 +14474,8 @@
   <dd>
     
     Stereo rendering (requires VR simulator)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2910" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2910" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2907" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2907" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -14493,7 +14491,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-10-13 14:02:57 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-11-18 10:09:55 UTC</small>
       </div>
     </div>
   </div>
