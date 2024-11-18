@@ -10,7 +10,7 @@
       "name": "RMAPI",
       "type": "UNKNOWN",
       "value": "__declspec(dllexport) extern inline",
-      "description": "We are building raylib as a Win32 shared library (.dll)."
+      "description": "We are building raylib as a Win32 shared library (.dll)"
     },
     {
       "name": "PI",
@@ -535,6 +535,21 @@
       ]
     },
     {
+      "name": "Vector2LineAngle",
+      "description": "",
+      "returnType": "float",
+      "params": [
+        {
+          "type": "Vector2",
+          "name": "start"
+        },
+        {
+          "type": "Vector2",
+          "name": "end"
+        }
+      ]
+    },
+    {
       "name": "Vector2Scale",
       "description": "",
       "returnType": "Vector2",
@@ -651,6 +666,36 @@
       ]
     },
     {
+      "name": "Vector2Min",
+      "description": "",
+      "returnType": "Vector2",
+      "params": [
+        {
+          "type": "Vector2",
+          "name": "v1"
+        },
+        {
+          "type": "Vector2",
+          "name": "v2"
+        }
+      ]
+    },
+    {
+      "name": "Vector2Max",
+      "description": "",
+      "returnType": "Vector2",
+      "params": [
+        {
+          "type": "Vector2",
+          "name": "v1"
+        },
+        {
+          "type": "Vector2",
+          "name": "v2"
+        }
+      ]
+    },
+    {
       "name": "Vector2Rotate",
       "description": "",
       "returnType": "Vector2",
@@ -745,6 +790,25 @@
         {
           "type": "Vector2",
           "name": "q"
+        }
+      ]
+    },
+    {
+      "name": "Vector2Refract",
+      "description": "",
+      "returnType": "Vector2",
+      "params": [
+        {
+          "type": "Vector2",
+          "name": "v"
+        },
+        {
+          "type": "Vector2",
+          "name": "n"
+        },
+        {
+          "type": "float",
+          "name": "r"
         }
       ]
     },
@@ -994,6 +1058,36 @@
       ]
     },
     {
+      "name": "Vector3Project",
+      "description": "",
+      "returnType": "Vector3",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "v1"
+        },
+        {
+          "type": "Vector3",
+          "name": "v2"
+        }
+      ]
+    },
+    {
+      "name": "Vector3Reject",
+      "description": "",
+      "returnType": "Vector3",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "v1"
+        },
+        {
+          "type": "Vector3",
+          "name": "v2"
+        }
+      ]
+    },
+    {
       "name": "Vector3OrthoNormalize",
       "description": "",
       "returnType": "void",
@@ -1058,6 +1152,25 @@
       ]
     },
     {
+      "name": "Vector3MoveTowards",
+      "description": "",
+      "returnType": "Vector3",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "v"
+        },
+        {
+          "type": "Vector3",
+          "name": "target"
+        },
+        {
+          "type": "float",
+          "name": "maxDistance"
+        }
+      ]
+    },
+    {
       "name": "Vector3Lerp",
       "description": "",
       "returnType": "Vector3",
@@ -1069,6 +1182,33 @@
         {
           "type": "Vector3",
           "name": "v2"
+        },
+        {
+          "type": "float",
+          "name": "amount"
+        }
+      ]
+    },
+    {
+      "name": "Vector3CubicHermite",
+      "description": "",
+      "returnType": "Vector3",
+      "params": [
+        {
+          "type": "Vector3",
+          "name": "v1"
+        },
+        {
+          "type": "Vector3",
+          "name": "tangent1"
+        },
+        {
+          "type": "Vector3",
+          "name": "v2"
+        },
+        {
+          "type": "Vector3",
+          "name": "tangent2"
         },
         {
           "type": "float",
@@ -1254,6 +1394,304 @@
         {
           "type": "float",
           "name": "r"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Zero",
+      "description": "",
+      "returnType": "Vector4"
+    },
+    {
+      "name": "Vector4One",
+      "description": "",
+      "returnType": "Vector4"
+    },
+    {
+      "name": "Vector4Add",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v1"
+        },
+        {
+          "type": "Vector4",
+          "name": "v2"
+        }
+      ]
+    },
+    {
+      "name": "Vector4AddValue",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v"
+        },
+        {
+          "type": "float",
+          "name": "add"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Subtract",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v1"
+        },
+        {
+          "type": "Vector4",
+          "name": "v2"
+        }
+      ]
+    },
+    {
+      "name": "Vector4SubtractValue",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v"
+        },
+        {
+          "type": "float",
+          "name": "add"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Length",
+      "description": "",
+      "returnType": "float",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v"
+        }
+      ]
+    },
+    {
+      "name": "Vector4LengthSqr",
+      "description": "",
+      "returnType": "float",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v"
+        }
+      ]
+    },
+    {
+      "name": "Vector4DotProduct",
+      "description": "",
+      "returnType": "float",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v1"
+        },
+        {
+          "type": "Vector4",
+          "name": "v2"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Distance",
+      "description": "",
+      "returnType": "float",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v1"
+        },
+        {
+          "type": "Vector4",
+          "name": "v2"
+        }
+      ]
+    },
+    {
+      "name": "Vector4DistanceSqr",
+      "description": "",
+      "returnType": "float",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v1"
+        },
+        {
+          "type": "Vector4",
+          "name": "v2"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Scale",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v"
+        },
+        {
+          "type": "float",
+          "name": "scale"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Multiply",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v1"
+        },
+        {
+          "type": "Vector4",
+          "name": "v2"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Negate",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Divide",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v1"
+        },
+        {
+          "type": "Vector4",
+          "name": "v2"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Normalize",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Min",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v1"
+        },
+        {
+          "type": "Vector4",
+          "name": "v2"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Max",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v1"
+        },
+        {
+          "type": "Vector4",
+          "name": "v2"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Lerp",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v1"
+        },
+        {
+          "type": "Vector4",
+          "name": "v2"
+        },
+        {
+          "type": "float",
+          "name": "amount"
+        }
+      ]
+    },
+    {
+      "name": "Vector4MoveTowards",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v"
+        },
+        {
+          "type": "Vector4",
+          "name": "target"
+        },
+        {
+          "type": "float",
+          "name": "maxDistance"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Invert",
+      "description": "",
+      "returnType": "Vector4",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "v"
+        }
+      ]
+    },
+    {
+      "name": "Vector4Equals",
+      "description": "",
+      "returnType": "int",
+      "params": [
+        {
+          "type": "Vector4",
+          "name": "p"
+        },
+        {
+          "type": "Vector4",
+          "name": "q"
         }
       ]
     },
@@ -1482,11 +1920,11 @@
         },
         {
           "type": "double",
-          "name": "near"
+          "name": "nearPlane"
         },
         {
           "type": "double",
-          "name": "far"
+          "name": "farPlane"
         }
       ]
     },
@@ -1497,7 +1935,7 @@
       "params": [
         {
           "type": "double",
-          "name": "fovy"
+          "name": "fovY"
         },
         {
           "type": "double",
@@ -1505,11 +1943,11 @@
         },
         {
           "type": "double",
-          "name": "near"
+          "name": "nearPlane"
         },
         {
           "type": "double",
-          "name": "far"
+          "name": "farPlane"
         }
       ]
     },
@@ -1536,11 +1974,11 @@
         },
         {
           "type": "double",
-          "name": "near"
+          "name": "nearPlane"
         },
         {
           "type": "double",
-          "name": "far"
+          "name": "farPlane"
         }
       ]
     },
@@ -1775,6 +2213,33 @@
       ]
     },
     {
+      "name": "QuaternionCubicHermiteSpline",
+      "description": "",
+      "returnType": "Quaternion",
+      "params": [
+        {
+          "type": "Quaternion",
+          "name": "q1"
+        },
+        {
+          "type": "Quaternion",
+          "name": "outTangent1"
+        },
+        {
+          "type": "Quaternion",
+          "name": "q2"
+        },
+        {
+          "type": "Quaternion",
+          "name": "inTangent2"
+        },
+        {
+          "type": "float",
+          "name": "t"
+        }
+      ]
+    },
+    {
       "name": "QuaternionFromVector3ToVector3",
       "description": "",
       "returnType": "Quaternion",
@@ -1902,6 +2367,29 @@
         {
           "type": "Quaternion",
           "name": "q"
+        }
+      ]
+    },
+    {
+      "name": "MatrixDecompose",
+      "description": "",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Matrix",
+          "name": "mat"
+        },
+        {
+          "type": "Vector3 *",
+          "name": "translation"
+        },
+        {
+          "type": "Quaternion *",
+          "name": "rotation"
+        },
+        {
+          "type": "Vector3 *",
+          "name": "scale"
         }
       ]
     }

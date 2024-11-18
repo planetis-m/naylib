@@ -1571,7 +1571,7 @@ func fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
     result.z = q.z * invLength
     result.w = q.w * invLength
 
-func toAxisAngle*(q: Quaternion; outAxis: var Vector3; outAngle: var float32) {.inline.} =
+func toAxisAngle*(q: Quaternion; outAxis: out Vector3; outAngle: out float32) {.inline.} =
   ## Get the rotation angle and axis for a given quaternion
   var q = q
   if abs(q.w) > 1'f32:
@@ -1640,7 +1640,7 @@ func transform*(q: Quaternion; mat: Matrix): Quaternion {.inline.} =
   result.z = mat.m2 * q.x + mat.m6 * q.y + mat.m10 * q.z + mat.m14 * q.w
   result.w = mat.m3 * q.x + mat.m7 * q.y + mat.m11 * q.z + mat.m15 * q.w
 
-func decompose*(mat: Matrix, translation: var Vector3, rotation: var Quaternion, scale: var Vector3) {.inline.} =
+func decompose*(mat: Matrix, translation: out Vector3, rotation: out Quaternion, scale: out Vector3) {.inline.} =
   # Extract translation
   translation.x = mat.m12
   translation.y = mat.m13

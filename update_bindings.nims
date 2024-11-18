@@ -72,11 +72,13 @@ task buildTools, "Build raylib_parser and naylib_wrapper":
 task genApi, "Generate API JSON files":
   buildParser()
   genApiJson("raylib", "RLAPI", "")
+  # genApiJson("rcamera", "RLAPI", "#endif // RCAMERA_H")
   # genApiJson("raymath", "RMAPI", "")
   genApiJson("rlgl", "", "#endif // RLGL_H")
 
 task genWrappers, "Generate Nim wrappers":
   genWrapper("raylib")
+  # genWrapper("rcamera")
   # genWrapper("raymath")
   genWrapper("rlgl")
 
@@ -94,12 +96,13 @@ task mangle, "Mangle identifiers in raylib source":
 task wrap, "Produce all raylib Nim wrappers":
   buildToolsTask()
   wrapRaylib("raylib", "RLAPI", "")
+  # wrapRaylib("rcamera", "RLAPI", "#endif // RCAMERA_H")
   # wrapRaylib("raymath", "RMAPI", "")
   wrapRaylib("rlgl", "", "#endif // RLGL_H")
 
 task docs, "Generate documentation":
   withDir(PkgDir):
-    for tmp in ["raymath", "raylib", "rlgl", "reasings", "rmem"]:
+    for tmp in ["raymath", "raylib", "rlgl", "reasings", "rmem", "rcamera"]:
       let doc = DocsDir / (tmp & ".html")
       let src = "src" / tmp
       let showNonExports = if tmp != "rmem": " --shownonexports" else: ""
