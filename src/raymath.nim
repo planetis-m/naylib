@@ -512,6 +512,29 @@ func moveTowards*(v, target: Vector3, maxDistance: float32): Vector3 {.inline.} 
   result.y = v.y + dy / dist * maxDistance
   result.z = v.z + dz / dist * maxDistance
 
+func cubicHermite*(v1, tangent1, v2, tangent2: Vector3, amount: float32): Vector3 {.inline.} =
+  ## Calculate cubic hermite interpolation between two vectors and their tangents
+  ## as described in the GLTF 2.0 specification: https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#interpolation-cubic
+  result = Vector3()
+
+  let amountPow2 = amount * amount
+  let amountPow3 = amount * amount * amount
+
+  result.x = (2 * amountPow3 - 3 * amountPow2 + 1) * v1.x +
+             (amountPow3 - 2 * amountPow2 + amount) * tangent1.x +
+             (-2 * amountPow3 + 3 * amountPow2) * v2.x +
+             (amountPow3 - amountPow2) * tangent2.x
+
+  result.y = (2 * amountPow3 - 3 * amountPow2 + 1) * v1.y +
+             (amountPow3 - 2 * amountPow2 + amount) * tangent1.y +
+             (-2 * amountPow3 + 3 * amountPow2) * v2.y +
+             (amountPow3 - amountPow2) * tangent2.y
+
+  result.z = (2 * amountPow3 - 3 * amountPow2 + 1) * v1.z +
+             (amountPow3 - 2 * amountPow2 + amount) * tangent1.z +
+             (-2 * amountPow3 + 3 * amountPow2) * v2.z +
+             (amountPow3 - amountPow2) * tangent2.z
+
 func reflect*(v, normal: Vector3): Vector3 {.inline.} =
   ## Calculate reflected vector to normal
   result = Vector3()
@@ -1443,6 +1466,26 @@ func slerp*(q1, q2: Quaternion; amount: float32): Quaternion {.inline.} =
       result.y = (q1.y * ratioA + q2.y * ratioB)
       result.z = (q1.z * ratioA + q2.z * ratioB)
       result.w = (q1.w * ratioA + q2.w * ratioB)
+
+func cubicHermiteSpline*(q1, outTangent1, q2, inTangent2: Quaternion, t: float32): Quaternion {.inline.} =
+  ## Calculate quaternion cubic spline interpolation using Cubic Hermite Spline algorithm
+  ## as described in the GLTF 2.0 specification: https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#interpolation-cubic
+  let t2 = t * t
+  let t3 = t2 * t
+  let h00 = 2 * t3 - 3 * t2 + 1
+  let h10 = t3 - 2 * t2 + t
+  let h01 = -2 * t3 + 3 * t2
+  let h11 = t3 - t2
+
+  let p0 = scale(q1, h00)
+  let m0 = scale(outTangent1, h10)
+  let p1 = scale(q2, h01)
+  let m1 = scale(inTangent2, h11)
+
+  result = add(p0, m0)
+  result = add(result, p1)
+  result = add(result, m1)
+  result = normalize(result)
 
 func fromVector3ToVector3*(`from`, to: Vector3): Quaternion {.inline.} =
   ## Calculate quaternion based on the rotation from one vector to another
