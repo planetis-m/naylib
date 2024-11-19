@@ -1589,7 +1589,6 @@ func fromAxisAngle*(axis: Vector3; angle: float32): Quaternion {.inline.} =
   if axisLength > 0'f32:
     angle = angle * 0.5'f32
     # Vector3Normalize(axis)
-    var v = axis
     var length = axisLength
     if length == 0'f32:
       length = 1'f32
