@@ -73,7 +73,7 @@
 
 // Support for clipboard image loading
 // NOTE: Only working on SDL3, GLFW (Windows) and RGFW (Windows)
-#define SUPPORT_CLIPBOARD_IMAGE    0
+#define SUPPORT_CLIPBOARD_IMAGE    1
 
 // NOTE: Clipboard image loading requires support for some image file formats
 // TODO: Those defines should probably be removed from here, I prefer to let the user manage them
