@@ -246,7 +246,7 @@ bool WindowShouldClose(void)
 
 // Toggle fullscreen mode
 void ToggleFullscreen(void)
-{   
+{
     RGFW_window_maximize(platform.window);
     ToggleBorderlessWindowed();
 }
@@ -664,42 +664,39 @@ const char *GetClipboardText(void)
     return RGFW_readClipboard(NULL);
 }
 
-
 #if defined(SUPPORT_CLIPBOARD_IMAGE)
-
-#ifdef _WIN32
-#   define WIN32_CLIPBOARD_IMPLEMENTATION
-#   define WINUSER_ALREADY_INCLUDED
-#   define WINBASE_ALREADY_INCLUDED
-#   define WINGDI_ALREADY_INCLUDED
-#   include "../external/win32_clipboard.h"
+#if defined(_WIN32)
+    #define WIN32_CLIPBOARD_IMPLEMENTATION
+    #define WINUSER_ALREADY_INCLUDED
+    #define WINBASE_ALREADY_INCLUDED
+    #define WINGDI_ALREADY_INCLUDED
+    #include "../external/win32_clipboard.h"
 #endif
+#endif // SUPPORT_CLIPBOARD_IMAGE
 
 // Get clipboard image
 Image GetClipboardImage(void)
 {
-    Image image = {0};
+    Image image = { 0 };
+
+#if defined(SUPPORT_CLIPBOARD_IMAGE)
+#if defined(_WIN32)
     unsigned long long int dataSize = 0;
-    void* fileData = NULL;
+    void *fileData = NULL;
+    int width = 0;
+    int height = 0;
 
-#ifdef _WIN32
-    int width, height;
     fileData  = (void*)Win32GetClipboardImageData(&width, &height, &dataSize);
-#else
-    TRACELOG(LOG_WARNING, "Clipboard image: PLATFORM_DESKTOP_RGFW doesn't implement `GetClipboardImage` for this OS");
-#endif
 
-    if (fileData == NULL)
-    {
-        TRACELOG(LOG_WARNING, "Clipboard image: Couldn't get clipboard data.");
-    }
-    else
-    {
-        image = LoadImageFromMemory(".bmp", fileData, dataSize);
-    }
+    if (fileData == NULL) TRACELOG(LOG_WARNING, "Clipboard image: Couldn't get clipboard data.");
+    else image = LoadImageFromMemory(".bmp", fileData, (int)dataSize);
+#else
+    TRACELOG(LOG_WARNING, "GetClipboardImage() not implemented on target platform");
+#endif
+#endif // SUPPORT_CLIPBOARD_IMAGE
+
     return image;
 }
-#endif // SUPPORT_CLIPBOARD_IMAGE
 
 // Show mouse cursor
 void rlShowCursor(void)
@@ -1197,7 +1194,7 @@ void PollInputEvents(void)
                         int button = (axis == GAMEPAD_AXIS_LEFT_TRIGGER)? GAMEPAD_BUTTON_LEFT_TRIGGER_2 : GAMEPAD_BUTTON_RIGHT_TRIGGER_2;
                         int pressed = (value > 0.1f);
                         CORE.Input.Gamepad.currentButtonState[event->joystick][button] = pressed;
-                        
+
                         if (pressed) CORE.Input.Gamepad.lastButtonPressed = button;
                         else if (CORE.Input.Gamepad.lastButtonPressed == button) CORE.Input.Gamepad.lastButtonPressed = 0;
                     }
@@ -1289,8 +1286,8 @@ int InitPlatform(void)
     RGFW_area screenSize = RGFW_getScreenSize();
     CORE.Window.display.width = screenSize.w;
     CORE.Window.display.height = screenSize.h;
-    /* 
-        I think this is needed by Raylib now ? 
+    /*
+        I think this is needed by Raylib now ?
         If so, rcore_destkop_sdl should be updated too
     */
     SetupFramebuffer(CORE.Window.display.width, CORE.Window.display.height);
