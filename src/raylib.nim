@@ -5,6 +5,7 @@ import std/[assertions, paths]
 const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
 
 {.passC: "-I" & raylibDir.string.}
+{.passC: "-I" & string(raylibDir / Path"platforms".}
 {.passC: "-I" & string(raylibDir / Path"external/glfw/include").}
 {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
