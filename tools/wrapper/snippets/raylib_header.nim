@@ -5,8 +5,8 @@ import std/[assertions, paths]
 const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
 
 {.passC: "-I" & raylibDir.string.}
+{.passC: "-I" & string(raylibDir / Path"platforms").}
 {.passC: "-I" & string(raylibDir / Path"external/glfw/include").}
-{.passC: "-I" & string(raylibDir / Path"external/glfw/deps/mingw").}
 {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB".}
@@ -113,13 +113,13 @@ when defined(emscripten): discard
 elif defined(android): discard
 elif defined(macosx): {.compile(raylibDir / Path"rglfw.c", "-x objective-c").}
 else: {.compile: raylibDir / Path"rglfw.c".}
+{.compile: raylibDir / Path"rcore.c".}
 {.compile: raylibDir / Path"rshapes.c".}
 {.compile: raylibDir / Path"rtextures.c".}
 {.compile: raylibDir / Path"rtext.c".}
 {.compile: raylibDir / Path"utils.c".}
 {.compile: raylibDir / Path"rmodels.c".}
 {.compile: raylibDir / Path"raudio.c".}
-{.compile: raylibDir / Path"rcore.c".}
 when defined(android):
   {.compile: AndroidNdk.Path / Path"sources/android/native_app_glue/android_native_app_glue.c".}
 
