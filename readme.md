@@ -53,6 +53,7 @@ For detailed instructions on advanced topics, please refer to our
 
 Here are quick links to some important sections:
 
+- [Customize raylib settings](manual/advance_usage.md#changing-raylib-settings-with-nim-defines) - Learn how to customize raylib settings with Nim defines
 - [Important Usage Tips](manual/advanced_usage.md#important-usage-tips) - Learn how to properly call `closeWindow` and other crucial tips
 - [Building for the Web (WebAssembly)](manual/advanced_usage.md#building-for-the-web-webassembly) - Instructions for compiling your project for web browsers
 - [Building for Android](manual/advanced_usage.md#building-for-android) - Step-by-step guide for Android development

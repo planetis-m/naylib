@@ -1,5 +1,33 @@
 # Naylib Advanced Usage Guide
 
+## Changing raylib Settings with Nim Defines
+
+To customize raylib behavior in the Naylib wrapper, you can use Nim's `--define` option to enable or disable specific features. These settings are configured in the project's `config.nims` file.
+
+### Example Usage
+
+To enable a feature, such as `NaylibSupportAutomationEvents`, add the following line to your `config.nims`:
+
+```nim
+switch("define", "NaylibSupportAutomationEvents")
+```
+
+Alternatively, you can pass it directly via the command line when invoking `nim`:
+
+```bash
+nim c --define:NaylibSupportAutomationEvents my_program.nim
+```
+
+To disable a feature, you can use:
+
+```nim
+switch("define", "NaylibSupportAutomationEvents=false")
+```
+
+### Available Options
+
+A full list of configurable options can be found in the `rconfig.nim` file. Refer to it for the supported feature flags and their descriptions: [rconfig.nim](../src/rconfig.nim).
+
 ## Building for the Web (WebAssembly)
 
 To compile your project for web browsers using WebAssembly:
