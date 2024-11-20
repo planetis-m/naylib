@@ -105,6 +105,10 @@ func dotProduct*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate two vectors dot product
   result = (v1.x * v2.x + v1.y * v2.y)
 
+func crossProduct*(v1, v2: Vector2): float32 {.inline.} =
+  ## Calculate two vectors cross product
+  result = v1.x * v2.y - v1.y * v2.x
+
 func distance*(v1, v2: Vector2): float32 {.inline.} =
   ## Calculate distance between two vectors
   result = sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y))
@@ -402,7 +406,7 @@ func orthoNormalize*(v1: var Vector3; v2: var Vector3) {.inline.} =
   ## Orthonormalize provided vectors
   ## Makes vectors normalized and orthogonal to each other
   ## Gram-Schmidt function implementation
-  # Vector3Normalize(*v1);
+  # normalize(v1)
   var v = v1
   var length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
   if length == 0'f32:
@@ -411,10 +415,10 @@ func orthoNormalize*(v1: var Vector3; v2: var Vector3) {.inline.} =
   v1.x = v1.x * invLength
   v1.y = v1.y * invLength
   v1.z = v1.z * invLength
-  # Vector3CrossProduct(*v1, *v2)
+  # crossProduct(v1, v2)
   var vn1 = Vector3(x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z,
                          z: v1.x * v2.y - v1.y * v2.x)
-  # Vector3Normalize(vn1);
+  # normalize(vn1);
   v = vn1
   length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
   if length == 0'f32:
@@ -423,7 +427,7 @@ func orthoNormalize*(v1: var Vector3; v2: var Vector3) {.inline.} =
   vn1.x = vn1.x * invLength
   vn1.y = vn1.y * invLength
   vn1.z = vn1.z * invLength
-  # Vector3CrossProduct(vn1, *v1)
+  # crossProduct(vn1, v1)
   let vn2 = Vector3(x: vn1.y * v1.z - vn1.z * v1.y, y: vn1.z * v1.x - vn1.x * v1.z,
                          z: vn1.x * v1.y - vn1.y * v1.x)
   v2 = vn2
@@ -1247,9 +1251,9 @@ func ortho*(left, right, bottom, top, nearPlane, farPlane: float): Matrix {.inli
 func lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
   ## Get camera look-at matrix (view matrix)
   result = Matrix()
-  # Vector3Subtract(eye, target)
+  # subtract(eye, target)
   var vz = Vector3(x: eye.x - target.x, y: eye.y - target.y, z: eye.z - target.z)
-  # Vector3Normalize(vz)
+  # normalize(vz)
   var v = vz
   var length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
   if length == 0'f32:
@@ -1258,10 +1262,10 @@ func lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
   vz.x = vz.x * invLength
   vz.y = vz.y * invLength
   vz.z = vz.z * invLength
-  # Vector3CrossProduct(up, vz)
+  # crossProduct(up, vz)
   var vx = Vector3(x: up.y * vz.z - up.z * vz.y, y: up.z * vz.x - up.x * vz.z,
                         z: up.x * vz.y - up.y * vz.x)
-  # Vector3Normalize(x)
+  # normalize(x)
   v = vx
   length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
   if length == 0'f32:
@@ -1270,7 +1274,7 @@ func lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
   vx.x = vx.x * invLength
   vx.y = vx.y * invLength
   vx.z = vx.z * invLength
-  # Vector3CrossProduct(vz, vx)
+  # crossProduct(vz, vx)
   var vy = Vector3(x: vz.y * vx.z - vz.z * vx.y, y: vz.z * vx.x - vz.x * vx.z,
                         z: vz.x * vx.y - vz.y * vx.x)
   result.m0 = vx.x
@@ -1286,11 +1290,11 @@ func lookAt*(eye, target, up: Vector3): Matrix {.inline.} =
   result.m10 = vz.z
   result.m11 = 0'f32
   result.m12 = -(vx.x * eye.x + vx.y * eye.y + vx.z * eye.z)
-  # Vector3DotProduct(vx, eye)
+  # dotProduct(vx, eye)
   result.m13 = -(vy.x * eye.x + vy.y * eye.y + vy.z * eye.z)
-  # Vector3DotProduct(vy, eye)
+  # dotProduct(vy, eye)
   result.m14 = -(vz.x * eye.x + vz.y * eye.y + vz.z * eye.z)
-  # Vector3DotProduct(vz, eye)
+  # dotProduct(vz, eye)
   result.m15 = 1'f32
 
 func toFloatV*(mat: Matrix): Float16 {.inline, noinit.} =
