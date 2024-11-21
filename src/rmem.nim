@@ -279,9 +279,6 @@ proc realloc*(x: var MemPool, p: pointer, newSize: Natural): pointer =
 proc getFreeMemory*(x: MemPool): int {.inline.} =
   result = x.capacity - x.occupied
 
-const
-  DefaultAlignment = when sizeof(int) <= 4: 8 else: 16
-
 type
   FreeNode = object
     next: ptr FreeNode
@@ -347,6 +344,9 @@ proc free*[T](x: var ObjPool[T], p: ptr T) =
       let node = cast[ptr FreeNode](p)
       node.next = x.head
       x.head = node
+
+const
+  DefaultAlignment = when sizeof(int) <= 4: 8 else: 16
 
 type
   BiStack* = object # Double-ended stack (aka Deque)
