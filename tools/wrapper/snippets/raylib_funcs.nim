@@ -76,27 +76,27 @@ proc exportDataAsCode*(data: openArray[byte], fileName: string): bool =
 
 type
   ShaderV* = concept
-    proc kind(x: typedesc[Self]): ShaderUniformDataType
+    proc shaderKind(x: typedesc[Self]): ShaderUniformDataType
 
-template kind*(x: typedesc[float32]): ShaderUniformDataType = Float
-template kind*(x: typedesc[Vector2]): ShaderUniformDataType = Vec2
-template kind*(x: typedesc[Vector3]): ShaderUniformDataType = Vec3
-template kind*(x: typedesc[Vector4]): ShaderUniformDataType = Vec4
-template kind*(x: typedesc[int32]): ShaderUniformDataType = Int
-template kind*(x: typedesc[array[2, int32]]): ShaderUniformDataType = Ivec2
-template kind*(x: typedesc[array[3, int32]]): ShaderUniformDataType = Ivec3
-template kind*(x: typedesc[array[4, int32]]): ShaderUniformDataType = Ivec4
-template kind*(x: typedesc[array[2, float32]]): ShaderUniformDataType = Vec2
-template kind*(x: typedesc[array[3, float32]]): ShaderUniformDataType = Vec3
-template kind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = Vec4
+template shaderKind*(x: typedesc[float32]): ShaderUniformDataType = Float
+template shaderKind*(x: typedesc[Vector2]): ShaderUniformDataType = Vec2
+template shaderKind*(x: typedesc[Vector3]): ShaderUniformDataType = Vec3
+template shaderKind*(x: typedesc[Vector4]): ShaderUniformDataType = Vec4
+template shaderKind*(x: typedesc[int32]): ShaderUniformDataType = Int
+template shaderKind*(x: typedesc[array[2, int32]]): ShaderUniformDataType = Ivec2
+template shaderKind*(x: typedesc[array[3, int32]]): ShaderUniformDataType = Ivec3
+template shaderKind*(x: typedesc[array[4, int32]]): ShaderUniformDataType = Ivec4
+template shaderKind*(x: typedesc[array[2, float32]]): ShaderUniformDataType = Vec2
+template shaderKind*(x: typedesc[array[3, float32]]): ShaderUniformDataType = Vec3
+template shaderKind*(x: typedesc[array[4, float32]]): ShaderUniformDataType = Vec4
 
 proc setShaderValue*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: T) =
   ## Set shader uniform value
-  setShaderValueImpl(shader, locIndex, addr value, kind(T))
+  setShaderValueImpl(shader, locIndex, addr value, shaderKind(T))
 
 proc setShaderValueV*[T: ShaderV](shader: Shader, locIndex: ShaderLocation, value: openArray[T]) =
   ## Set shader uniform value vector
-  setShaderValueVImpl(shader, locIndex, cast[pointer](value), kind(T), value.len.int32)
+  setShaderValueVImpl(shader, locIndex, cast[pointer](value), shaderKind(T), value.len.int32)
 
 proc loadModelAnimations*(fileName: string): RArray[ModelAnimation] =
   ## Load model animations from file
@@ -170,9 +170,9 @@ proc exportImageToMemory*(image: Image, fileType: string): RArray[uint8] =
 
 type
   Pixel* = concept
-    proc kind(x: typedesc[Self]): PixelFormat
+    proc pixelKind(x: typedesc[Self]): PixelFormat
 
-template kind*(x: typedesc[Color]): PixelFormat = UncompressedR8g8b8a8
+template pixelKind*(x: typedesc[Color]): PixelFormat = UncompressedR8g8b8a8
 
 template toColorArray*(a: openArray[byte]): untyped =
   ## Note: that `a` should be properly formatted, with a byte representation that aligns
@@ -184,10 +184,10 @@ template toColorArray*(a: openArray[byte]): untyped =
 
 proc loadTextureFromData*[T: Pixel](pixels: openArray[T], width: int32, height: int32): Texture =
   ## Load texture using pixels
-  assert getPixelDataSize(width, height, kind(T)) == pixels.len*sizeof(T),
+  assert getPixelDataSize(width, height, pixelKind(T)) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
   let image = Image(data: cast[pointer](pixels), width: width, height: height,
-      format: kind(T), mipmaps: 1).WeakImage
+      format: pixelKind(T), mipmaps: 1).WeakImage
   result = loadTextureFromImageImpl(image.Image)
   if not isTextureValid(result): raiseRaylibError("Failed to load Texture from buffer")
 
@@ -213,27 +213,27 @@ proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   ## Update GPU texture with new data
-  assert texture.format == kind(T), "Incompatible texture format"
+  assert texture.format == pixelKind(T), "Incompatible texture format"
   assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
   updateTextureImpl(texture, cast[pointer](pixels))
 
 proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
   ## Update GPU texture rectangle with new data
-  assert texture.format == kind(T), "Incompatible texture format"
+  assert texture.format == pixelKind(T), "Incompatible texture format"
   assert getPixelDataSize(rec.width.int32, rec.height.int32, texture.format) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
   updateTextureImpl(texture, rec, cast[pointer](pixels))
 
 proc getPixelColor*[T: Pixel](pixel: T): Color =
   ## Get Color from a source pixel pointer of certain format
-  assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
-  getPixelColorImpl(addr pixel, kind(T))
+  assert getPixelDataSize(1, 1, pixelKind(T)) == sizeof(T), "Pixel size does not match expected format"
+  getPixelColorImpl(addr pixel, pixelKind(T))
 
 proc setPixelColor*[T: Pixel](pixel: var T, color: Color) =
   ## Set color formatted into destination pixel pointer
-  assert getPixelDataSize(1, 1, kind(T)) == sizeof(T), "Pixel size does not match expected format"
-  setPixelColorImpl(addr pixel, color, kind(T))
+  assert getPixelDataSize(1, 1, pixelKind(T)) == sizeof(T), "Pixel size does not match expected format"
+  setPixelColorImpl(addr pixel, color, pixelKind(T))
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; codepoints: openArray[int32];
     `type`: FontType): RArray[GlyphInfo] =
