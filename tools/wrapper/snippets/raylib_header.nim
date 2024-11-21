@@ -2,7 +2,7 @@ from std/strutils import addf, toHex
 from std/unicode import Rune
 from std/syncio import writeFile
 import std/[assertions, paths]
-import rconfig
+import naylib/private/config
 const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
 
 {.passC: "-I" & raylibDir.string.}
