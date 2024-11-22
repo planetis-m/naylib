@@ -1,8 +1,6 @@
-import std/[parseutils, strutils], utils
+import std/strutils, utils
 
 const
-  NonWordChars = {'\1'..'\xff'} - IdentChars
-
   TypeMapping = { # DON'T rearrange
     "char **": "cstringArray",
     "char *": "cstring",
@@ -89,42 +87,34 @@ proc convertPointerType(s: sink string, pointerType: PointerType): string =
       result = "openArray[" & result & "]"
     else: discard
 
-proc convertArrayType(s: sink string, pointerType: PointerType): string =
+proc stripPrefixFromType(s: sink string; prefix: string): string =
+  result = s
+  if prefix.len == 0: return
+  if result.startsWith(prefix) and not isDigit(result[prefix.len]):
+    result.removePrefix(prefix)
+
+proc normalizeArraySize(arraySize: sink string, prefix: string): string =
+  result = stripPrefixFromType(arraySize, prefix)
+  if result.isScreamingSnakeCaseAscii():
+    result = result.camelCaseAscii()
+
+proc convertArrayType(s: sink string; prefix: string; pointerType: PointerType): string =
   result = s
   if result.endsWith(']'):
     let openBracket = result.find('[')
     var arraySize = result[openBracket + 1 ..< result.high]
-    if arraySize.isScreamingSnakeCaseAscii():
-      arraySize = arraySize.camelCaseAscii()
+    arraySize = normalizeArraySize(arraySize, prefix)
     result = convertPointerType(result[0 ..< openBracket],
         if pointerType in {ptPtr, ptArray}: pointerType else: ptPtr) # nestable types
     result = "array[" & arraySize & ", " & result & "]"
   else:
     result = convertPointerType(result, pointerType)
 
-proc stripPrefixFromType(s: sink string; prefix: string): string =
-  result = s
-  if prefix.len == 0: return
-  var start = 0
-  while true:
-    let prefixPos = result.find(prefix, start)
-    if prefixPos == -1: break
-    start = prefixPos + prefix.len
-    if prefixPos > 0 and result[prefixPos - 1] notin NonWordChars:
-      continue
-    var token: string
-    let captured = parseUntil(result, token, NonWordChars, start)
-    if captured == 0:
-      continue
-    result = result.substr(0, prefixPos-1) & token & result.substr(start + captured)
-    start = prefixPos + captured
-
 proc convertType*(s: string; prefix = ""; pointerType = ptPtr): string =
   result = s.replace("const ", "")
   result = result.multiReplace(TypeMapping)
-  # for prefix in prefixes.items:
   result = stripPrefixFromType(result, prefix)
-  result = convertArrayType(result, pointerType)
+  result = convertArrayType(result, prefix, pointerType)
 
 when isMainModule:
   import std/assertions
@@ -132,7 +122,7 @@ when isMainModule:
   assert convertType("rlDrawCall", "rl") == "DrawCall"
   assert convertType("BorderlessWindowed", prefix = "rl") == "BorderlessWindowed"
   assert convertType("int[RL_MAX_GAMEPADS]", "RL_") == "array[MaxGamepads, int32]"
-  assert convertType("rlDrawCall *", "rl", pointerType = ptArray) == "ptr UncheckedArray[DrawCall]"
+  assert convertType("const rlDrawCall *", "rl", pointerType = ptArray) == "ptr UncheckedArray[DrawCall]"
   assert convertType("Transform **") == "ptr ptr Transform"
   assert convertType("Transform **", pointerType = ptArray) == "ptr UncheckedArray[ptr UncheckedArray[Transform]]"
   assert convertType("const char *") == "cstring"
