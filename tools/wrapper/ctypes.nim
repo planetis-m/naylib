@@ -1,10 +1,9 @@
-import std/strutils
+import std/[parseutils, strutils]
 
 const
+  NonWordChars = {'\1'..'\xff'} - IdentChars
+
   TypeMapping = { # DON'T rearrange
-    "rlDrawCall": "DrawCall",
-    "rlRenderBatch": "RenderBatch",
-    "rlVertexBuffer": "VertexBuffer",
     "char **": "cstringArray",
     "char *": "cstring",
     "char**": "cstringArray",
@@ -101,19 +100,41 @@ proc convertArrayType(s: sink string, pointerType: PointerType): string =
   else:
     result = convertPointerType(result, pointerType)
 
-proc convertType*(s: string; pointerType = ptPtr): string =
+proc stripPrefixFromType(s: sink string; prefix: string): string =
+  result = s
+  if prefix.len == 0: return
+  var start = 0
+  while true:
+    let prefixPos = result.find(prefix, start)
+    if prefixPos == -1: break
+    start = prefixPos + prefix.len
+    if prefixPos > 0 and result[prefixPos - 1] notin NonWordChars:
+      continue
+    let captured = skipUntil(result, NonWordChars, start)
+    if captured == 0:
+      continue
+    result = result.substr(0, prefixPos-1) & result.substr(start)
+    start = prefixPos + captured
+
+proc convertType*(s: string; prefix = ""; pointerType = ptPtr): string =
   result = s.replace("const ", "")
   result = result.multiReplace(TypeMapping)
+  result = stripPrefixFromType(result, prefix)
   result = convertArrayType(result, pointerType)
 
 when isMainModule:
+  import std/assertions
+
+  assert convertType("rlDrawCall", "rl") == "DrawCall"
+  assert convertType("BorderlessWindowed", prefix = "rl") == "BorderlessWindowed"
+  assert convertType("rlDrawCall *", "rl", pointerType = ptArray) == "ptr UncheckedArray[DrawCall]"
   assert convertType("Transform **") == "ptr ptr Transform"
-  assert convertType("Transform **", ptArray) == "ptr UncheckedArray[ptr UncheckedArray[Transform]]"
+  assert convertType("Transform **", pointerType = ptArray) == "ptr UncheckedArray[ptr UncheckedArray[Transform]]"
   assert convertType("const char *") == "cstring"
   assert convertType("const char**") == "cstringArray"
-  assert convertType("const char *[MAX_TEXT_COUNT]", ptArray) == "array[MAX_TEXT_COUNT, cstring]"
-  assert convertType("Image *", ptOpenArray) == "openArray[Image]"
-  assert convertType("Image *[4]", ptVar) == "array[4, ptr Image]"
-  assert convertType("Image *[4]", ptArray) == "array[4, ptr UncheckedArray[Image]]"
+  assert convertType("const char *[MAX_TEXT_COUNT]", pointerType = ptArray) == "array[MAX_TEXT_COUNT, cstring]"
+  assert convertType("Image *", pointerType = ptOpenArray) == "openArray[Image]"
+  assert convertType("Image *[4]", pointerType = ptVar) == "array[4, ptr Image]"
+  assert convertType("Image *[4]", pointerType = ptArray) == "array[4, ptr UncheckedArray[Image]]"
   for cType, nType in TypeMapping.items:
     assert convertType(cType) == nType, "Failed converting: " & cType

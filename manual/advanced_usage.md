@@ -225,14 +225,12 @@ Remember that `texture` and `copy` will point to the same object.
 
 ### Additional Tips
 
-- **Custom Pixel Formats**: To make your external type compatible with the `Pixel` concept, define a `kind` template that returns the corresponding pixel format.
+- **Custom Pixel Formats**: To make your external type compatible with the `Pixel` concept, define a `pixelKind` template that returns the corresponding pixel format.
 
 ```nim
-from raylib import PixelFormat
-
 type RGBAPixel* = distinct byte
 
-template kind*(x: typedesc[RGBAPixel]): PixelFormat = UncompressedR8g8b8a8
+template pixelKind*(x: typedesc[RGBAPixel]): PixelFormat = UncompressedR8g8b8a8
 ```
 
 - **Swapping Raymath**: Raylib is designed to be independent of `raymath`. You can use alternative vector math libraries like `vmath`, `geometrymath`, or `glm`. Remember to implement converters for `Vector2`, `Vector3`, `Vector4`, and `Matrix` if you switch libraries.

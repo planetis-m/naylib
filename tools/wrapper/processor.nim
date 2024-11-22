@@ -65,7 +65,7 @@ proc updateType(typeVar: var string; module, name: string;
   if replacement != "":
     typeVar = replacement
   else:
-    typeVar = convertType(typeVar, pointerType)
+    typeVar = convertType(typeVar, config.namespacePrefix, pointerType)
 
 proc updateType(typeVar: var string; name: string; pointerType: PointerType; config: ConfigData) =
   updateType(typeVar, name, "", pointerType, config)
@@ -199,7 +199,7 @@ proc processParameters(fnc: var FunctionInfo, config: ConfigData) =
       elif isOutParameter(fnc.name, param.name, config): ptOut
       elif isPrivate notin fnc.flags: ptVar
       else: ptPtr
-    let paramType = convertType(param.`type`, pointerType)
+    let paramType = convertType(param.`type`, config.namespacePrefix, pointerType)
     if checkCstringType(fnc, paramType, config):
       param.flags.incl isString
       fnc.flags.incl isAutoWrappedFunc
@@ -218,7 +218,7 @@ proc processReturnType(fnc: var FunctionInfo, config: ConfigData) =
   if fnc.returnType != "void":
     if isArray(fnc.name, config):
       fnc.flags.incl isPtArray
-    let returnType = convertType(fnc.returnType)
+    let returnType = convertType(fnc.returnType, config.namespacePrefix)
     if checkCstringType(fnc, returnType, config):
       fnc.flags.incl isString
       fnc.flags.incl isAutoWrappedFunc
@@ -228,7 +228,7 @@ proc processReturnType(fnc: var FunctionInfo, config: ConfigData) =
 proc updateParameterTypes(fnc: var FunctionInfo, config: ConfigData) =
   for i, param in enumerate(fnc.params.mitems):
     if isOpenArray in param.flags:
-      param.dirty = convertType(param.`type`, ptOpenArray)
+      param.dirty = convertType(param.`type`, config.namespacePrefix, ptOpenArray)
       param.flags.incl isOpenArray
       fnc.params[i+1].dirty = param.name # stores array name
     let pointerType =
