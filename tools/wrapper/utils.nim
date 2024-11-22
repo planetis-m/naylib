@@ -45,6 +45,21 @@ proc uncapitalizeAscii*(s: string): string =
   if s.len == 0: result = ""
   else: result = toLowerAscii(s[0]) & substr(s, 1)
 
+proc isScreamingSnakeCaseAscii*(s: string): bool =
+  result = true
+  if s.len == 0 or s[0] == '_' or s[s.high] == '_':
+    return false
+  var lastWasUnderscore = false
+  for c in s:
+    if c == '_':
+      if lastWasUnderscore:
+        return false
+      lastWasUnderscore = true
+    elif not (c.isUpperAscii or c.isDigit):
+      return false
+    else:
+      lastWasUnderscore = false
+
 proc isKeyword*(s: string): bool {.inline.} =
   ## Checks if an indentifier is a Nim keyword
   binarySearch(nimKeyw, s) >= 0

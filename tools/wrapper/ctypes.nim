@@ -1,4 +1,4 @@
-import std/[parseutils, strutils]
+import std/[parseutils, strutils], utils
 
 const
   NonWordChars = {'\1'..'\xff'} - IdentChars
@@ -93,7 +93,9 @@ proc convertArrayType(s: sink string, pointerType: PointerType): string =
   result = s
   if result.endsWith(']'):
     let openBracket = result.find('[')
-    let arraySize = result[openBracket + 1 ..< result.high]
+    var arraySize = result[openBracket + 1 ..< result.high]
+    if arraySize.isScreamingSnakeCaseAscii():
+      arraySize = arraySize.camelCaseAscii()
     result = convertPointerType(result[0 ..< openBracket],
         if pointerType in {ptPtr, ptArray}: pointerType else: ptPtr) # nestable types
     result = "array[" & arraySize & ", " & result & "]"
@@ -110,15 +112,17 @@ proc stripPrefixFromType(s: sink string; prefix: string): string =
     start = prefixPos + prefix.len
     if prefixPos > 0 and result[prefixPos - 1] notin NonWordChars:
       continue
-    let captured = skipUntil(result, NonWordChars, start)
+    var token: string
+    let captured = parseUntil(result, token, NonWordChars, start)
     if captured == 0:
       continue
-    result = result.substr(0, prefixPos-1) & result.substr(start)
+    result = result.substr(0, prefixPos-1) & token & result.substr(start + captured)
     start = prefixPos + captured
 
 proc convertType*(s: string; prefix = ""; pointerType = ptPtr): string =
   result = s.replace("const ", "")
   result = result.multiReplace(TypeMapping)
+  # for prefix in prefixes.items:
   result = stripPrefixFromType(result, prefix)
   result = convertArrayType(result, pointerType)
 
@@ -127,12 +131,13 @@ when isMainModule:
 
   assert convertType("rlDrawCall", "rl") == "DrawCall"
   assert convertType("BorderlessWindowed", prefix = "rl") == "BorderlessWindowed"
+  assert convertType("int[RL_MAX_GAMEPADS]", "RL_") == "array[MaxGamepads, int32]"
   assert convertType("rlDrawCall *", "rl", pointerType = ptArray) == "ptr UncheckedArray[DrawCall]"
   assert convertType("Transform **") == "ptr ptr Transform"
   assert convertType("Transform **", pointerType = ptArray) == "ptr UncheckedArray[ptr UncheckedArray[Transform]]"
   assert convertType("const char *") == "cstring"
   assert convertType("const char**") == "cstringArray"
-  assert convertType("const char *[MAX_TEXT_COUNT]", pointerType = ptArray) == "array[MAX_TEXT_COUNT, cstring]"
+  assert convertType("const char *[MAX_TEXT_COUNT]", pointerType = ptArray) == "array[MaxTextCount, cstring]"
   assert convertType("Image *", pointerType = ptOpenArray) == "openArray[Image]"
   assert convertType("Image *[4]", pointerType = ptVar) == "array[4, ptr Image]"
   assert convertType("Image *[4]", pointerType = ptArray) == "array[4, ptr UncheckedArray[Image]]"
