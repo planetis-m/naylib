@@ -294,6 +294,23 @@ MOUSE_CURSOR_
 
 The prefixes are removed in the order they appear.
 
+#### TypePrefixes
+
+Type-specific prefixing is an adopted convention in C programming for organizing
+functions that operate on a particular data structure.
+
+```ini
+[TypePrefixes]
+Float
+Vector2
+Vector3
+Vector4
+Matrix
+Quaternion
+```
+
+The prefixes are removed from function names.
+
 ### Misc
 
 #### KeepNamespacePrefix

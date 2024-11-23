@@ -35,13 +35,13 @@ func getCameraUp*(camera: Camera): Vector3 =
 
 func getCameraRight*(camera: Camera): Vector3 =
   ## Returns the camera's right vector (normalized)
-  let forward = getForward(camera)
-  let up = getUp(camera)
+  let forward = getCameraForward(camera)
+  let up = getCameraUp(camera)
   normalize(crossProduct(forward, up))
 
 func moveForward*(camera: var Camera, distance: float32, moveInWorldPlane: bool) =
   ## Moves the camera in its forward direction
-  var forward = getForward(camera)
+  var forward = getCameraForward(camera)
 
   if moveInWorldPlane:
     # Project vector onto world plane
@@ -57,7 +57,7 @@ func moveForward*(camera: var Camera, distance: float32, moveInWorldPlane: bool)
 
 func moveUp*(camera: var Camera, distance: float32) =
   ## Moves the camera in its up direction
-  var up = getUp(camera)
+  var up = getCameraUp(camera)
 
   # Scale by distance
   up *= distance
@@ -68,7 +68,7 @@ func moveUp*(camera: var Camera, distance: float32) =
 
 func moveRight*(camera: var Camera, distance: float32, moveInWorldPlane: bool) =
   ## Moves the camera target in its current right direction
-  var right = getRight(camera)
+  var right = getCameraRight(camera)
 
   if moveInWorldPlane:
     # Project vector onto world plane
@@ -93,7 +93,7 @@ func moveToTarget*(camera: var Camera, delta: float32) =
   if distance <= 0: distance = 0.001'f32
 
   # Set new distance by moving the position along the forward vector
-  let forward = getForward(camera)
+  let forward = getCameraForward(camera)
   camera.position = camera.target + (forward * -distance)
 
 func yaw*(camera: var Camera, angle: float32, rotateAroundTarget: bool) =
@@ -102,7 +102,7 @@ func yaw*(camera: var Camera, angle: float32, rotateAroundTarget: bool) =
   ## If rotateAroundTarget is false, the camera rotates around its position
   ## Note: angle must be provided in radians
   # Rotation axis
-  let up = getUp(camera)
+  let up = getCameraUp(camera)
 
   # View vector
   var targetPosition = camera.target - camera.position
@@ -125,7 +125,7 @@ func pitch*(camera: var Camera, angle: float32, lockView, rotateAroundTarget, ro
   ## NOTE: angle must be provided in radians
   # Up direction
   var angle = angle
-  let up = getUp(camera)
+  let up = getCameraUp(camera)
 
   # View vector
   var targetPosition = camera.target - camera.position
@@ -146,7 +146,7 @@ func pitch*(camera: var Camera, angle: float32, lockView, rotateAroundTarget, ro
     if angle < maxAngleDown: angle = maxAngleDown
 
   # Rotation axis
-  let right = getRight(camera)
+  let right = getCameraRight(camera)
 
   # Rotate view vector around right axis
   targetPosition = rotateByAxisAngle(targetPosition, right, angle)
@@ -167,7 +167,7 @@ func roll*(camera: var Camera, angle: float32) =
   ## Roll is "turning your head sideways to the left or right"
   ## Note: angle must be provided in radians
   # Rotation axis
-  let forward = getForward(camera)
+  let forward = getCameraForward(camera)
 
   # Rotate up direction around forward axis
   camera.up = rotateByAxisAngle(camera.up, forward, angle)

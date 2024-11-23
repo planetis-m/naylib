@@ -1,4 +1,4 @@
-# template `=~`*[T: float32|Vector2|Vector3|Vector4|Quaternion](v1, v2: T): bool = equals(v1, v2)
+template `=~`*[T: float32|Vector2|Vector3|Vector4|Quaternion](v1, v2: T): bool = equals(v1, v2)
 
 template `+`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1, v2: T): T = add(v1, v2)
 template `+=`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1: var T, v2: T) = v1 = add(v1, v2)
