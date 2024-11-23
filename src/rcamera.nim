@@ -24,16 +24,16 @@ const
 # Module Functions Definition
 # -----------------------------------------------------------------------------------------
 
-func getForward*(camera: Camera): Vector3 =
+func getCameraForward*(camera: Camera): Vector3 =
   ## Returns the camera's forward vector (normalized)
   normalize(camera.target - camera.position)
 
-func getUp*(camera: Camera): Vector3 =
+func getCameraUp*(camera: Camera): Vector3 =
   ## Returns the camera's up vector (normalized)
   ## Note: The up vector might not be perpendicular to the forward vector
   normalize(camera.up)
 
-func getRight*(camera: Camera): Vector3 =
+func getCameraRight*(camera: Camera): Vector3 =
   ## Returns the camera's right vector (normalized)
   let forward = getForward(camera)
   let up = getUp(camera)
@@ -172,11 +172,11 @@ func roll*(camera: var Camera, angle: float32) =
   # Rotate up direction around forward axis
   camera.up = rotateByAxisAngle(camera.up, forward, angle)
 
-func getViewMatrix*(camera: Camera): Matrix =
+func getCameraViewMatrix*(camera: Camera): Matrix =
   ## Returns the camera view matrix
   lookAt(camera.position, camera.target, camera.up)
 
-func getProjectionMatrix*(camera: Camera, aspect: float32): Matrix =
+func getCameraProjectionMatrix*(camera: Camera, aspect: float32): Matrix =
   # Returns the camera projection matrix
   case camera.projection
   of Perspective:

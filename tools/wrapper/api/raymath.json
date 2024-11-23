@@ -490,6 +490,21 @@
       ]
     },
     {
+      "name": "Vector2CrossProduct",
+      "description": "",
+      "returnType": "float",
+      "params": [
+        {
+          "type": "Vector2",
+          "name": "v1"
+        },
+        {
+          "type": "Vector2",
+          "name": "v2"
+        }
+      ]
+    },
+    {
       "name": "Vector2Distance",
       "description": "",
       "returnType": "float",

@@ -5,7 +5,7 @@ const
   PkgDir = thisDir()
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
-  RayLatestCommit = "0d39e7137b28980f05843bd505ef3e74d8772d03"
+  RayLatestCommit = "47f83aa58f7a20110b0dc0d031b377faa50dd31e"
   DocsDir = PkgDir / "docs"
   ToolsDir = PkgDir / "tools"
   ApiDir = ToolsDir / "wrapper/api"
@@ -73,13 +73,13 @@ task genApi, "Generate API JSON files":
   buildParser()
   genApiJson("raylib", "RLAPI", "")
   # genApiJson("rcamera", "RLAPI", "#endif // RCAMERA_H")
-  # genApiJson("raymath", "RMAPI", "")
+  genApiJson("raymath", "RMAPI", "")
   genApiJson("rlgl", "", "#endif // RLGL_H")
 
 task genWrappers, "Generate Nim wrappers":
   genWrapper("raylib")
   # genWrapper("rcamera")
-  # genWrapper("raymath")
+  genWrapper("raymath")
   genWrapper("rlgl")
 
 task update, "Update the raylib git directory":
@@ -97,7 +97,7 @@ task wrap, "Produce all raylib Nim wrappers":
   buildToolsTask()
   wrapRaylib("raylib", "RLAPI", "")
   # wrapRaylib("rcamera", "RLAPI", "#endif // RCAMERA_H")
-  # wrapRaylib("raymath", "RMAPI", "")
+  wrapRaylib("raymath", "RMAPI", "")
   wrapRaylib("rlgl", "", "#endif // RLGL_H")
 
 task docs, "Generate documentation":
