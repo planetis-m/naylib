@@ -221,41 +221,44 @@ proc genBindings*(b: var Builder; ctx: ApiContext;
                   moduleHeader, afterEnums, afterObjects, afterFuncs, moduleEnd: string) =
   b.addRaw moduleHeader
   # Generate enum definitions
-  withSection(b, "type"):
-    for enm in ctx.api.enums:
-      generateEnum(b, enm)
-      b.addNL()
-  b.addNL()
+  if ctx.api.enums.len > 0:
+    withSection(b, "type"):
+      for enm in ctx.api.enums:
+        generateEnum(b, enm)
+        b.addNL()
+    b.addNL()
   b.addRaw afterEnums
   # Generate type definitions
-  withSection(b, "type"):
-    for obj in ctx.api.structs:
-      generateObject(b, obj)
-      b.addNL()
-    # Add type alias or missing type
-    for alias in ctx.api.aliases:
-      withSection(b, alias.name):
-        if isDistinct in alias.flags:
-          b.addRaw "* {.borrow: `.`.} = distinct "
-        else:
-          b.addRaw "* = "
-        b.addRaw alias.`type`
-        b.addDoc alias.description
-    # Distinct procs for arrays
-    for x in ctx.boundCheckedArrayAccessors:
-      withSection(b, x.name):
-        b.addRaw "* = distinct "
-        b.addRaw x.`type`
-  b.addRaw("\n\n")
+  if ctx.api.structs.len > 0:
+    withSection(b, "type"):
+      for obj in ctx.api.structs:
+        generateObject(b, obj)
+        b.addNL()
+      # Add type alias or missing type
+      for alias in ctx.api.aliases:
+        withSection(b, alias.name):
+          if isDistinct in alias.flags:
+            b.addRaw "* {.borrow: `.`.} = distinct "
+          else:
+            b.addRaw "* = "
+          b.addRaw alias.`type`
+          b.addDoc alias.description
+      # Distinct procs for arrays
+      for x in ctx.boundCheckedArrayAccessors:
+        withSection(b, x.name):
+          b.addRaw "* = distinct "
+          b.addRaw x.`type`
+    b.addRaw("\n\n")
   b.addRaw afterObjects
   # Generate procs
-  b.addRaw "\n{.push callconv: cdecl, header: "
-  b.addStrLit b.header
-  b.addRaw ".}"
-  for fnc in ctx.api.functions:
-    generateProc(b, fnc)
-    # b.addNL()
-  b.addRaw "\n{.pop.}\n"
+  if ctx.api.functions.len > 0:
+    b.addRaw "\n{.push callconv: cdecl, header: "
+    b.addStrLit b.header
+    b.addRaw ".}"
+    for fnc in ctx.api.functions:
+      generateProc(b, fnc)
+      # b.addNL()
+    b.addRaw "\n{.pop.}\n"
   b.addRaw afterFuncs
   b.addNL()
   # Generate getter procs

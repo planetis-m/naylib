@@ -25,6 +25,7 @@ type
     distinctAliases*: HashSet[string]
     keepNamespacePrefix*: HashSet[string]
     enumValuePrefixes*: seq[string]
+    typePrefixes*: seq[string]
     namespacePrefix*: string
     funcOverloadSuffixes*: seq[string]
     # Builder options
@@ -81,6 +82,8 @@ proc processKeyWithoutValue(config: var ConfigData; section: string, key: string
     config.keepNamespacePrefix.incl(key)
   of "EnumValuePrefixes":
     config.enumValuePrefixes.add(key)
+  of "TypePrefixes":
+    config.typePrefixes.add(key)
   of "FuncOverloadSuffixes":
     config.funcOverloadSuffixes.add(key)
   else:

@@ -254,6 +254,10 @@ proc generateNames(fnc: var FunctionInfo, config: ConfigData) =
     result = name
     if shouldRemoveNamespacePrefix(name, config):
       result.removePrefix(config.namespacePrefix)
+    for prefix in config.typePrefixes:
+      if result.startsWith(prefix) and not isDigit(result[prefix.len]):
+        result.removePrefix(prefix)
+        break
     if shouldRemoveSuffix(name, config):
       for suffix in config.funcOverloadSuffixes:
         if result.endsWith(suffix):
