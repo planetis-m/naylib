@@ -882,6 +882,8 @@ proc getWindowScaleDPI*(): Vector2 {.importc: "GetWindowScaleDPI", sideEffect.}
 proc getMonitorNameImpl(monitor: int32): cstring {.importc: "GetMonitorName", sideEffect.}
 proc setClipboardTextImpl(text: cstring) {.importc: "SetClipboardText", sideEffect.}
 proc getClipboardTextImpl(): cstring {.importc: "GetClipboardText", sideEffect.}
+proc getClipboardImage*(): Image {.importc: "GetClipboardImage", sideEffect.}
+  ## Get clipboard image content
 proc enableEventWaiting*() {.importc: "EnableEventWaiting", sideEffect.}
   ## Enable waiting for events on EndDrawing(), no automatic event polling
 proc disableEventWaiting*() {.importc: "DisableEventWaiting", sideEffect.}
