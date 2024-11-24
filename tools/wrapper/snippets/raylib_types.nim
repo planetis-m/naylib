@@ -126,7 +126,7 @@ proc `=destroy`*[T](x: RArray[T]) =
 proc `=wasMoved`*[T](x: var RArray[T]) =
   x.data = nil
 proc `=dup`*[T](source: RArray[T]): RArray[T] {.nodestroy.} =
-  result.len = source.len
+  result = RArray[T](len: source.len)
   if source.data != nil:
     result.data = cast[typeof(result.data)](memAlloc(result.len.uint32))
     for i in 0..<result.len: result.data[i] = `=dup`(source.data[i])
@@ -379,7 +379,7 @@ proc `[]=`*(x: var MeshBoneWeights, i: int, val: Vector4) =
 
 template boneMatrices*(x: Mesh): MeshBoneMatrices = MeshBoneMatrices(x)
 
-proc `[]`*(x: MeshBoneMatrices, i: int): Matrix =
+proc `[]`*(x: MeshBoneMatrices, i: int): lent Matrix =
   checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
   result = Mesh(x).boneMatrices[i]
 

@@ -14,6 +14,8 @@ template `*`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1, v2: T): T = mult
 template `*=`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1: var T, v2: T) = v1 = multiply(v1, v2)
 template `*`*[T: Vector2|Vector3|Vector4|Quaternion](v1: T, value: float32): T = scale(v1, value)
 template `*=`*[T: Vector2|Vector3|Vector4|Quaternion](v1: var T, value: float32) = v1 = scale(v1, value)
+template `*`*[T: Vector2|Vector3|Quaternion](v1: T, v2: Matrix): T = transform(v1, v2)
+template `*=`*[T: Vector2|Vector3|Quaternion](v1: var T, v2: Matrix) = v1 = transform(v1, v2)
 
 template `/`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1, v2: T): T = divide(v1, v2)
 template `/=`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1: var T, v2: T) = v1 = divide(v1, v2)
