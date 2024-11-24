@@ -197,7 +197,7 @@ proc processParameters(fnc: var FunctionInfo, config: ConfigData) =
   for i, param in enumerate(fnc.params.mitems):
     if isArray(fnc.name, param.name, config):
       param.flags.incl isPtArray
-    if isHiddenRefParameter(fnc.name, param.name, config):
+    if contains(param.`type`, '*') and isHiddenRefParameter(fnc.name, param.name, config):
       param.flags.incl isHiddenRefParam
     let pointerType =
       if isPtArray in param.flags: ptArray

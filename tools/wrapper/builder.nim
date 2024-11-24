@@ -205,7 +205,7 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
           b.addRaw "cast["
           b.addRaw param.`type`
           b.addRaw "]("
-        elif isVarParam in param.flags:
+        elif {isVarParam, isHiddenRefParam} * param.flags != {}:
           b.addRaw "addr "
         if isArrayLen in param.flags:
           b.addIdent param.dirty # stores array name
