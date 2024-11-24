@@ -65,6 +65,7 @@ type
     ptOut
     ptArray
     ptOpenArray
+    ptHidden
 
 proc convertPointerType(s: sink string, pointerType: PointerType): string =
   result = s
@@ -72,9 +73,9 @@ proc convertPointerType(s: sink string, pointerType: PointerType): string =
     let pointerDepth = result.count('*')
     result = result.replace(" *", "")
     result = result.replace("*", "")
-    for i in 1..pointerDepth - ord(pointerType in {ptVar, ptOut, ptOpenArray}):
+    for i in 1..pointerDepth - ord(pointerType in {ptVar, ptOut, ptOpenArray, ptHidden}):
       case pointerType:
-      of ptPtr, ptVar, ptOut, ptOpenArray:
+      of ptPtr, ptVar, ptOut, ptOpenArray, ptHidden:
         result = "ptr " & result
       of ptArray:
         result = "ptr UncheckedArray[" & result & "]"
@@ -119,6 +120,7 @@ proc convertType*(s: string; prefix = ""; pointerType = ptPtr): string =
 when isMainModule:
   import std/assertions
 
+  assert convertType("Camera *", pointerType = ptHidden) == "Camera"
   assert convertType("rlDrawCall", "rl") == "DrawCall"
   assert convertType("BorderlessWindowed", prefix = "rl") == "BorderlessWindowed"
   assert convertType("int[RL_MAX_GAMEPADS]", "RL_") == "array[MaxGamepads, int32]"

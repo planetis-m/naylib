@@ -285,9 +285,7 @@ proc loadFontFromMemory*(fileType: string; fileData: openArray[uint8]; fontSize:
 
 proc loadFontFromData*(chars: sink RArray[GlyphInfo]; baseSize, padding: int32, packMethod: int32): Font =
   ## Load font using chars info
-  result.baseSize = baseSize
-  result.glyphCount = chars.len.int32
-  result.glyphs = chars.data
+  result = Font(baseSize: baseSize, glyphCount: chars.len.int32, glyphs: chars.data)
   wasMoved(chars)
   let atlas = genImageFontAtlasImpl(result.glyphs, addr result.recs, result.glyphCount, baseSize,
       padding, packMethod)

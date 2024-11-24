@@ -103,6 +103,18 @@ DrawLineStrip/points
 DrawTriangleFan/points
 ```
 
+#### HiddenRefParameters
+
+Hides pointer semantics by using the `.byref` pragma.
+
+```ini
+[HiddenRefParameters]
+GetCameraForward/camera
+GetCameraUp/camera
+GetCameraRight/camera
+GetCameraViewMatrix/camera
+```
+
 #### TypeReplacements
 
 Allows manual type conversion in cases where C types don’t map well to Nim types:
