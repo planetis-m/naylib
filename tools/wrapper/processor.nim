@@ -76,6 +76,9 @@ proc checkCstringType(fnc: FunctionInfo, kind: string, config: ConfigData): bool
 proc isOpenArrayParameter(x, y: string, config: ConfigData): bool =
   (x, y) in config.openArrayParameters
 
+proc isHiddenRefParameter(x, y: string, config: ConfigData): bool =
+  (x, y) in config.hiddenRefParameters
+
 proc isVarargsParam(param: ParamInfo): bool =
   param.name == "args" and param.`type` == "..."
 
@@ -194,8 +197,11 @@ proc processParameters(fnc: var FunctionInfo, config: ConfigData) =
   for i, param in enumerate(fnc.params.mitems):
     if isArray(fnc.name, param.name, config):
       param.flags.incl isPtArray
+    if isHiddenRefParameter(fnc.name, param.name, config):
+      param.flags.incl isHiddenRefParam
     let pointerType =
       if isPtArray in param.flags: ptArray
+      elif isHiddenRefParam in param.flags: ptHidden
       elif isOutParameter(fnc.name, param.name, config): ptOut
       elif isPrivate notin fnc.flags: ptVar
       else: ptPtr
@@ -212,6 +218,8 @@ proc processParameters(fnc: var FunctionInfo, config: ConfigData) =
       param.flags.incl isNilIfEmpty
     if paramType.startsWith("var "):
       param.flags.incl isVarParam
+      param.dirty = paramType
+    if isHiddenRefParam in param.flags:
       param.dirty = paramType
 
 proc processReturnType(fnc: var FunctionInfo, config: ConfigData) =
@@ -234,6 +242,7 @@ proc updateParameterTypes(fnc: var FunctionInfo, config: ConfigData) =
     let pointerType =
       if isPtArray in param.flags: ptArray
       elif isOutParameter(fnc.name, param.name, config): ptOut
+      elif isHiddenRefParam in param.flags: (if isPrivate in fnc.flags: ptPtr else: ptHidden)
       elif isPrivate notin fnc.flags: ptVar
       else: ptPtr
     updateType(param.`type`, fnc.name, param.name, pointerType, config)

@@ -139,6 +139,8 @@ proc generateProc*(b: var Builder, fnc: FunctionInfo) =
       if i > 0:
         b.addRaw ", "
       b.addIdent param.name
+      if isPrivate notin fnc.flags and isHiddenRefParam in param.flags:
+        b.addRaw " {.byref.}"
       b.addRaw ": "
       b.addRaw param.`type`
     b.addRaw ")"
@@ -165,10 +167,12 @@ proc generateWrappedProc*(b: var Builder, fnc: FunctionInfo) =
       if i > 0:
         b.addRaw ", "
       b.addIdent param.name
+      if isHiddenRefParam in param.flags:
+        b.addRaw " {.byref.}"
       b.addRaw ": "
       if isString in param.flags:
         b.addRaw "string"
-      elif {isOpenArray, isVarParam} * param.flags != {}:
+      elif {isOpenArray, isVarParam, isHiddenRefParam} * param.flags != {}:
         b.addRaw param.dirty # stores native nim type
       else:
         b.addRaw param.`type`

@@ -20,7 +20,7 @@
 #
 # ****************************************************************************************
 
-import raylib, rlgl, raymath, rmem, reasings
+import raylib, rlgl, raymath, rmem, reasings, rcamera
 
 # ----------------------------------------------------------------------------------------
 # Global Variables Definition
