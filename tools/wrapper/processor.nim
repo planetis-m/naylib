@@ -197,14 +197,16 @@ proc processParameters(fnc: var FunctionInfo, config: ConfigData) =
   for i, param in enumerate(fnc.params.mitems):
     if isArray(fnc.name, param.name, config):
       param.flags.incl isPtArray
-    if contains(param.`type`, '*') and isHiddenRefParameter(fnc.name, param.name, config):
+    if isWrappedFunc notin fnc.flags and
+        contains(param.`type`, '*') and
+        isHiddenRefParameter(fnc.name, param.name, config):
       param.flags.incl isHiddenRefParam
     let pointerType =
       if isPtArray in param.flags: ptArray
-      elif isHiddenRefParam in param.flags: ptHidden
       elif isOutParameter(fnc.name, param.name, config): ptOut
-      elif isPrivate notin fnc.flags: ptVar
-      else: ptPtr
+      elif isPrivate in fnc.flags: ptPtr
+      elif isHiddenRefParam in param.flags: ptHidden
+      else: ptVar
     let paramType = convertType(param.`type`, config.namespacePrefix, pointerType)
     if checkCstringType(fnc, paramType, config):
       param.flags.incl isString
@@ -242,9 +244,9 @@ proc updateParameterTypes(fnc: var FunctionInfo, config: ConfigData) =
     let pointerType =
       if isPtArray in param.flags: ptArray
       elif isOutParameter(fnc.name, param.name, config): ptOut
-      elif isHiddenRefParam in param.flags: (if isPrivate in fnc.flags: ptPtr else: ptHidden)
-      elif isPrivate notin fnc.flags: ptVar
-      else: ptPtr
+      elif isPrivate in fnc.flags: ptPtr
+      elif isHiddenRefParam in param.flags: ptHidden
+      else: ptVar
     updateType(param.`type`, fnc.name, param.name, pointerType, config)
 
 proc updateReturnType(fnc: var FunctionInfo, config: ConfigData) =
