@@ -204,8 +204,8 @@ proc processParameters(fnc: var FunctionInfo, config: ConfigData) =
     let pointerType =
       if isPtArray in param.flags: ptArray
       elif isOutParameter(fnc.name, param.name, config): ptOut
-      elif isPrivate in fnc.flags: ptPtr
       elif isHiddenRefParam in param.flags: ptHidden
+      elif isPrivate in fnc.flags: ptPtr
       else: ptVar
     let paramType = convertType(param.`type`, config.namespacePrefix, pointerType)
     if checkCstringType(fnc, paramType, config):
