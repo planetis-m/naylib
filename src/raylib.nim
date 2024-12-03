@@ -1031,6 +1031,7 @@ proc getKeyPressed*(): KeyboardKey {.importc: "GetKeyPressed", sideEffect.}
   ## Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty
 proc getCharPressed*(): int32 {.importc: "GetCharPressed", sideEffect.}
   ## Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty
+proc getKeyNameImpl(key: int32): cstring {.importc: "GetKeyName", sideEffect.}
 proc setExitKey*(key: KeyboardKey) {.importc: "SetExitKey", sideEffect.}
   ## Set a custom key to exit program (default is ESC)
 proc isGamepadAvailable*(gamepad: int32): bool {.importc: "IsGamepadAvailable", sideEffect.}
@@ -2324,6 +2325,10 @@ proc loadAutomationEventList*(fileName: string): AutomationEventList =
 proc exportAutomationEventList*(list: AutomationEventList, fileName: string): bool =
   ## Export automation events list as text file
   exportAutomationEventListImpl(list, fileName.cstring)
+
+proc getKeyName*(key: int32): string =
+  ## Get name of a QWERTY key on the current keyboard layout (eg returns string 'q' for KEY_A on an AZERTY keyboard)
+  $getKeyNameImpl(key)
 
 proc getGamepadName*(gamepad: int32): string =
   ## Get gamepad internal name id
