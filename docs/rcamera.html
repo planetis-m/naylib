@@ -16,10 +16,10 @@
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH4QQQEwksSS9ZWwAAAk1JREFUWMPtll2ITVEUx39nn/O7Y5qR8f05wtCUUr6ZIS++8pEnkZInPImneaCQ5METNdOkeFBKUhMPRIkHKfEuUZSUlGlKPN2TrgfncpvmnntnmlEyq1Z7t89/rf9a6+y99oZxGZf/XeIq61EdtgKXgdXA0xrYAvBjOIF1AI9zvjcC74BSpndrJPkBWDScTF8Aa4E3wDlgHbASaANmVqlcCnwHvgDvgVfAJ+AikAAvgfVZwLnSVZHZaOuKoQi3ZOMi4NkYkpe1p4J7A8BpYAD49hfIy/oqG0+hLomiKP2L5L+1ubn5115S+3OAn4EnwBlgMzCjyt6ZAnQCJ4A7wOs88iRJHvw50HoujuPBoCKwHWiosy8MdfZnAdcHk8dxXFJ3VQbQlCTJvRBCGdRbD4M6uc5glpY3eAihpN5S5w12diSEcCCEcKUO4ljdr15T76ur1FDDLIQQ3qv71EdDOe3Kxj3leRXyk+pxdWnFWod6Wt2bY3de3aSuUHcPBVimHs7mK9WrmeOF6lR1o9qnzskh2ar2qm1qizpfXaPeVGdlmGN5pb09qMxz1Xb1kLqgzn1RyH7JUXW52lr5e/Kqi9qpto7V1atuUzfnARrV7jEib1T76gG2qxdGmXyiekkt1GswPTtek0aBfJp6YySGBfWg2tPQ0FAYgf1stUfdmdcjarbYJEniKIq6gY/Aw+zWHAC+p2labGpqiorFYgGYCEzN7oQdQClN07O1/EfDyGgC0ALMBdYAi4FyK+4H3gLPsxfR1zRNi+NP7nH5J+QntnXe5B5mpfQAAAAASUVORK5CYII=">
 
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.2.1">
+<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.3.1">
 
 <!-- JS -->
-<script type="text/javascript" src="dochack.js?v=2.2.1"></script>
+<script type="text/javascript" src="dochack.js?v=2.3.1"></script>
 </head>
 <body>
   <div class="document" id="documentId">
@@ -50,7 +50,86 @@
         <option value="type">Type</option>
       </select>
     </div>
-    
+    <ul class="simple simple-toc" id="toc-list">
+  <li>
+  <a class="reference reference-toplevel" href="#6" id="56">Imports</a>
+</li>
+<li>
+  <details open>
+    <summary><a class="reference reference-toplevel" href="#10" id="60">Consts</a></summary>
+    <ul class="simple simple-toc-section">
+      <li><a class="reference" href="#CameraCullDistanceFar" title="CameraCullDistanceFar = 1000.0">CameraCullDistanceFar</a></li>
+<li><a class="reference" href="#CameraCullDistanceNear" title="CameraCullDistanceNear = 0.01">CameraCullDistanceNear</a></li>
+<li><a class="reference" href="#CameraMouseMoveSensitivity" title="CameraMouseMoveSensitivity = 0.003'f32">CameraMouseMoveSensitivity</a></li>
+<li><a class="reference" href="#CameraMoveSpeed" title="CameraMoveSpeed = 5.4'f32">CameraMoveSpeed</a></li>
+<li><a class="reference" href="#CameraOrbitalSpeed" title="CameraOrbitalSpeed = 0.5'f32">CameraOrbitalSpeed</a></li>
+<li><a class="reference" href="#CameraPanSpeed" title="CameraPanSpeed = 0.2'f32">CameraPanSpeed</a></li>
+<li><a class="reference" href="#CameraRotationSpeed" title="CameraRotationSpeed = 0.03'f32">CameraRotationSpeed</a></li>
+
+    </ul>
+  </details>
+</li>
+<li>
+  <details open>
+    <summary><a class="reference reference-toplevel" href="#12" id="62">Procs</a></summary>
+    <ul class="simple simple-toc-section">
+      <ul class="simple nested-toc-section">getCameraForward
+  <li><a class="reference" href="#getCameraForward%2CCamera3D" title="getCameraForward(camera: Camera): Vector3">getCameraForward(camera: Camera): Vector3</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">getCameraProjectionMatrix
+  <li><a class="reference" href="#getCameraProjectionMatrix%2CCamera3D%2Cfloat32" title="getCameraProjectionMatrix(camera: Camera; aspect: float32): Matrix">getCameraProjectionMatrix(camera: Camera; aspect: float32): Matrix</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">getCameraRight
+  <li><a class="reference" href="#getCameraRight%2CCamera3D" title="getCameraRight(camera: Camera): Vector3">getCameraRight(camera: Camera): Vector3</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">getCameraUp
+  <li><a class="reference" href="#getCameraUp%2CCamera3D" title="getCameraUp(camera: Camera): Vector3">getCameraUp(camera: Camera): Vector3</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">getCameraViewMatrix
+  <li><a class="reference" href="#getCameraViewMatrix%2CCamera3D" title="getCameraViewMatrix(camera: Camera): Matrix">getCameraViewMatrix(camera: Camera): Matrix</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">moveForward
+  <li><a class="reference" href="#moveForward%2CCamera3D%2Cfloat32%2Cbool" title="moveForward(camera: var Camera; distance: float32; moveInWorldPlane: bool)">moveForward(camera: var Camera; distance: float32; moveInWorldPlane: bool)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">moveRight
+  <li><a class="reference" href="#moveRight%2CCamera3D%2Cfloat32%2Cbool" title="moveRight(camera: var Camera; distance: float32; moveInWorldPlane: bool)">moveRight(camera: var Camera; distance: float32; moveInWorldPlane: bool)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">moveToTarget
+  <li><a class="reference" href="#moveToTarget%2CCamera3D%2Cfloat32" title="moveToTarget(camera: var Camera; delta: float32)">moveToTarget(camera: var Camera; delta: float32)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">moveUp
+  <li><a class="reference" href="#moveUp%2CCamera3D%2Cfloat32" title="moveUp(camera: var Camera; distance: float32)">moveUp(camera: var Camera; distance: float32)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">pitch
+  <li><a class="reference" href="#pitch%2CCamera3D%2Cfloat32%2Cbool%2Cbool%2Cbool" title="pitch(camera: var Camera; angle: float32; lockView: bool;
+      rotateAroundTarget: bool; rotateUp: bool)">pitch(camera: var Camera; angle: float32; lockView: bool;
+      rotateAroundTarget: bool; rotateUp: bool)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">roll
+  <li><a class="reference" href="#roll%2CCamera3D%2Cfloat32" title="roll(camera: var Camera; angle: float32)">roll(camera: var Camera; angle: float32)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">yaw
+  <li><a class="reference" href="#yaw%2CCamera3D%2Cfloat32%2Cbool" title="yaw(camera: var Camera; angle: float32; rotateAroundTarget: bool)">yaw(camera: var Camera; angle: float32; rotateAroundTarget: bool)</a></li>
+
+</ul>
+
+    </ul>
+  </details>
+</li>
+
+</ul>
+
   </div>
   <div class="nine columns" id="content">
     <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L1" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
@@ -59,14 +138,276 @@
     <div id="tocRoot"></div>
     
     <p class="module-desc"></p>
+    <div class="section" id="6">
+  <h1><a class="toc-backref" href="#6">Imports</a></h1>
+  <dl class="item">
+    <a class="reference external" href="raylib.html">raylib</a>
+  </dl>
+</div>
+<div class="section" id="10">
+  <h1><a class="toc-backref" href="#10">Consts</a></h1>
+  <dl class="item">
+    <div id="CameraCullDistanceFar">
+  <dt><pre><a href="rcamera.html#CameraCullDistanceFar"><span class="Identifier">CameraCullDistanceFar</span></a> <span class="Other">=</span> <span class="FloatNumber">1000.0</span></pre></dt>
+  <dd>
     
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L15" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L15" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="CameraCullDistanceNear">
+  <dt><pre><a href="rcamera.html#CameraCullDistanceNear"><span class="Identifier">CameraCullDistanceNear</span></a> <span class="Other">=</span> <span class="FloatNumber">0.01</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L14" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L14" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="CameraMouseMoveSensitivity">
+  <dt><pre><a href="rcamera.html#CameraMouseMoveSensitivity"><span class="Identifier">CameraMouseMoveSensitivity</span></a> <span class="Other">=</span> <span class="FloatNumber">0.003'f32</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L9" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L9" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="CameraMoveSpeed">
+  <dt><pre><a href="rcamera.html#CameraMoveSpeed"><span class="Identifier">CameraMoveSpeed</span></a> <span class="Other">=</span> <span class="FloatNumber">5.4'f32</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L4" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L4" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="CameraOrbitalSpeed">
+  <dt><pre><a href="rcamera.html#CameraOrbitalSpeed"><span class="Identifier">CameraOrbitalSpeed</span></a> <span class="Other">=</span> <span class="FloatNumber">0.5'f32</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L12" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L12" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="CameraPanSpeed">
+  <dt><pre><a href="rcamera.html#CameraPanSpeed"><span class="Identifier">CameraPanSpeed</span></a> <span class="Other">=</span> <span class="FloatNumber">0.2'f32</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L6" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L6" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="CameraRotationSpeed">
+  <dt><pre><a href="rcamera.html#CameraRotationSpeed"><span class="Identifier">CameraRotationSpeed</span></a> <span class="Other">=</span> <span class="FloatNumber">0.03'f32</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L5" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L5" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+  </dl>
+</div>
+<div class="section" id="12">
+  <h1><a class="toc-backref" href="#12">Procs</a></h1>
+  <dl class="item">
+    <div id="getCameraForward-procs-all">
+  <div id="getCameraForward,Camera3D">
+  <dt><pre><span class="Keyword">func</span> <a href="#getCameraForward%2CCamera3D"><span class="Identifier">getCameraForward</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraForward&quot;</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L18" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L18" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="getCameraProjectionMatrix-procs-all">
+  <div id="getCameraProjectionMatrix,Camera3D,float32">
+  <dt><pre><span class="Keyword">func</span> <a href="#getCameraProjectionMatrix%2CCamera3D%2Cfloat32"><span class="Identifier">getCameraProjectionMatrix</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">;</span> <span class="Identifier">aspect</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraProjectionMatrix&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L29" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L29" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="getCameraRight-procs-all">
+  <div id="getCameraRight,Camera3D">
+  <dt><pre><span class="Keyword">func</span> <a href="#getCameraRight%2CCamera3D"><span class="Identifier">getCameraRight</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraRight&quot;</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L20" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L20" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="getCameraUp-procs-all">
+  <div id="getCameraUp,Camera3D">
+  <dt><pre><span class="Keyword">func</span> <a href="#getCameraUp%2CCamera3D"><span class="Identifier">getCameraUp</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraUp&quot;</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L19" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L19" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="getCameraViewMatrix-procs-all">
+  <div id="getCameraViewMatrix,Camera3D">
+  <dt><pre><span class="Keyword">func</span> <a href="#getCameraViewMatrix%2CCamera3D"><span class="Identifier">getCameraViewMatrix</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraViewMatrix&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L28" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L28" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="moveForward-procs-all">
+  <div id="moveForward,Camera3D,float32,bool">
+  <dt><pre><span class="Keyword">func</span> <a href="#moveForward%2CCamera3D%2Cfloat32%2Cbool"><span class="Identifier">moveForward</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">;</span> <span class="Identifier">distance</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">;</span> <span class="Identifier">moveInWorldPlane</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;CameraMoveForward&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L21" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L21" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="moveRight-procs-all">
+  <div id="moveRight,Camera3D,float32,bool">
+  <dt><pre><span class="Keyword">func</span> <a href="#moveRight%2CCamera3D%2Cfloat32%2Cbool"><span class="Identifier">moveRight</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">;</span> <span class="Identifier">distance</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">;</span> <span class="Identifier">moveInWorldPlane</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;CameraMoveRight&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L23" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L23" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="moveToTarget-procs-all">
+  <div id="moveToTarget,Camera3D,float32">
+  <dt><pre><span class="Keyword">func</span> <a href="#moveToTarget%2CCamera3D%2Cfloat32"><span class="Identifier">moveToTarget</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">;</span> <span class="Identifier">delta</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;CameraMoveToTarget&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L24" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L24" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="moveUp-procs-all">
+  <div id="moveUp,Camera3D,float32">
+  <dt><pre><span class="Keyword">func</span> <a href="#moveUp%2CCamera3D%2Cfloat32"><span class="Identifier">moveUp</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">;</span> <span class="Identifier">distance</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;CameraMoveUp&quot;</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L22" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L22" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="pitch-procs-all">
+  <div id="pitch,Camera3D,float32,bool,bool,bool">
+  <dt><pre><span class="Keyword">func</span> <a href="#pitch%2CCamera3D%2Cfloat32%2Cbool%2Cbool%2Cbool"><span class="Identifier">pitch</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">;</span> <span class="Identifier">angle</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">;</span> <span class="Identifier">lockView</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+           <span class="Identifier">rotateAroundTarget</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">rotateUp</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;CameraPitch&quot;</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L26" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L26" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="roll-procs-all">
+  <div id="roll,Camera3D,float32">
+  <dt><pre><span class="Keyword">func</span> <a href="#roll%2CCamera3D%2Cfloat32"><span class="Identifier">roll</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">;</span> <span class="Identifier">angle</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;CameraRoll&quot;</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L27" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L27" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="yaw-procs-all">
+  <div id="yaw,Camera3D,float32,bool">
+  <dt><pre><span class="Keyword">func</span> <a href="#yaw%2CCamera3D%2Cfloat32%2Cbool"><span class="Identifier">yaw</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">;</span> <span class="Identifier">angle</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">;</span> <span class="Identifier">rotateAroundTarget</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;CameraYaw&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rcamera.nim#L25" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rcamera.nim#L25" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+
+  </dl>
+</div>
+
   </div>
 </div>
 
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-11-23 12:19:29 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-12-03 11:44:41 UTC</small>
       </div>
     </div>
   </div>
