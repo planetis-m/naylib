@@ -96,9 +96,9 @@
 #endif
 
 #if defined(SUPPORT_MESH_GENERATION)
-    #define PAR_MALLOC(T, N) ((T*)RL_MALLOC(N*sizeof(T)))
-    #define PAR_CALLOC(T, N) ((T*)RL_CALLOC(N*sizeof(T), 1))
-    #define PAR_REALLOC(T, BUF, N) ((T*)RL_REALLOC(BUF, sizeof(T)*(N)))
+    #define PAR_MALLOC(T, N) ((T *)RL_MALLOC(N*sizeof(T)))
+    #define PAR_CALLOC(T, N) ((T *)RL_CALLOC(N*sizeof(T), 1))
+    #define PAR_REALLOC(T, BUF, N) ((T *)RL_REALLOC(BUF, sizeof(T)*(N)))
     #define PAR_FREE RL_FREE
 
     #if defined(_MSC_VER)           // Disable some MSVC warning
@@ -1734,12 +1734,12 @@ void DrawMeshInstanced(Mesh mesh, Material material, const Matrix *transforms, i
     // no faster, since we're transferring all the transform matrices anyway
     instancesVboId = rlLoadVertexBuffer(instanceTransforms, instances*sizeof(float16), false);
 
-    // Instances transformation matrices are send to shader attribute location: SHADER_LOC_MATRIX_MODEL
+    // Instances transformation matrices are sent to shader attribute location: SHADER_LOC_VERTEX_INSTANCE_TX
     for (unsigned int i = 0; i < 4; i++)
     {
-        rlEnableVertexAttribute(material.shader.locs[SHADER_LOC_MATRIX_MODEL] + i);
-        rlSetVertexAttribute(material.shader.locs[SHADER_LOC_MATRIX_MODEL] + i, 4, RL_FLOAT, 0, sizeof(Matrix), i*sizeof(Vector4));
-        rlSetVertexAttributeDivisor(material.shader.locs[SHADER_LOC_MATRIX_MODEL] + i, 1);
+        rlEnableVertexAttribute(material.shader.locs[SHADER_LOC_VERTEX_INSTANCE_TX] + i);
+        rlSetVertexAttribute(material.shader.locs[SHADER_LOC_VERTEX_INSTANCE_TX] + i, 4, RL_FLOAT, 0, sizeof(Matrix), i*sizeof(Vector4));
+        rlSetVertexAttributeDivisor(material.shader.locs[SHADER_LOC_VERTEX_INSTANCE_TX] + i, 1);
     }
 
     rlDisableVertexBuffer();
@@ -2270,50 +2270,73 @@ void UpdateModelAnimationBones(Model model, ModelAnimation anim, int frame)
     {
         if (frame >= anim.frameCount) frame = frame%anim.frameCount;
 
+        // Get first mesh which have bones
+        int firstMeshWithBones = -1;
+
         for (int i = 0; i < model.meshCount; i++)
         {
             if (model.meshes[i].boneMatrices)
             {
-                assert(model.meshes[i].boneCount == anim.boneCount);
-
-                for (int boneId = 0; boneId < model.meshes[i].boneCount; boneId++)
+                if (firstMeshWithBones == -1)
                 {
-                    Vector3 inTranslation = model.bindPose[boneId].translation;
-                    Quaternion inRotation = model.bindPose[boneId].rotation;
-                    Vector3 inScale = model.bindPose[boneId].scale;
+                    firstMeshWithBones = i;
+                    break;
+                }
+            }
+        }
 
-                    Vector3 outTranslation = anim.framePoses[frame][boneId].translation;
-                    Quaternion outRotation = anim.framePoses[frame][boneId].rotation;
-                    Vector3 outScale = anim.framePoses[frame][boneId].scale;
+        // Update all bones and boneMatrices of first mesh with bones.
+        for (int boneId = 0; boneId < anim.boneCount; boneId++)
+        {
+            Vector3 inTranslation = model.bindPose[boneId].translation;
+            Quaternion inRotation = model.bindPose[boneId].rotation;
+            Vector3 inScale = model.bindPose[boneId].scale;
 
-                    Vector3 invTranslation = Vector3RotateByQuaternion(Vector3Negate(inTranslation), QuaternionInvert(inRotation));
-                    Quaternion invRotation = QuaternionInvert(inRotation);
-                    Vector3 invScale = Vector3Divide((Vector3){ 1.0f, 1.0f, 1.0f }, inScale);
+            Vector3 outTranslation = anim.framePoses[frame][boneId].translation;
+            Quaternion outRotation = anim.framePoses[frame][boneId].rotation;
+            Vector3 outScale = anim.framePoses[frame][boneId].scale;
 
-                    Vector3 boneTranslation = Vector3Add(
-                        Vector3RotateByQuaternion(Vector3Multiply(outScale, invTranslation),
-                        outRotation), outTranslation);
-                    Quaternion boneRotation = QuaternionMultiply(outRotation, invRotation);
-                    Vector3 boneScale = Vector3Multiply(outScale, invScale);
+            Quaternion invRotation = QuaternionInvert(inRotation);
+            Vector3 invTranslation = Vector3RotateByQuaternion(Vector3Negate(inTranslation), invRotation);
+            Vector3 invScale = Vector3Divide((Vector3){ 1.0f, 1.0f, 1.0f }, inScale);
 
-                    Matrix boneMatrix = MatrixMultiply(MatrixMultiply(
-                        QuaternionToMatrix(boneRotation),
-                        MatrixTranslate(boneTranslation.x, boneTranslation.y, boneTranslation.z)),
-                        MatrixScale(boneScale.x, boneScale.y, boneScale.z));
+            Vector3 boneTranslation = Vector3Add(Vector3RotateByQuaternion(
+                Vector3Multiply(outScale, invTranslation), outRotation), outTranslation);
+            Quaternion boneRotation = QuaternionMultiply(outRotation, invRotation);
+            Vector3 boneScale = Vector3Multiply(outScale, invScale);
 
-                    model.meshes[i].boneMatrices[boneId] = boneMatrix;
+            Matrix boneMatrix = MatrixMultiply(MatrixMultiply(
+                QuaternionToMatrix(boneRotation),
+                MatrixTranslate(boneTranslation.x, boneTranslation.y, boneTranslation.z)),
+                MatrixScale(boneScale.x, boneScale.y, boneScale.z));
+
+            model.meshes[firstMeshWithBones].boneMatrices[boneId] = boneMatrix;
+        }
+
+        // Update remaining meshes with bones
+        // NOTE: Using deep copy because shallow copy results in double free with 'UnloadModel()'
+        if (firstMeshWithBones != -1)
+        {
+            for (int i = firstMeshWithBones + 1; i < model.meshCount; i++)
+            {
+                if (model.meshes[i].boneMatrices)
+                {
+                    memcpy(model.meshes[i].boneMatrices,
+                        model.meshes[firstMeshWithBones].boneMatrices,
+                        model.meshes[i].boneCount*sizeof(model.meshes[i].boneMatrices[0]));
                 }
             }
         }
     }
 }
 
-// at least 2x speed up vs the old method 
+// at least 2x speed up vs the old method
 // Update model animated vertex data (positions and normals) for a given frame
 // NOTE: Updated data is uploaded to GPU
 void UpdateModelAnimation(Model model, ModelAnimation anim, int frame)
 {
     UpdateModelAnimationBones(model,anim,frame);
+
     for (int m = 0; m < model.meshCount; m++)
     {
         Mesh mesh = model.meshes[m];
@@ -2322,8 +2345,12 @@ void UpdateModelAnimation(Model model, ModelAnimation anim, int frame)
         int boneId = 0;
         int boneCounter = 0;
         float boneWeight = 0.0;
-        bool updated = false;           // Flag to check when anim vertex information is updated
+        bool updated = false; // Flag to check when anim vertex information is updated
         const int vValues = mesh.vertexCount*3;
+
+        // Skip if missing bone data, causes segfault without on some models
+        if ((mesh.boneWeights == NULL) || (mesh.boneIds == NULL)) continue;
+
         for (int vCounter = 0; vCounter < vValues; vCounter += 3)
         {
             mesh.animVertices[vCounter] = 0;
@@ -2335,35 +2362,39 @@ void UpdateModelAnimation(Model model, ModelAnimation anim, int frame)
                 mesh.animNormals[vCounter + 1] = 0;
                 mesh.animNormals[vCounter + 2] = 0;
             }
-                // Iterates over 4 bones per vertex
+
+            // Iterates over 4 bones per vertex
             for (int j = 0; j < 4; j++, boneCounter++)
             {
                 boneWeight = mesh.boneWeights[boneCounter];
                 boneId = mesh.boneIds[boneCounter];
+
                 // Early stop when no transformation will be applied
                 if (boneWeight == 0.0f) continue;
                 animVertex = (Vector3){ mesh.vertices[vCounter], mesh.vertices[vCounter + 1], mesh.vertices[vCounter + 2] };
                 animVertex = Vector3Transform(animVertex,model.meshes[m].boneMatrices[boneId]);
-                mesh.animVertices[vCounter] += animVertex.x * boneWeight;
-                mesh.animVertices[vCounter+1] += animVertex.y * boneWeight;
-                mesh.animVertices[vCounter+2] += animVertex.z * boneWeight;
+                mesh.animVertices[vCounter] += animVertex.x*boneWeight;
+                mesh.animVertices[vCounter+1] += animVertex.y*boneWeight;
+                mesh.animVertices[vCounter+2] += animVertex.z*boneWeight;
                 updated = true;
+
                 // Normals processing
                 // NOTE: We use meshes.baseNormals (default normal) to calculate meshes.normals (animated normals)
-                if (mesh.normals != NULL)
+                if ((mesh.normals != NULL) && (mesh.animNormals != NULL ))
                 {
                     animNormal = (Vector3){ mesh.normals[vCounter], mesh.normals[vCounter + 1], mesh.normals[vCounter + 2] };
-                    animNormal = Vector3Transform(animNormal,model.meshes[m].boneMatrices[boneId]);
+                    animNormal = Vector3Transform(animNormal, MatrixTranspose(MatrixInvert(model.meshes[m].boneMatrices[boneId])));
                     mesh.animNormals[vCounter] += animNormal.x*boneWeight;
                     mesh.animNormals[vCounter + 1] += animNormal.y*boneWeight;
                     mesh.animNormals[vCounter + 2] += animNormal.z*boneWeight;
                 }
             }
         }
+
         if (updated)
         {
             rlUpdateVertexBuffer(mesh.vboId[0], mesh.animVertices, mesh.vertexCount*3*sizeof(float), 0); // Update vertex position
-            rlUpdateVertexBuffer(mesh.vboId[2], mesh.animNormals, mesh.vertexCount*3*sizeof(float), 0);  // Update vertex normals
+            if (mesh.normals != NULL) rlUpdateVertexBuffer(mesh.vboId[2], mesh.animNormals, mesh.vertexCount*3*sizeof(float), 0); // Update vertex normals
         }
     }
 }
@@ -2725,11 +2756,11 @@ Mesh GenMeshCube(float width, float height, float length)
 #else               // Use par_shapes library to generate cube mesh
 /*
 // Platonic solids:
-par_shapes_mesh* par_shapes_create_tetrahedron();       // 4 sides polyhedron (pyramid)
-par_shapes_mesh* par_shapes_create_cube();              // 6 sides polyhedron (cube)
-par_shapes_mesh* par_shapes_create_octahedron();        // 8 sides polyhedron (diamond)
-par_shapes_mesh* par_shapes_create_dodecahedron();      // 12 sides polyhedron
-par_shapes_mesh* par_shapes_create_icosahedron();       // 20 sides polyhedron
+par_shapes_mesh *par_shapes_create_tetrahedron();       // 4 sides polyhedron (pyramid)
+par_shapes_mesh *par_shapes_create_cube();              // 6 sides polyhedron (cube)
+par_shapes_mesh *par_shapes_create_octahedron();        // 8 sides polyhedron (diamond)
+par_shapes_mesh *par_shapes_create_dodecahedron();      // 12 sides polyhedron
+par_shapes_mesh *par_shapes_create_icosahedron();       // 20 sides polyhedron
 */
     // Platonic solid generation: cube (6 sides)
     // NOTE: No normals/texcoords generated by default
@@ -3840,7 +3871,7 @@ void DrawBillboardPro(Camera camera, Texture2D texture, rlRectangle source, Vect
     for (int i = 0; i < 4; i++)
     {
         points[i] = Vector3Subtract(points[i], origin3D);
-        if (rotation != 0.0) points[i] = Vector3RotateByAxisAngle(points[i], forward, rotation * DEG2RAD);
+        if (rotation != 0.0) points[i] = Vector3RotateByAxisAngle(points[i], forward, rotation*DEG2RAD);
         points[i] = Vector3Add(points[i], position);
     }
 
@@ -4049,7 +4080,7 @@ RayCollision GetRayCollisionMesh(Ray ray, Mesh mesh, Matrix transform)
         for (int i = 0; i < triangleCount; i++)
         {
             Vector3 a, b, c;
-            Vector3* vertdata = (Vector3*)mesh.vertices;
+            Vector3 *vertdata = (Vector3 *)mesh.vertices;
 
             if (mesh.indices)
             {
@@ -4213,7 +4244,7 @@ static Model LoadOBJ(const char *fileName)
     if (CHDIR(workingDir) != 0) TRACELOG(LOG_WARNING, "MODEL: [%s] Failed to change working directory", workingDir);
 
     unsigned int dataSize = (unsigned int)strlen(fileText);
-    
+
     unsigned int flags = TINYOBJ_FLAG_TRIANGULATE;
     int ret = tinyobj_parse_obj(&objAttributes, &objShapes, &objShapeCount, &objMaterials, &objMaterialCount, fileText, dataSize, flags);
 
@@ -4316,7 +4347,7 @@ static Model LoadOBJ(const char *fileName)
         faceVertIndex += objAttributes.face_num_verts[faceId];
         localMeshVertexCount += objAttributes.face_num_verts[faceId];
     }
-    
+
     localMeshVertexCounts[meshIndex] = localMeshVertexCount;
 
     for (int i = 0; i < model.meshCount; i++)
@@ -4325,7 +4356,7 @@ static Model LoadOBJ(const char *fileName)
         unsigned int vertexCount = localMeshVertexCounts[i];
 
         model.meshes[i].vertexCount = vertexCount;
-        model.meshes[i].triangleCount = vertexCount / 3;
+        model.meshes[i].triangleCount = vertexCount/3;
 
         model.meshes[i].vertices = (float *)MemAlloc(sizeof(float)*vertexCount*3);
         model.meshes[i].normals = (float *)MemAlloc(sizeof(float)*vertexCount*3);
@@ -4360,7 +4391,7 @@ static Model LoadOBJ(const char *fileName)
             else nextShapeEnd = objAttributes.num_face_num_verts; // This is actually the total number of face verts in the file, not faces
             newMesh = true;
         }
-        
+
         // If this is a new material, we need to allocate a new mesh
         if (lastMaterial != -1 && objAttributes.material_ids[faceId] != lastMaterial) newMesh = true;
         lastMaterial = objAttributes.material_ids[faceId];
@@ -5657,7 +5688,7 @@ static Model LoadGLTF(const char *fileName)
                 }
 
                 // Load primitive indices data (if provided)
-                if (mesh->primitives[p].indices != NULL)
+                if ((mesh->primitives[p].indices != NULL) && (mesh->primitives[p].indices->buffer_view != NULL))
                 {
                     cgltf_accessor *attribute = mesh->primitives[p].indices;
 
@@ -5674,7 +5705,7 @@ static Model LoadGLTF(const char *fileName)
                     else if (attribute->component_type == cgltf_component_type_r_8u)
                     {
                         // Init raylib mesh indices to copy glTF attribute data
-                        model.meshes[meshIndex].indices = RL_MALLOC(attribute->count * sizeof(unsigned short));
+                        model.meshes[meshIndex].indices = RL_MALLOC(attribute->count*sizeof(unsigned short));
                         LOAD_ATTRIBUTE_CAST(attribute, 1, unsigned char, model.meshes[meshIndex].indices, unsigned short)
 
                     }
@@ -5729,7 +5760,7 @@ static Model LoadGLTF(const char *fileName)
 
             for (int i = 0; i < model.boneCount; i++)
             {
-                cgltf_node* node = skin.joints[i];
+                cgltf_node *node = skin.joints[i];
                 cgltf_float worldTransform[16];
                 cgltf_node_transform_world(node, worldTransform);
                 Matrix worldMatrix = {

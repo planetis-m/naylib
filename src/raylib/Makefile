@@ -20,6 +20,8 @@
 #         - Linux (X11 desktop mode)
 #         - macOS/OSX (x64, arm64 (not tested))
 #         - Others (not tested)
+#     > PLATFORM_WEB_RGFW:
+#         - HTML5 (WebAssembly)
 #     > PLATFORM_WEB:
 #         - HTML5 (WebAssembly)
 #     > PLATFORM_DRM:
@@ -59,11 +61,10 @@
 #------------------------------------------------------------------------------------------------
 # Define target platform
 PLATFORM             ?= PLATFORM_DESKTOP
-
 ifeq ($(PLATFORM), PLATFORM_DESKTOP)
-    TARGET_PLATFORM = PLATFORM_DESKTOP_GLFW
+    TARGET_PLATFORM   = PLATFORM_DESKTOP_GLFW
 else
-    TARGET_PLATFORM = $(PLATFORM)
+    TARGET_PLATFORM   = $(PLATFORM)
 endif
 
 # Define required raylib variables
@@ -120,7 +121,6 @@ SDL_INCLUDE_PATH      ?= $(RAYLIB_SRC_PATH)/external/SDL2/include
 SDL_LIBRARY_PATH      ?= $(RAYLIB_SRC_PATH)/external/SDL2/lib
 SDL_LIBRARIES         ?= -lSDL2 -lSDL2main
 
-
 # Determine if the file has root access (only required to install raylib)
 # "whoami" prints the name of the user that calls him (so, if it is the root user, "whoami" prints "root")
 ROOT = $(shell whoami)
@@ -130,7 +130,7 @@ HOST_PLATFORM_OS ?= WINDOWS
 PLATFORM_OS ?= WINDOWS
 
 # Determine PLATFORM_OS when required
-ifeq ($(TARGET_PLATFORM),$(filter $(TARGET_PLATFORM),PLATFORM_DESKTOP_GLFW PLATFORM_DESKTOP_SDL PLATFORM_DESKTOP_RGFW PLATFORM_WEB PLATFORM_ANDROID))
+ifeq ($(TARGET_PLATFORM),$(filter $(TARGET_PLATFORM),PLATFORM_DESKTOP_GLFW PLATFORM_DESKTOP_SDL PLATFORM_DESKTOP_RGFW PLATFORM_WEB PLATFORM_WEB_RGFW PLATFORM_ANDROID))
     # No uname.exe on MinGW!, but OS=Windows_NT on Windows!
     # ifeq ($(UNAME),Msys) -> Windows
     ifeq ($(OS),Windows_NT)
@@ -172,7 +172,7 @@ ifeq ($(TARGET_PLATFORM),PLATFORM_DRM)
         PLATFORM_SHELL = sh
     endif
 endif
-ifeq ($(TARGET_PLATFORM),PLATFORM_WEB)
+ifeq ($(TARGET_PLATFORM),$(filter $(TARGET_PLATFORM),PLATFORM_WEB PLATFORM_WEB_RGFW))
     ifeq ($(PLATFORM_OS),LINUX)
         ifndef PLATFORM_SHELL
             PLATFORM_SHELL = sh
@@ -180,7 +180,7 @@ ifeq ($(TARGET_PLATFORM),PLATFORM_WEB)
     endif
 endif
 
-ifeq ($(TARGET_PLATFORM),PLATFORM_WEB)
+ifeq ($(TARGET_PLATFORM),$(filter $(TARGET_PLATFORM),PLATFORM_WEB PLATFORM_WEB_RGFW))
     ifeq ($(PLATFORM_OS), WINDOWS)
         # Emscripten required variables
         EMSDK_PATH         ?= C:/raylib/emsdk
@@ -254,7 +254,7 @@ ifeq ($(TARGET_PLATFORM),PLATFORM_DRM)
     # On DRM OpenGL ES 2.0 must be used
     GRAPHICS = GRAPHICS_API_OPENGL_ES2
 endif
-ifeq ($(TARGET_PLATFORM),PLATFORM_WEB)
+ifeq ($(TARGET_PLATFORM),$(filter $(TARGET_PLATFORM),PLATFORM_WEB PLATFORM_WEB_RGFW))
     # On HTML5 OpenGL ES 2.0 is used, emscripten translates it to WebGL 1.0
     GRAPHICS = GRAPHICS_API_OPENGL_ES2
     #GRAPHICS = GRAPHICS_API_OPENGL_ES3
@@ -288,7 +288,7 @@ ifeq ($(TARGET_PLATFORM),PLATFORM_DRM)
         AR = $(RPI_TOOLCHAIN)/bin/$(RPI_TOOLCHAIN_NAME)-ar
     endif
 endif
-ifeq ($(TARGET_PLATFORM),PLATFORM_WEB)
+ifeq ($(TARGET_PLATFORM),$(filter $(TARGET_PLATFORM),PLATFORM_WEB PLATFORM_WEB_RGFW))
     # HTML5 emscripten compiler
     CC = emcc
     AR = emar
@@ -331,7 +331,7 @@ ifneq ($(RAYLIB_CONFIG_FLAGS), NONE)
     CFLAGS += -DEXTERNAL_CONFIG_FLAGS $(RAYLIB_CONFIG_FLAGS)
 endif
 
-ifeq ($(TARGET_PLATFORM), PLATFORM_WEB)
+ifeq ($(TARGET_PLATFORM),$(filter $(TARGET_PLATFORM),PLATFORM_WEB PLATFORM_WEB_RGFW))
     # NOTE: When using multi-threading in the user code, it requires -pthread enabled
     CFLAGS += -std=gnu99
 else
@@ -347,7 +347,7 @@ ifeq ($(RAYLIB_BUILD_MODE),DEBUG)
 endif
 
 ifeq ($(RAYLIB_BUILD_MODE),RELEASE)
-    ifeq ($(TARGET_PLATFORM),PLATFORM_WEB)
+    ifeq ($(TARGET_PLATFORM),$(filter $(TARGET_PLATFORM),PLATFORM_WEB PLATFORM_WEB_RGFW))
         CFLAGS += -Os
     endif
     ifeq ($(TARGET_PLATFORM),PLATFORM_DESKTOP_GLFW)
@@ -366,7 +366,7 @@ endif
 ifeq ($(TARGET_PLATFORM),PLATFORM_DESKTOP_GLFW)
     CFLAGS += -Werror=implicit-function-declaration
 endif
-ifeq ($(TARGET_PLATFORM),PLATFORM_WEB)
+ifeq ($(TARGET_PLATFORM),$(filter $(TARGET_PLATFORM),PLATFORM_WEB PLATFORM_WEB_RGFW))
     # -Os                        # size optimization
     # -O2                        # optimization level 2, if used, also set --memory-init-file 0
     # -sUSE_GLFW=3              # Use glfw3 library (context/input management) -> Only for linker!
@@ -659,11 +659,11 @@ all: raylib
 # Compile raylib library
 # NOTE: Release directory is created if not exist
 raylib: $(OBJS)
-ifeq ($(TARGET_PLATFORM),PLATFORM_WEB)
+ifeq ($(TARGET_PLATFORM),$(filter $(TARGET_PLATFORM),PLATFORM_WEB PLATFORM_WEB_RGFW))
     # Compile raylib libray for web
     #$(CC) $(OBJS) -r -o $(RAYLIB_RELEASE_PATH)/lib$(RAYLIB_LIB_NAME).bc
-	$(AR) rcs $(RAYLIB_RELEASE_PATH)/lib$(RAYLIB_LIB_NAME).a $(OBJS)
-	@echo "raylib library generated (lib$(RAYLIB_LIB_NAME).a)!"
+	$(AR) rcs $(RAYLIB_RELEASE_PATH)/lib$(RAYLIB_LIB_NAME).web.a $(OBJS)
+	@echo "raylib library generated (lib$(RAYLIB_LIB_NAME).web.a)!"
 else
     ifeq ($(RAYLIB_LIBTYPE),SHARED)
         ifeq ($(TARGET_PLATFORM),$(filter $(TARGET_PLATFORM),PLATFORM_DESKTOP_GLFW PLATFORM_DESKTOP_SDL PLATFORM_DESKTOP_RGFW))

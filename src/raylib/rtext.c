@@ -247,7 +247,11 @@ extern void LoadFontDefault(void)
                 // we must consider data as little-endian order (alpha + gray)
                 ((unsigned short *)imFont.data)[i + j] = 0xffff;
             }
-            else ((unsigned short *)imFont.data)[i + j] = 0x00ff;
+            else 
+            { 
+                ((unsigned char *)imFont.data)[(i + j)*sizeof(short)] = 0xFF;
+                ((unsigned char *)imFont.data)[(i + j)*sizeof(short) + 1] = 0x00;
+            }
         }
 
         counter++;
@@ -1282,7 +1286,7 @@ Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing
 {
     Vector2 textSize = { 0 };
 
-    if ((isGpuReady && (font.texture.id == 0)) || 
+    if ((isGpuReady && (font.texture.id == 0)) ||
         (text == NULL) || (text[0] == '\0')) return textSize; // Security check
 
     int size = TextLength(text);    // Get size in bytes of text

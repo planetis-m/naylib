@@ -365,6 +365,7 @@ type
     VertexBoneids ## Shader location: vertex attribute: boneIds
     VertexBoneweights ## Shader location: vertex attribute: boneWeights
     BoneMatrices ## Shader location: array of matrices uniform: boneMatrices
+    VertexInstanceTx ## Shader location: vertex attribute: instanceTransform
 
   ShaderUniformDataType* {.size: sizeof(int32).} = enum ## Shader uniform data type
     Float ## Shader uniform type: float
@@ -375,6 +376,10 @@ type
     Ivec2 ## Shader uniform type: ivec2 (2 int)
     Ivec3 ## Shader uniform type: ivec3 (3 int)
     Ivec4 ## Shader uniform type: ivec4 (4 int)
+    Uint ## Shader uniform type: unsigned int
+    Uivec2 ## Shader uniform type: uivec2 (2 unsigned int)
+    Uivec3 ## Shader uniform type: uivec3 (3 unsigned int)
+    Uivec4 ## Shader uniform type: uivec4 (4 unsigned int)
     Sampler2d ## Shader uniform type: sampler2d
 
   ShaderAttributeDataType* {.size: sizeof(int32).} = enum ## Shader attribute data types

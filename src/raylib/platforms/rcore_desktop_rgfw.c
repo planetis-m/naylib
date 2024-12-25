@@ -6,6 +6,8 @@
 *       - Windows (Win32, Win64)
 *       - Linux (X11/Wayland desktop mode)
 *       - MacOS (Cocoa)
+*       - HTML5 (Emscripten)
+*       - Others (untested)
 *
 *   LIMITATIONS:
 *       - TODO
@@ -46,7 +48,11 @@
 *
 **********************************************************************************************/
 
-#if defined(GRAPHICS_API_OPENGL_ES2)
+#if defined(PLATFORM_WEB_RGFW)
+#define RGFW_NO_GL_HEADER 
+#endif
+
+#if defined(GRAPHICS_API_OPENGL_ES2) && !defined(PLATFORM_WEB_RGFW)
     #define RGFW_OPENGL_ES2
 #endif
 
@@ -79,6 +85,10 @@ void rlCloseWindow(void);
     #define Point NSPOINT
     #define Size NSSIZE
 #endif
+
+#define RGFW_MALLOC RL_MALLOC
+#define RGFW_FREE RL_FREE
+#define RGFW_CALLOC RL_CALLOC
 
 #include "../external/RGFW.h"
 
@@ -118,7 +128,9 @@ static bool RGFW_disableCursor = false;
 
 static const unsigned short keyMappingRGFW[] = {
     [RGFW_KEY_NULL] = KEY_NULL,
-    [RGFW_Quote] = KEY_APOSTROPHE,
+    [RGFW_Return] = KEY_ENTER,
+    [RGFW_Return] = KEY_ENTER,
+    [RGFW_Apostrophe] = KEY_APOSTROPHE,
     [RGFW_Comma] = KEY_COMMA,
     [RGFW_Minus] = KEY_MINUS,
     [RGFW_Period] = KEY_PERIOD,
@@ -157,7 +169,6 @@ static const unsigned short keyMappingRGFW[] = {
     [RGFW_SuperL] = KEY_LEFT_SUPER,
     #ifndef RGFW_MACOS
     [RGFW_ShiftR] = KEY_RIGHT_SHIFT,
-
     [RGFW_AltR] = KEY_RIGHT_ALT,
     #endif
     [RGFW_Space] = KEY_SPACE,
@@ -246,7 +257,7 @@ bool WindowShouldClose(void)
 
 // Toggle fullscreen mode
 void ToggleFullscreen(void)
-{
+{   
     RGFW_window_maximize(platform.window);
     ToggleBorderlessWindowed();
 }
@@ -485,7 +496,7 @@ void SetWindowIcons(Image *images, int count)
 // Set title for window
 void SetWindowTitle(const char *title)
 {
-    RGFW_window_setName(platform.window, (char*)title);
+    RGFW_window_setName(platform.window, (char *)title);
     CORE.Window.title = title;
 }
 
@@ -542,9 +553,9 @@ void SetWindowFocused(void)
 void *GetWindowHandle(void)
 {
 #ifdef RGFW_WEBASM
-    return (void*)platform.window->src.ctx;
+    return (void *)platform.window->src.ctx;
 #else
-    return (void*)platform.window->src.window;
+    return (void *)platform.window->src.window;
 #endif
 }
 
@@ -587,7 +598,7 @@ Vector2 GetMonitorPosition(int monitor)
 {
     RGFW_monitor *mons = RGFW_getMonitors();
 
-    return (Vector2){(float)mons[monitor].rect.x, (float)mons[monitor].rect.y};
+    return (Vector2){ (float)mons[monitor].rect.x, (float)mons[monitor].rect.y };
 }
 
 // Get selected monitor width (currently used by monitor)
@@ -609,9 +620,9 @@ int GetMonitorHeight(int monitor)
 // Get selected monitor physical width in millimetres
 int GetMonitorPhysicalWidth(int monitor)
 {
-    RGFW_monitor* mons = RGFW_getMonitors();
+    RGFW_monitor *mons = RGFW_getMonitors();
 
-    return (int)mons[monitor].physW;
+    return mons[monitor].physW;
 }
 
 // Get selected monitor physical height in millimetres
@@ -654,7 +665,7 @@ Vector2 GetWindowScaleDPI(void)
 // Set clipboard text content
 void SetClipboardText(const char *text)
 {
-    RGFW_writeClipboard(text, (u32)strlen(text));
+    RGFW_writeClipboard(text, strlen(text));
 }
 
 // Get clipboard text content
@@ -664,6 +675,7 @@ const char *GetClipboardText(void)
     return RGFW_readClipboard(NULL);
 }
 
+
 #if defined(SUPPORT_CLIPBOARD_IMAGE)
 #if defined(_WIN32)
     #define WIN32_CLIPBOARD_IMPLEMENTATION
@@ -672,26 +684,25 @@ const char *GetClipboardText(void)
     #define WINGDI_ALREADY_INCLUDED
     #include "../external/win32_clipboard.h"
 #endif
-#endif // SUPPORT_CLIPBOARD_IMAGE
+#endif
 
 // Get clipboard image
 Image GetClipboardImage(void)
 {
     Image image = { 0 };
+    unsigned long long int dataSize = 0;
+    void *fileData = NULL;
 
 #if defined(SUPPORT_CLIPBOARD_IMAGE)
 #if defined(_WIN32)
-    unsigned long long int dataSize = 0;
-    void *fileData = NULL;
     int width = 0;
     int height = 0;
-
-    fileData  = (void*)Win32GetClipboardImageData(&width, &height, &dataSize);
-
-    if (fileData == NULL) TRACELOG(LOG_WARNING, "Clipboard image: Couldn't get clipboard data.");
-    else image = LoadImageFromMemory(".bmp", fileData, (int)dataSize);
+    fileData  = (void *)Win32GetClipboardImageData(&width, &height, &dataSize);
+    
+    if (fileData == NULL) TRACELOG(LOG_WARNING, "Clipboard image: Couldn't get clipboard data");
+    else image = LoadImageFromMemory(".bmp", fileData, dataSize);
 #else
-    TRACELOG(LOG_WARNING, "GetClipboardImage() not implemented on target platform");
+    TRACELOG(LOG_WARNING, "Clipboard image: PLATFORM_DESKTOP_RGFW doesn't implement GetClipboardImage() for this OS");
 #endif
 #endif // SUPPORT_CLIPBOARD_IMAGE
 
@@ -728,9 +739,7 @@ void EnableCursor(void)
 void DisableCursor(void)
 {
     RGFW_disableCursor = true;
-
     RGFW_window_mouseHold(platform.window, RGFW_AREA(0, 0));
-
     HideCursor();
 }
 
@@ -780,6 +789,12 @@ int SetGamepadMappings(const char *mappings)
     return 0;
 }
 
+// Set gamepad vibration
+void SetGamepadVibration(int gamepad, float leftMotor, float rightMotor, float duration)
+{
+    TRACELOG(LOG_WARNING, "SetGamepadVibration() not available on target platform");
+}
+
 // Set mouse position XY
 void SetMousePosition(int x, int y)
 {
@@ -803,57 +818,25 @@ const char *GetKeyName(int key)
 
 static KeyboardKey ConvertScancodeToKey(u32 keycode);
 
-// TODO: Review function to avoid duplicate with RSGL
-char RSGL_keystrToChar(const char *str)
-{
-    if (str[1] == 0) return str[0];
-
-    static const char *map[] = {
-        "asciitilde", "`",
-        "grave", "~",
-        "exclam", "!",
-        "at", "@",
-        "numbersign", "#",
-        "dollar", "$",
-        "percent", "%%",
-        "asciicircum", "^",
-        "ampersand", "&",
-        "asterisk", "*",
-        "parenleft", "(",
-        "parenright", ")",
-        "underscore", "_",
-        "minus", "-",
-        "plus", "+",
-        "equal", "=",
-        "braceleft", "{",
-        "bracketleft", "[",
-        "bracketright", "]",
-        "braceright", "}",
-        "colon", ":",
-        "semicolon", ";",
-        "quotedbl", "\"",
-        "apostrophe", "'",
-        "bar", "|",
-        "backslash", "\'",
-        "less", "<",
-        "comma", ",",
-        "greater", ">",
-        "period", ".",
-        "question", "?",
-        "slash", "/",
-        "space", " ",
-        "Return", "\n",
-        "Enter", "\n",
-        "enter", "\n",
-    };
-
-    for (unsigned char i = 0; i < (sizeof(map)/sizeof(char *)); i += 2)
-    {
-        if (strcmp(map[i], str) == 0) return *map[i + 1];
-    }
-
-    return '\0';
-}
+int RGFW_gpConvTable[18] = {
+	[RGFW_GP_Y] = GAMEPAD_BUTTON_RIGHT_FACE_UP,
+	[RGFW_GP_B] = GAMEPAD_BUTTON_RIGHT_FACE_RIGHT,
+	[RGFW_GP_A] = GAMEPAD_BUTTON_RIGHT_FACE_DOWN,
+	[RGFW_GP_X] = GAMEPAD_BUTTON_RIGHT_FACE_LEFT,
+	[RGFW_GP_L1] = GAMEPAD_BUTTON_LEFT_TRIGGER_1,
+	[RGFW_GP_R1] = GAMEPAD_BUTTON_RIGHT_TRIGGER_1,
+	[RGFW_GP_L2] = GAMEPAD_BUTTON_LEFT_TRIGGER_2,
+	[RGFW_GP_R2] = GAMEPAD_BUTTON_RIGHT_TRIGGER_2,
+	[RGFW_GP_SELECT] = GAMEPAD_BUTTON_MIDDLE_LEFT,
+	[RGFW_GP_HOME] = GAMEPAD_BUTTON_MIDDLE,
+	[RGFW_GP_START] = GAMEPAD_BUTTON_MIDDLE_RIGHT,
+	[RGFW_GP_UP] = GAMEPAD_BUTTON_LEFT_FACE_UP,
+	[RGFW_GP_RIGHT] = GAMEPAD_BUTTON_LEFT_FACE_RIGHT,
+	[RGFW_GP_DOWN] = GAMEPAD_BUTTON_LEFT_FACE_DOWN,
+	[RGFW_GP_LEFT] = GAMEPAD_BUTTON_LEFT_FACE_LEFT,
+	[RGFW_GP_L3] = GAMEPAD_BUTTON_LEFT_THUMB,	
+	[RGFW_GP_R3] = GAMEPAD_BUTTON_RIGHT_THUMB,
+};
 
 // Register all input events
 void PollInputEvents(void)
@@ -863,7 +846,7 @@ void PollInputEvents(void)
     // because ProcessGestureEvent() is just called on an event, not every frame
     UpdateGestures();
 #endif
-
+	
     // Reset keys/chars pressed registered
     CORE.Input.Keyboard.keyPressedQueueCount = 0;
     CORE.Input.Keyboard.charPressedQueueCount = 0;
@@ -875,7 +858,6 @@ void PollInputEvents(void)
     // Register previous mouse position
 
     // Reset last gamepad button/axis registered state
-
     for (int i = 0; (i < 4) && (i < MAX_GAMEPADS); i++)
     {
         // Check if gamepad is available
@@ -927,27 +909,27 @@ void PollInputEvents(void)
 
     while (RGFW_window_checkEvent(platform.window))
     {
-        if ((platform.window->event.type >= RGFW_jsButtonPressed) && (platform.window->event.type <= RGFW_jsAxisMove))
+        if ((platform.window->event.type >= RGFW_gpButtonPressed) && (platform.window->event.type <= RGFW_gpAxisMove))
         {
-            if (!CORE.Input.Gamepad.ready[platform.window->event.joystick])
+            if (!CORE.Input.Gamepad.ready[platform.window->event.gamepad])
             {
-                CORE.Input.Gamepad.ready[platform.window->event.joystick] = true;
-                CORE.Input.Gamepad.axisCount[platform.window->event.joystick] = platform.window->event.axisesCount;
-                CORE.Input.Gamepad.name[platform.window->event.joystick][0] = '\0';
-                CORE.Input.Gamepad.axisState[platform.window->event.joystick][GAMEPAD_AXIS_LEFT_TRIGGER] = -1.0f;
-                CORE.Input.Gamepad.axisState[platform.window->event.joystick][GAMEPAD_AXIS_RIGHT_TRIGGER] = -1.0f;
+                CORE.Input.Gamepad.ready[platform.window->event.gamepad] = true;
+                CORE.Input.Gamepad.axisCount[platform.window->event.gamepad] = platform.window->event.axisesCount;
+                CORE.Input.Gamepad.name[platform.window->event.gamepad][0] = '\0';
+                CORE.Input.Gamepad.axisState[platform.window->event.gamepad][GAMEPAD_AXIS_LEFT_TRIGGER] = -1.0f;
+                CORE.Input.Gamepad.axisState[platform.window->event.gamepad][GAMEPAD_AXIS_RIGHT_TRIGGER] = -1.0f;
             }
         }
 
         RGFW_Event *event = &platform.window->event;
-
         // All input events can be processed after polling
-        switch (event->type)
+        
+		switch (event->type)
         {
             case RGFW_quit: CORE.Window.shouldClose = true; break;
             case RGFW_dnd:      // Dropped file
             {
-                for (u32 i = 0; i < event->droppedFilesCount; i++)
+                for (int i = 0; i < event->droppedFilesCount; i++)
                 {
                     if (CORE.Window.dropFileCount == 0)
                     {
@@ -958,7 +940,7 @@ void PollInputEvents(void)
 
                         CORE.Window.dropFilepaths[CORE.Window.dropFileCount] = (char *)RL_CALLOC(MAX_FILEPATH_LENGTH, sizeof(char));
                         strcpy(CORE.Window.dropFilepaths[CORE.Window.dropFileCount], event->droppedFiles[i]);
-
+						
                         CORE.Window.dropFileCount++;
                     }
                     else if (CORE.Window.dropFileCount < 1024)
@@ -991,8 +973,7 @@ void PollInputEvents(void)
             // Keyboard events
             case RGFW_keyPressed:
             {
-                KeyboardKey key = ConvertScancodeToKey(event->keyCode);
-
+                KeyboardKey key = ConvertScancodeToKey(event->key);
                 if (key != KEY_NULL)
                 {
                     // If key was up, add it to the key pressed queue
@@ -1016,13 +997,13 @@ void PollInputEvents(void)
                 if (CORE.Input.Keyboard.charPressedQueueCount < MAX_CHAR_PRESSED_QUEUE)
                 {
                     // Add character (codepoint) to the queue
-                    CORE.Input.Keyboard.charPressedQueue[CORE.Input.Keyboard.charPressedQueueCount] = RSGL_keystrToChar(event->keyName);
+                    CORE.Input.Keyboard.charPressedQueue[CORE.Input.Keyboard.charPressedQueueCount] = event->keyChar;
                     CORE.Input.Keyboard.charPressedQueueCount++;
                 }
             } break;
             case RGFW_keyReleased:
             {
-                KeyboardKey key = ConvertScancodeToKey(event->keyCode);
+                KeyboardKey key = ConvertScancodeToKey(event->key);
                 if (key != KEY_NULL) CORE.Input.Keyboard.currentKeyState[key] = 0;
             } break;
 
@@ -1031,9 +1012,9 @@ void PollInputEvents(void)
             {
                 if ((event->button == RGFW_mouseScrollUp) || (event->button == RGFW_mouseScrollDown))
                 {
-                    CORE.Input.Mouse.currentWheelMove.y = (float)event->scroll;
+                    CORE.Input.Mouse.currentWheelMove.y = event->scroll;
                     break;
-                }
+                } else CORE.Input.Mouse.currentWheelMove.y = 0;
 
                 int btn = event->button;
                 if (btn == RGFW_mouseLeft) btn = 1;
@@ -1047,12 +1028,11 @@ void PollInputEvents(void)
             } break;
             case RGFW_mouseButtonReleased:
             {
-
                 if ((event->button == RGFW_mouseScrollUp) || (event->button == RGFW_mouseScrollDown))
                 {
-                    CORE.Input.Mouse.currentWheelMove.y = (float)event->scroll;
+                    CORE.Input.Mouse.currentWheelMove.y = event->scroll;
                     break;
-                }
+                } else CORE.Input.Mouse.currentWheelMove.y = 0;
 
                 int btn = event->button;
                 if (btn == RGFW_mouseLeft) btn = 1;
@@ -1081,124 +1061,53 @@ void PollInputEvents(void)
                 CORE.Input.Touch.position[0] = CORE.Input.Mouse.currentPosition;
                 touchAction = 2;
             } break;
-            case RGFW_jsButtonPressed:
+            case RGFW_gpButtonPressed:
             {
-                int button = -1;
-
-                switch (event->button)
-                {
-                    case RGFW_JS_Y: button = GAMEPAD_BUTTON_RIGHT_FACE_UP; break;
-                    case RGFW_JS_B: button = GAMEPAD_BUTTON_RIGHT_FACE_RIGHT; break;
-                    case RGFW_JS_A: button = GAMEPAD_BUTTON_RIGHT_FACE_DOWN; break;
-                    case RGFW_JS_X: button = GAMEPAD_BUTTON_RIGHT_FACE_LEFT; break;
-
-                    case RGFW_JS_L1: button = GAMEPAD_BUTTON_LEFT_TRIGGER_1; break;
-                    case RGFW_JS_R1: button = GAMEPAD_BUTTON_RIGHT_TRIGGER_1; break;
-
-                    case RGFW_JS_L2: button = GAMEPAD_BUTTON_LEFT_TRIGGER_2; break;
-                    case RGFW_JS_R2: button = GAMEPAD_BUTTON_RIGHT_TRIGGER_2; break;
-
-                    case RGFW_JS_SELECT: button = GAMEPAD_BUTTON_MIDDLE_LEFT; break;
-                    case RGFW_JS_HOME: button = GAMEPAD_BUTTON_MIDDLE; break;
-                    case RGFW_JS_START: button = GAMEPAD_BUTTON_MIDDLE_RIGHT; break;
-
-                    case RGFW_JS_UP: button = GAMEPAD_BUTTON_LEFT_FACE_UP; break;
-                    case RGFW_JS_RIGHT: button = GAMEPAD_BUTTON_LEFT_FACE_RIGHT; break;
-                    case RGFW_JS_DOWN: button = GAMEPAD_BUTTON_LEFT_FACE_DOWN; break;
-                    case RGFW_JS_LEFT: button = GAMEPAD_BUTTON_LEFT_FACE_LEFT; break;
-
-                    default: break;
-                }
+				int button = RGFW_gpConvTable[event->button];
 
                 if (button >= 0)
                 {
-                    CORE.Input.Gamepad.currentButtonState[event->joystick][button] = 1;
+                    CORE.Input.Gamepad.currentButtonState[event->gamepad][button] = 1;
                     CORE.Input.Gamepad.lastButtonPressed = button;
                 }
             } break;
-            case RGFW_jsButtonReleased:
+            case RGFW_gpButtonReleased:
             {
-                int button = -1;
-                switch (event->button)
-                {
-                    case RGFW_JS_Y: button = GAMEPAD_BUTTON_RIGHT_FACE_UP; break;
-                    case RGFW_JS_B: button = GAMEPAD_BUTTON_RIGHT_FACE_RIGHT; break;
-                    case RGFW_JS_A: button = GAMEPAD_BUTTON_RIGHT_FACE_DOWN; break;
-                    case RGFW_JS_X: button = GAMEPAD_BUTTON_RIGHT_FACE_LEFT; break;
+				int button = RGFW_gpConvTable[event->button];
 
-                    case RGFW_JS_L1: button = GAMEPAD_BUTTON_LEFT_TRIGGER_1; break;
-                    case RGFW_JS_R1: button = GAMEPAD_BUTTON_RIGHT_TRIGGER_1; break;
-
-                    case RGFW_JS_L2: button = GAMEPAD_BUTTON_LEFT_TRIGGER_2; break;
-                    case RGFW_JS_R2: button = GAMEPAD_BUTTON_RIGHT_TRIGGER_2; break;
-
-                    case RGFW_JS_SELECT: button = GAMEPAD_BUTTON_MIDDLE_LEFT; break;
-                    case RGFW_JS_HOME: button = GAMEPAD_BUTTON_MIDDLE; break;
-                    case RGFW_JS_START: button = GAMEPAD_BUTTON_MIDDLE_RIGHT; break;
-
-                    case RGFW_JS_UP: button = GAMEPAD_BUTTON_LEFT_FACE_UP; break;
-                    case RGFW_JS_RIGHT: button = GAMEPAD_BUTTON_LEFT_FACE_RIGHT; break;
-                    case RGFW_JS_DOWN: button = GAMEPAD_BUTTON_LEFT_FACE_DOWN; break;
-                    case RGFW_JS_LEFT: button = GAMEPAD_BUTTON_LEFT_FACE_LEFT; break;
-                    default: break;
-                }
-
-                if (button >= 0)
-                {
-                    CORE.Input.Gamepad.currentButtonState[event->joystick][button] = 0;
-                    if (CORE.Input.Gamepad.lastButtonPressed == button) CORE.Input.Gamepad.lastButtonPressed = 0;
-                }
+                CORE.Input.Gamepad.currentButtonState[event->gamepad][button] = 0;
+                if (CORE.Input.Gamepad.lastButtonPressed == button) CORE.Input.Gamepad.lastButtonPressed = 0;
             } break;
-            case RGFW_jsAxisMove:
+            case RGFW_gpAxisMove:
             {
                 int axis = -1;
-                for (int i = 0; i < event->axisesCount; i++)
+
+				float value = 0;
+				switch(event->whichAxis) 
                 {
-                    switch(i)
-                    {
-                        case 0:
-                        {
-                            if (abs(event->axis[i].x) > abs(event->axis[i].y))
-                            {
-                                axis = GAMEPAD_AXIS_LEFT_X;
-                                break;
-                            }
-
-                            axis = GAMEPAD_AXIS_LEFT_Y;
-                        } break;
-                        case 1:
-                        {
-                            if (abs(event->axis[i].x) > abs(event->axis[i].y))
-                            {
-                                axis = GAMEPAD_AXIS_RIGHT_X;
-                                break;
-                            }
-
-                            axis = GAMEPAD_AXIS_RIGHT_Y;
-                        } break;
-                        case 2: axis = GAMEPAD_AXIS_LEFT_TRIGGER; break;
-                        case 3: axis = GAMEPAD_AXIS_RIGHT_TRIGGER; break;
-                        default: break;
-                    }
-
-                    #ifdef __linux__
-                    float value = (event->axis[i].x + event->axis[i].y)/(float)32767;
-                    #else
-                    float value = (event->axis[i].x + -event->axis[i].y)/(float)32767;
-                    #endif
-                    CORE.Input.Gamepad.axisState[event->joystick][axis] = value;
-
-                    // Register button state for triggers in addition to their axes
-                    if ((axis == GAMEPAD_AXIS_LEFT_TRIGGER) || (axis == GAMEPAD_AXIS_RIGHT_TRIGGER))
-                    {
-                        int button = (axis == GAMEPAD_AXIS_LEFT_TRIGGER)? GAMEPAD_BUTTON_LEFT_TRIGGER_2 : GAMEPAD_BUTTON_RIGHT_TRIGGER_2;
-                        int pressed = (value > 0.1f);
-                        CORE.Input.Gamepad.currentButtonState[event->joystick][button] = pressed;
-
-                        if (pressed) CORE.Input.Gamepad.lastButtonPressed = button;
-                        else if (CORE.Input.Gamepad.lastButtonPressed == button) CORE.Input.Gamepad.lastButtonPressed = 0;
-                    }
-                }
+					case 0:
+					{
+						CORE.Input.Gamepad.axisState[event->gamepad][GAMEPAD_AXIS_LEFT_X] = event->axis[0].x / 100.0f;
+						CORE.Input.Gamepad.axisState[event->gamepad][GAMEPAD_AXIS_LEFT_Y] = event->axis[0].y / 100.0f;
+					} break;
+					case 1:
+					{
+						CORE.Input.Gamepad.axisState[event->gamepad][GAMEPAD_AXIS_RIGHT_X] = event->axis[1].x / 100.0f;
+						CORE.Input.Gamepad.axisState[event->gamepad][GAMEPAD_AXIS_RIGHT_Y] = event->axis[1].y / 100.0f;
+					} break;
+					case 2: axis = GAMEPAD_AXIS_LEFT_TRIGGER;
+					case 3: 
+                    { 
+                        if (axis == -1) axis = GAMEPAD_AXIS_RIGHT_TRIGGER;
+						int button = (axis == GAMEPAD_AXIS_LEFT_TRIGGER)? GAMEPAD_BUTTON_LEFT_TRIGGER_2 : GAMEPAD_BUTTON_RIGHT_TRIGGER_2;
+						int pressed = (value > 0.1f);
+						CORE.Input.Gamepad.currentButtonState[event->gamepad][button] = pressed;
+						
+						if (pressed) CORE.Input.Gamepad.lastButtonPressed = button;
+						else if (CORE.Input.Gamepad.lastButtonPressed == button) CORE.Input.Gamepad.lastButtonPressed = 0;
+					}
+					default: break;
+				}
             } break;
             default: break;
         }
@@ -1255,45 +1164,33 @@ int InitPlatform(void)
 
     if ((CORE.Window.flags & FLAG_WINDOW_UNDECORATED) > 0) flags |= RGFW_NO_BORDER;
     if ((CORE.Window.flags & FLAG_WINDOW_RESIZABLE) == 0) flags |= RGFW_NO_RESIZE;
-
     if ((CORE.Window.flags & FLAG_WINDOW_TRANSPARENT) > 0) flags |= RGFW_TRANSPARENT_WINDOW;
-
     if ((CORE.Window.flags & FLAG_FULLSCREEN_MODE) > 0) flags |= RGFW_FULLSCREEN;
 
     // NOTE: Some OpenGL context attributes must be set before window creation
 
     // Check selection OpenGL version
-    if (rlGetVersion() == RL_OPENGL_21)
-    {
-        RGFW_setGLVersion(RGFW_GL_CORE, 2, 1);
-    }
-    else if (rlGetVersion() == RL_OPENGL_33)
-    {
-        RGFW_setGLVersion(RGFW_GL_CORE, 3, 3);
-    }
-    else if (rlGetVersion() == RL_OPENGL_43)
-    {
-        RGFW_setGLVersion(RGFW_GL_CORE, 4, 1);
-    }
+    if (rlGetVersion() == RL_OPENGL_21) RGFW_setGLVersion(RGFW_GL_CORE, 2, 1);
+    else if (rlGetVersion() == RL_OPENGL_33) RGFW_setGLVersion(RGFW_GL_CORE, 3, 3);
+    else if (rlGetVersion() == RL_OPENGL_43) RGFW_setGLVersion(RGFW_GL_CORE, 4, 1);
 
-    if (CORE.Window.flags & FLAG_MSAA_4X_HINT)
-    {
-        RGFW_setGLSamples(4);
-    }
+    if (CORE.Window.flags & FLAG_MSAA_4X_HINT) RGFW_setGLSamples(4);
 
     platform.window = RGFW_createWindow(CORE.Window.title, RGFW_RECT(0, 0, CORE.Window.screen.width, CORE.Window.screen.height), flags);
 
+#ifndef PLATFORM_WEB_RGFW
     RGFW_area screenSize = RGFW_getScreenSize();
     CORE.Window.display.width = screenSize.w;
     CORE.Window.display.height = screenSize.h;
-    /*
-        I think this is needed by Raylib now ?
-        If so, rcore_destkop_sdl should be updated too
-    */
-    SetupFramebuffer(CORE.Window.display.width, CORE.Window.display.height);
-
-    if (CORE.Window.flags & FLAG_VSYNC_HINT) RGFW_window_swapInterval(platform.window, 1);
-
+#else
+	CORE.Window.display.width = CORE.Window.screen.width;
+    CORE.Window.display.height = CORE.Window.screen.height;
+#endif
+	// TODO: Is this needed by raylib now? 
+    // If so, rcore_desktop_sdl should be updated too
+	//SetupFramebuffer(CORE.Window.display.width, CORE.Window.display.height);
+	
+	if (CORE.Window.flags & FLAG_VSYNC_HINT) RGFW_window_swapInterval(platform.window, 1);
     RGFW_window_makeCurrent(platform.window);
 
     // Check surface and context activation
@@ -1305,12 +1202,6 @@ int InitPlatform(void)
         CORE.Window.render.height = CORE.Window.screen.height;
         CORE.Window.currentFbo.width = CORE.Window.render.width;
         CORE.Window.currentFbo.height = CORE.Window.render.height;
-
-        TRACELOG(LOG_INFO, "DISPLAY: Device initialized successfully");
-        TRACELOG(LOG_INFO, "    > Display size: %i x %i", CORE.Window.display.width, CORE.Window.display.height);
-        TRACELOG(LOG_INFO, "    > Screen size:  %i x %i", CORE.Window.screen.width, CORE.Window.screen.height);
-        TRACELOG(LOG_INFO, "    > Render size:  %i x %i", CORE.Window.render.width, CORE.Window.render.height);
-        TRACELOG(LOG_INFO, "    > Viewport offsets: %i, %i", CORE.Window.renderOffset.x, CORE.Window.renderOffset.y);
     }
     else
     {
@@ -1336,7 +1227,7 @@ int InitPlatform(void)
     // Load OpenGL extensions
     // NOTE: GL procedures address loader is required to load extensions
     //----------------------------------------------------------------------------
-    rlLoadExtensions((void*)RGFW_getProcAddress);
+    rlLoadExtensions((void *)RGFW_getProcAddress);
     //----------------------------------------------------------------------------
 
     // TODO: Initialize input events system
@@ -1360,12 +1251,11 @@ int InitPlatform(void)
 #ifdef RGFW_X11
     for (int i = 0; (i < 4) && (i < MAX_GAMEPADS); i++)
     {
-        RGFW_registerJoystick(platform.window, i);
+        RGFW_registerGamepad(platform.window, i);
     }
 #endif
 
     TRACELOG(LOG_INFO, "PLATFORM: CUSTOM: Initialized successfully");
-
     return 0;
 }
 
@@ -1379,6 +1269,6 @@ void ClosePlatform(void)
 static KeyboardKey ConvertScancodeToKey(u32 keycode)
 {
     if (keycode > sizeof(keyMappingRGFW)/sizeof(unsigned short)) return 0;
-
-    return keyMappingRGFW[keycode];
+    
+	return keyMappingRGFW[keycode];
 }

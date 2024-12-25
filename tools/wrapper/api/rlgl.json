@@ -571,6 +571,12 @@
       "description": ""
     },
     {
+      "name": "RL_DEFAULT_SHADER_ATTRIB_LOCATION_INSTANCE_TX",
+      "type": "INT",
+      "value": 9,
+      "description": ""
+    },
+    {
       "name": "RL_MATRIX_TYPE",
       "type": "GUARD",
       "value": "",
