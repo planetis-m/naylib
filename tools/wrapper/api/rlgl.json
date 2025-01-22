@@ -2202,18 +2202,23 @@
       ]
     },
     {
-      "name": "rlEnableWireMode",
-      "description": "Enable wire mode",
-      "returnType": "void"
-    },
-    {
       "name": "rlEnablePointMode",
       "description": "Enable point mode",
       "returnType": "void"
     },
     {
+      "name": "rlDisablePointMode",
+      "description": "Disable point mode",
+      "returnType": "void"
+    },
+    {
+      "name": "rlEnableWireMode",
+      "description": "Enable wire mode",
+      "returnType": "void"
+    },
+    {
       "name": "rlDisableWireMode",
-      "description": "Disable wire (and point) mode",
+      "description": "Disable wire mode",
       "returnType": "void"
     },
     {

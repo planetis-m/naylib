@@ -70,7 +70,7 @@
 *
 *   LICENSE: zlib/libpng
 *
-*   Copyright (c) 2013-2024 Ramon Santamaria (@raysan5) and contributors
+*   Copyright (c) 2013-2025 Ramon Santamaria (@raysan5) and contributors
 *
 *   This software is provided "as-is", without any express or implied warranty. In no event
 *   will the authors be held liable for any damages arising from the use of this software.
@@ -233,6 +233,9 @@ __declspec(dllimport) unsigned int __stdcall timeEndPeriod(unsigned int uPeriod)
 #ifndef MAX_GAMEPADS
     #define MAX_GAMEPADS                   4        // Maximum number of gamepads supported
 #endif
+#ifndef MAX_GAMEPAD_NAME_LENGTH
+    #define MAX_GAMEPAD_NAME_LENGTH      128        // Maximum number of characters of gamepad name (byte size)
+#endif
 #ifndef MAX_GAMEPAD_AXIS
     #define MAX_GAMEPAD_AXIS               8        // Maximum number of axis supported (per gamepad)
 #endif
@@ -352,7 +355,7 @@ typedef struct CoreData {
             int lastButtonPressed;          // Register last gamepad button pressed
             int axisCount[MAX_GAMEPADS];    // Register number of available gamepad axis
             bool ready[MAX_GAMEPADS];       // Flag to know if gamepad is ready
-            char name[MAX_GAMEPADS][64];    // Gamepad name holder
+            char name[MAX_GAMEPADS][MAX_GAMEPAD_NAME_LENGTH];               // Gamepad name holder
             char currentButtonState[MAX_GAMEPADS][MAX_GAMEPAD_BUTTONS];     // Current gamepad buttons state
             char previousButtonState[MAX_GAMEPADS][MAX_GAMEPAD_BUTTONS];    // Previous gamepad buttons state
             float axisState[MAX_GAMEPADS][MAX_GAMEPAD_AXIS];                // Gamepad axis state
@@ -1326,9 +1329,10 @@ Shader LoadShaderFromMemory(const char *vsCode, const char *fsCode)
 
     shader.id = rlLoadShaderCode(vsCode, fsCode);
 
-    // After shader loading, we TRY to set default location names
-    if (shader.id > 0)
+    if (shader.id == rlGetShaderIdDefault()) shader.locs = rlGetShaderLocsDefault();
+    else if (shader.id > 0)
     {
+        // After custom shader loading, we TRY to set default location names
         // Default shader attribute locations have been binded before linking:
         //          vertex position location    = 0
         //          vertex texcoord location    = 1
@@ -1930,7 +1934,7 @@ bool IsFileExtension(const char *fileName, const char *ext)
     {
 #if defined(SUPPORT_MODULE_RTEXT) && defined(SUPPORT_TEXT_MANIPULATION)
         int extCount = 0;
-        const char **checkExts = TextSplit(ext, ';', &extCount); // WARNING: Module required: rtext
+        char **checkExts = TextSplit(ext, ';', &extCount); // WARNING: Module required: rtext
 
         char fileExtLower[MAX_FILE_EXTENSION_LENGTH + 1] = { 0 };
         strncpy(fileExtLower, TextToLower(fileExt), MAX_FILE_EXTENSION_LENGTH); // WARNING: Module required: rtext
@@ -2999,7 +3003,7 @@ bool ExportAutomationEventList(AutomationEventList list, const char *fileName)
     byteCount += sprintf(txtData + byteCount, "# more info and bugs-report:  github.com/raysan5/raylib\n");
     byteCount += sprintf(txtData + byteCount, "# feedback and support:       ray[at]raylib.com\n");
     byteCount += sprintf(txtData + byteCount, "#\n");
-    byteCount += sprintf(txtData + byteCount, "# Copyright (c) 2023-2024 Ramon Santamaria (@raysan5)\n");
+    byteCount += sprintf(txtData + byteCount, "# Copyright (c) 2023-2025 Ramon Santamaria (@raysan5)\n");
     byteCount += sprintf(txtData + byteCount, "#\n\n");
 
     // Add events data
