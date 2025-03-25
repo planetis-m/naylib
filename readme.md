@@ -90,7 +90,7 @@ While we believe that Naylib provides a great option for game development with N
 that it may not be the perfect fit for everyone. Here are some noteworthy alternatives:
 
 - [NimForUE](https://github.com/jmgomez/NimForUE): Plugin for Unreal Engine 5
-- [nsdl3](https://github.com/amnr/nsdl3): High level SDL 3 wrapper
+- [nim-sdl3](https://github.com/transmutrix/nim-sdl3): Nim wrapper for SDL3.x
 - [sokol-nim](https://github.com/floooh/sokol-nim): Auto-generated bindings for sokol headers
 - [gdextcore](https://github.com/godot-nim/gdext-nim): Godot 4.x bindings
 - [godot-nim](https://github.com/pragmagic/godot-nim): Godot 3 bindings

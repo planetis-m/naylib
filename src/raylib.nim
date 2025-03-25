@@ -953,7 +953,7 @@ proc setShaderValueVImpl(shader: Shader, locIndex: ShaderLocation, value: pointe
 proc setShaderValueMatrix*(shader: Shader, locIndex: ShaderLocation, mat: Matrix) {.importc: "SetShaderValueMatrix", sideEffect.}
   ## Set shader uniform value (matrix 4x4)
 proc setShaderValueTexture*(shader: Shader, locIndex: ShaderLocation, texture: Texture2D) {.importc: "SetShaderValueTexture", sideEffect.}
-  ## Set shader uniform value for texture (sampler2d)
+  ## Set shader uniform value and bind the texture (sampler2d)
 proc unloadShader(shader: Shader) {.importc: "UnloadShader", sideEffect.}
 proc getScreenToWorldRay*(position: Vector2, camera: Camera): Ray {.importc: "GetScreenToWorldRay", sideEffect.}
   ## Get a ray trace from screen position (i.e mouse)
@@ -1696,11 +1696,11 @@ proc setAudioStreamBufferSizeDefault*(size: int32) {.importc: "SetAudioStreamBuf
 proc setAudioStreamCallback*(stream: AudioStream, callback: AudioCallback) {.importc: "SetAudioStreamCallback", sideEffect.}
   ## Audio thread callback to request new data
 proc attachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "AttachAudioStreamProcessor", sideEffect.}
-  ## Attach audio stream processor to stream, receives the samples as 'float'
+  ## Attach audio stream processor to stream, receives frames x 2 samples as 'float' (stereo)
 proc detachAudioStreamProcessor*(stream: AudioStream, processor: AudioCallback) {.importc: "DetachAudioStreamProcessor", sideEffect.}
   ## Detach audio stream processor from stream
 proc attachAudioMixedProcessor*(processor: AudioCallback) {.importc: "AttachAudioMixedProcessor", sideEffect.}
-  ## Attach audio stream processor to the entire audio pipeline, receives the samples as 'float'
+  ## Attach audio stream processor to the entire audio pipeline, receives frames x 2 samples as 'float' (stereo)
 proc detachAudioMixedProcessor*(processor: AudioCallback) {.importc: "DetachAudioMixedProcessor", sideEffect.}
   ## Detach audio stream processor from the entire audio pipeline
 {.pop.}

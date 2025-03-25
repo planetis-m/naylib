@@ -74,23 +74,23 @@
     <summary><a class="reference reference-toplevel" href="#12" id="62">Procs</a></summary>
     <ul class="simple simple-toc-section">
       <ul class="simple nested-toc-section">getCameraForward
-  <li><a class="reference" href="#getCameraForward%2CCamera3D" title="getCameraForward(camera: Camera): Vector3">getCameraForward(camera: Camera): Vector3</a></li>
+  <li><a class="reference" href="#getCameraForward%2CCamera3D" title="getCameraForward(camera {.byref.}: Camera): Vector3">getCameraForward(camera {.byref.}: Camera): Vector3</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">getCameraProjectionMatrix
-  <li><a class="reference" href="#getCameraProjectionMatrix%2CCamera3D%2Cfloat32" title="getCameraProjectionMatrix(camera: Camera; aspect: float32): Matrix">getCameraProjectionMatrix(camera: Camera; aspect: float32): Matrix</a></li>
+  <li><a class="reference" href="#getCameraProjectionMatrix%2CCamera3D%2Cfloat32" title="getCameraProjectionMatrix(camera {.byref.}: Camera; aspect: float32): Matrix">getCameraProjectionMatrix(camera {.byref.}: Camera; aspect: float32): Matrix</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">getCameraRight
-  <li><a class="reference" href="#getCameraRight%2CCamera3D" title="getCameraRight(camera: Camera): Vector3">getCameraRight(camera: Camera): Vector3</a></li>
+  <li><a class="reference" href="#getCameraRight%2CCamera3D" title="getCameraRight(camera {.byref.}: Camera): Vector3">getCameraRight(camera {.byref.}: Camera): Vector3</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">getCameraUp
-  <li><a class="reference" href="#getCameraUp%2CCamera3D" title="getCameraUp(camera: Camera): Vector3">getCameraUp(camera: Camera): Vector3</a></li>
+  <li><a class="reference" href="#getCameraUp%2CCamera3D" title="getCameraUp(camera {.byref.}: Camera): Vector3">getCameraUp(camera {.byref.}: Camera): Vector3</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">getCameraViewMatrix
-  <li><a class="reference" href="#getCameraViewMatrix%2CCamera3D" title="getCameraViewMatrix(camera: Camera): Matrix">getCameraViewMatrix(camera: Camera): Matrix</a></li>
+  <li><a class="reference" href="#getCameraViewMatrix%2CCamera3D" title="getCameraViewMatrix(camera {.byref.}: Camera): Matrix">getCameraViewMatrix(camera {.byref.}: Camera): Matrix</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">moveForward
@@ -225,8 +225,9 @@
   <dl class="item">
     <div id="getCameraForward-procs-all">
   <div id="getCameraForward,Camera3D">
-  <dt><pre><span class="Keyword">func</span> <a href="#getCameraForward%2CCamera3D"><span class="Identifier">getCameraForward</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraForward&quot;</span><span class="Other">,</span>
-    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">func</span> <a href="#getCameraForward%2CCamera3D"><span class="Identifier">getCameraForward</span></a><span class="Other">(</span><span class="Identifier">camera</span> {.<span class="Identifier">byref</span>.}<span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraForward&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -239,7 +240,7 @@
 </div>
 <div id="getCameraProjectionMatrix-procs-all">
   <div id="getCameraProjectionMatrix,Camera3D,float32">
-  <dt><pre><span class="Keyword">func</span> <a href="#getCameraProjectionMatrix%2CCamera3D%2Cfloat32"><span class="Identifier">getCameraProjectionMatrix</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">;</span> <span class="Identifier">aspect</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.
+  <dt><pre><span class="Keyword">func</span> <a href="#getCameraProjectionMatrix%2CCamera3D%2Cfloat32"><span class="Identifier">getCameraProjectionMatrix</span></a><span class="Other">(</span><span class="Identifier">camera</span> {.<span class="Identifier">byref</span>.}<span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">;</span> <span class="Identifier">aspect</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraProjectionMatrix&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -254,8 +255,9 @@
 </div>
 <div id="getCameraRight-procs-all">
   <div id="getCameraRight,Camera3D">
-  <dt><pre><span class="Keyword">func</span> <a href="#getCameraRight%2CCamera3D"><span class="Identifier">getCameraRight</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraRight&quot;</span><span class="Other">,</span>
-    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">func</span> <a href="#getCameraRight%2CCamera3D"><span class="Identifier">getCameraRight</span></a><span class="Other">(</span><span class="Identifier">camera</span> {.<span class="Identifier">byref</span>.}<span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraRight&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -268,7 +270,7 @@
 </div>
 <div id="getCameraUp-procs-all">
   <div id="getCameraUp,Camera3D">
-  <dt><pre><span class="Keyword">func</span> <a href="#getCameraUp%2CCamera3D"><span class="Identifier">getCameraUp</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraUp&quot;</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">func</span> <a href="#getCameraUp%2CCamera3D"><span class="Identifier">getCameraUp</span></a><span class="Other">(</span><span class="Identifier">camera</span> {.<span class="Identifier">byref</span>.}<span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraUp&quot;</span><span class="Other">,</span>
     <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -282,7 +284,7 @@
 </div>
 <div id="getCameraViewMatrix-procs-all">
   <div id="getCameraViewMatrix,Camera3D">
-  <dt><pre><span class="Keyword">func</span> <a href="#getCameraViewMatrix%2CCamera3D"><span class="Identifier">getCameraViewMatrix</span></a><span class="Other">(</span><span class="Identifier">camera</span><span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.
+  <dt><pre><span class="Keyword">func</span> <a href="#getCameraViewMatrix%2CCamera3D"><span class="Identifier">getCameraViewMatrix</span></a><span class="Other">(</span><span class="Identifier">camera</span> {.<span class="Identifier">byref</span>.}<span class="Other">:</span> <a href="raylib.html#Camera"><span class="Identifier">Camera</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;GetCameraViewMatrix&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rcamera.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -407,7 +409,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-12-03 11:44:41 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-03-25 16:31:19 UTC</small>
       </div>
     </div>
   </div>

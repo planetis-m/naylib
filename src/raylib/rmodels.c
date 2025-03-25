@@ -1307,7 +1307,7 @@ void UploadMesh(Mesh *mesh, bool dynamic)
     {
         // Default vertex attribute: normal
         // WARNING: Default value provided to shader if location available
-        float value[3] = { 1.0f, 1.0f, 1.0f };
+        float value[3] = { 0.0f, 0.0f, 1.0f };
         rlSetVertexAttributeDefault(RL_DEFAULT_SHADER_ATTRIB_LOCATION_NORMAL, value, SHADER_ATTRIB_VEC3, 3);
         rlDisableVertexAttribute(RL_DEFAULT_SHADER_ATTRIB_LOCATION_NORMAL);
     }
@@ -1339,7 +1339,7 @@ void UploadMesh(Mesh *mesh, bool dynamic)
     {
         // Default vertex attribute: tangent
         // WARNING: Default value provided to shader if location available
-        float value[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+        float value[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
         rlSetVertexAttributeDefault(RL_DEFAULT_SHADER_ATTRIB_LOCATION_TANGENT, value, SHADER_ATTRIB_VEC4, 4);
         rlDisableVertexAttribute(RL_DEFAULT_SHADER_ATTRIB_LOCATION_TANGENT);
     }
@@ -3879,10 +3879,10 @@ void DrawBillboardPro(Camera camera, Texture2D texture, rlRectangle source, Vect
     }
 
     Vector2 texcoords[4];
-    texcoords[0] = (Vector2) { (float)source.x/texture.width, (float)(source.y + source.height)/texture.height };
-    texcoords[1] = (Vector2) { (float)(source.x + source.width)/texture.width, (float)(source.y + source.height)/texture.height };
-    texcoords[2] = (Vector2) { (float)(source.x + source.width)/texture.width, (float)source.y/texture.height };
-    texcoords[3] = (Vector2) { (float)source.x/texture.width, (float)source.y/texture.height };
+    texcoords[0] = (Vector2){ (float)source.x/texture.width, (float)(source.y + source.height)/texture.height };
+    texcoords[1] = (Vector2){ (float)(source.x + source.width)/texture.width, (float)(source.y + source.height)/texture.height };
+    texcoords[2] = (Vector2){ (float)(source.x + source.width)/texture.width, (float)source.y/texture.height };
+    texcoords[3] = (Vector2){ (float)source.x/texture.width, (float)source.y/texture.height };
 
     rlSetTexture(texture.id);
     rlBegin(RL_QUADS);
@@ -5141,7 +5141,7 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
             image = rlLoadImage(TextFormat("%s/%s", texPath, cgltfImage->uri));
         }
     }
-    else if (cgltfImage->buffer_view != NULL && cgltfImage->buffer_view->buffer->data != NULL)    // Check if image is provided as data buffer
+    else if ((cgltfImage->buffer_view != NULL) && (cgltfImage->buffer_view->buffer->data != NULL))    // Check if image is provided as data buffer
     {
         unsigned char *data = RL_MALLOC(cgltfImage->buffer_view->size);
         int offset = (int)cgltfImage->buffer_view->offset;
@@ -5156,10 +5156,14 @@ static Image LoadImageFromCgltfImage(cgltf_image *cgltfImage, const char *texPat
 
         // Check mime_type for image: (cgltfImage->mime_type == "image/png")
         // NOTE: Detected that some models define mime_type as "image\\/png"
-        if ((strcmp(cgltfImage->mime_type, "image\\/png") == 0) ||
-            (strcmp(cgltfImage->mime_type, "image/png") == 0)) image = LoadImageFromMemory(".png", data, (int)cgltfImage->buffer_view->size);
-        else if ((strcmp(cgltfImage->mime_type, "image\\/jpeg") == 0) ||
-                 (strcmp(cgltfImage->mime_type, "image/jpeg") == 0)) image = LoadImageFromMemory(".jpg", data, (int)cgltfImage->buffer_view->size);
+        if ((strcmp(cgltfImage->mime_type, "image\\/png") == 0) || (strcmp(cgltfImage->mime_type, "image/png") == 0))
+        {
+            image = LoadImageFromMemory(".png", data, (int)cgltfImage->buffer_view->size);
+        }
+        else if ((strcmp(cgltfImage->mime_type, "image\\/jpeg") == 0) || (strcmp(cgltfImage->mime_type, "image/jpeg") == 0))
+        {
+            image = LoadImageFromMemory(".jpg", data, (int)cgltfImage->buffer_view->size);
+        }
         else TRACELOG(LOG_WARNING, "MODEL: glTF image data MIME type not recognized", TextFormat("%s/%s", texPath, cgltfImage->uri));
 
         RL_FREE(data);
@@ -5285,19 +5289,18 @@ static Model LoadGLTF(const char *fileName)
         if (result != cgltf_result_success) TRACELOG(LOG_INFO, "MODEL: [%s] Failed to load mesh/material buffers", fileName);
 
         int primitivesCount = 0;
+
         // NOTE: We will load every primitive in the glTF as a separate raylib Mesh.
         // Determine total number of meshes needed from the node hierarchy.
         for (unsigned int i = 0; i < data->nodes_count; i++)
         {
             cgltf_node *node = &(data->nodes[i]);
             cgltf_mesh *mesh = node->mesh;
-            if (!mesh)
-                continue;
+            if (!mesh) continue;
 
             for (unsigned int p = 0; p < mesh->primitives_count; p++)
             {
-                if (mesh->primitives[p].type == cgltf_primitive_type_triangles)
-                    primitivesCount++;
+                if (mesh->primitives[p].type == cgltf_primitive_type_triangles) primitivesCount++;
             }
         }
         TRACELOG(LOG_DEBUG, "    > Primitives (triangles only) count based on hierarchy : %i", primitivesCount);
@@ -5347,7 +5350,34 @@ static Model LoadGLTF(const char *fileName)
                     Image imMetallicRoughness = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.metallic_roughness_texture.texture->image, texPath);
                     if (imMetallicRoughness.data != NULL)
                     {
-                        model.materials[j].maps[MATERIAL_MAP_ROUGHNESS].texture = LoadTextureFromImage(imMetallicRoughness);
+                        Image imMetallic = { 0 };
+                        Image imRoughness = { 0 };
+
+                        imMetallic.data = RL_MALLOC(imMetallicRoughness.width*imMetallicRoughness.height);
+                        imRoughness.data = RL_MALLOC(imMetallicRoughness.width*imMetallicRoughness.height);
+
+                        imMetallic.width = imRoughness.width = imMetallicRoughness.width;
+                        imMetallic.height = imRoughness.height = imMetallicRoughness.height;
+
+                        imMetallic.format = imRoughness.format = PIXELFORMAT_UNCOMPRESSED_GRAYSCALE;
+                        imMetallic.mipmaps = imRoughness.mipmaps = 1;
+
+                        for (int x = 0; x < imRoughness.width; x++)
+                        {
+                            for (int y = 0; y < imRoughness.height; y++)
+                            {
+                                Color color = GetImageColor(imMetallicRoughness, x, y);
+
+                                ((unsigned char *)imRoughness.data)[y*imRoughness.width + x] = color.g; // Roughness color channel
+                                ((unsigned char *)imMetallic.data)[y*imMetallic.width + x] = color.b; // Metallic color channel
+                            }
+                        }
+
+                        model.materials[j].maps[MATERIAL_MAP_ROUGHNESS].texture = LoadTextureFromImage(imRoughness);
+                        model.materials[j].maps[MATERIAL_MAP_METALNESS].texture = LoadTextureFromImage(imMetallic);
+
+                        UnloadImage(imRoughness);
+                        UnloadImage(imMetallic);
                         UnloadImage(imMetallicRoughness);
                     }
 

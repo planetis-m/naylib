@@ -1540,21 +1540,21 @@ const char *TextSubtext(const char *text, int position, int length)
 
     if (position >= textLength)
     {
-        position = textLength - 1;
-        length = 0;
+        return buffer; //First char is already '\0' by memset
     }
 
-    if (length >= textLength) length = textLength;
+    int maxLength = textLength - position;
+    if (length > maxLength) length = maxLength;
+    if (length >= MAX_TEXT_BUFFER_LENGTH) length = MAX_TEXT_BUFFER_LENGTH - 1;
 
     // NOTE: Alternative: memcpy(buffer, text + position, length)
 
     for (int c = 0 ; c < length ; c++)
     {
-        *(buffer + c) = *(text + position);
-        text++;
+        buffer[c] = text[position + c];
     }
 
-    *(buffer + length) = '\0';
+    buffer[length] = '\0';
 
     return buffer;
 }
@@ -1915,7 +1915,7 @@ void UnloadCodepoints(int *codepoints)
 int GetCodepointCount(const char *text)
 {
     unsigned int length = 0;
-    char *ptr = (char *)&text[0];
+    const char *ptr = text;
 
     while (*ptr != '\0')
     {

@@ -345,12 +345,14 @@ proc disableScissorTest*() {.importc: "rlDisableScissorTest", sideEffect.}
   ## Disable scissor test
 proc scissor*(x: int32, y: int32, width: int32, height: int32) {.importc: "rlScissor", sideEffect.}
   ## Scissor test
-proc enableWireMode*() {.importc: "rlEnableWireMode", sideEffect.}
-  ## Enable wire mode
 proc enablePointMode*() {.importc: "rlEnablePointMode", sideEffect.}
   ## Enable point mode
+proc disablePointMode*() {.importc: "rlDisablePointMode", sideEffect.}
+  ## Disable point mode
+proc enableWireMode*() {.importc: "rlEnableWireMode", sideEffect.}
+  ## Enable wire mode
 proc disableWireMode*() {.importc: "rlDisableWireMode", sideEffect.}
-  ## Disable wire (and point) mode
+  ## Disable wire mode
 proc setLineWidth*(width: float32) {.importc: "rlSetLineWidth", sideEffect.}
   ## Set the line drawing width
 proc getLineWidth*(): float32 {.importc: "rlGetLineWidth", sideEffect.}
