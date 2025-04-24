@@ -122,7 +122,7 @@ when defined(emscripten): discard
 elif defined(android): discard
 elif defined(macosx):
   const glfwBuildOSPath = buildOSPath(raylibDir / Path"rglfw.c")
-  {.compile(glfwPath, "-x objective-c").}
+  {.compile(glfwBuildOSPath, "-x objective-c").}
 else: {.compile: buildOSPath(raylibDir / Path"rglfw.c").}
 {.compile: buildOSPath(raylibDir / Path"rcore.c").}
 {.compile: buildOSPath(raylibDir / Path"rshapes.c").}
