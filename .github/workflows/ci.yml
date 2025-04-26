@@ -17,7 +17,7 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
       run: |
-        sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev libwayland-bin
+        sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev libwayland-bin mingw-w64
     - name: Set up Emscripten
       run: |
         git clone https://github.com/emscripten-core/emsdk.git
