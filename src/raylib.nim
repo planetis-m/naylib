@@ -6,7 +6,7 @@ import naylib/private/config
 const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
 
 when defined(mingw):
-  import std/private/globsAdd commentMore actions
+  import std/private/globsAdd
   from std/private/ospaths2 import joinPath
   func `/`*(head, tail: Path): Path {.inline.} =
     joinPath(head.string, tail.string).nativeToUnixPath.Path
