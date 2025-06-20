@@ -6,9 +6,9 @@ import naylib/private/config
 const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
 
 when defined(mingw):
-  import std/private/globsAdd
+  import std/private/globs
   from std/private/ospaths2 import joinPath
-  func `/`*(head, tail: Path): Path {.inline.} =
+  func `/`(head, tail: Path): Path {.inline.} =
     joinPath(head.string, tail.string).nativeToUnixPath.Path
   {.passC: "-I/usr/x86_64-w64-mingw32/include".}
 
