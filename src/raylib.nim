@@ -321,7 +321,7 @@ type
     LeftThumb ## Gamepad joystick pressed button left
     RightThumb ## Gamepad joystick pressed button right
 
-  GamepadAxis* {.size: sizeof(int32).} = enum ## Gamepad axis
+  GamepadAxis* {.size: sizeof(int32).} = enum ## Gamepad axes
     LeftX ## Gamepad left stick X axis
     LeftY ## Gamepad left stick Y axis
     RightX ## Gamepad right stick X axis
@@ -842,7 +842,7 @@ proc maximizeWindow*() {.importc: "MaximizeWindow", sideEffect.}
 proc minimizeWindow*() {.importc: "MinimizeWindow", sideEffect.}
   ## Set window state: minimized, if resizable
 proc restoreWindow*() {.importc: "RestoreWindow", sideEffect.}
-  ## Set window state: not minimized/maximized
+  ## Restore window from being minimized/maximized
 proc setWindowIcon*(image: Image) {.importc: "SetWindowIcon", sideEffect.}
   ## Set icon for window (single image, RGBA 32bit)
 proc setWindowIconsImpl(images: ptr UncheckedArray[Image], count: int32) {.importc: "SetWindowIcons", sideEffect.}
@@ -1060,9 +1060,9 @@ proc isGamepadButtonUp*(gamepad: int32, button: GamepadButton): bool {.importc: 
 proc getGamepadButtonPressed*(): GamepadButton {.importc: "GetGamepadButtonPressed", sideEffect.}
   ## Get the last gamepad button pressed
 proc getGamepadAxisCount*(gamepad: int32): int32 {.importc: "GetGamepadAxisCount", sideEffect.}
-  ## Get gamepad axis count for a gamepad
+  ## Get axis count for a gamepad
 proc getGamepadAxisMovement*(gamepad: int32, axis: GamepadAxis): float32 {.importc: "GetGamepadAxisMovement", sideEffect.}
-  ## Get axis movement value for a gamepad axis
+  ## Get movement value for a gamepad axis
 proc setGamepadMappingsImpl(mappings: cstring): int32 {.importc: "SetGamepadMappings", sideEffect.}
 proc setGamepadVibration*(gamepad: int32, leftMotor: float32, rightMotor: float32, duration: float32) {.importc: "SetGamepadVibration", sideEffect.}
   ## Set gamepad vibration for both motors (duration in seconds)
@@ -1159,8 +1159,12 @@ proc drawCircleLines*(center: Vector2, radius: float32, color: Color) {.importc:
   ## Draw circle outline (Vector version)
 proc drawEllipse*(centerX: int32, centerY: int32, radiusH: float32, radiusV: float32, color: Color) {.importc: "DrawEllipse", sideEffect.}
   ## Draw ellipse
+proc drawEllipse*(center: Vector2, radiusH: float32, radiusV: float32, color: Color) {.importc: "DrawEllipseV", sideEffect.}
+  ## Draw ellipse (Vector version)
 proc drawEllipseLines*(centerX: int32, centerY: int32, radiusH: float32, radiusV: float32, color: Color) {.importc: "DrawEllipseLines", sideEffect.}
   ## Draw ellipse outline
+proc drawEllipseLines*(center: Vector2, radiusH: float32, radiusV: float32, color: Color) {.importc: "DrawEllipseLinesV", sideEffect.}
+  ## Draw ellipse outline (Vector version)
 proc drawRing*(center: Vector2, innerRadius: float32, outerRadius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawRing", sideEffect.}
   ## Draw ring
 proc drawRingLines*(center: Vector2, innerRadius: float32, outerRadius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawRingLines", sideEffect.}
@@ -1177,7 +1181,7 @@ proc drawRectangleGradientV*(posX: int32, posY: int32, width: int32, height: int
   ## Draw a vertical-gradient-filled rectangle
 proc drawRectangleGradientH*(posX: int32, posY: int32, width: int32, height: int32, left: Color, right: Color) {.importc: "DrawRectangleGradientH", sideEffect.}
   ## Draw a horizontal-gradient-filled rectangle
-proc drawRectangleGradient*(rec: Rectangle, topLeft: Color, bottomLeft: Color, topRight: Color, bottomRight: Color) {.importc: "DrawRectangleGradientEx", sideEffect.}
+proc drawRectangleGradient*(rec: Rectangle, topLeft: Color, bottomLeft: Color, bottomRight: Color, topRight: Color) {.importc: "DrawRectangleGradientEx", sideEffect.}
   ## Draw a gradient-filled rectangle with custom vertex colors
 proc drawRectangleLines*(posX: int32, posY: int32, width: int32, height: int32, color: Color) {.importc: "DrawRectangleLines", sideEffect.}
   ## Draw rectangle outline

@@ -17,8 +17,8 @@ const
   DefaultBatchMaxTextureUnits* = 4 ## Maximum number of textures units that can be activated on batch drawing
   MaxMatrixStackSize* = 32 ## Maximum size of Matrix stack
   # MaxShaderLocations* = 32 ## Maximum number of shader locations supported
-  CullDistanceNear* = 0.01 ## Default near cull distance
-  CullDistanceFar* = 1000.0 ## Default far cull distance
+  CullDistanceNear* = 0.05 ## Default near cull distance
+  CullDistanceFar* = 4000.0 ## Default far cull distance
 
 when not UseEmbeddedGraphicsApi:
   const DefaultBatchBufferElements* = 8192 ## This is the maximum amount of elements (quads) per batch

@@ -111,13 +111,13 @@
     {
       "name": "RL_CULL_DISTANCE_NEAR",
       "type": "DOUBLE",
-      "value": 0.001,
+      "value": 0.05,
       "description": "Default near cull distance"
     },
     {
       "name": "RL_CULL_DISTANCE_FAR",
       "type": "DOUBLE",
-      "value": 10000.0,
+      "value": 4000.0,
       "description": "Default far cull distance"
     },
     {
