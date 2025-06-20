@@ -1,21 +1,19 @@
-import "$nim"/compiler/platform
-from std/strutils import addf, toHex, replace
+from std/strutils import addf, toHex
 from std/unicode import Rune
 from std/syncio import writeFile
 import std/[assertions, paths]
 import naylib/private/config
 const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
 
-const buildOSName {.magic: "BuildOS".}: string = ""
-const BuildOS = nameToOS(buildOSName)
-const BuildSep = if BuildOS in {osDos, osWindows, osOs2}: '\\' else: '/'
-when BuildSep == DirSep:
-  template buildOSPath*(p: Path): string = p.string
-else:
-  proc buildOSPath*(p: Path): string = p.string.replace(DirSep, BuildSep)
+when defined(mingw):
+  import std/private/globs
+  from std/private/ospaths2 import joinPath
+  func `/`(head, tail: Path): Path {.inline.} =
+    joinPath(head.string, tail.string).nativeToUnixPath.Path
+  {.passC: "-I/usr/x86_64-w64-mingw32/include".}
 
-{.passC: "-I" & buildOSPath(raylibDir).}
-{.passC: "-I" & buildOSPath(raylibDir / Path"external/glfw/include").}
+{.passC: "-I" & raylibDir.string.}
+{.passC: "-I" & string(raylibDir / Path"external/glfw/include").}
 {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB".}
@@ -41,7 +39,7 @@ when defined(emscripten):
 elif defined(android):
   const AndroidNdk {.strdefine.} = "/opt/android-ndk"
   const ProjectLibraryName = "main"
-  {.passC: "-I" & buildOSPath(AndroidNdk.Path / Path"sources/android/native_app_glue").}
+  {.passC: "-I" & string(AndroidNdk.Path / Path"sources/android/native_app_glue").}
 
   {.passC: "-DPLATFORM_ANDROID".}
   when defined(GraphicsApiOpenGlEs3): {.passC: "-DGRAPHICS_API_OPENGL_ES3".}
@@ -93,10 +91,10 @@ else:
       const wlProtocolsDir = raylibDir / Path"external/glfw/deps/wayland"
 
       proc wlGenerate(protocol: Path, basename: string) =
-        discard staticExec("wayland-scanner client-header " & buildOSPath(protocol) & " " &
-            buildOSPath(raylibDir / Path(basename & ".h")))
-        discard staticExec("wayland-scanner private-code " & buildOSPath(protocol) & " " &
-            buildOSPath(raylibDir / Path(basename & "-code.h")).string)
+        discard staticExec("wayland-scanner client-header " & protocol.string & " " &
+            string(raylibDir / Path(basename & ".h")))
+        discard staticExec("wayland-scanner private-code " & protocol.string & " " &
+            string(raylibDir / Path(basename & "-code.h")))
 
       static:
         wlGenerate(wlProtocolsDir / Path"wayland.xml", "wayland-client-protocol")
@@ -120,19 +118,17 @@ else:
 
 when defined(emscripten): discard
 elif defined(android): discard
-elif defined(macosx):
-  const glfwBuildOSPath = buildOSPath(raylibDir / Path"rglfw.c")
-  {.compile(glfwBuildOSPath, "-x objective-c").}
-else: {.compile: buildOSPath(raylibDir / Path"rglfw.c").}
-{.compile: buildOSPath(raylibDir / Path"rcore.c").}
-{.compile: buildOSPath(raylibDir / Path"rshapes.c").}
-{.compile: buildOSPath(raylibDir / Path"rtextures.c").}
-{.compile: buildOSPath(raylibDir / Path"rtext.c").}
-{.compile: buildOSPath(raylibDir / Path"utils.c").}
-{.compile: buildOSPath(raylibDir / Path"rmodels.c").}
-{.compile: buildOSPath(raylibDir / Path"raudio.c").}
+elif defined(macosx): {.compile(raylibDir / Path"rglfw.c", "-x objective-c").}
+else: {.compile: raylibDir / Path"rglfw.c".}
+{.compile: raylibDir / Path"rcore.c".}
+{.compile: raylibDir / Path"rshapes.c".}
+{.compile: raylibDir / Path"rtextures.c".}
+{.compile: raylibDir / Path"rtext.c".}
+{.compile: raylibDir / Path"utils.c".}
+{.compile: raylibDir / Path"rmodels.c".}
+{.compile: raylibDir / Path"raudio.c".}
 when defined(android):
-  {.compile: buildOSPath(AndroidNdk.Path / Path"sources/android/native_app_glue/android_native_app_glue.c").}
+  {.compile: AndroidNdk.Path / Path"sources/android/native_app_glue/android_native_app_glue.c".}
 
 const
   RaylibVersion* = (5, 5, 0)
