@@ -508,7 +508,7 @@ void MinimizeWindow(void)
     if ((CORE.Window.flags & FLAG_WINDOW_MINIMIZED) == 0) CORE.Window.flags |= FLAG_WINDOW_MINIMIZED;
 }
 
-// Set window state: not minimized/maximized
+// Restore window from being minimized/maximized
 void RestoreWindow(void)
 {
     SDL_RestoreWindow(platform.window);
@@ -518,6 +518,8 @@ void RestoreWindow(void)
 // Set window configuration state using flags
 void SetWindowState(unsigned int flags)
 {
+    if (!CORE.Window.ready) TRACELOG(LOG_WARNING, "WINDOW: SetWindowState does nothing before window initialization, Use \"SetConfigFlags\" instead");
+
     CORE.Window.flags |= flags;
 
     if (flags & FLAG_VSYNC_HINT)
@@ -702,70 +704,84 @@ void SetWindowIcon(Image image)
     switch (image.format)
     {
         case PIXELFORMAT_UNCOMPRESSED_GRAYSCALE:
+        {
             rmask = 0xFF, gmask = 0;
             bmask = 0, amask = 0;
             depth = 8, pitch = image.width;
-            break;
+        } break;
         case PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA:
+        {
             rmask = 0xFF, gmask = 0xFF00;
             bmask = 0, amask = 0;
             depth = 16, pitch = image.width*2;
-            break;
+        } break;
         case PIXELFORMAT_UNCOMPRESSED_R5G6B5:
+        {
             rmask = 0xF800, gmask = 0x07E0;
             bmask = 0x001F, amask = 0;
             depth = 16, pitch = image.width*2;
-            break;
-        case PIXELFORMAT_UNCOMPRESSED_R8G8B8: // Uses BGR for 24-bit
-            rmask = 0x0000FF, gmask = 0x00FF00;
-            bmask = 0xFF0000, amask = 0;
+        } break;
+        case PIXELFORMAT_UNCOMPRESSED_R8G8B8:
+        {
+            // WARNING: SDL2 could be using BGR but SDL3 RGB
+            rmask = 0xFF0000, gmask = 0x00FF00;
+            bmask = 0x0000FF, amask = 0;
             depth = 24, pitch = image.width*3;
-            break;
+        } break;
         case PIXELFORMAT_UNCOMPRESSED_R5G5B5A1:
+        {
             rmask = 0xF800, gmask = 0x07C0;
             bmask = 0x003E, amask = 0x0001;
             depth = 16, pitch = image.width*2;
-            break;
+        } break;
         case PIXELFORMAT_UNCOMPRESSED_R4G4B4A4:
+        {
             rmask = 0xF000, gmask = 0x0F00;
             bmask = 0x00F0, amask = 0x000F;
             depth = 16, pitch = image.width*2;
-            break;
+        } break;
         case PIXELFORMAT_UNCOMPRESSED_R8G8B8A8:
+        {
             rmask = 0xFF000000, gmask = 0x00FF0000;
             bmask = 0x0000FF00, amask = 0x000000FF;
             depth = 32, pitch = image.width*4;
-            break;
+        } break;
         case PIXELFORMAT_UNCOMPRESSED_R32:
+        {
             rmask = 0xFFFFFFFF, gmask = 0;
             bmask = 0, amask = 0;
             depth = 32, pitch = image.width*4;
-            break;
+        } break;
         case PIXELFORMAT_UNCOMPRESSED_R32G32B32:
+        {
             rmask = 0xFFFFFFFF, gmask = 0xFFFFFFFF;
             bmask = 0xFFFFFFFF, amask = 0;
             depth = 96, pitch = image.width*12;
-            break;
+        } break;
         case PIXELFORMAT_UNCOMPRESSED_R32G32B32A32:
+        {
             rmask = 0xFFFFFFFF, gmask = 0xFFFFFFFF;
             bmask = 0xFFFFFFFF, amask = 0xFFFFFFFF;
             depth = 128, pitch = image.width*16;
-            break;
+        } break;
         case PIXELFORMAT_UNCOMPRESSED_R16:
+        {
             rmask = 0xFFFF, gmask = 0;
             bmask = 0, amask = 0;
             depth = 16, pitch = image.width*2;
-            break;
+        } break;
         case PIXELFORMAT_UNCOMPRESSED_R16G16B16:
+        {
             rmask = 0xFFFF, gmask = 0xFFFF;
             bmask = 0xFFFF, amask = 0;
             depth = 48, pitch = image.width*6;
-            break;
+        } break;
         case PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
+        {
             rmask = 0xFFFF, gmask = 0xFFFF;
             bmask = 0xFFFF, amask = 0xFFFF;
             depth = 64, pitch = image.width*8;
-            break;
+        } break;
         default: return; // Compressed formats are not supported
     }
 
@@ -1349,7 +1365,7 @@ void PollInputEvents(void)
     for (int i = 0; i < MAX_TOUCH_POINTS; i++) CORE.Input.Touch.previousTouchState[i] = CORE.Input.Touch.currentTouchState[i];
 
     // Map touch position to mouse position for convenience
-    CORE.Input.Touch.position[0] = CORE.Input.Mouse.currentPosition;
+    if (CORE.Input.Touch.pointCount == 0) CORE.Input.Touch.position[0] = CORE.Input.Mouse.currentPosition;
 
     int touchAction = -1;       // 0-TOUCH_ACTION_UP, 1-TOUCH_ACTION_DOWN, 2-TOUCH_ACTION_MOVE
     bool realTouch = false;     // Flag to differentiate real touch gestures from mouse ones
@@ -1670,7 +1686,7 @@ void PollInputEvents(void)
             {
                 int jid = event.jdevice.which; // Joystick device index
 
-                if (!CORE.Input.Gamepad.ready[jid] && (jid < MAX_GAMEPADS))
+                if (CORE.Input.Gamepad.ready[jid] && (jid < MAX_GAMEPADS))
                 {
                     platform.gamepad[jid] = SDL_GameControllerOpen(jid);
                     platform.gamepadId[jid] = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(platform.gamepad[jid]));
@@ -1681,8 +1697,8 @@ void PollInputEvents(void)
                         CORE.Input.Gamepad.axisCount[jid] = SDL_JoystickNumAxes(SDL_GameControllerGetJoystick(platform.gamepad[jid]));
                         CORE.Input.Gamepad.axisState[jid][GAMEPAD_AXIS_LEFT_TRIGGER] = -1.0f;
                         CORE.Input.Gamepad.axisState[jid][GAMEPAD_AXIS_RIGHT_TRIGGER] = -1.0f;
+                        memset(CORE.Input.Gamepad.name[jid], 0, MAX_GAMEPAD_NAME_LENGTH);
                         strncpy(CORE.Input.Gamepad.name[jid], SDL_GameControllerNameForIndex(jid), MAX_GAMEPAD_NAME_LENGTH - 1);
-                        CORE.Input.Gamepad.name[jid][MAX_GAMEPAD_NAME_LENGTH - 1] = '\0';
                     }
                     else
                     {
@@ -1809,7 +1825,7 @@ void PollInputEvents(void)
                     {
                         if (platform.gamepadId[i] == event.jaxis.which)
                         {
-                            // SDL axis value range is -32768 to 32767, we normalize it to RayLib's -1.0 to 1.0f range
+                            // SDL axis value range is -32768 to 32767, we normalize it to raylib's -1.0 to 1.0f range
                             float value = event.jaxis.value/(float)32767;
                             CORE.Input.Gamepad.axisState[i][axis] = value;
 

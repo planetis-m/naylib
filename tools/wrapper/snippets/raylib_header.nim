@@ -5,6 +5,13 @@ import std/[assertions, paths]
 import naylib/private/config
 const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
 
+when defined(mingw):
+  import std/private/globs
+  from std/private/ospaths2 import joinPath
+  func `/`(head, tail: Path): Path {.inline.} =
+    joinPath(head.string, tail.string).nativeToUnixPath.Path
+  {.passC: "-I/usr/x86_64-w64-mingw32/include".}
+
 {.passC: "-I" & raylibDir.string.}
 {.passC: "-I" & string(raylibDir / Path"external/glfw/include").}
 {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
