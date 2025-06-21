@@ -336,3 +336,15 @@ rlEnd
 rlglInit
 rlglClose
 ```
+
+####  DistinctAliases 
+
+Type aliases that become distinct.
+
+```ini
+[ DistinctAliases ]
+
+Quaternion
+```
+
+The borrow pragma is used to allow field access.

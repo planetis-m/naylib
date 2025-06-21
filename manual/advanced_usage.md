@@ -93,6 +93,8 @@ Building for Android is streamlined using the [naylib-game-template](https://git
 
    Now you should be able to run your raylib game on your Android device!
 
+> **Note:** Instead of the standard Android template, you can use this: [naylib-android-withads-template](https://github.com/choltreppe/naylib-android-withads-template) if you need to add reward ads to your game.
+
 ### Customizing the Android Build
 
 The [build_android.nims](https://github.com/planetis-m/naylib-game-template/blob/master/build_android.nims#L31-L65) file in the naylib-game-template repository offers extensive customization options for your Android build:
