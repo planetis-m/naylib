@@ -26,6 +26,8 @@ To learn more about how to use this wrapper, you can check out the documentation
 If you're familiar with the C version of raylib, you may find the
 [cheatsheet](https://www.raylib.com/cheatsheet/cheatsheet.html) useful.
 
+> **Note:** raygui is offered as a separate package. You can find it [here](https://github.com/planetis-m/naygui).
+
 ## Installation
 
 Install naylib easily with `nimble install naylib`.
@@ -69,7 +71,7 @@ Check out the wrapper's [Configuration Guide](manual/config_guide.md) for detail
 | WebAssembly      | Supported, Tested | Supported, Tested | Supported, Tested |
 | DRM              | Untested          | Supported         | Untested          |
 | Android          | Supported, Tested | Supported, Tested | Possibly Works    |
-| Windows (Cross)  | N/A               | Known Issues      | Untested          |
+| Windows (Cross)  | N/A               | Supported, Tested | Untested          |
 
 ### Development Status
 

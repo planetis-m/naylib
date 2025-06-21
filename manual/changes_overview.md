@@ -22,7 +22,7 @@ Each function argument, array index or object field that is intended to employ a
 
 ## Abstraction of Raw Pointers and CString Parameters
 
-To improve the safety and usability of the public API, Naylib has abstracted the use of raw pointers through the use of `openArray[T]`, with the exception of `cstring` parameters, which are automatically converted from `string`. If you encounter a warning related to `CStringConv`, you can silence it by using the `--warning:CStringConv:off` flag.
+To improve the safety and usability of the public API, Naylib has abstracted the use of raw pointers through the use of `openArray[T]`. `cstring` parameters are automatically wrapped to `string`.
 
 ## Safer Begin-End Pairs with Syntactic Sugar
 
@@ -48,9 +48,9 @@ Use the `toWeak*` procs to get an `WeakImage` or `WeakWave`, which are not memor
 
 The concepts of `ShaderV` and `Pixel` permit the integration of external data types into procs that employ them, such as `setShaderValue` and `updateTexture`.
 
-## Using IsReady() in Asset Loading
+## Using IsValid() in Asset Loading
 
-To prevent unexpected behavior or crashes, `Load()` functions utilize `IsReady()` to confirm asset loading success and raise `RaylibError` if an asset is not found. This approach ensures that the program not only logs an error but also immediately takes action to handle it appropriately.
+To prevent unexpected behavior or crashes, `Load()` functions utilize `IsValid()` to confirm asset loading success and raise `RaylibError` if an asset is not found. This approach ensures that the program not only logs an error but also immediately takes action to handle it appropriately.
 
 ## Math Libraries
 
