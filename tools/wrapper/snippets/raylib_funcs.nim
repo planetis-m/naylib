@@ -212,14 +212,14 @@ proc loadRenderTexture*(width: int32, height: int32): RenderTexture2D =
   if not isRenderTextureValid(result): raiseRaylibError("Failed to load RenderTexture")
 
 proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
-  ## Update GPU texture with new data
+  ## Update GPU texture with new data (pixels should be able to fill texture)
   assert texture.format == pixelKind(T), "Incompatible texture format"
   assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
   updateTextureImpl(texture, cast[pointer](pixels))
 
 proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
-  ## Update GPU texture rectangle with new data
+  ## Update GPU texture rectangle with new data (pixels and rec should fit in texture)
   assert texture.format == pixelKind(T), "Incompatible texture format"
   assert getPixelDataSize(rec.width.int32, rec.height.int32, texture.format) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
@@ -336,7 +336,7 @@ proc loadSoundFromWave*(wave: Wave): Sound =
   if not isSoundValid(result): raiseRaylibError("Failed to load Sound from Wave")
 
 proc updateSound*[T](sound: var Sound, data: openArray[T]) =
-  ## Update sound buffer with new data
+  ## Update sound buffer with new data (data and frame count should fit in sound)
   updateSoundImpl(sound, cast[ptr UncheckedArray[T]](data), data.len.int32)
 
 proc loadMusicStream*(fileName: string): Music =
