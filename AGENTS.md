@@ -63,6 +63,7 @@ This document provides essential context for AI models interacting with this pro
     * `src/naylib/private/config.nim` - Main configuration flags for the library
     * `naylib.nimble` - Package configuration and tasks
     * `update_bindings.nims` - Build and update tasks for the wrapper
+    * `src/raylib.nim` (header): Manages all build configurations by translating the original C Makefile's settings into Nim. It is the primary reference for platform-specific compiler and linker flags, consolidating the build process into a single file.
 * **CI/CD Pipeline:** `.github/workflows/ci.yml` for continuous integration
 
 ## 6. Development & Testing Workflow
