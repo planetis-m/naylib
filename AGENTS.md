@@ -26,7 +26,7 @@ This document provides essential context for AI models interacting with this pro
     * `/docs`: Generated documentation for the Nim API
     * `/tools`: Contains tools for generating the wrapper from the Raylib API definitions
     * `/manual`: Contains detailed documentation guides and overviews
-* **Module Organization:** Modules are organized to mirror the raylib library structure with raylib.nim as the core module and additional modules for specific functionality (raymath.nim, rlgl.nim, rcamera.nim, reasings.nim, rmem.nim).
+* **Module Organization:** Modules are organized to mirror the raylib library structure with raylib.nim as the core module and additional modules for specific functionality (raymath.nim, rlgl.nim, rcamera.nim, reasings.nim, rmem.nim) reside directly in the src directory rather than a nested naylib/ subdirectory.
 
 ## 4. Coding Conventions & Style Guide
 

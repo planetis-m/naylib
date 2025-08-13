@@ -52,6 +52,13 @@ elif defined(android):
   {.passL: "-Wl,--fatal-warnings -u ANativeActivity_onCreate -Wl,-no-undefined".}
   {.passL: "-llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm -ldl".}
 
+elif defined(drm):
+  {.passC: staticExec("pkg-config libdrm --cflags").}
+  {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
+  # pkg-config glesv2 egl libdrm gbm --libs
+  # nanosleep: -lrt, miniaudio linux 32bit ARM: -ldl -lpthread -lm -latomic
+  {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lrt -ldl -lpthread -lm -latomic".}
+
 else:
   {.passC: "-DPLATFORM_DESKTOP_GLFW".}
   when defined(GraphicsApiOpenGl11): {.passC: "-DGRAPHICS_API_OPENGL_11".}
@@ -67,13 +74,6 @@ else:
 
   elif defined(macosx):
     {.passL: "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo".}
-
-  elif defined(drm):
-    {.passC: staticExec("pkg-config libdrm --cflags").}
-    {.passC: "-DPLATFORM_DRM -DGRAPHICS_API_OPENGL_ES2 -DEGL_NO_X11".}
-    # pkg-config glesv2 egl libdrm gbm --libs
-    # nanosleep: -lrt, miniaudio linux 32bit ARM: -ldl -lpthread -lm -latomic
-    {.passL: "-lGLESv2 -lEGL -ldrm -lgbm -lrt -ldl -lpthread -lm -latomic".}
 
   else:
     when defined(linux):
@@ -118,6 +118,7 @@ else:
 
 when defined(emscripten): discard
 elif defined(android): discard
+elif defined(drm): discard
 elif defined(macosx): {.compile(raylibDir / Path"rglfw.c", "-x objective-c").}
 else: {.compile: raylibDir / Path"rglfw.c".}
 {.compile: raylibDir / Path"rcore.c".}
