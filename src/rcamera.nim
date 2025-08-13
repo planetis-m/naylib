@@ -1,4 +1,5 @@
-from raylib import CameraMode, CameraProjection, Vector2, Vector3, Matrix, Camera3D, Camera
+from raylib import Vector2, Vector3, Matrix, Camera3D, Camera, CameraProjection, CameraMode
+export Vector2, Vector3, Matrix, Camera3D, Camera, CameraProjection, CameraMode
 
 const
   CameraMoveSpeed* = 5.4'f32 # Units per second
@@ -11,8 +12,8 @@ const
   # Camera orbital speed in CAMERA_ORBITAL mode
   CameraOrbitalSpeed* = 0.5'f32 # Radians per second
 
-  CameraCullDistanceNear* = 0.01
-  CameraCullDistanceFar* = 1000.0
+  CameraCullDistanceNear* = 0.05
+  CameraCullDistanceFar* = 4000.0
 
 {.push callconv: cdecl, header: "rcamera.h".}
 func getCameraForward*(camera {.byref.}: Camera): Vector3 {.importc: "GetCameraForward".}

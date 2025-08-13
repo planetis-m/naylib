@@ -36,7 +36,7 @@
 *
 *   DEPENDENCIES:
 *       stb_image        - Multiple image formats loading (JPEG, PNG, BMP, TGA, PSD, GIF, PIC)
-*                          NOTE: stb_image has been slightly modified to support Android platform.
+*                          NOTE: stb_image has been slightly modified to support Android platform
 *       stb_image_resize - Multiple image resize algorithms
 *
 *
@@ -169,10 +169,13 @@
         #pragma GCC diagnostic ignored "-Wunused-function"
     #endif
 
+    #define RL_GPUTEX_MALLOC RL_MALLOC
+    #define RL_GPUTEX_FREE RL_FREE
+    #define RL_GPUTEX_LOG(...) TRACELOG(LOG_WARNING, "IMAGE: " __VA_ARGS__)
+    #define RL_GPUTEX_SHOW_LOG_INFO
     #define RL_GPUTEX_IMPLEMENTATION
     #include "external/rl_gputex.h"         // Required for: rl_load_xxx_from_memory()
                                             // NOTE: Used to read compressed textures data (multiple formats support)
-
     #if defined(__GNUC__) // GCC and Clang
         #pragma GCC diagnostic pop
     #endif
@@ -2927,7 +2930,16 @@ void ImageColorReplace(Image *image, Color color, Color replace)
     image->data = pixels;
     image->format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
 
-    ImageFormat(image, format);
+    // Only convert back to original format if it supported alpha
+    if ((format == PIXELFORMAT_UNCOMPRESSED_R8G8B8) ||
+        (format == PIXELFORMAT_UNCOMPRESSED_R5G6B5) ||
+        (format == PIXELFORMAT_UNCOMPRESSED_GRAYSCALE) ||
+        (format == PIXELFORMAT_UNCOMPRESSED_R32G32B32) ||
+        (format == PIXELFORMAT_UNCOMPRESSED_R16G16B16) ||
+        (format == PIXELFORMAT_COMPRESSED_DXT1_RGB) ||
+        (format == PIXELFORMAT_COMPRESSED_ETC1_RGB) ||
+        (format == PIXELFORMAT_COMPRESSED_ETC2_RGB) ||
+        (format == PIXELFORMAT_COMPRESSED_PVRT_RGB)) ImageFormat(image, format);
 }
 #endif      // SUPPORT_IMAGE_MANIPULATION
 

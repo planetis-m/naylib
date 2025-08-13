@@ -2388,6 +2388,17 @@
       ]
     },
     {
+      "name": "rlGetProcAddress",
+      "description": "Get OpenGL procedure address",
+      "returnType": "void *",
+      "params": [
+        {
+          "type": "const char *",
+          "name": "procName"
+        }
+      ]
+    },
+    {
       "name": "rlGetVersion",
       "description": "Get current OpenGL version",
       "returnType": "int"

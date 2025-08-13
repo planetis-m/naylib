@@ -13781,7 +13781,7 @@
   <dt><pre><span class="Keyword">proc</span> <a href="#updateSound%2CSound%2CopenArray%5BT%5D"><span class="Identifier">updateSound</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">sound</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Sound"><span class="Identifier">Sound</span></a><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
   <dd>
     
-    Update sound buffer with new data
+    Update sound buffer with new data (data and frame count should fit in sound)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2813" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2813" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13794,7 +13794,7 @@
   <dt><pre><span class="Keyword">proc</span> <a href="#updateTexture%2CTexture%2CopenArray%5BT%5D"><span class="Identifier">updateTexture</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <a href="raylib.html#Pixel"><span class="Identifier">Pixel</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">texture</span><span class="Other">:</span> <a href="raylib.html#Texture2D"><span class="Identifier">Texture2D</span></a><span class="Other">;</span> <span class="Identifier">pixels</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
   <dd>
     
-    Update GPU texture with new data
+    Update GPU texture with new data (pixels should be able to fill texture)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2689" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2689" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13805,7 +13805,7 @@
                              <span class="Identifier">pixels</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
   <dd>
     
-    Update GPU texture rectangle with new data
+    Update GPU texture rectangle with new data (pixels and rec should fit in texture)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L2696" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L2696" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -14582,7 +14582,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-16 10:40:44 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-08-13 12:31:56 UTC</small>
       </div>
     </div>
   </div>

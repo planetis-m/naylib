@@ -12,7 +12,7 @@
 *       #define SUPPORT_FILEFORMAT_GLTF
 *       #define SUPPORT_FILEFORMAT_VOX
 *       #define SUPPORT_FILEFORMAT_M3D
-*           Selected desired fileformats to be supported for model data loading.
+*           Selected desired fileformats to be supported for model data loading
 *
 *       #define SUPPORT_MESH_GENERATION
 *           Support procedural mesh generation functions, uses external par_shapes.h library
@@ -2298,7 +2298,7 @@ void UpdateModelAnimationBones(Model model, ModelAnimation anim, int frame)
 
         if (firstMeshWithBones != -1)
         {
-            // Update all bones and boneMatrices of first mesh with bones.
+            // Update all bones and boneMatrices of first mesh with bones
             for (int boneId = 0; boneId < anim.boneCount; boneId++)
             {
                 Transform *bindTransform = &model.bindPose[boneId];
@@ -4292,7 +4292,7 @@ static Model LoadOBJ(const char *fileName)
 
     if (fileText == NULL)
     {
-        TRACELOG(LOG_ERROR, "MODEL: [%s] Unable to read obj file", fileName);
+        TRACELOG(LOG_WARNING, "MODEL: [%s] Unable to read obj file", fileName);
         return model;
     }
 
@@ -4308,7 +4308,7 @@ static Model LoadOBJ(const char *fileName)
 
     if (ret != TINYOBJ_SUCCESS)
     {
-        TRACELOG(LOG_ERROR, "MODEL: Unable to read obj data %s", fileName);
+        TRACELOG(LOG_WARNING, "MODEL: Unable to read obj data %s", fileName);
         return model;
     }
 
@@ -4473,9 +4473,17 @@ static Model LoadOBJ(const char *fileName)
 
             for (int i = 0; i < 3; i++) model.meshes[meshIndex].vertices[localMeshVertexCount*3 + i] = objAttributes.vertices[vertIndex*3 + i];
 
-            for (int i = 0; i < 3; i++) model.meshes[meshIndex].normals[localMeshVertexCount*3 + i] = objAttributes.normals[normalIndex*3 + i];
-
             for (int i = 0; i < 2; i++) model.meshes[meshIndex].texcoords[localMeshVertexCount*2 + i] = objAttributes.texcoords[texcordIndex*2 + i];
+            if (objAttributes.normals != NULL && normalIndex != TINYOBJ_INVALID_INDEX && normalIndex >= 0)
+            {
+                for (int i = 0; i < 3; i++) model.meshes[meshIndex].normals[localMeshVertexCount*3 + i] = objAttributes.normals[normalIndex*3 + i];
+            }
+            else
+            {
+                model.meshes[meshIndex].normals[localMeshVertexCount*3 + 0] = 0.0f;
+                model.meshes[meshIndex].normals[localMeshVertexCount*3 + 1] = 1.0f;
+                model.meshes[meshIndex].normals[localMeshVertexCount*3 + 2] = 0.0f;
+            }
 
             model.meshes[meshIndex].texcoords[localMeshVertexCount*2 + 1] = 1.0f - model.meshes[meshIndex].texcoords[localMeshVertexCount*2 + 1];
 
@@ -4492,8 +4500,6 @@ static Model LoadOBJ(const char *fileName)
     tinyobj_attrib_free(&objAttributes);
     tinyobj_shapes_free(objShapes, objShapeCount);
     tinyobj_materials_free(objMaterials, objMaterialCount);
-
-    for (int i = 0; i < model.meshCount; i++) UploadMesh(model.meshes + i, true);
 
     // Restore current working directory
     if (CHDIR(currentDir) != 0)
@@ -5285,8 +5291,7 @@ static Model LoadGLTF(const char *fileName)
               > Texcoords: vec2: float
               > Colors: vec4: u8, u16, f32 (normalized)
               > Indices: u16, u32 (truncated to u16)
-          - Scenes defined in the glTF file are ignored. All nodes in the file
-            are used.
+          - Scenes defined in the glTF file are ignored. All nodes in the file are used
 
     ***********************************************************************************************/
 
@@ -5341,8 +5346,8 @@ static Model LoadGLTF(const char *fileName)
 
         int primitivesCount = 0;
 
-        // NOTE: We will load every primitive in the glTF as a separate raylib Mesh.
-        // Determine total number of meshes needed from the node hierarchy.
+        // NOTE: We will load every primitive in the glTF as a separate raylib Mesh
+        // Determine total number of meshes needed from the node hierarchy
         for (unsigned int i = 0; i < data->nodes_count; i++)
         {
             cgltf_node *node = &(data->nodes[i]);
@@ -5484,14 +5489,13 @@ static Model LoadGLTF(const char *fileName)
             // has_clearcoat, has_transmission, has_volume, has_ior, has specular, has_sheen
         }
 
-        // Visit each node in the hierarchy and process any mesh linked from it.
-        // Each primitive within a glTF node becomes a Raylib Mesh.
+        // Visit each node in the hierarchy and process any mesh linked from it
+        // Each primitive within a glTF node becomes a Raylib Mesh
         // The local-to-world transform of each node is used to transform the
-        // points/normals/tangents of the created Mesh(es).
+        // points/normals/tangents of the created Mesh(es)
         // Any glTF mesh linked from more than one Node (i.e. instancing)
-        // is turned into multiple Mesh's, as each Node will have its own
-        // transform applied.
-        // NOTE: The code below disregards the scenes defined in the file, all nodes are used.
+        // is turned into multiple Mesh's, as each Node will have its own transform applied
+        // NOTE: The code below disregards the scenes defined in the file, all nodes are used
         //----------------------------------------------------------------------------------------------------
         int meshIndex = 0;
         for (unsigned int i = 0; i < data->nodes_count; i++)

@@ -385,6 +385,7 @@ proc rlglClose*() {.importc: "rlglClose", sideEffect.}
   ## De-initialize rlgl (buffers, shaders, textures)
 proc loadExtensions*(loader: rlglLoadProc) {.importc: "rlLoadExtensions", sideEffect.}
   ## Load OpenGL extensions (loader function required)
+proc getProcAddressImpl(procName: cstring): pointer {.importc: "rlGetProcAddress", sideEffect.}
 proc getVersion*(): GlVersion {.importc: "rlGetVersion", sideEffect.}
   ## Get current OpenGL version
 proc setFramebufferWidth*(width: int32) {.importc: "rlSetFramebufferWidth", sideEffect.}
@@ -532,6 +533,10 @@ proc loadDrawQuad*() {.importc: "rlLoadDrawQuad", sideEffect.}
 
 proc elementCount*(x: VertexBuffer): int32 {.inline.} = x.elementCount
 proc bufferCount*(x: RenderBatch): int32 {.inline.} = x.bufferCount
+
+proc getProcAddress*(procName: string): pointer =
+  ## Get OpenGL procedure address
+  getProcAddressImpl(procName.cstring)
 
 proc loadShaderCode*(vsCode: string, fsCode: string): uint32 =
   ## Load shader from code strings
