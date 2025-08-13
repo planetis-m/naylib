@@ -21,15 +21,26 @@ Ensure you have the necessary tools installed:
    ```
    This fetches the specified raylib version and copies the sources to `src/raylib/`
 
-### 2. Handle identifier mangling
+### 2. Resolve identifier conflicts
 
-There are known C symbol clashes, to fix them run:
-```bash
-nim mangle update_bindings.nims
-```
-This modifies the raylib C source files to rename conflicting symbols.
+Some C symbols in raylib conflict with each other. To fix these clashes:
 
-You need to run this step before updating the API definitions!
+1. **Run the mangling script**
+
+   ```bash
+   nim mangle update_bindings.nims
+   ```
+
+   This modifies the raylib C source files, renaming symbols that would otherwise cause collisions.
+
+2. **Manually adjust `rlgl` header**
+   The API generator cannot correctly process `#if defined` conditional sections in `rlgl.h`. You must preprocess the file manually:
+
+   ```bash
+   unifdef -UGRAPHICS_API_OPENGL_ES2 -DGRAPHICS_API_OPENGL_33 raylib/src/rlgl.h > raylib/src/rlgl.h
+   ```
+
+**Important:** Perform this step **before** generating or updating the API definitions.
 
 ### 3. Update API JSON definitions
 
@@ -42,8 +53,6 @@ You need to run this step before updating the API definitions!
    nim genApi update_bindings.nims
    ```
    This creates updated JSON files in `tools/wrapper/api/` for raylib, rcamera, raymath, and rlgl.
-3. Open `rlgl.json` and remove duplicate `indices` and `vaoId` fields in the `rlVertexBuffer` struct.
-   The api generator cannot handle `#if defined` sections correctly, manual intervention is required for rlgl.
 
 ### 4. Update Nim wrappers
 
