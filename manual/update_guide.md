@@ -21,7 +21,17 @@ Ensure you have the necessary tools installed:
    ```
    This fetches the specified raylib version and copies the sources to `src/raylib/`
 
-### 2. Update API JSON definitions
+### 2. Handle identifier mangling
+
+There are known C symbol clashes, to fix them run:
+```bash
+nim mangle update_bindings.nims
+```
+This modifies the raylib C source files to rename conflicting symbols.
+
+You need to run this step before updating the API definitions!
+
+### 3. Update API JSON definitions
 
 1. Build the parser tool:
    ```bash
@@ -32,8 +42,10 @@ Ensure you have the necessary tools installed:
    nim genApi update_bindings.nims
    ```
    This creates updated JSON files in `tools/wrapper/api/` for raylib, rcamera, raymath, and rlgl.
+3. Open `rlgl.json` and remove duplicate `indices` and `vaoId` fields in the `rlVertexBuffer` struct.
+   The api generator cannot handle `#if defined` sections correctly, manual intervention is required for rlgl.
 
-### 3. Update Nim wrappers
+### 4. Update Nim wrappers
 
 1. (Optional) Adjust configuration files in `tools/wrapper/config/` if the new raylib version has:
    - New functions/structs that need special type handling
@@ -44,14 +56,6 @@ Ensure you have the necessary tools installed:
    nim genWrappers update_bindings.nims
    ```
    This creates updated `.nim` files in `src/` based on the new JSON definitions and configuration files.
-
-### 4. Handle identifier mangling
-
-If there are C symbol clashes:
-```bash
-nim mangle update_bindings.nims
-```
-This modifies the raylib C source files to rename conflicting symbols.
 
 ### 5. Update documentation
 
