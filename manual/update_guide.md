@@ -17,7 +17,7 @@ Ensure you have the necessary tools installed:
    - Update the `RayLatestCommit` constant to the desired raylib commit hash
 2. Run the update task:
    ```bash
-   nim update update_bindings.nims update
+   nim update update_bindings.nims
    ```
    This fetches the specified raylib version and copies the sources to `src/raylib/`
 
@@ -25,11 +25,11 @@ Ensure you have the necessary tools installed:
 
 1. Build the parser tool:
    ```bash
-   nim update update_bindings.nims buildTools
+   nim buildTools update_bindings.nims
    ```
 2. Generate new JSON definitions:
    ```bash
-   nim update update_bindings.nims genApi
+   nim genApi update_bindings.nims
    ```
    This creates updated JSON files in `tools/wrapper/api/` for raylib, rcamera, raymath, and rlgl.
 
@@ -41,15 +41,15 @@ Ensure you have the necessary tools installed:
    - New enum prefixes
 2. Generate updated Nim wrappers:
    ```bash
-   nim update update_bindings.nims genWrappers
+   nim genWrappers update_bindings.nims
    ```
    This creates updated `.nim` files in `src/` based on the new JSON definitions and configuration files.
 
-### 4. Handle identifier mangling (if needed)
+### 4. Handle identifier mangling
 
 If there are C symbol clashes:
 ```bash
-nim update update_bindings.nims mangle
+nim mangle update_bindings.nims
 ```
 This modifies the raylib C source files to rename conflicting symbols.
 
@@ -57,7 +57,7 @@ This modifies the raylib C source files to rename conflicting symbols.
 
 Generate updated HTML documentation:
 ```bash
-nim update update_bindings.nims docs
+nim docs update_bindings.nims
 ```
 
 ### 6. Verify changes

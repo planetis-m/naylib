@@ -86,7 +86,7 @@ task update, "Update the raylib git directory":
   fetchLatestRaylib()
   rmDir(PkgDir / "src/raylib")
   cpDir(RaylibDir / "src", PkgDir / "src/raylib")
-  cpFile(RaylibDir / "parser/raylib_parser.c", ToolsDir / "parser/raylib_parser.c")
+  cpFile(RaylibDir / "tools/parser/raylib_parser.c", ToolsDir / "parser/raylib_parser.c")
 
 task mangle, "Mangle identifiers in raylib source":
   buildMangler()
