@@ -19,7 +19,7 @@ Ensure you have the necessary tools installed:
    ```bash
    nim update update_bindings.nims
    ```
-   This fetches the specified raylib version and copies the sources to `src/raylib/`
+   This fetches the specified raylib version in `raylib/` and copies the sources to `src/raylib/`
 
 ### 2. Resolve identifier conflicts
 
@@ -37,7 +37,16 @@ Some C symbols in raylib conflict with each other. To fix these clashes:
    The API generator cannot correctly process `#if defined` conditional sections in `rlgl.h`. You must preprocess the file manually:
 
    ```bash
-   unifdef -UGRAPHICS_API_OPENGL_ES2 -DGRAPHICS_API_OPENGL_33 raylib/src/rlgl.h > raylib/src/rlgl.h
+   cd raylib # Do not confuse the top-level raylib directory with src/raylib
+   unifdef -UGRAPHICS_API_OPENGL_ES2 -DGRAPHICS_API_OPENGL_33 src/rlgl.h > src/rlgl.h.tmp
+   mv src/rlgl.h.tmp src/rlgl.h
+   ```
+
+   If something goes wrong, you can restore the original file:
+
+   ```bash
+   cd raylib # This is a git directory tracking raysan5/raylib
+   git checkout src/rlgl.h
    ```
 
 **Important:** Perform this step **before** generating or updating the API definitions.
