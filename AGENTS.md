@@ -67,10 +67,17 @@ This document provides essential context for AI models interacting with this pro
 
 ## 6. Development & Testing Workflow
 
-* **Local Development Environment:** To set up the project locally, you need to have Nim and the required system dependencies for Raylib installed.
-    1. Run `nimble develop naylib` to clone the repository
-    2. Run `nimble check` to verify setup
-    3. Run `nimble lock` to generate a package lock file
+* **Local Development Environment:** To set up the project locally, you need Nim installed.
+    * **Install Nim**
+      ```bash
+      wget https://codeberg.org/janAkali/grabnim/raw/branch/master/misc/install.sh
+      sh install.sh
+      grabnim
+      ```
+    * **Setting up the project**
+      1. Run `nimble develop naylib` to clone the repository, this prints Linux installation commands for system dependencies in the output.
+      2. Run `nimble check` to verify setup
+      3. Run `nimble lock` to generate a package lock file
 * **Task Configuration:** 
     * **Nimble Tasks:** Run `nimble tasks` to list all available tasks in the .nimble file, then execute with `nimble <taskname>`
     * **Custom .nims Tasks:** Tasks defined in `update_bindings.nims` can be executed with `nim <taskname> update_bindings.nims`
@@ -88,6 +95,6 @@ This document provides essential context for AI models interacting with this pro
     * Be mindful of security when handling file I/O and external resources
     * Do not hardcode secrets or keys
 * **Dependencies:**
-    * When adding new dependencies, edit the .nimble file and run `nimble sync`, `nimble check` and `nimble lock`
+    * When adding new dependencies, edit the .nimble file and run `nimble lock`
     * Core raylib is bundled, so updates require running the update task in `update_bindings.nims`
 * **Commit Messages:** Follow conventional commit messages with clear, descriptive summaries of changes
