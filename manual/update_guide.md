@@ -38,7 +38,9 @@ Some C symbols in raylib conflict with each other. To fix these clashes:
 
    ```bash
    cd raylib # Do not confuse the top-level raylib directory with src/raylib
+   # unifdef returns non-zero when it processes a file, even if the processing is successful
    unifdef -UGRAPHICS_API_OPENGL_ES2 -DGRAPHICS_API_OPENGL_33 src/rlgl.h > src/rlgl.h.tmp
+   # move the temporary file in a separate step
    mv src/rlgl.h.tmp src/rlgl.h
    ```
 
@@ -49,7 +51,7 @@ Some C symbols in raylib conflict with each other. To fix these clashes:
    git checkout src/rlgl.h
    ```
 
-**Important:** Perform this step **before** generating or updating the API definitions.
+**Important:** Perform this step **before** updating the API definitions.
 
 ### 3. Update API JSON definitions
 
