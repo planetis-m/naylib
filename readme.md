@@ -63,6 +63,8 @@ Here are quick links to some important sections:
 
 Check out the wrapper's [Configuration Guide](manual/config_guide.md) for detailed information on how to use and contribute to naylib-wrapper.
 
+AI has created a good [overview](https://deepwiki.com/planetis-m/naylib) of the project.
+
 ## Platform Support
 
 | Target           | Windows           | Linux             | macOS             |
