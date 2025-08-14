@@ -3,7 +3,7 @@ from std/unicode import Rune
 from std/syncio import writeFile
 import std/[assertions, paths]
 import naylib/private/config
-const raylibDir = Path"/home/ageralis/Projects/test/naylib/src/raylib"
+const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
 
 when defined(mingw):
   import std/private/globs
