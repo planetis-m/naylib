@@ -1,6 +1,6 @@
 # Package
 
-version     = "25.29.0"
+version     = "25.33.0"
 author      = "Antonis Geralis"
 description = "Raylib Nim wrapper"
 license     = "MIT"
@@ -16,7 +16,7 @@ feature "dev":
 import std/distros
 if detectOs(Ubuntu):
   foreignDep "libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev"
-  foreignDep "libxkbcommon-dev libwayland-bin"
+  foreignDep "libxkbcommon-dev libwayland-bin" # for wayland
 elif detectOs(Fedora):
   foreignDep "alsa-lib-devel mesa-libGL-devel libX11-devel libXrandr-devel libXi-devel libXcursor-devel libXinerama-devel libatomic"
   foreignDep "libxkbcommon-devel wayland-devel"
