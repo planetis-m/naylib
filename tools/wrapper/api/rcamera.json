@@ -1,0 +1,438 @@
+{
+  "defines": [
+    {
+      "name": "RCAMERA_H",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "__declspec(x)",
+      "type": "MACRO",
+      "value": "__attribute__((x))",
+      "description": ""
+    },
+    {
+      "name": "RLAPI",
+      "type": "UNKNOWN",
+      "value": "__declspec(dllexport)",
+      "description": "We are building the library as a Win32 shared library (.dll)"
+    },
+    {
+      "name": "CAMERA_CULL_DISTANCE_NEAR",
+      "type": "DOUBLE",
+      "value": 0.05,
+      "description": ""
+    },
+    {
+      "name": "CAMERA_CULL_DISTANCE_FAR",
+      "type": "DOUBLE",
+      "value": 4000.0,
+      "description": ""
+    }
+  ],
+  "structs": [
+    {
+      "name": "Vector2",
+      "description": "Vector2, 2 components",
+      "fields": [
+        {
+          "type": "float",
+          "name": "x",
+          "description": "Vector x component"
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "description": "Vector y component"
+        }
+      ]
+    },
+    {
+      "name": "Vector3",
+      "description": "Vector3, 3 components",
+      "fields": [
+        {
+          "type": "float",
+          "name": "x",
+          "description": "Vector x component"
+        },
+        {
+          "type": "float",
+          "name": "y",
+          "description": "Vector y component"
+        },
+        {
+          "type": "float",
+          "name": "z",
+          "description": "Vector z component"
+        }
+      ]
+    },
+    {
+      "name": "Matrix",
+      "description": "Matrix, 4x4 components, column major, OpenGL style, right-handed",
+      "fields": [
+        {
+          "type": "float",
+          "name": "m0",
+          "description": "Matrix first row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m4",
+          "description": "Matrix first row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m8",
+          "description": "Matrix first row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m12",
+          "description": "Matrix first row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m1",
+          "description": "Matrix second row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m5",
+          "description": "Matrix second row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m9",
+          "description": "Matrix second row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m13",
+          "description": "Matrix second row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m2",
+          "description": "Matrix third row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m6",
+          "description": "Matrix third row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m10",
+          "description": "Matrix third row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m14",
+          "description": "Matrix third row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m3",
+          "description": "Matrix fourth row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m7",
+          "description": "Matrix fourth row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m11",
+          "description": "Matrix fourth row (4 components)"
+        },
+        {
+          "type": "float",
+          "name": "m15",
+          "description": "Matrix fourth row (4 components)"
+        }
+      ]
+    },
+    {
+      "name": "Camera3D",
+      "description": "Camera type, defines a camera position/orientation in 3d space",
+      "fields": [
+        {
+          "type": "Vector3",
+          "name": "position",
+          "description": "Camera position"
+        },
+        {
+          "type": "Vector3",
+          "name": "target",
+          "description": "Camera target it looks-at"
+        },
+        {
+          "type": "Vector3",
+          "name": "up",
+          "description": "Camera up vector (rotation over its axis)"
+        },
+        {
+          "type": "float",
+          "name": "fovy",
+          "description": "Camera field-of-view apperture in Y (degrees) in perspective, used as near plane width in orthographic"
+        },
+        {
+          "type": "int",
+          "name": "projection",
+          "description": "Camera projection type: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC"
+        }
+      ]
+    }
+  ],
+  "aliases": [
+    {
+      "type": "Camera3D",
+      "name": "Camera",
+      "description": "Camera type fallback, defaults to Camera3D"
+    }
+  ],
+  "enums": [
+    {
+      "name": "CameraProjection",
+      "description": "Camera projection",
+      "values": [
+        {
+          "name": "CAMERA_PERSPECTIVE",
+          "value": 0,
+          "description": "Perspective projection"
+        },
+        {
+          "name": "CAMERA_ORTHOGRAPHIC",
+          "value": 1,
+          "description": "Orthographic projection"
+        }
+      ]
+    },
+    {
+      "name": "CameraMode",
+      "description": "Camera system modes",
+      "values": [
+        {
+          "name": "CAMERA_CUSTOM",
+          "value": 0,
+          "description": "Camera custom, controlled by user (UpdateCamera() does nothing)"
+        },
+        {
+          "name": "CAMERA_FREE",
+          "value": 1,
+          "description": "Camera free mode"
+        },
+        {
+          "name": "CAMERA_ORBITAL",
+          "value": 2,
+          "description": "Camera orbital, around target, zoom supported"
+        },
+        {
+          "name": "CAMERA_FIRST_PERSON",
+          "value": 3,
+          "description": "Camera first person"
+        },
+        {
+          "name": "CAMERA_THIRD_PERSON",
+          "value": 4,
+          "description": "Camera third person"
+        }
+      ]
+    }
+  ],
+  "callbacks": [
+  ],
+  "functions": [
+    {
+      "name": "GetCameraForward",
+      "description": "",
+      "returnType": "Vector3",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        }
+      ]
+    },
+    {
+      "name": "GetCameraUp",
+      "description": "",
+      "returnType": "Vector3",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        }
+      ]
+    },
+    {
+      "name": "GetCameraRight",
+      "description": "",
+      "returnType": "Vector3",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        }
+      ]
+    },
+    {
+      "name": "CameraMoveForward",
+      "description": "",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        },
+        {
+          "type": "float",
+          "name": "distance"
+        },
+        {
+          "type": "bool",
+          "name": "moveInWorldPlane"
+        }
+      ]
+    },
+    {
+      "name": "CameraMoveUp",
+      "description": "",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        },
+        {
+          "type": "float",
+          "name": "distance"
+        }
+      ]
+    },
+    {
+      "name": "CameraMoveRight",
+      "description": "",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        },
+        {
+          "type": "float",
+          "name": "distance"
+        },
+        {
+          "type": "bool",
+          "name": "moveInWorldPlane"
+        }
+      ]
+    },
+    {
+      "name": "CameraMoveToTarget",
+      "description": "",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        },
+        {
+          "type": "float",
+          "name": "delta"
+        }
+      ]
+    },
+    {
+      "name": "CameraYaw",
+      "description": "",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        },
+        {
+          "type": "float",
+          "name": "angle"
+        },
+        {
+          "type": "bool",
+          "name": "rotateAroundTarget"
+        }
+      ]
+    },
+    {
+      "name": "CameraPitch",
+      "description": "",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        },
+        {
+          "type": "float",
+          "name": "angle"
+        },
+        {
+          "type": "bool",
+          "name": "lockView"
+        },
+        {
+          "type": "bool",
+          "name": "rotateAroundTarget"
+        },
+        {
+          "type": "bool",
+          "name": "rotateUp"
+        }
+      ]
+    },
+    {
+      "name": "CameraRoll",
+      "description": "",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        },
+        {
+          "type": "float",
+          "name": "angle"
+        }
+      ]
+    },
+    {
+      "name": "GetCameraViewMatrix",
+      "description": "",
+      "returnType": "Matrix",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        }
+      ]
+    },
+    {
+      "name": "GetCameraProjectionMatrix",
+      "description": "",
+      "returnType": "Matrix",
+      "params": [
+        {
+          "type": "Camera *",
+          "name": "camera"
+        },
+        {
+          "type": "float",
+          "name": "aspect"
+        }
+      ]
+    }
+  ]
+}

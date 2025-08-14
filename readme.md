@@ -23,10 +23,10 @@ To learn more about how to use this wrapper, you can check out the documentation
 - [rmem](https://planetis-m.github.io/naylib/rmem.html) - Memory pool and objects pool allocators
 - [rcamera](https://planetis-m.github.io/naylib/rcamera.html) - Basic camera system
 
+> **Note:** raygui is offered as a separate package. You can find it [here](https://github.com/planetis-m/naygui).
+
 If you're familiar with the C version of raylib, you may find the
 [cheatsheet](https://www.raylib.com/cheatsheet/cheatsheet.html) useful.
-
-> **Note:** raygui is offered as a separate package. You can find it [here](https://github.com/planetis-m/naygui).
 
 ## Installation
 

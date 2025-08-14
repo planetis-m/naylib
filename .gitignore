@@ -1,0 +1,28 @@
+# Build artifacts
+*.o
+*.a
+*.so
+*.dll
+*.exe
+nimcache/
+
+*.nimble_link
+
+# Dependencies
+deps/
+nimbledeps/
+
+.env
+.venv
+
+# Raylib source
+raylib/
+
+# Compiled tools
+tools/mangler/naylib_mangler
+tools/parser/raylib_parser
+tools/wrapper/naylib_wrapper
+
+# Configuration
+nim.cfg
+
