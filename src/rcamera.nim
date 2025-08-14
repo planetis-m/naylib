@@ -15,6 +15,7 @@ const
   CameraCullDistanceNear* = 0.05
   CameraCullDistanceFar* = 4000.0
 
+
 {.push callconv: cdecl, header: "rcamera.h".}
 func getCameraForward*(camera {.byref.}: Camera): Vector3 {.importc: "GetCameraForward".}
 func getCameraUp*(camera {.byref.}: Camera): Vector3 {.importc: "GetCameraUp".}

@@ -37,18 +37,13 @@ Some C symbols in raylib conflict with each other. To fix these clashes:
    The API generator cannot correctly process `#if defined` conditional sections in `rlgl.h`. You must preprocess the file manually:
 
    ```bash
-   cd raylib # Do not confuse the top-level raylib directory with src/raylib
-   # unifdef returns non-zero when it processes a file, even if the processing is successful
-   unifdef -UGRAPHICS_API_OPENGL_ES2 -DGRAPHICS_API_OPENGL_33 src/rlgl.h > src/rlgl.h.tmp
-   # Move the temporary file in a separate step
-   mv src/rlgl.h.tmp src/rlgl.h
+   cd raylib && { unifdef -UGRAPHICS_API_OPENGL_ES2 -DGRAPHICS_API_OPENGL_33 src/rlgl.h > src/rlgl.h.tmp || [ $? -le 1 ]; } && mv -f src/rlgl.h.tmp src/rlgl.h
    ```
 
    If something goes wrong, you can restore the original file:
 
    ```bash
-   cd raylib # This is a git directory tracking raysan5/raylib
-   git checkout src/rlgl.h
+   cd raylib && git checkout src/rlgl.h # This is a git directory tracking raysan5/raylib
    ```
 
 **Important:** Perform this step **before** updating the API definitions.
