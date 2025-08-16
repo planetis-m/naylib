@@ -140,7 +140,7 @@ Look for non-const pointer parameters that the function will modify:
 ```json
 {
   "type": "Vector2 *",  // Non-const pointer to be modified
-  "name": "collision"
+  "name": "collisionPoint"
 }
 ```
 
@@ -151,7 +151,7 @@ Look for functions returning `int` but semantically returning a boolean value:
 
 ```json
 {
-  "name": "IsWindowMinimized",
+  "name": "GuiWindowBox",
   "returnType": "int"  // Actually returns 0 or 1
 }
 ```
@@ -161,8 +161,8 @@ These should be added to `[BoolReturn]` section.
 ### Struct Field Changes
 When struct fields change:
 - New array fields need to be added to `[ArrayTypes]`
-- Fields with special types need entries in `[TypeReplacements]`
-- Fields that should be read-only need to be added to `[ReadOnlyFields]`
+- Fields with enum types that appear as `int` in C API need entries in `[TypeReplacements]`
+- Fields that track counts or sizes should be added to `[ReadOnlyFields]` (e.g., `Mesh/boneCount`) to prevent memory access violations if modified directly
 
 ## Step 5: Update Configuration Files as Needed
 
@@ -170,28 +170,35 @@ Based on your findings, modify files in `tools/wrapper/config/`:
 
 ### Common Configuration Updates
 
-1. **New array parameters**: Add to `[ArrayTypes]` and `[OpenArrayParameters]` sections
-   - Example: `DrawLineStrip/points`
+1. **Enum Type Parameters**: Add to `[TypeReplacements]`
+   - Convert `int` parameters to proper enum types
+   - Example: `IsKeyPressed/key: "KeyboardKey"`
 
-2. **New out parameters**: Add to `[OutParameters]` section
-   - Example: `NewFunction/outputParam`
+2. **Boolean Returns**: Add to `[BoolReturn]`
+   - For functions returning `int` (0/1) but logically representing booleans
+   - Example: `IsKeyPressed`, `CheckCollision` functions
 
-3. **New enum prefixes**: Add to `[EnumValuePrefixes]` section
-   - If you see new enums with consistent prefixes (e.g., `FLAG_`, `KEY_`)
-   - Example: `NEW_PREFIX_`
+3. **Arrays**: Update `[ArrayTypes]` and `[OpenArrayParameters]`
+   - Example: `DrawLineStrip/points`, `UpdateMeshBuffer/data`
 
-4. **Special type handling**: Add to `[TypeReplacements]` section
-   - For complex types that need special mapping in Nim
-   - Example: `NewStruct/complexField: "CustomNimType"`
+4. **Output Parameters**: Add to `[OutParameters]`
+   - Example: `CheckCollisionLines/collisionPoint`
 
-5. **Function return handling**: Update as needed
-   - `[BoolReturn]` for functions returning int but logically represent boolean
-   - `[DiscardReturn]` for functions whose return value can be ignored
-   - `[NoSideEffectsFuncs]` for pure functions
+5. **Discardable Returns**: Add to `[DiscardReturn]`
+   - For functions whose return values are optional
+   - Example: UI functions like `GuiButton`
 
-6. **Struct field handling**: Update as needed
-   - `[ReadOnlyFields]` for fields that should be read-only
-   - `[PrivateSymbols]` for fields that should not be exposed publicly
+6. **Pure Functions**: Add to `[NoSideEffectsFuncs]`
+   - For functions without side effects
+   - Example: Math functions like `Vector2Add`
+
+7. **Function Overloads**: Update `[FunctionOverloads]` section
+   - Simplifies APIs with multiple versions (suffixed with V, Rec, Ex)
+   - Example: `DrawPixelV` becomes an overload of `DrawPixel`
+
+8. **Field Access Control**: 
+   - `[ReadOnlyFields]`: For count/size fields (e.g., `Font/glyphCount`)
+   - `[PrivateSymbols]`: For internal functions/fields (e.g., `UnloadFont`)
 
 For a complete reference of all available configuration options and their detailed usage, refer to the [Configuration Guide](config_guide.md).
 
