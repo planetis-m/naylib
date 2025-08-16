@@ -104,7 +104,19 @@ Review the diff files, looking for:
    +    },
    ```
 
-## Step 3: Identify Array Parameters and Other Special Types
+## Step 3: Filter Out Ignored Symbols
+
+When reviewing API changes, filter out symbols that are explicitly ignored in the configuration:
+
+```bash
+# View the ignored symbols in the configuration files
+grep -A 85 "\[ IgnoredSymbols \]" tools/wrapper/config/raylib.cfg
+grep -A 20 "\[ IgnoredSymbols \]" tools/wrapper/config/raymath.cfg
+```
+
+Functions related to text management, file operations, compression, and encoding are excluded from the wrapper.
+
+## Step 4: Identify Array Parameters and Other Special Types
 
 ### Array Parameters
 Look for parameters with pointer types (`*`) often paired with a count parameter:
@@ -152,7 +164,7 @@ When struct fields change:
 - Fields with special types need entries in `[TypeReplacements]`
 - Fields that should be read-only need to be added to `[ReadOnlyFields]`
 
-## Step 4: Update Configuration Files as Needed
+## Step 5: Update Configuration Files as Needed
 
 Based on your findings, modify files in `tools/wrapper/config/`:
 
