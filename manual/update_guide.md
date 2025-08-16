@@ -2,7 +2,7 @@
 
 This guide describes the process of updating the bundled raylib version and regenerating the Nim wrappers.
 
-## Update raylib source
+## Step 1: Update raylib source
 
 1. Edit `update_bindings.nims`:
    - Update the `RayLatestCommit` constant to the desired raylib commit hash
@@ -10,13 +10,13 @@ This guide describes the process of updating the bundled raylib version and rege
    ```bash
    nim update update_bindings.nims
    ```
-   This fetches the specified raylib version in `raylib/` and copies the sources to `src/raylib/`
+   This fetches the specified raylib version in `raylib/` (a git repository tracking raysan5/raylib) and copies the sources to `src/raylib/` (the bundled sources used by naylib)
 3. Build the parser, mangler and wrapper tools:
    ```bash
    nim buildTools update_bindings.nims
    ```
 
-## Resolve identifier conflicts
+## Step 2: Resolve identifier conflicts
 
 Some C symbols in raylib conflict with each other. To fix these clashes:
 
@@ -26,24 +26,18 @@ Some C symbols in raylib conflict with each other. To fix these clashes:
    nim mangle update_bindings.nims
    ```
 
-   This modifies the raylib C source files in `src/raylib`, renaming symbols that would otherwise cause collisions.
+   This modifies the raylib C source files in `src/raylib/` (the bundled sources), renaming symbols that would otherwise cause collisions.
 
 2. **Manually adjust `rlgl` header**
-   The API generator cannot correctly process `#if defined` conditional sections in `rlgl.h`. You must preprocess the file in `raylib/src/` manually:
+   The API generator cannot correctly process `#if defined` conditional sections in `rlgl.h`. You must preprocess the file in `raylib/src/` (from the raylib git repository) manually:
 
    ```bash
    cd raylib && { unifdef -UGRAPHICS_API_OPENGL_ES2 -DGRAPHICS_API_OPENGL_33 src/rlgl.h > src/rlgl.h.tmp || [ $? -le 1 ]; } && mv -f src/rlgl.h.tmp src/rlgl.h
    ```
 
-   If something goes wrong, you can restore the original file:
+**IMPORTANT DIRECTORY NOTE**: The above command modifies `raylib/src/rlgl.h` (in the raylib git repository), NOT `src/raylib/rlgl.h` (the bundled sources).
 
-   ```bash
-   cd raylib && git checkout src/rlgl.h # This is a git directory tracking raysan5/raylib
-   ```
-
-**Important:** Perform this step **before** updating the API definitions.
-
-## Update API JSON definitions
+## Step 3: Update API JSON definitions
 
 1. Generate new JSON definitions:
    ```bash
@@ -51,7 +45,7 @@ Some C symbols in raylib conflict with each other. To fix these clashes:
    ```
    This creates updated JSON files in `tools/wrapper/api/` for raylib, rcamera, raymath, and rlgl.
 
-## Update Nim wrappers
+## Step 4: Update Nim wrappers
 
 1. Review and update configuration files in `tools/wrapper/config/` as needed
    Follow the [Review Guide](review_guide.md) step-by-step to identify and implement necessary changes
@@ -62,18 +56,17 @@ Some C symbols in raylib conflict with each other. To fix these clashes:
    ```
    This creates updated `.nim` files in `src/` based on the new JSON definitions and configuration files.
 
-## Update documentation
+## Step 5: Update documentation
 
 Generate updated HTML documentation:
 ```bash
 nim docs update_bindings.nims
 ```
 
-## Verify changes
+## Step 6: Verify changes
 
 1. Run tests to ensure functionality isn't broken:
    ```bash
    nimble test
    ```
 2. Check for any compiler warnings or errors
-
