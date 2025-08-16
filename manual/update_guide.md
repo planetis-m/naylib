@@ -53,10 +53,9 @@ Some C symbols in raylib conflict with each other. To fix these clashes:
 
 ## Update Nim wrappers
 
-1. (Optional) Adjust configuration files in `tools/wrapper/config/` if the new raylib version has:
-   - New functions/structs that need special type handling
-   - Changed function signatures
-   - New enum prefixes
+1. Review and update configuration files in `tools/wrapper/config/` as needed
+   Follow the [Review Guide](review_guide.md) step-by-step to identify and implement necessary changes
+
 2. Generate updated Nim wrappers:
    ```bash
    nim genWrappers update_bindings.nims
@@ -72,10 +71,9 @@ nim docs update_bindings.nims
 
 ## Verify changes
 
-1. Review the generated wrappers in `src/`
-2. Check for any new compiler warnings or errors
-3. Run tests to ensure functionality wasn't broken:
+1. Run tests to ensure functionality isn't broken:
    ```bash
    nimble test
    ```
+2. Check for any compiler warnings or errors
 

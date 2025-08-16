@@ -1,17 +1,17 @@
 # Configuration Review Guide
 
-This guide helps you identify and apply necessary changes to configuration files when updating raylib.
+After generating the new API definitions, follow these steps to update the configuration files:
 
-## Step 1: Compare API Definitions Using Git
+## Step 1: Compare API Definitions
 
 Use git to compare the API changes:
 
 ```bash
-# After running the genApi step in the update process
-# View changes to the API definitions (unstaged changes)
+# Generate diffs for all API files
 git diff -- tools/wrapper/api/raylib.json > raylib_api_changes.diff
 git diff -- tools/wrapper/api/raymath.json > raymath_api_changes.diff
 git diff -- tools/wrapper/api/rlgl.json > rlgl_api_changes.diff
+git diff -- tools/wrapper/api/rcamera.json > rcamera_api_changes.diff
 ```
 
 ## Step 2: Analyze API Changes
@@ -152,7 +152,7 @@ When struct fields change:
 - Fields with special types need entries in `[TypeReplacements]`
 - Fields that should be read-only need to be added to `[ReadOnlyFields]`
 
-## Step 4: Update Configuration Files
+## Step 4: Update Configuration Files as Needed
 
 Based on your findings, modify files in `tools/wrapper/config/`:
 
@@ -181,5 +181,5 @@ Based on your findings, modify files in `tools/wrapper/config/`:
    - `[ReadOnlyFields]` for fields that should be read-only
    - `[PrivateSymbols]` for fields that should not be exposed publicly
 
-For a complete reference of all available configuration options and their detailed usage, refer to the [Configuration Guide](manual/config_guide.md).
+For a complete reference of all available configuration options and their detailed usage, refer to the [Configuration Guide](config_guide.md).
 

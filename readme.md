@@ -78,7 +78,7 @@ For an AI-generated overview of the project:
 |------------------|-------------------|-------------------|-------------------|
 | Native           | Supported, Tested | Supported, Tested | Supported, Tested |
 | WebAssembly      | Supported, Tested | Supported, Tested | Supported, Tested |
-| DRM              | Untested          | Supported         | Untested          |
+| DRM              | N/A               | Supported         | N/A               |
 | Android          | Supported, Tested | Supported, Tested | Possibly Works    |
 | Windows (Cross)  | N/A               | Supported, Tested | Untested          |
 
