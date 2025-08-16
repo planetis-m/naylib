@@ -5,7 +5,7 @@ const
   PkgDir = thisDir()
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
-  RayLatestCommit = "81615a91a620d0969ac28ec62714285934ffb9b1"
+  RayLatestCommit = "e4dfb6dbb52289e5b71fa0c99be5079a6454c093"
   DocsDir = PkgDir / "docs"
   ToolsDir = PkgDir / "tools"
   ApiDir = ToolsDir / "wrapper/api"
@@ -20,6 +20,7 @@ proc fetchLatestRaylib() =
     exec "git clone --depth 1 " & RaylibGit & " " & quoteShell(RaylibDir)
   withDir(RaylibDir):
     if not firstTime:
+      exec "git restore ."
       exec "git switch - --detach"
     exec "git fetch --depth 200 origin " & RayLatestCommit
     exec "git checkout " & RayLatestCommit
