@@ -175,7 +175,7 @@ Based on your findings, modify files in `tools/wrapper/config/`:
    - Example: `IsKeyPressed/key: "KeyboardKey"`
 
 2. **Boolean Returns**: Add to `[BoolReturn]`
-   - For functions returning `int` (0/1) but logically representing booleans
+   - For functions returning `int` but logically representing booleans
    - Example: `IsKeyPressed`, `CheckCollision` functions
 
 3. **Arrays**: Update `[ArrayTypes]` and `[OpenArrayParameters]`

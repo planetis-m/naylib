@@ -48,7 +48,7 @@ Some C symbols in raylib conflict with each other. To fix these clashes:
 ## Step 4: Update Nim wrappers
 
 1. Review and update configuration files in `tools/wrapper/config/` as needed
-   Follow the [Review Guide](review_guide.md) step-by-step to identify and implement necessary changes
+   Follow the manual/review_guide.md step-by-step to identify and implement necessary changes
 
 2. Generate updated Nim wrappers:
    ```bash
