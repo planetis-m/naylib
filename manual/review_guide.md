@@ -200,5 +200,5 @@ Based on your findings, modify files in `tools/wrapper/config/`:
    - `[ReadOnlyFields]`: For count/size fields (e.g., `Font/glyphCount`)
    - `[PrivateSymbols]`: For internal functions/fields (e.g., `UnloadFont`)
 
-For a complete reference of all available configuration options and their detailed usage, refer to the [Configuration Guide](config_guide.md).
+For a complete reference of all available configuration options and their detailed usage, refer to `manual/config_guide.md`.
 
