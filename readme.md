@@ -60,7 +60,13 @@ Here are quick links to some important sections:
 - [Building for Android](manual/advanced_usage.md#building-for-android) - Step-by-step guide for Android development
 - [Raylib Functions to Nim Alternatives](manual/alternatives_table.rst) - Find Nim equivalents for raylib functions
 
-Check out the wrapper's [Configuration Guide](manual/config_guide.md) for detailed information on how to use and contribute to naylib-wrapper.
+### Development Guides
+
+For contributors and maintainers:
+
+- [Update Guide](manual/update_guide.md) - Step-by-step process for updating the raylib version and regenerating wrappers
+- [Configuration Guide](manual/config_guide.md) - Detailed information on configuration options for the wrapper generator
+- [Review Guide](manual/review_guide.md) - How to identify and implement configuration changes when updating raylib
 
 For an AI-generated overview of the project:
 
