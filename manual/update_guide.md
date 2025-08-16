@@ -2,16 +2,7 @@
 
 This guide describes the process of updating the bundled raylib version and regenerating the Nim wrappers.
 
-## Prerequisites
-
-Ensure you have the necessary tools installed:
-- Git
-- A C compiler (for building raylib_parser)
-- Nim (for building tools and generating wrappers)
-
-## Update Process
-
-### 1. Update raylib source
+## Update raylib source
 
 1. Edit `update_bindings.nims`:
    - Update the `RayLatestCommit` constant to the desired raylib commit hash
@@ -20,8 +11,12 @@ Ensure you have the necessary tools installed:
    nim update update_bindings.nims
    ```
    This fetches the specified raylib version in `raylib/` and copies the sources to `src/raylib/`
+3. Build the parser, mangler and wrapper tools:
+   ```bash
+   nim buildTools update_bindings.nims
+   ```
 
-### 2. Resolve identifier conflicts
+## Resolve identifier conflicts
 
 Some C symbols in raylib conflict with each other. To fix these clashes:
 
@@ -31,10 +26,10 @@ Some C symbols in raylib conflict with each other. To fix these clashes:
    nim mangle update_bindings.nims
    ```
 
-   This modifies the raylib C source files, renaming symbols that would otherwise cause collisions.
+   This modifies the raylib C source files in `src/raylib`, renaming symbols that would otherwise cause collisions.
 
 2. **Manually adjust `rlgl` header**
-   The API generator cannot correctly process `#if defined` conditional sections in `rlgl.h`. You must preprocess the file manually:
+   The API generator cannot correctly process `#if defined` conditional sections in `rlgl.h`. You must preprocess the file in `raylib/src/` manually:
 
    ```bash
    cd raylib && { unifdef -UGRAPHICS_API_OPENGL_ES2 -DGRAPHICS_API_OPENGL_33 src/rlgl.h > src/rlgl.h.tmp || [ $? -le 1 ]; } && mv -f src/rlgl.h.tmp src/rlgl.h
@@ -48,19 +43,15 @@ Some C symbols in raylib conflict with each other. To fix these clashes:
 
 **Important:** Perform this step **before** updating the API definitions.
 
-### 3. Update API JSON definitions
+## Update API JSON definitions
 
-1. Build the parser tool:
-   ```bash
-   nim buildTools update_bindings.nims
-   ```
-2. Generate new JSON definitions:
+1. Generate new JSON definitions:
    ```bash
    nim genApi update_bindings.nims
    ```
    This creates updated JSON files in `tools/wrapper/api/` for raylib, rcamera, raymath, and rlgl.
 
-### 4. Update Nim wrappers
+## Update Nim wrappers
 
 1. (Optional) Adjust configuration files in `tools/wrapper/config/` if the new raylib version has:
    - New functions/structs that need special type handling
@@ -72,14 +63,14 @@ Some C symbols in raylib conflict with each other. To fix these clashes:
    ```
    This creates updated `.nim` files in `src/` based on the new JSON definitions and configuration files.
 
-### 5. Update documentation
+## Update documentation
 
 Generate updated HTML documentation:
 ```bash
 nim docs update_bindings.nims
 ```
 
-### 6. Verify changes
+## Verify changes
 
 1. Review the generated wrappers in `src/`
 2. Check for any new compiler warnings or errors
@@ -88,11 +79,3 @@ nim docs update_bindings.nims
    nimble test
    ```
 
-## Key Files
-
-The key files involved in this process are:
-- `update_bindings.nims`: Controls the update process
-- `tools/wrapper/config/*.cfg`: Configuration files for each module's wrapper generation
-- `tools/wrapper/api/*.json`: Generated API definitions (intermediate files)
-- `src/*.nim`: Generated Nim wrappers
-- `src/raylib/*`: Bundled raylib C source files

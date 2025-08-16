@@ -22,8 +22,7 @@ To learn more about how to use this wrapper, you can check out the documentation
 - [reasings](https://planetis-m.github.io/naylib/reasings.html) - Smooth animation transitions
 - [rmem](https://planetis-m.github.io/naylib/rmem.html) - Memory pool and objects pool allocators
 - [rcamera](https://planetis-m.github.io/naylib/rcamera.html) - Basic camera system
-
-> **Note:** raygui is offered as a separate package. You can find it [here](https://github.com/planetis-m/naygui).
+- raygui - Offered as a separate package: [naygui](https://github.com/planetis-m/naygui)
 
 If you're familiar with the C version of raylib, you may find the
 [cheatsheet](https://www.raylib.com/cheatsheet/cheatsheet.html) useful.
@@ -63,7 +62,9 @@ Here are quick links to some important sections:
 
 Check out the wrapper's [Configuration Guide](manual/config_guide.md) for detailed information on how to use and contribute to naylib-wrapper.
 
-AI has created a good [overview](https://deepwiki.com/planetis-m/naylib) of the project.
+For an AI-generated overview of the project:
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/planetis-m/naylib)
 
 ## Platform Support
 
