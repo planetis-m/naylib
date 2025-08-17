@@ -139,8 +139,13 @@ Look for non-const pointer parameters that the function will modify:
 
 ```json
 {
-  "type": "Vector2 *",  // Non-const pointer to be modified
-  "name": "collisionPoint"
+  "name": "CheckCollisionLines",
+  "description": "Check the collision between two lines defined by two points each, returns collision point by reference",
+  "returnType": "bool",
+  "params": [
+    "type": "Vector2 *",  // Non-const pointer to be modified
+    "name": "collisionPoint"
+  ]
 }
 ```
 
@@ -151,8 +156,9 @@ Look for functions returning `int` but semantically returning a boolean value:
 
 ```json
 {
-  "name": "GuiWindowBox",
-  "returnType": "int"  // Actually returns 0 or 1
+  "name": "GuiButton",
+  "description": "Button control, returns true when clicked",
+  "returnType": "int" // Actually returns 0 or 1
 }
 ```
 
@@ -176,7 +182,7 @@ Based on your findings, modify files in `tools/wrapper/config/`:
 
 2. **Boolean Returns**: Add to `[BoolReturn]`
    - For functions returning `int` but logically representing booleans
-   - Example: `IsKeyPressed`, `CheckCollision` functions
+   - Example: UI functions like `GuiButton`
 
 3. **Arrays**: Update `[ArrayTypes]` and `[OpenArrayParameters]`
    - Example: `DrawLineStrip/points`, `UpdateMeshBuffer/data`
@@ -186,7 +192,7 @@ Based on your findings, modify files in `tools/wrapper/config/`:
 
 5. **Discardable Returns**: Add to `[DiscardReturn]`
    - For functions whose return values are optional
-   - Example: UI functions like `GuiButton`
+   - Example: UI functions like `GuiLine` (returns int for consistency)
 
 6. **Pure Functions**: Add to `[NoSideEffectsFuncs]`
    - For functions without side effects
