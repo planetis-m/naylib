@@ -16,7 +16,11 @@ git diff -- tools/wrapper/api/rcamera.json > rcamera_api_changes.diff
 
 ## Step 2: Analyze API Changes
 
-Review the diff files, looking for:
+Review the diff files:
+
+- If a diff file is empty, it signifies no changes for that specific API. Skip it and move to the next one.
+- If all diff files are empty, no further action is needed.
+- If a diff file has content, look for:
 
 1. **New Functions**: Look for new function entries
    ```diff

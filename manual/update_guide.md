@@ -66,3 +66,4 @@ nim docs update_bindings.nims
    nimble test
    ```
 2. Check for any compiler warnings or errors
+
