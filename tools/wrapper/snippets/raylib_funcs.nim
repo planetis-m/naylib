@@ -375,6 +375,9 @@ proc loadModelFromMesh*(mesh: Mesh): ModelFromMesh =
   result = ModelFromMesh(loadModelFromMeshImpl(mesh))
   if not isModelValid(Model(result)): raiseRaylibError("Failed to load Model from Mesh")
 
+template loadModelFromMesh*(mesh: Mesh{call}): ModelFromMesh =
+  {.error: "Cannot pass a rvalue, as `result` does not take ownership of the mesh.".}
+
 proc fade*(color: Color, alpha: float32): Color =
   ## Get color with alpha applied, alpha goes from 0.0 to 1.0
   let alpha = clamp(alpha, 0, 1)
