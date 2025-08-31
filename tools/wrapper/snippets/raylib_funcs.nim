@@ -373,7 +373,7 @@ proc loadModel*(fileName: string): Model =
 proc loadModelFromMesh*(mesh: Mesh): ModelFromMesh =
   ## Load model from generated mesh (default material)
   result = ModelFromMesh(loadModelFromMeshImpl(mesh))
-  if not isModelValid(result): raiseRaylibError("Failed to load Model from Mesh")
+  if not isModelValid(Model(result)): raiseRaylibError("Failed to load Model from Mesh")
 
 proc fade*(color: Color, alpha: float32): Color =
   ## Get color with alpha applied, alpha goes from 0.0 to 1.0

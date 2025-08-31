@@ -30,9 +30,10 @@ proc `=dup`*(source: MaterialMap): MaterialMap {.error.}
 proc `=copy`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 proc `=sink`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 
-proc `=destroy`*(x: ModelFromMesh) =
-  x.meshCount = 0
-  unloadModel(x)
+proc `=destroy`*(x: ModelFromMesh) {.nodestroy.} =
+  let m = addr(Model(x))
+  m.meshCount = 0
+  unloadModel(m[])
 proc `=dup`*(source: ModelFromMesh): ModelFromMesh {.error.}
 proc `=copy`*(dest: var ModelFromMesh; source: ModelFromMesh) {.error.}
 
