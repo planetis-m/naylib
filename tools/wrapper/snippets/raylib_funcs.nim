@@ -370,10 +370,9 @@ proc loadModel*(fileName: string): Model =
   result = loadModelImpl(fileName.cstring)
   if not isModelValid(result): raiseRaylibError("Failed to load Model from " & fileName)
 
-proc loadModelFromMesh*(mesh: sink Mesh): Model =
+proc loadModelFromMesh*(mesh: Mesh): ModelFromMesh =
   ## Load model from generated mesh (default material)
-  result = loadModelFromMeshImpl(mesh)
-  wasMoved(mesh)
+  result = ModelFromMesh(loadModelFromMeshImpl(mesh))
   if not isModelValid(result): raiseRaylibError("Failed to load Model from Mesh")
 
 proc fade*(color: Color, alpha: float32): Color =

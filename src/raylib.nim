@@ -1725,6 +1725,7 @@ type
   MaterialMapsPtr* = distinct typeof(Material.maps)
   ShaderLocsPtr* = distinct typeof(Shader.locs)
   SoundAlias* = distinct Sound
+  ModelFromMesh* = distinct Model
 
 proc `=destroy`*(x: WeakImage) = discard
 proc `=dup`*(source: WeakImage): WeakImage {.nodestroy.} = source
@@ -1746,6 +1747,12 @@ proc `=wasMoved`*(x: var MaterialMap) {.error.}
 proc `=dup`*(source: MaterialMap): MaterialMap {.error.}
 proc `=copy`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 proc `=sink`*(dest: var MaterialMap; source: MaterialMap) {.error.}
+
+proc `=destroy`*(x: ModelFromMesh) =
+  x.meshCount = 0
+  unloadModel(x)
+proc `=dup`*(source: ModelFromMesh): ModelFromMesh {.error.}
+proc `=copy`*(dest: var ModelFromMesh; source: ModelFromMesh) {.error.}
 
 # proc `=destroy`*(x: ShaderLocsPtr) = discard
 # proc `=wasMoved`*(x: var ShaderLocsPtr) {.error.}
@@ -2846,10 +2853,9 @@ proc loadModel*(fileName: string): Model =
   result = loadModelImpl(fileName.cstring)
   if not isModelValid(result): raiseRaylibError("Failed to load Model from " & fileName)
 
-proc loadModelFromMesh*(mesh: sink Mesh): Model =
+proc loadModelFromMesh*(mesh: Mesh): ModelFromMesh =
   ## Load model from generated mesh (default material)
-  result = loadModelFromMeshImpl(mesh)
-  wasMoved(mesh)
+  result = ModelFromMesh(loadModelFromMeshImpl(mesh))
   if not isModelValid(result): raiseRaylibError("Failed to load Model from Mesh")
 
 proc fade*(color: Color, alpha: float32): Color =

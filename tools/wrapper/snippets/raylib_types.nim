@@ -7,6 +7,7 @@ type
   MaterialMapsPtr* = distinct typeof(Material.maps)
   ShaderLocsPtr* = distinct typeof(Shader.locs)
   SoundAlias* = distinct Sound
+  ModelFromMesh* = distinct Model
 
 proc `=destroy`*(x: WeakImage) = discard
 proc `=dup`*(source: WeakImage): WeakImage {.nodestroy.} = source
@@ -28,6 +29,12 @@ proc `=wasMoved`*(x: var MaterialMap) {.error.}
 proc `=dup`*(source: MaterialMap): MaterialMap {.error.}
 proc `=copy`*(dest: var MaterialMap; source: MaterialMap) {.error.}
 proc `=sink`*(dest: var MaterialMap; source: MaterialMap) {.error.}
+
+proc `=destroy`*(x: ModelFromMesh) =
+  x.meshCount = 0
+  unloadModel(x)
+proc `=dup`*(source: ModelFromMesh): ModelFromMesh {.error.}
+proc `=copy`*(dest: var ModelFromMesh; source: ModelFromMesh) {.error.}
 
 # proc `=destroy`*(x: ShaderLocsPtr) = discard
 # proc `=wasMoved`*(x: var ShaderLocsPtr) {.error.}
