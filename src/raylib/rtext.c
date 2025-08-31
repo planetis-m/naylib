@@ -404,7 +404,7 @@ Font LoadFont(const char *fileName)
 // Load Font from TTF or BDF font file with generation parameters
 // NOTE: You can pass an array with desired characters, those characters should be available in the font
 // if array is NULL, default char set is selected 32..126
-Font LoadFontEx(const char *fileName, int fontSize, int *codepoints, int codepointCount)
+Font LoadFontEx(const char *fileName, int fontSize, const int *codepoints, int codepointCount)
 {
     Font font = { 0 };
 
@@ -549,7 +549,7 @@ Font LoadFontFromImage(Image image, Color key, int firstChar)
 }
 
 // Load font from memory buffer, fileType refers to extension: i.e. ".ttf"
-Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount)
+Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, const int *codepoints, int codepointCount)
 {
     Font font = { 0 };
 
@@ -850,7 +850,7 @@ Image GenImageFontAtlas(const GlyphInfo *glyphs, rlRectangle **glyphRecs, int gl
                 {
                     for (int j = i + 1; j < glyphCount; j++)
                     {
-                        TRACELOG(LOG_WARNING, "FONT: Failed to package character (%i)", j);
+                        TRACELOG(LOG_WARNING, "FONT: Failed to package character (0x%02x)", glyphs[j].value);
                         // Make sure remaining recs contain valid data
                         recs[j].x = 0;
                         recs[j].y = 0;
@@ -918,7 +918,7 @@ Image GenImageFontAtlas(const GlyphInfo *glyphs, rlRectangle **glyphRecs, int gl
                     }
                 }
             }
-            else TRACELOG(LOG_WARNING, "FONT: Failed to package character (%i)", i);
+            else TRACELOG(LOG_WARNING, "FONT: Failed to package character (0x%02x)", glyphs[i].value);
         }
 
         RL_FREE(rects);
@@ -1415,6 +1415,40 @@ rlRectangle GetGlyphAtlasRec(Font font, int codepoint)
 //----------------------------------------------------------------------------------
 // Text strings management functions
 //----------------------------------------------------------------------------------
+// Load text as separate lines ('\n')
+// WARNING: There is a limit set for number of lines and line-size
+char **LoadTextLines(const char *text, int *count)
+{
+    #define MAX_TEXTLINES_COUNT      512
+    #define MAX_TEXTLINES_LINE_LEN   512
+
+    char **lines = (char **)RL_CALLOC(MAX_TEXTLINES_COUNT, sizeof(char *));
+    for (int i = 0; i < MAX_TEXTLINES_COUNT; i++) lines[i] = (char *)RL_CALLOC(MAX_TEXTLINES_LINE_LEN, 1);
+    int textSize = (int)strlen(text);
+    int k = 0;
+
+    for (int i = 0, len = 0; (i < textSize) && (k < MAX_TEXTLINES_COUNT); i++)
+    {
+        if ((text[i] == '\n') || (len == (MAX_TEXTLINES_LINE_LEN - 1)))
+        {
+            strncpy(lines[k], &text[i - len], len);
+            len = 0;
+            k++;
+        }
+        else len++;
+    }
+
+    *count += k;
+    return lines;
+}
+
+// Unload text lines
+void UnloadTextLines(char **lines)
+{
+    for (int i = 0; i < MAX_TEXTLINES_COUNT; i++) RL_FREE(lines[i]);
+    RL_FREE(lines);
+}
+
 // Get text length in bytes, check for \0 character
 unsigned int TextLength(const char *text)
 {

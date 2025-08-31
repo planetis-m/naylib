@@ -5,7 +5,7 @@ const
   PkgDir = thisDir()
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
-  RayLatestCommit = "f60333d9b24a053974cc1c3d15a50241d6e0d0bf"
+  RayLatestCommit = "82d65e110a2caba862b31a3f1c11ca7a8ba60e3b"
   DocsDir = PkgDir / "docs"
   ToolsDir = PkgDir / "tools"
   ApiDir = ToolsDir / "wrapper/api"
