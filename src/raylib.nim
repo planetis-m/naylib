@@ -584,7 +584,7 @@ type
     position*: Vector3 ## Camera position
     target*: Vector3 ## Camera target it looks-at
     up*: Vector3 ## Camera up vector (rotation over its axis)
-    fovy*: float32 ## Camera field-of-view aperture in Y (degrees) in perspective, used as near plane width in orthographic
+    fovy*: float32 ## Camera field-of-view aperture in Y (degrees) in perspective, used as near plane height in world units in orthographic
     projection*: CameraProjection ## Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
 
   Camera2D* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Camera2D, defines position/orientation in 2d space
@@ -1448,7 +1448,7 @@ proc loadFontFromImageImpl(image: Image, key: Color, firstChar: int32): Font {.i
 proc loadFontFromMemoryImpl(fileType: cstring, fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32): Font {.importc: "LoadFontFromMemory", sideEffect.}
 func isFontValid*(font: Font): bool {.importc: "IsFontValid".}
   ## Check if a font is valid (font data loaded, WARNING: GPU texture not checked)
-proc loadFontDataImpl(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32, `type`: FontType): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData", sideEffect.}
+proc loadFontDataImpl(fileData: ptr UncheckedArray[uint8], dataSize: int32, fontSize: int32, codepoints: ptr UncheckedArray[int32], codepointCount: int32, `type`: FontType, glyphCount: ptr int32): ptr UncheckedArray[GlyphInfo] {.importc: "LoadFontData", sideEffect.}
 func genImageFontAtlasImpl(glyphs: ptr UncheckedArray[GlyphInfo], glyphRecs: ptr ptr UncheckedArray[Rectangle], glyphCount: int32, fontSize: int32, padding: int32, packMethod: int32): Image {.importc: "GenImageFontAtlas".}
 proc unloadFont(font: Font) {.importc: "UnloadFont", sideEffect.}
 proc exportFontAsCodeImpl(font: Font, fileName: cstring): bool {.importc: "ExportFontAsCode", sideEffect.}
@@ -2722,16 +2722,18 @@ proc setPixelColor*[T: Pixel](pixel: var T, color: Color) =
 proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; codepoints: openArray[int32];
     `type`: FontType): RArray[GlyphInfo] =
   ## Load font data for further use
+  var glyphCount: int32 = 0
   let data = loadFontDataImpl(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
       fontSize, if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints),
-      codepoints.len.int32, `type`)
-  result = RArray[GlyphInfo](len: if codepoints.len == 0: 95 else: codepoints.len, data: data)
+      codepoints.len.int32, `type`, addr glyphCount)
+  result = RArray[GlyphInfo](len: glyphCount, data: data)
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize, glyphCount: int32;
     `type`: FontType): RArray[GlyphInfo] =
+  var actualGlyphCount: int32 = 0
   let data = loadFontDataImpl(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
-      fontSize, nil, glyphCount, `type`)
-  result = RArray[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
+      fontSize, nil, glyphCount, `type`, addr actualGlyphCount)
+  result = RArray[GlyphInfo](len: actualGlyphCount, data: data)
 
 proc loadFont*(fileName: string): Font =
   ## Load font from file into GPU memory (VRAM)

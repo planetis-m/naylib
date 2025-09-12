@@ -49,6 +49,7 @@ TextReplace        strutils.replace, strutils.multiReplace
 TextInsert         insert
 TextJoin           strutils.join
 TextSplit          strutils.split, unicode.split
+LoadTextLines      strutils.splitLines
 TextAppend         add
 TextFindIndex      strutils.find
 TextToUpper        strutils.toUpperAscii, unicode.toUpper

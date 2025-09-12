@@ -238,16 +238,18 @@ proc setPixelColor*[T: Pixel](pixel: var T, color: Color) =
 proc loadFontData*(fileData: openArray[uint8]; fontSize: int32; codepoints: openArray[int32];
     `type`: FontType): RArray[GlyphInfo] =
   ## Load font data for further use
+  var glyphCount: int32 = 0
   let data = loadFontDataImpl(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
       fontSize, if codepoints.len == 0: nil else: cast[ptr UncheckedArray[int32]](codepoints),
-      codepoints.len.int32, `type`)
-  result = RArray[GlyphInfo](len: if codepoints.len == 0: 95 else: codepoints.len, data: data)
+      codepoints.len.int32, `type`, addr glyphCount)
+  result = RArray[GlyphInfo](len: glyphCount, data: data)
 
 proc loadFontData*(fileData: openArray[uint8]; fontSize, glyphCount: int32;
     `type`: FontType): RArray[GlyphInfo] =
+  var actualGlyphCount: int32 = 0
   let data = loadFontDataImpl(cast[ptr UncheckedArray[uint8]](fileData), fileData.len.int32,
-      fontSize, nil, glyphCount, `type`)
-  result = RArray[GlyphInfo](len: if glyphCount > 0: glyphCount else: 95, data: data)
+      fontSize, nil, glyphCount, `type`, addr actualGlyphCount)
+  result = RArray[GlyphInfo](len: actualGlyphCount, data: data)
 
 proc loadFont*(fileName: string): Font =
   ## Load font from file into GPU memory (VRAM)
