@@ -14,6 +14,12 @@ SaveFileData               writeFile                        seq[byte] overload
 LoadFileText               readFile
 SaveFileText               writeFile                        string overload
 FileExists                 os.fileExists
+FileRename                 os.moveFile                      Use moveFile for renaming
+FileRemove                 os.removeFile                    Use removeFile to delete
+FileCopy                   os.copyFile                      Use copyFile
+FileMove                   os.moveFile                      Use moveFile
+FileTextReplace            strutils.replace                 Use replace from strutils
+FileTextFindIndex          strutils.find                    Use find from strutils
 DirectoryExists            os.dirExists
 IsFileExtension            strutils.endsWith
 GetFileExtension           os.splitFile, os.searchExtPos
@@ -46,6 +52,9 @@ TextLength         len
 TextFormat         strutils.format, strformat.`&`
 TextSubtext        substr
 TextReplace        strutils.replace, strutils.multiReplace
+TextRemoveSpaces   strutils.strip, strutils.multiReplace      Use strip or multiReplace to remove spaces
+GetTextBetween     Manual implementation                      Need to write a custom function
+TextReplaceBetween Manual implementation                      Need to write a custom function
 TextInsert         insert
 TextJoin           strutils.join
 TextSplit          strutils.split, unicode.split
@@ -92,6 +101,7 @@ DecodeDataBase64   base64.decode
 ComputeCRC32       crunchy.crc32         External package
 ComputeMD5         checksums.md5         External package
 ComputeSHA1        checksums.sha1        External package
+ComputeSHA256      checksums.sha256      External package
 ================== ===================== ================
 
 Misc

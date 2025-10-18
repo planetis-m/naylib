@@ -5,7 +5,7 @@ const
   PkgDir = thisDir()
   RaylibDir = PkgDir / "raylib"
   RaylibGit = "https://github.com/raysan5/raylib.git"
-  RayLatestCommit = "7db5f56e814c7e91948580e61a9610ff417c3cb1"
+  RayLatestCommit = "085f933b172f70c54afc401a6fb1401662a8a2ff"
   DocsDir = PkgDir / "docs"
   ToolsDir = PkgDir / "tools"
   ApiDir = ToolsDir / "wrapper/api"
@@ -87,7 +87,7 @@ task update, "Update the raylib git directory":
   fetchLatestRaylib()
   rmDir(PkgDir / "src/raylib")
   cpDir(RaylibDir / "src", PkgDir / "src/raylib")
-  cpFile(RaylibDir / "tools/parser/raylib_parser.c", ToolsDir / "parser/raylib_parser.c")
+  cpFile(RaylibDir / "tools/rlparser/rlparser.c", ToolsDir / "parser/raylib_parser.c")
 
 task mangle, "Mangle identifiers in raylib source":
   buildMangler()

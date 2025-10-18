@@ -33,7 +33,8 @@ type
 
 type
   GlVersion* {.size: sizeof(int32).} = enum ## OpenGL version
-    Opengl11 = 1 ## OpenGL 1.1
+    Opengl11Software ## Software rendering
+    Opengl11 ## OpenGL 1.1
     Opengl21 ## OpenGL 2.1 (GLSL 120)
     Opengl33 ## OpenGL 3.3 (GLSL 330)
     Opengl43 ## OpenGL 4.3 (using GLSL 330)
@@ -349,6 +350,10 @@ proc enablePointMode*() {.importc: "rlEnablePointMode", sideEffect.}
   ## Enable point mode
 proc disablePointMode*() {.importc: "rlDisablePointMode", sideEffect.}
   ## Disable point mode
+proc setPointSize*(size: float32) {.importc: "rlSetPointSize", sideEffect.}
+  ## Set the point drawing size
+proc getPointSize*(): float32 {.importc: "rlGetPointSize", sideEffect.}
+  ## Get the point drawing size
 proc enableWireMode*() {.importc: "rlEnableWireMode", sideEffect.}
   ## Enable wire mode
 proc disableWireMode*() {.importc: "rlDisableWireMode", sideEffect.}
@@ -469,6 +474,10 @@ proc framebufferComplete*(id: uint32): bool {.importc: "rlFramebufferComplete", 
   ## Verify framebuffer is complete
 proc unloadFramebuffer*(id: uint32) {.importc: "rlUnloadFramebuffer", sideEffect.}
   ## Delete framebuffer from GPU
+proc copyFramebuffer*(x: int32, y: int32, width: int32, height: int32, format: int32, pixels: pointer) {.importc: "rlCopyFramebuffer", sideEffect.}
+  ## Copy framebuffer pixel data to internal buffer
+proc resizeFramebuffer*(width: int32, height: int32) {.importc: "rlResizeFramebuffer", sideEffect.}
+  ## Resize internal framebuffer
 proc loadShaderCodeImpl(vsCode: cstring, fsCode: cstring): uint32 {.importc: "rlLoadShaderCode", sideEffect.}
 proc compileShaderImpl(shaderCode: cstring, `type`: ShaderType): uint32 {.importc: "rlCompileShader", sideEffect.}
 proc loadShaderProgram*(vShaderId: uint32, fShaderId: uint32): uint32 {.importc: "rlLoadShaderProgram", sideEffect.}
@@ -547,11 +556,11 @@ proc compileShader*(shaderCode: string, `type`: ShaderType): uint32 =
   compileShaderImpl(shaderCode.cstring, `type`)
 
 proc getLocationUniform*(shaderId: uint32, uniformName: string): ShaderLocation =
-  ## Get shader location uniform
+  ## Get shader location uniform, requires shader program id
   getLocationUniformImpl(shaderId, uniformName.cstring)
 
 proc getLocationAttrib*(shaderId: uint32, attribName: string): ShaderLocation =
-  ## Get shader location attribute
+  ## Get shader location attribute, requires shader program id
   getLocationAttribImpl(shaderId, attribName.cstring)
 
 proc `=destroy`*(x: RenderBatch) =

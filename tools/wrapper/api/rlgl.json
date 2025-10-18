@@ -61,6 +61,12 @@
       "description": ""
     },
     {
+      "name": "GRAPHICS_API_OPENGL_11",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
       "name": "GRAPHICS_API_OPENGL_ES2",
       "type": "GUARD",
       "value": "",
@@ -798,6 +804,11 @@
       "name": "rlGlVersion",
       "description": "OpenGL version",
       "values": [
+        {
+          "name": "RL_OPENGL_11_SOFTWARE",
+          "value": 0,
+          "description": "Software rendering"
+        },
         {
           "name": "RL_OPENGL_11",
           "value": 1,
@@ -2212,6 +2223,22 @@
       "returnType": "void"
     },
     {
+      "name": "rlSetPointSize",
+      "description": "Set the point drawing size",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "float",
+          "name": "size"
+        }
+      ]
+    },
+    {
+      "name": "rlGetPointSize",
+      "description": "Get the point drawing size",
+      "returnType": "float"
+    },
+    {
       "name": "rlEnableWireMode",
       "description": "Enable wire mode",
       "returnType": "void"
@@ -3050,6 +3077,52 @@
       ]
     },
     {
+      "name": "rlCopyFramebuffer",
+      "description": "Copy framebuffer pixel data to internal buffer",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "x"
+        },
+        {
+          "type": "int",
+          "name": "y"
+        },
+        {
+          "type": "int",
+          "name": "width"
+        },
+        {
+          "type": "int",
+          "name": "height"
+        },
+        {
+          "type": "int",
+          "name": "format"
+        },
+        {
+          "type": "void *",
+          "name": "pixels"
+        }
+      ]
+    },
+    {
+      "name": "rlResizeFramebuffer",
+      "description": "Resize internal framebuffer",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "width"
+        },
+        {
+          "type": "int",
+          "name": "height"
+        }
+      ]
+    },
+    {
       "name": "rlLoadShaderCode",
       "description": "Load shader from code strings",
       "returnType": "unsigned int",
@@ -3107,7 +3180,7 @@
     },
     {
       "name": "rlGetLocationUniform",
-      "description": "Get shader location uniform",
+      "description": "Get shader location uniform, requires shader program id",
       "returnType": "int",
       "params": [
         {
@@ -3122,7 +3195,7 @@
     },
     {
       "name": "rlGetLocationAttrib",
-      "description": "Get shader location attribute",
+      "description": "Get shader location attribute, requires shader program id",
       "returnType": "int",
       "params": [
         {

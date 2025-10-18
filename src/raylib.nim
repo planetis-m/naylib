@@ -1144,6 +1144,8 @@ proc drawLine*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color)
 proc drawLineStripImpl(points: ptr UncheckedArray[Vector2], pointCount: int32, color: Color) {.importc: "DrawLineStrip", sideEffect.}
 proc drawLineBezier*(startPos: Vector2, endPos: Vector2, thick: float32, color: Color) {.importc: "DrawLineBezier", sideEffect.}
   ## Draw line segment cubic-bezier in-out interpolation
+proc drawLineDashed*(startPos: Vector2, endPos: Vector2, dashSize: int32, spaceSize: int32, color: Color) {.importc: "DrawLineDashed", sideEffect.}
+  ## Draw a dashed line
 proc drawCircle*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircle", sideEffect.}
   ## Draw a color-filled circle
 proc drawCircleSector*(center: Vector2, radius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawCircleSector", sideEffect.}

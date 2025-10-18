@@ -63,18 +63,20 @@
     #include "SDL.h"
 #endif
 
-#if defined(GRAPHICS_API_OPENGL_ES2)
-    // It seems it does not need to be included to work
-    //#include "SDL_opengles2.h"
-#else
-    // SDL OpenGL functionality (if required, instead of internal renderer)
-    #ifdef USING_SDL3_PROJECT
-        #include "SDL3/SDL_opengl.h"
-    #elif USING_SDL2_PROJECT
-        #include "SDL2/SDL_opengl.h"
-    #else
-        #include "SDL_opengl.h"
-    #endif
+#if !defined(GRAPHICS_API_OPENGL_11_SOFTWARE)
+  #if defined(GRAPHICS_API_OPENGL_ES2)
+      // It seems it does not need to be included to work
+      //#include "SDL_opengles2.h"
+  #else
+      // SDL OpenGL functionality (if required, instead of internal renderer)
+      #ifdef USING_SDL3_PROJECT
+          #include "SDL3/SDL_opengl.h"
+      #elif USING_SDL2_PROJECT
+          #include "SDL2/SDL_opengl.h"
+      #else
+          #include "SDL_opengl.h"
+      #endif
+  #endif
 #endif
 
 //----------------------------------------------------------------------------------
@@ -90,6 +92,8 @@
     #endif
 #endif
 
+#define SCANCODE_MAPPED_NUM     232
+
 //----------------------------------------------------------------------------------
 // Types and Structures Definition
 //----------------------------------------------------------------------------------
@@ -98,7 +102,7 @@ typedef struct {
     SDL_GLContext glContext;
 
     SDL_GameController *gamepad[MAX_GAMEPADS];
-    SDL_JoystickID gamepadId[MAX_GAMEPADS]; // Joystick instance ids
+    SDL_JoystickID gamepadId[MAX_GAMEPADS]; // Joystick instance ids, they do not start from 0
     SDL_Cursor *cursor;
     bool cursorRelative;
 } PlatformData;
@@ -110,10 +114,6 @@ extern CoreData CORE;                   // Global CORE state context
 
 static PlatformData platform = { 0 };   // Platform specific data
 
-//----------------------------------------------------------------------------------
-// Global Variables Definition
-//----------------------------------------------------------------------------------
-#define SCANCODE_MAPPED_NUM 232
 static const KeyboardKey mapScancodeToKey[SCANCODE_MAPPED_NUM] = {
     KEY_NULL,           // SDL_SCANCODE_UNKNOWN
     0,
@@ -321,7 +321,7 @@ Uint8 SDL_EventState(Uint32 type, int state)
     {
         case SDL_DISABLE: SDL_SetEventEnabled(type, false); break;
         case SDL_ENABLE: SDL_SetEventEnabled(type, true); break;
-        default: TRACELOG(LOG_WARNING, "Event sate: unknow type");
+        default: TRACELOG(LOG_WARNING, "SDL: Event state of unknow type");
     }
 
     return stateBefore;
@@ -329,10 +329,10 @@ Uint8 SDL_EventState(Uint32 type, int state)
 
 void SDL_GetCurrentDisplayMode_Adapter(SDL_DisplayID displayID, SDL_DisplayMode* mode)
 {
-    const SDL_DisplayMode* currMode = SDL_GetCurrentDisplayMode(displayID);
+    const SDL_DisplayMode *currentMode = SDL_GetCurrentDisplayMode(displayID);
 
-    if (currMode == NULL) TRACELOG(LOG_WARNING, "No current display mode");
-    else *mode = *currMode;
+    if (currentMode == NULL) TRACELOG(LOG_WARNING, "SDL: No possible to get current display mode");
+    else *mode = *currentMode;
 }
 
 // SDL3 Migration: Renamed
@@ -423,7 +423,7 @@ int SDL_GetNumTouchFingers(SDL_TouchID touchID)
 // SDL_GetClipboardData function is available since SDL 3.1.3. (e.g. SDL3)
 void *SDL_GetClipboardData(const char *mime_type, size_t *size)
 {
-    TRACELOG(LOG_WARNING, "Getting clipboard data that is not text is only available in SDL3");
+    TRACELOG(LOG_WARNING, "SDL: Getting clipboard data that is not text not available in SDL2");
 
     // We could possibly implement it ourselves in this case for some easier platforms
     return NULL;
@@ -438,8 +438,8 @@ int InitPlatform(void);                                      // Initialize platf
 void ClosePlatform(void);                                    // Close platform
 
 static KeyboardKey ConvertScancodeToKey(SDL_Scancode sdlScancode);  // Help convert SDL scancodes to raylib key
-
 static int GetCodepointNextSDL(const char *text, int *codepointSize); // Get next codepoint in a byte sequence and bytes processed
+static void UpdateTouchPointsSDL(SDL_TouchFingerEvent event); // Update CORE input touch point info from SDL touch data
 
 //----------------------------------------------------------------------------------
 // Module Functions Declaration
@@ -1231,7 +1231,14 @@ void DisableCursor(void)
 // Swap back buffer with front buffer (screen drawing)
 void SwapScreenBuffer(void)
 {
+#if defined(GRAPHICS_API_OPENGL_11_SOFTWARE)
+    // NOTE: We use a preprocessor condition here because `rlCopyFramebuffer` is only declared for software rendering
+    SDL_Surface *surface = SDL_GetWindowSurface(platform.window);
+    rlCopyFramebuffer(0, 0, CORE.Window.render.width, CORE.Window.render.height, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8, surface->pixels);
+    SDL_UpdateWindowSurface(platform.window);
+#else
     SDL_GL_SwapWindow(platform.window);
+#endif
 }
 
 //----------------------------------------------------------------------------------
@@ -1307,41 +1314,6 @@ const char *GetKeyName(int key)
     return SDL_GetKeyName(key);
 }
 
-static void UpdateTouchPointsSDL(SDL_TouchFingerEvent event)
-{
-#if defined(USING_VERSION_SDL3) // SDL3
-    int count = 0;
-    SDL_Finger **fingers = SDL_GetTouchFingers(event.touchID, &count);
-    CORE.Input.Touch.pointCount = count;
-
-    for (int i = 0; i < CORE.Input.Touch.pointCount; i++)
-    {
-        SDL_Finger *finger = fingers[i];
-        CORE.Input.Touch.pointId[i] = finger->id;
-        CORE.Input.Touch.position[i].x = finger->x*CORE.Window.screen.width;
-        CORE.Input.Touch.position[i].y = finger->y*CORE.Window.screen.height;
-        CORE.Input.Touch.currentTouchState[i] = 1;
-    }
-
-    SDL_free(fingers);
-
-#else // SDL2
-
-    CORE.Input.Touch.pointCount = SDL_GetNumTouchFingers(event.touchId);
-
-    for (int i = 0; i < CORE.Input.Touch.pointCount; i++)
-    {
-        SDL_Finger *finger = SDL_GetTouchFinger(event.touchId, i);
-        CORE.Input.Touch.pointId[i] = finger->id;
-        CORE.Input.Touch.position[i].x = finger->x*CORE.Window.screen.width;
-        CORE.Input.Touch.position[i].y = finger->y*CORE.Window.screen.height;
-        CORE.Input.Touch.currentTouchState[i] = 1;
-    }
-#endif
-
-    for (int i = CORE.Input.Touch.pointCount; i < MAX_TOUCH_POINTS; i++) CORE.Input.Touch.currentTouchState[i] = 0;
-}
-
 // Register all input events
 void PollInputEvents(void)
 {
@@ -1399,15 +1371,9 @@ void PollInputEvents(void)
 
     // Poll input events for current platform
     //-----------------------------------------------------------------------------
-    /*
     // WARNING: Indexes into this array are obtained by using SDL_Scancode values, not SDL_Keycode values
-    const Uint8 *keys = SDL_GetKeyboardState(NULL);
-    for (int i = 0; i < 256; ++i)
-    {
-        CORE.Input.Keyboard.currentKeyState[i] = keys[i];
-        //if (keys[i]) TRACELOG(LOG_WARNING, "Pressed key: %i", i);
-    }
-    */
+    //const Uint8 *keys = SDL_GetKeyboardState(NULL);
+    //for (int i = 0; i < 256; ++i) CORE.Input.Keyboard.currentKeyState[i] = keys[i];
 
     CORE.Window.resizedLastFrame = false;
 
@@ -1620,13 +1586,15 @@ void PollInputEvents(void)
                 if (CORE.Input.Keyboard.charPressedQueueCount < MAX_CHAR_PRESSED_QUEUE)
                 {
                     // Add character (codepoint) to the queue
-                    #if defined(USING_VERSION_SDL3)
+
+                #if defined(USING_VERSION_SDL3)
                     size_t textLen = strlen(event.text.text);
                     unsigned int codepoint = (unsigned int)SDL_StepUTF8(&event.text.text, &textLen);
-                    #else
+                #else
                     int codepointSize = 0;
                     int codepoint = GetCodepointNextSDL(event.text.text, &codepointSize);
-                    #endif
+                #endif
+
                     CORE.Input.Keyboard.charPressedQueue[CORE.Input.Keyboard.charPressedQueueCount] = codepoint;
                     CORE.Input.Keyboard.charPressedQueueCount++;
                 }
@@ -1706,19 +1674,34 @@ void PollInputEvents(void)
             {
                 int jid = event.jdevice.which; // Joystick device index
 
-                if (CORE.Input.Gamepad.ready[jid] && (jid < MAX_GAMEPADS))
+                // check if already added at InitPlatform
+                for (int i = 0; i < MAX_GAMEPADS; ++i)
                 {
-                    platform.gamepad[jid] = SDL_GameControllerOpen(jid);
-                    platform.gamepadId[jid] = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(platform.gamepad[jid]));
-
-                    if (platform.gamepad[jid])
+                    if (jid == platform.gamepadId[i])
                     {
-                        CORE.Input.Gamepad.ready[jid] = true;
-                        CORE.Input.Gamepad.axisCount[jid] = SDL_JoystickNumAxes(SDL_GameControllerGetJoystick(platform.gamepad[jid]));
-                        CORE.Input.Gamepad.axisState[jid][GAMEPAD_AXIS_LEFT_TRIGGER] = -1.0f;
-                        CORE.Input.Gamepad.axisState[jid][GAMEPAD_AXIS_RIGHT_TRIGGER] = -1.0f;
-                        memset(CORE.Input.Gamepad.name[jid], 0, MAX_GAMEPAD_NAME_LENGTH);
-                        strncpy(CORE.Input.Gamepad.name[jid], SDL_GameControllerNameForIndex(jid), MAX_GAMEPAD_NAME_LENGTH - 1);
+                        return;
+                    }
+                }
+
+                int nextAvailableSlot = 0;
+                while (nextAvailableSlot < MAX_GAMEPADS && CORE.Input.Gamepad.ready[nextAvailableSlot])
+                {
+                    ++nextAvailableSlot;
+                }
+
+                if ((nextAvailableSlot < MAX_GAMEPADS) && !CORE.Input.Gamepad.ready[nextAvailableSlot])
+                {
+                    platform.gamepad[nextAvailableSlot] = SDL_GameControllerOpen(jid);
+                    platform.gamepadId[nextAvailableSlot] = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(platform.gamepad[nextAvailableSlot]));
+
+                    if (platform.gamepad[nextAvailableSlot])
+                    {
+                        CORE.Input.Gamepad.ready[nextAvailableSlot] = true;
+                        CORE.Input.Gamepad.axisCount[nextAvailableSlot] = SDL_JoystickNumAxes(SDL_GameControllerGetJoystick(platform.gamepad[nextAvailableSlot]));
+                        CORE.Input.Gamepad.axisState[nextAvailableSlot][GAMEPAD_AXIS_LEFT_TRIGGER] = -1.0f;
+                        CORE.Input.Gamepad.axisState[nextAvailableSlot][GAMEPAD_AXIS_RIGHT_TRIGGER] = -1.0f;
+                        memset(CORE.Input.Gamepad.name[nextAvailableSlot], 0, MAX_GAMEPAD_NAME_LENGTH);
+                        strncpy(CORE.Input.Gamepad.name[nextAvailableSlot], SDL_GameControllerNameForIndex(nextAvailableSlot), MAX_GAMEPAD_NAME_LENGTH - 1);
                     }
                     else
                     {
@@ -1746,7 +1729,7 @@ void PollInputEvents(void)
             {
                 int button = -1;
 
-                switch (event.jbutton.button)
+                switch (event.gbutton.button)
                 {
                     case SDL_CONTROLLER_BUTTON_Y: button = GAMEPAD_BUTTON_RIGHT_FACE_UP; break;
                     case SDL_CONTROLLER_BUTTON_B: button = GAMEPAD_BUTTON_RIGHT_FACE_RIGHT; break;
@@ -1774,7 +1757,7 @@ void PollInputEvents(void)
                 {
                     for (int i = 0; i < MAX_GAMEPADS; i++)
                     {
-                        if (platform.gamepadId[i] == event.jbutton.which)
+                        if (platform.gamepadId[i] == event.gbutton.which)
                         {
                             CORE.Input.Gamepad.currentButtonState[i][button] = 1;
                             CORE.Input.Gamepad.lastButtonPressed = button;
@@ -1787,7 +1770,7 @@ void PollInputEvents(void)
             {
                 int button = -1;
 
-                switch (event.jbutton.button)
+                switch (event.gbutton.button)
                 {
                     case SDL_CONTROLLER_BUTTON_Y: button = GAMEPAD_BUTTON_RIGHT_FACE_UP; break;
                     case SDL_CONTROLLER_BUTTON_B: button = GAMEPAD_BUTTON_RIGHT_FACE_RIGHT; break;
@@ -1815,7 +1798,7 @@ void PollInputEvents(void)
                 {
                     for (int i = 0; i < MAX_GAMEPADS; i++)
                     {
-                        if (platform.gamepadId[i] == event.jbutton.which)
+                        if (platform.gamepadId[i] == event.gbutton.which)
                         {
                             CORE.Input.Gamepad.currentButtonState[i][button] = 0;
                             if (CORE.Input.Gamepad.lastButtonPressed == button) CORE.Input.Gamepad.lastButtonPressed = 0;
@@ -1915,7 +1898,6 @@ int InitPlatform(void)
     //----------------------------------------------------------------------------
     unsigned int flags = 0;
     flags |= SDL_WINDOW_SHOWN;
-    flags |= SDL_WINDOW_OPENGL;
     flags |= SDL_WINDOW_INPUT_FOCUS;
     flags |= SDL_WINDOW_MOUSE_FOCUS;
     flags |= SDL_WINDOW_MOUSE_CAPTURE;  // Window has mouse captured
@@ -1950,44 +1932,50 @@ int InitPlatform(void)
 
     // NOTE: Some OpenGL context attributes must be set before window creation
 
-    // Check selection OpenGL version
-    if (rlGetVersion() == RL_OPENGL_21)
+    if (rlGetVersion() != RL_OPENGL_11_SOFTWARE)
     {
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-    }
-    else if (rlGetVersion() == RL_OPENGL_33)
-    {
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    }
-    else if (rlGetVersion() == RL_OPENGL_43)
-    {
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-#if defined(RLGL_ENABLE_OPENGL_DEBUG_CONTEXT)
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);   // Enable OpenGL Debug Context
-#endif
-    }
-    else if (rlGetVersion() == RL_OPENGL_ES_20)                 // Request OpenGL ES 2.0 context
-    {
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-    }
-    else if (rlGetVersion() == RL_OPENGL_ES_30)                 // Request OpenGL ES 3.0 context
-    {
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-    }
+        // Add the flag telling the window to use an OpenGL context
+        flags |= SDL_WINDOW_OPENGL;
 
-    if (CORE.Window.flags & FLAG_MSAA_4X_HINT)
-    {
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+        // Check selection OpenGL version
+        if (rlGetVersion() == RL_OPENGL_21)
+        {
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+        }
+        else if (rlGetVersion() == RL_OPENGL_33)
+        {
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        }
+        else if (rlGetVersion() == RL_OPENGL_43)
+        {
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    #if defined(RLGL_ENABLE_OPENGL_DEBUG_CONTEXT)
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);   // Enable OpenGL Debug Context
+    #endif
+        }
+        else if (rlGetVersion() == RL_OPENGL_ES_20)                 // Request OpenGL ES 2.0 context
+        {
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+        }
+        else if (rlGetVersion() == RL_OPENGL_ES_30)                 // Request OpenGL ES 3.0 context
+        {
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+        }
+
+        if (CORE.Window.flags & FLAG_MSAA_4X_HINT)
+        {
+            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+        }
     }
 
     // Init window
@@ -1998,10 +1986,12 @@ int InitPlatform(void)
 #endif
 
     // Init OpenGL context
-    platform.glContext = SDL_GL_CreateContext(platform.window);
+    if (rlGetVersion() != RL_OPENGL_11_SOFTWARE)
+    {
+        platform.glContext = SDL_GL_CreateContext(platform.window);
+    }
 
-    // Check window and glContext have been initialized successfully
-    if ((platform.window != NULL) && (platform.glContext != NULL))
+    if ((platform.window != NULL) && ((rlGetVersion() == RL_OPENGL_11_SOFTWARE) || (platform.glContext != NULL)))
     {
         CORE.Window.ready = true;
 
@@ -2022,8 +2012,14 @@ int InitPlatform(void)
         TRACELOG(LOG_INFO, "    > Render size:  %i x %i", CORE.Window.render.width, CORE.Window.render.height);
         TRACELOG(LOG_INFO, "    > Viewport offsets: %i, %i", CORE.Window.renderOffset.x, CORE.Window.renderOffset.y);
 
-        if (CORE.Window.flags & FLAG_VSYNC_HINT) SDL_GL_SetSwapInterval(1);
-        else SDL_GL_SetSwapInterval(0);
+        if (platform.glContext != NULL)
+        {
+            SDL_GL_SetSwapInterval((CORE.Window.flags & FLAG_VSYNC_HINT)? 1 : 0);
+
+            // Load OpenGL extensions
+            // NOTE: GL procedures address loader is required to load extensions
+            rlLoadExtensions(SDL_GL_GetProcAddress);
+        }
     }
     else
     {
@@ -2031,9 +2027,6 @@ int InitPlatform(void)
         return -1;
     }
 
-    // Load OpenGL extensions
-    // NOTE: GL procedures address loader is required to load extensions
-    rlLoadExtensions(SDL_GL_GetProcAddress);
     //----------------------------------------------------------------------------
 
     // Initialize input events system
@@ -2044,21 +2037,28 @@ int InitPlatform(void)
         platform.gamepadId[i] = -1; // Set all gamepad initial instance ids as invalid to not conflict with instance id zero
     }
 
-    for (int i = 0; (i < SDL_NumJoysticks()) && (i < MAX_GAMEPADS); i++)
-    {
-        platform.gamepad[i] = SDL_GameControllerOpen(i);
-        platform.gamepadId[i] = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(platform.gamepad[i]));
+    int numJoysticks = 0;
+    SDL_JoystickID *joysticks = SDL_GetJoysticks(&numJoysticks); // array of joystick IDs, they do not start from 0
 
-        if (platform.gamepad[i])
+    if (joysticks)
+    {
+        for (int i = 0; (i < numJoysticks) && (i < MAX_GAMEPADS); i++)
         {
-            CORE.Input.Gamepad.ready[i] = true;
-            CORE.Input.Gamepad.axisCount[i] = SDL_JoystickNumAxes(SDL_GameControllerGetJoystick(platform.gamepad[i]));
-            CORE.Input.Gamepad.axisState[i][GAMEPAD_AXIS_LEFT_TRIGGER] = -1.0f;
-            CORE.Input.Gamepad.axisState[i][GAMEPAD_AXIS_RIGHT_TRIGGER] = -1.0f;
-            strncpy(CORE.Input.Gamepad.name[i], SDL_GameControllerNameForIndex(i), MAX_GAMEPAD_NAME_LENGTH - 1);
-            CORE.Input.Gamepad.name[i][MAX_GAMEPAD_NAME_LENGTH - 1] = '\0';
+            platform.gamepad[i] = SDL_GameControllerOpen(joysticks[i]);
+            platform.gamepadId[i] = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(platform.gamepad[i]));
+
+            if (platform.gamepad[i])
+            {
+                CORE.Input.Gamepad.ready[i] = true;
+                CORE.Input.Gamepad.axisCount[i] = SDL_JoystickNumAxes(SDL_GameControllerGetJoystick(platform.gamepad[i]));
+                CORE.Input.Gamepad.axisState[i][GAMEPAD_AXIS_LEFT_TRIGGER] = -1.0f;
+                CORE.Input.Gamepad.axisState[i][GAMEPAD_AXIS_RIGHT_TRIGGER] = -1.0f;
+                strncpy(CORE.Input.Gamepad.name[i], SDL_GameControllerNameForIndex(i), MAX_GAMEPAD_NAME_LENGTH - 1);
+                CORE.Input.Gamepad.name[i][MAX_GAMEPAD_NAME_LENGTH - 1] = '\0';
+            }
+            else TRACELOG(LOG_WARNING, "PLATFORM: Unable to open game controller [ERROR: %s]", SDL_GetError());
         }
-        else TRACELOG(LOG_WARNING, "PLATFORM: Unable to open game controller [ERROR: %s]", SDL_GetError());
+        SDL_free(joysticks);
     }
 
     // Disable mouse events being interpreted as touch events
@@ -2098,7 +2098,7 @@ int InitPlatform(void)
 void ClosePlatform(void)
 {
     SDL_FreeCursor(platform.cursor); // Free cursor
-    SDL_GL_DeleteContext(platform.glContext); // Deinitialize OpenGL context
+    if (platform.glContext != NULL) SDL_GL_DeleteContext(platform.glContext); // Deinitialize OpenGL context
     SDL_DestroyWindow(platform.window);
     SDL_Quit(); // Deinitialize SDL internal global state
 }
@@ -2151,4 +2151,40 @@ static int GetCodepointNextSDL(const char *text, int *codepointSize)
     }
 
     return codepoint;
+}
+
+// Update CORE input touch point info from SDL touch data
+static void UpdateTouchPointsSDL(SDL_TouchFingerEvent event)
+{
+#if defined(USING_VERSION_SDL3) // SDL3
+    int count = 0;
+    SDL_Finger **fingers = SDL_GetTouchFingers(event.touchID, &count);
+    CORE.Input.Touch.pointCount = count;
+
+    for (int i = 0; i < CORE.Input.Touch.pointCount; i++)
+    {
+        SDL_Finger *finger = fingers[i];
+        CORE.Input.Touch.pointId[i] = finger->id;
+        CORE.Input.Touch.position[i].x = finger->x*CORE.Window.screen.width;
+        CORE.Input.Touch.position[i].y = finger->y*CORE.Window.screen.height;
+        CORE.Input.Touch.currentTouchState[i] = 1;
+    }
+
+    SDL_free(fingers);
+
+#else // SDL2
+
+    CORE.Input.Touch.pointCount = SDL_GetNumTouchFingers(event.touchId);
+
+    for (int i = 0; i < CORE.Input.Touch.pointCount; i++)
+    {
+        SDL_Finger *finger = SDL_GetTouchFinger(event.touchId, i);
+        CORE.Input.Touch.pointId[i] = finger->id;
+        CORE.Input.Touch.position[i].x = finger->x*CORE.Window.screen.width;
+        CORE.Input.Touch.position[i].y = finger->y*CORE.Window.screen.height;
+        CORE.Input.Touch.currentTouchState[i] = 1;
+    }
+#endif
+
+    for (int i = CORE.Input.Touch.pointCount; i < MAX_TOUCH_POINTS; i++) CORE.Input.Touch.currentTouchState[i] = 0;
 }
