@@ -1416,7 +1416,7 @@ proc drawTexture*(texture: Texture2D, source: Rectangle, position: Vector2, tint
   ## Draw a part of a texture defined by a rectangle
 proc drawTexture*(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTexturePro", sideEffect.}
   ## Draw a part of a texture defined by a rectangle with 'pro' parameters
-proc drawTextureNPatch*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch", sideEffect.}
+proc drawTexture*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch", sideEffect.}
   ## Draws a texture (or part of it) that stretches or shrinks nicely
 func colorNormalize*(color: Color): Vector4 {.importc: "ColorNormalize".}
   ## Get Color normalized as float [0..1]
