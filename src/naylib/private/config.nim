@@ -82,11 +82,6 @@ const NaylibSupportScreenCapture {.booldefine.} = true
 when NaylibSupportScreenCapture:
   {.passC: "-DSUPPORT_SCREEN_CAPTURE=1".}
 
-# GIF recording support
-const NaylibSupportGifRecording {.booldefine.} = true
-when NaylibSupportGifRecording:
-  {.passC: "-DSUPPORT_GIF_RECORDING=1".}
-
 # Compression API support
 const NaylibSupportCompressionApi {.booldefine.} = true
 when NaylibSupportCompressionApi:
@@ -237,6 +232,10 @@ const NaylibSupportFontAtlasWhiteRec {.booldefine.} = true
 when NaylibSupportFontAtlasWhiteRec:
   {.passC: "-DSUPPORT_FONT_ATLAS_WHITE_REC=1".}
 
+const NaylibSupportAtlasSizeConservative {.booldefine.} = false
+when NaylibSupportAtlasSizeConservative:
+  {.passC: "-DSUPPORT_FONT_ATLAS_SIZE_CONSERVATIVE=1".}
+
 # ----------------------------------------------------------------------------------------
 # Module: rmodels - Configuration Flags
 # ----------------------------------------------------------------------------------------
@@ -316,3 +315,92 @@ when NaylibSupportTracelog:
 const NaylibSupportTracelogDebug {.booldefine.} = false
 when NaylibSupportTracelogDebug:
   {.passC: "-DSUPPORT_TRACELOG_DEBUG=1".}
+
+# ----------------------------------------------------------------------------------------
+# All Modules: Configuration Values
+# ----------------------------------------------------------------------------------------
+
+{.passC: "-DRL_DEFAULT_BATCH_BUFFERS=1".}      # Default number of batch buffers (multi-buffering)
+{.passC: "-DRL_DEFAULT_BATCH_DRAWCALLS=256".}  # Default number of batch draw calls (by state changes: mode, texture)
+{.passC: "-DRL_DEFAULT_BATCH_MAX_TEXTURE_UNITS=4".} # Maximum number of textures units that can be activated on batch drawing (SetShaderValueTexture())
+
+{.passC: "-DRL_MAX_MATRIX_STACK_SIZE=32".}     # Maximum size of internal Matrix stack
+{.passC: "-DRL_MAX_SHADER_LOCATIONS=32".}      # Maximum number of shader locations supported
+
+{.passC: "-DRL_CULL_DISTANCE_NEAR=0.05".}      # Default projection matrix near cull distance
+{.passC: "-DRL_CULL_DISTANCE_FAR=4000.0".}     # Default projection matrix far cull distance
+
+# Default shader vertex attribute locations
+{.passC: "-DRL_DEFAULT_SHADER_ATTRIB_LOCATION_POSITION=0".}
+{.passC: "-DRL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD=1".}
+{.passC: "-DRL_DEFAULT_SHADER_ATTRIB_LOCATION_NORMAL=2".}
+{.passC: "-DRL_DEFAULT_SHADER_ATTRIB_LOCATION_COLOR=3".}
+{.passC: "-DRL_DEFAULT_SHADER_ATTRIB_LOCATION_TANGENT=4".}
+{.passC: "-DRL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD2=5".}
+{.passC: "-DRL_DEFAULT_SHADER_ATTRIB_LOCATION_INDICES=6".}
+{.passC: "-DRL_DEFAULT_SHADER_ATTRIB_LOCATION_INSTANCE_TX=9".}
+
+when defined(NaylibRlSupportMeshGpuSkinning):
+  {.passC: "-DRL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEIDS=7".}
+  {.passC: "-DRL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEWEIGHTS=8".}
+
+# Default shader vertex attribute names to set location points
+{.passC: """-DRL_DEFAULT_SHADER_ATTRIB_NAME_POSITION=\"vertexPosition\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD=\"vertexTexCoord\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_ATTRIB_NAME_NORMAL=\"vertexNormal\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_ATTRIB_NAME_COLOR=\"vertexColor\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_ATTRIB_NAME_TANGENT=\"vertexTangent\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD2=\"vertexTexCoord2\"""".}
+
+# Default shader uniform/sampler names
+{.passC: """-DRL_DEFAULT_SHADER_UNIFORM_NAME_MVP=\"mvp\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_UNIFORM_NAME_VIEW=\"matView\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_UNIFORM_NAME_PROJECTION=\"matProjection\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_UNIFORM_NAME_MODEL=\"matModel\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_UNIFORM_NAME_NORMAL=\"matNormal\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_UNIFORM_NAME_COLOR=\"colDiffuse\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE0=\"texture0\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE1=\"texture1\"""".}
+{.passC: """-DRL_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE2=\"texture2\"""".}
+
+# rshapes: Configuration values
+{.passC: "-DSPLINE_SEGMENT_DIVISIONS=24".}     # Spline segments subdivisions
+
+# rcore: Configuration values
+{.passC: "-DMAX_FILEPATH_CAPACITY=8192".}      # Maximum file paths capacity
+{.passC: "-DMAX_FILEPATH_LENGTH=4096".}        # Maximum length for filepaths (Linux PATH_MAX default value)
+
+{.passC: "-DMAX_KEYBOARD_KEYS=512".}           # Maximum number of keyboard keys supported
+{.passC: "-DMAX_MOUSE_BUTTONS=8".}             # Maximum number of mouse buttons supported
+{.passC: "-DMAX_GAMEPADS=4".}                  # Maximum number of gamepads supported
+{.passC: "-DMAX_GAMEPAD_AXES=8".}              # Maximum number of axes supported (per gamepad)
+{.passC: "-DMAX_GAMEPAD_BUTTONS=32".}          # Maximum number of buttons supported (per gamepad)
+{.passC: "-DMAX_GAMEPAD_VIBRATION_TIME=2.0f".} # Maximum vibration time in seconds
+{.passC: "-DMAX_TOUCH_POINTS=8".}              # Maximum number of touch points supported
+{.passC: "-DMAX_KEY_PRESSED_QUEUE=16".}        # Maximum number of keys in the key input queue
+{.passC: "-DMAX_CHAR_PRESSED_QUEUE=16".}       # Maximum number of characters in the char input queue
+
+{.passC: "-DMAX_DECOMPRESSION_SIZE=64".}       # Max size allocated for decompression in MB
+{.passC: "-DMAX_AUTOMATION_EVENTS=16384".}     # Maximum number of automation events to record
+
+# rtext: Configuration values
+{.passC: "-DMAX_TEXT_BUFFER_LENGTH=1024".}     # Size of internal static buffers used on some functions
+{.passC: "-DMAX_TEXTSPLIT_COUNT=128".}         # Maximum number of substrings to split: TextSplit()
+
+# rmodels: Configuration values
+{.passC: "-DMAX_MATERIAL_MAPS=12".}            # Maximum number of shader maps supported
+
+when defined(NaylibRlSupportMeshGpuSkinning):
+  {.passC: "-DMAX_MESH_VERTEX_BUFFERS=9".}     # Maximum vertex buffers (VBO) per mesh
+else:
+  {.passC: "-DMAX_MESH_VERTEX_BUFFERS=7".}     # Maximum vertex buffers (VBO) per mesh
+
+# raudio: Configuration values
+{.passC: "-DAUDIO_DEVICE_FORMAT=ma_format_f32".} # Device output format (miniaudio: float-32bit)
+{.passC: "-DAUDIO_DEVICE_CHANNELS=2".}           # Device output channels: stereo
+{.passC: "-DAUDIO_DEVICE_SAMPLE_RATE=0".}        # Device sample rate (device default)
+{.passC: "-DMAX_AUDIO_BUFFER_POOL_CHANNELS=16".} # Maximum number of audio pool channels
+
+# utils: Configuration values
+{.passC: "-DMAX_TRACELOG_MSG_LENGTH=256".}     # Max length of one trace-log message
+
