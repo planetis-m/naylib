@@ -21,6 +21,7 @@
 *       Internal buffer (and resources) must be manually unloaded calling rlglClose()
 *
 *   CONFIGURATION:
+*       #define GRAPHICS_API_OPENGL_11_SOFTWARE
 *       #define GRAPHICS_API_OPENGL_11
 *       #define GRAPHICS_API_OPENGL_21
 *       #define GRAPHICS_API_OPENGL_33
@@ -775,10 +776,9 @@ RLAPI unsigned int rlLoadFramebuffer(void);                               // Loa
 RLAPI void rlFramebufferAttach(unsigned int fboId, unsigned int texId, int attachType, int texType, int mipLevel); // Attach texture/renderbuffer to a framebuffer
 RLAPI bool rlFramebufferComplete(unsigned int id);                        // Verify framebuffer is complete
 RLAPI void rlUnloadFramebuffer(unsigned int id);                          // Delete framebuffer from GPU
-#if defined(GRAPHICS_API_OPENGL_11_SOFTWARE)
+// WARNING: Copy and resize framebuffer functionality only defined for software backend
 RLAPI void rlCopyFramebuffer(int x, int y, int width, int height, int format, void *pixels); // Copy framebuffer pixel data to internal buffer
 RLAPI void rlResizeFramebuffer(int width, int height);                    // Resize internal framebuffer
-#endif
 
 // Shaders management
 RLAPI unsigned int rlLoadShaderCode(const char *vsCode, const char *fsCode);    // Load shader from code strings
@@ -902,6 +902,7 @@ RLAPI void rlLoadDrawQuad(void);     // Load and draw a quad
 
     // It seems OpenGL ES 2.0 instancing entry points are not defined on Raspberry Pi
     // provided headers (despite being defined in official Khronos GLES2 headers)
+    // TODO: Avoid raylib platform-dependant code on rlgl, it should be a completely portable library
     #if defined(PLATFORM_DRM)
     typedef void (GL_APIENTRYP PFNGLDRAWARRAYSINSTANCEDEXTPROC) (GLenum mode, GLint start, GLsizei count, GLsizei primcount);
     typedef void (GL_APIENTRYP PFNGLDRAWELEMENTSINSTANCEDEXTPROC) (GLenum mode, GLsizei count, GLenum type, const void *indices, GLsizei primcount);
@@ -1152,6 +1153,7 @@ static double rlCullDistanceFar = RL_CULL_DISTANCE_FAR;
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
 static rlglData RLGL = { 0 };
 #endif  // GRAPHICS_API_OPENGL_33 || GRAPHICS_API_OPENGL_ES2
+static bool isGpuReady = false;
 
 #if defined(GRAPHICS_API_OPENGL_ES2) && !defined(GRAPHICS_API_OPENGL_ES3)
 // NOTE: VAO functionality is exposed through extensions (OES)
@@ -1251,7 +1253,7 @@ void rlPushMatrix(void)
     RLGL.State.stackCounter++;
 }
 
-// Pop lattest inserted matrix from RLGL.State.stack
+// Pop latest inserted matrix from RLGL.State.stack
 void rlPopMatrix(void)
 {
     if (RLGL.State.stackCounter > 0)
@@ -2282,6 +2284,8 @@ static void GLAPIENTRY rlDebugMessageCallback(GLenum source, GLenum type, GLuint
 // Initialize rlgl: OpenGL extensions, default buffers/shaders/textures, OpenGL states
 void rlglInit(int width, int height)
 {
+    isGpuReady = true;
+
     // Enable OpenGL debug context if required
 #if defined(RLGL_ENABLE_OPENGL_DEBUG_CONTEXT) && defined(GRAPHICS_API_OPENGL_43)
     if ((glDebugMessageCallback != NULL) && (glDebugMessageControl != NULL))
@@ -2329,6 +2333,16 @@ void rlglInit(int width, int height)
     RLGL.State.currentMatrix = &RLGL.State.modelview;
 #endif  // GRAPHICS_API_OPENGL_33 || GRAPHICS_API_OPENGL_ES2
 
+#if defined(GRAPHICS_API_OPENGL_11_SOFTWARE)
+    // Initialize software renderer backend
+    int result = swInit(width, height);
+    if (result == 0)
+    {
+        TRACELOG(RL_LOG_ERROR, "RLSW: Software renderer initialization failed!");
+        exit(-1);
+    }
+#endif
+
     // Initialize OpenGL default states
     //----------------------------------------------------------
     // Init state: Depth test
@@ -2345,39 +2359,28 @@ void rlglInit(int width, int height)
     glFrontFace(GL_CCW);                                    // Front face are defined counter clockwise (default)
     glEnable(GL_CULL_FACE);                                 // Enable backface culling
 
-    // Init state: Cubemap seamless
-#if defined(GRAPHICS_API_OPENGL_33)
-    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);                 // Seamless cubemaps (not supported on OpenGL ES 2.0)
-#endif
-
 #if defined(GRAPHICS_API_OPENGL_11)
     // Init state: Color hints (deprecated in OpenGL 3.0+)
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);      // Improve quality of color and texture coordinate interpolation
     glShadeModel(GL_SMOOTH);                                // Smooth shading between vertex (vertex colors interpolation)
 #endif
-
-#if defined(GRAPHICS_API_OPENGL_11_SOFTWARE)
-    int result = swInit(width, height); // Initialize software renderer backend
-    if (result == 0)
-    {
-        TRACELOG(RL_LOG_ERROR, "RLSW: Software renderer initialization failed!");
-        exit(-1);
-    }
+#if defined(GRAPHICS_API_OPENGL_33)
+    // Init state: Cubemap seamless
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);                 // Seamless cubemaps (not supported on OpenGL ES 2.0)
 #endif
-
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
     // Store screen size into global variables
     RLGL.State.framebufferWidth = width;
     RLGL.State.framebufferHeight = height;
-
-    TRACELOG(RL_LOG_INFO, "RLGL: Default OpenGL state initialized successfully");
-    //----------------------------------------------------------
 #endif
 
     // Init state: Color/Depth buffers clear
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);                   // Set clear color (black)
     glClearDepth(1.0f);                                     // Set clear depth value (default)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);     // Clear color and depth buffers (depth buffer required for 3D)
+
+    TRACELOG(RL_LOG_INFO, "RLGL: Default OpenGL state initialized successfully");
+    //----------------------------------------------------------
 }
 
 // Vertex Buffer Object deinitialization (memory free)
@@ -2395,6 +2398,7 @@ void rlglClose(void)
 #if defined(GRAPHICS_API_OPENGL_11_SOFTWARE)
     swClose(); // Unload sofware renderer resources
 #endif
+    isGpuReady = false;
 }
 
 // Load OpenGL extensions
@@ -2492,12 +2496,12 @@ void rlLoadExtensions(void *loader)
     const char *extensions = (const char *)glGetString(GL_EXTENSIONS);  // One big const string
 
     // NOTE: We have to duplicate string because glGetString() returns a const string
-    int size = strlen(extensions) + 1;      // Get extensions string size in bytes
-    char *extensionsDup = (char *)RL_CALLOC(size, sizeof(char));
-    strcpy(extensionsDup, extensions);
+    int extensionsLength = (int)strlen(extensions); // Get extensions string size in bytes
+    char *extensionsDup = (char *)RL_CALLOC(extensionsLength + 1, sizeof(char)); // Allocate space for copy with additional EOL byte
+    strncpy(extensionsDup, extensions, extensionsLength);
     extList[numExt] = extensionsDup;
 
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < extensionsLength; i++)
     {
         if (extensionsDup[i] == ' ')
         {
@@ -2799,6 +2803,7 @@ int *rlGetShaderLocsDefault(void)
 rlRenderBatch rlLoadRenderBatch(int numBuffers, int bufferElements)
 {
     rlRenderBatch batch = { 0 };
+    if (!isGpuReady) { TRACELOG(RL_LOG_WARNING, "GL: GPU is not ready to load data, trying to load before InitWindow()?"); return batch; }
 
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
     // Initialize CPU (RAM) vertex buffers (position, texcoord, color data and indexes)
@@ -2921,7 +2926,7 @@ rlRenderBatch rlLoadRenderBatch(int numBuffers, int bufferElements)
 
     batch.bufferCount = numBuffers;    // Record buffer count
     batch.drawCounter = 1;             // Reset draws counter
-    batch.currentDepth = -1.0f;         // Reset depth value
+    batch.currentDepth = -1.0f;        // Reset depth value
     //--------------------------------------------------------------------------------------------
 #endif
 
@@ -2982,7 +2987,8 @@ void rlDrawRenderBatch(rlRenderBatch *batch)
     // Update batch vertex buffers
     //------------------------------------------------------------------------------------------------------------
     // NOTE: If there is not vertex data, buffers doesn't need to be updated (vertexCount > 0)
-    // TODO: If no data changed on the CPU arrays --> No need to re-update GPU arrays (use a change detector flag?)
+    // TODO: If no data changed on the CPU arrays there is no need to re-upload data to GPU,
+    // a flag can be used to detect changes but it would imply keeping a copy buffer and memcmp() both, does it worth it?
     if (RLGL.State.vertexCounter > 0)
     {
         // Activate elements VAO
@@ -3252,6 +3258,7 @@ bool rlCheckRenderBatchLimit(int vCount)
 unsigned int rlLoadTexture(const void *data, int width, int height, int format, int mipmapCount)
 {
     unsigned int id = 0;
+    if (!isGpuReady) { TRACELOG(RL_LOG_WARNING, "GL: GPU is not ready to load data, trying to load before InitWindow()?"); return id; }
 
     glBindTexture(GL_TEXTURE_2D, 0);    // Free any old binding
 
@@ -3383,10 +3390,12 @@ unsigned int rlLoadTexture(const void *data, int width, int height, int format, 
 #if defined(GRAPHICS_API_OPENGL_33)
     if (mipmapCount > 1)
     {
-        // Activate Trilinear filtering if mipmaps are available
+        // Activate trilinear filtering if mipmaps are available
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipmapCount); // Required for user-defined mip count
+        
+        // Define thee maximum number of mipmap levels to be used, 0 is default texture size
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipmapCount - 1);
     }
 #endif
 
@@ -3408,6 +3417,7 @@ unsigned int rlLoadTexture(const void *data, int width, int height, int format, 
 unsigned int rlLoadTextureDepth(int width, int height, bool useRenderBuffer)
 {
     unsigned int id = 0;
+    if (!isGpuReady) { TRACELOG(RL_LOG_WARNING, "GL: GPU is not ready to load data, trying to load before InitWindow()?"); return id; }
 
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
     // In case depth textures not supported, we force renderbuffer usage
@@ -3466,6 +3476,7 @@ unsigned int rlLoadTextureDepth(int width, int height, bool useRenderBuffer)
 unsigned int rlLoadTextureCubemap(const void *data, int size, int format, int mipmapCount)
 {
     unsigned int id = 0;
+    if (!isGpuReady) { TRACELOG(RL_LOG_WARNING, "GL: GPU is not ready to load data, trying to load before InitWindow()?"); return id; }
 
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
     int mipSize = size;
@@ -3748,21 +3759,23 @@ void *rlReadTexturePixels(unsigned int id, int width, int height, int format)
     return pixels;
 }
 
-#if defined(GRAPHICS_API_OPENGL_11_SOFTWARE)
 // Copy framebuffer pixel data to internal buffer
 void rlCopyFramebuffer(int x, int y, int width, int height, int format, void *pixels)
 {
+#if defined(GRAPHICS_API_OPENGL_11_SOFTWARE)
     unsigned int glInternalFormat, glFormat, glType;
     rlGetGlTextureFormats(format, &glInternalFormat, &glFormat, &glType); // Get OpenGL texture format
     swCopyFramebuffer(x, y, width, height, glFormat, glType, pixels);
+#endif
 }
 
 // Resize internal framebuffer
 void rlResizeFramebuffer(int width, int height)
 {
+#if defined(GRAPHICS_API_OPENGL_11_SOFTWARE)
     swResizeFramebuffer(width, height);
-}
 #endif
+}
 
 // Read screen pixel data (color buffer)
 unsigned char *rlReadScreenPixels(int width, int height)
@@ -3808,6 +3821,7 @@ unsigned char *rlReadScreenPixels(int width, int height)
 unsigned int rlLoadFramebuffer(void)
 {
     unsigned int fboId = 0;
+    if (!isGpuReady) { TRACELOG(RL_LOG_WARNING, "GL: GPU is not ready to load data, trying to load before InitWindow()?"); return fboId; }
 
 #if (defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)) && defined(RLGL_RENDER_TEXTURES_HINT)
     glGenFramebuffers(1, &fboId);       // Create the framebuffer object
@@ -3900,7 +3914,7 @@ void rlUnloadFramebuffer(unsigned int id)
 
     // TODO: Review warning retrieving object name in WebGL
     // WARNING: WebGL: INVALID_ENUM: getFramebufferAttachmentParameter: invalid parameter name
-    // https://registry.khronos.org/webgl/specs/latest/1.0/
+    // REF: https://registry.khronos.org/webgl/specs/latest/1.0/
     glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &depthId);
 
     unsigned int depthIdU = (unsigned int)depthId;
@@ -3923,6 +3937,7 @@ void rlUnloadFramebuffer(unsigned int id)
 unsigned int rlLoadVertexBuffer(const void *buffer, int size, bool dynamic)
 {
     unsigned int id = 0;
+    if (!isGpuReady) { TRACELOG(RL_LOG_WARNING, "GL: GPU is not ready to load data, trying to load before InitWindow()?"); return id; }
 
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
     glGenBuffers(1, &id);
@@ -3937,6 +3952,7 @@ unsigned int rlLoadVertexBuffer(const void *buffer, int size, bool dynamic)
 unsigned int rlLoadVertexBufferElement(const void *buffer, int size, bool dynamic)
 {
     unsigned int id = 0;
+    if (!isGpuReady) { TRACELOG(RL_LOG_WARNING, "GL: GPU is not ready to load data, trying to load before InitWindow()?"); return id; }
 
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
     glGenBuffers(1, &id);
@@ -4102,12 +4118,12 @@ void rlDisableStatePointer(int vertexAttribType)
 unsigned int rlLoadVertexArray(void)
 {
     unsigned int vaoId = 0;
+    if (!isGpuReady) { TRACELOG(RL_LOG_WARNING, "GL: GPU is not ready to load data, trying to load before InitWindow()?"); return vaoId; }
+
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
-    if (RLGL.ExtSupported.vao)
-    {
-        glGenVertexArrays(1, &vaoId);
-    }
+    if (RLGL.ExtSupported.vao) glGenVertexArrays(1, &vaoId);
 #endif
+
     return vaoId;
 }
 
@@ -4162,6 +4178,7 @@ void rlUnloadVertexBuffer(unsigned int vboId)
 unsigned int rlLoadShaderCode(const char *vsCode, const char *fsCode)
 {
     unsigned int id = 0;
+    if (!isGpuReady) { TRACELOG(RL_LOG_WARNING, "GL: GPU is not ready to load data, trying to load before InitWindow()?"); return id; }
 
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
     unsigned int vertexShaderId = 0;
@@ -4304,6 +4321,7 @@ unsigned int rlCompileShader(const char *shaderCode, int type)
 unsigned int rlLoadShaderProgram(unsigned int vShaderId, unsigned int fShaderId)
 {
     unsigned int programId = 0;
+    if (!isGpuReady) { TRACELOG(RL_LOG_WARNING, "GL: GPU is not ready to load data, trying to load before InitWindow()?"); return programId; }
 
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
     GLint success = 0;
@@ -4427,8 +4445,6 @@ void rlSetUniform(int locIndex, const void *value, int uniformType, int count)
     #endif
         case RL_SHADER_UNIFORM_SAMPLER2D: glUniform1iv(locIndex, count, (int *)value); break;
         default: TRACELOG(RL_LOG_WARNING, "SHADER: Failed to set uniform value, data type not recognized");
-
-        // TODO: Support glUniform1uiv(), glUniform2uiv(), glUniform3uiv(), glUniform4uiv()
     }
 #endif
 }

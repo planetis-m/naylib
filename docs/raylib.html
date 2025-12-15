@@ -60,19 +60,13 @@
     <ul class="simple simple-toc-section">
       <li><a class="reference" href="#AudioCallback" title="AudioCallback = proc (bufferData: pointer; frames: uint32) {.cdecl.}">AudioCallback</a></li>
 <li><a class="reference" href="#AudioStream" title="AudioStream {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
-  ## Pointer to internal data used by the audio system
-  ## Pointer to internal data processor, useful for audio effects
   sampleRate*: uint32        ## Frequency (samples per second)
   sampleSize*: uint32        ## Bit depth (bits per sample): 8, 16, 32 (24 not supported)
   channels*: uint32          ## Number of channels (1-mono, 2-stereo, ...)">AudioStream</a></li>
 <li><a class="reference" href="#AutomationEvent" title="AutomationEvent {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
   frame*: uint32             ## Event frame
-  ## Event type (AutomationEventType)
   params*: array[4, int32]   ## Event parameters (if required)">AutomationEvent</a></li>
-<li><a class="reference" href="#AutomationEventList" title="AutomationEventList {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
-  ## Events max entries (MAX_AUTOMATION_EVENTS)
-  ## Events entries count
-  ## Events entries">AutomationEventList</a></li>
+<li><a class="reference" href="#AutomationEventList" title="AutomationEventList {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object">AutomationEventList</a></li>
 <li><a class="reference" href="#BlendMode" title="BlendMode {.size: 4.} = enum
   Alpha,                    ## Blend textures considering alpha (default)
   Additive,                 ## Blend textures adding colors
@@ -90,10 +84,10 @@
   max*: Vector3              ## Maximum vertex box-corner">BoundingBox</a></li>
 <li><a class="reference" href="#Camera" title="Camera = Camera3D">Camera</a></li>
 <li><a class="reference" href="#Camera2D" title="Camera2D {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
-  offset*: Vector2           ## Camera offset (displacement from target)
-  target*: Vector2           ## Camera target (rotation and zoom origin)
-  rotation*: float32         ## Camera rotation in degrees
-  zoom*: float32             ## Camera zoom (scaling), should be 1.0f by default">Camera2D</a></li>
+  offset*: Vector2           ## Camera offset (screen space offset from window origin)
+  target*: Vector2           ## Camera target (world space target point that is mapped to screen space offset)
+  rotation*: float32         ## Camera rotation in degrees (pivots around target)
+  zoom*: float32             ## Camera zoom (scaling around target), must not be set to 0, set to 1.0f for no scale">Camera2D</a></li>
 <li><a class="reference" href="#Camera3D" title="Camera3D {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
   position*: Vector3         ## Camera position
   target*: Vector3           ## Camera target it looks-at
@@ -140,11 +134,8 @@
 <li><a class="reference" href="#Flags" title="Flags[E] = distinct uint32">Flags</a></li>
 <li><a class="reference" href="#Font" title="Font {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
   baseSize*: int32           ## Base size (default chars height)
-  ## Number of glyph characters
   glyphPadding*: int32       ## Padding around the glyph characters
-  texture*: Texture2D        ## Texture atlas containing the glyphs
-  ## Rectangles in texture for the glyphs
-  ## Glyphs info data">Font</a></li>
+  texture*: Texture2D        ## Texture atlas containing the glyphs">Font</a></li>
 <li><a class="reference" href="#FontGlyphs" title="FontGlyphs = distinct Font">FontGlyphs</a></li>
 <li><a class="reference" href="#FontRecs" title="FontRecs = distinct Font">FontRecs</a></li>
 <li><a class="reference" href="#FontType" title="FontType {.size: 4.} = enum
@@ -316,11 +307,8 @@
     uint8] {.cdecl.}">LoadFileDataCallback</a></li>
 <li><a class="reference" href="#LoadFileTextCallback" title="LoadFileTextCallback = proc (fileName: ConstCstring): cstring {.cdecl.}">LoadFileTextCallback</a></li>
 <li><a class="reference" href="#Material" title="Material {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
-  ## Material shader
-  ## Material maps array (MAX_MATERIAL_MAPS)
   params*: array[4, float32] ## Material generic parameters (if required)">Material</a></li>
 <li><a class="reference" href="#MaterialMap" title="MaterialMap {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
-  ## Material map texture
   color*: Color              ## Material map color
   value*: float32            ## Material map value">MaterialMap</a></li>
 <li><a class="reference" href="#MaterialMapIndex" title="MaterialMapIndex {.size: 4.} = enum
@@ -343,23 +331,7 @@
   m2*, m6*, m10*, m14*: float32 ## Matrix third row (4 components)
   m3*, m7*, m11*, m15*: float32 ## Matrix fourth row (4 components)">Matrix</a></li>
 <li><a class="reference" href="#Mesh" title="Mesh {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
-  ## Number of vertices stored in arrays
-  ## Number of triangles stored (indexed or not)
-  ## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
-  ## Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
-  ## Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)
-  ## Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
-  ## Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
-  ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-  ## Vertex indices (in case vertex data comes indexed)
-  ## Animated vertex positions (after bones transformations)
-  ## Animated normals (after bones transformations)
-  ## Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning) (shader-location = 6)
-  ## Vertex bone weight, up to 4 bones influence by vertex (skinning) (shader-location = 7)
-  ## Bones animated transformation matrices
-  ## Number of bones
-  vaoId*: uint32             ## OpenGL Vertex Array Object id
-  ## OpenGL Vertex Buffer Objects id (default vertex data)">Mesh</a></li>
+  vaoId*: uint32             ## OpenGL Vertex Array Object id">Mesh</a></li>
 <li><a class="reference" href="#MeshAnimNormals" title="MeshAnimNormals = distinct Mesh">MeshAnimNormals</a></li>
 <li><a class="reference" href="#MeshAnimVertices" title="MeshAnimVertices = distinct Mesh">MeshAnimVertices</a></li>
 <li><a class="reference" href="#MeshBoneIds" title="MeshBoneIds = distinct Mesh">MeshBoneIds</a></li>
@@ -374,20 +346,8 @@
 <li><a class="reference" href="#MeshVboId" title="MeshVboId = distinct Mesh">MeshVboId</a></li>
 <li><a class="reference" href="#MeshVertices" title="MeshVertices = distinct Mesh">MeshVertices</a></li>
 <li><a class="reference" href="#Model" title="Model {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
-  transform*: Matrix         ## Local transform matrix
-  ## Number of meshes
-  ## Number of materials
-  ## Meshes array
-  ## Materials array
-  ## Mesh material number
-  ## Number of bones
-  ## Bones information (skeleton)
-  ## Bones base transformation (pose)">Model</a></li>
+  transform*: Matrix         ## Local transform matrix">Model</a></li>
 <li><a class="reference" href="#ModelAnimation" title="ModelAnimation {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
-  ## Number of bones
-  ## Number of animation frames
-  ## Bones information (skeleton)
-  ## Poses array by frame
   name*: array[32, char]     ## Animation name">ModelAnimation</a></li>
 <li><a class="reference" href="#ModelAnimationBones" title="ModelAnimationBones = distinct ModelAnimation">ModelAnimationBones</a></li>
 <li><a class="reference" href="#ModelAnimationFramePoses" title="ModelAnimationFramePoses = distinct ModelAnimation">ModelAnimationFramePoses</a></li>
@@ -487,8 +447,7 @@
 <li><a class="reference" href="#SaveFileTextCallback" title="SaveFileTextCallback = proc (fileName: ConstCstring; text: cstring): bool {.
     cdecl.}">SaveFileTextCallback</a></li>
 <li><a class="reference" href="#Shader" title="Shader {.importc, header: &quot;raylib.h&quot;, completeStruct, bycopy.} = object
-  id*: uint32                ## Shader program id
-  ## Shader locations array (RL_MAX_SHADER_LOCATIONS)">Shader</a></li>
+  id*: uint32                ## Shader program id">Shader</a></li>
 <li><a class="reference" href="#ShaderAttributeDataType" title="ShaderAttributeDataType {.size: 4.} = enum
   Float,                    ## Shader attribute type: float
   Vec2,                     ## Shader attribute type: vec2 (2 float)
@@ -3275,10 +3234,10 @@
 </div>
 <div id="Camera2D">
   <dt><pre><a href="raylib.html#Camera2D"><span class="Identifier">Camera2D</span></a> {.<span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span class="Identifier">completeStruct</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Identifier">offset</span><span class="Operator">*</span><span class="Other">:</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a>           <span class="Comment">## Camera offset (displacement from target)</span>
-  <span class="Identifier">target</span><span class="Operator">*</span><span class="Other">:</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a>           <span class="Comment">## Camera target (rotation and zoom origin)</span>
-  <span class="Identifier">rotation</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">float32</span>         <span class="Comment">## Camera rotation in degrees</span>
-  <span class="Identifier">zoom</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">float32</span>             <span class="Comment">## Camera zoom (scaling), should be 1.0f by default</span></pre></dt>
+  <span class="Identifier">offset</span><span class="Operator">*</span><span class="Other">:</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a>           <span class="Comment">## Camera offset (screen space offset from window origin)</span>
+  <span class="Identifier">target</span><span class="Operator">*</span><span class="Other">:</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a>           <span class="Comment">## Camera target (world space target point that is mapped to screen space offset)</span>
+  <span class="Identifier">rotation</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">float32</span>         <span class="Comment">## Camera rotation in degrees (pivots around target)</span>
+  <span class="Identifier">zoom</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">float32</span>             <span class="Comment">## Camera zoom (scaling around target), must not be set to 0, set to 1.0f for no scale</span></pre></dt>
   <dd>
     
     Camera2D, defines position/orientation in 2d space
@@ -13012,7 +12971,7 @@
     <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set pan for a music (0.5 is center)
+    Set pan for a music (-1.0 left, 0.0 center, 1.0 right)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1679" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1679" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -13171,7 +13130,7 @@
     <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raylib.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Set pan for a sound (0.5 is center)
+    Set pan for a sound (-1.0 left, 0.0 center, 1.0 right)
     <a href="https://github.com/planetis-m/naylib/tree/main/src/raylib.nim#L1647" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/raylib.nim#L1647" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -14664,7 +14623,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-10-18 10:47:41 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-12-15 10:01:41 UTC</small>
       </div>
     </div>
   </div>

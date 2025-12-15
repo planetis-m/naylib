@@ -588,10 +588,10 @@ type
     projection*: CameraProjection ## Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
 
   Camera2D* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Camera2D, defines position/orientation in 2d space
-    offset*: Vector2 ## Camera offset (displacement from target)
-    target*: Vector2 ## Camera target (rotation and zoom origin)
-    rotation*: float32 ## Camera rotation in degrees
-    zoom*: float32 ## Camera zoom (scaling), should be 1.0f by default
+    offset*: Vector2 ## Camera offset (screen space offset from window origin)
+    target*: Vector2 ## Camera target (world space target point that is mapped to screen space offset)
+    rotation*: float32 ## Camera rotation in degrees (pivots around target)
+    zoom*: float32 ## Camera zoom (scaling around target), must not be set to 0, set to 1.0f for no scale
 
   Mesh* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Mesh, vertex data and vao/vbo
     vertexCount: int32 ## Number of vertices stored in arrays
@@ -1645,7 +1645,7 @@ proc setSoundVolume*(sound: Sound, volume: float32) {.importc: "SetSoundVolume",
 proc setSoundPitch*(sound: Sound, pitch: float32) {.importc: "SetSoundPitch", sideEffect.}
   ## Set pitch for a sound (1.0 is base level)
 proc setSoundPan*(sound: Sound, pan: float32) {.importc: "SetSoundPan", sideEffect.}
-  ## Set pan for a sound (0.5 is center)
+  ## Set pan for a sound (-1.0 left, 0.0 center, 1.0 right)
 func waveCopy*(wave: Wave): Wave {.importc: "WaveCopy".}
   ## Copy a wave to a new wave
 func waveCrop*(wave: var Wave, initFrame: int32, finalFrame: int32) {.importc: "WaveCrop".}
@@ -1677,7 +1677,7 @@ proc setMusicVolume*(music: Music, volume: float32) {.importc: "SetMusicVolume",
 proc setMusicPitch*(music: Music, pitch: float32) {.importc: "SetMusicPitch", sideEffect.}
   ## Set pitch for a music (1.0 is base level)
 proc setMusicPan*(music: Music, pan: float32) {.importc: "SetMusicPan", sideEffect.}
-  ## Set pan for a music (0.5 is center)
+  ## Set pan for a music (-1.0 left, 0.0 center, 1.0 right)
 func getMusicTimeLength*(music: Music): float32 {.importc: "GetMusicTimeLength".}
   ## Get music time length (in seconds)
 proc getMusicTimePlayed*(music: Music): float32 {.importc: "GetMusicTimePlayed", sideEffect.}

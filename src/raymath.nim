@@ -237,6 +237,7 @@ func fromEuler*(pitch: float32, yaw: float32, roll: float32): Quaternion {.impor
 func toEuler*(q: Quaternion): Vector3 {.importc: "QuaternionToEuler".}
 func transform*(q: Quaternion, mat: Matrix): Quaternion {.importc: "QuaternionTransform".}
 func equals*(p: Quaternion, q: Quaternion): int32 {.importc: "QuaternionEquals".}
+func compose*(translation: Vector3, rotation: Quaternion, scale: Vector3): Matrix {.importc: "MatrixCompose".}
 func decompose*(mat: Matrix, translation: out Vector3, rotation: out Quaternion, scale: out Vector3) {.importc: "MatrixDecompose".}
 {.pop.}
 

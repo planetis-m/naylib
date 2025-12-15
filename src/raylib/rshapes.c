@@ -1169,9 +1169,9 @@ void DrawRectangleRounded(rlRectangle rec, float roundness, int segments, Color 
 }
 
 // Draw rectangle with rounded edges
-// TODO: This function should be refactored to use RL_LINES, for consistency with other Draw*Lines()
 void DrawRectangleRoundedLines(rlRectangle rec, float roundness, int segments, Color color)
 {
+    // NOTE: For line thicknes <=1.0f we use RL_LINES, otherwise wee use RL_QUADS/RL_TRIANGLES
     DrawRectangleRoundedLinesEx(rec, roundness, segments, 1.0f, color);
 }
 
@@ -1395,7 +1395,6 @@ void DrawRectangleRoundedLinesEx(rlRectangle rec, float roundness, int segments,
     {
         // Use LINES to draw the outline
         rlBegin(RL_LINES);
-
             // Draw all the 4 corners first: Upper Left Corner, Upper Right Corner, Lower Right Corner, Lower Left Corner
             for (int k = 0; k < 4; ++k) // Hope the compiler is smart enough to unroll this loop
             {
@@ -1418,7 +1417,6 @@ void DrawRectangleRoundedLinesEx(rlRectangle rec, float roundness, int segments,
                 rlVertex2f(point[i].x, point[i].y);
                 rlVertex2f(point[i + 1].x, point[i + 1].y);
             }
-
         rlEnd();
     }
 }
@@ -1432,6 +1430,7 @@ void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color)
     rlRectangle shapeRect = GetShapesTextureRectangle();
 
     rlBegin(RL_QUADS);
+        rlNormal3f(0.0f, 0.0f, 1.0f);
         rlColor4ub(color.r, color.g, color.b, color.a);
 
         rlTexCoord2f(shapeRect.x/texShapes.width, shapeRect.y/texShapes.height);
@@ -1441,7 +1440,7 @@ void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color)
         rlVertex2f(v2.x, v2.y);
 
         rlTexCoord2f((shapeRect.x + shapeRect.width)/texShapes.width, (shapeRect.y + shapeRect.height)/texShapes.height);
-        rlVertex2f(v2.x, v2.y);
+        rlVertex2f(v3.x, v3.y);
 
         rlTexCoord2f((shapeRect.x + shapeRect.width)/texShapes.width, shapeRect.y/texShapes.height);
         rlVertex2f(v3.x, v3.y);

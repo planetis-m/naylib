@@ -103,6 +103,10 @@
 <li><a class="reference" href="#clampValue%2CVector3%2Cfloat32%2Cfloat32" title="clampValue(v: Vector3; min: float32; max: float32): Vector3">clampValue(v: Vector3; min: float32; max: float32): Vector3</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">compose
+  <li><a class="reference" href="#compose%2CVector3%2CQuaternion%2CVector3" title="compose(translation: Vector3; rotation: Quaternion; scale: Vector3): Matrix">compose(translation: Vector3; rotation: Quaternion; scale: Vector3): Matrix</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">crossProduct
   <li><a class="reference" href="#crossProduct%2CVector2%2CVector2" title="crossProduct(v1: Vector2; v2: Vector2): float32">crossProduct(v1: Vector2; v2: Vector2): float32</a></li>
 <li><a class="reference" href="#crossProduct%2CVector3%2CVector3" title="crossProduct(v1: Vector3; v2: Vector3): Vector3">crossProduct(v1: Vector3; v2: Vector3): Vector3</a></li>
@@ -770,6 +774,21 @@
 </div>
 
 </div>
+<div id="compose-procs-all">
+  <div id="compose,Vector3,Quaternion,Vector3">
+  <dt><pre><span class="Keyword">func</span> <a href="#compose%2CVector3%2CQuaternion%2CVector3"><span class="Identifier">compose</span></a><span class="Other">(</span><span class="Identifier">translation</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a><span class="Other">;</span> <span class="Identifier">rotation</span><span class="Other">:</span> <a href="raylib.html#Quaternion"><span class="Identifier">Quaternion</span></a><span class="Other">;</span> <span class="Identifier">scale</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Matrix"><span class="Identifier">Matrix</span></a> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;MatrixCompose&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;raymath.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L240" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L240" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
 <div id="crossProduct-procs-all">
   <div id="crossProduct,Vector2,Vector2">
   <dt><pre><span class="Keyword">proc</span> <a href="#crossProduct%2CVector2%2CVector2"><span class="Identifier">crossProduct</span></a><span class="Other">(</span><span class="Identifier">v1</span><span class="Other">:</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a><span class="Other">;</span> <span class="Identifier">v2</span><span class="Other">:</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float32</span> {.
@@ -838,8 +857,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L240" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L240" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L241" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L241" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2532,8 +2551,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L259" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L259" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L260" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L260" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2542,8 +2561,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L255" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L255" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L256" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L256" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2552,8 +2571,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L257" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L257" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L258" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L258" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2565,8 +2584,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L260" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L260" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L261" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L261" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2576,8 +2595,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L256" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L256" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L257" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L257" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2587,8 +2606,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L258" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L258" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L259" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L259" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2600,8 +2619,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L245" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L245" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L246" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L246" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2610,8 +2629,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L247" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L247" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L248" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L248" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2624,8 +2643,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L246" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L246" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L247" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L247" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2635,8 +2654,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L248" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L248" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L249" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L249" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2648,8 +2667,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L250" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L250" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L251" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L251" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2658,8 +2677,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L252" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L252" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L253" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L253" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2668,8 +2687,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L267" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L267" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L268" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L268" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2682,8 +2701,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L251" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L251" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L252" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L252" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2693,8 +2712,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L253" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L253" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L254" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L254" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2706,8 +2725,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L262" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L262" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L263" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L263" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2716,8 +2735,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L264" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L264" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L265" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L265" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2730,8 +2749,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L263" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L263" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L264" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L264" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2741,8 +2760,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L265" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L265" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L266" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L266" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2754,8 +2773,8 @@
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L243" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L243" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/raymath.nim#L244" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/raymath.nim#L244" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2777,7 +2796,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-10-18 10:47:41 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-12-15 10:01:41 UTC</small>
       </div>
     </div>
   </div>
