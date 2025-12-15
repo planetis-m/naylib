@@ -15,6 +15,8 @@ when defined(mingw):
 {.passC: "-I" & raylibDir.string.}
 {.passC: "-I" & string(raylibDir / Path"external/glfw/include").}
 {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
+when not defined(vcc):
+  {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB".}
   when defined(GraphicsApiOpenGlEs3):
@@ -70,6 +72,7 @@ else:
 
   when defined(windows):
     when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
+    elif defined(vcc): {.passL: "opengl32.lib gdi32.lib winmm.lib user32.lib shell32.lib".}
     else: {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
 
   elif defined(macosx):

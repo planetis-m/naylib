@@ -15,6 +15,8 @@ when defined(mingw):
 {.passC: "-I" & raylibDir.string.}
 {.passC: "-I" & string(raylibDir / Path"external/glfw/include").}
 {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
+when not defined(vcc):
+  {.passC: "-Wall -D_GNU_SOURCE -Wno-missing-braces -Werror=pointer-arith".}
 when defined(emscripten):
   {.passC: "-DPLATFORM_WEB".}
   when defined(GraphicsApiOpenGlEs3):
@@ -70,6 +72,7 @@ else:
 
   when defined(windows):
     when defined(tcc): {.passL: "-lopengl32 -lgdi32 -lwinmm -lshell32".}
+    elif defined(vcc): {.passL: "opengl32.lib gdi32.lib winmm.lib user32.lib shell32.lib".}
     else: {.passL: "-static-libgcc -lopengl32 -lgdi32 -lwinmm".}
 
   elif defined(macosx):
@@ -1416,7 +1419,7 @@ proc drawTexture*(texture: Texture2D, source: Rectangle, position: Vector2, tint
   ## Draw a part of a texture defined by a rectangle
 proc drawTexture*(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTexturePro", sideEffect.}
   ## Draw a part of a texture defined by a rectangle with 'pro' parameters
-proc drawTextureNPatch*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch", sideEffect.}
+proc drawTexture*(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color) {.importc: "DrawTextureNPatch", sideEffect.}
   ## Draws a texture (or part of it) that stretches or shrinks nicely
 func colorNormalize*(color: Color): Vector4 {.importc: "ColorNormalize".}
   ## Get Color normalized as float [0..1]
