@@ -127,7 +127,6 @@ else: {.compile: raylibDir / Path"rglfw.c".}
 {.compile: raylibDir / Path"rshapes.c".}
 {.compile: raylibDir / Path"rtextures.c".}
 {.compile: raylibDir / Path"rtext.c".}
-{.compile: raylibDir / Path"utils.c".}
 {.compile: raylibDir / Path"rmodels.c".}
 {.compile: raylibDir / Path"raudio.c".}
 when defined(android):
@@ -998,14 +997,14 @@ proc waitTime*(seconds: float64) {.importc: "WaitTime", sideEffect.}
 proc takeScreenshotImpl(fileName: cstring) {.importc: "TakeScreenshot", sideEffect.}
 proc setConfigFlags*(flags: Flags[ConfigFlags]) {.importc: "SetConfigFlags", sideEffect.}
   ## Setup init configuration flags (view FLAGS)
-proc traceLog*(logLevel: TraceLogLevel, text: cstring) {.importc: "TraceLog", varargs, sideEffect.}
-  ## Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
 proc setTraceLogLevel*(logLevel: TraceLogLevel) {.importc: "SetTraceLogLevel", sideEffect.}
   ## Set the current threshold (minimum) log level
+proc traceLog*(logLevel: TraceLogLevel, text: cstring) {.importc: "TraceLog", varargs, sideEffect.}
+  ## Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
+proc setTraceLogCallbackImpl(callback: TraceLogCallbackImpl) {.importc: "SetTraceLogCallback", sideEffect.}
 proc memAlloc(size: uint32): pointer {.importc: "MemAlloc", sideEffect.}
 proc memRealloc(`ptr`: pointer, size: uint32): pointer {.importc: "MemRealloc", sideEffect.}
 proc memFree(`ptr`: pointer) {.importc: "MemFree", sideEffect.}
-proc setTraceLogCallbackImpl(callback: TraceLogCallbackImpl) {.importc: "SetTraceLogCallback", sideEffect.}
 proc setLoadFileDataCallback*(callback: LoadFileDataCallback) {.importc: "SetLoadFileDataCallback", sideEffect.}
   ## Set custom file binary data loader
 proc setSaveFileDataCallback*(callback: SaveFileDataCallback) {.importc: "SetSaveFileDataCallback", sideEffect.}

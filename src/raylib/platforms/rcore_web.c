@@ -12,9 +12,6 @@
 *   POSSIBLE IMPROVEMENTS:
 *       - Replace glfw3 dependency by direct browser API calls (same as library_glfw3.js)
 *
-*   ADDITIONAL NOTES:
-*       - TRACELOG() function is located in raylib [utils] module
-*
 *   CONFIGURATION:
 *       #define RCORE_PLATFORM_CUSTOM_FLAG
 *           Custom flag for rcore on target platform -not used-
@@ -26,7 +23,7 @@
 *
 *   LICENSE: zlib/libpng
 *
-*   Copyright (c) 2013-2025 Ramon Santamaria (@raysan5) and contributors
+*   Copyright (c) 2013-2026 Ramon Santamaria (@raysan5) and contributors
 *
 *   This software is provided "as-is", without any express or implied warranty. In no event
 *   will the authors be held liable for any damages arising from the use of this software.
@@ -76,10 +73,10 @@ typedef struct {
     bool ourFullscreen;                 // Internal var to filter our handling of fullscreen vs the user handling of fullscreen
     int unmaximizedWidth;               // Internal var to store the unmaximized window (canvas) width
     int unmaximizedHeight;              // Internal var to store the unmaximized window (canvas) height
-    
+
     char canvasId[64];                  // Keep current canvas id where wasm app is running
                                         // NOTE: Useful when trying to run multiple wasms in different canvases in same webpage
-    
+
 #if defined(GRAPHICS_API_OPENGL_11_SOFTWARE)
     unsigned int *pixels;               // Pointer to pixel data buffer (RGBA 32bit format)
 #endif
@@ -204,7 +201,6 @@ void ToggleFullscreen(void)
 
         EM_ASM(document.exitFullscreen(););
 
-        CORE.Window.fullscreen = false;
         FLAG_CLEAR(CORE.Window.flags, FLAG_FULLSCREEN_MODE);
         FLAG_CLEAR(CORE.Window.flags, FLAG_BORDERLESS_WINDOWED_MODE);
     }
@@ -213,14 +209,12 @@ void ToggleFullscreen(void)
     if (enterFullscreen)
     {
         // NOTE: The setTimeouts handle the browser mode change delay
-        EM_ASM
-        (
-            setTimeout(function()
-            {
+        EM_ASM(
+            setTimeout(function(){
                 Module.requestFullscreen(false, false);
             }, 100);
         );
-        CORE.Window.fullscreen = true;
+
         FLAG_SET(CORE.Window.flags, FLAG_FULLSCREEN_MODE);
     }
 
@@ -238,7 +232,7 @@ void ToggleFullscreen(void)
     */
     // EM_ASM(Module.requestFullscreen(false, false););
     /*
-        if (!CORE.Window.fullscreen)
+        if (!FLAG_IS_SET(CORE.Window.flags, FLAG_FULLSCREEN_MODE))
         {
             // Option 1: Request fullscreen for the canvas element
             // This option does not seem to work at all:
@@ -274,7 +268,6 @@ void ToggleFullscreen(void)
             emscripten_get_canvas_element_size(platform.canvasId, &width, &height);
             TRACELOG(LOG_WARNING, "Emscripten: Enter fullscreen: Canvas size: %i x %i", width, height);
 
-            CORE.Window.fullscreen = true;          // Toggle fullscreen flag
             FLAG_SET(CORE.Window.flags, FLAG_FULLSCREEN_MODE);
         }
         else
@@ -286,7 +279,6 @@ void ToggleFullscreen(void)
             emscripten_get_canvas_element_size(platform.canvasId, &width, &height);
             TRACELOG(LOG_WARNING, "Emscripten: Exit fullscreen: Canvas size: %i x %i", width, height);
 
-            CORE.Window.fullscreen = false;          // Toggle fullscreen flag
             FLAG_CLEAR(CORE.Window.flags, FLAG_FULLSCREEN_MODE);
         }
     */
@@ -313,7 +305,6 @@ void ToggleBorderlessWindowed(void)
 
         EM_ASM(document.exitFullscreen(););
 
-        CORE.Window.fullscreen = false;
         FLAG_CLEAR(CORE.Window.flags, FLAG_FULLSCREEN_MODE);
         FLAG_CLEAR(CORE.Window.flags, FLAG_BORDERLESS_WINDOWED_MODE);
     }
@@ -545,7 +536,6 @@ void ClearWindowState(unsigned int flags)
             if (FLAG_IS_SET(CORE.Window.flags, FLAG_FULLSCREEN_MODE) || (canvasStyleWidth > canvasWidth)) EM_ASM(document.exitFullscreen(););
         }
 
-        CORE.Window.fullscreen = false;
         FLAG_CLEAR(CORE.Window.flags, FLAG_FULLSCREEN_MODE);
     }
 
@@ -892,7 +882,7 @@ void SwapScreenBuffer(void)
 #if defined(GRAPHICS_API_OPENGL_11_SOFTWARE)
     // Update framebuffer
     rlCopyFramebuffer(0, 0, CORE.Window.render.width, CORE.Window.render.height, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8, platform.pixels);
-    
+
     // Copy framebuffer data into canvas
     EM_ASM({
         const width = $0;
@@ -1111,7 +1101,7 @@ void PollInputEvents(void)
                     else CORE.Input.Gamepad.currentButtonState[i][button] = 0;
                 }
 
-                //TRACELOGD("INPUT: Gamepad %d, button %d: Digital: %d, Analog: %g", gamepadState.index, j, gamepadState.digitalButton[j], gamepadState.analogButton[j]);
+                //TRACELOG(LOG_DEBUG, "INPUT: Gamepad %d, button %d: Digital: %d, Analog: %g", gamepadState.index, j, gamepadState.digitalButton[j], gamepadState.analogButton[j]);
             }
 
             // Register axis data for every connected gamepad
@@ -1135,7 +1125,7 @@ void PollInputEvents(void)
 int InitPlatform(void)
 {
     SetCanvasIdJs(platform.canvasId, 64); // Get the current canvas id
-    
+
     glfwSetErrorCallback(ErrorCallback);
 
     // Initialize GLFW internal global state
@@ -1155,8 +1145,6 @@ int InitPlatform(void)
     // glfwWindowHint(GLFW_AUX_BUFFERS, 0);          // Number of auxiliar buffers
 
     // Check window creation flags
-    if (FLAG_IS_SET(CORE.Window.flags, FLAG_FULLSCREEN_MODE)) CORE.Window.fullscreen = true;
-
     if (FLAG_IS_SET(CORE.Window.flags, FLAG_WINDOW_HIDDEN)) glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Visible window
     else glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE); // Window initially hidden
 
@@ -1209,8 +1197,8 @@ int InitPlatform(void)
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); // Choose OpenGL minor version (just hint)
         // Profiles Hint, only OpenGL 3.3 and above
         // Possible values: GLFW_OPENGL_CORE_PROFILE, GLFW_OPENGL_ANY_PROFILE, GLFW_OPENGL_COMPAT_PROFILE
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); 
-        
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_FALSE); // Forward Compatibility Hint: Only 3.3 and above!
         // glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE); // Request OpenGL DEBUG context
     }
@@ -1245,7 +1233,7 @@ int InitPlatform(void)
 
     // Init fullscreen toggle required var:
     platform.ourFullscreen = false;
-    
+
 #if defined(GRAPHICS_API_OPENGL_11_SOFTWARE)
     // Avoid creating a WebGL canvas, avoid calling glfwCreateWindow()
     emscripten_set_canvas_element_size(platform.canvasId, CORE.Window.screen.width, CORE.Window.screen.height);
@@ -1253,14 +1241,14 @@ int InitPlatform(void)
         const canvas = document.getElementById("canvas");
         Module.canvas = canvas;
     });
-    
+
     // Load memory framebuffer with desired screen size
     // NOTE: Despite using a software framebuffer for blitting, GLFW still creates a WebGL canvas,
     // but it is not being used, on SwapScreenBuffer() the pure software renderer is used
     // TODO: Consider requesting another type of canvas, not a WebGL one --> Replace GLFW-web by Emscripten?
     platform.pixels = (unsigned int *)RL_CALLOC(CORE.Window.screen.width*CORE.Window.screen.height, sizeof(unsigned int));
 #else
-    if (CORE.Window.fullscreen)
+    if (FLAG_IS_SET(CORE.Window.flags, FLAG_FULLSCREEN_MODE))
     {
         // remember center for switchinging from fullscreen to window
         if ((CORE.Window.screen.height == CORE.Window.display.height) && (CORE.Window.screen.width == CORE.Window.display.width))
@@ -1298,18 +1286,6 @@ int InitPlatform(void)
         }
 
         TRACELOG(LOG_WARNING, "SYSTEM: Closest fullscreen videomode: %i x %i", CORE.Window.display.width, CORE.Window.display.height);
-
-        // NOTE: ISSUE: Closest videomode could not match monitor aspect-ratio, for example,
-        // for a desired screen size of 800x450 (16:9), closest supported videomode is 800x600 (4:3),
-        // framebuffer is rendered correctly but once displayed on a 16:9 monitor, it gets stretched
-        // by the sides to fit all monitor space...
-
-        // Try to setup the most appropriate fullscreen framebuffer for the requested screenWidth/screenHeight
-        // It considers device display resolution mode and setups a framebuffer with black bars if required (render size/offset)
-        // Modified global variables: CORE.Window.screen.width/CORE.Window.screen.height - CORE.Window.render.width/CORE.Window.render.height - CORE.Window.renderOffset.x/CORE.Window.renderOffset.y - CORE.Window.screenScale
-        // TODO: It is a quite cumbersome solution to display size vs requested size, it should be reviewed or removed...
-        // HighDPI monitors are properly considered in a following similar function: SetupViewport()
-        SetupFramebuffer(CORE.Window.display.width, CORE.Window.display.height);
 
         platform.handle = glfwCreateWindow(CORE.Window.display.width, CORE.Window.display.height, (CORE.Window.title != 0)? CORE.Window.title : " ", glfwGetPrimaryMonitor(), NULL);
 
@@ -1531,7 +1507,7 @@ static void WindowDropCallback(GLFWwindow *window, int count, const char **paths
         for (unsigned int i = 0; i < CORE.Window.dropFileCount; i++)
         {
             CORE.Window.dropFilepaths[i] = (char *)RL_CALLOC(MAX_FILEPATH_LENGTH, sizeof(char));
-            strcpy(CORE.Window.dropFilepaths[i], paths[i]);
+            strncpy(CORE.Window.dropFilepaths[i], paths[i], MAX_FILEPATH_LENGTH - 1);
         }
     }
 }
@@ -1716,12 +1692,12 @@ static EM_BOOL EmscriptenPointerlockCallback(int eventType, const EmscriptenPoin
 static EM_BOOL EmscriptenGamepadCallback(int eventType, const EmscriptenGamepadEvent *gamepadEvent, void *userData)
 {
     /*
-    TRACELOGD("%s: timeStamp: %g, connected: %d, index: %ld, numAxes: %d, numButtons: %d, id: \"%s\", mapping: \"%s\"",
+    TRACELOG(LOG_DEBUG, "%s: timeStamp: %g, connected: %d, index: %ld, numAxes: %d, numButtons: %d, id: \"%s\", mapping: \"%s\"",
            eventType != 0? emscripten_event_type_to_string(eventType) : "Gamepad state",
            gamepadEvent->timestamp, gamepadEvent->connected, gamepadEvent->index, gamepadEvent->numAxes, gamepadEvent->numButtons, gamepadEvent->id, gamepadEvent->mapping);
 
-    for (int i = 0; i < gamepadEvent->numAxes; i++) TRACELOGD("Axis %d: %g", i, gamepadEvent->axis[i]);
-    for (int i = 0; i < gamepadEvent->numButtons; i++) TRACELOGD("Button %d: Digital: %d, Analog: %g", i, gamepadEvent->digitalButton[i], gamepadEvent->analogButton[i]);
+    for (int i = 0; i < gamepadEvent->numAxes; i++) TRACELOG(LOG_DEBUG, "Axis %d: %g", i, gamepadEvent->axis[i]);
+    for (int i = 0; i < gamepadEvent->numButtons; i++) TRACELOG(LOG_DEBUG, "Button %d: Digital: %d, Analog: %g", i, gamepadEvent->digitalButton[i], gamepadEvent->analogButton[i]);
     */
 
     if (gamepadEvent->connected && (gamepadEvent->index < MAX_GAMEPADS))
@@ -1830,7 +1806,6 @@ static EM_BOOL EmscriptenFullscreenChangeCallback(int eventType, const Emscripte
         const bool wasFullscreen = EM_ASM_INT( { if (document.fullscreenElement) return 1; }, 0);
         if (!wasFullscreen)
         {
-            CORE.Window.fullscreen = false;
             FLAG_CLEAR(CORE.Window.flags, FLAG_FULLSCREEN_MODE);
             FLAG_CLEAR(CORE.Window.flags, FLAG_BORDERLESS_WINDOWED_MODE);
         }

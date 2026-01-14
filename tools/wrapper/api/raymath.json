@@ -77,6 +77,42 @@
       "type": "GUARD",
       "value": "",
       "description": ""
+    },
+    {
+      "name": "RAYMATH_SSE42_ENABLED",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "RAYMATH_SSE41_ENABLED",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "RAYMATH_SSSE3_ENABLED",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "RAYMATH_SSE3_ENABLED",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "RAYMATH_SSE2_ENABLED",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "RAYMATH_SSE_ENABLED",
+      "type": "GUARD",
+      "value": "",
+      "description": ""
     }
   ],
   "structs": [

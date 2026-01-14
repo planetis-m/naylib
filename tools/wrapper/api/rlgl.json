@@ -25,12 +25,6 @@
       "description": ""
     },
     {
-      "name": "TRACELOGD(...)",
-      "type": "MACRO",
-      "value": "(void)0",
-      "description": ""
-    },
-    {
       "name": "RL_MALLOC(sz)",
       "type": "MACRO",
       "value": "malloc(sz)",
@@ -68,12 +62,6 @@
     },
     {
       "name": "GRAPHICS_API_OPENGL_ES2",
-      "type": "GUARD",
-      "value": "",
-      "description": ""
-    },
-    {
-      "name": "RLGL_RENDER_TEXTURES_HINT",
       "type": "GUARD",
       "value": "",
       "description": ""

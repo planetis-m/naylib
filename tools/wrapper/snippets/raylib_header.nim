@@ -127,7 +127,6 @@ else: {.compile: raylibDir / Path"rglfw.c".}
 {.compile: raylibDir / Path"rshapes.c".}
 {.compile: raylibDir / Path"rtextures.c".}
 {.compile: raylibDir / Path"rtext.c".}
-{.compile: raylibDir / Path"utils.c".}
 {.compile: raylibDir / Path"rmodels.c".}
 {.compile: raylibDir / Path"raudio.c".}
 when defined(android):
