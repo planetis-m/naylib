@@ -26,7 +26,7 @@ switch("define", "NaylibSupportAutomationEvents=false")
 
 ### Available Options
 
-A full list of configurable options can be found in the `rconfig.nim` file. Refer to it for the supported feature flags and their descriptions: [rconfig.nim](../src/rconfig.nim).
+A full list of configurable options can be found in the `rconfig.nim` file. Refer to it for the supported feature flags and their descriptions: [rconfig.nim](../src/naylib/private/rconfig.nim).
 
 ## Building for the Web (WebAssembly)
 

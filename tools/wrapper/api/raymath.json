@@ -10,7 +10,7 @@
       "name": "RMAPI",
       "type": "UNKNOWN",
       "value": "__declspec(dllexport) extern inline",
-      "description": "We are building raylib as a Win32 shared library (.dll)"
+      "description": "Building raylib as a Win32 shared library (.dll)"
     },
     {
       "name": "PI",

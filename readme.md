@@ -51,15 +51,13 @@ conventions, and API improvements, please refer to our
 
 ### Advanced Usage Guide
 
-Covers the most common Naylib usage pitfalls and lifetime rules.
-
-- [Advanced Usage Guide](manual/advanced_usage.md)
-- [Memory management and destructors](manual/advanced_usage.md#memory-management)
-  Why `Unload*` functions are not used
-- [Properly calling `closeWindow`](manual/advanced_usage.md#important-usage-tips)
-  Ensuring correct shutdown order and avoiding crashes
-- [Ownership rules for resources](manual/advanced_usage.md#common-patterns-and-idioms)
-  Textures, meshes, and models
+* [Advanced Usage Guide](manual/advanced_usage.md)
+**What's inside:**
+* **RAII & Destructors:** Understanding how Naylib automates `Unload*` functions using Nim’s memory model.
+* **Ownership Rules:** How to handle textures, meshes, and models without accidental double-frees or leaks.
+* **Window Lifecycle:** Proper usage of `initWindow` and `closeWindow` with `defer` or owning objects.
+* **Optimization:** Using "Weak Views" for embedded resources and custom pixel formats for external data.
+* **Math Integration:** How to bridge Naylib with external math libraries like `vmath` or `glm`.
 
 ### Build & Platform Configuration Guide
 
