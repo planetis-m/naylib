@@ -1395,7 +1395,7 @@ proc loadTextureCubemapImpl(image: Image, layout: CubemapLayout): TextureCubemap
 proc loadRenderTextureImpl(width: int32, height: int32): RenderTexture2D {.importc: "LoadRenderTexture", sideEffect.}
 func isTextureValid*(texture: Texture2D): bool {.importc: "IsTextureValid".}
   ## Check if a texture is valid (loaded in GPU)
-proc unloadTexture(texture: Texture2D) {.importc: "UnloadTexture", sideEffect.}
+proc unloadTexture*(texture: Texture2D) {.importc: "UnloadTexture", sideEffect.}
 func isRenderTextureValid*(target: RenderTexture2D): bool {.importc: "IsRenderTextureValid".}
   ## Check if a render texture is valid (loaded in GPU)
 proc unloadRenderTexture(target: RenderTexture2D) {.importc: "UnloadRenderTexture", sideEffect.}
