@@ -25,7 +25,7 @@ To learn more about how to use this wrapper, you can check out the documentation
 - raygui - Offered as a separate package: [naygui](https://github.com/planetis-m/naygui)
 
 If you're familiar with the C version of raylib, you may find the
-[cheatsheet](https://www.raylib.com/cheatsheet/cheatsheet.html) useful.
+[cheatsheet](https://www.raylib.com/cheatsheet/cheatsheet.html) useful. When porting C code to Nim, also refer to the [raylib translation guide](https://github.com/planetis-m/raylib-examples/blob/main/raylib_translation_guide.md)
 
 ## Installation
 
@@ -47,18 +47,29 @@ For a comprehensive overview of these changes, including memory management, nami
 conventions, and API improvements, please refer to our
 [Changes Overview](manual/changes_overview.md) document.
 
-## Advanced Usage
+## Usage Guides
 
-For detailed instructions on advanced topics, please refer to our
-[Advanced Usage Guide](manual/advanced_usage.md).
+### Advanced Usage Guide
 
-Here are quick links to some important sections:
+Covers the most common Naylib usage pitfalls and lifetime rules.
 
-- [Customize raylib settings](manual/advanced_usage.md#changing-raylib-settings-with-nim-defines) - Learn how to customize raylib settings with Nim defines
-- [Important Usage Tips](manual/advanced_usage.md#important-usage-tips) - Learn how to properly call `closeWindow` and other crucial tips
-- [Building for the Web (WebAssembly)](manual/advanced_usage.md#building-for-the-web-webassembly) - Instructions for compiling your project for web browsers
-- [Building for Android](manual/advanced_usage.md#building-for-android) - Step-by-step guide for Android development
-- [Raylib Functions to Nim Alternatives](manual/alternatives_table.rst) - Find Nim equivalents for raylib functions
+- [Advanced Usage Guide](manual/advanced_usage.md)
+- [Memory management and destructors](manual/advanced_usage.md#memory-management)
+  Why `Unload*` functions are not used
+- [Properly calling `closeWindow`](manual/advanced_usage.md#important-usage-tips)
+  Ensuring correct shutdown order and avoiding crashes
+- [Ownership rules for resources](manual/advanced_usage.md#common-patterns-and-idioms)
+  Textures, meshes, and models
+
+### Build & Platform Configuration Guide
+
+Covers compilation flags, platform targets, graphics backends, and deployment.
+
+- [Build & Platform Configuration Guide](manual/build_platform_configuration.md)
+- [Changing raylib settings with Nim defines](manual/build_platform_configuration.md#changing-raylib-settings-with-nim-defines)
+- [Building for the Web (WebAssembly)](manual/build_platform_configuration.md#building-for-the-web-webassembly)
+- [Building for Android](manual/build_platform_configuration.md#building-for-android)
+- [Choosing the OpenGL graphics backend](manual/build_platform_configuration.md#choosing-the-opengl-graphics-backend-version)
 
 ### Development Guides
 
@@ -101,7 +112,7 @@ While we believe that Naylib provides a great option for game development with N
 that it may not be the perfect fit for everyone. Here are some noteworthy alternatives:
 
 - [NimForUE](https://github.com/jmgomez/NimForUE): Plugin for Unreal Engine 5
-- [nim-sdl3](https://github.com/transmutrix/nim-sdl3): Nim wrapper for SDL3.x
+- [nim-sdl3](https://github.com/dinau/sdl3_nim): Nim wrapper for SDL3.x
 - [sokol-nim](https://github.com/floooh/sokol-nim): Auto-generated bindings for sokol headers
 - [gdextcore](https://github.com/godot-nim/gdext-nim): Godot 4.x bindings
 - [norx](https://github.com/tankfeud/norx): Nim wrapper for the ORX 2.5D game engine
