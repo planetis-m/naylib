@@ -218,6 +218,13 @@ proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
       "Mismatch between expected and actual data size"
   updateTextureImpl(texture, cast[pointer](pixels))
 
+proc updateTexture*(texture: Texture2D, image: Image) =
+  ## Update GPU texture with new image data
+  assert texture.format == image.format, "Incompatible texture format"
+  assert texture.width == image.width and texture.height == image.height,
+      "Image dimensions do not match texture dimensions"
+  updateTextureImpl(texture, image.data)
+
 proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
   ## Update GPU texture rectangle with new data (pixels and rec should fit in texture)
   assert texture.format == pixelKind(T), "Incompatible texture format"

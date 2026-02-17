@@ -651,11 +651,11 @@ type
     bindPose: ptr UncheckedArray[Transform] ## Bones base transformation (pose)
 
   ModelAnimation* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## ModelAnimation
+    name*: array[32, char] ## Animation name
     boneCount: int32 ## Number of bones
     frameCount: int32 ## Number of animation frames
     bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
     framePoses: ptr UncheckedArray[ptr UncheckedArray[Transform]] ## Poses array by frame
-    name*: array[32, char] ## Animation name
 
   Ray* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Ray, ray for raycasting
     position*: Vector3 ## Ray position (origin)
@@ -2706,6 +2706,13 @@ proc updateTexture*[T: Pixel](texture: Texture2D, pixels: openArray[T]) =
   assert getPixelDataSize(texture.width, texture.height, texture.format) == pixels.len*sizeof(T),
       "Mismatch between expected and actual data size"
   updateTextureImpl(texture, cast[pointer](pixels))
+
+proc updateTexture*(texture: Texture2D, image: Image) =
+  ## Update GPU texture with new image data
+  assert texture.format == image.format, "Incompatible texture format"
+  assert texture.width == image.width and texture.height == image.height,
+      "Image dimensions do not match texture dimensions"
+  updateTextureImpl(texture, image.data)
 
 proc updateTexture*[T: Pixel](texture: Texture2D, rec: Rectangle, pixels: openArray[T]) =
   ## Update GPU texture rectangle with new data (pixels and rec should fit in texture)

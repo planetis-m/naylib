@@ -915,7 +915,7 @@ void SwapScreenBuffer(void)
         {
             TRACELOG(LOG_ERROR, "DISPLAY: Failed to get DRM resources");
             drmModeRmFB(platform.fd, fb);
-            struct drm_mode_destroy_dumb dreq = {0};
+            struct drm_mode_destroy_dumb dreq = { 0 };
             dreq.handle = creq.handle;
             drmIoctl(platform.fd, DRM_IOCTL_MODE_DESTROY_DUMB, &dreq);
             return;
@@ -955,7 +955,7 @@ void SwapScreenBuffer(void)
         {
             TRACELOG(LOG_ERROR, "DISPLAY: No compatible CRTC found");
             drmModeRmFB(platform.fd, fb);
-            struct drm_mode_destroy_dumb dreq = {0};
+            struct drm_mode_destroy_dumb dreq = { 0 };
             dreq.handle = creq.handle;
             drmIoctl(platform.fd, DRM_IOCTL_MODE_DESTROY_DUMB, &dreq);
             return;
@@ -971,7 +971,7 @@ void SwapScreenBuffer(void)
         TRACELOG(LOG_ERROR, "DISPLAY: Mode: %dx%d@%d", mode->hdisplay, mode->vdisplay, mode->vrefresh);
 
         drmModeRmFB(platform.fd, fb);
-        struct drm_mode_destroy_dumb dreq = {0};
+        struct drm_mode_destroy_dumb dreq = { 0 };
         dreq.handle = creq.handle;
         drmIoctl(platform.fd, DRM_IOCTL_MODE_DESTROY_DUMB, &dreq);
         return;
@@ -989,7 +989,7 @@ void SwapScreenBuffer(void)
     // Clean up previous dumb buffer
     if (platform.prevDumbHandle)
     {
-        struct drm_mode_destroy_dumb dreq = {0};
+        struct drm_mode_destroy_dumb dreq = { 0 };
         dreq.handle = platform.prevDumbHandle;
         drmIoctl(platform.fd, DRM_IOCTL_MODE_DESTROY_DUMB, &dreq);
     }
@@ -1017,10 +1017,9 @@ double GetTime(void)
 }
 
 // Open URL with default system browser (if available)
-// NOTE: This function is only safe to use if you control the URL given
+// NOTE: This function is only safe to use if the provided URL is safe
 // A user could craft a malicious string performing another action
-// Only call this function yourself not with user input or make sure to check the string yourself
-// REF: https://github.com/raysan5/raylib/issues/686
+// Avoid calling this function with user input non-validated strings
 void OpenURL(const char *url)
 {
     TRACELOG(LOG_WARNING, "OpenURL() not implemented on target platform");
@@ -1469,7 +1468,7 @@ int InitPlatform(void)
     if (!eglChooseConfig(platform.device, framebufferAttribs, configs, numConfigs, &matchingNumConfigs))
     {
         TRACELOG(LOG_WARNING, "DISPLAY: Failed to choose EGL config: 0x%x", eglGetError());
-        free(configs);
+        RL_FREE(configs);
         return -1;
     }
 
@@ -2149,14 +2148,11 @@ static void ConfigureEvdevDevice(char *device)
 
         if (absAxisCount > 0)
         {
-            // TODO / NOTE
+            // TODO: Review GamepadAxis enum matching
             // So gamepad axes (as in the actual linux joydev.c) are just simply enumerated
             // and (at least for some input drivers like xpat) it's convention to use
-            // ABS_X, ABX_Y for one joystick ABS_RX, ABS_RY for the other and the Z axes for the
-            // shoulder buttons
-            // If these are now enumerated you get LJOY_X, LJOY_Y, LEFT_SHOULDERB, RJOY_X, ...
-            // That means they don't match the GamepadAxis enum
-            // This could be fixed
+            // ABS_X, ABX_Y for one joystick ABS_RX, ABS_RY for the other and the Z axes for the shoulder buttons
+            // If these are now enumerated, it results to LJOY_X, LJOY_Y, LEFT_SHOULDERB, RJOY_X, ...
             int axisIndex = 0;
             for (int axis = ABS_X; axis < ABS_PRESSURE; axis++)
             {

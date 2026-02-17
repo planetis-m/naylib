@@ -2363,31 +2363,35 @@ bool CheckCollisionCircleRec(Vector2 center, float radius, rlRectangle rec)
 }
 
 // Check the collision between two lines defined by two points each, returns collision point by reference
+// REF: https://en.wikipedia.org/wiki/Line–line_intersection#Given_two_points_on_each_line_segment
 bool CheckCollisionLines(Vector2 startPos1, Vector2 endPos1, Vector2 startPos2, Vector2 endPos2, Vector2 *collisionPoint)
 {
     bool collision = false;
 
-    float div = (endPos2.y - startPos2.y)*(endPos1.x - startPos1.x) - (endPos2.x - startPos2.x)*(endPos1.y - startPos1.y);
+    float rx = endPos1.x - startPos1.x;
+    float ry = endPos1.y - startPos1.y;
+    float sx = endPos2.x - startPos2.x;
+    float sy = endPos2.y - startPos2.y;
+
+    float div = rx*sy - ry*sx;
 
     if (fabsf(div) >= FLT_EPSILON)
     {
-        collision = true;
+        float s12x = startPos2.x - startPos1.x;
+        float s12y = startPos2.y - startPos1.y;
 
-        float xi = ((startPos2.x - endPos2.x)*(startPos1.x*endPos1.y - startPos1.y*endPos1.x) - (startPos1.x - endPos1.x)*(startPos2.x*endPos2.y - startPos2.y*endPos2.x))/div;
-        float yi = ((startPos2.y - endPos2.y)*(startPos1.x*endPos1.y - startPos1.y*endPos1.x) - (startPos1.y - endPos1.y)*(startPos2.x*endPos2.y - startPos2.y*endPos2.x))/div;
+        float t = (s12x*sy - s12y*sx)/div;
+        float u = (s12x*ry - s12y*rx)/div;
 
-        if (((fabsf(startPos1.x - endPos1.x) > FLT_EPSILON) && (xi < fminf(startPos1.x, endPos1.x) || (xi > fmaxf(startPos1.x, endPos1.x)))) ||
-            ((fabsf(startPos2.x - endPos2.x) > FLT_EPSILON) && (xi < fminf(startPos2.x, endPos2.x) || (xi > fmaxf(startPos2.x, endPos2.x)))) ||
-            ((fabsf(startPos1.y - endPos1.y) > FLT_EPSILON) && (yi < fminf(startPos1.y, endPos1.y) || (yi > fmaxf(startPos1.y, endPos1.y)))) ||
-            ((fabsf(startPos2.y - endPos2.y) > FLT_EPSILON) && (yi < fminf(startPos2.y, endPos2.y) || (yi > fmaxf(startPos2.y, endPos2.y))))) collision = false;
-
-        if (collision && (collisionPoint != 0))
+        if ((0.0f <= t) && (t <= 1.0f) && (0.0f <= u) && (u <= 1.0f))
         {
-            collisionPoint->x = xi;
-            collisionPoint->y = yi;
+            collisionPoint->x = startPos1.x + t*rx;
+            collisionPoint->y = startPos1.y + t*ry;
+            
+            collision = true;
         }
     }
-
+    
     return collision;
 }
 
