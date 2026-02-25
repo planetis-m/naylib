@@ -9,8 +9,6 @@ srcDir      = "src"
 # Deps
 
 requires "nim >= 2.0.0"
-feature "dev":
-  requires "eminim == 2.8.2"
 
 # https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux
 import std/distros
