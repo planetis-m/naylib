@@ -1775,17 +1775,17 @@ proc `=copy`*(dest: var Image; source: Image) =
     dest = imageCopy(source) # generates =sink
 
 proc `=destroy`*(x: Texture) =
-  unloadTexture(x)
+  if isTextureValid(x): unloadTexture(x)
 proc `=dup`*(source: Texture): Texture {.error.}
 proc `=copy`*(dest: var Texture; source: Texture) {.error.}
 
 proc `=destroy`*(x: RenderTexture) =
-  unloadRenderTexture(x)
+  if isRenderTextureValid(x): unloadRenderTexture(x)
 proc `=dup`*(source: RenderTexture): RenderTexture {.error.}
 proc `=copy`*(dest: var RenderTexture; source: RenderTexture) {.error.}
 
 proc `=destroy`*(x: Font) =
-  unloadFont(x)
+  if isFontValid(x): unloadFont(x)
 proc `=dup`*(source: Font): Font {.error.}
 proc `=copy`*(dest: var Font; source: Font) {.error.}
 
