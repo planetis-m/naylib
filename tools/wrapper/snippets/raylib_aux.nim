@@ -1,3 +1,5 @@
+  ModelAnimPose* = ptr Transform ## Anim pose, an array of Transform[]
+
   rAudioBuffer {.importc, nodecl, bycopy.} = object
   rAudioProcessor {.importc, nodecl, bycopy.} = object
 

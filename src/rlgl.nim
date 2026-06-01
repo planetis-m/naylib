@@ -36,7 +36,7 @@ type
 
 type
   GlVersion* {.size: sizeof(int32).} = enum ## OpenGL version
-    Opengl11Software ## Software rendering
+    OpenglSoftware ## Software rendering
     Opengl11 ## OpenGL 1.1
     Opengl21 ## OpenGL 2.1 (GLSL 120)
     Opengl33 ## OpenGL 3.3 (GLSL 330)
@@ -471,7 +471,7 @@ proc readScreenPixels*(width: int32, height: int32): var uint8 {.importc: "rlRea
   ## Read screen pixel data (color buffer)
 proc loadFramebuffer*(): uint32 {.importc: "rlLoadFramebuffer", sideEffect.}
   ## Load an empty framebuffer
-proc framebufferAttach*(fboId: uint32, texId: uint32, attachType: FramebufferAttachType, texType: FramebufferAttachTextureType, mipLevel: int32) {.importc: "rlFramebufferAttach", sideEffect.}
+proc framebufferAttach*(id: uint32, texId: uint32, attachType: FramebufferAttachType, texType: FramebufferAttachTextureType, mipLevel: int32) {.importc: "rlFramebufferAttach", sideEffect.}
   ## Attach texture/renderbuffer to a framebuffer
 proc framebufferComplete*(id: uint32): bool {.importc: "rlFramebufferComplete", sideEffect.}
   ## Verify framebuffer is complete
@@ -481,14 +481,18 @@ proc copyFramebuffer*(x: int32, y: int32, width: int32, height: int32, format: i
   ## Copy framebuffer pixel data to internal buffer
 proc resizeFramebuffer*(width: int32, height: int32) {.importc: "rlResizeFramebuffer", sideEffect.}
   ## Resize internal framebuffer
-proc loadShaderCodeImpl(vsCode: cstring, fsCode: cstring): uint32 {.importc: "rlLoadShaderCode", sideEffect.}
-proc compileShaderImpl(shaderCode: cstring, `type`: ShaderType): uint32 {.importc: "rlCompileShader", sideEffect.}
-proc loadShaderProgram*(vShaderId: uint32, fShaderId: uint32): uint32 {.importc: "rlLoadShaderProgram", sideEffect.}
-  ## Load custom shader program
+proc loadShaderImpl(code: cstring, `type`: ShaderType): uint32 {.importc: "rlLoadShader", sideEffect.}
+proc loadShaderProgramImpl(vsCode: cstring, fsCode: cstring): uint32 {.importc: "rlLoadShaderProgram", sideEffect.}
+proc loadShaderProgramEx*(vsId: uint32, fsId: uint32): uint32 {.importc: "rlLoadShaderProgramEx", sideEffect.}
+  ## Load shader program, using already loaded shader ids
+proc loadShaderProgramCompute*(csId: uint32): uint32 {.importc: "rlLoadShaderProgramCompute", sideEffect.}
+  ## Load compute shader program
+proc unloadShader*(id: uint32) {.importc: "rlUnloadShader", sideEffect.}
+  ## Unload shader, loaded with rlLoadShader()
 proc unloadShaderProgram*(id: uint32) {.importc: "rlUnloadShaderProgram", sideEffect.}
   ## Unload shader program
-proc getLocationUniformImpl(shaderId: uint32, uniformName: cstring): ShaderLocation {.importc: "rlGetLocationUniform", sideEffect.}
-proc getLocationAttribImpl(shaderId: uint32, attribName: cstring): ShaderLocation {.importc: "rlGetLocationAttrib", sideEffect.}
+proc getLocationUniformImpl(id: uint32, uniformName: cstring): ShaderLocation {.importc: "rlGetLocationUniform", sideEffect.}
+proc getLocationAttribImpl(id: uint32, attribName: cstring): ShaderLocation {.importc: "rlGetLocationAttrib", sideEffect.}
 proc setUniform*(locIndex: ShaderLocation, value: pointer, uniformType: ShaderUniformDataType, count: int32) {.importc: "rlSetUniform", sideEffect.}
   ## Set shader value uniform
 proc setUniformMatrix*(locIndex: ShaderLocation, mat: Matrix) {.importc: "rlSetUniformMatrix", sideEffect.}
@@ -499,8 +503,6 @@ proc setUniformSampler*(locIndex: ShaderLocation, textureId: uint32) {.importc: 
   ## Set shader value sampler
 proc setShader*(id: uint32, locs: ShaderLocsPtr) {.importc: "rlSetShader", sideEffect.}
   ## Set shader currently active (id and locations)
-proc loadComputeShaderProgram*(shaderId: uint32): uint32 {.importc: "rlLoadComputeShaderProgram", sideEffect.}
-  ## Load compute shader program
 proc computeShaderDispatch*(groupX: uint32, groupY: uint32, groupZ: uint32) {.importc: "rlComputeShaderDispatch", sideEffect.}
   ## Dispatch compute shader (equivalent to *draw* for graphics pipeline)
 proc loadShaderBuffer*(size: uint32, data: pointer, usageHint: BufferUsageHint): uint32 {.importc: "rlLoadShaderBuffer", sideEffect.}
@@ -550,21 +552,21 @@ proc getProcAddress*(procName: string): pointer =
   ## Get OpenGL procedure address
   getProcAddressImpl(procName.cstring)
 
-proc loadShaderCode*(vsCode: string, fsCode: string): uint32 =
+proc loadShader*(code: string, `type`: ShaderType): uint32 =
+  ## Load (compile) shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
+  loadShaderImpl(code.cstring, `type`)
+
+proc loadShaderProgram*(vsCode: string, fsCode: string): uint32 =
   ## Load shader from code strings
-  loadShaderCodeImpl(if vsCode.len == 0: nil else: vsCode.cstring, if fsCode.len == 0: nil else: fsCode.cstring)
+  loadShaderProgramImpl(if vsCode.len == 0: nil else: vsCode.cstring, if fsCode.len == 0: nil else: fsCode.cstring)
 
-proc compileShader*(shaderCode: string, `type`: ShaderType): uint32 =
-  ## Compile custom shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
-  compileShaderImpl(shaderCode.cstring, `type`)
-
-proc getLocationUniform*(shaderId: uint32, uniformName: string): ShaderLocation =
+proc getLocationUniform*(id: uint32, uniformName: string): ShaderLocation =
   ## Get shader location uniform, requires shader program id
-  getLocationUniformImpl(shaderId, uniformName.cstring)
+  getLocationUniformImpl(id, uniformName.cstring)
 
-proc getLocationAttrib*(shaderId: uint32, attribName: string): ShaderLocation =
+proc getLocationAttrib*(id: uint32, attribName: string): ShaderLocation =
   ## Get shader location attribute, requires shader program id
-  getLocationAttribImpl(shaderId, attribName.cstring)
+  getLocationAttribImpl(id, attribName.cstring)
 
 proc `=destroy`*(x: RenderBatch) =
   unloadRenderBatch(x)

@@ -205,6 +205,7 @@ func invert*(mat: Matrix): Matrix {.importc: "MatrixInvert".}
 func add*(left: Matrix, right: Matrix): Matrix {.importc: "MatrixAdd".}
 func subtract*(left: Matrix, right: Matrix): Matrix {.importc: "MatrixSubtract".}
 func multiply*(left: Matrix, right: Matrix): Matrix {.importc: "MatrixMultiply".}
+func multiplyValue*(left: Matrix, value: float32): Matrix {.importc: "MatrixMultiplyValue".}
 func translate*(x: float32, y: float32, z: float32): Matrix {.importc: "MatrixTranslate".}
 func rotate*(axis: Vector3, angle: float32): Matrix {.importc: "MatrixRotate".}
 func rotateX*(angle: float32): Matrix {.importc: "MatrixRotateX".}

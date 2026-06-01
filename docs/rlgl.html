@@ -16,13 +16,16 @@
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH4QQQEwksSS9ZWwAAAk1JREFUWMPtll2ITVEUx39nn/O7Y5qR8f05wtCUUr6ZIS++8pEnkZInPImneaCQ5METNdOkeFBKUhMPRIkHKfEuUZSUlGlKPN2TrgfncpvmnntnmlEyq1Z7t89/rf9a6+y99oZxGZf/XeIq61EdtgKXgdXA0xrYAvBjOIF1AI9zvjcC74BSpndrJPkBWDScTF8Aa4E3wDlgHbASaANmVqlcCnwHvgDvgVfAJ+AikAAvgfVZwLnSVZHZaOuKoQi3ZOMi4NkYkpe1p4J7A8BpYAD49hfIy/oqG0+hLomiKP2L5L+1ubn5115S+3OAn4EnwBlgMzCjyt6ZAnQCJ4A7wOs88iRJHvw50HoujuPBoCKwHWiosy8MdfZnAdcHk8dxXFJ3VQbQlCTJvRBCGdRbD4M6uc5glpY3eAihpN5S5w12diSEcCCEcKUO4ljdr15T76ur1FDDLIQQ3qv71EdDOe3Kxj3leRXyk+pxdWnFWod6Wt2bY3de3aSuUHcPBVimHs7mK9WrmeOF6lR1o9qnzskh2ar2qm1qizpfXaPeVGdlmGN5pb09qMxz1Xb1kLqgzn1RyH7JUXW52lr5e/Kqi9qpto7V1atuUzfnARrV7jEib1T76gG2qxdGmXyiekkt1GswPTtek0aBfJp6YySGBfWg2tPQ0FAYgf1stUfdmdcjarbYJEniKIq6gY/Aw+zWHAC+p2labGpqiorFYgGYCEzN7oQdQClN07O1/EfDyGgC0ALMBdYAi4FyK+4H3gLPsxfR1zRNi+NP7nH5J+QntnXe5B5mpfQAAAAASUVORK5CYII=">
 
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.3.1">
+<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.2.10">
 
 <!-- JS -->
-<script type="text/javascript" src="dochack.js?v=2.3.1"></script>
+<script type="text/javascript" src="dochack.js?v=2.2.10"></script>
 </head>
 <body>
   <div class="document" id="documentId">
+    <input type="checkbox" id="nav-toggle" hidden>
+    <label for="nav-toggle" id="nav-burger">&#9776;</label>
+    <label for="nav-toggle" id="nav-overlay"></label>
     <div class="container">
       <h1 class="title">src/rlgl</h1>
       <div class="row">
@@ -158,7 +161,7 @@
   UnsignedByte = 5121,      ## GL_UNSIGNED_BYTE
   Float = 5126               ## GL_FLOAT">GlType</a></li>
 <li><a class="reference" href="#GlVersion" title="GlVersion {.size: 4.} = enum
-  Opengl11Software,         ## Software rendering
+  OpenglSoftware,           ## Software rendering
   Opengl11,                 ## OpenGL 1.1
   Opengl21,                 ## OpenGL 2.1 (GLSL 120)
   Opengl33,                 ## OpenGL 3.3 (GLSL 330)
@@ -333,10 +336,6 @@
 </ul>
 <ul class="simple nested-toc-section">colorMask
   <li><a class="reference" href="#colorMask%2Cbool%2Cbool%2Cbool%2Cbool" title="colorMask(r: bool; g: bool; b: bool; a: bool)">colorMask(r: bool; g: bool; b: bool; a: bool)</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">compileShader
-  <li><a class="reference" href="#compileShader%2Cstring%2CShaderType" title="compileShader(shaderCode: string; type: ShaderType): uint32">compileShader(shaderCode: string; type: ShaderType): uint32</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">computeShaderDispatch
@@ -534,10 +533,8 @@
 
 </ul>
 <ul class="simple nested-toc-section">framebufferAttach
-  <li><a class="reference" href="#framebufferAttach%2Cuint32%2Cuint32%2CFramebufferAttachType%2CFramebufferAttachTextureType%2Cint32" title="framebufferAttach(fboId: uint32; texId: uint32;
-                  attachType: FramebufferAttachType;
-                  texType: FramebufferAttachTextureType; mipLevel: int32)">framebufferAttach(fboId: uint32; texId: uint32;
-                  attachType: FramebufferAttachType;
+  <li><a class="reference" href="#framebufferAttach%2Cuint32%2Cuint32%2CFramebufferAttachType%2CFramebufferAttachTextureType%2Cint32" title="framebufferAttach(id: uint32; texId: uint32; attachType: FramebufferAttachType;
+                  texType: FramebufferAttachTextureType; mipLevel: int32)">framebufferAttach(id: uint32; texId: uint32; attachType: FramebufferAttachType;
                   texType: FramebufferAttachTextureType; mipLevel: int32)</a></li>
 
 </ul>
@@ -588,11 +585,11 @@
 
 </ul>
 <ul class="simple nested-toc-section">getLocationAttrib
-  <li><a class="reference" href="#getLocationAttrib%2Cuint32%2Cstring" title="getLocationAttrib(shaderId: uint32; attribName: string): ShaderLocation">getLocationAttrib(shaderId: uint32; attribName: string): ShaderLocation</a></li>
+  <li><a class="reference" href="#getLocationAttrib%2Cuint32%2Cstring" title="getLocationAttrib(id: uint32; attribName: string): ShaderLocation">getLocationAttrib(id: uint32; attribName: string): ShaderLocation</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">getLocationUniform
-  <li><a class="reference" href="#getLocationUniform%2Cuint32%2Cstring" title="getLocationUniform(shaderId: uint32; uniformName: string): ShaderLocation">getLocationUniform(shaderId: uint32; uniformName: string): ShaderLocation</a></li>
+  <li><a class="reference" href="#getLocationUniform%2Cuint32%2Cstring" title="getLocationUniform(id: uint32; uniformName: string): ShaderLocation">getLocationUniform(id: uint32; uniformName: string): ShaderLocation</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">getMatrixModelview
@@ -651,10 +648,6 @@
   <li><a class="reference" href="#isStereoRenderEnabled" title="isStereoRenderEnabled(): bool">isStereoRenderEnabled(): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">loadComputeShaderProgram
-  <li><a class="reference" href="#loadComputeShaderProgram%2Cuint32" title="loadComputeShaderProgram(shaderId: uint32): uint32">loadComputeShaderProgram(shaderId: uint32): uint32</a></li>
-
-</ul>
 <ul class="simple nested-toc-section">loadDrawCube
   <li><a class="reference" href="#loadDrawCube" title="loadDrawCube()">loadDrawCube()</a></li>
 
@@ -679,16 +672,24 @@
   <li><a class="reference" href="#loadRenderBatch%2Cint32%2Cint32" title="loadRenderBatch(numBuffers: int32; bufferElements: int32): RenderBatch">loadRenderBatch(numBuffers: int32; bufferElements: int32): RenderBatch</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">loadShader
+  <li><a class="reference" href="#loadShader%2Cstring%2CShaderType" title="loadShader(code: string; type: ShaderType): uint32">loadShader(code: string; type: ShaderType): uint32</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">loadShaderBuffer
   <li><a class="reference" href="#loadShaderBuffer%2Cuint32%2Cpointer%2CBufferUsageHint" title="loadShaderBuffer(size: uint32; data: pointer; usageHint: BufferUsageHint): uint32">loadShaderBuffer(size: uint32; data: pointer; usageHint: BufferUsageHint): uint32</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">loadShaderCode
-  <li><a class="reference" href="#loadShaderCode%2Cstring%2Cstring" title="loadShaderCode(vsCode: string; fsCode: string): uint32">loadShaderCode(vsCode: string; fsCode: string): uint32</a></li>
+<ul class="simple nested-toc-section">loadShaderProgram
+  <li><a class="reference" href="#loadShaderProgram%2Cstring%2Cstring" title="loadShaderProgram(vsCode: string; fsCode: string): uint32">loadShaderProgram(vsCode: string; fsCode: string): uint32</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">loadShaderProgram
-  <li><a class="reference" href="#loadShaderProgram%2Cuint32%2Cuint32" title="loadShaderProgram(vShaderId: uint32; fShaderId: uint32): uint32">loadShaderProgram(vShaderId: uint32; fShaderId: uint32): uint32</a></li>
+<ul class="simple nested-toc-section">loadShaderProgramCompute
+  <li><a class="reference" href="#loadShaderProgramCompute%2Cuint32" title="loadShaderProgramCompute(csId: uint32): uint32">loadShaderProgramCompute(csId: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">loadShaderProgramEx
+  <li><a class="reference" href="#loadShaderProgramEx%2Cuint32%2Cuint32" title="loadShaderProgramEx(vsId: uint32; fsId: uint32): uint32">loadShaderProgramEx(vsId: uint32; fsId: uint32): uint32</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">loadTexture
@@ -909,6 +910,10 @@
   <li><a class="reference" href="#unloadFramebuffer%2Cuint32" title="unloadFramebuffer(id: uint32)">unloadFramebuffer(id: uint32)</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">unloadShader
+  <li><a class="reference" href="#unloadShader%2Cuint32" title="unloadShader(id: uint32)">unloadShader(id: uint32)</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">unloadShaderBuffer
   <li><a class="reference" href="#unloadShaderBuffer%2Cuint32" title="unloadShaderBuffer(ssboId: uint32)">unloadShaderBuffer(ssboId: uint32)</a></li>
 
@@ -1035,7 +1040,7 @@
   <h1><a class="toc-backref" href="#7">Types</a></h1>
   <dl class="item">
     <div id="BlendFactor">
-  <dt><pre><a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#BlendFactor"><span class="Identifier">BlendFactor</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">Zero</span><span class="Other">,</span>                     <span class="Comment">## GL_ZERO</span>
   <span class="Identifier">One</span><span class="Other">,</span>                      <span class="Comment">## GL_ONE</span>
   <span class="Identifier">SrcColor</span> <span class="Other">=</span> <span class="DecNumber">768</span><span class="Other">,</span>           <span class="Comment">## GL_SRC_COLOR</span>
@@ -1060,7 +1065,7 @@
   </dd>
 </div>
 <div id="BlendFuncOrEq">
-  <dt><pre><a href="rlgl.html#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">BlendColor</span> <span class="Other">=</span> <span class="DecNumber">32773</span><span class="Other">,</span>       <span class="Comment">## GL_BLEND_COLOR</span>
   <span class="Identifier">FuncAdd</span> <span class="Other">=</span> <span class="DecNumber">32774</span><span class="Other">,</span>          <span class="Comment">## GL_FUNC_ADD</span>
   <span class="Identifier">Min</span> <span class="Other">=</span> <span class="DecNumber">32775</span><span class="Other">,</span>              <span class="Comment">## GL_MIN</span>
@@ -1082,7 +1087,7 @@
   </dd>
 </div>
 <div id="BufferUsageHint">
-  <dt><pre><a href="rlgl.html#BufferUsageHint"><span class="Identifier">BufferUsageHint</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#BufferUsageHint"><span class="Identifier">BufferUsageHint</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">StreamDraw</span> <span class="Other">=</span> <span class="DecNumber">35040</span><span class="Other">,</span>       <span class="Comment">## GL_STREAM_DRAW</span>
   <span class="Identifier">StreamRead</span> <span class="Other">=</span> <span class="DecNumber">35041</span><span class="Other">,</span>       <span class="Comment">## GL_STREAM_READ</span>
   <span class="Identifier">StreamCopy</span> <span class="Other">=</span> <span class="DecNumber">35042</span><span class="Other">,</span>       <span class="Comment">## GL_STREAM_COPY</span>
@@ -1101,7 +1106,7 @@
   </dd>
 </div>
 <div id="CullMode">
-  <dt><pre><a href="rlgl.html#CullMode"><span class="Identifier">CullMode</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#CullMode"><span class="Identifier">CullMode</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">FaceFront</span><span class="Other">,</span> <span class="Identifier">FaceBack</span></pre></dt>
   <dd>
     
@@ -1112,7 +1117,7 @@
   </dd>
 </div>
 <div id="DefaultShaderLocationIndex">
-  <dt><pre><a href="rlgl.html#DefaultShaderLocationIndex"><span class="Identifier">DefaultShaderLocationIndex</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#DefaultShaderLocationIndex"><span class="Identifier">DefaultShaderLocationIndex</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">AttribPosition</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">,</span> <span class="Identifier">AttribTexcoord</span><span class="Other">,</span> <span class="Identifier">AttribNormal</span><span class="Other">,</span> <span class="Identifier">AttribColor</span><span class="Other">,</span> <span class="Identifier">AttribTangent</span><span class="Other">,</span>
   <span class="Identifier">AttribTexcoord2</span><span class="Other">,</span> <span class="Identifier">AttribLocationBoneIds</span><span class="Other">,</span> <span class="Identifier">AttribLocationBoneWeights</span><span class="Other">,</span>
   <span class="Identifier">AttribLocationIndices</span></pre></dt>
@@ -1125,7 +1130,7 @@
   </dd>
 </div>
 <div id="DefaultShaderVariableName">
-  <dt><pre><a href="rlgl.html#DefaultShaderVariableName"><span class="Identifier">DefaultShaderVariableName</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#DefaultShaderVariableName"><span class="Identifier">DefaultShaderVariableName</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">AttribPosition</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexPosition&quot;</span><span class="Other">,</span> <span class="Comment">## Bound by default to shader location: 0</span>
   <span class="Identifier">AttribTexcoord</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexTexCoord&quot;</span><span class="Other">,</span> <span class="Comment">## Bound by default to shader location: 1</span>
   <span class="Identifier">AttribNormal</span> <span class="Other">=</span> <span class="StringLit">&quot;vertexNormal&quot;</span><span class="Other">,</span> <span class="Comment">## Bound by default to shader location: 2</span>
@@ -1153,7 +1158,7 @@
   </dd>
 </div>
 <div id="DrawCall">
-  <dt><pre><a href="rlgl.html#DrawCall"><span class="Identifier">DrawCall</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlDrawCall&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span class="Identifier">completeStruct</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
+  <dt><pre><a href="#DrawCall"><span class="Identifier">DrawCall</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlDrawCall&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span class="Identifier">completeStruct</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">mode</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>               <span class="Comment">## Drawing mode: LINES, TRIANGLES, QUADS</span>
   <span class="Identifier">vertexCount</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>        <span class="Comment">## Number of vertex of the draw</span>
   <span class="Identifier">vertexAlignment</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>    <span class="Comment">## Number of vertex required for index alignment (LINES, TRIANGLES)</span>
@@ -1167,7 +1172,7 @@
   </dd>
 </div>
 <div id="DrawMode">
-  <dt><pre><a href="rlgl.html#DrawMode"><span class="Identifier">DrawMode</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#DrawMode"><span class="Identifier">DrawMode</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">Lines</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">,</span>                <span class="Comment">## GL_LINES</span>
   <span class="Identifier">Triangles</span> <span class="Other">=</span> <span class="DecNumber">4</span><span class="Other">,</span>            <span class="Comment">## GL_TRIANGLES</span>
   <span class="Identifier">Quads</span> <span class="Other">=</span> <span class="DecNumber">7</span>                  <span class="Comment">## GL_QUADS</span></pre></dt>
@@ -1180,7 +1185,7 @@
   </dd>
 </div>
 <div id="FramebufferAttachTextureType">
-  <dt><pre><a href="rlgl.html#FramebufferAttachTextureType"><span class="Identifier">FramebufferAttachTextureType</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#FramebufferAttachTextureType"><span class="Identifier">FramebufferAttachTextureType</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">CubemapPositiveX</span><span class="Other">,</span>         <span class="Comment">## Framebuffer texture attachment type: cubemap, +X side</span>
   <span class="Identifier">CubemapNegativeX</span><span class="Other">,</span>         <span class="Comment">## Framebuffer texture attachment type: cubemap, -X side</span>
   <span class="Identifier">CubemapPositiveY</span><span class="Other">,</span>         <span class="Comment">## Framebuffer texture attachment type: cubemap, +Y side</span>
@@ -1198,7 +1203,7 @@
   </dd>
 </div>
 <div id="FramebufferAttachType">
-  <dt><pre><a href="rlgl.html#FramebufferAttachType"><span class="Identifier">FramebufferAttachType</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#FramebufferAttachType"><span class="Identifier">FramebufferAttachType</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">ColorChannel0</span><span class="Other">,</span>            <span class="Comment">## Framebuffer attachment type: color 0</span>
   <span class="Identifier">ColorChannel1</span><span class="Other">,</span>            <span class="Comment">## Framebuffer attachment type: color 1</span>
   <span class="Identifier">ColorChannel2</span><span class="Other">,</span>            <span class="Comment">## Framebuffer attachment type: color 2</span>
@@ -1218,7 +1223,7 @@
   </dd>
 </div>
 <div id="FramebufferTarget">
-  <dt><pre><a href="rlgl.html#FramebufferTarget"><span class="Identifier">FramebufferTarget</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#FramebufferTarget"><span class="Identifier">FramebufferTarget</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">ReadFramebuffer</span> <span class="Other">=</span> <span class="DecNumber">36008</span><span class="Other">,</span>  <span class="Comment">## GL_READ_FRAMEBUFFER</span>
   <span class="Identifier">DrawFramebuffer</span> <span class="Other">=</span> <span class="DecNumber">36009</span>    <span class="Comment">## GL_DRAW_FRAMEBUFFER</span></pre></dt>
   <dd>
@@ -1230,7 +1235,7 @@
   </dd>
 </div>
 <div id="GlType">
-  <dt><pre><a href="rlgl.html#GlType"><span class="Identifier">GlType</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#GlType"><span class="Identifier">GlType</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">UnsignedByte</span> <span class="Other">=</span> <span class="DecNumber">5121</span><span class="Other">,</span>      <span class="Comment">## GL_UNSIGNED_BYTE</span>
   <span class="Identifier">Float</span> <span class="Other">=</span> <span class="DecNumber">5126</span>               <span class="Comment">## GL_FLOAT</span></pre></dt>
   <dd>
@@ -1242,8 +1247,8 @@
   </dd>
 </div>
 <div id="GlVersion">
-  <dt><pre><a href="rlgl.html#GlVersion"><span class="Identifier">GlVersion</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">Opengl11Software</span><span class="Other">,</span>         <span class="Comment">## Software rendering</span>
+  <dt><pre><a href="#GlVersion"><span class="Identifier">GlVersion</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">OpenglSoftware</span><span class="Other">,</span>           <span class="Comment">## Software rendering</span>
   <span class="Identifier">Opengl11</span><span class="Other">,</span>                 <span class="Comment">## OpenGL 1.1</span>
   <span class="Identifier">Opengl21</span><span class="Other">,</span>                 <span class="Comment">## OpenGL 2.1 (GLSL 120)</span>
   <span class="Identifier">Opengl33</span><span class="Other">,</span>                 <span class="Comment">## OpenGL 3.3 (GLSL 330)</span>
@@ -1259,17 +1264,17 @@
   </dd>
 </div>
 <div id="IndicesArr">
-  <dt><pre><a href="rlgl.html#IndicesArr"><span class="Identifier">IndicesArr</span></a> <span class="Other">=</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">6</span><span class="Other">,</span> <span class="Identifier">uint32</span><span class="Other">]</span></pre></dt>
+  <dt><pre><a href="#IndicesArr"><span class="Identifier">IndicesArr</span></a> <span class="Other">=</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">6</span><span class="Other">,</span> <span class="Identifier">uint32</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L639" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L639" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L641" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L641" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="MatrixMode">
-  <dt><pre><a href="rlgl.html#MatrixMode"><span class="Identifier">MatrixMode</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#MatrixMode"><span class="Identifier">MatrixMode</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">Modelview</span> <span class="Other">=</span> <span class="DecNumber">5888</span><span class="Other">,</span>         <span class="Comment">## GL_MODELVIEW</span>
   <span class="Identifier">Projection</span> <span class="Other">=</span> <span class="DecNumber">5889</span><span class="Other">,</span>        <span class="Comment">## GL_PROJECTION</span>
   <span class="Identifier">Texture</span> <span class="Other">=</span> <span class="DecNumber">5890</span>             <span class="Comment">## GL_TEXTURE</span></pre></dt>
@@ -1282,11 +1287,11 @@
   </dd>
 </div>
 <div id="RenderBatch">
-  <dt><pre><a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlRenderBatch&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span class="Identifier">completeStruct</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
+  <dt><pre><a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlRenderBatch&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span class="Identifier">completeStruct</span><span class="Other">,</span> <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">bufferCount</span><span class="Other">:</span> <span class="Identifier">int32</span>         <span class="Comment">## Number of vertex buffers (multi-buffering support)</span>
   <span class="Identifier">currentBuffer</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>      <span class="Comment">## Current buffer tracking in case of multi-buffering</span>
-  <span class="Identifier">vertexBuffer</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">]</span> <span class="Comment">## Dynamic buffer(s) for vertex data</span>
-  <span class="Identifier">draws</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="rlgl.html#DrawCall"><span class="Identifier">DrawCall</span></a><span class="Other">]</span> <span class="Comment">## Draw calls array, depends on textureId</span>
+  <span class="Identifier">vertexBuffer</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">]</span> <span class="Comment">## Dynamic buffer(s) for vertex data</span>
+  <span class="Identifier">draws</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><a href="#DrawCall"><span class="Identifier">DrawCall</span></a><span class="Other">]</span> <span class="Comment">## Draw calls array, depends on textureId</span>
   <span class="Identifier">drawCounter</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int32</span>        <span class="Comment">## Draw calls counter</span>
   <span class="Identifier">currentDepth</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">float32</span>     <span class="Comment">## Current depth value for next draw</span></pre></dt>
   <dd>
@@ -1298,7 +1303,7 @@
   </dd>
 </div>
 <div id="RenderBatchDraws">
-  <dt><pre><a href="rlgl.html#RenderBatchDraws"><span class="Identifier">RenderBatchDraws</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a></pre></dt>
+  <dt><pre><a href="#RenderBatchDraws"><span class="Identifier">RenderBatchDraws</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a></pre></dt>
   <dd>
     
     
@@ -1308,7 +1313,7 @@
   </dd>
 </div>
 <div id="RenderBatchVertexBuffer">
-  <dt><pre><a href="rlgl.html#RenderBatchVertexBuffer"><span class="Identifier">RenderBatchVertexBuffer</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a></pre></dt>
+  <dt><pre><a href="#RenderBatchVertexBuffer"><span class="Identifier">RenderBatchVertexBuffer</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a></pre></dt>
   <dd>
     
     
@@ -1318,7 +1323,7 @@
   </dd>
 </div>
 <div id="rlglLoadProc">
-  <dt><pre><a href="rlgl.html#rlglLoadProc"><span class="Identifier">rlglLoadProc</span></a> <span class="Other">=</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
+  <dt><pre><a href="#rlglLoadProc"><span class="Identifier">rlglLoadProc</span></a> <span class="Other">=</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
   <dd>
     
     OpenGL extension functions loader signature (same as GLADloadproc)
@@ -1328,7 +1333,7 @@
   </dd>
 </div>
 <div id="ShaderType">
-  <dt><pre><a href="rlgl.html#ShaderType"><span class="Identifier">ShaderType</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#ShaderType"><span class="Identifier">ShaderType</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">FragmentShader</span> <span class="Other">=</span> <span class="DecNumber">35632</span><span class="Other">,</span>   <span class="Comment">## GL_FRAGMENT_SHADER</span>
   <span class="Identifier">VertexShader</span> <span class="Other">=</span> <span class="DecNumber">35633</span><span class="Other">,</span>     <span class="Comment">## GL_VERTEX_SHADER</span>
   <span class="Identifier">ComputeShader</span> <span class="Other">=</span> <span class="DecNumber">37305</span>      <span class="Comment">## GL_COMPUTE_SHADER</span></pre></dt>
@@ -1341,7 +1346,7 @@
   </dd>
 </div>
 <div id="TextureParameter">
-  <dt><pre><a href="rlgl.html#TextureParameter"><span class="Identifier">TextureParameter</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
+  <dt><pre><a href="#TextureParameter"><span class="Identifier">TextureParameter</span></a> {.<span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">FilterNearest</span> <span class="Other">=</span> <span class="DecNumber">9728</span><span class="Other">,</span>     <span class="Comment">## GL_NEAREST</span>
   <span class="Identifier">FilterLinear</span> <span class="Other">=</span> <span class="DecNumber">9729</span><span class="Other">,</span>      <span class="Comment">## GL_LINEAR</span>
   <span class="Identifier">FilterMipNearest</span> <span class="Other">=</span> <span class="DecNumber">9984</span><span class="Other">,</span>  <span class="Comment">## GL_NEAREST_MIPMAP_NEAREST</span>
@@ -1367,7 +1372,7 @@
   </dd>
 </div>
 <div id="VertexBuffer">
-  <dt><pre><a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlVertexBuffer&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span class="Identifier">completeStruct</span><span class="Other">,</span>
+  <dt><pre><a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlVertexBuffer&quot;</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span class="Identifier">completeStruct</span><span class="Other">,</span>
                <span class="Identifier">bycopy</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">elementCount</span><span class="Other">:</span> <span class="Identifier">int32</span>        <span class="Comment">## Number of elements in the buffer (QUADS)</span>
   <span class="Identifier">vertices</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">UncheckedArray</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span> <span class="Comment">## Vertex position (XYZ - 3 components per vertex) (shader-location = 0)</span>
@@ -1386,7 +1391,7 @@
   </dd>
 </div>
 <div id="VertexBufferColors">
-  <dt><pre><a href="rlgl.html#VertexBufferColors"><span class="Identifier">VertexBufferColors</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a></pre></dt>
+  <dt><pre><a href="#VertexBufferColors"><span class="Identifier">VertexBufferColors</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a></pre></dt>
   <dd>
     
     
@@ -1396,7 +1401,7 @@
   </dd>
 </div>
 <div id="VertexBufferIndices">
-  <dt><pre><a href="rlgl.html#VertexBufferIndices"><span class="Identifier">VertexBufferIndices</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a></pre></dt>
+  <dt><pre><a href="#VertexBufferIndices"><span class="Identifier">VertexBufferIndices</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a></pre></dt>
   <dd>
     
     
@@ -1406,7 +1411,7 @@
   </dd>
 </div>
 <div id="VertexBufferNormals">
-  <dt><pre><a href="rlgl.html#VertexBufferNormals"><span class="Identifier">VertexBufferNormals</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a></pre></dt>
+  <dt><pre><a href="#VertexBufferNormals"><span class="Identifier">VertexBufferNormals</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a></pre></dt>
   <dd>
     
     
@@ -1416,7 +1421,7 @@
   </dd>
 </div>
 <div id="VertexBufferTexcoords">
-  <dt><pre><a href="rlgl.html#VertexBufferTexcoords"><span class="Identifier">VertexBufferTexcoords</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a></pre></dt>
+  <dt><pre><a href="#VertexBufferTexcoords"><span class="Identifier">VertexBufferTexcoords</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a></pre></dt>
   <dd>
     
     
@@ -1426,7 +1431,7 @@
   </dd>
 </div>
 <div id="VertexBufferVertices">
-  <dt><pre><a href="rlgl.html#VertexBufferVertices"><span class="Identifier">VertexBufferVertices</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a></pre></dt>
+  <dt><pre><a href="#VertexBufferVertices"><span class="Identifier">VertexBufferVertices</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a></pre></dt>
   <dd>
     
     
@@ -1442,7 +1447,7 @@
   <h1><a class="toc-backref" href="#10">Consts</a></h1>
   <dl class="item">
     <div id="CullDistanceFar">
-  <dt><pre><a href="rlgl.html#CullDistanceFar"><span class="Identifier">CullDistanceFar</span></a> <span class="Other">=</span> <span class="FloatNumber">4000.0</span></pre></dt>
+  <dt><pre><a href="#CullDistanceFar"><span class="Identifier">CullDistanceFar</span></a> <span class="Other">=</span> <span class="FloatNumber">4000.0</span></pre></dt>
   <dd>
     
     Default far cull distance
@@ -1452,7 +1457,7 @@
   </dd>
 </div>
 <div id="CullDistanceNear">
-  <dt><pre><a href="rlgl.html#CullDistanceNear"><span class="Identifier">CullDistanceNear</span></a> <span class="Other">=</span> <span class="FloatNumber">0.05</span></pre></dt>
+  <dt><pre><a href="#CullDistanceNear"><span class="Identifier">CullDistanceNear</span></a> <span class="Other">=</span> <span class="FloatNumber">0.05</span></pre></dt>
   <dd>
     
     Default near cull distance
@@ -1462,7 +1467,7 @@
   </dd>
 </div>
 <div id="DefaultBatchBufferElements">
-  <dt><pre><a href="rlgl.html#DefaultBatchBufferElements"><span class="Identifier">DefaultBatchBufferElements</span></a> <span class="Other">=</span> <span class="DecNumber">8192</span></pre></dt>
+  <dt><pre><a href="#DefaultBatchBufferElements"><span class="Identifier">DefaultBatchBufferElements</span></a> <span class="Other">=</span> <span class="DecNumber">8192</span></pre></dt>
   <dd>
     
     This is the maximum amount of elements (quads) per batch NOTE: Be careful with text, every letter maps to a quad
@@ -1472,7 +1477,7 @@
   </dd>
 </div>
 <div id="DefaultBatchBuffers">
-  <dt><pre><a href="rlgl.html#DefaultBatchBuffers"><span class="Identifier">DefaultBatchBuffers</span></a> <span class="Other">=</span> <span class="DecNumber">1</span></pre></dt>
+  <dt><pre><a href="#DefaultBatchBuffers"><span class="Identifier">DefaultBatchBuffers</span></a> <span class="Other">=</span> <span class="DecNumber">1</span></pre></dt>
   <dd>
     
     Default number of batch buffers (multi-buffering)
@@ -1482,7 +1487,7 @@
   </dd>
 </div>
 <div id="DefaultBatchDrawCalls">
-  <dt><pre><a href="rlgl.html#DefaultBatchDrawCalls"><span class="Identifier">DefaultBatchDrawCalls</span></a> <span class="Other">=</span> <span class="DecNumber">256</span></pre></dt>
+  <dt><pre><a href="#DefaultBatchDrawCalls"><span class="Identifier">DefaultBatchDrawCalls</span></a> <span class="Other">=</span> <span class="DecNumber">256</span></pre></dt>
   <dd>
     
     Default number of batch draw calls (by state changes: mode, texture)
@@ -1492,7 +1497,7 @@
   </dd>
 </div>
 <div id="DefaultBatchMaxTextureUnits">
-  <dt><pre><a href="rlgl.html#DefaultBatchMaxTextureUnits"><span class="Identifier">DefaultBatchMaxTextureUnits</span></a> <span class="Other">=</span> <span class="DecNumber">4</span></pre></dt>
+  <dt><pre><a href="#DefaultBatchMaxTextureUnits"><span class="Identifier">DefaultBatchMaxTextureUnits</span></a> <span class="Other">=</span> <span class="DecNumber">4</span></pre></dt>
   <dd>
     
     Maximum number of textures units that can be activated on batch drawing
@@ -1502,7 +1507,7 @@
   </dd>
 </div>
 <div id="MaxMatrixStackSize">
-  <dt><pre><a href="rlgl.html#MaxMatrixStackSize"><span class="Identifier">MaxMatrixStackSize</span></a> <span class="Other">=</span> <span class="DecNumber">32</span></pre></dt>
+  <dt><pre><a href="#MaxMatrixStackSize"><span class="Identifier">MaxMatrixStackSize</span></a> <span class="Other">=</span> <span class="DecNumber">32</span></pre></dt>
   <dd>
     
     Maximum size of Matrix stack
@@ -1512,7 +1517,7 @@
   </dd>
 </div>
 <div id="RlglVersion">
-  <dt><pre><a href="rlgl.html#RlglVersion"><span class="Identifier">RlglVersion</span></a> <span class="Other">=</span> <span class="Other">(</span><span class="DecNumber">5</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
+  <dt><pre><a href="#RlglVersion"><span class="Identifier">RlglVersion</span></a> <span class="Other">=</span> <span class="Other">(</span><span class="DecNumber">5</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -1529,53 +1534,7 @@
   <dl class="item">
     <div id="=copy-procs-all">
   <div id="=copy,RenderBatch,RenderBatch">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dcopy%2CRenderBatch%2CRenderBatch"><span class="Identifier">`=copy`</span></a><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span> {.<span class="Identifier">error</span>.}</pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L572" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L572" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="=copy,VertexBuffer,VertexBuffer">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dcopy%2CVertexBuffer%2CVertexBuffer"><span class="Identifier">`=copy`</span></a><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span> {.<span class="Identifier">error</span>.}</pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L575" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L575" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
-<div id="=destroy-procs-all">
-  <div id="=destroy,RenderBatch">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CRenderBatch"><span class="Identifier">`=destroy`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L569" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L569" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
-<div id="=dup-procs-all">
-  <div id="=dup,RenderBatch">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddup%2CRenderBatch"><span class="Identifier">`=dup`</span></a><span class="Other">(</span><span class="Identifier">source</span><span class="Other">:</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span><span class="Other">:</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a> {.<span class="Identifier">error</span>.}</pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L571" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L571" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="=dup,VertexBuffer">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddup%2CVertexBuffer"><span class="Identifier">`=dup`</span></a><span class="Other">(</span><span class="Identifier">source</span><span class="Other">:</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a> {.<span class="Identifier">error</span>.}</pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dcopy%2CRenderBatch%2CRenderBatch"><span class="Identifier">`=copy`</span></a><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span> {.<span class="Identifier">error</span>.}</pre></dt>
   <dd>
     
     
@@ -1584,11 +1543,44 @@
 
   </dd>
 </div>
+<div id="=copy,VertexBuffer,VertexBuffer">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dcopy%2CVertexBuffer%2CVertexBuffer"><span class="Identifier">`=copy`</span></a><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span> {.<span class="Identifier">error</span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L577" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L577" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
 
 </div>
-<div id="=sink-procs-all">
-  <div id="=sink,VertexBuffer,VertexBuffer">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dsink%2CVertexBuffer%2CVertexBuffer"><span class="Identifier">`=sink`</span></a><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span> {.<span class="Identifier">error</span>.}</pre></dt>
+<div id="=destroy-procs-all">
+  <div id="=destroy,RenderBatch">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CRenderBatch"><span class="Identifier">`=destroy`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L571" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L571" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="=dup-procs-all">
+  <div id="=dup,RenderBatch">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddup%2CRenderBatch"><span class="Identifier">`=dup`</span></a><span class="Other">(</span><span class="Identifier">source</span><span class="Other">:</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span><span class="Other">:</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a> {.<span class="Identifier">error</span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L573" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L573" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="=dup,VertexBuffer">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddup%2CVertexBuffer"><span class="Identifier">`=dup`</span></a><span class="Other">(</span><span class="Identifier">source</span><span class="Other">:</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a> {.<span class="Identifier">error</span>.}</pre></dt>
   <dd>
     
     
@@ -1599,136 +1591,149 @@
 </div>
 
 </div>
+<div id="=sink-procs-all">
+  <div id="=sink,VertexBuffer,VertexBuffer">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Dsink%2CVertexBuffer%2CVertexBuffer"><span class="Identifier">`=sink`</span></a><span class="Other">(</span><span class="Identifier">dest</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span> {.<span class="Identifier">error</span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L578" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L578" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
 <div id="[]-procs-all">
   <div id="[],RenderBatchDraws,int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CRenderBatchDraws%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#RenderBatchDraws"><span class="Identifier">RenderBatchDraws</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">lent</span> <a href="rlgl.html#DrawCall"><span class="Identifier">DrawCall</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CRenderBatchDraws%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#RenderBatchDraws"><span class="Identifier">RenderBatchDraws</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">lent</span> <a href="#DrawCall"><span class="Identifier">DrawCall</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L663" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L663" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L665" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L665" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[],RenderBatchVertexBuffer,int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CRenderBatchVertexBuffer%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#RenderBatchVertexBuffer"><span class="Identifier">RenderBatchVertexBuffer</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">lent</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CRenderBatchVertexBuffer%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#RenderBatchVertexBuffer"><span class="Identifier">RenderBatchVertexBuffer</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">lent</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L655" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L655" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L657" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L657" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[],RenderBatchDraws,int_2">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CRenderBatchDraws%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#RenderBatchDraws"><span class="Identifier">RenderBatchDraws</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#DrawCall"><span class="Identifier">DrawCall</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CRenderBatchDraws%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#RenderBatchDraws"><span class="Identifier">RenderBatchDraws</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#DrawCall"><span class="Identifier">DrawCall</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L667" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L667" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L669" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L669" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[],RenderBatchVertexBuffer,int_2">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CRenderBatchVertexBuffer%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#RenderBatchVertexBuffer"><span class="Identifier">RenderBatchVertexBuffer</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a> {.
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CRenderBatchVertexBuffer%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#RenderBatchVertexBuffer"><span class="Identifier">RenderBatchVertexBuffer</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L659" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L659" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L661" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L661" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[],VertexBufferColors,int_2">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferColors%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#VertexBufferColors"><span class="Identifier">VertexBufferColors</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Color"><span class="Identifier">Color</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferColors%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#VertexBufferColors"><span class="Identifier">VertexBufferColors</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Color"><span class="Identifier">Color</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L630" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L630" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L632" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L632" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[],VertexBufferIndices,int_2">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferIndices%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#VertexBufferIndices"><span class="Identifier">VertexBufferIndices</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#IndicesArr"><span class="Identifier">IndicesArr</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferIndices%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#VertexBufferIndices"><span class="Identifier">VertexBufferIndices</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#IndicesArr"><span class="Identifier">IndicesArr</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L647" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L647" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L649" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L649" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[],VertexBufferTexcoords,int_2">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferTexcoords%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#VertexBufferTexcoords"><span class="Identifier">VertexBufferTexcoords</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferTexcoords%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#VertexBufferTexcoords"><span class="Identifier">VertexBufferTexcoords</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L618" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L618" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L620" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L620" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[],VertexBufferVertices,int_2">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferVertices%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#VertexBufferVertices"><span class="Identifier">VertexBufferVertices</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferVertices%2Cint_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#VertexBufferVertices"><span class="Identifier">VertexBufferVertices</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L606" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L606" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L608" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L608" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[],VertexBufferColors,int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferColors%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#VertexBufferColors"><span class="Identifier">VertexBufferColors</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Color"><span class="Identifier">Color</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferColors%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#VertexBufferColors"><span class="Identifier">VertexBufferColors</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Color"><span class="Identifier">Color</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L626" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L626" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L628" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L628" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[],VertexBufferIndices,int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferIndices%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#VertexBufferIndices"><span class="Identifier">VertexBufferIndices</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="rlgl.html#IndicesArr"><span class="Identifier">IndicesArr</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferIndices%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#VertexBufferIndices"><span class="Identifier">VertexBufferIndices</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="#IndicesArr"><span class="Identifier">IndicesArr</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L643" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L643" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L645" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L645" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[],VertexBufferTexcoords,int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferTexcoords%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#VertexBufferTexcoords"><span class="Identifier">VertexBufferTexcoords</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferTexcoords%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#VertexBufferTexcoords"><span class="Identifier">VertexBufferTexcoords</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L614" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L614" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L616" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L616" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[],VertexBufferVertices,int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferVertices%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#VertexBufferVertices"><span class="Identifier">VertexBufferVertices</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CVertexBufferVertices%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#VertexBufferVertices"><span class="Identifier">VertexBufferVertices</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L602" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L602" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L604" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L604" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1736,46 +1741,46 @@
 </div>
 <div id="[]=-procs-all">
   <div id="[]=,VertexBufferColors,int,Color">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%3D%2CVertexBufferColors%2Cint%2CColor"><span class="Identifier">`[]=`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#VertexBufferColors"><span class="Identifier">VertexBufferColors</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <a href="raylib.html#Color"><span class="Identifier">Color</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%3D%2CVertexBufferColors%2Cint%2CColor"><span class="Identifier">`[]=`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#VertexBufferColors"><span class="Identifier">VertexBufferColors</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <a href="raylib.html#Color"><span class="Identifier">Color</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L634" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L634" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L636" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L636" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[]=,VertexBufferIndices,int,IndicesArr">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%3D%2CVertexBufferIndices%2Cint%2CIndicesArr"><span class="Identifier">`[]=`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#VertexBufferIndices"><span class="Identifier">VertexBufferIndices</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <a href="rlgl.html#IndicesArr"><span class="Identifier">IndicesArr</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%3D%2CVertexBufferIndices%2Cint%2CIndicesArr"><span class="Identifier">`[]=`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#VertexBufferIndices"><span class="Identifier">VertexBufferIndices</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <a href="#IndicesArr"><span class="Identifier">IndicesArr</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L651" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L651" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L653" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L653" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[]=,VertexBufferTexcoords,int,Vector2">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%3D%2CVertexBufferTexcoords%2Cint%2CVector2"><span class="Identifier">`[]=`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#VertexBufferTexcoords"><span class="Identifier">VertexBufferTexcoords</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%3D%2CVertexBufferTexcoords%2Cint%2CVector2"><span class="Identifier">`[]=`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#VertexBufferTexcoords"><span class="Identifier">VertexBufferTexcoords</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <a href="raylib.html#Vector2"><span class="Identifier">Vector2</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L622" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L622" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L624" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L624" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="[]=,VertexBufferVertices,int,Vector3">
-  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%3D%2CVertexBufferVertices%2Cint%2CVector3"><span class="Identifier">`[]=`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#VertexBufferVertices"><span class="Identifier">VertexBufferVertices</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%3D%2CVertexBufferVertices%2Cint%2CVector3"><span class="Identifier">`[]=`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#VertexBufferVertices"><span class="Identifier">VertexBufferVertices</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <a href="raylib.html#Vector3"><span class="Identifier">Vector3</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L610" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L610" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L612" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L612" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1813,7 +1818,7 @@
 </div>
 <div id="bindFramebuffer-procs-all">
   <div id="bindFramebuffer,FramebufferTarget,uint32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#bindFramebuffer%2CFramebufferTarget%2Cuint32"><span class="Identifier">bindFramebuffer</span></a><span class="Other">(</span><span class="Identifier">target</span><span class="Other">:</span> <a href="rlgl.html#FramebufferTarget"><span class="Identifier">FramebufferTarget</span></a><span class="Other">;</span> <span class="Identifier">framebuffer</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span> {.
+  <dt><pre><span class="Keyword">proc</span> <a href="#bindFramebuffer%2CFramebufferTarget%2Cuint32"><span class="Identifier">bindFramebuffer</span></a><span class="Other">(</span><span class="Identifier">target</span><span class="Other">:</span> <a href="#FramebufferTarget"><span class="Identifier">FramebufferTarget</span></a><span class="Other">;</span> <span class="Identifier">framebuffer</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlBindFramebuffer&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -1835,8 +1840,8 @@
   <dd>
     
     Bind image texture
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L520" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L520" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L522" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L522" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1850,8 +1855,8 @@
   <dd>
     
     Bind SSBO buffer
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L512" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L512" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L514" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L514" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1876,13 +1881,13 @@
 </div>
 <div id="bufferCount-procs-all">
   <div id="bufferCount,RenderBatch">
-  <dt><pre><span class="Keyword">proc</span> <a href="#bufferCount%2CRenderBatch"><span class="Identifier">bufferCount</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.<span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#bufferCount%2CRenderBatch"><span class="Identifier">bufferCount</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.<span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L547" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L547" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L549" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L549" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2003,20 +2008,6 @@
 </div>
 
 </div>
-<div id="compileShader-procs-all">
-  <div id="compileShader,string,ShaderType">
-  <dt><pre><span class="Keyword">proc</span> <a href="#compileShader%2Cstring%2CShaderType"><span class="Identifier">compileShader</span></a><span class="Other">(</span><span class="Identifier">shaderCode</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">type</span><span class="Other">:</span> <a href="rlgl.html#ShaderType"><span class="Identifier">ShaderType</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    Compile custom shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L557" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L557" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
 <div id="computeShaderDispatch-procs-all">
   <div id="computeShaderDispatch,uint32,uint32,uint32">
   <dt><pre><span class="Keyword">proc</span> <a href="#computeShaderDispatch%2Cuint32%2Cuint32%2Cuint32"><span class="Identifier">computeShaderDispatch</span></a><span class="Other">(</span><span class="Identifier">groupX</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">groupY</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">groupZ</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span> {.
@@ -2025,8 +2016,8 @@
   <dd>
     
     Dispatch compute shader (equivalent to <em>draw</em> for graphics pipeline)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L504" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L504" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L506" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L506" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2057,8 +2048,8 @@
   <dd>
     
     Copy SSBO data between buffers
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L516" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L516" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L518" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L518" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2338,7 +2329,7 @@
 </div>
 <div id="drawRenderBatch-procs-all">
   <div id="drawRenderBatch,RenderBatch">
-  <dt><pre><span class="Keyword">proc</span> <a href="#drawRenderBatch%2CRenderBatch"><span class="Identifier">drawRenderBatch</span></a><span class="Other">(</span><span class="Identifier">batch</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlDrawRenderBatch&quot;</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#drawRenderBatch%2CRenderBatch"><span class="Identifier">drawRenderBatch</span></a><span class="Other">(</span><span class="Identifier">batch</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlDrawRenderBatch&quot;</span><span class="Other">,</span>
     <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -2428,13 +2419,13 @@
 </div>
 <div id="elementCount-procs-all">
   <div id="elementCount,VertexBuffer">
-  <dt><pre><span class="Keyword">proc</span> <a href="#elementCount%2CVertexBuffer"><span class="Identifier">elementCount</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.<span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#elementCount%2CVertexBuffer"><span class="Identifier">elementCount</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.<span class="Identifier">inline</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L546" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L546" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L548" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L548" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2702,9 +2693,9 @@
 </div>
 <div id="framebufferAttach-procs-all">
   <div id="framebufferAttach,uint32,uint32,FramebufferAttachType,FramebufferAttachTextureType,int32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#framebufferAttach%2Cuint32%2Cuint32%2CFramebufferAttachType%2CFramebufferAttachTextureType%2Cint32"><span class="Identifier">framebufferAttach</span></a><span class="Other">(</span><span class="Identifier">fboId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">texId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span>
-                       <span class="Identifier">attachType</span><span class="Other">:</span> <a href="rlgl.html#FramebufferAttachType"><span class="Identifier">FramebufferAttachType</span></a><span class="Other">;</span>
-                       <span class="Identifier">texType</span><span class="Other">:</span> <a href="rlgl.html#FramebufferAttachTextureType"><span class="Identifier">FramebufferAttachTextureType</span></a><span class="Other">;</span> <span class="Identifier">mipLevel</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span> {.
+  <dt><pre><span class="Keyword">proc</span> <a href="#framebufferAttach%2Cuint32%2Cuint32%2CFramebufferAttachType%2CFramebufferAttachTextureType%2Cint32"><span class="Identifier">framebufferAttach</span></a><span class="Other">(</span><span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">texId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span>
+                       <span class="Identifier">attachType</span><span class="Other">:</span> <a href="#FramebufferAttachType"><span class="Identifier">FramebufferAttachType</span></a><span class="Other">;</span>
+                       <span class="Identifier">texType</span><span class="Other">:</span> <a href="#FramebufferAttachTextureType"><span class="Identifier">FramebufferAttachTextureType</span></a><span class="Other">;</span> <span class="Identifier">mipLevel</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlFramebufferAttach&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -2870,13 +2861,13 @@
 </div>
 <div id="getLocationAttrib-procs-all">
   <div id="getLocationAttrib,uint32,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#getLocationAttrib%2Cuint32%2Cstring"><span class="Identifier">getLocationAttrib</span></a><span class="Other">(</span><span class="Identifier">shaderId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">attribName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderLocation"><span class="Identifier">ShaderLocation</span></a> {.
+  <dt><pre><span class="Keyword">proc</span> <a href="#getLocationAttrib%2Cuint32%2Cstring"><span class="Identifier">getLocationAttrib</span></a><span class="Other">(</span><span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">attribName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderLocation"><span class="Identifier">ShaderLocation</span></a> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     Get shader location attribute, requires shader program id
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L565" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L565" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L567" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L567" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2884,13 +2875,13 @@
 </div>
 <div id="getLocationUniform-procs-all">
   <div id="getLocationUniform,uint32,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#getLocationUniform%2Cuint32%2Cstring"><span class="Identifier">getLocationUniform</span></a><span class="Other">(</span><span class="Identifier">shaderId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">uniformName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderLocation"><span class="Identifier">ShaderLocation</span></a> {.
+  <dt><pre><span class="Keyword">proc</span> <a href="#getLocationUniform%2Cuint32%2Cstring"><span class="Identifier">getLocationUniform</span></a><span class="Other">(</span><span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">uniformName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="raylib.html#ShaderLocation"><span class="Identifier">ShaderLocation</span></a> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     Get shader location uniform, requires shader program id
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L561" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L561" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L563" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L563" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2904,8 +2895,8 @@
   <dd>
     
     Get internal modelview matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L522" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L522" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L524" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L524" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2919,8 +2910,8 @@
   <dd>
     
     Get internal projection matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L524" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L524" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L526" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L526" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2934,8 +2925,8 @@
   <dd>
     
     Get internal projection matrix for stereo render (selected eye)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L528" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L528" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L530" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L530" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2949,8 +2940,8 @@
   <dd>
     
     Get internal accumulated transform matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L526" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L526" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L528" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L528" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2964,8 +2955,8 @@
   <dd>
     
     Get internal view offset matrix for stereo render (selected eye)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L530" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L530" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L532" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L532" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2978,8 +2969,8 @@
   <dd>
     
     Get name string for pixel format
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L671" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L671" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L673" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L673" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3007,8 +2998,8 @@
   <dd>
     
     Get OpenGL procedure address
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L549" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L549" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L551" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L551" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3021,8 +3012,8 @@
   <dd>
     
     Get SSBO buffer size
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L518" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L518" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L520" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L520" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3074,7 +3065,7 @@
 </div>
 <div id="getVersion-procs-all">
   <div id="getVersion">
-  <dt><pre><span class="Keyword">proc</span> <a href="#getVersion"><span class="Identifier">getVersion</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="rlgl.html#GlVersion"><span class="Identifier">GlVersion</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlGetVersion&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#getVersion"><span class="Identifier">getVersion</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="#GlVersion"><span class="Identifier">GlVersion</span></a> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlGetVersion&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span>
                                <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
                                <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -3102,21 +3093,6 @@
 </div>
 
 </div>
-<div id="loadComputeShaderProgram-procs-all">
-  <div id="loadComputeShaderProgram,uint32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadComputeShaderProgram%2Cuint32"><span class="Identifier">loadComputeShaderProgram</span></a><span class="Other">(</span><span class="Identifier">shaderId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
-    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlLoadComputeShaderProgram&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span>
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    Load compute shader program
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L502" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L502" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
 <div id="loadDrawCube-procs-all">
   <div id="loadDrawCube">
   <dt><pre><span class="Keyword">proc</span> <a href="#loadDrawCube"><span class="Identifier">loadDrawCube</span></a><span class="Other">(</span><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlLoadDrawCube&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span>
@@ -3124,8 +3100,8 @@
   <dd>
     
     Load and draw a cube
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L540" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L540" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L542" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L542" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3138,8 +3114,8 @@
   <dd>
     
     Load and draw a quad
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L542" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L542" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L544" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L544" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3147,7 +3123,7 @@
 </div>
 <div id="loadExtensions-procs-all">
   <div id="loadExtensions,rlglLoadProc">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadExtensions%2CrlglLoadProc"><span class="Identifier">loadExtensions</span></a><span class="Other">(</span><span class="Identifier">loader</span><span class="Other">:</span> <a href="rlgl.html#rlglLoadProc"><span class="Identifier">rlglLoadProc</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlLoadExtensions&quot;</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadExtensions%2CrlglLoadProc"><span class="Identifier">loadExtensions</span></a><span class="Other">(</span><span class="Identifier">loader</span><span class="Other">:</span> <a href="#rlglLoadProc"><span class="Identifier">rlglLoadProc</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlLoadExtensions&quot;</span><span class="Other">,</span>
     <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -3190,7 +3166,7 @@
 </div>
 <div id="loadRenderBatch-procs-all">
   <div id="loadRenderBatch,int32,int32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadRenderBatch%2Cint32%2Cint32"><span class="Identifier">loadRenderBatch</span></a><span class="Other">(</span><span class="Identifier">numBuffers</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">bufferElements</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a> {.
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadRenderBatch%2Cint32%2Cint32"><span class="Identifier">loadRenderBatch</span></a><span class="Other">(</span><span class="Identifier">numBuffers</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">bufferElements</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlLoadRenderBatch&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -3203,43 +3179,72 @@
 </div>
 
 </div>
-<div id="loadShaderBuffer-procs-all">
-  <div id="loadShaderBuffer,uint32,pointer,BufferUsageHint">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadShaderBuffer%2Cuint32%2Cpointer%2CBufferUsageHint"><span class="Identifier">loadShaderBuffer</span></a><span class="Other">(</span><span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">usageHint</span><span class="Other">:</span> <a href="rlgl.html#BufferUsageHint"><span class="Identifier">BufferUsageHint</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
-    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlLoadShaderBuffer&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<div id="loadShader-procs-all">
+  <div id="loadShader,string,ShaderType">
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadShader%2Cstring%2CShaderType"><span class="Identifier">loadShader</span></a><span class="Other">(</span><span class="Identifier">code</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">type</span><span class="Other">:</span> <a href="#ShaderType"><span class="Identifier">ShaderType</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Load shader storage buffer object (SSBO)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L506" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L506" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    Load (compile) shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L555" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L555" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
-<div id="loadShaderCode-procs-all">
-  <div id="loadShaderCode,string,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadShaderCode%2Cstring%2Cstring"><span class="Identifier">loadShaderCode</span></a><span class="Other">(</span><span class="Identifier">vsCode</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">fsCode</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<div id="loadShaderBuffer-procs-all">
+  <div id="loadShaderBuffer,uint32,pointer,BufferUsageHint">
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadShaderBuffer%2Cuint32%2Cpointer%2CBufferUsageHint"><span class="Identifier">loadShaderBuffer</span></a><span class="Other">(</span><span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">usageHint</span><span class="Other">:</span> <a href="#BufferUsageHint"><span class="Identifier">BufferUsageHint</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlLoadShaderBuffer&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Load shader from code strings
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L553" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L553" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    Load shader storage buffer object (SSBO)
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L508" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L508" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="loadShaderProgram-procs-all">
-  <div id="loadShaderProgram,uint32,uint32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#loadShaderProgram%2Cuint32%2Cuint32"><span class="Identifier">loadShaderProgram</span></a><span class="Other">(</span><span class="Identifier">vShaderId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">fShaderId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
-    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlLoadShaderProgram&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <div id="loadShaderProgram,string,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadShaderProgram%2Cstring%2Cstring"><span class="Identifier">loadShaderProgram</span></a><span class="Other">(</span><span class="Identifier">vsCode</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">fsCode</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Load custom shader program
+    Load shader from code strings
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L559" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L559" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="loadShaderProgramCompute-procs-all">
+  <div id="loadShaderProgramCompute,uint32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadShaderProgramCompute%2Cuint32"><span class="Identifier">loadShaderProgramCompute</span></a><span class="Other">(</span><span class="Identifier">csId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlLoadShaderProgramCompute&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    Load compute shader program
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L488" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L488" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="loadShaderProgramEx-procs-all">
+  <div id="loadShaderProgramEx,uint32,uint32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#loadShaderProgramEx%2Cuint32%2Cuint32"><span class="Identifier">loadShaderProgramEx</span></a><span class="Other">(</span><span class="Identifier">vsId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">fsId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlLoadShaderProgramEx&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    Load shader program, using already loaded shader ids
     <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L486" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L486" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -3340,7 +3345,7 @@
 </div>
 <div id="matrixMode-procs-all">
   <div id="matrixMode,MatrixMode">
-  <dt><pre><span class="Keyword">proc</span> <a href="#matrixMode%2CMatrixMode"><span class="Identifier">matrixMode</span></a><span class="Other">(</span><span class="Identifier">mode</span><span class="Other">:</span> <a href="rlgl.html#MatrixMode"><span class="Identifier">MatrixMode</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlMatrixMode&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#matrixMode%2CMatrixMode"><span class="Identifier">matrixMode</span></a><span class="Other">(</span><span class="Identifier">mode</span><span class="Other">:</span> <a href="#MatrixMode"><span class="Identifier">MatrixMode</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlMatrixMode&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span>
                                     <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
                                     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -3447,8 +3452,8 @@
   <dd>
     
     Read SSBO buffer data (GPU-&gt;CPU)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L514" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L514" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L516" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L516" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3487,7 +3492,7 @@
 </div>
 <div id="rlBegin-procs-all">
   <div id="rlBegin,DrawMode">
-  <dt><pre><span class="Keyword">proc</span> <a href="#rlBegin%2CDrawMode"><span class="Identifier">rlBegin</span></a><span class="Other">(</span><span class="Identifier">mode</span><span class="Other">:</span> <a href="rlgl.html#DrawMode"><span class="Identifier">DrawMode</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlBegin&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#rlBegin%2CDrawMode"><span class="Identifier">rlBegin</span></a><span class="Other">(</span><span class="Identifier">mode</span><span class="Other">:</span> <a href="#DrawMode"><span class="Identifier">DrawMode</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlBegin&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span>
                                <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -3587,8 +3592,8 @@
 </div>
 <div id="setBlendFactors-procs-all">
   <div id="setBlendFactors,BlendFactor,BlendFactor,BlendFuncOrEq">
-  <dt><pre><span class="Keyword">proc</span> <a href="#setBlendFactors%2CBlendFactor%2CBlendFactor%2CBlendFuncOrEq"><span class="Identifier">setBlendFactors</span></a><span class="Other">(</span><span class="Identifier">glSrcFactor</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span> <span class="Identifier">glDstFactor</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span>
-                     <span class="Identifier">glEquation</span><span class="Other">:</span> <a href="rlgl.html#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlSetBlendFactors&quot;</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#setBlendFactors%2CBlendFactor%2CBlendFactor%2CBlendFuncOrEq"><span class="Identifier">setBlendFactors</span></a><span class="Other">(</span><span class="Identifier">glSrcFactor</span><span class="Other">:</span> <a href="#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span> <span class="Identifier">glDstFactor</span><span class="Other">:</span> <a href="#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span>
+                     <span class="Identifier">glEquation</span><span class="Other">:</span> <a href="#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlSetBlendFactors&quot;</span><span class="Other">,</span>
     <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -3602,9 +3607,9 @@
 </div>
 <div id="setBlendFactorsSeparate-procs-all">
   <div id="setBlendFactorsSeparate,BlendFactor,BlendFactor,BlendFactor,BlendFactor,BlendFuncOrEq,BlendFuncOrEq">
-  <dt><pre><span class="Keyword">proc</span> <a href="#setBlendFactorsSeparate%2CBlendFactor%2CBlendFactor%2CBlendFactor%2CBlendFactor%2CBlendFuncOrEq%2CBlendFuncOrEq"><span class="Identifier">setBlendFactorsSeparate</span></a><span class="Other">(</span><span class="Identifier">glSrcRGB</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span> <span class="Identifier">glDstRGB</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span>
-                             <span class="Identifier">glSrcAlpha</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span> <span class="Identifier">glDstAlpha</span><span class="Other">:</span> <a href="rlgl.html#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span>
-                             <span class="Identifier">glEqRGB</span><span class="Other">:</span> <a href="rlgl.html#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">;</span> <span class="Identifier">glEqAlpha</span><span class="Other">:</span> <a href="rlgl.html#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">)</span> {.
+  <dt><pre><span class="Keyword">proc</span> <a href="#setBlendFactorsSeparate%2CBlendFactor%2CBlendFactor%2CBlendFactor%2CBlendFactor%2CBlendFuncOrEq%2CBlendFuncOrEq"><span class="Identifier">setBlendFactorsSeparate</span></a><span class="Other">(</span><span class="Identifier">glSrcRGB</span><span class="Other">:</span> <a href="#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span> <span class="Identifier">glDstRGB</span><span class="Other">:</span> <a href="#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span>
+                             <span class="Identifier">glSrcAlpha</span><span class="Other">:</span> <a href="#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span> <span class="Identifier">glDstAlpha</span><span class="Other">:</span> <a href="#BlendFactor"><span class="Identifier">BlendFactor</span></a><span class="Other">;</span>
+                             <span class="Identifier">glEqRGB</span><span class="Other">:</span> <a href="#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">;</span> <span class="Identifier">glEqAlpha</span><span class="Other">:</span> <a href="#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">)</span> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlSetBlendFactorsSeparate&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span>
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -3649,7 +3654,7 @@
 </div>
 <div id="setCullFace-procs-all">
   <div id="setCullFace,CullMode">
-  <dt><pre><span class="Keyword">proc</span> <a href="#setCullFace%2CCullMode"><span class="Identifier">setCullFace</span></a><span class="Other">(</span><span class="Identifier">mode</span><span class="Other">:</span> <a href="rlgl.html#CullMode"><span class="Identifier">CullMode</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlSetCullFace&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#setCullFace%2CCullMode"><span class="Identifier">setCullFace</span></a><span class="Other">(</span><span class="Identifier">mode</span><span class="Other">:</span> <a href="#CullMode"><span class="Identifier">CullMode</span></a><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlSetCullFace&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span>
                                    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
                                    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -3713,8 +3718,8 @@
   <dd>
     
     Set a custom modelview matrix (replaces internal modelview matrix)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L534" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L534" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L536" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L536" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3727,8 +3732,8 @@
   <dd>
     
     Set a custom projection matrix (replaces internal projection matrix)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L532" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L532" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L534" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L534" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3742,8 +3747,8 @@
   <dd>
     
     Set eyes projection matrices for stereo rendering
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L536" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L536" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L538" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L538" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3757,8 +3762,8 @@
   <dd>
     
     Set eyes view offsets matrices for stereo rendering
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L538" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L538" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L540" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L540" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3781,7 +3786,7 @@
 </div>
 <div id="setRenderBatchActive-procs-all">
   <div id="setRenderBatchActive,RenderBatch">
-  <dt><pre><span class="Keyword">proc</span> <a href="#setRenderBatchActive%2CRenderBatch"><span class="Identifier">setRenderBatchActive</span></a><span class="Other">(</span><span class="Identifier">batch</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span> {.
+  <dt><pre><span class="Keyword">proc</span> <a href="#setRenderBatchActive%2CRenderBatch"><span class="Identifier">setRenderBatchActive</span></a><span class="Other">(</span><span class="Identifier">batch</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlSetRenderBatchActive&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -3801,8 +3806,8 @@
   <dd>
     
     Set shader currently active (id and locations)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L500" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L500" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L504" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L504" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3832,8 +3837,8 @@
   <dd>
     
     Set shader value uniform
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L492" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L492" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L496" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L496" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3847,8 +3852,8 @@
   <dd>
     
     Set shader value matrices
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L496" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L496" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L500" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L500" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3862,8 +3867,8 @@
   <dd>
     
     Set shader value matrix
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L494" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L494" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L498" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L498" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3877,8 +3882,8 @@
   <dd>
     
     Set shader value sampler
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L498" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L498" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L502" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L502" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3886,7 +3891,7 @@
 </div>
 <div id="setVertexAttribute-procs-all">
   <div id="setVertexAttribute,uint32,int32,GlType,bool,int32,int32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#setVertexAttribute%2Cuint32%2Cint32%2CGlType%2Cbool%2Cint32%2Cint32"><span class="Identifier">setVertexAttribute</span></a><span class="Other">(</span><span class="Identifier">index</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">compSize</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">type</span><span class="Other">:</span> <a href="rlgl.html#GlType"><span class="Identifier">GlType</span></a><span class="Other">;</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#setVertexAttribute%2Cuint32%2Cint32%2CGlType%2Cbool%2Cint32%2Cint32"><span class="Identifier">setVertexAttribute</span></a><span class="Other">(</span><span class="Identifier">index</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">compSize</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">type</span><span class="Other">:</span> <a href="#GlType"><span class="Identifier">GlType</span></a><span class="Other">;</span>
                         <span class="Identifier">normalized</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">stride</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">offset</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlSetVertexAttribute&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
@@ -3947,7 +3952,7 @@
 </div>
 <div id="textureParameters-procs-all">
   <div id="textureParameters,uint32,TextureParameter,int32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#textureParameters%2Cuint32%2CTextureParameter%2Cint32"><span class="Identifier">textureParameters</span></a><span class="Other">(</span><span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">param</span><span class="Other">:</span> <a href="rlgl.html#TextureParameter"><span class="Identifier">TextureParameter</span></a><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span> {.
+  <dt><pre><span class="Keyword">proc</span> <a href="#textureParameters%2Cuint32%2CTextureParameter%2Cint32"><span class="Identifier">textureParameters</span></a><span class="Other">(</span><span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">param</span><span class="Other">:</span> <a href="#TextureParameter"><span class="Identifier">TextureParameter</span></a><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span> {.
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlTextureParameters&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -3989,6 +3994,21 @@
 </div>
 
 </div>
+<div id="unloadShader-procs-all">
+  <div id="unloadShader,uint32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#unloadShader%2Cuint32"><span class="Identifier">unloadShader</span></a><span class="Other">(</span><span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlUnloadShader&quot;</span><span class="Other">,</span> <span class="Identifier">sideEffect</span><span class="Other">,</span>
+                                <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;rlgl.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+                                <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    Unload shader, loaded with rlLoadShader()
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L490" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L490" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
 <div id="unloadShaderBuffer-procs-all">
   <div id="unloadShaderBuffer,uint32">
   <dt><pre><span class="Keyword">proc</span> <a href="#unloadShaderBuffer%2Cuint32"><span class="Identifier">unloadShaderBuffer</span></a><span class="Other">(</span><span class="Identifier">ssboId</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span> {.<span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;rlUnloadShaderBuffer&quot;</span><span class="Other">,</span>
@@ -3996,8 +4016,8 @@
   <dd>
     
     Unload shader storage buffer object (SSBO)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L508" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L508" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L510" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L510" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4011,8 +4031,8 @@
   <dd>
     
     Unload shader program
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L488" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L488" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L492" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L492" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4070,8 +4090,8 @@
   <dd>
     
     Update SSBO buffer data
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L510" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L510" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L512" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L512" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4191,7 +4211,7 @@
   <dl class="item">
     <div id="BlendEquationRgb-templates-all">
   <div id="BlendEquationRgb.t,typedesc[BlendFuncOrEq]">
-  <dt><pre><span class="Keyword">template</span> <a href="#BlendEquationRgb.t%2Ctypedesc%5BBlendFuncOrEq%5D"><span class="Identifier">BlendEquationRgb</span></a><span class="Other">(</span><span class="Operator">_</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="rlgl.html#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#BlendEquationRgb.t%2Ctypedesc%5BBlendFuncOrEq%5D"><span class="Identifier">BlendEquationRgb</span></a><span class="Other">(</span><span class="Operator">_</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="#BlendFuncOrEq"><span class="Identifier">BlendFuncOrEq</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
   <dd>
     
     
@@ -4204,72 +4224,7 @@
 </div>
 <div id="colors-templates-all">
   <div id="colors.t,VertexBuffer">
-  <dt><pre><span class="Keyword">template</span> <a href="#colors.t%2CVertexBuffer"><span class="Identifier">colors</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <a href="rlgl.html#VertexBufferColors"><span class="Identifier">VertexBufferColors</span></a></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L588" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L588" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
-<div id="drawMode-templates-all">
-  <div id="drawMode.t,DrawMode,untyped">
-  <dt><pre><span class="Keyword">template</span> <a href="#drawMode.t%2CDrawMode%2Cuntyped"><span class="Identifier">drawMode</span></a><span class="Other">(</span><span class="Identifier">mode</span><span class="Other">:</span> <a href="rlgl.html#DrawMode"><span class="Identifier">DrawMode</span></a><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    Drawing mode (how to organize vertex)
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L578" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L578" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
-<div id="draws-templates-all">
-  <div id="draws.t,RenderBatch">
-  <dt><pre><span class="Keyword">template</span> <a href="#draws.t%2CRenderBatch"><span class="Identifier">draws</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span><span class="Other">:</span> <a href="rlgl.html#RenderBatchDraws"><span class="Identifier">RenderBatchDraws</span></a></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L591" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L591" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
-<div id="indices-templates-all">
-  <div id="indices.t,VertexBuffer">
-  <dt><pre><span class="Keyword">template</span> <a href="#indices.t%2CVertexBuffer"><span class="Identifier">indices</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <a href="rlgl.html#VertexBufferIndices"><span class="Identifier">VertexBufferIndices</span></a></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L589" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L589" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
-<div id="texcoords-templates-all">
-  <div id="texcoords.t,VertexBuffer">
-  <dt><pre><span class="Keyword">template</span> <a href="#texcoords.t%2CVertexBuffer"><span class="Identifier">texcoords</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <a href="rlgl.html#VertexBufferTexcoords"><span class="Identifier">VertexBufferTexcoords</span></a></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L587" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L587" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
-<div id="vertexBuffer-templates-all">
-  <div id="vertexBuffer.t,RenderBatch">
-  <dt><pre><span class="Keyword">template</span> <a href="#vertexBuffer.t%2CRenderBatch"><span class="Identifier">vertexBuffer</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span><span class="Other">:</span> <a href="rlgl.html#RenderBatchVertexBuffer"><span class="Identifier">RenderBatchVertexBuffer</span></a></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#colors.t%2CVertexBuffer"><span class="Identifier">colors</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <a href="#VertexBufferColors"><span class="Identifier">VertexBufferColors</span></a></pre></dt>
   <dd>
     
     
@@ -4280,14 +4235,79 @@
 </div>
 
 </div>
-<div id="vertices-templates-all">
-  <div id="vertices.t,VertexBuffer">
-  <dt><pre><span class="Keyword">template</span> <a href="#vertices.t%2CVertexBuffer"><span class="Identifier">vertices</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="rlgl.html#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <a href="rlgl.html#VertexBufferVertices"><span class="Identifier">VertexBufferVertices</span></a></pre></dt>
+<div id="drawMode-templates-all">
+  <div id="drawMode.t,DrawMode,untyped">
+  <dt><pre><span class="Keyword">template</span> <a href="#drawMode.t%2CDrawMode%2Cuntyped"><span class="Identifier">drawMode</span></a><span class="Other">(</span><span class="Identifier">mode</span><span class="Other">:</span> <a href="#DrawMode"><span class="Identifier">DrawMode</span></a><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    Drawing mode (how to organize vertex)
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L580" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L580" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="draws-templates-all">
+  <div id="draws.t,RenderBatch">
+  <dt><pre><span class="Keyword">template</span> <a href="#draws.t%2CRenderBatch"><span class="Identifier">draws</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span><span class="Other">:</span> <a href="#RenderBatchDraws"><span class="Identifier">RenderBatchDraws</span></a></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L586" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L586" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L593" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L593" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="indices-templates-all">
+  <div id="indices.t,VertexBuffer">
+  <dt><pre><span class="Keyword">template</span> <a href="#indices.t%2CVertexBuffer"><span class="Identifier">indices</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <a href="#VertexBufferIndices"><span class="Identifier">VertexBufferIndices</span></a></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L591" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L591" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="texcoords-templates-all">
+  <div id="texcoords.t,VertexBuffer">
+  <dt><pre><span class="Keyword">template</span> <a href="#texcoords.t%2CVertexBuffer"><span class="Identifier">texcoords</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <a href="#VertexBufferTexcoords"><span class="Identifier">VertexBufferTexcoords</span></a></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L589" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L589" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="vertexBuffer-templates-all">
+  <div id="vertexBuffer.t,RenderBatch">
+  <dt><pre><span class="Keyword">template</span> <a href="#vertexBuffer.t%2CRenderBatch"><span class="Identifier">vertexBuffer</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#RenderBatch"><span class="Identifier">RenderBatch</span></a><span class="Other">)</span><span class="Other">:</span> <a href="#RenderBatchVertexBuffer"><span class="Identifier">RenderBatchVertexBuffer</span></a></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L592" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L592" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="vertices-templates-all">
+  <div id="vertices.t,VertexBuffer">
+  <dt><pre><span class="Keyword">template</span> <a href="#vertices.t%2CVertexBuffer"><span class="Identifier">vertices</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <a href="#VertexBuffer"><span class="Identifier">VertexBuffer</span></a><span class="Other">)</span><span class="Other">:</span> <a href="#VertexBufferVertices"><span class="Identifier">VertexBufferVertices</span></a></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/planetis-m/naylib/tree/main/src/rlgl.nim#L588" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/planetis-m/naylib/edit/main/src/rlgl.nim#L588" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4309,7 +4329,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-02-17 13:25:27 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-06-01 05:00:33 UTC</small>
       </div>
     </div>
   </div>

@@ -6,7 +6,7 @@ from std/unicode import Rune
 from std/syncio import writeFile
 import std/[assertions, paths]
 import naylib/private/config
-const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
+const raylibDir = Path"/home/lyj/代码/naylib/src/raylib"
 
 when defined(mingw):
   import std/private/globs
@@ -307,7 +307,7 @@ type
     NotAllowed ## The operation-not-allowed shape
 
   GamepadButton* {.size: sizeof(int32).} = enum ## Gamepad buttons
-    Unknown ## Unknown button, just for error checking
+    Unknown ## Unknown button, for error checking
     LeftFaceUp ## Gamepad left DPAD up button
     LeftFaceRight ## Gamepad left DPAD right button
     LeftFaceDown ## Gamepad left DPAD down button
@@ -369,15 +369,15 @@ type
     MapRoughness ## Shader location: sampler2d texture: roughness
     MapOcclusion ## Shader location: sampler2d texture: occlusion
     MapEmission ## Shader location: sampler2d texture: emission
-    MapHeight ## Shader location: sampler2d texture: height
+    MapHeight ## Shader location: sampler2d texture: heightmap
     MapCubemap ## Shader location: samplerCube texture: cubemap
     MapIrradiance ## Shader location: samplerCube texture: irradiance
     MapPrefilter ## Shader location: samplerCube texture: prefilter
     MapBrdf ## Shader location: sampler2d texture: brdf
-    VertexBoneids ## Shader location: vertex attribute: boneIds
-    VertexBoneweights ## Shader location: vertex attribute: boneWeights
-    BoneMatrices ## Shader location: array of matrices uniform: boneMatrices
-    VertexInstanceTx ## Shader location: vertex attribute: instanceTransform
+    VertexBoneids ## Shader location: vertex attribute: bone indices
+    VertexBoneweights ## Shader location: vertex attribute: bone weights
+    MatrixBonetransforms ## Shader location: matrix attribute: bone transforms (animation)
+    VertexInstancetransform ## Shader location: vertex attribute: instance transforms
 
   ShaderUniformDataType* {.size: sizeof(int32).} = enum ## Shader uniform data type
     Float ## Shader uniform type: float
@@ -427,7 +427,7 @@ type
     CompressedAstc8x8Rgba ## 2 bpp
 
   TextureFilter* {.size: sizeof(int32).} = enum ## Texture parameters: filter mode
-    Point ## No filter, just pixel approximation
+    Point ## No filter, pixel approximation
     Bilinear ## Linear filtering
     Trilinear ## Trilinear filtering (linear with mipmaps)
     Anisotropic4x ## Anisotropic filtering 4x
@@ -607,12 +607,11 @@ type
     tangents: ptr UncheckedArray[float32] ## Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
     colors: ptr UncheckedArray[uint8] ## Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
     indices: ptr UncheckedArray[uint16] ## Vertex indices (in case vertex data comes indexed)
+    boneCount: int32 ## Number of bones (MAX: 256 bones)
+    boneIndices: ptr UncheckedArray[uint8] ## Vertex bone indices, up to 4 bones influence by vertex (skinning) (shader-location = 6)
+    boneWeights: ptr UncheckedArray[float32] ## Vertex bone weight, up to 4 bones influence by vertex (skinning) (shader-location = 7)
     animVertices: ptr UncheckedArray[float32] ## Animated vertex positions (after bones transformations)
     animNormals: ptr UncheckedArray[float32] ## Animated normals (after bones transformations)
-    boneIds: ptr UncheckedArray[uint8] ## Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning) (shader-location = 6)
-    boneWeights: ptr UncheckedArray[float32] ## Vertex bone weight, up to 4 bones influence by vertex (skinning) (shader-location = 7)
-    boneMatrices: ptr UncheckedArray[Matrix] ## Bones animated transformation matrices
-    boneCount: int32 ## Number of bones
     vaoId*: uint32 ## OpenGL Vertex Array Object id
     vboId: ptr UncheckedArray[uint32] ## OpenGL Vertex Buffer Objects id (default vertex data)
 
@@ -639,6 +638,11 @@ type
     name*: array[32, char] ## Bone name
     parent*: int32 ## Bone parent
 
+  ModelSkeleton* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Skeleton, animation bones hierarchy
+    boneCount: int32 ## Number of bones
+    bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
+    bindPose: ModelAnimPose ## Bones base transformation (Transform[])
+
   Model* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Model, meshes, materials and animation data
     transform*: Matrix ## Local transform matrix
     meshCount: int32 ## Number of meshes
@@ -646,16 +650,15 @@ type
     meshes: ptr UncheckedArray[Mesh] ## Meshes array
     materials: ptr UncheckedArray[Material] ## Materials array
     meshMaterial: ptr UncheckedArray[int32] ## Mesh material number
-    boneCount: int32 ## Number of bones
-    bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
-    bindPose: ptr UncheckedArray[Transform] ## Bones base transformation (pose)
+    skeleton*: ModelSkeleton ## Skeleton for animation
+    currentPose: ModelAnimPose ## Current animation pose (Transform[])
+    boneMatrices: ptr UncheckedArray[Matrix] ## Bones animated transformation matrices
 
-  ModelAnimation* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## ModelAnimation
+  ModelAnimation* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## ModelAnimation, contains a full animation sequence
     name*: array[32, char] ## Animation name
-    boneCount: int32 ## Number of bones
-    frameCount: int32 ## Number of animation frames
-    bones: ptr UncheckedArray[BoneInfo] ## Bones information (skeleton)
-    framePoses: ptr UncheckedArray[ptr UncheckedArray[Transform]] ## Poses array by frame
+    boneCount: int32 ## Number of bones (per pose)
+    keyframeCount: int32 ## Number of animation key frames
+    keyframePoses: ptr UncheckedArray[ModelAnimPose] ## Animation sequence keyframe poses [keyframe][pose]
 
   Ray* {.importc, header: "raylib.h", completeStruct, bycopy.} = object ## Ray, ray for raycasting
     position*: Vector3 ## Ray position (origin)
@@ -745,21 +748,23 @@ type
   MeshTangents* = distinct Mesh
   MeshColors* = distinct Mesh
   MeshIndices* = distinct Mesh
+  MeshBoneIndices* = distinct Mesh
+  MeshBoneWeights* = distinct Mesh
   MeshAnimVertices* = distinct Mesh
   MeshAnimNormals* = distinct Mesh
-  MeshBoneIds* = distinct Mesh
-  MeshBoneWeights* = distinct Mesh
-  MeshBoneMatrices* = distinct Mesh
   MeshVboId* = distinct Mesh
   ShaderLocs* = distinct Shader
   MaterialMaps* = distinct Material
+  ModelSkeletonBones* = distinct ModelSkeleton
+  ModelSkeletonBindPose* = distinct ModelSkeleton
   ModelMeshes* = distinct Model
   ModelMaterials* = distinct Model
   ModelMeshMaterial* = distinct Model
-  ModelBones* = distinct Model
-  ModelBindPose* = distinct Model
-  ModelAnimationBones* = distinct ModelAnimation
-  ModelAnimationFramePoses* = distinct ModelAnimation
+  ModelCurrentPose* = distinct Model
+  ModelBoneMatrices* = distinct Model
+  ModelAnimationKeyframePoses* = distinct ModelAnimation
+
+  ModelAnimPose* = ptr Transform ## Anim pose, an array of Transform[]
 
   rAudioBuffer {.importc, nodecl, bycopy.} = object
   rAudioProcessor {.importc, nodecl, bycopy.} = object
@@ -1151,14 +1156,14 @@ proc drawLineDashed*(startPos: Vector2, endPos: Vector2, dashSize: int32, spaceS
   ## Draw a dashed line
 proc drawCircle*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircle", sideEffect.}
   ## Draw a color-filled circle
+proc drawCircle*(center: Vector2, radius: float32, color: Color) {.importc: "DrawCircleV", sideEffect.}
+  ## Draw a color-filled circle (Vector version)
+proc drawCircleGradient*(center: Vector2, radius: float32, inner: Color, outer: Color) {.importc: "DrawCircleGradient", sideEffect.}
+  ## Draw a gradient-filled circle
 proc drawCircleSector*(center: Vector2, radius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawCircleSector", sideEffect.}
   ## Draw a piece of a circle
 proc drawCircleSectorLines*(center: Vector2, radius: float32, startAngle: float32, endAngle: float32, segments: int32, color: Color) {.importc: "DrawCircleSectorLines", sideEffect.}
   ## Draw circle sector outline
-proc drawCircleGradient*(centerX: int32, centerY: int32, radius: float32, inner: Color, outer: Color) {.importc: "DrawCircleGradient", sideEffect.}
-  ## Draw a gradient-filled circle
-proc drawCircle*(center: Vector2, radius: float32, color: Color) {.importc: "DrawCircleV", sideEffect.}
-  ## Draw a color-filled circle (Vector version)
 proc drawCircleLines*(centerX: int32, centerY: int32, radius: float32, color: Color) {.importc: "DrawCircleLines", sideEffect.}
   ## Draw circle outline
 proc drawCircleLines*(center: Vector2, radius: float32, color: Color) {.importc: "DrawCircleLinesV", sideEffect.}
@@ -1469,6 +1474,7 @@ proc setTextLineSpacing*(spacing: int32) {.importc: "SetTextLineSpacing", sideEf
   ## Set vertical line spacing when drawing with line-breaks
 proc measureTextImpl(text: cstring, fontSize: int32): int32 {.importc: "MeasureText", sideEffect.}
 func measureTextImpl(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextEx".}
+proc measureTextCodepointsImpl(font: Font, codepoints: ptr UncheckedArray[int32], length: int32, fontSize: float32, spacing: float32): Vector2 {.importc: "MeasureTextCodepoints", sideEffect.}
 func getGlyphIndex*(font: Font, codepoint: Rune): int32 {.importc: "GetGlyphIndex".}
   ## Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
 func getGlyphInfo*(font: Font, codepoint: Rune): GlyphInfo {.importc: "GetGlyphInfo".}
@@ -1531,10 +1537,6 @@ proc drawModelWires*(model: Model, position: Vector3, scale: float32, tint: Colo
   ## Draw a model wires (with texture if set)
 proc drawModelWires*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelWiresEx", sideEffect.}
   ## Draw a model wires (with texture if set) with extended parameters
-proc drawModelPoints*(model: Model, position: Vector3, scale: float32, tint: Color) {.importc: "DrawModelPoints", sideEffect.}
-  ## Draw a model as points
-proc drawModelPoints*(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) {.importc: "DrawModelPointsEx", sideEffect.}
-  ## Draw a model as points with extended parameters
 proc drawBoundingBox*(box: BoundingBox, color: Color) {.importc: "DrawBoundingBox", sideEffect.}
   ## Draw bounding box (wires)
 proc drawBillboard*(camera: Camera, texture: Texture2D, position: Vector3, scale: float32, tint: Color) {.importc: "DrawBillboard", sideEffect.}
@@ -1585,11 +1587,10 @@ func isMaterialValid*(material: Material): bool {.importc: "IsMaterialValid".}
   ## Check if a material is valid (shader assigned, map textures loaded in GPU)
 proc unloadMaterial(material: Material) {.importc: "UnloadMaterial", sideEffect.}
 proc loadModelAnimationsImpl(fileName: cstring, animCount: ptr int32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations", sideEffect.}
-proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimation", sideEffect.}
-  ## Update model animation pose (CPU)
-func updateModelAnimationBones*(model: Model, anim: ModelAnimation, frame: int32) {.importc: "UpdateModelAnimationBones".}
-  ## Update model animation mesh bone matrices (GPU skinning)
-proc unloadModelAnimation(anim: ModelAnimation) {.importc: "UnloadModelAnimation", sideEffect.}
+proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: float32) {.importc: "UpdateModelAnimation", sideEffect.}
+  ## Update model animation pose (vertex buffers and bone matrices)
+func updateModelAnimationEx*(model: Model, animA: ModelAnimation, frameA: float32, animB: ModelAnimation, frameB: float32, blend: float32) {.importc: "UpdateModelAnimationEx".}
+  ## Update model animation pose, blending two animations
 func isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
   ## Check model animation skeleton match
 func checkCollisionSpheres*(center1: Vector3, radius1: float32, center2: Vector3, radius2: float32): bool {.importc: "CheckCollisionSpheres".}
@@ -1707,7 +1708,7 @@ proc setAudioStreamVolume*(stream: AudioStream, volume: float32) {.importc: "Set
 proc setAudioStreamPitch*(stream: AudioStream, pitch: float32) {.importc: "SetAudioStreamPitch", sideEffect.}
   ## Set pitch for audio stream (1.0 is base level)
 proc setAudioStreamPan*(stream: AudioStream, pan: float32) {.importc: "SetAudioStreamPan", sideEffect.}
-  ## Set pan for audio stream (0.5 is centered)
+  ## Set pan for audio stream (-1.0 to 1.0 range, 0.0 is centered)
 proc setAudioStreamBufferSizeDefault*(size: int32) {.importc: "SetAudioStreamBufferSizeDefault", sideEffect.}
   ## Default size for new audio streams
 proc setAudioStreamCallback*(stream: AudioStream, callback: AudioCallback) {.importc: "SetAudioStreamCallback", sideEffect.}
@@ -1810,7 +1811,8 @@ proc `=dup`*(source: Model): Model {.error.}
 proc `=copy`*(dest: var Model; source: Model) {.error.}
 
 proc `=destroy`*(x: ModelAnimation) =
-  unloadModelAnimation(x)
+  ## TODO: Update for new API. Use UnloadModelAnimations for arrays.
+  discard
 # proc `=dup`*(source: ModelAnimation): ModelAnimation {.error.}
 proc `=copy`*(dest: var ModelAnimation; source: ModelAnimation) {.error.}
 
@@ -2080,19 +2082,19 @@ proc `[]=`*(x: var MeshAnimNormals, i: int, val: Vector3) =
   checkArrayAccess(Mesh(x).animNormals, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector3]](Mesh(x).animNormals)[i] = val
 
-template boneIds*(x: Mesh): MeshBoneIds = MeshBoneIds(x)
+template boneIndices*(x: Mesh): MeshBoneIndices = MeshBoneIndices(x)
 
-proc `[]`*(x: MeshBoneIds, i: int): array[4, uint8] =
-  checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
-  result = cast[ptr UncheckedArray[typeof(result)]](Mesh(x).boneIds)[i]
+proc `[]`*(x: MeshBoneIndices, i: int): array[4, uint8] =
+  checkArrayAccess(Mesh(x).boneIndices, i, Mesh(x).vertexCount)
+  result = cast[ptr UncheckedArray[typeof(result)]](Mesh(x).boneIndices)[i]
 
-proc `[]`*(x: var MeshBoneIds, i: int): var array[4, uint8] =
-  checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
-  result = cast[ptr UncheckedArray[typeof(result)]](Mesh(x).boneIds)[i]
+proc `[]`*(x: var MeshBoneIndices, i: int): var array[4, uint8] =
+  checkArrayAccess(Mesh(x).boneIndices, i, Mesh(x).vertexCount)
+  result = cast[ptr UncheckedArray[typeof(result)]](Mesh(x).boneIndices)[i]
 
-proc `[]=`*(x: var MeshBoneIds, i: int, val: array[4, uint8]) =
-  checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
-  cast[ptr UncheckedArray[typeof(val)]](Mesh(x).boneIds)[i] = val
+proc `[]=`*(x: var MeshBoneIndices, i: int, val: array[4, uint8]) =
+  checkArrayAccess(Mesh(x).boneIndices, i, Mesh(x).vertexCount)
+  cast[ptr UncheckedArray[typeof(val)]](Mesh(x).boneIndices)[i] = val
 
 template boneWeights*(x: Mesh): MeshBoneWeights = MeshBoneWeights(x)
 
@@ -2107,20 +2109,6 @@ proc `[]`*(x: var MeshBoneWeights, i: int): var Vector4 =
 proc `[]=`*(x: var MeshBoneWeights, i: int, val: Vector4) =
   checkArrayAccess(Mesh(x).boneWeights, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector4]](Mesh(x).boneWeights)[i] = val
-
-template boneMatrices*(x: Mesh): MeshBoneMatrices = MeshBoneMatrices(x)
-
-proc `[]`*(x: MeshBoneMatrices, i: int): lent Matrix =
-  checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
-  result = Mesh(x).boneMatrices[i]
-
-proc `[]`*(x: var MeshBoneMatrices, i: int): var Matrix =
-  checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
-  result = Mesh(x).boneMatrices[i]
-
-proc `[]=`*(x: var MeshBoneMatrices, i: int, val: Matrix) =
-  checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
-  Mesh(x).boneMatrices[i] = val
 
 template vboId*(x: Mesh): MeshVboId = MeshVboId(x)
 
@@ -2239,74 +2227,63 @@ proc `[]=`*(x: var ModelMeshMaterial, i: int, val: int32) =
   checkArrayAccess(Model(x).meshMaterial, i, Model(x).meshCount)
   Model(x).meshMaterial[i] = val
 
-template bones*(x: Model): ModelBones = ModelBones(x)
+template bones*(x: Model): ModelSkeletonBones = ModelSkeletonBones(x.skeleton)
 
-proc `[]`*(x: ModelBones, i: int): lent BoneInfo =
-  checkArrayAccess(Model(x).bones, i, Model(x).boneCount)
-  result = Model(x).bones[i]
+proc `[]`*(x: ModelSkeletonBones, i: int): lent BoneInfo =
+  checkArrayAccess(ModelSkeleton(x).bones, i, ModelSkeleton(x).boneCount)
+  result = ModelSkeleton(x).bones[i]
 
-proc `[]`*(x: var ModelBones, i: int): var BoneInfo =
-  checkArrayAccess(Model(x).bones, i, Model(x).boneCount)
-  result = Model(x).bones[i]
+proc `[]`*(x: var ModelSkeletonBones, i: int): var BoneInfo =
+  checkArrayAccess(ModelSkeleton(x).bones, i, ModelSkeleton(x).boneCount)
+  result = ModelSkeleton(x).bones[i]
 
-proc `[]=`*(x: var ModelBones, i: int, val: BoneInfo) =
-  checkArrayAccess(Model(x).bones, i, Model(x).boneCount)
-  Model(x).bones[i] = val
+proc `[]=`*(x: var ModelSkeletonBones, i: int, val: BoneInfo) =
+  checkArrayAccess(ModelSkeleton(x).bones, i, ModelSkeleton(x).boneCount)
+  ModelSkeleton(x).bones[i] = val
 
-template bindPose*(x: Model): ModelBindPose = ModelBindPose(x)
+template bindPose*(x: Model): ModelSkeletonBindPose = ModelSkeletonBindPose(x.skeleton)
 
-proc `[]`*(x: ModelBindPose, i: int): lent Transform =
-  checkArrayAccess(Model(x).bindPose, i, Model(x).boneCount)
-  result = Model(x).bindPose[i]
+proc `[]`*(x: ModelSkeletonBindPose, i: int): lent Transform =
+  checkArrayAccess(ModelSkeleton(x).bindPose, i, ModelSkeleton(x).boneCount)
+  result = cast[ptr UncheckedArray[Transform]](ModelSkeleton(x).bindPose)[i]
 
-proc `[]`*(x: var ModelBindPose, i: int): var Transform =
-  checkArrayAccess(Model(x).bindPose, i, Model(x).boneCount)
-  result = Model(x).bindPose[i]
+proc `[]`*(x: var ModelSkeletonBindPose, i: int): var Transform =
+  checkArrayAccess(ModelSkeleton(x).bindPose, i, ModelSkeleton(x).boneCount)
+  result = cast[ptr UncheckedArray[Transform]](ModelSkeleton(x).bindPose)[i]
 
-proc `[]=`*(x: var ModelBindPose, i: int, val: Transform) =
-  checkArrayAccess(Model(x).bindPose, i, Model(x).boneCount)
-  Model(x).bindPose[i] = val
+proc `[]=`*(x: var ModelSkeletonBindPose, i: int, val: Transform) =
+  checkArrayAccess(ModelSkeleton(x).bindPose, i, ModelSkeleton(x).boneCount)
+  cast[ptr UncheckedArray[Transform]](ModelSkeleton(x).bindPose)[i] = val
 
-template bones*(x: ModelAnimation): ModelAnimationBones = ModelAnimationBones(x)
+template keyframePoses*(x: ModelAnimation): ModelAnimationKeyframePoses = ModelAnimationKeyframePoses(x)
 
-proc `[]`*(x: ModelAnimationBones, i: int): lent BoneInfo =
-  checkArrayAccess(ModelAnimation(x).bones, i, ModelAnimation(x).boneCount)
-  result = ModelAnimation(x).bones[i]
+proc `[]`*(x: ModelAnimationKeyframePoses; i, j: int): lent Transform =
+  checkArrayAccess(ModelAnimation(x).keyframePoses, i, ModelAnimation(x).keyframeCount)
+  let row = ModelAnimation(x).keyframePoses[i]
+  checkArrayAccess(row, j, ModelAnimation(x).boneCount)
+  result = cast[ptr UncheckedArray[Transform]](row)[j]
 
-proc `[]`*(x: var ModelAnimationBones, i: int): var BoneInfo =
-  checkArrayAccess(ModelAnimation(x).bones, i, ModelAnimation(x).boneCount)
-  result = ModelAnimation(x).bones[i]
+proc `[]`*(x: var ModelAnimationKeyframePoses; i, j: int): var Transform =
+  checkArrayAccess(ModelAnimation(x).keyframePoses, i, ModelAnimation(x).keyframeCount)
+  let row = ModelAnimation(x).keyframePoses[i]
+  checkArrayAccess(row, j, ModelAnimation(x).boneCount)
+  result = cast[ptr UncheckedArray[Transform]](row)[j]
 
-proc `[]=`*(x: var ModelAnimationBones, i: int, val: BoneInfo) =
-  checkArrayAccess(ModelAnimation(x).bones, i, ModelAnimation(x).boneCount)
-  ModelAnimation(x).bones[i] = val
-
-template framePoses*(x: ModelAnimation): ModelAnimationFramePoses = ModelAnimationFramePoses(x)
-
-proc `[]`*(x: ModelAnimationFramePoses; i, j: int): lent Transform =
-  checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
-  checkArrayAccess(ModelAnimation(x).framePoses[i], j, ModelAnimation(x).boneCount)
-  result = ModelAnimation(x).framePoses[i][j]
-
-proc `[]`*(x: var ModelAnimationFramePoses; i, j: int): var Transform =
-  checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
-  checkArrayAccess(ModelAnimation(x).framePoses[i], j, ModelAnimation(x).boneCount)
-  result = ModelAnimation(x).framePoses[i][j]
-
-proc `[]=`*(x: var ModelAnimationFramePoses; i, j: int, val: Transform) =
-  checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
-  checkArrayAccess(ModelAnimation(x).framePoses[i], j, ModelAnimation(x).boneCount)
-  ModelAnimation(x).framePoses[i][j] = val
+proc `[]=`*(x: var ModelAnimationKeyframePoses; i, j: int, val: Transform) =
+  checkArrayAccess(ModelAnimation(x).keyframePoses, i, ModelAnimation(x).keyframeCount)
+  let row = ModelAnimation(x).keyframePoses[i]
+  checkArrayAccess(row, j, ModelAnimation(x).boneCount)
+  cast[ptr UncheckedArray[Transform]](row)[j] = val
 
 proc glyphCount*(x: Font): int32 {.inline.} = x.glyphCount
 proc vertexCount*(x: Mesh): int32 {.inline.} = x.vertexCount
 proc triangleCount*(x: Mesh): int32 {.inline.} = x.triangleCount
 proc boneCount*(x: Mesh): int32 {.inline.} = x.boneCount
+proc boneCount*(x: ModelSkeleton): int32 {.inline.} = x.boneCount
 proc meshCount*(x: Model): int32 {.inline.} = x.meshCount
 proc materialCount*(x: Model): int32 {.inline.} = x.materialCount
-proc boneCount*(x: Model): int32 {.inline.} = x.boneCount
 proc boneCount*(x: ModelAnimation): int32 {.inline.} = x.boneCount
-proc frameCount*(x: ModelAnimation): int32 {.inline.} = x.frameCount
+proc keyframeCount*(x: ModelAnimation): int32 {.inline.} = x.keyframeCount
 
 proc setWindowIcons*(images: openArray[Image]) =
   ## Set icon for window (multiple images, RGBA 32bit)
@@ -2467,6 +2444,10 @@ proc measureText*(text: string, fontSize: int32): int32 =
 proc measureText*(font: Font, text: string, fontSize: float32, spacing: float32): Vector2 =
   ## Measure string size for Font
   measureTextImpl(font, text.cstring, fontSize, spacing)
+
+proc measureTextCodepoints*(font: Font, codepoints: openArray[int32], fontSize: float32, spacing: float32): Vector2 =
+  ## Measure string size for an existing array of codepoints for Font
+  measureTextCodepointsImpl(font, cast[ptr UncheckedArray[int32]](codepoints), codepoints.len.int32, fontSize, spacing)
 
 proc drawTriangleStrip3D*(points: openArray[Vector3], color: Color) =
   ## Draw a triangle strip defined by points

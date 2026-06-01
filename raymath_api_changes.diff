@@ -1,0 +1,26 @@
+diff --git a/tools/wrapper/api/raymath.json b/tools/wrapper/api/raymath.json
+index 2affb11..98db4a8 100644
+--- a/tools/wrapper/api/raymath.json
++++ b/tools/wrapper/api/raymath.json
+@@ -1852,6 +1852,21 @@
+         }
+       ]
+     },
++    {
++      "name": "MatrixMultiplyValue",
++      "description": "",
++      "returnType": "Matrix",
++      "params": [
++        {
++          "type": "Matrix",
++          "name": "left"
++        },
++        {
++          "type": "float",
++          "name": "value"
++        }
++      ]
++    },
+     {
+       "name": "MatrixTranslate",
+       "description": "",
