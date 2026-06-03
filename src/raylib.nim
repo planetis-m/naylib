@@ -6,7 +6,7 @@ from std/unicode import Rune
 from std/syncio import writeFile
 import std/[assertions, paths]
 import naylib/private/config
-const raylibDir = Path"/home/lyj/代码/naylib/src/raylib"
+const raylibDir = currentSourcePath().Path.parentDir / Path"raylib"
 
 when defined(mingw):
   import std/private/globs
@@ -1589,7 +1589,7 @@ proc unloadMaterial(material: Material) {.importc: "UnloadMaterial", sideEffect.
 proc loadModelAnimationsImpl(fileName: cstring, animCount: ptr int32): ptr UncheckedArray[ModelAnimation] {.importc: "LoadModelAnimations", sideEffect.}
 proc updateModelAnimation*(model: Model, anim: ModelAnimation, frame: float32) {.importc: "UpdateModelAnimation", sideEffect.}
   ## Update model animation pose (vertex buffers and bone matrices)
-func updateModelAnimationEx*(model: Model, animA: ModelAnimation, frameA: float32, animB: ModelAnimation, frameB: float32, blend: float32) {.importc: "UpdateModelAnimationEx".}
+func updateModelAnimation*(model: Model, animA: ModelAnimation, frameA: float32, animB: ModelAnimation, frameB: float32, blend: float32) {.importc: "UpdateModelAnimationEx".}
   ## Update model animation pose, blending two animations
 func isModelAnimationValid*(model: Model, anim: ModelAnimation): bool {.importc: "IsModelAnimationValid".}
   ## Check model animation skeleton match

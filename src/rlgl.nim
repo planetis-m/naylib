@@ -483,7 +483,7 @@ proc resizeFramebuffer*(width: int32, height: int32) {.importc: "rlResizeFramebu
   ## Resize internal framebuffer
 proc loadShaderImpl(code: cstring, `type`: ShaderType): uint32 {.importc: "rlLoadShader", sideEffect.}
 proc loadShaderProgramImpl(vsCode: cstring, fsCode: cstring): uint32 {.importc: "rlLoadShaderProgram", sideEffect.}
-proc loadShaderProgramEx*(vsId: uint32, fsId: uint32): uint32 {.importc: "rlLoadShaderProgramEx", sideEffect.}
+proc loadShaderProgram*(vsId: uint32, fsId: uint32): uint32 {.importc: "rlLoadShaderProgramEx", sideEffect.}
   ## Load shader program, using already loaded shader ids
 proc loadShaderProgramCompute*(csId: uint32): uint32 {.importc: "rlLoadShaderProgramCompute", sideEffect.}
   ## Load compute shader program
