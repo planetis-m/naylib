@@ -87,7 +87,8 @@ proc `=dup`*(source: Model): Model {.error.}
 proc `=copy`*(dest: var Model; source: Model) {.error.}
 
 proc `=destroy`*(x: ModelAnimation) =
-  unloadModelAnimation(x)
+  ## TODO: Update for new API. Use UnloadModelAnimations for arrays.
+  discard
 # proc `=dup`*(source: ModelAnimation): ModelAnimation {.error.}
 proc `=copy`*(dest: var ModelAnimation; source: ModelAnimation) {.error.}
 
@@ -357,19 +358,19 @@ proc `[]=`*(x: var MeshAnimNormals, i: int, val: Vector3) =
   checkArrayAccess(Mesh(x).animNormals, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector3]](Mesh(x).animNormals)[i] = val
 
-template boneIds*(x: Mesh): MeshBoneIds = MeshBoneIds(x)
+template boneIndices*(x: Mesh): MeshBoneIndices = MeshBoneIndices(x)
 
-proc `[]`*(x: MeshBoneIds, i: int): array[4, uint8] =
-  checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
-  result = cast[ptr UncheckedArray[typeof(result)]](Mesh(x).boneIds)[i]
+proc `[]`*(x: MeshBoneIndices, i: int): array[4, uint8] =
+  checkArrayAccess(Mesh(x).boneIndices, i, Mesh(x).vertexCount)
+  result = cast[ptr UncheckedArray[typeof(result)]](Mesh(x).boneIndices)[i]
 
-proc `[]`*(x: var MeshBoneIds, i: int): var array[4, uint8] =
-  checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
-  result = cast[ptr UncheckedArray[typeof(result)]](Mesh(x).boneIds)[i]
+proc `[]`*(x: var MeshBoneIndices, i: int): var array[4, uint8] =
+  checkArrayAccess(Mesh(x).boneIndices, i, Mesh(x).vertexCount)
+  result = cast[ptr UncheckedArray[typeof(result)]](Mesh(x).boneIndices)[i]
 
-proc `[]=`*(x: var MeshBoneIds, i: int, val: array[4, uint8]) =
-  checkArrayAccess(Mesh(x).boneIds, i, Mesh(x).vertexCount)
-  cast[ptr UncheckedArray[typeof(val)]](Mesh(x).boneIds)[i] = val
+proc `[]=`*(x: var MeshBoneIndices, i: int, val: array[4, uint8]) =
+  checkArrayAccess(Mesh(x).boneIndices, i, Mesh(x).vertexCount)
+  cast[ptr UncheckedArray[typeof(val)]](Mesh(x).boneIndices)[i] = val
 
 template boneWeights*(x: Mesh): MeshBoneWeights = MeshBoneWeights(x)
 
@@ -384,20 +385,6 @@ proc `[]`*(x: var MeshBoneWeights, i: int): var Vector4 =
 proc `[]=`*(x: var MeshBoneWeights, i: int, val: Vector4) =
   checkArrayAccess(Mesh(x).boneWeights, i, Mesh(x).vertexCount)
   cast[ptr UncheckedArray[Vector4]](Mesh(x).boneWeights)[i] = val
-
-template boneMatrices*(x: Mesh): MeshBoneMatrices = MeshBoneMatrices(x)
-
-proc `[]`*(x: MeshBoneMatrices, i: int): lent Matrix =
-  checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
-  result = Mesh(x).boneMatrices[i]
-
-proc `[]`*(x: var MeshBoneMatrices, i: int): var Matrix =
-  checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
-  result = Mesh(x).boneMatrices[i]
-
-proc `[]=`*(x: var MeshBoneMatrices, i: int, val: Matrix) =
-  checkArrayAccess(Mesh(x).boneMatrices, i, Mesh(x).boneCount)
-  Mesh(x).boneMatrices[i] = val
 
 template vboId*(x: Mesh): MeshVboId = MeshVboId(x)
 
@@ -516,61 +503,50 @@ proc `[]=`*(x: var ModelMeshMaterial, i: int, val: int32) =
   checkArrayAccess(Model(x).meshMaterial, i, Model(x).meshCount)
   Model(x).meshMaterial[i] = val
 
-template bones*(x: Model): ModelBones = ModelBones(x)
+template bones*(x: Model): ModelSkeletonBones = ModelSkeletonBones(x.skeleton)
 
-proc `[]`*(x: ModelBones, i: int): lent BoneInfo =
-  checkArrayAccess(Model(x).bones, i, Model(x).boneCount)
-  result = Model(x).bones[i]
+proc `[]`*(x: ModelSkeletonBones, i: int): lent BoneInfo =
+  checkArrayAccess(ModelSkeleton(x).bones, i, ModelSkeleton(x).boneCount)
+  result = ModelSkeleton(x).bones[i]
 
-proc `[]`*(x: var ModelBones, i: int): var BoneInfo =
-  checkArrayAccess(Model(x).bones, i, Model(x).boneCount)
-  result = Model(x).bones[i]
+proc `[]`*(x: var ModelSkeletonBones, i: int): var BoneInfo =
+  checkArrayAccess(ModelSkeleton(x).bones, i, ModelSkeleton(x).boneCount)
+  result = ModelSkeleton(x).bones[i]
 
-proc `[]=`*(x: var ModelBones, i: int, val: BoneInfo) =
-  checkArrayAccess(Model(x).bones, i, Model(x).boneCount)
-  Model(x).bones[i] = val
+proc `[]=`*(x: var ModelSkeletonBones, i: int, val: BoneInfo) =
+  checkArrayAccess(ModelSkeleton(x).bones, i, ModelSkeleton(x).boneCount)
+  ModelSkeleton(x).bones[i] = val
 
-template bindPose*(x: Model): ModelBindPose = ModelBindPose(x)
+template bindPose*(x: Model): ModelSkeletonBindPose = ModelSkeletonBindPose(x.skeleton)
 
-proc `[]`*(x: ModelBindPose, i: int): lent Transform =
-  checkArrayAccess(Model(x).bindPose, i, Model(x).boneCount)
-  result = Model(x).bindPose[i]
+proc `[]`*(x: ModelSkeletonBindPose, i: int): lent Transform =
+  checkArrayAccess(ModelSkeleton(x).bindPose, i, ModelSkeleton(x).boneCount)
+  result = cast[ptr UncheckedArray[Transform]](ModelSkeleton(x).bindPose)[i]
 
-proc `[]`*(x: var ModelBindPose, i: int): var Transform =
-  checkArrayAccess(Model(x).bindPose, i, Model(x).boneCount)
-  result = Model(x).bindPose[i]
+proc `[]`*(x: var ModelSkeletonBindPose, i: int): var Transform =
+  checkArrayAccess(ModelSkeleton(x).bindPose, i, ModelSkeleton(x).boneCount)
+  result = cast[ptr UncheckedArray[Transform]](ModelSkeleton(x).bindPose)[i]
 
-proc `[]=`*(x: var ModelBindPose, i: int, val: Transform) =
-  checkArrayAccess(Model(x).bindPose, i, Model(x).boneCount)
-  Model(x).bindPose[i] = val
+proc `[]=`*(x: var ModelSkeletonBindPose, i: int, val: Transform) =
+  checkArrayAccess(ModelSkeleton(x).bindPose, i, ModelSkeleton(x).boneCount)
+  cast[ptr UncheckedArray[Transform]](ModelSkeleton(x).bindPose)[i] = val
 
-template bones*(x: ModelAnimation): ModelAnimationBones = ModelAnimationBones(x)
+template keyframePoses*(x: ModelAnimation): ModelAnimationKeyframePoses = ModelAnimationKeyframePoses(x)
 
-proc `[]`*(x: ModelAnimationBones, i: int): lent BoneInfo =
-  checkArrayAccess(ModelAnimation(x).bones, i, ModelAnimation(x).boneCount)
-  result = ModelAnimation(x).bones[i]
+proc `[]`*(x: ModelAnimationKeyframePoses; i, j: int): lent Transform =
+  checkArrayAccess(ModelAnimation(x).keyframePoses, i, ModelAnimation(x).keyframeCount)
+  let row = ModelAnimation(x).keyframePoses[i]
+  checkArrayAccess(row, j, ModelAnimation(x).boneCount)
+  result = cast[ptr UncheckedArray[Transform]](row)[j]
 
-proc `[]`*(x: var ModelAnimationBones, i: int): var BoneInfo =
-  checkArrayAccess(ModelAnimation(x).bones, i, ModelAnimation(x).boneCount)
-  result = ModelAnimation(x).bones[i]
+proc `[]`*(x: var ModelAnimationKeyframePoses; i, j: int): var Transform =
+  checkArrayAccess(ModelAnimation(x).keyframePoses, i, ModelAnimation(x).keyframeCount)
+  let row = ModelAnimation(x).keyframePoses[i]
+  checkArrayAccess(row, j, ModelAnimation(x).boneCount)
+  result = cast[ptr UncheckedArray[Transform]](row)[j]
 
-proc `[]=`*(x: var ModelAnimationBones, i: int, val: BoneInfo) =
-  checkArrayAccess(ModelAnimation(x).bones, i, ModelAnimation(x).boneCount)
-  ModelAnimation(x).bones[i] = val
-
-template framePoses*(x: ModelAnimation): ModelAnimationFramePoses = ModelAnimationFramePoses(x)
-
-proc `[]`*(x: ModelAnimationFramePoses; i, j: int): lent Transform =
-  checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
-  checkArrayAccess(ModelAnimation(x).framePoses[i], j, ModelAnimation(x).boneCount)
-  result = ModelAnimation(x).framePoses[i][j]
-
-proc `[]`*(x: var ModelAnimationFramePoses; i, j: int): var Transform =
-  checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
-  checkArrayAccess(ModelAnimation(x).framePoses[i], j, ModelAnimation(x).boneCount)
-  result = ModelAnimation(x).framePoses[i][j]
-
-proc `[]=`*(x: var ModelAnimationFramePoses; i, j: int, val: Transform) =
-  checkArrayAccess(ModelAnimation(x).framePoses, i, ModelAnimation(x).frameCount)
-  checkArrayAccess(ModelAnimation(x).framePoses[i], j, ModelAnimation(x).boneCount)
-  ModelAnimation(x).framePoses[i][j] = val
+proc `[]=`*(x: var ModelAnimationKeyframePoses; i, j: int, val: Transform) =
+  checkArrayAccess(ModelAnimation(x).keyframePoses, i, ModelAnimation(x).keyframeCount)
+  let row = ModelAnimation(x).keyframePoses[i]
+  checkArrayAccess(row, j, ModelAnimation(x).boneCount)
+  cast[ptr UncheckedArray[Transform]](row)[j] = val

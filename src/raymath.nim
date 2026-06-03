@@ -205,6 +205,7 @@ func invert*(mat: Matrix): Matrix {.importc: "MatrixInvert".}
 func add*(left: Matrix, right: Matrix): Matrix {.importc: "MatrixAdd".}
 func subtract*(left: Matrix, right: Matrix): Matrix {.importc: "MatrixSubtract".}
 func multiply*(left: Matrix, right: Matrix): Matrix {.importc: "MatrixMultiply".}
+func multiplyValue*(left: Matrix, value: float32): Matrix {.importc: "MatrixMultiplyValue".}
 func translate*(x: float32, y: float32, z: float32): Matrix {.importc: "MatrixTranslate".}
 func rotate*(axis: Vector3, angle: float32): Matrix {.importc: "MatrixRotate".}
 func rotateX*(angle: float32): Matrix {.importc: "MatrixRotateX".}
@@ -262,10 +263,14 @@ template `*`*[T: Vector2|Vector3|Vector4|Quaternion](v1: T, value: float32): T =
 template `*=`*[T: Vector2|Vector3|Vector4|Quaternion](v1: var T, value: float32) = v1 = scale(v1, value)
 template `*`*[T: Vector2|Vector3|Quaternion](v1: T, v2: Matrix): T = transform(v1, v2)
 template `*=`*[T: Vector2|Vector3|Quaternion](v1: var T, v2: Matrix) = v1 = transform(v1, v2)
+template `*`*(v1: Matrix, value: float32): Matrix = multiplyValue(v1, value)
+template `*=`*(v1: var Matrix, value: float32) = v1 = multiplyValue(v1, value)
 
 template `/`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1, v2: T): T = divide(v1, v2)
 template `/=`*[T: Vector2|Vector3|Vector4|Quaternion|Matrix](v1: var T, v2: T) = v1 = divide(v1, v2)
 template `/`*[T: Vector2|Vector3|Vector4|Quaternion](v1: T, value: float32): T = scale(v1, 1'f32/value)
 template `/=`*[T: Vector2|Vector3|Vector4|Quaternion](v1: var T, value: float32) = v1 = scale(v1, 1'f32/value)
+template `/`*(v1: Matrix, value: float32): Matrix = multiplyValue(v1, 1'f32/value)
+template `/=`*(v1: var Matrix, value: float32) = v1 = multiplyValue(v1, 1'f32/value)
 
 template `-`*[T: Vector2|Vector3|Vector4](v1: T): T = negate(v1)

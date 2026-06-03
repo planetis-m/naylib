@@ -1853,6 +1853,21 @@
       ]
     },
     {
+      "name": "MatrixMultiplyValue",
+      "description": "",
+      "returnType": "Matrix",
+      "params": [
+        {
+          "type": "Matrix",
+          "name": "left"
+        },
+        {
+          "type": "float",
+          "name": "value"
+        }
+      ]
+    },
+    {
       "name": "MatrixTranslate",
       "description": "",
       "returnType": "Matrix",
