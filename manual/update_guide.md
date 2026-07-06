@@ -6,11 +6,13 @@ This guide describes the process of updating the bundled raylib version and rege
 
 1. Edit `update_bindings.nims`:
    - Update the `RayLatestCommit` constant to the desired raylib commit hash
+
 2. Run the update task:
    ```bash
    nim update update_bindings.nims
    ```
    This fetches the specified raylib version in `raylib/` (a git repository tracking raysan5/raylib) and copies the sources to `src/raylib/`
+
 3. Build the parser, mangler and wrapper tools:
    ```bash
    nim buildTools update_bindings.nims
@@ -65,5 +67,6 @@ nim docs update_bindings.nims
    ```bash
    nimble test
    ```
+
 2. Check for any compiler warnings or errors
 
