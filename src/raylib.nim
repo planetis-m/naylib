@@ -2501,7 +2501,7 @@ type
 var
   traceLogCallback: TraceLogCallback # TraceLog callback function pointer
 
-proc wrapperTraceLogCallback(logLevel: int32; text: cstring; args: va_list) {.cdecl.} =
+proc wrapperTraceLogCallback(logLevel: int32; text: ConstCstring; args: va_list) {.cdecl.} =
   var buf = newString(128)
   vsprintf(buf.cstring, text, args)
   traceLogCallback(logLevel.TraceLogLevel, buf)
